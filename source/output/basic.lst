@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.56.2625 listing file
 ; 64tass -b -Wall -Wno-portable -c -L output/basic.lst -l output/basic.lbl -Wall -q -o basic.rom _basic.asm
-; Sun Sep 18 12:00:34 2022
+; Sun Sep 18 12:41:34 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -116,49 +116,70 @@
 
 .8010	a2 ff		ldx #$ff	Start:	ldx 	#$FF 						; stack reset
 .8012	9a		txs				txs
->8013	db						.byte 	$DB 						; causes a break in the emulator
-.8014	20 2a 80	jsr $802a			jsr 	NewCommand 					; erase current program
-.8017	a9 21		lda #$21			lda 	#'!'
-.8019	20 d2 ff	jsr $ffd2			jsr 	$FFD2
-.801c	4c 1c 80	jmp $801c	Halt:	jmp 	Halt
-.801f					WarmStart:
->801f	db						.byte 	$DB 						; causes a break in the emulator
-.8020	80 fd		bra $801f			bra 	WarmStart
-.8022					ErrorHandler:
->8022	db						.byte 	$DB 						; causes a break in the emulator
-.8023	4c 22 80	jmp $8022			jmp 	ErrorHandler
+.8013	20 24 80	jsr $8024			jsr 	NewCommand 					; erase current program
+.8016	4c 37 80	jmp $8037			jmp 	BackloadProgram
+.8019					WarmStart:
+>8019	db						.byte 	$DB 						; causes a break in the emulator
+.801a	80 fd		bra $8019			bra 	WarmStart
+.801c					ErrorHandler:
+>801c	db						.byte 	$DB 						; causes a break in the emulator
+.801d	4c 1c 80	jmp $801c			jmp 	ErrorHandler
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./commands/clear.asm
 
-.8026					ClearCommand:
-.8026	60		rts				rts
+.8020					ClearCommand:
+.8020	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./commands/end.asm
 
-.8027					EndCommand:
-.8027	4c 1f 80	jmp $801f			jmp 	WarmStart
+.8021					EndCommand:
+.8021	4c 19 80	jmp $8019			jmp 	WarmStart
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./commands/new.asm
 
-.802a					NewCommand:
-.802a	a9 00		lda #$00			lda 	#(BasicStart & $FF)
-.802c	85 30		sta $30				sta 	codePtr
-.802e	a9 20		lda #$20			lda 	#(BasicStart >> 8)
-.8030	85 31		sta $31				sta 	codePtr+1
-.8032	a9 00		lda #$00			lda 	#0 							; write zero there erasing the program.
-.8034	92 30		sta ($30)			sta 	(codePtr)
-.8036	9c 00 10	stz $1000			stz 	VariableSpace 				; erase all variables.
-.8039	20 26 80	jsr $8026			jsr 	ClearCommand 				; clear everything.
-.803c	60		rts				rts
+.8024					NewCommand:
+.8024	a9 00		lda #$00			lda 	#(BasicStart & $FF)
+.8026	85 30		sta $30				sta 	codePtr
+.8028	a9 20		lda #$20			lda 	#(BasicStart >> 8)
+.802a	85 31		sta $31				sta 	codePtr+1
+.802c	a9 00		lda #$00			lda 	#0 							; write zero there erasing the program.
+.802e	92 30		sta ($30)			sta 	(codePtr)
+.8030	9c 00 10	stz $1000			stz 	VariableSpace 				; erase all variables.
+.8033	20 20 80	jsr $8020			jsr 	ClearCommand 				; clear everything.
+.8036	60		rts				rts
+
+;******  Return to file: _basic.asm
+
+
+;******  Processing file: ./tokeniser/backload.asm
+
+.8037					BackloadProgram:
+>8037	db						.byte 	$DB
+.8038	a2 ff		ldx #$ff			ldx 	#$FF
+.803a	ad fa ff	lda $fffa			lda 	$FFFA 						; read first byte
+.803d	30 13		bmi $8052			bmi 	_BPExit
+.803f					_BPCopy:
+.803f	e8		inx				inx  								; copy byte in
+.8040	9d 40 06	sta $0640,x			sta 	lineBuffer,x
+.8043	9e 41 06	stz $0641,x			stz 	lineBuffer+1,x
+.8046	ad fa ff	lda $fffa			lda 	$FFFA 						; read next byte
+.8049	30 04		bmi $804f			bmi 	_BPEndLine 					; -ve = EOL
+.804b	c9 20		cmp #$20			cmp 	#' ' 						; < ' ' = EOL
+.804d	b0 f0		bcs $803f			bcs 	_BPCopy
+.804f					_BPEndLine:
+>804f	db						.byte 	$DB 						; causes a break in the emulator
+.8050	80 e5		bra $8037			bra 	BackloadProgram
+.8052					_BPExit:
+.8052	4c 19 80	jmp $8019			jmp 	WarmStart
 
 ;******  Return to file: _basic.asm
 

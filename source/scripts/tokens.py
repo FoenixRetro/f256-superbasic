@@ -59,6 +59,7 @@ class Token(object):
 		self.name = name.upper().strip()
 		self.set = set 
 		self.id = None
+		self.label = None
 	#
 	def sortKey(self):
 		return "9"+str(self.set)+self.name
@@ -69,8 +70,13 @@ class Token(object):
 		return self.set 
 	def getID(self):
 		return self.id 
+	def getLabel(self):
+		return self.label
+	#
 	def setID(self,id):
 		self.id = id
+	def setLabel(self,label):
+		self.label = label
 
 class CtrlToken(Token):
 	def sortKey(self):

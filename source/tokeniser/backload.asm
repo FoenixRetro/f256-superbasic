@@ -1,8 +1,8 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		00start.asm
-;		Purpose:	Start up code.
+;		Name:		backload.asm
+;		Purpose:	Backloader for Emulator
 ;		Created:	18th September 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
@@ -12,20 +12,32 @@
 
 		.section code
 
-Start:	ldx 	#$FF 						; stack reset
-		txs	
-		;
-		jsr 	NewCommand 					; erase current program
-		jmp 	BackloadProgram
+; ************************************************************************************************
+;
+;								Characters can be streamed in by $FFFA
+;
+; ************************************************************************************************
 
-WarmStart:
+BackloadProgram:
+		ldx 	#$FF
+		lda 	$FFFA 						; read first byte
+		bmi 	_BPExit
+_BPCopy:
+		inx  								; copy byte in
+		sta 	lineBuffer,x
+		stz 	lineBuffer+1,x
+		lda 	$FFFA 						; read next byte
+		bmi 	_BPEndLine 					; -ve = EOL
+		cmp 	#' ' 						; < ' ' = EOL
+		bcs 	_BPCopy
+_BPEndLine:		
 		.debug
-		bra 	WarmStart
+		bra 	BackloadProgram
 
-ErrorHandler:		
-		.debug
-		jmp 	ErrorHandler
 
+_BPExit:
+		jmp 	WarmStart
+		
 		.send code
 
 ; ************************************************************************************************

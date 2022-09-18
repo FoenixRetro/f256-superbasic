@@ -10,3 +10,4 @@
 	.include	"./commands/clear.asm"
 	.include	"./commands/end.asm"
 	.include	"./commands/new.asm"
+	.include	"./tokeniser/backload.asm"
