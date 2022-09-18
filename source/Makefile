@@ -1,0 +1,46 @@
+# ************************************************************************************************
+# ************************************************************************************************
+#
+#		Name:		Makefile
+#		Purpose:	Main make file
+#		Created:	18th September 2022
+#		Author:		Paul Robson (paul@robsons.org.uk)
+#
+# ************************************************************************************************
+# ************************************************************************************************
+
+ifeq ($(OS),Windows_NT)
+include ..\documents\common.make
+else
+include ../documents/common.make
+endif
+
+BINDIR = $(ROOTDIR)bin$(S)
+ASMOPTS = -b -Wall -Wno-portable -c -L output$(S)basic.lst -l output$(S)basic.lbl -Wall -q
+APPNAME = basic.rom
+SCRIPTDIR = scripts$(S)
+EMULATOR = $(BINDIR)jr256$(APPSTEM)
+TTYPORT = /dev/ttyUSB0
+
+all :  basic
+
+run : basic
+	$(EMULATOR) $(APPNAME)@8010
+
+go : basic 
+	$(BINDIR)makeboot $(APPSTEM) basic.rom upload.bin
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary upload.bin --address 8000
+
+update-tools:
+	$(CCOPY) ..$(S)..$(S)junior-emulator$(S)jr256* $(BINDIR)
+	$(CCOPY) ..$(S)..$(S)junior-utilities$(S)fnxmgr.zip $(BINDIR)
+	$(CCOPY) ..$(S)..$(S)junior-utilities$(S)makeboot$(APPSTEM) $(BINDIR)
+	$(CCOPY) ..$(S)..$(S)junior-utilities$(S)foenixmgr.ini .
+
+basic : prelim
+	64tass $(ASMOPTS) _basic.asm -o $(APPNAME)
+
+prelim:
+	python $(SCRIPTDIR)makebuild.py
+
+

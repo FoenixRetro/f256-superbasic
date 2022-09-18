@@ -1,0 +1,16 @@
+zTemp0		= $36
+Halt		= $8018
+EndVariableSpace= $2000
+MathStackSize	= 8
+BasicStackSize	= 512
+MemoryStorage	= $640
+ZeroPageMandatory= $30
+BasicStart	= $2000
+VariableSpace	= $1000
+ZeroPagePreference= $600
+codePtr		= $30
+zTemp2		= $3a
+zTemp1		= $38
+Start		= $8010
+basicStack	= $34
+CodeStart	= $8010

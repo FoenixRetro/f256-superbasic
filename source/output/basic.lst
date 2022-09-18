@@ -1,0 +1,65 @@
+
+; 64tass Turbo Assembler Macro V1.56.2625 listing file
+; 64tass -b -Wall -Wno-portable -c -L output/basic.lst -l output/basic.lbl -Wall -q -o basic.rom _basic.asm
+; Sun Sep 18 08:30:54 2022
+
+;Offset	;Hex		;Monitor	;Source
+
+;******  Processing input file: _basic.asm
+
+
+;******  Processing file: ./system/01common.inc
+
+=$30					ZeroPageMandatory = $30
+=$600					ZeroPagePreference = $600
+=$640					MemoryStorage = $640
+=$2000					BasicStart = $2000
+=$8010					CodeStart = $8010
+=$1000					VariableSpace = $1000
+=$2000					EndVariableSpace = $2000
+=8					MathStackSize = 8
+=512					BasicStackSize = 512
+
+;******  Return to file: _basic.asm
+
+
+;******  Processing file: ./system/02macros.inc
+
+
+;******  Return to file: _basic.asm
+
+
+;******  Processing file: ./system/03access.inc
+
+
+;******  Return to file: _basic.asm
+
+
+;******  Processing file: ./system/04data.inc
+
+.0030					codePtr:
+>0030							.fill 	4
+.0034					basicStack:
+>0034							.fill 	2
+.0036					zTemp0:
+>0036							.fill 	2
+.0038					zTemp1:
+>0038							.fill 	2
+.003a					zTemp2:
+>003a							.fill 	2
+
+;******  Return to file: _basic.asm
+
+
+;******  Processing file: ./system/00start.asm
+
+.8010	a2 ff		ldx #$ff	Start:	ldx 	#$FF 						; stack reset
+.8012	9a		txs				txs
+.8013	a9 21		lda #$21			lda 	#'!'
+.8015	20 d2 ff	jsr $ffd2			jsr 	$FFD2
+.8018	4c 18 80	jmp $8018	Halt:	jmp 	Halt
+
+;******  Return to file: _basic.asm
+
+
+;******  End of listing
