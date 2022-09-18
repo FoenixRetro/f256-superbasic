@@ -1,14 +1,14 @@
 
 ; 64tass Turbo Assembler Macro V1.56.2625 listing file
 ; 64tass -b -Wall -Wno-portable -c -L output/basic.lst -l output/basic.lbl -Wall -q -o basic.rom _basic.asm
-; Sun Sep 18 08:30:54 2022
+; Sun Sep 18 12:00:34 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
 ;******  Processing input file: _basic.asm
 
 
-;******  Processing file: ./system/01common.inc
+;******  Processing file: ./aa_system/01common.inc
 
 =$30					ZeroPageMandatory = $30
 =$600					ZeroPagePreference = $600
@@ -23,19 +23,19 @@
 ;******  Return to file: _basic.asm
 
 
-;******  Processing file: ./system/02macros.inc
+;******  Processing file: ./aa_system/02macros.inc
 
 
 ;******  Return to file: _basic.asm
 
 
-;******  Processing file: ./system/03access.inc
+;******  Processing file: ./aa_system/03access.inc
 
 
 ;******  Return to file: _basic.asm
 
 
-;******  Processing file: ./system/04data.inc
+;******  Processing file: ./aa_system/04data.inc
 
 .0030					codePtr:
 >0030							.fill 	4
@@ -47,17 +47,118 @@
 >0038							.fill 	2
 .003a					zTemp2:
 >003a							.fill 	2
+.0640					lineBuffer:
+>0640							.fill 	256
+.0740					tokenBuffer:
+>0740							.fill 	256
 
 ;******  Return to file: _basic.asm
 
 
-;******  Processing file: ./system/00start.asm
+;******  Processing file: ./generated/kwdconst.inc
+
+=$83					KWD_FOR                              = $83; $83 FOR
+=$84					KWD_IF                               = $84; $84 IF
+=$85					KWD_PROC                             = $85; $85 PROC
+=$86					KWD_REPEAT                           = $86; $86 REPEAT
+=$87					KWD_WHILE                            = $87; $87 WHILE
+=$88					KWD_ENDIF                            = $88; $88 ENDIF
+=$89					KWD_ENDPROC                          = $89; $89 ENDPROC
+=$8a					KWD_NEXT                             = $8a; $8a NEXT
+=$8b					KWD_UNTIL                            = $8b; $8b UNTIL
+=$8c					KWD_WEND                             = $8c; $8c WEND
+=$8d					KWD_ABSLPAREN                        = $8d; $8d ABS(
+=$8e					KWD_ALLOCLPAREN                      = $8e; $8e ALLOC(
+=$8f					KWD_ASCLPAREN                        = $8f; $8f ASC(
+=$90					KWD_CHRDOLLARLPAREN                  = $90; $90 CHR$(
+=$91					KWD_DECLPAREN                        = $91; $91 DEC(
+=$92					KWD_GETDATEDOLLARLPAREN              = $92; $92 GETDATE$(
+=$93					KWD_GETTIMEDOLLARLPAREN              = $93; $93 GETTIME$(
+=$94					KWD_HEXDOLLARLPAREN                  = $94; $94 HEX$(
+=$95					KWD_INTLPAREN                        = $95; $95 INT(
+=$96					KWD_ISVALLPAREN                      = $96; $96 ISVAL(
+=$97					KWD_LEFTDOLLARLPAREN                 = $97; $97 LEFT$(
+=$98					KWD_LENLPAREN                        = $98; $98 LEN(
+=$99					KWD_MIDDOLLARLPAREN                  = $99; $99 MID$(
+=$9a					KWD_NOT                              = $9a; $9a NOT
+=$9b					KWD_PAGE                             = $9b; $9b PAGE
+=$9c					KWD_RIGHTDOLLARLPAREN                = $9c; $9c RIGHT$(
+=$9d					KWD_RNDLPAREN                        = $9d; $9d RND(
+=$9e					KWD_SGNLPAREN                        = $9e; $9e SGN(
+=$9f					KWD_SPCLPAREN                        = $9f; $9f SPC(
+=$a0					KWD_STRDOLLARLPAREN                  = $a0; $a0 STR$(
+=$a1					KWD_VALLPAREN                        = $a1; $a1 VAL(
+=$a2					KWD_CLS                              = $a2; $a2 CLS
+=$a3					KWD_DATA                             = $a3; $a3 DATA
+=$a4					KWD_DIM                              = $a4; $a4 DIM
+=$a5					KWD_GOSUB                            = $a5; $a5 GOSUB
+=$a6					KWD_GOTO                             = $a6; $a6 GOTO
+=$a7					KWD_LET                              = $a7; $a7 LET
+=$a8					KWD_PRINT                            = $a8; $a8 PRINT
+=$a9					KWD_READ                             = $a9; $a9 READ
+=$aa					KWD_REM                              = $aa; $aa REM
+=$ab					KWD_RETURN                           = $ab; $ab RETURN
+=$ac					KWD_THEN                             = $ac; $ac THEN
+=$ad					KWD_TO                               = $ad; $ad TO
+=$83					KWD_ASSERT                           = $83; $83 ASSERT
+=$84					KWD_CLEAR                            = $84; $84 CLEAR
+=$85					KWD_END                              = $85; $85 END
+=$86					KWD_LIST                             = $86; $86 LIST
+=$87					KWD_NEW                              = $87; $87 NEW
+=$88					KWD_RESTORE                          = $88; $88 RESTORE
+=$89					KWD_RUN                              = $89; $89 RUN
+=$8a					KWD_STOP                             = $8a; $8a STOP
+
+;******  Return to file: _basic.asm
+
+
+;******  Processing file: ./aa_system/00start.asm
 
 .8010	a2 ff		ldx #$ff	Start:	ldx 	#$FF 						; stack reset
 .8012	9a		txs				txs
-.8013	a9 21		lda #$21			lda 	#'!'
-.8015	20 d2 ff	jsr $ffd2			jsr 	$FFD2
-.8018	4c 18 80	jmp $8018	Halt:	jmp 	Halt
+>8013	db						.byte 	$DB 						; causes a break in the emulator
+.8014	20 2a 80	jsr $802a			jsr 	NewCommand 					; erase current program
+.8017	a9 21		lda #$21			lda 	#'!'
+.8019	20 d2 ff	jsr $ffd2			jsr 	$FFD2
+.801c	4c 1c 80	jmp $801c	Halt:	jmp 	Halt
+.801f					WarmStart:
+>801f	db						.byte 	$DB 						; causes a break in the emulator
+.8020	80 fd		bra $801f			bra 	WarmStart
+.8022					ErrorHandler:
+>8022	db						.byte 	$DB 						; causes a break in the emulator
+.8023	4c 22 80	jmp $8022			jmp 	ErrorHandler
+
+;******  Return to file: _basic.asm
+
+
+;******  Processing file: ./commands/clear.asm
+
+.8026					ClearCommand:
+.8026	60		rts				rts
+
+;******  Return to file: _basic.asm
+
+
+;******  Processing file: ./commands/end.asm
+
+.8027					EndCommand:
+.8027	4c 1f 80	jmp $801f			jmp 	WarmStart
+
+;******  Return to file: _basic.asm
+
+
+;******  Processing file: ./commands/new.asm
+
+.802a					NewCommand:
+.802a	a9 00		lda #$00			lda 	#(BasicStart & $FF)
+.802c	85 30		sta $30				sta 	codePtr
+.802e	a9 20		lda #$20			lda 	#(BasicStart >> 8)
+.8030	85 31		sta $31				sta 	codePtr+1
+.8032	a9 00		lda #$00			lda 	#0 							; write zero there erasing the program.
+.8034	92 30		sta ($30)			sta 	(codePtr)
+.8036	9c 00 10	stz $1000			stz 	VariableSpace 				; erase all variables.
+.8039	20 26 80	jsr $8026			jsr 	ClearCommand 				; clear everything.
+.803c	60		rts				rts
 
 ;******  Return to file: _basic.asm
 

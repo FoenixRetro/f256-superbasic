@@ -1,8 +1,8 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		00start.asm
-;		Purpose:	Start up code.
+;		Name:		end.asm
+;		Purpose:	END command
 ;		Created:	18th September 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
@@ -12,14 +12,9 @@
 
 		.section code
 
-Start:	ldx 	#$FF 						; stack reset
-		txs	
-		;
-		lda 	#'!'
-		jsr 	$FFD2
-
-Halt:	jmp 	Halt
-
+EndCommand: ;; [end]
+		jmp 	WarmStart
+		
 		.send code
 
 ; ************************************************************************************************

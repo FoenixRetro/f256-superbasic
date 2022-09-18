@@ -50,7 +50,11 @@ zTemp2:
 
 		.section storage
 
-
+lineBuffer: 								; used for input - ASCII line goes here
+		.fill 	256
+tokenBuffer: 								; used for tokenising - tokenised result goes here
+		.fill 	256		
+		
 		.send 	storage
 
 ; ************************************************************************************************

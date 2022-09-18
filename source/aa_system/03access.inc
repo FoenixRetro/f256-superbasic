@@ -68,10 +68,10 @@ _CREExit:
 ;
 ; ************************************************************************************************
 
-setcodepointer 	.macro
-		lda 	#((\1) & $FF)
+resetcodepointer 	.macro
+		lda 	#(BasicStart & $FF)
 		sta 	codePtr
-		lda 	#((\1) >> 8)
+		lda 	#(BasicStart >> 8)
 		sta 	codePtr+1
 		.endm
 

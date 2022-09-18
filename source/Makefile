@@ -42,5 +42,6 @@ basic : prelim
 
 prelim:
 	python $(SCRIPTDIR)makebuild.py
+	python $(SCRIPTDIR)tokens.py
 
 

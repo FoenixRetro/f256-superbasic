@@ -1,0 +1,6 @@
+
+	Read into a buffer
+	Case process the buffer
+	Tokenise the buffer to a complete line.
+	Write code to load in an initial program
+	Start on terms - expressions - etc.
