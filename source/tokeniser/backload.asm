@@ -36,6 +36,7 @@ _BPNotTab:
 		bcs 	_BPCopy
 _BPEndLine:		
 		jsr 	TokeniseLine 				; tokenise the line.
+		.debug
 		bra 	BackloadProgram
 _BPExit:
 		jmp 	WarmStart

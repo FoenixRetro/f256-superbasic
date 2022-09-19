@@ -106,7 +106,7 @@ _TKNoShift:
 
 _TKString: 									; tokenise a string
 		jsr 	TokeniseString
-		bra 	_TOTokeniseLoop
+		bra 	_TKTokeniseLoop
 
 		;----------------------------------------------------------------------------------------
 		;
@@ -237,6 +237,53 @@ _TKNoTShift:
 		ldx 	identTypeEnd 				; X points to following byte
 		jmp 	_TKTokeniseLoop 			; and go round again.
 
+; ************************************************************************************************
+;
+;									Tokenise a string.
+;
+; ************************************************************************************************
+
+TokeniseString:
+		inx									; start of quoted string.
+		phx 								; push start of string on top
+		dex
+_TSFindEnd:							
+		inx
+		lda 	lineBuffer,x 				; next character
+		beq 	_TSEndOfString
+		cmp 	#'"'
+		bne 	_TSFindEnd
+_TSEndOfString:
+		ply  								; so now Y is first character, X is character after end.		
+		pha 								; save what we terminated with, so we know whether to skip.
+		stx 	zTemp0 						; save the end point.
+
+		lda 	#$FF 						; string token.
+		jsr 	TokeniseWriteByte
+
+		tya 								; work out the string length
+		eor 	#$FF
+		sec
+		adc 	zTemp0
+		jsr 	TokeniseWriteByte 			; write that length.
+		;
+_TSOutputString:
+		cpy 	zTemp0 						; reached the end.
+		beq 	_TSEndString
+		lda 	lineBuffer,y 				; output one
+		iny
+		jsr 	TokeniseWriteByte
+		bra 	_TSOutputString
+_TSEndString:
+		lda 	#0		 					; output EOS
+		jsr 	TokeniseWriteByte
+		;
+		pla 								; did we end in " ?
+		cmp 	#'"'
+		bne 	_TSNoEndQuote
+		inx
+_TSNoEndQuote:
+		rts		
 		.send code
 
 ; ************************************************************************************************
