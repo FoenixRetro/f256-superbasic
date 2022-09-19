@@ -1,0 +1,26 @@
+# *******************************************************************************************
+# *******************************************************************************************
+#
+#		Name : 		errors.en
+#		Purpose :	Error messages (English)
+#		Date :		19th September 2022
+#		Author : 	Paul Robson (paul@robsons.org.uk)
+#
+# *******************************************************************************************
+# *******************************************************************************************
+#
+#		Generates ERRID_<xxxx> 		Identifiers (counting from 1)
+#		Generates .error_<xxxx> 	Macro
+#		When Prefixed by ! generates a jump target <xxxx>Error
+#
+Break: 		Break
+!Syntax:  	Syntax error
+DivZero: 	Division by zero
+!Range:		Out of Range
+!Type:		Type mismatch
+Memory:		Out of memory
+Argument:	Illegal argument
+Stop:		Stop
+String:		String too long
+Assert:		Assertion failed
+Data:		Out of data

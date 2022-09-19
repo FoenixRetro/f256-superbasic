@@ -37,7 +37,32 @@ zTemp2:
 ;
 ; ************************************************************************************************
 
+NSBIsNegative = $80 						; bit 7 : sign of mantissa (where numeric)
+NSBIsReference = $20 						; bit 5 : is a reference
+NSBIsString = $10 							; bit 4 : set if string (procedures don't go on the stack)
+NSBTypeMask = $18 							; bits 4,3 : 00 int 01 float 10 string 11 procedure
+NSBRefMask = $03 							; bits 0,1 : Bytes of reference, -1 (e.g. 00 = 1 byte, 11 = 4 bytes)
+
 		.section zeropref
+
+; ************************************************************************************************
+;
+;							The number stack (works up from zero)
+;
+; ************************************************************************************************
+
+NSStatus: 									; Status bits of stack.
+		.fill 	MathStackSize
+NSMantissa0: 								; Mantissa on stack (address in 0,1 for string/reference)
+		.fill 	MathStackSize 				; (this is my integer mantissa system)
+NSMantissa1:
+		.fill 	MathStackSize
+NSMantissa2:
+		.fill 	MathStackSize
+NSMantissa3:
+		.fill 	MathStackSize
+NSExponent: 								; Exponent , 0 = Mantissa is integer
+		.fill 	MathStackSize
 
 		.send zeropref
 
@@ -83,3 +108,4 @@ lineBuffer: 								; used for input - ASCII line goes here
 ;		==== 			=====
 ;
 ; ************************************************************************************************
+

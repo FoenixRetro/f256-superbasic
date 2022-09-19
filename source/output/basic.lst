@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.56.2625 listing file
 ; 64tass -b -Wall -Wno-portable -c -L output/basic.lst -l output/basic.lbl -Wall -q -o basic.rom _basic.asm
-; Mon Sep 19 17:19:09 2022
+; Mon Sep 19 20:00:17 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -12,7 +12,7 @@
 
 =$30					ZeroPageMandatory = $30
 =$600					ZeroPagePreference = $600
-=$620					MemoryStorage = $620
+=$700					MemoryStorage = $700
 =$2000					BasicStart = $2000
 =$8010					CodeStart = $8010
 =$1000					VariableSpace = $1000
@@ -41,24 +41,41 @@
 >0038							.fill 	2
 .003a					zTemp2:
 >003a							.fill 	2
-.0620					identStart:
->0620							.fill 	1
-.0621					identTypeStart:
->0621							.fill 	1
-.0622					identTypeEnd:
->0622							.fill 	1
-.0623					identHash:
->0623							.fill 	1
-.0624					identTypeByte:
->0624							.fill 	1	 						; (see tokenising.pdf)
-.0625					tokenOffset:
->0625							.fill 	1
-.0626					tokenLineNumber:
->0626							.fill 	2
-.0628					tokenBuffer:
->0628							.fill 	253
-.0725					lineBuffer:
->0725							.fill 	256
+=$80					NSBIsNegative = $80 						; bit 7 : sign of mantissa (where numeric)
+=$20					NSBIsReference = $20 						; bit 5 : is a reference
+=$10					NSBIsString = $10 							; bit 4 : set if string (procedures don't go on the stack)
+=$18					NSBTypeMask = $18 							; bits 4,3 : 00 int 01 float 10 string 11 procedure
+=$03					NSBRefMask = $03 							; bits 0,1 : Bytes of reference, -1 (e.g. 00 = 1 byte, 11 = 4 bytes)
+.0600					NSStatus:
+>0600							.fill 	MathStackSize
+.0608					NSMantissa0:
+>0608							.fill 	MathStackSize 				; (this is my integer mantissa system)
+.0610					NSMantissa1:
+>0610							.fill 	MathStackSize
+.0618					NSMantissa2:
+>0618							.fill 	MathStackSize
+.0620					NSMantissa3:
+>0620							.fill 	MathStackSize
+.0628					NSExponent:
+>0628							.fill 	MathStackSize
+.0700					identStart:
+>0700							.fill 	1
+.0701					identTypeStart:
+>0701							.fill 	1
+.0702					identTypeEnd:
+>0702							.fill 	1
+.0703					identHash:
+>0703							.fill 	1
+.0704					identTypeByte:
+>0704							.fill 	1	 						; (see tokenising.pdf)
+.0705					tokenOffset:
+>0705							.fill 	1
+.0706					tokenLineNumber:
+>0706							.fill 	2
+.0708					tokenBuffer:
+>0708							.fill 	253
+.0805					lineBuffer:
+>0805							.fill 	256
 
 ;******  Return to file: _basic.asm
 
@@ -196,14 +213,14 @@
 .8052					_CREExit:
 .8052	80 ef		bra $8043			bra 	_MAFindEnd
 .8054					_MAFoundEnd:
-.8054	ac 25 06	ldy $0625			ldy 	tokenOffset 				; bytes to copy
+.8054	ac 05 07	ldy $0705			ldy 	tokenOffset 				; bytes to copy
 .8057	c0 04		cpy #$04			cpy 	#4 							; blank line
 .8059	f0 0e		beq $8069			beq 	_MANoLine
 .805b	a9 00		lda #$00			lda 	#0 							; end of program
 .805d	91 30		sta ($30),y			sta 	(codePtr),y
 .805f					_MACopy:
 .805f	88		dey				dey
-.8060	b9 25 06	lda $0625,y			lda 	tokenOffset,y
+.8060	b9 05 07	lda $0705,y			lda 	tokenOffset,y
 .8063	91 30		sta ($30),y			sta 	(codePtr),y
 .8065	c0 00		cpy #$00			cpy 	#0
 .8067	d0 f6		bne $805f			bne 	_MACopy
@@ -231,8 +248,8 @@
 .8071	30 1e		bmi $8091			bmi 	_BPExit
 .8073					_BPCopy:
 .8073	e8		inx				inx  								; copy byte in
-.8074	9d 25 07	sta $0725,x			sta 	lineBuffer,x
-.8077	9e 26 07	stz $0726,x			stz 	lineBuffer+1,x
+.8074	9d 05 08	sta $0805,x			sta 	lineBuffer,x
+.8077	9e 06 08	stz $0806,x			stz 	lineBuffer+1,x
 .807a	ad fa ff	lda $fffa			lda 	$FFFA 						; read next byte
 .807d	30 0a		bmi $8089			bmi 	_BPEndLine 					; -ve = EOL
 .807f	c9 09		cmp #$09			cmp 	#9 							; handle TAB
@@ -266,24 +283,24 @@
 .80a4	c8		iny				iny 								; get the hash
 .80a5	b1 36		lda ($36),y			lda 	(zTemp0),y
 .80a7	88		dey				dey
-.80a8	cd 23 06	cmp $0623			cmp 	identHash 					; check they match, if not go to next
+.80a8	cd 03 07	cmp $0703			cmp 	identHash 					; check they match, if not go to next
 .80ab	d0 25		bne $80d2			bne 	_TSTNext
-.80ad	ad 22 06	lda $0622			lda 	identTypeEnd 				; length of identifier
+.80ad	ad 02 07	lda $0702			lda 	identTypeEnd 				; length of identifier
 .80b0	38		sec				sec
-.80b1	ed 20 06	sbc $0620			sbc 	identStart
+.80b1	ed 00 07	sbc $0700			sbc 	identStart
 .80b4	d1 36		cmp ($36),y			cmp 	(zTemp0),y 					; no match, then return.
 .80b6	d0 1a		bne $80d2			bne 	_TSTNext
 .80b8	5a		phy				phy 								; save Y , we might fail
 .80b9	c8		iny				iny 								; point to text
 .80ba	c8		iny				iny
-.80bb	ae 20 06	ldx $0620			ldx 	identStart 					; offset in line buffer in X
+.80bb	ae 00 07	ldx $0700			ldx 	identStart 					; offset in line buffer in X
 .80be					_TSTCompareName:
-.80be	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; compare text.
+.80be	bd 05 08	lda $0805,x			lda 	lineBuffer,x 				; compare text.
 .80c1	d1 36		cmp ($36),y			cmp 	(zTemp0),y
 .80c3	d0 0c		bne $80d1			bne 	_TSTNextPullY 				; fail, pullY and do next
 .80c5	e8		inx				inx
 .80c6	c8		iny				iny
-.80c7	ec 22 06	cpx $0622			cpx 	identTypeEnd 				; complete match.
+.80c7	ec 02 07	cpx $0702			cpx 	identTypeEnd 				; complete match.
 .80ca	d0 f2		bne $80be			bne 	_TSTCompareName
 .80cc	7a		ply				ply 								; throw Y
 .80cd	a5 38		lda $38				lda 	zTemp1 						; get token #
@@ -397,13 +414,13 @@
 .8250					TokeniseLine:
 .8250	20 ab 83	jsr $83ab			jsr 	FixLineBufferCase 			; fix line case
 .8253	a9 03		lda #$03			lda 	#3 							; reset the token buffer to empty
-.8255	8d 25 06	sta $0625			sta 	tokenOffset
-.8258	9c 26 06	stz $0626			stz 	tokenLineNumber
-.825b	9c 27 06	stz $0627			stz 	tokenLineNumber+1
+.8255	8d 05 07	sta $0705			sta 	tokenOffset
+.8258	9c 06 07	stz $0706			stz 	tokenLineNumber
+.825b	9c 07 07	stz $0707			stz 	tokenLineNumber+1
 .825e	a2 ff		ldx #$ff			ldx 	#$FF
 .8260					_TKFindFirst:
 .8260	e8		inx				inx
-.8261	bd 25 07	lda $0725,x			lda 	lineBuffer,x
+.8261	bd 05 08	lda $0805,x			lda 	lineBuffer,x
 .8264	f0 70		beq $82d6			beq 	_TKExit
 .8266	c9 20		cmp #$20			cmp 	#' '
 .8268	90 f6		bcc $8260			bcc 	_TKFindFirst
@@ -414,7 +431,7 @@
 .8272	20 d5 83	jsr $83d5			jsr 	TokeniseExtractLineNumber
 .8275					_TKNoLineNumber:
 .8275					_TKTokeniseLoop:
-.8275	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; next character, exit if zero EOL.
+.8275	bd 05 08	lda $0805,x			lda 	lineBuffer,x 				; next character, exit if zero EOL.
 .8278	f0 5c		beq $82d6			beq 	_TKExit
 .827a	e8		inx				inx
 .827b	c9 20		cmp #$20			cmp 	#' '
@@ -434,7 +451,7 @@
 .8294	c9 3e		cmp #$3e			cmp 	#'>'
 .8296	f0 20		beq $82b8			beq 	_TKCheckDouble
 .8298					_TKStandardPunctuation:
-.8298	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; get it back.
+.8298	bd 05 08	lda $0805,x			lda 	lineBuffer,x 				; get it back.
 .829b	c9 40		cmp #$40			cmp 	#64 						; are we >= 64
 .829d	90 0e		bcc $82ad			bcc 	_TKNoShift
 .829f	48		pha				pha 								; save
@@ -454,15 +471,15 @@
 .82b3	20 5e 83	jsr $835e			jsr 	TokeniseString
 .82b6	80 bd		bra $8275			bra 	_TKTokeniseLoop
 .82b8					_TKCheckDouble:
-.82b8	bd 26 07	lda $0726,x			lda 	lineBuffer+1,x 				; get next character
+.82b8	bd 06 08	lda $0806,x			lda 	lineBuffer+1,x 				; get next character
 .82bb	c9 3c		cmp #$3c			cmp 	#'<'						; if not < = > which are ASCII consecutive go back
 .82bd	90 d9		bcc $8298			bcc 	_TKStandardPunctuation
 .82bf	c9 3f		cmp #$3f			cmp 	#'>'+1
 .82c1	b0 d5		bcs $8298			bcs 	_TKStandardPunctuation
-.82c3	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; this is < (60) or > (62)
+.82c3	bd 05 08	lda $0805,x			lda 	lineBuffer,x 				; this is < (60) or > (62)
 .82c6	29 02		and #$02			and 	#2 							; now < (0) or > (2)
 .82c8	0a		asl a				asl 	a 							; now < (0) or > (4), CC also
-.82c9	7d 26 07	adc $0726,x			adc 	lineBuffer+1,x 				; add < = > codes - < code
+.82c9	7d 06 08	adc $0806,x			adc 	lineBuffer+1,x 				; add < = > codes - < code
 .82cc	38		sec				sec
 .82cd	e9 3c		sbc #$3c			sbc 	#'<'
 .82cf	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte 			; this is in the range 0-7
@@ -473,11 +490,11 @@
 .82d8	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte
 .82db	60		rts				rts
 .82dc					_TKTokeniseIdentifier:
-.82dc	8e 20 06	stx $0620			stx 	identStart 					; save start
-.82df	9c 24 06	stz $0624			stz 	identTypeByte 				; zero the type byte
+.82dc	8e 00 07	stx $0700			stx 	identStart 					; save start
+.82df	9c 04 07	stz $0704			stz 	identTypeByte 				; zero the type byte
 .82e2					_TKCheckLoop:
 .82e2	e8		inx				inx 								; look at next, we know first is identifier.
-.82e3	bd 25 07	lda $0725,x			lda  	lineBuffer,x
+.82e3	bd 05 08	lda $0805,x			lda  	lineBuffer,x
 .82e6	c9 5f		cmp #$5f			cmp 	#"_" 						; legal char _ 0-9 A-Z
 .82e8	f0 f8		beq $82e2			beq 	_TKCheckLoop
 .82ea	c9 30		cmp #$30			cmp	 	#"0"
@@ -489,7 +506,7 @@
 .82f6	c9 5b		cmp #$5b			cmp 	#"Z"+1
 .82f8	90 e8		bcc $82e2			bcc 	_TKCheckLoop
 .82fa					_TKEndIdentifier:
-.82fa	8e 21 06	stx $0621			stx 	identTypeStart 				; save start of type text (if any !)
+.82fa	8e 01 07	stx $0701			stx 	identTypeStart 				; save start of type text (if any !)
 .82fd	a0 08		ldy #$08			ldy 	#$08 						; this is the identifier type byte for #
 .82ff	c9 23		cmp #$23			cmp 	#"#"						; followed by #
 .8301	f0 06		beq $8309			beq 	_TKHasTypeCharacter
@@ -497,18 +514,18 @@
 .8305	c9 24		cmp #$24			cmp 	#"$"						; followed by $ or #
 .8307	d0 07		bne $8310			bne 	_TKNoTypeCharacter
 .8309					_TKHasTypeCharacter:
-.8309	8c 24 06	sty $0624			sty 	identTypeByte 				; has # or $, save the type
+.8309	8c 04 07	sty $0704			sty 	identTypeByte 				; has # or $, save the type
 .830c	e8		inx				inx 								; read next
-.830d	bd 25 07	lda $0725,x			lda 	lineBuffer,x
+.830d	bd 05 08	lda $0805,x			lda 	lineBuffer,x
 .8310					_TKNoTypeCharacter:
 .8310	c9 28		cmp #$28			cmp 	#"("						; is it open parenthesis (e.g. array)
 .8312	d0 09		bne $831d			bne 	_TKNoArray
 .8314	e8		inx				inx 								; skip the (
-.8315	ad 24 06	lda $0624			lda 	identTypeByte 				; set bit 2 (e.g. array)
+.8315	ad 04 07	lda $0704			lda 	identTypeByte 				; set bit 2 (e.g. array)
 .8318	09 04		ora #$04			ora 	#$04
-.831a	8d 24 06	sta $0624			sta 	identTypeByte
+.831a	8d 04 07	sta $0704			sta 	identTypeByte
 .831d					_TKNoArray:
-.831d	8e 22 06	stx $0622			stx 	identTypeEnd 				; save end marker, e.g. continue from here.
+.831d	8e 02 07	stx $0702			stx 	identTypeEnd 				; save end marker, e.g. continue from here.
 .8320	20 96 83	jsr $8396			jsr 	TokeniseCalculateHash 		; calculate the has for those tokens
 .8323	a0 80		ldy #$80			ldy 	#(KeywordSet0) >> 8
 .8325	a9 ed		lda #$ed			lda 	#(KeywordSet0) & $FF
@@ -526,7 +543,7 @@
 .8340	a2 82		ldx #$82			ldx 	#$82
 .8342	b0 09		bcs $834d			bcs 	_TKFoundToken
 .8344	20 26 84	jsr $8426			jsr 	CheckCreateVariableRecord 	; failed all, it's a variable, create record if does not exist.
-.8347	ae 22 06	ldx $0622			ldx 	identTypeEnd 				; X points to following byte
+.8347	ae 02 07	ldx $0702			ldx 	identTypeEnd 				; X points to following byte
 .834a	4c 75 82	jmp $8275			jmp 	_TKTokeniseLoop 			; and go round again.
 .834d					_TKFoundToken:
 .834d	48		pha				pha 								; save token
@@ -536,7 +553,7 @@
 .8354					_TKNoTShift:
 .8354	68		pla				pla 								; restore and write token
 .8355	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte
-.8358	ae 22 06	ldx $0622			ldx 	identTypeEnd 				; X points to following byte
+.8358	ae 02 07	ldx $0702			ldx 	identTypeEnd 				; X points to following byte
 .835b	4c 75 82	jmp $8275			jmp 	_TKTokeniseLoop 			; and go round again.
 .835e					TokeniseString:
 .835e	e8		inx				inx									; start of quoted string.
@@ -544,7 +561,7 @@
 .8360	ca		dex				dex
 .8361					_TSFindEnd:
 .8361	e8		inx				inx
-.8362	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; next character
+.8362	bd 05 08	lda $0805,x			lda 	lineBuffer,x 				; next character
 .8365	f0 04		beq $836b			beq 	_TSEndOfString
 .8367	c9 22		cmp #$22			cmp 	#'"'
 .8369	d0 f6		bne $8361			bne 	_TSFindEnd
@@ -562,7 +579,7 @@
 .837d					_TSOutputString:
 .837d	c4 36		cpy $36				cpy 	zTemp0 						; reached the end.
 .837f	f0 09		beq $838a			beq 	_TSEndString
-.8381	b9 25 07	lda $0725,y			lda 	lineBuffer,y 				; output one
+.8381	b9 05 08	lda $0805,y			lda 	lineBuffer,y 				; output one
 .8384	c8		iny				iny
 .8385	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte
 .8388	80 f3		bra $837d			bra 	_TSOutputString
@@ -583,21 +600,21 @@
 
 .8396					TokeniseCalculateHash:
 .8396	da		phx				phx
-.8397	ae 20 06	ldx $0620			ldx 	identStart 					; needs to be same as in tokens.py - simple sum
+.8397	ae 00 07	ldx $0700			ldx 	identStart 					; needs to be same as in tokens.py - simple sum
 .839a	a9 00		lda #$00			lda 	#0
 .839c					_TCHLoop:
 .839c	18		clc				clc
-.839d	7d 25 07	adc $0725,x			adc 	lineBuffer,x
+.839d	7d 05 08	adc $0805,x			adc 	lineBuffer,x
 .83a0	e8		inx				inx
-.83a1	ec 22 06	cpx $0622			cpx 	identTypeEnd 				; do the whole thing including type and array markers.
+.83a1	ec 02 07	cpx $0702			cpx 	identTypeEnd 				; do the whole thing including type and array markers.
 .83a4	d0 f6		bne $839c			bne 	_TCHLoop
-.83a6	8d 23 06	sta $0623			sta 	identHash 					; save the hash
+.83a6	8d 03 07	sta $0703			sta 	identHash 					; save the hash
 .83a9	fa		plx				plx
 .83aa	60		rts				rts
 .83ab					FixLineBufferCase:
 .83ab	a2 00		ldx #$00			ldx 	#0
 .83ad					_FLBCLoop:
-.83ad	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; get next character
+.83ad	bd 05 08	lda $0805,x			lda 	lineBuffer,x 				; get next character
 .83b0	f0 22		beq $83d4			beq 	_FLBCExit 					; end of string.
 .83b2	c9 22		cmp #$22			cmp 	#'"'						; quote, go to in quotes
 .83b4	f0 11		beq $83c7			beq 	_FLBCInQuotes
@@ -608,11 +625,11 @@
 .83bd	b0 ee		bcs $83ad			bcs 	_FLBCLoop
 .83bf	38		sec				sec 								; make U/C
 .83c0	e9 20		sbc #$20			sbc 	#32
-.83c2	9d 24 07	sta $0724,x			sta	 	lineBuffer-1,x 				; write back
+.83c2	9d 04 08	sta $0804,x			sta	 	lineBuffer-1,x 				; write back
 .83c5	80 e6		bra $83ad			bra 	_FLBCLoop
 .83c7					_FLBCInQuotes:
 .83c7	e8		inx				inx 								; advance
-.83c8	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; get next
+.83c8	bd 05 08	lda $0805,x			lda 	lineBuffer,x 				; get next
 .83cb	f0 07		beq $83d4			beq 	_FLBCExit 					; exit on EOS
 .83cd	c9 22		cmp #$22			cmp 	#'"' 				 		; until " found
 .83cf	d0 f6		bne $83c7			bne 	_FLBCInQuotes
@@ -621,30 +638,30 @@
 .83d4					_FLBCExit:
 .83d4	60		rts				rts
 .83d5					TokeniseExtractLineNumber:
-.83d5	ad 27 06	lda $0627			lda 	tokenLineNumber+1 			; push current value on stack
+.83d5	ad 07 07	lda $0707			lda 	tokenLineNumber+1 			; push current value on stack
 .83d8	48		pha				pha
-.83d9	ad 26 06	lda $0626			lda 	tokenLineNumber
+.83d9	ad 06 07	lda $0706			lda 	tokenLineNumber
 .83dc	48		pha				pha
 .83dd	20 13 84	jsr $8413			jsr 	_TELNTimes2 				; line # x 4
 .83e0	20 13 84	jsr $8413			jsr 	_TELNTimes2 				; line # x 2
 .83e3	18		clc				clc 								; add stacked value
 .83e4	68		pla				pla
-.83e5	6d 26 06	adc $0626			adc 	tokenLineNumber
-.83e8	8d 26 06	sta $0626			sta 	tokenLineNumber
+.83e5	6d 06 07	adc $0706			adc 	tokenLineNumber
+.83e8	8d 06 07	sta $0706			sta 	tokenLineNumber
 .83eb	68		pla				pla
-.83ec	6d 27 06	adc $0627			adc 	tokenLineNumber+1
-.83ef	8d 27 06	sta $0627			sta 	tokenLineNumber+1 			; line # x 5
+.83ec	6d 07 07	adc $0707			adc 	tokenLineNumber+1
+.83ef	8d 07 07	sta $0707			sta 	tokenLineNumber+1 			; line # x 5
 .83f2	20 13 84	jsr $8413			jsr 	_TELNTimes2 				; line # x 10
-.83f5	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; get and consume character
+.83f5	bd 05 08	lda $0805,x			lda 	lineBuffer,x 				; get and consume character
 .83f8	e8		inx				inx
 .83f9	29 0f		and #$0f			and 	#15 						; add to line #
 .83fb	18		clc				clc
-.83fc	6d 26 06	adc $0626			adc 	tokenLineNumber
-.83ff	8d 26 06	sta $0626			sta 	tokenLineNumber
+.83fc	6d 06 07	adc $0706			adc 	tokenLineNumber
+.83ff	8d 06 07	sta $0706			sta 	tokenLineNumber
 .8402	90 03		bcc $8407			bcc 	_TLENNoCarry
-.8404	ee 27 06	inc $0627			inc 	tokenLineNumber+1
+.8404	ee 07 07	inc $0707			inc 	tokenLineNumber+1
 .8407					_TLENNoCarry:
-.8407	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; more digits ?
+.8407	bd 05 08	lda $0805,x			lda 	lineBuffer,x 				; more digits ?
 .840a	c9 30		cmp #$30			cmp 	#'0'
 .840c	90 04		bcc $8412			bcc 	_TLENExit
 .840e	c9 3a		cmp #$3a			cmp 	#'9'+1
@@ -652,14 +669,14 @@
 .8412					_TLENExit:
 .8412	60		rts				rts
 .8413					_TELNTimes2:
-.8413	0e 26 06	asl $0626			asl 	tokenLineNumber
-.8416	2e 27 06	rol $0627			rol 	tokenLineNumber+1
+.8413	0e 06 07	asl $0706			asl 	tokenLineNumber
+.8416	2e 07 07	rol $0707			rol 	tokenLineNumber+1
 .8419	60		rts				rts
 .841a					TokeniseWriteByte:
 .841a	da		phx				phx
-.841b	ae 25 06	ldx $0625			ldx 	tokenOffset 				; next slot to write to
-.841e	9d 25 06	sta $0625,x			sta 	tokenOffset,x 				; write byte out
-.8421	ee 25 06	inc $0625			inc 	tokenOffset 				; advance slot.
+.841b	ae 05 07	ldx $0705			ldx 	tokenOffset 				; next slot to write to
+.841e	9d 05 07	sta $0705,x			sta 	tokenOffset,x 				; write byte out
+.8421	ee 05 07	inc $0705			inc 	tokenOffset 				; advance slot.
 .8424	fa		plx				plx
 .8425	60		rts				rts
 
@@ -679,19 +696,19 @@
 .8433	f0 2c		beq $8461			beq 	_CCVFail
 .8435	a0 01		ldy #$01			ldy 	#1 							; read the hash
 .8437	b1 36		lda ($36),y			lda 	(zTemp0),y 					; does it match ?
-.8439	cd 23 06	cmp $0623			cmp 	identHash
+.8439	cd 03 07	cmp $0703			cmp 	identHash
 .843c	d0 16		bne $8454			bne 	_CCVNext
 .843e	a0 08		ldy #$08			ldy 	#8 							; name in variable record
-.8440	ae 20 06	ldx $0620			ldx 	identStart
+.8440	ae 00 07	ldx $0700			ldx 	identStart
 .8443					_CCVCompare:
-.8443	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; xor them. zero if the same, except
+.8443	bd 05 08	lda $0805,x			lda 	lineBuffer,x 				; xor them. zero if the same, except
 .8446	51 36		eor ($36),y			eor 	(zTemp0),y 					; bit 7 is used for EOS.
 .8448	e8		inx				inx 								; advance pointers
 .8449	c8		iny				iny
 .844a	0a		asl a				asl 	a 							; A = 0 if they match, CS if end.
 .844b	d0 07		bne $8454			bne 	_CCVNext  					; didn't match go to next.
 .844d	90 f4		bcc $8443			bcc 	_CCVCompare 				; not finished yet.
-.844f	ec 22 06	cpx $0622			cpx 	identTypeEnd 				; matched whole thing ?
+.844f	ec 02 07	cpx $0702			cpx 	identTypeEnd 				; matched whole thing ?
 .8452	f0 41		beq $8495			beq 	_CCVFound 					; yes, we were successful
 .8454					_CCVNext:
 .8454	18		clc				clc
@@ -703,10 +720,10 @@
 .845f	80 d0		bra $8431			bra 	_CCVSearch
 .8461					_CCVFail:
 .8461	a0 01		ldy #$01			ldy 	#1 							; create the new record. Offset 1 is hash
-.8463	ad 23 06	lda $0623			lda 	identHash
+.8463	ad 03 07	lda $0703			lda 	identHash
 .8466	91 36		sta ($36),y			sta 	(zTemp0),y
 .8468	c8		iny				iny 								; offset 2 is the type byte
-.8469	ad 24 06	lda $0624			lda 	identTypeByte
+.8469	ad 04 07	lda $0704			lda 	identTypeByte
 .846c	91 36		sta ($36),y			sta 	(zTemp0),y
 .846e	c8		iny				iny
 .846f					_CCVData:
@@ -715,13 +732,13 @@
 .8473	c8		iny				iny
 .8474	c0 08		cpy #$08			cpy 	#8
 .8476	90 f7		bcc $846f			bcc 	_CCVData
-.8478	ae 20 06	ldx $0620			ldx 	identStart 					; copy name into 8 on.
+.8478	ae 00 07	ldx $0700			ldx 	identStart 					; copy name into 8 on.
 .847b					_CCVCopyName:
-.847b	bd 25 07	lda $0725,x			lda 	lineBuffer,x
+.847b	bd 05 08	lda $0805,x			lda 	lineBuffer,x
 .847e	91 36		sta ($36),y			sta 	(zTemp0),y
 .8480	e8		inx				inx
 .8481	c8		iny				iny
-.8482	ec 22 06	cpx $0622			cpx 	identTypeEnd
+.8482	ec 02 07	cpx $0702			cpx 	identTypeEnd
 .8485	d0 f4		bne $847b			bne 	_CCVCopyName
 .8487	98		tya				tya 								; patch offset
 .8488	92 36		sta ($36)			sta 	(zTemp0)

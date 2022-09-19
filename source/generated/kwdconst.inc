@@ -1,3 +1,6 @@
+;
+;	This is automatically generated.
+;
 KWD_FOR                              = $83; $83 FOR
 KWD_IF                               = $84; $84 IF
 KWD_PROC                             = $85; $85 PROC

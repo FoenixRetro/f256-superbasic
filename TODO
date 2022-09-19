@@ -1,7 +1,20 @@
-
-	Clear code (also reset procedures)
-	Start on terms - expressions - etc.
+	
+	Error Creation & Basic Error Handler
+	Clear code (also reset procedures to arrays ? - scan later)
+	Start on terms - 
+	Scanning for [x]
+	expressions - etc.
 
 
 Error : out of identifier space
 Todo : scan for procedures (part of CLEAR)	
+
+	phx
+	tax
+	jmp 	(xxx,X)
+
+	..
+	..
+
+	plx
+	(etc.)
