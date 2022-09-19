@@ -11,6 +11,7 @@
 	.include	"./commands/end.asm"
 	.include	"./commands/new.asm"
 	.include	"./memory.flat/memory.asm"
+	.include	"./memory.flat/variable.asm"
 	.include	"./tokeniser/backload.asm"
 	.include	"./tokeniser/searchtokens.asm"
 	.include	"./tokeniser/tokenise.asm"

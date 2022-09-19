@@ -1,6 +1,6 @@
-
-	Tokenise the buffer to a complete line.
-		- if not, treat it as a variable
-
 	Code to append line (insert not required yet)
 	Start on terms - expressions - etc.
+
+
+Error : out of identifier space
+Todo : scan for procedures (part of CLEAR)	
