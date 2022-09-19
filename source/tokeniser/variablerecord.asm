@@ -73,7 +73,7 @@ _CCVFail:
 		sta 	(zTemp0),y
 		iny
 _CCVData:
-		lda 	#00 						; erase data 3-7
+		lda 	#0 							; erase data 3-7
 		sta 	(zTemp0),y
 		iny
 		cpy 	#8

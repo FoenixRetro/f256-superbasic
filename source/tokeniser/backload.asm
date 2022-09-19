@@ -36,7 +36,7 @@ _BPNotTab:
 		bcs 	_BPCopy
 _BPEndLine:		
 		jsr 	TokeniseLine 				; tokenise the line.
-		.debug
+		jsr 	MemoryAppend 				; append to current program
 		bra 	BackloadProgram
 _BPExit:
 		jmp 	WarmStart

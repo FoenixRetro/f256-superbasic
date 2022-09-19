@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.56.2625 listing file
 ; 64tass -b -Wall -Wno-portable -c -L output/basic.lst -l output/basic.lbl -Wall -q -o basic.rom _basic.asm
-; Mon Sep 19 15:29:10 2022
+; Mon Sep 19 17:19:09 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -131,7 +131,7 @@
 .8010	a2 ff		ldx #$ff	Start:	ldx 	#$FF 						; stack reset
 .8012	9a		txs				txs
 .8013	20 24 80	jsr $8024			jsr 	NewCommand 					; erase current program
-.8016	4c 3d 80	jmp $803d			jmp 	BackloadProgram
+.8016	4c 6c 80	jmp $806c			jmp 	BackloadProgram
 .8019					WarmStart:
 >8019	db						.byte 	$DB 						; causes a break in the emulator
 .801a	80 fd		bra $8019			bra 	WarmStart
@@ -179,108 +179,138 @@
 .8036	a9 00		lda #$00			lda 	#0 							; write zero there erasing the program.
 .8038	92 30		sta ($30)			sta 	(codePtr)
 .803a	60		rts				rts
+.803b					MemoryAppend:
+.803b	a9 00		lda #$00			lda 	#(BasicStart & $FF)
+.803d	85 30		sta $30				sta 	codePtr
+.803f	a9 20		lda #$20			lda 	#(BasicStart >> 8)
+.8041	85 31		sta $31				sta 	codePtr+1
+.8043					_MAFindEnd:
+.8043	b2 30		lda ($30)			lda 	(codePtr)
+.8045	f0 0d		beq $8054			beq 	_MAFoundEnd
+.8047	18		clc				clc
+.8048	b2 30		lda ($30)			lda 	(codePtr)					; get offset
+.804a	65 30		adc $30				adc 	codePtr
+.804c	85 30		sta $30				sta 	codePtr
+.804e	90 02		bcc $8052			bcc 	_CREExit
+.8050	e6 31		inc $31				inc 	codePtr+1
+.8052					_CREExit:
+.8052	80 ef		bra $8043			bra 	_MAFindEnd
+.8054					_MAFoundEnd:
+.8054	ac 25 06	ldy $0625			ldy 	tokenOffset 				; bytes to copy
+.8057	c0 04		cpy #$04			cpy 	#4 							; blank line
+.8059	f0 0e		beq $8069			beq 	_MANoLine
+.805b	a9 00		lda #$00			lda 	#0 							; end of program
+.805d	91 30		sta ($30),y			sta 	(codePtr),y
+.805f					_MACopy:
+.805f	88		dey				dey
+.8060	b9 25 06	lda $0625,y			lda 	tokenOffset,y
+.8063	91 30		sta ($30),y			sta 	(codePtr),y
+.8065	c0 00		cpy #$00			cpy 	#0
+.8067	d0 f6		bne $805f			bne 	_MACopy
+.8069					_MANoLine:
+.8069	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./memory.flat/variable.asm
 
-.803b					VariableOpen:
-.803b	60		rts				rts
-.803c					VariableClose:
-.803c	60		rts				rts
+.806a					VariableOpen:
+.806a	60		rts				rts
+.806b					VariableClose:
+.806b	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./tokeniser/backload.asm
 
-.803d					BackloadProgram:
-.803d	a2 ff		ldx #$ff			ldx 	#$FF
-.803f	ad fa ff	lda $fffa			lda 	$FFFA 						; read first byte
-.8042	30 1c		bmi $8060			bmi 	_BPExit
-.8044					_BPCopy:
-.8044	e8		inx				inx  								; copy byte in
-.8045	9d 25 07	sta $0725,x			sta 	lineBuffer,x
-.8048	9e 26 07	stz $0726,x			stz 	lineBuffer+1,x
-.804b	ad fa ff	lda $fffa			lda 	$FFFA 						; read next byte
-.804e	30 0a		bmi $805a			bmi 	_BPEndLine 					; -ve = EOL
-.8050	c9 09		cmp #$09			cmp 	#9 							; handle TAB
-.8052	d0 02		bne $8056			bne 	_BPNotTab
-.8054	a9 20		lda #$20			lda 	#' '
-.8056					_BPNotTab:
-.8056	c9 20		cmp #$20			cmp 	#' ' 						; < ' ' = EOL
-.8058	b0 ea		bcs $8044			bcs 	_BPCopy
-.805a					_BPEndLine:
-.805a	20 1f 82	jsr $821f			jsr 	TokeniseLine 				; tokenise the line.
->805d	db						.byte 	$DB 						; causes a break in the emulator
-.805e	80 dd		bra $803d			bra 	BackloadProgram
-.8060					_BPExit:
-.8060	4c 19 80	jmp $8019			jmp 	WarmStart
+.806c					BackloadProgram:
+.806c	a2 ff		ldx #$ff			ldx 	#$FF
+.806e	ad fa ff	lda $fffa			lda 	$FFFA 						; read first byte
+.8071	30 1e		bmi $8091			bmi 	_BPExit
+.8073					_BPCopy:
+.8073	e8		inx				inx  								; copy byte in
+.8074	9d 25 07	sta $0725,x			sta 	lineBuffer,x
+.8077	9e 26 07	stz $0726,x			stz 	lineBuffer+1,x
+.807a	ad fa ff	lda $fffa			lda 	$FFFA 						; read next byte
+.807d	30 0a		bmi $8089			bmi 	_BPEndLine 					; -ve = EOL
+.807f	c9 09		cmp #$09			cmp 	#9 							; handle TAB
+.8081	d0 02		bne $8085			bne 	_BPNotTab
+.8083	a9 20		lda #$20			lda 	#' '
+.8085					_BPNotTab:
+.8085	c9 20		cmp #$20			cmp 	#' ' 						; < ' ' = EOL
+.8087	b0 ea		bcs $8073			bcs 	_BPCopy
+.8089					_BPEndLine:
+.8089	20 50 82	jsr $8250			jsr 	TokeniseLine 				; tokenise the line.
+.808c	20 3b 80	jsr $803b			jsr 	MemoryAppend 				; append to current program
+.808f	80 db		bra $806c			bra 	BackloadProgram
+.8091					_BPExit:
+.8091	4c 19 80	jmp $8019			jmp 	WarmStart
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./tokeniser/searchtokens.asm
 
-.8063					TokeniseSearchTable:
-.8063	84 37		sty $37				sty 	zTemp0+1 					; (zTemp0),y points to current token.
-.8065	85 36		sta $36				sta 	zTemp0
-.8067	a0 00		ldy #$00			ldy 	#0
-.8069	a9 80		lda #$80			lda 	#$80 						; token #
-.806b	85 38		sta $38				sta 	zTemp1
-.806d					_TSTLoop:
-.806d	b1 36		lda ($36),y			lda 	(zTemp0),y 					; length, 0 (skip) -ve (end)
-.806f	30 49		bmi $80ba			bmi 	_TSTFail 					; -ve = end of table
-.8071	f0 2e		beq $80a1			beq 	_TSTNext 					; zero, check next it's a dummy
-.8073	c8		iny				iny 								; get the hash
-.8074	b1 36		lda ($36),y			lda 	(zTemp0),y
-.8076	88		dey				dey
-.8077	cd 23 06	cmp $0623			cmp 	identHash 					; check they match, if not go to next
-.807a	d0 25		bne $80a1			bne 	_TSTNext
-.807c	ad 22 06	lda $0622			lda 	identTypeEnd 				; length of identifier
-.807f	38		sec				sec
-.8080	ed 20 06	sbc $0620			sbc 	identStart
-.8083	d1 36		cmp ($36),y			cmp 	(zTemp0),y 					; no match, then return.
-.8085	d0 1a		bne $80a1			bne 	_TSTNext
-.8087	5a		phy				phy 								; save Y , we might fail
-.8088	c8		iny				iny 								; point to text
-.8089	c8		iny				iny
-.808a	ae 20 06	ldx $0620			ldx 	identStart 					; offset in line buffer in X
-.808d					_TSTCompareName:
-.808d	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; compare text.
-.8090	d1 36		cmp ($36),y			cmp 	(zTemp0),y
-.8092	d0 0c		bne $80a0			bne 	_TSTNextPullY 				; fail, pullY and do next
-.8094	e8		inx				inx
-.8095	c8		iny				iny
-.8096	ec 22 06	cpx $0622			cpx 	identTypeEnd 				; complete match.
-.8099	d0 f2		bne $808d			bne 	_TSTCompareName
-.809b	7a		ply				ply 								; throw Y
-.809c	a5 38		lda $38				lda 	zTemp1 						; get token #
-.809e	38		sec				sec 								; return with CS = passed.
-.809f	60		rts				rts
-.80a0					_TSTNextPullY:
-.80a0	7a		ply				ply 								; restore current, fall through.
-.80a1					_TSTNext:
-.80a1	e6 38		inc $38				inc 	zTemp1 						; token counter
-.80a3	98		tya				tya
-.80a4	18		clc				clc
-.80a5	71 36		adc ($36),y			adc 	(zTemp0),y 					; add [Length] + 2 to Y
-.80a7	1a		inc a				inc 	a 							; +1
-.80a8	1a		inc a				inc 	a 							; +2
-.80a9	a8		tay				tay
-.80aa	10 c1		bpl $806d			bpl 	_TSTLoop 					; if Y < $80 loop back
-.80ac	98		tya				tya 								; add Y to zTemp0 and reset Y
-.80ad	a0 00		ldy #$00			ldy 	#0   						; so we can use Y to search fast
-.80af	18		clc				clc  								; but have tables > 255 bytes
-.80b0	65 36		adc $36				adc 	zTemp0 						; when Y gets >= 128 we reset Y
-.80b2	85 36		sta $36				sta 	zTemp0 						; and adjust the table pointer/
-.80b4	90 b7		bcc $806d			bcc 	_TSTLoop
-.80b6	e6 37		inc $37				inc 	zTemp0+1
-.80b8	80 b3		bra $806d			bra 	_TSTLoop
-.80ba					_TSTFail:
-.80ba	18		clc				clc
-.80bb	60		rts				rts
+.8094					TokeniseSearchTable:
+.8094	84 37		sty $37				sty 	zTemp0+1 					; (zTemp0),y points to current token.
+.8096	85 36		sta $36				sta 	zTemp0
+.8098	a0 00		ldy #$00			ldy 	#0
+.809a	a9 80		lda #$80			lda 	#$80 						; token #
+.809c	85 38		sta $38				sta 	zTemp1
+.809e					_TSTLoop:
+.809e	b1 36		lda ($36),y			lda 	(zTemp0),y 					; length, 0 (skip) -ve (end)
+.80a0	30 49		bmi $80eb			bmi 	_TSTFail 					; -ve = end of table
+.80a2	f0 2e		beq $80d2			beq 	_TSTNext 					; zero, check next it's a dummy
+.80a4	c8		iny				iny 								; get the hash
+.80a5	b1 36		lda ($36),y			lda 	(zTemp0),y
+.80a7	88		dey				dey
+.80a8	cd 23 06	cmp $0623			cmp 	identHash 					; check they match, if not go to next
+.80ab	d0 25		bne $80d2			bne 	_TSTNext
+.80ad	ad 22 06	lda $0622			lda 	identTypeEnd 				; length of identifier
+.80b0	38		sec				sec
+.80b1	ed 20 06	sbc $0620			sbc 	identStart
+.80b4	d1 36		cmp ($36),y			cmp 	(zTemp0),y 					; no match, then return.
+.80b6	d0 1a		bne $80d2			bne 	_TSTNext
+.80b8	5a		phy				phy 								; save Y , we might fail
+.80b9	c8		iny				iny 								; point to text
+.80ba	c8		iny				iny
+.80bb	ae 20 06	ldx $0620			ldx 	identStart 					; offset in line buffer in X
+.80be					_TSTCompareName:
+.80be	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; compare text.
+.80c1	d1 36		cmp ($36),y			cmp 	(zTemp0),y
+.80c3	d0 0c		bne $80d1			bne 	_TSTNextPullY 				; fail, pullY and do next
+.80c5	e8		inx				inx
+.80c6	c8		iny				iny
+.80c7	ec 22 06	cpx $0622			cpx 	identTypeEnd 				; complete match.
+.80ca	d0 f2		bne $80be			bne 	_TSTCompareName
+.80cc	7a		ply				ply 								; throw Y
+.80cd	a5 38		lda $38				lda 	zTemp1 						; get token #
+.80cf	38		sec				sec 								; return with CS = passed.
+.80d0	60		rts				rts
+.80d1					_TSTNextPullY:
+.80d1	7a		ply				ply 								; restore current, fall through.
+.80d2					_TSTNext:
+.80d2	e6 38		inc $38				inc 	zTemp1 						; token counter
+.80d4	98		tya				tya
+.80d5	18		clc				clc
+.80d6	71 36		adc ($36),y			adc 	(zTemp0),y 					; add [Length] + 2 to Y
+.80d8	1a		inc a				inc 	a 							; +1
+.80d9	1a		inc a				inc 	a 							; +2
+.80da	a8		tay				tay
+.80db	10 c1		bpl $809e			bpl 	_TSTLoop 					; if Y < $80 loop back
+.80dd	98		tya				tya 								; add Y to zTemp0 and reset Y
+.80de	a0 00		ldy #$00			ldy 	#0   						; so we can use Y to search fast
+.80e0	18		clc				clc  								; but have tables > 255 bytes
+.80e1	65 36		adc $36				adc 	zTemp0 						; when Y gets >= 128 we reset Y
+.80e3	85 36		sta $36				sta 	zTemp0 						; and adjust the table pointer/
+.80e5	90 b7		bcc $809e			bcc 	_TSTLoop
+.80e7	e6 37		inc $37				inc 	zTemp0+1
+.80e9	80 b3		bra $809e			bra 	_TSTLoop
+.80eb					_TSTFail:
+.80eb	18		clc				clc
+.80ec	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
@@ -290,427 +320,427 @@
 
 ;******  Processing file: ./tokeniser/../generated/kwdtext.dat
 
-.80bc					KeywordSet0:
->80bc	00 65					.text	0,$65,""               ; $80 !0:EOF
->80be	00 58					.text	0,$58,""               ; $81 !1:SH1
->80c0	00 5a					.text	0,$5a,""               ; $82 !2:SH2
->80c2	03 e7 46 4f 52				.text	3,$e7,"FOR"            ; $83 FOR
->80c7	02 8f 49 46				.text	2,$8f,"IF"             ; $84 IF
->80cb	04 34 50 52 4f 43			.text	4,$34,"PROC"           ; $85 PROC
->80d1	06 c1 52 45 50 45 41 54			.text	6,$c1,"REPEAT"         ; $86 REPEAT
->80d9	05 79 57 48 49 4c 45			.text	5,$79,"WHILE"          ; $87 WHILE
->80e0	05 66 45 4e 44 49 46			.text	5,$66,"ENDIF"          ; $88 ENDIF
->80e7	07 0b 45 4e 44 50 52 4f			.text	7,$0b,"ENDPROC"        ; $89 ENDPROC
->80ef	43
->80f0	04 3f 4e 45 58 54			.text	4,$3f,"NEXT"           ; $8a NEXT
->80f6	05 8c 55 4e 54 49 4c			.text	5,$8c,"UNTIL"          ; $8b UNTIL
->80fd	04 2e 57 45 4e 44			.text	4,$2e,"WEND"           ; $8c WEND
->8103	04 fe 41 42 53 28			.text	4,$fe,"ABS("           ; $8d ABS(
->8109	06 93 41 4c 4c 4f 43 28			.text	6,$93,"ALLOC("         ; $8e ALLOC(
->8111	04 ff 41 53 43 28			.text	4,$ff,"ASC("           ; $8f ASC(
->8117	05 29 43 48 52 24 28			.text	5,$29,"CHR$("          ; $90 CHR$(
->811e	04 f4 44 45 43 28			.text	4,$f4,"DEC("           ; $91 DEC(
->8124	09 4a 47 45 54 44 41 54			.text	9,$4a,"GETDATE$("      ; $92 GETDATE$(
->812c	45 24 28
->812f	09 5b 47 45 54 54 49 4d			.text	9,$5b,"GETTIME$("      ; $93 GETTIME$(
->8137	45 24 28
->813a	05 31 48 45 58 24 28			.text	5,$31,"HEX$("          ; $94 HEX$(
->8141	04 13 49 4e 54 28			.text	4,$13,"INT("           ; $95 INT(
->8147	06 a7 49 53 56 41 4c 28			.text	6,$a7,"ISVAL("         ; $96 ISVAL(
->814f	06 77 4c 45 46 54 24 28			.text	6,$77,"LEFT$("         ; $97 LEFT$(
->8157	04 07 4c 45 4e 28			.text	4,$07,"LEN("           ; $98 LEN(
->815d	05 26 4d 49 44 24 28			.text	5,$26,"MID$("          ; $99 MID$(
->8164	03 f1 4e 4f 54				.text	3,$f1,"NOT"            ; $9a NOT
->8169	04 1d 50 41 47 45			.text	4,$1d,"PAGE"           ; $9b PAGE
->816f	07 ca 52 49 47 48 54 24			.text	7,$ca,"RIGHT$("        ; $9c RIGHT$(
->8177	28
->8178	04 0c 52 4e 44 28			.text	4,$0c,"RND("           ; $9d RND(
->817e	04 10 53 47 4e 28			.text	4,$10,"SGN("           ; $9e SGN(
->8184	04 0e 53 50 43 28			.text	4,$0e,"SPC("           ; $9f SPC(
->818a	05 45 53 54 52 24 28			.text	5,$45,"STR$("          ; $a0 STR$(
->8191	04 0b 56 41 4c 28			.text	4,$0b,"VAL("           ; $a1 VAL(
->8197	03 e2 43 4c 53				.text	3,$e2,"CLS"            ; $a2 CLS
->819c	04 1a 44 41 54 41			.text	4,$1a,"DATA"           ; $a3 DATA
->81a2	03 da 44 49 4d				.text	3,$da,"DIM"            ; $a4 DIM
->81a7	05 80 47 4f 53 55 42			.text	5,$80,"GOSUB"          ; $a5 GOSUB
->81ae	04 39 47 4f 54 4f			.text	4,$39,"GOTO"           ; $a6 GOTO
->81b4	03 e5 4c 45 54				.text	3,$e5,"LET"            ; $a7 LET
->81b9	05 8d 50 52 49 4e 54			.text	5,$8d,"PRINT"          ; $a8 PRINT
->81c0	04 1c 52 45 41 44			.text	4,$1c,"READ"           ; $a9 READ
->81c6	03 e4 52 45 4d				.text	3,$e4,"REM"            ; $aa REM
->81cb	06 e0 52 45 54 55 52 4e			.text	6,$e0,"RETURN"         ; $ab RETURN
->81d3	04 2f 54 48 45 4e			.text	4,$2f,"THEN"           ; $ac THEN
->81d9	02 a3 54 4f				.text	2,$a3,"TO"             ; $ad TO
->81dd	ff					.text	$FF
-.81de					KeywordSet1:
->81de	00 65					.text	0,$65,""               ; $80 !0:EOF
->81e0	00 58					.text	0,$58,""               ; $81 !1:SH1
->81e2	00 5a					.text	0,$5a,""               ; $82 !2:SH2
->81e4	06 d2 41 53 53 45 52 54			.text	6,$d2,"ASSERT"         ; $83 ASSERT
->81ec	05 67 43 4c 45 41 52			.text	5,$67,"CLEAR"          ; $84 CLEAR
->81f3	03 d7 45 4e 44				.text	3,$d7,"END"            ; $85 END
->81f8	04 3c 4c 49 53 54			.text	4,$3c,"LIST"           ; $86 LIST
->81fe	03 ea 4e 45 57				.text	3,$ea,"NEW"            ; $87 NEW
->8203	07 24 52 45 53 54 4f 52			.text	7,$24,"RESTORE"        ; $88 RESTORE
->820b	45
->820c	03 f5 52 55 4e				.text	3,$f5,"RUN"            ; $89 RUN
->8211	04 46 53 54 4f 50			.text	4,$46,"STOP"           ; $8a STOP
->8217	ff					.text	$FF
-.8218					KeywordSet2:
->8218	00 65					.text	0,$65,""               ; $80 !0:EOF
->821a	00 58					.text	0,$58,""               ; $81 !1:SH1
->821c	00 5a					.text	0,$5a,""               ; $82 !2:SH2
->821e	ff					.text	$FF
+.80ed					KeywordSet0:
+>80ed	00 65					.text	0,$65,""               ; $80 !0:EOF
+>80ef	00 58					.text	0,$58,""               ; $81 !1:SH1
+>80f1	00 5a					.text	0,$5a,""               ; $82 !2:SH2
+>80f3	03 e7 46 4f 52				.text	3,$e7,"FOR"            ; $83 FOR
+>80f8	02 8f 49 46				.text	2,$8f,"IF"             ; $84 IF
+>80fc	04 34 50 52 4f 43			.text	4,$34,"PROC"           ; $85 PROC
+>8102	06 c1 52 45 50 45 41 54			.text	6,$c1,"REPEAT"         ; $86 REPEAT
+>810a	05 79 57 48 49 4c 45			.text	5,$79,"WHILE"          ; $87 WHILE
+>8111	05 66 45 4e 44 49 46			.text	5,$66,"ENDIF"          ; $88 ENDIF
+>8118	07 0b 45 4e 44 50 52 4f			.text	7,$0b,"ENDPROC"        ; $89 ENDPROC
+>8120	43
+>8121	04 3f 4e 45 58 54			.text	4,$3f,"NEXT"           ; $8a NEXT
+>8127	05 8c 55 4e 54 49 4c			.text	5,$8c,"UNTIL"          ; $8b UNTIL
+>812e	04 2e 57 45 4e 44			.text	4,$2e,"WEND"           ; $8c WEND
+>8134	04 fe 41 42 53 28			.text	4,$fe,"ABS("           ; $8d ABS(
+>813a	06 93 41 4c 4c 4f 43 28			.text	6,$93,"ALLOC("         ; $8e ALLOC(
+>8142	04 ff 41 53 43 28			.text	4,$ff,"ASC("           ; $8f ASC(
+>8148	05 29 43 48 52 24 28			.text	5,$29,"CHR$("          ; $90 CHR$(
+>814f	04 f4 44 45 43 28			.text	4,$f4,"DEC("           ; $91 DEC(
+>8155	09 4a 47 45 54 44 41 54			.text	9,$4a,"GETDATE$("      ; $92 GETDATE$(
+>815d	45 24 28
+>8160	09 5b 47 45 54 54 49 4d			.text	9,$5b,"GETTIME$("      ; $93 GETTIME$(
+>8168	45 24 28
+>816b	05 31 48 45 58 24 28			.text	5,$31,"HEX$("          ; $94 HEX$(
+>8172	04 13 49 4e 54 28			.text	4,$13,"INT("           ; $95 INT(
+>8178	06 a7 49 53 56 41 4c 28			.text	6,$a7,"ISVAL("         ; $96 ISVAL(
+>8180	06 77 4c 45 46 54 24 28			.text	6,$77,"LEFT$("         ; $97 LEFT$(
+>8188	04 07 4c 45 4e 28			.text	4,$07,"LEN("           ; $98 LEN(
+>818e	05 26 4d 49 44 24 28			.text	5,$26,"MID$("          ; $99 MID$(
+>8195	03 f1 4e 4f 54				.text	3,$f1,"NOT"            ; $9a NOT
+>819a	04 1d 50 41 47 45			.text	4,$1d,"PAGE"           ; $9b PAGE
+>81a0	07 ca 52 49 47 48 54 24			.text	7,$ca,"RIGHT$("        ; $9c RIGHT$(
+>81a8	28
+>81a9	04 0c 52 4e 44 28			.text	4,$0c,"RND("           ; $9d RND(
+>81af	04 10 53 47 4e 28			.text	4,$10,"SGN("           ; $9e SGN(
+>81b5	04 0e 53 50 43 28			.text	4,$0e,"SPC("           ; $9f SPC(
+>81bb	05 45 53 54 52 24 28			.text	5,$45,"STR$("          ; $a0 STR$(
+>81c2	04 0b 56 41 4c 28			.text	4,$0b,"VAL("           ; $a1 VAL(
+>81c8	03 e2 43 4c 53				.text	3,$e2,"CLS"            ; $a2 CLS
+>81cd	04 1a 44 41 54 41			.text	4,$1a,"DATA"           ; $a3 DATA
+>81d3	03 da 44 49 4d				.text	3,$da,"DIM"            ; $a4 DIM
+>81d8	05 80 47 4f 53 55 42			.text	5,$80,"GOSUB"          ; $a5 GOSUB
+>81df	04 39 47 4f 54 4f			.text	4,$39,"GOTO"           ; $a6 GOTO
+>81e5	03 e5 4c 45 54				.text	3,$e5,"LET"            ; $a7 LET
+>81ea	05 8d 50 52 49 4e 54			.text	5,$8d,"PRINT"          ; $a8 PRINT
+>81f1	04 1c 52 45 41 44			.text	4,$1c,"READ"           ; $a9 READ
+>81f7	03 e4 52 45 4d				.text	3,$e4,"REM"            ; $aa REM
+>81fc	06 e0 52 45 54 55 52 4e			.text	6,$e0,"RETURN"         ; $ab RETURN
+>8204	04 2f 54 48 45 4e			.text	4,$2f,"THEN"           ; $ac THEN
+>820a	02 a3 54 4f				.text	2,$a3,"TO"             ; $ad TO
+>820e	ff					.text	$FF
+.820f					KeywordSet1:
+>820f	00 65					.text	0,$65,""               ; $80 !0:EOF
+>8211	00 58					.text	0,$58,""               ; $81 !1:SH1
+>8213	00 5a					.text	0,$5a,""               ; $82 !2:SH2
+>8215	06 d2 41 53 53 45 52 54			.text	6,$d2,"ASSERT"         ; $83 ASSERT
+>821d	05 67 43 4c 45 41 52			.text	5,$67,"CLEAR"          ; $84 CLEAR
+>8224	03 d7 45 4e 44				.text	3,$d7,"END"            ; $85 END
+>8229	04 3c 4c 49 53 54			.text	4,$3c,"LIST"           ; $86 LIST
+>822f	03 ea 4e 45 57				.text	3,$ea,"NEW"            ; $87 NEW
+>8234	07 24 52 45 53 54 4f 52			.text	7,$24,"RESTORE"        ; $88 RESTORE
+>823c	45
+>823d	03 f5 52 55 4e				.text	3,$f5,"RUN"            ; $89 RUN
+>8242	04 46 53 54 4f 50			.text	4,$46,"STOP"           ; $8a STOP
+>8248	ff					.text	$FF
+.8249					KeywordSet2:
+>8249	00 65					.text	0,$65,""               ; $80 !0:EOF
+>824b	00 58					.text	0,$58,""               ; $81 !1:SH1
+>824d	00 5a					.text	0,$5a,""               ; $82 !2:SH2
+>824f	ff					.text	$FF
 
 ;******  Return to file: ./tokeniser/tokenise.asm
 
-.821f					TokeniseLine:
-.821f	20 7a 83	jsr $837a			jsr 	FixLineBufferCase 			; fix line case
-.8222	a9 03		lda #$03			lda 	#3 							; reset the token buffer to empty
-.8224	8d 25 06	sta $0625			sta 	tokenOffset
-.8227	9c 26 06	stz $0626			stz 	tokenLineNumber
-.822a	9c 27 06	stz $0627			stz 	tokenLineNumber+1
-.822d	a2 ff		ldx #$ff			ldx 	#$FF
-.822f					_TKFindFirst:
-.822f	e8		inx				inx
-.8230	bd 25 07	lda $0725,x			lda 	lineBuffer,x
-.8233	f0 70		beq $82a5			beq 	_TKExit
-.8235	c9 20		cmp #$20			cmp 	#' '
-.8237	90 f6		bcc $822f			bcc 	_TKFindFirst
-.8239	c9 30		cmp #$30			cmp 	#'0'
-.823b	90 07		bcc $8244			bcc 	_TKNoLineNumber
-.823d	c9 3a		cmp #$3a			cmp 	#'9'+1
-.823f	b0 03		bcs $8244			bcs 	_TKNoLineNumber
-.8241	20 a4 83	jsr $83a4			jsr 	TokeniseExtractLineNumber
-.8244					_TKNoLineNumber:
-.8244					_TKTokeniseLoop:
-.8244	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; next character, exit if zero EOL.
-.8247	f0 5c		beq $82a5			beq 	_TKExit
-.8249	e8		inx				inx
-.824a	c9 20		cmp #$20			cmp 	#' '
-.824c	f0 f6		beq $8244			beq 	_TKTokeniseLoop 			; keep looping if space found.
-.824e	ca		dex				dex 								; undo last get, A contains character, X is position.
-.824f	c9 5f		cmp #$5f			cmp 	#'_'						; _ A-Z is identifier *or* token
-.8251	f0 58		beq $82ab			beq 	_TKTokeniseIdentifier
-.8253	c9 41		cmp #$41			cmp 	#'A'
-.8255	90 04		bcc $825b			bcc 	_TKTokenisePunctuation
-.8257	c9 5b		cmp #$5b			cmp 	#'Z'+1
-.8259	90 50		bcc $82ab			bcc 	_TKTokeniseIdentifier
-.825b					_TKTokenisePunctuation:
-.825b	c9 22		cmp #$22			cmp 	#'"'						; quoted string ?
-.825d	f0 23		beq $8282			beq 	_TKString
-.825f	c9 3c		cmp #$3c			cmp 	#'<' 						; check for < > handlers.
-.8261	f0 24		beq $8287			beq 	_TKCheckDouble
-.8263	c9 3e		cmp #$3e			cmp 	#'>'
-.8265	f0 20		beq $8287			beq 	_TKCheckDouble
-.8267					_TKStandardPunctuation:
-.8267	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; get it back.
-.826a	c9 40		cmp #$40			cmp 	#64 						; are we >= 64
-.826c	90 0e		bcc $827c			bcc 	_TKNoShift
-.826e	48		pha				pha 								; save
-.826f	29 07		and #$07			and 	#7 							; lower 3 bits in zTemp0
-.8271	85 36		sta $36				sta 	zTemp0
-.8273	68		pla				pla
-.8274	29 20		and #$20			and 	#32 						; bit 5
-.8276	4a		lsr a				lsr 	a 							; shift into bit 3
-.8277	4a		lsr a				lsr 	a
-.8278	05 36		ora $36				ora 	zTemp0
-.827a	09 10		ora #$10			ora 	#$10						; now in the range 16-31
-.827c					_TKNoShift:
-.827c	20 e9 83	jsr $83e9			jsr 	TokeniseWriteByte 			; write the punctuation character
-.827f	e8		inx				inx 								; consume the character
-.8280	80 c2		bra $8244			bra 	_TKTokeniseLoop 			; and loop round again.
-.8282					_TKString:
-.8282	20 2d 83	jsr $832d			jsr 	TokeniseString
-.8285	80 bd		bra $8244			bra 	_TKTokeniseLoop
-.8287					_TKCheckDouble:
-.8287	bd 26 07	lda $0726,x			lda 	lineBuffer+1,x 				; get next character
-.828a	c9 3c		cmp #$3c			cmp 	#'<'						; if not < = > which are ASCII consecutive go back
-.828c	90 d9		bcc $8267			bcc 	_TKStandardPunctuation
-.828e	c9 3f		cmp #$3f			cmp 	#'>'+1
-.8290	b0 d5		bcs $8267			bcs 	_TKStandardPunctuation
-.8292	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; this is < (60) or > (62)
-.8295	29 02		and #$02			and 	#2 							; now < (0) or > (2)
-.8297	0a		asl a				asl 	a 							; now < (0) or > (4), CC also
-.8298	7d 26 07	adc $0726,x			adc 	lineBuffer+1,x 				; add < = > codes - < code
-.829b	38		sec				sec
-.829c	e9 3c		sbc #$3c			sbc 	#'<'
-.829e	20 e9 83	jsr $83e9			jsr 	TokeniseWriteByte 			; this is in the range 0-7
-.82a1	e8		inx				inx 								; consume both
-.82a2	e8		inx				inx
-.82a3	80 9f		bra $8244			bra 	_TKTokeniseLoop
-.82a5	a9 80		lda #$80	_TKExit:lda 	#$80 						; write end of line byte
-.82a7	20 e9 83	jsr $83e9			jsr 	TokeniseWriteByte
-.82aa	60		rts				rts
-.82ab					_TKTokeniseIdentifier:
-.82ab	8e 20 06	stx $0620			stx 	identStart 					; save start
-.82ae	9c 24 06	stz $0624			stz 	identTypeByte 				; zero the type byte
-.82b1					_TKCheckLoop:
-.82b1	e8		inx				inx 								; look at next, we know first is identifier.
-.82b2	bd 25 07	lda $0725,x			lda  	lineBuffer,x
-.82b5	c9 5f		cmp #$5f			cmp 	#"_" 						; legal char _ 0-9 A-Z
-.82b7	f0 f8		beq $82b1			beq 	_TKCheckLoop
-.82b9	c9 30		cmp #$30			cmp	 	#"0"
-.82bb	90 0c		bcc $82c9			bcc 	_TKEndIdentifier
-.82bd	c9 3a		cmp #$3a			cmp 	#"9"+1
-.82bf	90 f0		bcc $82b1			bcc 	_TKCheckLoop
-.82c1	c9 41		cmp #$41			cmp	 	#"A"
-.82c3	90 04		bcc $82c9			bcc 	_TKEndIdentifier
-.82c5	c9 5b		cmp #$5b			cmp 	#"Z"+1
-.82c7	90 e8		bcc $82b1			bcc 	_TKCheckLoop
-.82c9					_TKEndIdentifier:
-.82c9	8e 21 06	stx $0621			stx 	identTypeStart 				; save start of type text (if any !)
-.82cc	a0 08		ldy #$08			ldy 	#$08 						; this is the identifier type byte for #
-.82ce	c9 23		cmp #$23			cmp 	#"#"						; followed by #
-.82d0	f0 06		beq $82d8			beq 	_TKHasTypeCharacter
-.82d2	a0 10		ldy #$10			ldy 	#$10 						; this is the identifier type byte for $
-.82d4	c9 24		cmp #$24			cmp 	#"$"						; followed by $ or #
-.82d6	d0 07		bne $82df			bne 	_TKNoTypeCharacter
-.82d8					_TKHasTypeCharacter:
-.82d8	8c 24 06	sty $0624			sty 	identTypeByte 				; has # or $, save the type
-.82db	e8		inx				inx 								; read next
-.82dc	bd 25 07	lda $0725,x			lda 	lineBuffer,x
-.82df					_TKNoTypeCharacter:
-.82df	c9 28		cmp #$28			cmp 	#"("						; is it open parenthesis (e.g. array)
-.82e1	d0 09		bne $82ec			bne 	_TKNoArray
-.82e3	e8		inx				inx 								; skip the (
-.82e4	ad 24 06	lda $0624			lda 	identTypeByte 				; set bit 2 (e.g. array)
-.82e7	09 04		ora #$04			ora 	#$04
-.82e9	8d 24 06	sta $0624			sta 	identTypeByte
-.82ec					_TKNoArray:
-.82ec	8e 22 06	stx $0622			stx 	identTypeEnd 				; save end marker, e.g. continue from here.
-.82ef	20 65 83	jsr $8365			jsr 	TokeniseCalculateHash 		; calculate the has for those tokens
-.82f2	a0 80		ldy #$80			ldy 	#(KeywordSet0) >> 8
-.82f4	a9 bc		lda #$bc			lda 	#(KeywordSet0) & $FF
-.82f6	20 63 80	jsr $8063			jsr 	TokeniseSearchTable
-.82f9	a2 00		ldx #$00			ldx 	#0
-.82fb	b0 1f		bcs $831c			bcs 	_TKFoundToken
-.82fd	a0 81		ldy #$81			ldy 	#(KeywordSet1) >> 8
-.82ff	a9 de		lda #$de			lda 	#(KeywordSet1) & $FF
-.8301	20 63 80	jsr $8063			jsr 	TokeniseSearchTable
-.8304	a2 81		ldx #$81			ldx 	#$81
-.8306	b0 14		bcs $831c			bcs 	_TKFoundToken
-.8308	a0 81		ldy #$81			ldy 	#(KeywordSet1) >> 8
-.830a	a9 de		lda #$de			lda 	#(KeywordSet1) & $FF
-.830c	20 63 80	jsr $8063			jsr 	TokeniseSearchTable
-.830f	a2 82		ldx #$82			ldx 	#$82
-.8311	b0 09		bcs $831c			bcs 	_TKFoundToken
-.8313	20 f5 83	jsr $83f5			jsr 	CheckCreateVariableRecord 	; failed all, it's a variable, create record if does not exist.
-.8316	ae 22 06	ldx $0622			ldx 	identTypeEnd 				; X points to following byte
-.8319	4c 44 82	jmp $8244			jmp 	_TKTokeniseLoop 			; and go round again.
-.831c					_TKFoundToken:
-.831c	48		pha				pha 								; save token
-.831d	8a		txa				txa 								; shift in X, is there one ?
-.831e	f0 03		beq $8323			beq 	_TKNoTShift
-.8320	20 e9 83	jsr $83e9			jsr 	TokeniseWriteByte 			; if so, write it out
-.8323					_TKNoTShift:
-.8323	68		pla				pla 								; restore and write token
-.8324	20 e9 83	jsr $83e9			jsr 	TokeniseWriteByte
-.8327	ae 22 06	ldx $0622			ldx 	identTypeEnd 				; X points to following byte
-.832a	4c 44 82	jmp $8244			jmp 	_TKTokeniseLoop 			; and go round again.
-.832d					TokeniseString:
-.832d	e8		inx				inx									; start of quoted string.
-.832e	da		phx				phx 								; push start of string on top
-.832f	ca		dex				dex
-.8330					_TSFindEnd:
-.8330	e8		inx				inx
-.8331	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; next character
-.8334	f0 04		beq $833a			beq 	_TSEndOfString
-.8336	c9 22		cmp #$22			cmp 	#'"'
-.8338	d0 f6		bne $8330			bne 	_TSFindEnd
-.833a					_TSEndOfString:
-.833a	7a		ply				ply  								; so now Y is first character, X is character after end.
-.833b	48		pha				pha 								; save what we terminated with, so we know whether to skip.
-.833c	86 36		stx $36				stx 	zTemp0 						; save the end point.
-.833e	a9 ff		lda #$ff			lda 	#$FF 						; string token.
-.8340	20 e9 83	jsr $83e9			jsr 	TokeniseWriteByte
-.8343	98		tya				tya 								; work out the string length
-.8344	49 ff		eor #$ff			eor 	#$FF
-.8346	38		sec				sec
-.8347	65 36		adc $36				adc 	zTemp0
-.8349	20 e9 83	jsr $83e9			jsr 	TokeniseWriteByte 			; write that length.
-.834c					_TSOutputString:
-.834c	c4 36		cpy $36				cpy 	zTemp0 						; reached the end.
-.834e	f0 09		beq $8359			beq 	_TSEndString
-.8350	b9 25 07	lda $0725,y			lda 	lineBuffer,y 				; output one
-.8353	c8		iny				iny
-.8354	20 e9 83	jsr $83e9			jsr 	TokeniseWriteByte
-.8357	80 f3		bra $834c			bra 	_TSOutputString
-.8359					_TSEndString:
-.8359	a9 00		lda #$00			lda 	#0		 					; output EOS
-.835b	20 e9 83	jsr $83e9			jsr 	TokeniseWriteByte
-.835e	68		pla				pla 								; did we end in " ?
-.835f	c9 22		cmp #$22			cmp 	#'"'
-.8361	d0 01		bne $8364			bne 	_TSNoEndQuote
-.8363	e8		inx				inx
-.8364					_TSNoEndQuote:
-.8364	60		rts				rts
+.8250					TokeniseLine:
+.8250	20 ab 83	jsr $83ab			jsr 	FixLineBufferCase 			; fix line case
+.8253	a9 03		lda #$03			lda 	#3 							; reset the token buffer to empty
+.8255	8d 25 06	sta $0625			sta 	tokenOffset
+.8258	9c 26 06	stz $0626			stz 	tokenLineNumber
+.825b	9c 27 06	stz $0627			stz 	tokenLineNumber+1
+.825e	a2 ff		ldx #$ff			ldx 	#$FF
+.8260					_TKFindFirst:
+.8260	e8		inx				inx
+.8261	bd 25 07	lda $0725,x			lda 	lineBuffer,x
+.8264	f0 70		beq $82d6			beq 	_TKExit
+.8266	c9 20		cmp #$20			cmp 	#' '
+.8268	90 f6		bcc $8260			bcc 	_TKFindFirst
+.826a	c9 30		cmp #$30			cmp 	#'0'
+.826c	90 07		bcc $8275			bcc 	_TKNoLineNumber
+.826e	c9 3a		cmp #$3a			cmp 	#'9'+1
+.8270	b0 03		bcs $8275			bcs 	_TKNoLineNumber
+.8272	20 d5 83	jsr $83d5			jsr 	TokeniseExtractLineNumber
+.8275					_TKNoLineNumber:
+.8275					_TKTokeniseLoop:
+.8275	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; next character, exit if zero EOL.
+.8278	f0 5c		beq $82d6			beq 	_TKExit
+.827a	e8		inx				inx
+.827b	c9 20		cmp #$20			cmp 	#' '
+.827d	f0 f6		beq $8275			beq 	_TKTokeniseLoop 			; keep looping if space found.
+.827f	ca		dex				dex 								; undo last get, A contains character, X is position.
+.8280	c9 5f		cmp #$5f			cmp 	#'_'						; _ A-Z is identifier *or* token
+.8282	f0 58		beq $82dc			beq 	_TKTokeniseIdentifier
+.8284	c9 41		cmp #$41			cmp 	#'A'
+.8286	90 04		bcc $828c			bcc 	_TKTokenisePunctuation
+.8288	c9 5b		cmp #$5b			cmp 	#'Z'+1
+.828a	90 50		bcc $82dc			bcc 	_TKTokeniseIdentifier
+.828c					_TKTokenisePunctuation:
+.828c	c9 22		cmp #$22			cmp 	#'"'						; quoted string ?
+.828e	f0 23		beq $82b3			beq 	_TKString
+.8290	c9 3c		cmp #$3c			cmp 	#'<' 						; check for < > handlers.
+.8292	f0 24		beq $82b8			beq 	_TKCheckDouble
+.8294	c9 3e		cmp #$3e			cmp 	#'>'
+.8296	f0 20		beq $82b8			beq 	_TKCheckDouble
+.8298					_TKStandardPunctuation:
+.8298	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; get it back.
+.829b	c9 40		cmp #$40			cmp 	#64 						; are we >= 64
+.829d	90 0e		bcc $82ad			bcc 	_TKNoShift
+.829f	48		pha				pha 								; save
+.82a0	29 07		and #$07			and 	#7 							; lower 3 bits in zTemp0
+.82a2	85 36		sta $36				sta 	zTemp0
+.82a4	68		pla				pla
+.82a5	29 20		and #$20			and 	#32 						; bit 5
+.82a7	4a		lsr a				lsr 	a 							; shift into bit 3
+.82a8	4a		lsr a				lsr 	a
+.82a9	05 36		ora $36				ora 	zTemp0
+.82ab	09 10		ora #$10			ora 	#$10						; now in the range 16-31
+.82ad					_TKNoShift:
+.82ad	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte 			; write the punctuation character
+.82b0	e8		inx				inx 								; consume the character
+.82b1	80 c2		bra $8275			bra 	_TKTokeniseLoop 			; and loop round again.
+.82b3					_TKString:
+.82b3	20 5e 83	jsr $835e			jsr 	TokeniseString
+.82b6	80 bd		bra $8275			bra 	_TKTokeniseLoop
+.82b8					_TKCheckDouble:
+.82b8	bd 26 07	lda $0726,x			lda 	lineBuffer+1,x 				; get next character
+.82bb	c9 3c		cmp #$3c			cmp 	#'<'						; if not < = > which are ASCII consecutive go back
+.82bd	90 d9		bcc $8298			bcc 	_TKStandardPunctuation
+.82bf	c9 3f		cmp #$3f			cmp 	#'>'+1
+.82c1	b0 d5		bcs $8298			bcs 	_TKStandardPunctuation
+.82c3	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; this is < (60) or > (62)
+.82c6	29 02		and #$02			and 	#2 							; now < (0) or > (2)
+.82c8	0a		asl a				asl 	a 							; now < (0) or > (4), CC also
+.82c9	7d 26 07	adc $0726,x			adc 	lineBuffer+1,x 				; add < = > codes - < code
+.82cc	38		sec				sec
+.82cd	e9 3c		sbc #$3c			sbc 	#'<'
+.82cf	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte 			; this is in the range 0-7
+.82d2	e8		inx				inx 								; consume both
+.82d3	e8		inx				inx
+.82d4	80 9f		bra $8275			bra 	_TKTokeniseLoop
+.82d6	a9 80		lda #$80	_TKExit:lda 	#$80 						; write end of line byte
+.82d8	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte
+.82db	60		rts				rts
+.82dc					_TKTokeniseIdentifier:
+.82dc	8e 20 06	stx $0620			stx 	identStart 					; save start
+.82df	9c 24 06	stz $0624			stz 	identTypeByte 				; zero the type byte
+.82e2					_TKCheckLoop:
+.82e2	e8		inx				inx 								; look at next, we know first is identifier.
+.82e3	bd 25 07	lda $0725,x			lda  	lineBuffer,x
+.82e6	c9 5f		cmp #$5f			cmp 	#"_" 						; legal char _ 0-9 A-Z
+.82e8	f0 f8		beq $82e2			beq 	_TKCheckLoop
+.82ea	c9 30		cmp #$30			cmp	 	#"0"
+.82ec	90 0c		bcc $82fa			bcc 	_TKEndIdentifier
+.82ee	c9 3a		cmp #$3a			cmp 	#"9"+1
+.82f0	90 f0		bcc $82e2			bcc 	_TKCheckLoop
+.82f2	c9 41		cmp #$41			cmp	 	#"A"
+.82f4	90 04		bcc $82fa			bcc 	_TKEndIdentifier
+.82f6	c9 5b		cmp #$5b			cmp 	#"Z"+1
+.82f8	90 e8		bcc $82e2			bcc 	_TKCheckLoop
+.82fa					_TKEndIdentifier:
+.82fa	8e 21 06	stx $0621			stx 	identTypeStart 				; save start of type text (if any !)
+.82fd	a0 08		ldy #$08			ldy 	#$08 						; this is the identifier type byte for #
+.82ff	c9 23		cmp #$23			cmp 	#"#"						; followed by #
+.8301	f0 06		beq $8309			beq 	_TKHasTypeCharacter
+.8303	a0 10		ldy #$10			ldy 	#$10 						; this is the identifier type byte for $
+.8305	c9 24		cmp #$24			cmp 	#"$"						; followed by $ or #
+.8307	d0 07		bne $8310			bne 	_TKNoTypeCharacter
+.8309					_TKHasTypeCharacter:
+.8309	8c 24 06	sty $0624			sty 	identTypeByte 				; has # or $, save the type
+.830c	e8		inx				inx 								; read next
+.830d	bd 25 07	lda $0725,x			lda 	lineBuffer,x
+.8310					_TKNoTypeCharacter:
+.8310	c9 28		cmp #$28			cmp 	#"("						; is it open parenthesis (e.g. array)
+.8312	d0 09		bne $831d			bne 	_TKNoArray
+.8314	e8		inx				inx 								; skip the (
+.8315	ad 24 06	lda $0624			lda 	identTypeByte 				; set bit 2 (e.g. array)
+.8318	09 04		ora #$04			ora 	#$04
+.831a	8d 24 06	sta $0624			sta 	identTypeByte
+.831d					_TKNoArray:
+.831d	8e 22 06	stx $0622			stx 	identTypeEnd 				; save end marker, e.g. continue from here.
+.8320	20 96 83	jsr $8396			jsr 	TokeniseCalculateHash 		; calculate the has for those tokens
+.8323	a0 80		ldy #$80			ldy 	#(KeywordSet0) >> 8
+.8325	a9 ed		lda #$ed			lda 	#(KeywordSet0) & $FF
+.8327	20 94 80	jsr $8094			jsr 	TokeniseSearchTable
+.832a	a2 00		ldx #$00			ldx 	#0
+.832c	b0 1f		bcs $834d			bcs 	_TKFoundToken
+.832e	a0 82		ldy #$82			ldy 	#(KeywordSet1) >> 8
+.8330	a9 0f		lda #$0f			lda 	#(KeywordSet1) & $FF
+.8332	20 94 80	jsr $8094			jsr 	TokeniseSearchTable
+.8335	a2 81		ldx #$81			ldx 	#$81
+.8337	b0 14		bcs $834d			bcs 	_TKFoundToken
+.8339	a0 82		ldy #$82			ldy 	#(KeywordSet1) >> 8
+.833b	a9 0f		lda #$0f			lda 	#(KeywordSet1) & $FF
+.833d	20 94 80	jsr $8094			jsr 	TokeniseSearchTable
+.8340	a2 82		ldx #$82			ldx 	#$82
+.8342	b0 09		bcs $834d			bcs 	_TKFoundToken
+.8344	20 26 84	jsr $8426			jsr 	CheckCreateVariableRecord 	; failed all, it's a variable, create record if does not exist.
+.8347	ae 22 06	ldx $0622			ldx 	identTypeEnd 				; X points to following byte
+.834a	4c 75 82	jmp $8275			jmp 	_TKTokeniseLoop 			; and go round again.
+.834d					_TKFoundToken:
+.834d	48		pha				pha 								; save token
+.834e	8a		txa				txa 								; shift in X, is there one ?
+.834f	f0 03		beq $8354			beq 	_TKNoTShift
+.8351	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte 			; if so, write it out
+.8354					_TKNoTShift:
+.8354	68		pla				pla 								; restore and write token
+.8355	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte
+.8358	ae 22 06	ldx $0622			ldx 	identTypeEnd 				; X points to following byte
+.835b	4c 75 82	jmp $8275			jmp 	_TKTokeniseLoop 			; and go round again.
+.835e					TokeniseString:
+.835e	e8		inx				inx									; start of quoted string.
+.835f	da		phx				phx 								; push start of string on top
+.8360	ca		dex				dex
+.8361					_TSFindEnd:
+.8361	e8		inx				inx
+.8362	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; next character
+.8365	f0 04		beq $836b			beq 	_TSEndOfString
+.8367	c9 22		cmp #$22			cmp 	#'"'
+.8369	d0 f6		bne $8361			bne 	_TSFindEnd
+.836b					_TSEndOfString:
+.836b	7a		ply				ply  								; so now Y is first character, X is character after end.
+.836c	48		pha				pha 								; save what we terminated with, so we know whether to skip.
+.836d	86 36		stx $36				stx 	zTemp0 						; save the end point.
+.836f	a9 ff		lda #$ff			lda 	#$FF 						; string token.
+.8371	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte
+.8374	98		tya				tya 								; work out the string length
+.8375	49 ff		eor #$ff			eor 	#$FF
+.8377	38		sec				sec
+.8378	65 36		adc $36				adc 	zTemp0
+.837a	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte 			; write that length.
+.837d					_TSOutputString:
+.837d	c4 36		cpy $36				cpy 	zTemp0 						; reached the end.
+.837f	f0 09		beq $838a			beq 	_TSEndString
+.8381	b9 25 07	lda $0725,y			lda 	lineBuffer,y 				; output one
+.8384	c8		iny				iny
+.8385	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte
+.8388	80 f3		bra $837d			bra 	_TSOutputString
+.838a					_TSEndString:
+.838a	a9 00		lda #$00			lda 	#0		 					; output EOS
+.838c	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte
+.838f	68		pla				pla 								; did we end in " ?
+.8390	c9 22		cmp #$22			cmp 	#'"'
+.8392	d0 01		bne $8395			bne 	_TSNoEndQuote
+.8394	e8		inx				inx
+.8395					_TSNoEndQuote:
+.8395	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./tokeniser/utility.asm
 
-.8365					TokeniseCalculateHash:
-.8365	da		phx				phx
-.8366	ae 20 06	ldx $0620			ldx 	identStart 					; needs to be same as in tokens.py - simple sum
-.8369	a9 00		lda #$00			lda 	#0
-.836b					_TCHLoop:
-.836b	18		clc				clc
-.836c	7d 25 07	adc $0725,x			adc 	lineBuffer,x
-.836f	e8		inx				inx
-.8370	ec 22 06	cpx $0622			cpx 	identTypeEnd 				; do the whole thing including type and array markers.
-.8373	d0 f6		bne $836b			bne 	_TCHLoop
-.8375	8d 23 06	sta $0623			sta 	identHash 					; save the hash
-.8378	fa		plx				plx
-.8379	60		rts				rts
-.837a					FixLineBufferCase:
-.837a	a2 00		ldx #$00			ldx 	#0
-.837c					_FLBCLoop:
-.837c	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; get next character
-.837f	f0 22		beq $83a3			beq 	_FLBCExit 					; end of string.
-.8381	c9 22		cmp #$22			cmp 	#'"'						; quote, go to in quotes
-.8383	f0 11		beq $8396			beq 	_FLBCInQuotes
-.8385	e8		inx				inx
-.8386	c9 61		cmp #$61			cmp 	#'a'						; needs capitalising ?
-.8388	90 f2		bcc $837c			bcc 	_FLBCLoop
-.838a	c9 7b		cmp #$7b			cmp 	#'z'+1
-.838c	b0 ee		bcs $837c			bcs 	_FLBCLoop
-.838e	38		sec				sec 								; make U/C
-.838f	e9 20		sbc #$20			sbc 	#32
-.8391	9d 24 07	sta $0724,x			sta	 	lineBuffer-1,x 				; write back
-.8394	80 e6		bra $837c			bra 	_FLBCLoop
-.8396					_FLBCInQuotes:
-.8396	e8		inx				inx 								; advance
-.8397	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; get next
-.839a	f0 07		beq $83a3			beq 	_FLBCExit 					; exit on EOS
-.839c	c9 22		cmp #$22			cmp 	#'"' 				 		; until " found
-.839e	d0 f6		bne $8396			bne 	_FLBCInQuotes
-.83a0	e8		inx				inx 								; skip over it
-.83a1	80 d9		bra $837c			bra 	_FLBCLoop
-.83a3					_FLBCExit:
-.83a3	60		rts				rts
-.83a4					TokeniseExtractLineNumber:
-.83a4	ad 27 06	lda $0627			lda 	tokenLineNumber+1 			; push current value on stack
-.83a7	48		pha				pha
-.83a8	ad 26 06	lda $0626			lda 	tokenLineNumber
-.83ab	48		pha				pha
-.83ac	20 e2 83	jsr $83e2			jsr 	_TELNTimes2 				; line # x 4
-.83af	20 e2 83	jsr $83e2			jsr 	_TELNTimes2 				; line # x 2
-.83b2	18		clc				clc 								; add stacked value
-.83b3	68		pla				pla
-.83b4	6d 26 06	adc $0626			adc 	tokenLineNumber
-.83b7	8d 26 06	sta $0626			sta 	tokenLineNumber
-.83ba	68		pla				pla
-.83bb	6d 27 06	adc $0627			adc 	tokenLineNumber+1
-.83be	8d 27 06	sta $0627			sta 	tokenLineNumber+1 			; line # x 5
-.83c1	20 e2 83	jsr $83e2			jsr 	_TELNTimes2 				; line # x 10
-.83c4	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; get and consume character
-.83c7	e8		inx				inx
-.83c8	29 0f		and #$0f			and 	#15 						; add to line #
-.83ca	18		clc				clc
-.83cb	6d 26 06	adc $0626			adc 	tokenLineNumber
-.83ce	8d 26 06	sta $0626			sta 	tokenLineNumber
-.83d1	90 03		bcc $83d6			bcc 	_TLENNoCarry
-.83d3	ee 27 06	inc $0627			inc 	tokenLineNumber+1
-.83d6					_TLENNoCarry:
-.83d6	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; more digits ?
-.83d9	c9 30		cmp #$30			cmp 	#'0'
-.83db	90 04		bcc $83e1			bcc 	_TLENExit
-.83dd	c9 3a		cmp #$3a			cmp 	#'9'+1
-.83df	90 c3		bcc $83a4			bcc 	TokeniseExtractLineNumber
-.83e1					_TLENExit:
-.83e1	60		rts				rts
-.83e2					_TELNTimes2:
-.83e2	0e 26 06	asl $0626			asl 	tokenLineNumber
-.83e5	2e 27 06	rol $0627			rol 	tokenLineNumber+1
-.83e8	60		rts				rts
-.83e9					TokeniseWriteByte:
-.83e9	da		phx				phx
-.83ea	ae 25 06	ldx $0625			ldx 	tokenOffset 				; next slot to write to
-.83ed	9d 25 06	sta $0625,x			sta 	tokenOffset,x 				; write byte out
-.83f0	ee 25 06	inc $0625			inc 	tokenOffset 				; advance slot.
-.83f3	fa		plx				plx
-.83f4	60		rts				rts
+.8396					TokeniseCalculateHash:
+.8396	da		phx				phx
+.8397	ae 20 06	ldx $0620			ldx 	identStart 					; needs to be same as in tokens.py - simple sum
+.839a	a9 00		lda #$00			lda 	#0
+.839c					_TCHLoop:
+.839c	18		clc				clc
+.839d	7d 25 07	adc $0725,x			adc 	lineBuffer,x
+.83a0	e8		inx				inx
+.83a1	ec 22 06	cpx $0622			cpx 	identTypeEnd 				; do the whole thing including type and array markers.
+.83a4	d0 f6		bne $839c			bne 	_TCHLoop
+.83a6	8d 23 06	sta $0623			sta 	identHash 					; save the hash
+.83a9	fa		plx				plx
+.83aa	60		rts				rts
+.83ab					FixLineBufferCase:
+.83ab	a2 00		ldx #$00			ldx 	#0
+.83ad					_FLBCLoop:
+.83ad	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; get next character
+.83b0	f0 22		beq $83d4			beq 	_FLBCExit 					; end of string.
+.83b2	c9 22		cmp #$22			cmp 	#'"'						; quote, go to in quotes
+.83b4	f0 11		beq $83c7			beq 	_FLBCInQuotes
+.83b6	e8		inx				inx
+.83b7	c9 61		cmp #$61			cmp 	#'a'						; needs capitalising ?
+.83b9	90 f2		bcc $83ad			bcc 	_FLBCLoop
+.83bb	c9 7b		cmp #$7b			cmp 	#'z'+1
+.83bd	b0 ee		bcs $83ad			bcs 	_FLBCLoop
+.83bf	38		sec				sec 								; make U/C
+.83c0	e9 20		sbc #$20			sbc 	#32
+.83c2	9d 24 07	sta $0724,x			sta	 	lineBuffer-1,x 				; write back
+.83c5	80 e6		bra $83ad			bra 	_FLBCLoop
+.83c7					_FLBCInQuotes:
+.83c7	e8		inx				inx 								; advance
+.83c8	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; get next
+.83cb	f0 07		beq $83d4			beq 	_FLBCExit 					; exit on EOS
+.83cd	c9 22		cmp #$22			cmp 	#'"' 				 		; until " found
+.83cf	d0 f6		bne $83c7			bne 	_FLBCInQuotes
+.83d1	e8		inx				inx 								; skip over it
+.83d2	80 d9		bra $83ad			bra 	_FLBCLoop
+.83d4					_FLBCExit:
+.83d4	60		rts				rts
+.83d5					TokeniseExtractLineNumber:
+.83d5	ad 27 06	lda $0627			lda 	tokenLineNumber+1 			; push current value on stack
+.83d8	48		pha				pha
+.83d9	ad 26 06	lda $0626			lda 	tokenLineNumber
+.83dc	48		pha				pha
+.83dd	20 13 84	jsr $8413			jsr 	_TELNTimes2 				; line # x 4
+.83e0	20 13 84	jsr $8413			jsr 	_TELNTimes2 				; line # x 2
+.83e3	18		clc				clc 								; add stacked value
+.83e4	68		pla				pla
+.83e5	6d 26 06	adc $0626			adc 	tokenLineNumber
+.83e8	8d 26 06	sta $0626			sta 	tokenLineNumber
+.83eb	68		pla				pla
+.83ec	6d 27 06	adc $0627			adc 	tokenLineNumber+1
+.83ef	8d 27 06	sta $0627			sta 	tokenLineNumber+1 			; line # x 5
+.83f2	20 13 84	jsr $8413			jsr 	_TELNTimes2 				; line # x 10
+.83f5	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; get and consume character
+.83f8	e8		inx				inx
+.83f9	29 0f		and #$0f			and 	#15 						; add to line #
+.83fb	18		clc				clc
+.83fc	6d 26 06	adc $0626			adc 	tokenLineNumber
+.83ff	8d 26 06	sta $0626			sta 	tokenLineNumber
+.8402	90 03		bcc $8407			bcc 	_TLENNoCarry
+.8404	ee 27 06	inc $0627			inc 	tokenLineNumber+1
+.8407					_TLENNoCarry:
+.8407	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; more digits ?
+.840a	c9 30		cmp #$30			cmp 	#'0'
+.840c	90 04		bcc $8412			bcc 	_TLENExit
+.840e	c9 3a		cmp #$3a			cmp 	#'9'+1
+.8410	90 c3		bcc $83d5			bcc 	TokeniseExtractLineNumber
+.8412					_TLENExit:
+.8412	60		rts				rts
+.8413					_TELNTimes2:
+.8413	0e 26 06	asl $0626			asl 	tokenLineNumber
+.8416	2e 27 06	rol $0627			rol 	tokenLineNumber+1
+.8419	60		rts				rts
+.841a					TokeniseWriteByte:
+.841a	da		phx				phx
+.841b	ae 25 06	ldx $0625			ldx 	tokenOffset 				; next slot to write to
+.841e	9d 25 06	sta $0625,x			sta 	tokenOffset,x 				; write byte out
+.8421	ee 25 06	inc $0625			inc 	tokenOffset 				; advance slot.
+.8424	fa		plx				plx
+.8425	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./tokeniser/variablerecord.asm
 
-.83f5					CheckCreateVariableRecord:
-.83f5	a9 00		lda #$00			lda 	#((VariableSpace) & $FF)
-.83f7	85 36		sta $36				sta 	0+zTemp0
-.83f9	a9 10		lda #$10			lda 	#((VariableSpace) >> 8)
-.83fb	85 37		sta $37				sta 	1+zTemp0
-.83fd	20 3b 80	jsr $803b			jsr 	VariableOpen 				; make variable space available
-.8400					_CCVSearch:
-.8400	b2 36		lda ($36)			lda 	(zTemp0) 					; end of list
-.8402	f0 2c		beq $8430			beq 	_CCVFail
-.8404	a0 01		ldy #$01			ldy 	#1 							; read the hash
-.8406	b1 36		lda ($36),y			lda 	(zTemp0),y 					; does it match ?
-.8408	cd 23 06	cmp $0623			cmp 	identHash
-.840b	d0 16		bne $8423			bne 	_CCVNext
-.840d	a0 08		ldy #$08			ldy 	#8 							; name in variable record
-.840f	ae 20 06	ldx $0620			ldx 	identStart
-.8412					_CCVCompare:
-.8412	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; xor them. zero if the same, except
-.8415	51 36		eor ($36),y			eor 	(zTemp0),y 					; bit 7 is used for EOS.
-.8417	e8		inx				inx 								; advance pointers
-.8418	c8		iny				iny
-.8419	0a		asl a				asl 	a 							; A = 0 if they match, CS if end.
-.841a	d0 07		bne $8423			bne 	_CCVNext  					; didn't match go to next.
-.841c	90 f4		bcc $8412			bcc 	_CCVCompare 				; not finished yet.
-.841e	ec 22 06	cpx $0622			cpx 	identTypeEnd 				; matched whole thing ?
-.8421	f0 41		beq $8464			beq 	_CCVFound 					; yes, we were successful
-.8423					_CCVNext:
-.8423	18		clc				clc
-.8424	b2 36		lda ($36)			lda 	(zTemp0) 					; add offset to pointer
-.8426	65 36		adc $36				adc 	zTemp0
-.8428	85 36		sta $36				sta 	zTemp0
-.842a	90 d4		bcc $8400			bcc 	_CCVSearch
-.842c	e6 37		inc $37				inc 	zTemp0+1
-.842e	80 d0		bra $8400			bra 	_CCVSearch
-.8430					_CCVFail:
-.8430	a0 01		ldy #$01			ldy 	#1 							; create the new record. Offset 1 is hash
-.8432	ad 23 06	lda $0623			lda 	identHash
-.8435	91 36		sta ($36),y			sta 	(zTemp0),y
-.8437	c8		iny				iny 								; offset 2 is the type byte
-.8438	ad 24 06	lda $0624			lda 	identTypeByte
-.843b	91 36		sta ($36),y			sta 	(zTemp0),y
-.843d	c8		iny				iny
-.843e					_CCVData:
-.843e	a9 00		lda #$00			lda 	#00 						; erase data 3-7
-.8440	91 36		sta ($36),y			sta 	(zTemp0),y
-.8442	c8		iny				iny
-.8443	c0 08		cpy #$08			cpy 	#8
-.8445	90 f7		bcc $843e			bcc 	_CCVData
-.8447	ae 20 06	ldx $0620			ldx 	identStart 					; copy name into 8 on.
-.844a					_CCVCopyName:
-.844a	bd 25 07	lda $0725,x			lda 	lineBuffer,x
-.844d	91 36		sta ($36),y			sta 	(zTemp0),y
-.844f	e8		inx				inx
-.8450	c8		iny				iny
-.8451	ec 22 06	cpx $0622			cpx 	identTypeEnd
-.8454	d0 f4		bne $844a			bne 	_CCVCopyName
-.8456	98		tya				tya 								; patch offset
-.8457	92 36		sta ($36)			sta 	(zTemp0)
-.8459	a9 00		lda #$00			lda 	#0 							; offset for next is zero.
-.845b	91 36		sta ($36),y			sta 	(zTemp0),y
-.845d	88		dey				dey
-.845e	b1 36		lda ($36),y			lda 	(zTemp0),y 					; set bit 7 of last bit
-.8460	09 80		ora #$80			ora 	#$80
-.8462	91 36		sta ($36),y			sta 	(zTemp0),y
-.8464					_CCVFound:
-.8464	20 3c 80	jsr $803c			jsr 	VariableClose 				; map out variables, perhaps.
-.8467	a5 37		lda $37				lda 	zTemp0+1 					; write out MSB
-.8469	38		sec				sec
-.846a	e9 10		sbc #$10			sbc 	#(VariableSpace >> 8) 		; offset from the start
-.846c	09 40		ora #$40			ora 	#$40 						; make it a writeable token
-.846e	20 e9 83	jsr $83e9			jsr 	TokeniseWriteByte
-.8471	a5 36		lda $36				lda 	zTemp0 						; write out LSB
-.8473	20 e9 83	jsr $83e9			jsr 	TokeniseWriteByte
-.8476	60		rts				rts
+.8426					CheckCreateVariableRecord:
+.8426	a9 00		lda #$00			lda 	#((VariableSpace) & $FF)
+.8428	85 36		sta $36				sta 	0+zTemp0
+.842a	a9 10		lda #$10			lda 	#((VariableSpace) >> 8)
+.842c	85 37		sta $37				sta 	1+zTemp0
+.842e	20 6a 80	jsr $806a			jsr 	VariableOpen 				; make variable space available
+.8431					_CCVSearch:
+.8431	b2 36		lda ($36)			lda 	(zTemp0) 					; end of list
+.8433	f0 2c		beq $8461			beq 	_CCVFail
+.8435	a0 01		ldy #$01			ldy 	#1 							; read the hash
+.8437	b1 36		lda ($36),y			lda 	(zTemp0),y 					; does it match ?
+.8439	cd 23 06	cmp $0623			cmp 	identHash
+.843c	d0 16		bne $8454			bne 	_CCVNext
+.843e	a0 08		ldy #$08			ldy 	#8 							; name in variable record
+.8440	ae 20 06	ldx $0620			ldx 	identStart
+.8443					_CCVCompare:
+.8443	bd 25 07	lda $0725,x			lda 	lineBuffer,x 				; xor them. zero if the same, except
+.8446	51 36		eor ($36),y			eor 	(zTemp0),y 					; bit 7 is used for EOS.
+.8448	e8		inx				inx 								; advance pointers
+.8449	c8		iny				iny
+.844a	0a		asl a				asl 	a 							; A = 0 if they match, CS if end.
+.844b	d0 07		bne $8454			bne 	_CCVNext  					; didn't match go to next.
+.844d	90 f4		bcc $8443			bcc 	_CCVCompare 				; not finished yet.
+.844f	ec 22 06	cpx $0622			cpx 	identTypeEnd 				; matched whole thing ?
+.8452	f0 41		beq $8495			beq 	_CCVFound 					; yes, we were successful
+.8454					_CCVNext:
+.8454	18		clc				clc
+.8455	b2 36		lda ($36)			lda 	(zTemp0) 					; add offset to pointer
+.8457	65 36		adc $36				adc 	zTemp0
+.8459	85 36		sta $36				sta 	zTemp0
+.845b	90 d4		bcc $8431			bcc 	_CCVSearch
+.845d	e6 37		inc $37				inc 	zTemp0+1
+.845f	80 d0		bra $8431			bra 	_CCVSearch
+.8461					_CCVFail:
+.8461	a0 01		ldy #$01			ldy 	#1 							; create the new record. Offset 1 is hash
+.8463	ad 23 06	lda $0623			lda 	identHash
+.8466	91 36		sta ($36),y			sta 	(zTemp0),y
+.8468	c8		iny				iny 								; offset 2 is the type byte
+.8469	ad 24 06	lda $0624			lda 	identTypeByte
+.846c	91 36		sta ($36),y			sta 	(zTemp0),y
+.846e	c8		iny				iny
+.846f					_CCVData:
+.846f	a9 00		lda #$00			lda 	#0 							; erase data 3-7
+.8471	91 36		sta ($36),y			sta 	(zTemp0),y
+.8473	c8		iny				iny
+.8474	c0 08		cpy #$08			cpy 	#8
+.8476	90 f7		bcc $846f			bcc 	_CCVData
+.8478	ae 20 06	ldx $0620			ldx 	identStart 					; copy name into 8 on.
+.847b					_CCVCopyName:
+.847b	bd 25 07	lda $0725,x			lda 	lineBuffer,x
+.847e	91 36		sta ($36),y			sta 	(zTemp0),y
+.8480	e8		inx				inx
+.8481	c8		iny				iny
+.8482	ec 22 06	cpx $0622			cpx 	identTypeEnd
+.8485	d0 f4		bne $847b			bne 	_CCVCopyName
+.8487	98		tya				tya 								; patch offset
+.8488	92 36		sta ($36)			sta 	(zTemp0)
+.848a	a9 00		lda #$00			lda 	#0 							; offset for next is zero.
+.848c	91 36		sta ($36),y			sta 	(zTemp0),y
+.848e	88		dey				dey
+.848f	b1 36		lda ($36),y			lda 	(zTemp0),y 					; set bit 7 of last bit
+.8491	09 80		ora #$80			ora 	#$80
+.8493	91 36		sta ($36),y			sta 	(zTemp0),y
+.8495					_CCVFound:
+.8495	20 6b 80	jsr $806b			jsr 	VariableClose 				; map out variables, perhaps.
+.8498	a5 37		lda $37				lda 	zTemp0+1 					; write out MSB
+.849a	38		sec				sec
+.849b	e9 10		sbc #$10			sbc 	#(VariableSpace >> 8) 		; offset from the start
+.849d	09 40		ora #$40			ora 	#$40 						; make it a writeable token
+.849f	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte
+.84a2	a5 36		lda $36				lda 	zTemp0 						; write out LSB
+.84a4	20 1a 84	jsr $841a			jsr 	TokeniseWriteByte
+.84a7	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
