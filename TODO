@@ -1,6 +1,8 @@
 
-	Read into a buffer
-	Case process the buffer
 	Tokenise the buffer to a complete line.
-	Write code to load in an initial program
+		- extract token and type
+		- check it is a keyword
+		- if not, treat it as a variable
+
+	Code to append line (insert not required yet)
 	Start on terms - expressions - etc.

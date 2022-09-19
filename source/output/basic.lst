@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.56.2625 listing file
 ; 64tass -b -Wall -Wno-portable -c -L output/basic.lst -l output/basic.lbl -Wall -q -o basic.rom _basic.asm
-; Sun Sep 18 12:41:34 2022
+; Mon Sep 19 08:20:44 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -29,12 +29,6 @@
 ;******  Return to file: _basic.asm
 
 
-;******  Processing file: ./aa_system/03access.inc
-
-
-;******  Return to file: _basic.asm
-
-
 ;******  Processing file: ./aa_system/04data.inc
 
 .0030					codePtr:
@@ -49,8 +43,12 @@
 >003a							.fill 	2
 .0640					lineBuffer:
 >0640							.fill 	256
-.0740					tokenBuffer:
->0740							.fill 	256
+.0740					tokenOffset:
+>0740							.fill 	1
+.0741					tokenLineNumber:
+>0741							.fill 	2
+.0743					tokenBuffer:
+>0743							.fill 	253
 
 ;******  Return to file: _basic.asm
 
@@ -112,12 +110,18 @@
 ;******  Return to file: _basic.asm
 
 
+;******  Processing file: ./memory.flat/access.inc
+
+
+;******  Return to file: _basic.asm
+
+
 ;******  Processing file: ./aa_system/00start.asm
 
 .8010	a2 ff		ldx #$ff	Start:	ldx 	#$FF 						; stack reset
 .8012	9a		txs				txs
 .8013	20 24 80	jsr $8024			jsr 	NewCommand 					; erase current program
-.8016	4c 37 80	jmp $8037			jmp 	BackloadProgram
+.8016	4c 3b 80	jmp $803b			jmp 	BackloadProgram
 .8019					WarmStart:
 >8019	db						.byte 	$DB 						; causes a break in the emulator
 .801a	80 fd		bra $8019			bra 	WarmStart
@@ -147,39 +151,205 @@
 ;******  Processing file: ./commands/new.asm
 
 .8024					NewCommand:
-.8024	a9 00		lda #$00			lda 	#(BasicStart & $FF)
-.8026	85 30		sta $30				sta 	codePtr
-.8028	a9 20		lda #$20			lda 	#(BasicStart >> 8)
-.802a	85 31		sta $31				sta 	codePtr+1
-.802c	a9 00		lda #$00			lda 	#0 							; write zero there erasing the program.
-.802e	92 30		sta ($30)			sta 	(codePtr)
-.8030	9c 00 10	stz $1000			stz 	VariableSpace 				; erase all variables.
-.8033	20 20 80	jsr $8020			jsr 	ClearCommand 				; clear everything.
-.8036	60		rts				rts
+.8024	20 2e 80	jsr $802e			jsr 	MemoryNew
+.8027	9c 00 10	stz $1000			stz 	VariableSpace 				; erase all variables.
+.802a	20 20 80	jsr $8020			jsr 	ClearCommand 				; clear everything.
+.802d	60		rts				rts
+
+;******  Return to file: _basic.asm
+
+
+;******  Processing file: ./memory.flat/memory.asm
+
+.802e					MemoryNew:
+.802e	a9 00		lda #$00			lda 	#(BasicStart & $FF)
+.8030	85 30		sta $30				sta 	codePtr
+.8032	a9 20		lda #$20			lda 	#(BasicStart >> 8)
+.8034	85 31		sta $31				sta 	codePtr+1
+.8036	a9 00		lda #$00			lda 	#0 							; write zero there erasing the program.
+.8038	92 30		sta ($30)			sta 	(codePtr)
+.803a	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./tokeniser/backload.asm
 
-.8037					BackloadProgram:
->8037	db						.byte 	$DB
-.8038	a2 ff		ldx #$ff			ldx 	#$FF
-.803a	ad fa ff	lda $fffa			lda 	$FFFA 						; read first byte
-.803d	30 13		bmi $8052			bmi 	_BPExit
-.803f					_BPCopy:
-.803f	e8		inx				inx  								; copy byte in
-.8040	9d 40 06	sta $0640,x			sta 	lineBuffer,x
-.8043	9e 41 06	stz $0641,x			stz 	lineBuffer+1,x
-.8046	ad fa ff	lda $fffa			lda 	$FFFA 						; read next byte
-.8049	30 04		bmi $804f			bmi 	_BPEndLine 					; -ve = EOL
-.804b	c9 20		cmp #$20			cmp 	#' ' 						; < ' ' = EOL
-.804d	b0 f0		bcs $803f			bcs 	_BPCopy
-.804f					_BPEndLine:
->804f	db						.byte 	$DB 						; causes a break in the emulator
-.8050	80 e5		bra $8037			bra 	BackloadProgram
-.8052					_BPExit:
-.8052	4c 19 80	jmp $8019			jmp 	WarmStart
+.803b					BackloadProgram:
+.803b	a2 ff		ldx #$ff			ldx 	#$FF
+.803d	ad fa ff	lda $fffa			lda 	$FFFA 						; read first byte
+.8040	30 1b		bmi $805d			bmi 	_BPExit
+.8042					_BPCopy:
+.8042	e8		inx				inx  								; copy byte in
+.8043	9d 40 06	sta $0640,x			sta 	lineBuffer,x
+.8046	9e 41 06	stz $0641,x			stz 	lineBuffer+1,x
+.8049	ad fa ff	lda $fffa			lda 	$FFFA 						; read next byte
+.804c	30 0a		bmi $8058			bmi 	_BPEndLine 					; -ve = EOL
+.804e	c9 09		cmp #$09			cmp 	#9 							; handle TAB
+.8050	d0 02		bne $8054			bne 	_BPNotTab
+.8052	a9 20		lda #$20			lda 	#' '
+.8054					_BPNotTab:
+.8054	c9 20		cmp #$20			cmp 	#' ' 						; < ' ' = EOL
+.8056	b0 ea		bcs $8042			bcs 	_BPCopy
+.8058					_BPEndLine:
+.8058	20 60 80	jsr $8060			jsr 	TokeniseLine 				; tokenise the line.
+.805b	80 de		bra $803b			bra 	BackloadProgram
+.805d					_BPExit:
+.805d	4c 19 80	jmp $8019			jmp 	WarmStart
+
+;******  Return to file: _basic.asm
+
+
+;******  Processing file: ./tokeniser/tokenise.asm
+
+.8060					TokeniseLine:
+.8060	20 e2 80	jsr $80e2			jsr 	FixLineBufferCase 			; fix line case
+.8063	a9 03		lda #$03			lda 	#3 							; reset the token buffer to empty
+.8065	8d 40 07	sta $0740			sta 	tokenOffset
+.8068	9c 41 07	stz $0741			stz 	tokenLineNumber
+.806b	9c 42 07	stz $0742			stz 	tokenLineNumber+1
+.806e	a2 ff		ldx #$ff			ldx 	#$FF
+.8070					_TKFindFirst:
+.8070	e8		inx				inx
+.8071	bd 40 06	lda $0640,x			lda 	lineBuffer,x
+.8074	c9 20		cmp #$20			cmp 	#' '
+.8076	f0 f8		beq $8070			beq 	_TKFindFirst
+.8078	c9 30		cmp #$30			cmp 	#'0'
+.807a	90 07		bcc $8083			bcc 	_TKNoLineNumber
+.807c	c9 3a		cmp #$3a			cmp 	#'9'+1
+.807e	b0 03		bcs $8083			bcs 	_TKNoLineNumber
+.8080	20 0c 81	jsr $810c			jsr 	TokeniseExtractLineNumber
+.8083					_TKNoLineNumber:
+.8083					_TKTokeniseLoop:
+.8083	bd 40 06	lda $0640,x			lda 	lineBuffer,x 				; next character, exit if zero EOL.
+>8086	db						.byte 	$DB 						; causes a break in the emulator
+.8087	f0 53		beq $80dc			beq 	_TKExit
+.8089	e8		inx				inx
+.808a	c9 20		cmp #$20			cmp 	#' '
+.808c	f0 f5		beq $8083			beq 	_TKTokeniseLoop 			; keep looping if space found.
+.808e	ca		dex				dex 								; undo last get, A contains character, X is position.
+.808f	c9 5f		cmp #$5f			cmp 	#'_'						; _ A-Z is identifier *or* token
+.8091	f0 49		beq $80dc			beq 	_TKTokeniseIdentifier
+.8093	c9 41		cmp #$41			cmp 	#'A'
+.8095	90 04		bcc $809b			bcc 	_TKTokenisePunctuation
+.8097	c9 5b		cmp #$5b			cmp 	#'Z'+1
+.8099	90 41		bcc $80dc			bcc 	_TKTokeniseIdentifier
+.809b					_TKTokenisePunctuation:
+.809b	c9 3c		cmp #$3c			cmp 	#'<' 						; check for < > handlers.
+.809d	f0 1f		beq $80be			beq 	_TKCheckDouble
+.809f	c9 3e		cmp #$3e			cmp 	#'>'
+.80a1	f0 1b		beq $80be			beq 	_TKCheckDouble
+.80a3					_TKStandardPunctuation:
+.80a3	bd 40 06	lda $0640,x			lda 	lineBuffer,x 				; get it back.
+.80a6	c9 40		cmp #$40			cmp 	#64 						; are we >= 64
+.80a8	90 0e		bcc $80b8			bcc 	_TKNoShift
+.80aa	48		pha				pha 								; save
+.80ab	29 07		and #$07			and 	#7 							; lower 3 bits in zTemp0
+.80ad	85 36		sta $36				sta 	zTemp0
+.80af	68		pla				pla
+.80b0	29 20		and #$20			and 	#32 						; bit 5
+.80b2	4a		lsr a				lsr 	a 							; shift into bit 3
+.80b3	4a		lsr a				lsr 	a
+.80b4	05 36		ora $36				ora 	zTemp0
+.80b6	09 10		ora #$10			ora 	#$10						; now in the range 16-31
+.80b8					_TKNoShift:
+.80b8	20 51 81	jsr $8151			jsr 	TokeniseWriteByte 			; write the punctuation character
+.80bb	e8		inx				inx 								; consume the character
+.80bc	80 c5		bra $8083			bra 	_TKTokeniseLoop 			; and loop round again.
+.80be					_TKCheckDouble:
+.80be	bd 41 06	lda $0641,x			lda 	lineBuffer+1,x 				; get next character
+.80c1	c9 3c		cmp #$3c			cmp 	#'<'						; if not < = > which are ASCII consecutive go back
+.80c3	90 de		bcc $80a3			bcc 	_TKStandardPunctuation
+.80c5	c9 3f		cmp #$3f			cmp 	#'>'+1
+.80c7	b0 da		bcs $80a3			bcs 	_TKStandardPunctuation
+.80c9	bd 40 06	lda $0640,x			lda 	lineBuffer,x 				; this is < (60) or > (62)
+.80cc	29 02		and #$02			and 	#2 							; now < (0) or > (2)
+.80ce	0a		asl a				asl 	a 							; now < (0) or > (4), CC also
+.80cf	7d 41 06	adc $0641,x			adc 	lineBuffer+1,x 				; add < = > codes - < code
+.80d2	38		sec				sec
+.80d3	e9 3c		sbc #$3c			sbc 	#'<'
+.80d5	20 51 81	jsr $8151			jsr 	TokeniseWriteByte 			; this is in the range 0-7
+.80d8	e8		inx				inx 								; consume both
+.80d9	e8		inx				inx
+.80da	80 a7		bra $8083			bra 	_TKTokeniseLoop
+.80dc					_TKTokeniseIdentifier:
+.80dc	a9 80		lda #$80	_TKExit:lda 	#$80 						; write end of line byte
+.80de	20 51 81	jsr $8151			jsr 	TokeniseWriteByte
+.80e1	60		rts				rts
+
+;******  Return to file: _basic.asm
+
+
+;******  Processing file: ./tokeniser/utility.asm
+
+.80e2					FixLineBufferCase:
+.80e2	a2 00		ldx #$00			ldx 	#0
+.80e4					_FLBCLoop:
+.80e4	bd 40 06	lda $0640,x			lda 	lineBuffer,x 				; get next character
+.80e7	f0 22		beq $810b			beq 	_FLBCExit 					; end of string.
+.80e9	c9 22		cmp #$22			cmp 	#'"'						; quote, go to in quotes
+.80eb	f0 11		beq $80fe			beq 	_FLBCInQuotes
+.80ed	e8		inx				inx
+.80ee	c9 61		cmp #$61			cmp 	#'a'						; needs capitalising ?
+.80f0	90 f2		bcc $80e4			bcc 	_FLBCLoop
+.80f2	c9 7b		cmp #$7b			cmp 	#'z'+1
+.80f4	b0 ee		bcs $80e4			bcs 	_FLBCLoop
+.80f6	38		sec				sec 								; make U/C
+.80f7	e9 20		sbc #$20			sbc 	#32
+.80f9	9d 3f 06	sta $063f,x			sta	 	lineBuffer-1,x 				; write back
+.80fc	80 e6		bra $80e4			bra 	_FLBCLoop
+.80fe					_FLBCInQuotes:
+.80fe	e8		inx				inx 								; advance
+.80ff	bd 40 06	lda $0640,x			lda 	lineBuffer,x 				; get next
+.8102	f0 07		beq $810b			beq 	_FLBCExit 					; exit on EOS
+.8104	c9 22		cmp #$22			cmp 	#'"' 				 		; until " found
+.8106	d0 f6		bne $80fe			bne 	_FLBCInQuotes
+.8108	e8		inx				inx 								; skip over it
+.8109	80 d9		bra $80e4			bra 	_FLBCLoop
+.810b					_FLBCExit:
+.810b	60		rts				rts
+.810c					TokeniseExtractLineNumber:
+.810c	ad 42 07	lda $0742			lda 	tokenLineNumber+1 			; push current value on stack
+.810f	48		pha				pha
+.8110	ad 41 07	lda $0741			lda 	tokenLineNumber
+.8113	48		pha				pha
+.8114	20 4a 81	jsr $814a			jsr 	_TELNTimes2 				; line # x 4
+.8117	20 4a 81	jsr $814a			jsr 	_TELNTimes2 				; line # x 2
+.811a	18		clc				clc 								; add stacked value
+.811b	68		pla				pla
+.811c	6d 41 07	adc $0741			adc 	tokenLineNumber
+.811f	8d 41 07	sta $0741			sta 	tokenLineNumber
+.8122	68		pla				pla
+.8123	6d 42 07	adc $0742			adc 	tokenLineNumber+1
+.8126	8d 42 07	sta $0742			sta 	tokenLineNumber+1 			; line # x 5
+.8129	20 4a 81	jsr $814a			jsr 	_TELNTimes2 				; line # x 10
+.812c	bd 40 06	lda $0640,x			lda 	lineBuffer,x 				; get and consume character
+.812f	e8		inx				inx
+.8130	29 0f		and #$0f			and 	#15 						; add to line #
+.8132	18		clc				clc
+.8133	6d 41 07	adc $0741			adc 	tokenLineNumber
+.8136	8d 41 07	sta $0741			sta 	tokenLineNumber
+.8139	90 03		bcc $813e			bcc 	_TLENNoCarry
+.813b	ee 42 07	inc $0742			inc 	tokenLineNumber+1
+.813e					_TLENNoCarry:
+.813e	bd 40 06	lda $0640,x			lda 	lineBuffer,x 				; more digits ?
+.8141	c9 30		cmp #$30			cmp 	#'0'
+.8143	90 04		bcc $8149			bcc 	_TLENExit
+.8145	c9 3a		cmp #$3a			cmp 	#'9'+1
+.8147	90 c3		bcc $810c			bcc 	TokeniseExtractLineNumber
+.8149					_TLENExit:
+.8149	60		rts				rts
+.814a					_TELNTimes2:
+.814a	0e 41 07	asl $0741			asl 	tokenLineNumber
+.814d	2e 42 07	rol $0742			rol 	tokenLineNumber+1
+.8150	60		rts				rts
+.8151					TokeniseWriteByte:
+.8151	da		phx				phx
+.8152	ae 40 07	ldx $0740			ldx 	tokenOffset 				; next slot to write to
+.8155	9d 40 07	sta $0740,x			sta 	tokenOffset,x 				; write byte out
+.8158	ee 40 07	inc $0740			inc 	tokenOffset 				; advance slot.
+.815b	fa		plx				plx
+.815c	60		rts				rts
 
 ;******  Return to file: _basic.asm
 

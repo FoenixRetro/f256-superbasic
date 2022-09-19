@@ -52,8 +52,13 @@ zTemp2:
 
 lineBuffer: 								; used for input - ASCII line goes here
 		.fill 	256
-tokenBuffer: 								; used for tokenising - tokenised result goes here
-		.fill 	256		
+
+tokenOffset: 							; used for tokenising - tokenised result goes here
+		.fill 	1		
+tokenLineNumber:
+		.fill 	2		
+tokenBuffer: 	
+		.fill 	253
 		
 		.send 	storage
 

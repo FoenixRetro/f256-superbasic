@@ -1,9 +1,9 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		backload.asm
-;		Purpose:	Backloader for Emulator
-;		Created:	18th September 2022
+;		Name:		memory.asm
+;		Purpose:	BASIC program space manipulation
+;		Created:	19th September 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
@@ -14,32 +14,16 @@
 
 ; ************************************************************************************************
 ;
-;								Characters can be streamed in by $FFFA
+;									Erase the current program
 ;
 ; ************************************************************************************************
 
-BackloadProgram:
-		ldx 	#$FF
-		lda 	$FFFA 						; read first byte
-		bmi 	_BPExit
-_BPCopy:
-		inx  								; copy byte in
-		sta 	lineBuffer,x
-		stz 	lineBuffer+1,x
-		lda 	$FFFA 						; read next byte
-		bmi 	_BPEndLine 					; -ve = EOL
-		cmp 	#9 							; handle TAB
-		bne 	_BPNotTab
-		lda 	#' '
-_BPNotTab:		
-		cmp 	#' ' 						; < ' ' = EOL
-		bcs 	_BPCopy
-_BPEndLine:		
-		jsr 	TokeniseLine 				; tokenise the line.
-		bra 	BackloadProgram
-_BPExit:
-		jmp 	WarmStart
-		
+MemoryNew:
+		.resetCodePointer 					; point to start of program memory
+		lda 	#0 							; write zero there erasing the program.
+		.cset0	
+		rts
+
 		.send code
 
 ; ************************************************************************************************

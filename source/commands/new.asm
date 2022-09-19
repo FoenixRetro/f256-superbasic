@@ -13,10 +13,7 @@
 		.section code
 
 NewCommand: ;; [new]
-		.resetCodePointer 					; point to start of program memory
-		lda 	#0 							; write zero there erasing the program.
-		.cset0	
-
+		jsr 	MemoryNew
 		stz 	VariableSpace 				; erase all variables.
 		jsr 	ClearCommand 				; clear everything.
 		rts
