@@ -75,11 +75,13 @@ _TKTokeniseLoop:
 		;----------------------------------------------------------------------------------------
 		;
 		;		So we now have a punctuation character. Special cases are those >= 64 and < or > followed by = > or <
-		;		For 64 conversion see the punctuation.ods
+		;		and quoted strings. For 64 conversion see the punctuation.ods
 		;
 		;----------------------------------------------------------------------------------------
 
 _TKTokenisePunctuation:
+		cmp 	#'"'						; quoted string ?
+		beq 	_TKString
 		cmp 	#'<' 						; check for < > handlers.
 		beq 	_TKCheckDouble
 		cmp 	#'>'
@@ -101,6 +103,10 @@ _TKNoShift:
 		jsr 	TokeniseWriteByte 			; write the punctuation character
 		inx 								; consume the character
 		bra 	_TKTokeniseLoop 			; and loop round again.
+
+_TKString: 									; tokenise a string
+		jsr 	TokeniseString
+		bra 	_TOTokeniseLoop
 
 		;----------------------------------------------------------------------------------------
 		;
