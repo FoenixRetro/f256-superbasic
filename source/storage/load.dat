@@ -1,5 +1,4 @@
-10 >=*0
-4110 pRint "Hello world"a
-4120 end "xx
+
+4110 pRint 42;left$(0,4):list
 
 

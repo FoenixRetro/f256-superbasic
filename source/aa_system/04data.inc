@@ -50,16 +50,27 @@ zTemp2:
 
 		.section storage
 
-lineBuffer: 								; used for input - ASCII line goes here
-		.fill 	256
+identStart: 								; start of identifier in line buffer
+		.fill 	1
+identTypeStart: 							; start of type information (#$ and ( in the line buffer)
+		.fill 	1
+identTypeEnd: 								; character after end of type information in the line buffer
+		.fill 	1		
+identHash: 									; hash of identifier (including the type characters)
+		.fill 	1
+identTypeByte: 								; type descriptor in format used in identifier record
+		.fill 	1	 						; (see tokenising.pdf)
 
-tokenOffset: 							; used for tokenising - tokenised result goes here
+tokenOffset: 								; used for tokenising - tokenised result goes here
 		.fill 	1		
 tokenLineNumber:
 		.fill 	2		
 tokenBuffer: 	
 		.fill 	253
-		
+
+lineBuffer: 								; used for input - ASCII line goes here
+		.fill 	256
+
 		.send 	storage
 
 ; ************************************************************************************************

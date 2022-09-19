@@ -1,7 +1,6 @@
 
 	Tokenise the buffer to a complete line.
-		- extract token and type
-		- check it is a keyword
+		- tokenise strings ('"')
 		- if not, treat it as a variable
 
 	Code to append line (insert not required yet)

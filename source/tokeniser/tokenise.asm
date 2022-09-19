@@ -12,6 +12,8 @@
 
 		.section code
 
+		.include "../generated/kwdtext.dat"
+		
 ; ************************************************************************************************
 ;
 ;								Tokenise ASCIIZ line in lineBuffer
@@ -37,8 +39,9 @@ TokeniseLine:
 _TKFindFirst:
 		inx
 		lda 	lineBuffer,x
+		beq 	_TKExit
 		cmp 	#' '
-		beq 	_TKFindFirst
+		bcc 	_TKFindFirst
 		;
 		;		If it is 0-9 extract a 2 byte integer into the token line number
 		;
@@ -48,12 +51,14 @@ _TKFindFirst:
 		bcs 	_TKNoLineNumber
 		jsr 	TokeniseExtractLineNumber
 _TKNoLineNumber:		
+		;----------------------------------------------------------------------------------------
 		;
-		;		Main tokenising loop
+		;							Main tokenising loop
 		;
+		;----------------------------------------------------------------------------------------
+
 _TKTokeniseLoop:
 		lda 	lineBuffer,x 				; next character, exit if zero EOL.
-		.debug
 		beq 	_TKExit
 		inx
 		cmp 	#' '
@@ -66,10 +71,14 @@ _TKTokeniseLoop:
 		bcc 	_TKTokenisePunctuation 
 		cmp 	#'Z'+1
 		bcc 	_TKTokeniseIdentifier
+
+		;----------------------------------------------------------------------------------------
 		;
 		;		So we now have a punctuation character. Special cases are those >= 64 and < or > followed by = > or <
 		;		For 64 conversion see the punctuation.ods
 		;
+		;----------------------------------------------------------------------------------------
+
 _TKTokenisePunctuation:
 		cmp 	#'<' 						; check for < > handlers.
 		beq 	_TKCheckDouble
@@ -92,10 +101,14 @@ _TKNoShift:
 		jsr 	TokeniseWriteByte 			; write the punctuation character
 		inx 								; consume the character
 		bra 	_TKTokeniseLoop 			; and loop round again.
+
+		;----------------------------------------------------------------------------------------
 		;
 		;		Have < or >. Check following character is < = >. These are mapped onto 
 		;		codes 0-5 for << >> <= >= <> , see punctuation.ods
 		;
+		;----------------------------------------------------------------------------------------
+
 _TKCheckDouble:
 		lda 	lineBuffer+1,x 				; get next character
 		cmp 	#'<'						; if not < = > which are ASCII consecutive go back
@@ -113,15 +126,111 @@ _TKCheckDouble:
 		inx 								; consume both
 		inx
 		bra 	_TKTokeniseLoop
+
+		;----------------------------------------------------------------------------------------
 		;
-		;		Found _ or A..Z, which means an identifier or a token.
+		;		Exit point, writes EOL and returns
 		;
-_TKTokeniseIdentifier:		
-		; **TODO**
+		;----------------------------------------------------------------------------------------
 
 _TKExit:lda 	#$80 						; write end of line byte
 		jsr 	TokeniseWriteByte		
 		rts	
+
+		;----------------------------------------------------------------------------------------
+		;
+		;		Found _ or A..Z, which means an identifier or a token.
+		;
+		;----------------------------------------------------------------------------------------
+
+_TKTokeniseIdentifier:		
+		stx 	identStart 					; save start
+		stz 	identTypeByte 				; zero the type byte
+_TKCheckLoop:
+		inx 								; look at next, we know first is identifier.
+		lda  	lineBuffer,x
+		cmp 	#"_" 						; legal char _ 0-9 A-Z
+		beq 	_TKCheckLoop
+		cmp	 	#"0"
+		bcc 	_TKEndIdentifier
+		cmp 	#"9"+1
+		bcc 	_TKCheckLoop
+		cmp	 	#"A"
+		bcc 	_TKEndIdentifier
+		cmp 	#"Z"+1
+		bcc 	_TKCheckLoop
+_TKEndIdentifier:
+		stx 	identTypeStart 				; save start of type text (if any !)
+		;
+		ldy 	#$08 						; this is the identifier type byte for #
+		cmp 	#"#"						; followed by #
+		beq 	_TKHasTypeCharacter
+		ldy 	#$10 						; this is the identifier type byte for $
+		cmp 	#"$"						; followed by $ or #
+		bne 	_TKNoTypeCharacter
+_TKHasTypeCharacter:
+		sty 	identTypeByte 				; has # or $, save the type
+		inx 								; read next
+		lda 	lineBuffer,x
+_TKNoTypeCharacter:
+		cmp 	#"("						; is it open parenthesis (e.g. array)
+		bne 	_TKNoArray
+		inx 								; skip the (
+		lda 	identTypeByte 				; set bit 2 (e.g. array)
+		ora 	#$04
+		sta 	identTypeByte
+_TKNoArray:		
+		stx 	identTypeEnd 				; save end marker, e.g. continue from here.
+		jsr 	TokeniseCalculateHash 		; calculate the has for those tokens
+
+		;----------------------------------------------------------------------------------------
+		;
+		;			Search the token tables.
+		;
+		;----------------------------------------------------------------------------------------
+
+checktokens .macro
+		ldy 	#(\1) >> 8
+		lda 	#(\1) & $FF
+		jsr 	TokeniseSearchTable
+		.endm
+		.checktokens KeywordSet0			; check the three token tables for the keyword.
+		ldx 	#0 							
+		bcs 	_TKFoundToken
+		.checktokens KeywordSet1
+		ldx 	#$81
+		bcs 	_TKFoundToken
+		.checktokens KeywordSet1
+		ldx 	#$82
+		bcs 	_TKFoundToken
+
+		;----------------------------------------------------------------------------------------
+		;
+		;			 No shift found, so it's a procedure or a variable declaration
+		;
+		;----------------------------------------------------------------------------------------
+
+		jsr 	CheckCreateVariableRecord 	; failed all, it's a variable, create record if does not exist.
+		ldx 	identTypeEnd 				; X points to following byte
+		jmp 	_TKTokeniseLoop 			; and go round again.
+
+		;----------------------------------------------------------------------------------------
+		;
+		;				Found a token, X contains the shift (or 0), A the token
+		;
+		;----------------------------------------------------------------------------------------
+
+_TKFoundToken:
+		pha 								; save token
+		txa 								; shift in X, is there one ?
+		beq 	_TKNoTShift
+		jsr 	TokeniseWriteByte 			; if so, write it out
+_TKNoTShift:
+		pla 								; restore and write token
+		jsr 	TokeniseWriteByte
+		ldx 	identTypeEnd 				; X points to following byte
+		jmp 	_TKTokeniseLoop 			; and go round again.
+
 		.send code
 
 ; ************************************************************************************************

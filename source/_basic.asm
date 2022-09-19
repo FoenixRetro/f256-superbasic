@@ -12,5 +12,7 @@
 	.include	"./commands/new.asm"
 	.include	"./memory.flat/memory.asm"
 	.include	"./tokeniser/backload.asm"
+	.include	"./tokeniser/searchtokens.asm"
 	.include	"./tokeniser/tokenise.asm"
 	.include	"./tokeniser/utility.asm"
+	.include	"./tokeniser/variablerecord.asm"

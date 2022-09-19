@@ -14,6 +14,26 @@
 
 ; ************************************************************************************************
 ;
+;					   Calculate Hash of part of buffer selected for identifier
+;
+; ************************************************************************************************
+
+TokeniseCalculateHash:
+		phx
+		ldx 	identStart 					; needs to be same as in tokens.py - simple sum
+		lda 	#0
+_TCHLoop:
+		clc
+		adc 	lineBuffer,x
+		inx
+		cpx 	identTypeEnd 				; do the whole thing including type and array markers.
+		bne 	_TCHLoop	
+		sta 	identHash 					; save the hash
+		plx	
+		rts
+
+; ************************************************************************************************
+;
 ;					   Fix case of line in LineBuffer to U/C outside quotes
 ;
 ; ************************************************************************************************
