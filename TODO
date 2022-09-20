@@ -1,15 +1,20 @@
-	
+
 	Clear code (also reset procedures to arrays ? - scan later)
+	Add hex tokenising and terms (uses #)
 	Scanning for [x]
 	expressions - etc.
 	add parenthesis to term.
 
-Add hex constants
-Error : out of identifier space
-Todo : scan for procedures (part of CLEAR)	
-Code to access variables in term.
-Encoding Decimals.
-Dispatch has to preserve X for unaries/binary operations.
+Later:
+	Error : out of identifier space
+	Todo : scan for procedures (part of CLEAR)	
+	Code to access variables in term.
+	Encoding Decimals (e.g. .90132)
+	Variable code
+	add parenthesis to term.
+	
+Notes:
+	Dispatch has to preserve X for unaries/binary operations.
 
 	phx
 	tax

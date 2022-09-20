@@ -29,7 +29,11 @@ Dereference:
 		beq 	_DRFExit 					; not a reference
 		;
 		phy
+		; ------------------------------------------------------------------------
 		;
+		;		Stuff we do for everything
+		;
+		; ------------------------------------------------------------------------
 		lda 	NSMantissa0,x 				; copy address to dereference into zTemp0
 		sta 	zTemp0
 		lda 	NSMantissa1,x
@@ -39,6 +43,12 @@ Dereference:
 		lda 	(zTemp0) 					; do the first byte
 		sta 	NSMantissa0,x		
 		;
+		; ------------------------------------------------------------------------
+		;
+		;		Figure out if string, float, or int, and if integer byte/word/int
+		;
+		; ------------------------------------------------------------------------
+
 		lda 	NSStatus,x 					; get status byte.
 		and 	#NSBTypeMask 				; what type is it ?
 		cmp 	#NSTString 					; if string, dereference two
@@ -49,9 +59,13 @@ Dereference:
 		lda 	NSStatus,x 					; must be integer - how many bytes ?
 		and 	#3
 		beq 	_DRFFull 					; the whole word
+
+		; ------------------------------------------------------------------------
 		;
 		;		Doing 1 or 2 bytes
 		;
+		; ------------------------------------------------------------------------
+
 		cmp 	#1 							; is it 10 (e.g. 2 bytes)
 		beq		_DRFClear23 				; no, one byte, clear 2 & 3 and exit
 		;
@@ -66,6 +80,13 @@ _DRFClear23:
 		lda 	NSStatus,x 					; make it a value of that type.
 		and 	#NSBTypeMask
 		sta 	NSStatus,x 					
+
+		; ------------------------------------------------------------------------
+		;
+		;		For string reference, if the value stored there is $0000 return
+		; 		a null string.
+		;
+		; ------------------------------------------------------------------------
 
 		cmp 	#NSTString  				; is it a string
 		bne 	_DRFNotString
@@ -84,11 +105,14 @@ _DRFNotString
 _DRFExit:		
 		rts
 
+
 _DRFNullString: 							; a null string.
 		.byte 	0		
+		; ------------------------------------------------------------------------
 		;
 		;		Doing 4 (Integer, word) or 5 bytes (Float)
 		;		
+		; ------------------------------------------------------------------------
 _DRFFull:
 		ldy 	#1 							; get remaining 3 bytes.
 		lda 	(zTemp0),y
@@ -101,9 +125,11 @@ _DRFFull:
 		sta 	NSMantissa3,x
 		;
 		stz 	NSExponent,x 				; clear exponent.
+		; ------------------------------------------------------------------------
 		;
 		;		Do we read a 5th byte for Floats ?
 		;
+		; ------------------------------------------------------------------------
 		lda		NSStatus,x 					; see if type is integer
 		and 	#NSBTypeMask  				; type information only
 		sta 	NSStatus,x 					; update it back.
@@ -112,9 +138,11 @@ _DRFFull:
 		lda 	(zTemp0),y
 		sta 	NSExponent,x
 _DRFNoExponent:
+		; ------------------------------------------------------------------------
 		;
 		;		Extract the sign bit from Mantissa3:7 to Status:7
 		;
+		; ------------------------------------------------------------------------
 		lda 	NSMantissa3,x 				; is the most significant bit set ?
 		bpl 	_DRFExit2 					; if not, then exit.
 		and 	#$7F 						; clear that bit.

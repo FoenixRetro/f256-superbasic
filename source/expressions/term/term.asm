@@ -31,7 +31,7 @@ EvaluateTerm:
 		cmp 	#$40 						; 40-7F => identifier reference
 		bcs 	_ETVariable
 		cmp 	#'0' 						; is it a number
-		bcc 	_ETPuncUnary
+		bcc 	_ETPuncUnary 				; if not it might be a punctuation unary.
 		cmp 	#'9'+1 	
 		bcs 	_ETPuncUnary
 
@@ -46,7 +46,7 @@ _ETNumber:
 		iny 								; keep encoding until we have the numbers
 		.cget
 		jsr 	EncodeNumberContinue
-		bcs 	_ETNumber
+		bcs 	_ETNumber 					; go back if accepted.
 		rts
 
 		; ----------------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ _ETSyntaxError:
 
 		; ----------------------------------------------------------------------------------------
 		;
-		;		String $FF
+		;		String $FF <total length> <text> $00
 		;		
 		; ----------------------------------------------------------------------------------------
 
@@ -83,10 +83,11 @@ _ETString:
 		pha
 		iny 								; first character
 		jsr 	MemoryInline 				; put address of string at (codePtr),y on stack
+											; (may have to duplicate into soft memory)
 		pla 								; restore count and save
 		sta 	zTemp0 
 
-		tya 								; add length to Y
+		tya 								; add length to Y to skip it.
 		clc
 		adc 	zTemp0
 		tay
@@ -131,7 +132,7 @@ _ETPuncUnary:
 
 		; ----------------------------------------------------------------------------------------
 		;
-		;		Indirection, ind count-1 is in zTemp0 - does unary ? !
+		;		Indirection, ind count-1 is in zTemp0 - does unary ? (byte) ! (word)
 		;
 		; ----------------------------------------------------------------------------------------
 
@@ -162,7 +163,7 @@ _ETUnaryNegate:
 		lda 	NSStatus,x 					; must be a number
 		and 	#NSTString 	
 		bne 	_ETTypeMismatch
-		jmp 	NSMNegate 
+		jmp 	NSMNegate  					; just toggles the sign bit.
 
 		; ----------------------------------------------------------------------------------------
 		;
@@ -175,11 +176,13 @@ _ETDereference:
 		lda 	NSStatus,x 					; must be a reference
 		and 	#NSBIsReference
 		beq 	_ETTypeMismatch
-		stz 	NSStatus,x 					; make it an integer
+		stz 	NSStatus,x 					; make it an integer address
+		rts
 
 		; ----------------------------------------------------------------------------------------
 		;
-		;		Constant to string reference ($)
+		;		Converts an address to a string there, so if you do $256 his refers to the
+		;		ASCIIZ string at 256.
 		;
 		; ----------------------------------------------------------------------------------------
 
