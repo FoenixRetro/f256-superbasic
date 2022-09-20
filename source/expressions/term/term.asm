@@ -26,7 +26,6 @@
 ; ************************************************************************************************
 
 EvaluateTerm:
-		.debug
 		.cget 								; look at first character
 		bmi 	_ETCheckUnary 				; unary function ? (text ones)
 		cmp 	#$40 						; 40-7F => identifier reference
@@ -108,13 +107,109 @@ _ETVariable:
 
 		; ----------------------------------------------------------------------------------------
 		;
-		;		Punctuation Unary these are @ (deref) ?\!$ (indirection) & (hex) ( (parenthesis)
+		;		Punctuation Unary these are @ (deref) ?\!$ (indirection) ( (parenthesis)
 		;		and - (negation)
 		;
 		; ----------------------------------------------------------------------------------------
 
 _ETPuncUnary:
 		.debug
+		iny 								; consume the unary character
+		cmp 	#KWD_MINUS 					; unary minus
+		beq 	_ETUnaryNegate
+		cmp 	#KWD_AT 					; @ reference -> constant
+		beq 	_ETDereference
+		cmp 	#KWD_LPAREN 				; parenthesis
+		beq 	_ETParenthesis
+		cmp 	#KWD_DOLLAR
+		beq 	_ETStringReference
+		stz 	zTemp0 						; zTemp0 is the indirection level.
+		cmp 	#KWD_QMARK 					; byte indirection (0) ?
+		beq 	_ETIndirection
+		inc 	zTemp0
+		cmp 	#KWD_BACKSLASH				; word indirection (1) \
+		beq 	_ETIndirection
+		inc 	zTemp0
+		inc 	zTemp0
+		cmp 	#KWD_PLING 					; long indirection (3) !
+		bne 	_ETSyntaxError
+
+		; ----------------------------------------------------------------------------------------
+		;
+		;		Indirection, ind count is in zTemp0 - does unary ? \ !
+		;
+		; ----------------------------------------------------------------------------------------
+
+_ETIndirection:
+		lda 	zTemp0 						; push indirection amount (0-3) on the stack
+		pha
+		jsr 	EvaluateTerm				; evaluate the term
+		jsr 	Dereference 				; dereference it.
+		lda 	NSStatus,x 					; must be a +ve integer.
+		bne 	_ETTypeMismatch
+		pla 								; indirection 0-3
+		ora 	#NSBIsReference 			; make it a reference.
+		sta 	NSStatus,x 
+		rts
+_ETTypeMismatch:
+		jmp 	TypeError		
+
+		; ----------------------------------------------------------------------------------------
+		;
+		;		Unary negation (-)
+		;
+		; ----------------------------------------------------------------------------------------
+
+_ETUnaryNegate:
+		jsr 	EvaluateTerm				; evaluate the term
+		jsr 	Dereference 				; dereference it.
+		lda 	NSStatus,x 					; must be a number
+		and 	#NSTString 	
+		bne 	_ETTypeMismatch
+		jmp 	NSMNegate 
+
+		; ----------------------------------------------------------------------------------------
+		;
+		;		Dereference a reference to a constant address (@)
+		;
+		; ----------------------------------------------------------------------------------------
+
+_ETDereference:
+		jsr 	EvaluateTerm				; evaluate the term
+		lda 	NSStatus,x 					; must be a reference
+		and 	#NSBIsReference
+		beq 	_ETTypeMismatch
+		stz 	NSStatus,x 					; make it an integer
+
+		; ----------------------------------------------------------------------------------------
+		;
+		;		Constant to string reference ($)
+		;
+		; ----------------------------------------------------------------------------------------
+
+_ETStringReference:		
+		jsr 	EvaluateTerm				; evaluate the term
+		jsr 	Dereference 				; dereference it.
+		lda 	NSStatus,x 					; must be a +ve integer.
+		bne 	_ETTypeMismatch
+		lda 	#NSTString 					; make it a string
+		sta 	NSStatus,x
+		rts
+
+		; ----------------------------------------------------------------------------------------
+		;
+		;		Expression in parenthesis.
+		;
+		; ----------------------------------------------------------------------------------------
+
+_ETParenthesis:
+		.debug
+		; ** TODO **
+		bra 	_ETParenthesis
+
+Dereference:
+		; ** TODO **
+		rts
 
 		.send code
 

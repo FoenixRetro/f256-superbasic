@@ -192,18 +192,25 @@ class TokenCollection(object):
 			t.setID(self.nextFreeID[s])
 			self.nextFreeID[s] += 1
 	#
-	#		Dump a token group , text and constants.
+	#		Dump a token group , text 
 	#
-	def dumpGroup(self,set,textHandle,constHandle):
-		textHandle.write("KeywordSet{0}:\n".format(set))
+	def dumpGroupText(self,set,h):
+		h.write("KeywordSet{0}:\n".format(set))
 		for t in self.tokenList:
 			if t.getSet() == set:
 				hash = sum([ord(x) for x in t.getName()]) & 0xFF
 				name = "" if t.getName().startswith("!") else t.getName()
-				textHandle.write("\t.text\t{0},${1:02x},{2:16} ; ${3:02x} {4}\n".format(len(name),hash,'"'+name+'"',t.getID(),t.getName()))
-				if t.getID() >= 131:
-					constHandle.write("KWD_{0:32} = ${1:02x}; ${1:02x} {2}\n".format(self.processName(t.getName()),t.getID(),t.getName()))
-		textHandle.write("\t.text\t$FF\n")
+				h.write("\t.text\t{0},${1:02x},{2:16} ; ${3:02x} {4}\n".format(len(name),hash,'"'+name+'"',t.getID(),t.getName()))
+		h.write("\t.text\t$FF\n")
+	#
+	#		Dump a token group , constants
+	#
+	def dumpGroupConstants(self,set,h):
+		for t in self.tokenList:
+			if t.getSet() == set:
+				name = "" if t.getName().startswith("!") else t.getName()
+				if (t.getID() >= 131 or t.getID() < 64) and t.getID() != 31 and t.getID() != 32:
+					h.write("KWD_{0:32} = ${1:02x}; ${1:02x} {2}\n".format(self.processName(t.getName()),t.getID(),t.getName()))
 	#
 	#		Dump precedence table
 	#
@@ -225,7 +232,15 @@ class TokenCollection(object):
 	#		Process Name to remove control characters if any.
 	#
 	def processName(self,s):
-		return s.replace("!","PLING").replace("$","DOLLAR").replace(":","COLON").replace("(","LPAREN")
+		s = s.replace("!","PLING").replace("$","DOLLAR").replace(":","COLON").replace("(","LPAREN")
+		s = s.replace("<","LESS").replace(">","GREATER").replace("=","EQUAL").replace("\\","BACKSLASH").replace(")","RPAREN")
+		s = s.replace("@","AT").replace("[","LSQPAREN").replace("]","RSQPAREN").replace("^","HAT").replace("+","PLUS")
+		s = s.replace("-","MINUS").replace("*","STAR").replace("/","SLASH").replace("%","PERCENT").replace("&","AMPERSAND")
+		s = s.replace("?","QMARK").replace(";","SEMICOLON").replace("'","QUOTE").replace("`","BQUOTE").replace("{","LCURLY")
+		s = s.replace("}","RCURLY").replace("_","UNDERSCORE").replace("|","BAR").replace(",","COMMA").replace("#","HASH")
+		s = s.replace(".","PERIOD").replace('"',"DQUOTE").replace("~","TILDE").replace(" ","SPACE").replace("","")
+		#s = s.replace("","").replace("","").replace("","").replace("","").replace("","")
+		return s 
 	#
 	#		Dump group 0 info
 	#
@@ -257,12 +272,15 @@ if __name__ == "__main__":
 	note = ";\n;\tThis is automatically generated.\n;\n"
 	t = TokenCollection()
 	h1 = open("generated/kwdtext.dat","w")
-	h2 = open("generated/kwdconst.inc","w")
 	h1.write(note)
-	h2.write(note)
 	for i in range(0,3):
-		t.dumpGroup(i,h1,h2)
+		t.dumpGroupText(i,h1)
 	h1.close()
+
+	h2 = open("generated/kwdconst.inc","w")
+	h2.write(note)
+	for i in range(-1,1):
+		t.dumpGroupConstants(i,h2)
 	h2.close()
 
 	h = open("generated/precedence.dat","w")
