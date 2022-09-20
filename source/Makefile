@@ -21,6 +21,7 @@ APPNAME = basic.rom
 SCRIPTDIR = scripts$(S)
 EMULATOR = $(BINDIR)jr256$(APPSTEM)
 TTYPORT = /dev/ttyUSB0
+LANGUAGE = en
 
 all :  basic
 
@@ -41,6 +42,7 @@ basic : prelim
 	64tass $(ASMOPTS) _basic.asm -o $(APPNAME)
 
 prelim:
+	python $(SCRIPTDIR)errors.py $(LANGUAGE)
 	python $(SCRIPTDIR)makebuild.py
 	python $(SCRIPTDIR)tokens.py
 

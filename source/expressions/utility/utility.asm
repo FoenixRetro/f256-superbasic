@@ -1,9 +1,9 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		backload.asm
-;		Purpose:	Backloader for Emulator
-;		Created:	18th September 2022
+;		Name:		number.asm
+;		Purpose:	State machine inputting numbers
+;		Created:	20th September 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
@@ -12,35 +12,50 @@
 
 		.section code
 
+
 ; ************************************************************************************************
 ;
-;								Characters can be streamed in by $FFFA
+;							  Set mantissa to a 1 byte integer
 ;
 ; ************************************************************************************************
 
-BackloadProgram:
-		ldx 	#$FF
-		lda 	$FFFA 						; read first byte
-		bmi 	_BPExit
-_BPCopy:
-		inx  								; copy byte in
-		sta 	lineBuffer,x
-		stz 	lineBuffer+1,x
-		lda 	$FFFA 						; read next byte
-		bmi 	_BPEndLine 					; -ve = EOL
-		cmp 	#9 							; handle TAB
-		bne 	_BPNotTab
-		lda 	#' '
-_BPNotTab:		
-		cmp 	#' ' 						; < ' ' = EOL
-		bcs 	_BPCopy
-_BPEndLine:		
-		jsr 	TokeniseLine 				; tokenise the line.
-		jsr 	MemoryAppend 				; append to current program
-		bra 	BackloadProgram
-_BPExit:
+NSMMantissaZero:
+		lda 	#0
+NSMMantissaByte:
+		sta 	NSMantissa0,x
+		stz 	NSMantissa1,x
+		stz 	NSMantissa2,x
+		stz 	NSMantissa3,x
+		stz 	NSExponent,x 				; zero exponent, as integer.
+		stz 	NSStatus,x 					; status zero (integer)
 		rts
-		
+				
+; ************************************************************************************************
+;
+;									Shift the mantissa left
+;
+; ************************************************************************************************
+
+NSMShiftLeft:		
+		asl 	NSMantissa0,x
+		rol		NSMantissa1,x
+		rol		NSMantissa2,x
+		rol		NSMantissa3,x
+		rts
+
+; ************************************************************************************************
+;
+;									Shift the mantissa right
+;
+; ************************************************************************************************
+
+NSMShiftRight:		
+		lsr 	NSMantissa3,x
+		ror		NSMantissa2,x
+		ror		NSMantissa1,x
+		ror		NSMantissa0,x
+		rts
+
 		.send code
 
 ; ************************************************************************************************

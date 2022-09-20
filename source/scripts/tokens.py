@@ -97,14 +97,16 @@ class UnaryToken(Token):
 	def __init__(self,name):
 		Token.__init__(self,name,0)
 	def sortKey(self):
-		return "3"+self.name 
+		return "1"+self.name 
 
 class StructureToken(Token):
 	def __init__(self,name,adjust):
 		Token.__init__(self,name,0)
 		self.adjustment = adjust 
 	def sortKey(self):
-		return ("1" if self.adjustment > 0 else "2")+self.name  
+		return ("2" if self.adjustment > 0 else "3")+self.name  
+	def getAdjustment(self):
+		return self.adjustment
 
 # *******************************************************************************************
 #
@@ -214,7 +216,7 @@ class TokenCollection(object):
 	#		Dump vector table
 	#				
 	def dumpVectorTable(self,set,h):
-		h.write("VectorSet{0}:\n".format(set))
+		h.write("VectorSet{0}:\n".format(set if set >= 0 else "Punc"))
 		for t in self.tokenList:
 			if t.getSet() == set:
 				label = t.getLabel() if t.getLabel() is not None else "SyntaxError"
@@ -224,6 +226,32 @@ class TokenCollection(object):
 	#
 	def processName(self,s):
 		return s.replace("!","PLING").replace("$","DOLLAR").replace(":","COLON").replace("(","LPAREN")
+	#
+	#		Dump group 0 info
+	#
+	def group0Info(self,h1):
+		h1.write("KWC_EOL = $80\n")
+		h1.write("KWC_STRING = $FF\n")
+		lowInc = 999
+		lowDec = 999
+		highAdjust = 0
+		lowUnary = 999
+		highUnary = 0 
+		for t in self.tokenList:
+			if t.getSet() == 0:
+				if isinstance(t,UnaryToken):
+					lowUnary = min(t.getID(),lowUnary)
+					highUnary = max(t.getID(),highUnary)
+				if isinstance(t,StructureToken):
+					highAdjust = max(t.getID(),highUnary)
+					lowInc = min(t.getID(),lowInc)
+					if t.getAdjustment() < 0:
+						lowDec = min(t.getID(),lowDec)
+		h1.write("KWC_FIRST_STRUCTURE = ${0:02x}\n".format(lowInc))						
+		h1.write("KWC_FIRST_STRUCTURE_DEC = ${0:02x}\n".format(lowDec))						
+		h1.write("KWC_LAST_STRUCTURE = ${0:02x}\n".format(highAdjust))						
+		h1.write("KWC_FIRST_UNARY = ${0:02x}\n".format(lowUnary))
+		h1.write("KWC_LAST_UNARY = ${0:02x}\n".format(highUnary))
 
 if __name__ == "__main__":
 	note = ";\n;\tThis is automatically generated.\n;\n"
@@ -243,9 +271,13 @@ if __name__ == "__main__":
 	h.close()
 
 	h = open("generated/vectors.dat","w")
-	h = sys.stdout
 	h.write(note)
 	t.dumpVectorTable(-1,h)
 	for i in range(0,3):
 		t.dumpVectorTable(i,h)
 	h.close()
+
+	h1 = open("generated/kwdconst0.inc","w")
+	h1.write(note)
+	t.group0Info(h1)
+	h1.close()

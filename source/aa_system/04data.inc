@@ -43,6 +43,11 @@ NSBIsString = $10 							; bit 4 : set if string (procedures don't go on the sta
 NSBTypeMask = $18 							; bits 4,3 : 00 int 01 float 10 string 11 procedure
 NSBRefMask = $03 							; bits 0,1 : Bytes of reference, -1 (e.g. 00 = 1 byte, 11 = 4 bytes)
 
+NSTInteger = $00 							; base types for bits 3..4
+NSTFloat = $08
+NSTString = $10
+NSTProcedure = $18
+
 		.section zeropref
 
 ; ************************************************************************************************
@@ -86,6 +91,11 @@ identHash: 									; hash of identifier (including the type characters)
 identTypeByte: 								; type descriptor in format used in identifier record
 		.fill 	1	 						; (see tokenising.pdf)
 
+encodeState: 								; state for simple encoding FSM
+		.fill 	1
+;
+;		New tokenised line - these three *must* be contiguous as they are used as a single entity
+;		
 tokenOffset: 								; used for tokenising - tokenised result goes here
 		.fill 	1		
 tokenLineNumber:

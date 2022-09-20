@@ -5,37 +5,37 @@ KeywordSet0:
 	.text	0,$65,""               ; $80 !0:EOF
 	.text	0,$58,""               ; $81 !1:SH1
 	.text	0,$5a,""               ; $82 !2:SH2
-	.text	3,$e7,"FOR"            ; $83 FOR
-	.text	2,$8f,"IF"             ; $84 IF
-	.text	4,$34,"PROC"           ; $85 PROC
-	.text	6,$c1,"REPEAT"         ; $86 REPEAT
-	.text	5,$79,"WHILE"          ; $87 WHILE
-	.text	5,$66,"ENDIF"          ; $88 ENDIF
-	.text	7,$0b,"ENDPROC"        ; $89 ENDPROC
-	.text	4,$3f,"NEXT"           ; $8a NEXT
-	.text	5,$8c,"UNTIL"          ; $8b UNTIL
-	.text	4,$2e,"WEND"           ; $8c WEND
-	.text	4,$fe,"ABS("           ; $8d ABS(
-	.text	6,$93,"ALLOC("         ; $8e ALLOC(
-	.text	4,$ff,"ASC("           ; $8f ASC(
-	.text	5,$29,"CHR$("          ; $90 CHR$(
-	.text	4,$f4,"DEC("           ; $91 DEC(
-	.text	9,$4a,"GETDATE$("      ; $92 GETDATE$(
-	.text	9,$5b,"GETTIME$("      ; $93 GETTIME$(
-	.text	5,$31,"HEX$("          ; $94 HEX$(
-	.text	4,$13,"INT("           ; $95 INT(
-	.text	6,$a7,"ISVAL("         ; $96 ISVAL(
-	.text	6,$77,"LEFT$("         ; $97 LEFT$(
-	.text	4,$07,"LEN("           ; $98 LEN(
-	.text	5,$26,"MID$("          ; $99 MID$(
-	.text	3,$f1,"NOT"            ; $9a NOT
-	.text	4,$1d,"PAGE"           ; $9b PAGE
-	.text	7,$ca,"RIGHT$("        ; $9c RIGHT$(
-	.text	4,$0c,"RND("           ; $9d RND(
-	.text	4,$10,"SGN("           ; $9e SGN(
-	.text	4,$0e,"SPC("           ; $9f SPC(
-	.text	5,$45,"STR$("          ; $a0 STR$(
-	.text	4,$0b,"VAL("           ; $a1 VAL(
+	.text	4,$fe,"ABS("           ; $83 ABS(
+	.text	6,$93,"ALLOC("         ; $84 ALLOC(
+	.text	4,$ff,"ASC("           ; $85 ASC(
+	.text	5,$29,"CHR$("          ; $86 CHR$(
+	.text	4,$f4,"DEC("           ; $87 DEC(
+	.text	9,$4a,"GETDATE$("      ; $88 GETDATE$(
+	.text	9,$5b,"GETTIME$("      ; $89 GETTIME$(
+	.text	5,$31,"HEX$("          ; $8a HEX$(
+	.text	4,$13,"INT("           ; $8b INT(
+	.text	6,$a7,"ISVAL("         ; $8c ISVAL(
+	.text	6,$77,"LEFT$("         ; $8d LEFT$(
+	.text	4,$07,"LEN("           ; $8e LEN(
+	.text	5,$26,"MID$("          ; $8f MID$(
+	.text	3,$f1,"NOT"            ; $90 NOT
+	.text	4,$1d,"PAGE"           ; $91 PAGE
+	.text	7,$ca,"RIGHT$("        ; $92 RIGHT$(
+	.text	4,$0c,"RND("           ; $93 RND(
+	.text	4,$10,"SGN("           ; $94 SGN(
+	.text	4,$0e,"SPC("           ; $95 SPC(
+	.text	5,$45,"STR$("          ; $96 STR$(
+	.text	4,$0b,"VAL("           ; $97 VAL(
+	.text	3,$e7,"FOR"            ; $98 FOR
+	.text	2,$8f,"IF"             ; $99 IF
+	.text	4,$34,"PROC"           ; $9a PROC
+	.text	6,$c1,"REPEAT"         ; $9b REPEAT
+	.text	5,$79,"WHILE"          ; $9c WHILE
+	.text	5,$66,"ENDIF"          ; $9d ENDIF
+	.text	7,$0b,"ENDPROC"        ; $9e ENDPROC
+	.text	4,$3f,"NEXT"           ; $9f NEXT
+	.text	5,$8c,"UNTIL"          ; $a0 UNTIL
+	.text	4,$2e,"WEND"           ; $a1 WEND
 	.text	3,$e2,"CLS"            ; $a2 CLS
 	.text	4,$1a,"DATA"           ; $a3 DATA
 	.text	3,$da,"DIM"            ; $a4 DIM

@@ -139,7 +139,7 @@ _TKCheckDouble:
 		;
 		;----------------------------------------------------------------------------------------
 
-_TKExit:lda 	#$80 						; write end of line byte
+_TKExit:lda 	#KWC_EOL 					; write end of line byte
 		jsr 	TokeniseWriteByte		
 		rts	
 
@@ -258,7 +258,7 @@ _TSEndOfString:
 		pha 								; save what we terminated with, so we know whether to skip.
 		stx 	zTemp0 						; save the end point.
 
-		lda 	#$FF 						; string token.
+		lda 	#KWC_STRING 				; string token.
 		jsr 	TokeniseWriteByte
 
 		tya 								; work out the string length

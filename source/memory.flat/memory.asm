@@ -51,6 +51,24 @@ _MACopy:
 		bne 	_MACopy
 _MANoLine:			
 		rts
+
+; ************************************************************************************************
+;
+;									Get inline code address
+;
+; ************************************************************************************************
+
+MemoryInline:
+		tya 								; put address into stack,x
+		clc 
+		adc 	codePtr
+		sta 	NSMantissa0,x
+		lda 	codePtr+1
+		adc 	#0
+		sta 	NSMantissa1,x
+		stz 	NSMantissa2,x
+		stz 	NSMantissa3,x
+		rts		
 		
 		.send code
 
