@@ -86,8 +86,8 @@ _ETString:
 		pla 								; restore count and save
 		sta 	zTemp0 
 
-		tya 								; add length + 1 to Y
-		sec
+		tya 								; add length to Y
+		clc
 		adc 	zTemp0
 		tay
 
@@ -107,13 +107,12 @@ _ETVariable:
 
 		; ----------------------------------------------------------------------------------------
 		;
-		;		Punctuation Unary these are @ (deref) ?\!$ (indirection) ( (parenthesis)
+		;		Punctuation Unary these are @ (deref) ?!$ (indirection) ( (parenthesis)
 		;		and - (negation)
 		;
 		; ----------------------------------------------------------------------------------------
 
 _ETPuncUnary:
-		.debug
 		iny 								; consume the unary character
 		cmp 	#KWD_MINUS 					; unary minus
 		beq 	_ETUnaryNegate
@@ -127,27 +126,24 @@ _ETPuncUnary:
 		cmp 	#KWD_QMARK 					; byte indirection (0) ?
 		beq 	_ETIndirection
 		inc 	zTemp0
-		cmp 	#KWD_BACKSLASH				; word indirection (1) \
-		beq 	_ETIndirection
-		inc 	zTemp0
-		inc 	zTemp0
-		cmp 	#KWD_PLING 					; long indirection (3) !
+		cmp 	#KWD_PLING					; word indirection (1) \
 		bne 	_ETSyntaxError
 
 		; ----------------------------------------------------------------------------------------
 		;
-		;		Indirection, ind count is in zTemp0 - does unary ? \ !
+		;		Indirection, ind count-1 is in zTemp0 - does unary ? !
 		;
 		; ----------------------------------------------------------------------------------------
 
 _ETIndirection:
-		lda 	zTemp0 						; push indirection amount (0-3) on the stack
+		lda 	zTemp0 						; push indirection amount (0-1) => (1-2) on the stack
+		inc 	a
 		pha
 		jsr 	EvaluateTerm				; evaluate the term
 		jsr 	Dereference 				; dereference it.
 		lda 	NSStatus,x 					; must be a +ve integer.
 		bne 	_ETTypeMismatch
-		pla 								; indirection 0-3
+		pla 								; indirection 1-2
 		ora 	#NSBIsReference 			; make it a reference.
 		sta 	NSStatus,x 
 		rts
@@ -206,10 +202,6 @@ _ETParenthesis:
 		.debug
 		; ** TODO **
 		bra 	_ETParenthesis
-
-Dereference:
-		; ** TODO **
-		rts
 
 		.send code
 

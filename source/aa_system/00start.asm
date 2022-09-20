@@ -21,7 +21,10 @@ Start:	ldx 	#$FF 						; stack reset
 		ldy 	#4
 		ldx 	#1
 		jsr 	EvaluateTerm
-
+		.debug 
+		lda 	#$20+$00
+		sta 	NSStatus,x
+		jsr 	Dereference
 WarmStart:
 		.debug
 		bra 	WarmStart

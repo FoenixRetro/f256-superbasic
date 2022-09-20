@@ -261,10 +261,11 @@ _TSEndOfString:
 		lda 	#KWC_STRING 				; string token.
 		jsr 	TokeniseWriteByte
 
-		tya 								; work out the string length
+		tya 								; work out the string length including the EOS.
 		eor 	#$FF
 		sec
 		adc 	zTemp0
+		inc 	a
 		jsr 	TokeniseWriteByte 			; write that length.
 		;
 _TSOutputString:

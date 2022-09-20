@@ -12,6 +12,7 @@
 	.include	"./commands/clear.asm"
 	.include	"./commands/end.asm"
 	.include	"./commands/new.asm"
+	.include	"./expressions/term/dereference.asm"
 	.include	"./expressions/term/number.asm"
 	.include	"./expressions/term/term.asm"
 	.include	"./expressions/utility/utility.asm"

@@ -1,16 +1,14 @@
 	
-	Implement dereference and test indirection works.
 	Clear code (also reset procedures to arrays ? - scan later)
 	Scanning for [x]
 	expressions - etc.
 	add parenthesis to term.
 
-
+Add hex constants
 Error : out of identifier space
 Todo : scan for procedures (part of CLEAR)	
 Code to access variables in term.
 Encoding Decimals.
-
 Dispatch has to preserve X for unaries/binary operations.
 
 	phx

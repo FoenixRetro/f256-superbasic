@@ -172,7 +172,7 @@ class TokenCollection(object):
 			">":2,">=":2,"<":2,"<=":2,"=":2,"<>":2,
 			"+":3,"-":3,
 			"*":4,"/":4,"%":4,"<<":4,">>":4,
-			"!":5,"\\":5,"?":5,"$":5
+			"!":5,"?":5,"$":5
 		} 
 		return prec[op] if op in prec else 0
 	#
@@ -247,6 +247,7 @@ class TokenCollection(object):
 	def group0Info(self,h1):
 		h1.write("KWC_EOL = $80\n")
 		h1.write("KWC_STRING = $FF\n")
+		h1.write("KWC_HEXCONST = $FE\n")
 		lowInc = 999
 		lowDec = 999
 		highAdjust = 0
