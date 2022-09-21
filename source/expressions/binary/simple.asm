@@ -42,6 +42,7 @@ simple32 .macro
 AddInteger: 	;; [+]
 		plx
 		.dispatcher NotDoneError,NotDoneError
+AddTopTwoStack:		
 		clc
 		.simple32 adc
 		rts
@@ -49,6 +50,7 @@ AddInteger: 	;; [+]
 SubInteger: 	;; [-]
 		plx
 		.dispatcher NotDoneError,NotDoneError
+SubTopTwoStack:		
 		sec
 		.simple32 sbc
 		rts

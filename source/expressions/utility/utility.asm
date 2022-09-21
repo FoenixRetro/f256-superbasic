@@ -26,6 +26,27 @@ NSMNegate:									; negate int or float.
 
 ; ************************************************************************************************
 ;
+;							  Shift entry X to entry X+2
+;
+; ************************************************************************************************
+
+NSMShiftUpTwo:
+		lda 	NSMantissa0,x
+		sta 	NSMantissa0+2,x
+		lda 	NSMantissa1,x
+		sta 	NSMantissa1+2,x
+		lda 	NSMantissa2,x
+		sta 	NSMantissa2+2,x
+		lda 	NSMantissa3,x
+		sta 	NSMantissa3+2,x
+		lda 	NSExponent,x 				
+		sta 	NSExponent+2,x
+		lda 	NSStatus,x
+		sta 	NSStatus+2,x 	
+		rts
+		
+; ************************************************************************************************
+;
 ;							  Set mantissa to a 1 byte integer
 ;
 ; ************************************************************************************************

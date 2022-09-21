@@ -44,7 +44,7 @@ VectorSetPunc:
 	.word	SyntaxError                      ; $27 '
 	.word	SyntaxError                      ; $28 (
 	.word	SyntaxError                      ; $29 )
-	.word	SyntaxError                      ; $2a *
+	.word	MulInteger                       ; $2a *
 	.word	AddInteger                       ; $2b +
 	.word	SyntaxError                      ; $2c ,
 	.word	SubInteger                       ; $2d -

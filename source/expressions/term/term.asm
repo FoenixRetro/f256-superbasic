@@ -236,9 +236,9 @@ _ETStringReference:
 		; ----------------------------------------------------------------------------------------
 
 _ETParenthesis:
-		.debug
-		; ** TODO **
-		bra 	_ETParenthesis
+		jsr 	EvaluateExpression 			; evaluate here, from lowest precedence
+		jsr 	CheckRightBracket 			; check for )
+		rts
 
 		.send code
 

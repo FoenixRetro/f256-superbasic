@@ -1,7 +1,6 @@
 
 	#xxxx becomes &xxxx ? why not ?
-	Look at basic multiply (use unchanged with shift ?)
-	Add parenthesis to term.
+	Division code, Modulus code.
 	Comparison operators 
 	Clear code (also reset procedures to arrays ? - scan later)
 	Float add, subtract, multiply, divide (?)

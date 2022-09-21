@@ -13,6 +13,8 @@
 	.include	"./commands/clear.asm"
 	.include	"./commands/end.asm"
 	.include	"./commands/new.asm"
+	.include	"./errors/charcheck.asm"
+	.include	"./expressions/binary/multiply.asm"
 	.include	"./expressions/binary/shifts.asm"
 	.include	"./expressions/binary/simple.asm"
 	.include	"./expressions/expression.asm"
