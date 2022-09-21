@@ -4,6 +4,7 @@
 	.include	"./aa_system/01common.inc"
 	.include	"./aa_system/02macros.inc"
 	.include	"./aa_system/04data.inc"
+	.include	"./expressions/binary/handlers.inc"
 	.include	"./generated/errors.inc"
 	.include	"./generated/kwdconst.inc"
 	.include	"./generated/kwdconst0.inc"

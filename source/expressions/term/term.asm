@@ -80,10 +80,9 @@ _ETSyntaxError:
 		; ----------------------------------------------------------------------------------------
 
 _ETHexConstant:
-		.debug
 		iny 								; skip #
 		iny 								; skip count
-		jsr 	NSMMantissaZero 			; clear result
+		jsr 	NSMSetZero 					; clear result
 _ETHLoop:
 		.cget 								; get next character
 		iny 								; and consume

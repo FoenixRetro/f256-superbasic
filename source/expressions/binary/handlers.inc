@@ -1,71 +1,69 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		number.asm
-;		Purpose:	State machine inputting numbers
-;		Created:	20th September 2022
+;		Name:		simple.asm
+;		Purpose:	Simple binary operations
+;		Created:	21st September 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
 
+; ************************************************************************************************
+;
+;							Dereference both values if required
+;
+; ************************************************************************************************
+
 		.section code
 
-; ************************************************************************************************
-;
-;							  		Negate mantissa
-;
-; ************************************************************************************************
-
-NSMNegate:									; negate int or float.
-		lda 	NSStatus,x
-		eor 	#NSBIsNegative
-		sta 	NSStatus,x
-		rts
-
-; ************************************************************************************************
-;
-;							  Set mantissa to a 1 byte integer
-;
-; ************************************************************************************************
-
-NSMSetZero:
-		lda 	#0
-NSMSetByte:
-		sta 	NSMantissa0,x
-		stz 	NSMantissa1,x
-		stz 	NSMantissa2,x
-		stz 	NSMantissa3,x
-		stz 	NSExponent,x 				; zero exponent, as integer.
-		stz 	NSStatus,x 					; status zero (integer)
-		rts
-				
-; ************************************************************************************************
-;
-;									Shift the mantissa left
-;
-; ************************************************************************************************
-
-NSMShiftLeft:		
-		asl 	NSMantissa0,x
-		rol		NSMantissa1,x
-		rol		NSMantissa2,x
-		rol		NSMantissa3,x
-		rts
+dereferenceboth .macro
+		lda 	NSStatus,x 					; OR the type data together
+		ora 	NSStatus+1,x
+		asl 	a 							; shift reference bit into sign bit
+		asl 	a
+		bpl 	_NotRef
+		pha
+		jsr 	DereferenceTopTwo 			; call the dereference code preserving A
+		pla
+_NotRef:
+		.endm
 
 ; ************************************************************************************************
 ;
-;									Shift the mantissa right
+;			Drops through if one integer. \1 if at least one float, \2 if one is string
 ;
 ; ************************************************************************************************
 
-NSMShiftRight:		
-		lsr 	NSMantissa3,x
-		ror		NSMantissa2,x
-		ror		NSMantissa1,x
-		ror		NSMantissa0,x
-		rts
+dispatcher .macro
+		.dereferenceboth 					; remove reference, A << 2 in A
+		asl 	a 							; put MSB of type into A:7
+		bmi 	_StringData 				; if the original bit 4 was set then do the string code.
+		lda 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
+		ora 	NSExponent+1,x
+		beq 	_IntegerCode 				; if clear, then we have two integers
+		jmp 	\1 							; otherwise at least one float.
+_StringData:
+		jmp 	\2							; at least one string - don't know both are strings.
+_IntegerCode:		
+		.endm								
+
+; ************************************************************************************************
+;
+;								Integer only dispatcher
+;
+; ************************************************************************************************
+
+dispatchintegeronly .macro
+		.dereferenceboth 					; remove reference, A << 2 in A
+		and 	#$C0 						; isolate the type bits which have been shifted
+		ora 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
+		ora 	NSExponent+1,x
+		beq 	_IntegerCode 				; if clear, then we have two integers
+		jmp 	TypeError 					; anything else, type mismatch.
+_IntegerCode:		
+		.endm								
 
 		.send code
 

@@ -24,3 +24,4 @@ Stop:		Stop
 String:		String too long
 Assert:		Assertion failed
 Data:		Out of data
+!NotDone: 	Unimplemented

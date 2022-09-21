@@ -14,6 +14,17 @@
 
 ; ************************************************************************************************
 ;
+;								Dereference x and x+1 entries
+;
+; ************************************************************************************************
+
+DereferenceTopTwo:
+		inx
+		jsr 	Dereference 				; deref x+1
+		dex  								; falls through to deref x
+
+; ************************************************************************************************
+;
 ;									Dereference stack level X
 ;
 ;		Can be : a string reference (if $0000, this is changed to point to a null string)

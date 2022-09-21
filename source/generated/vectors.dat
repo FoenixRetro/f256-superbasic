@@ -2,13 +2,13 @@
 ;	This is automatically generated.
 ;
 VectorSetPunc:
-	.word	ShiftLt                          ; $00 <<
+	.word	ShiftLeft                        ; $00 <<
 	.word	SyntaxError                      ; $01 <=
 	.word	SyntaxError                      ; $02 <>
 	.word	SyntaxError                      ; $03 !!3
 	.word	SyntaxError                      ; $04 ><
 	.word	SyntaxError                      ; $05 >=
-	.word	SyntaxError                      ; $06 >>
+	.word	ShiftRight                       ; $06 >>
 	.word	SyntaxError                      ; $07 !!7
 	.word	SyntaxError                      ; $08 !!8
 	.word	SyntaxError                      ; $09 !!9
@@ -24,13 +24,13 @@ VectorSetPunc:
 	.word	SyntaxError                      ; $13 [
 	.word	SyntaxError                      ; $14 \
 	.word	SyntaxError                      ; $15 ]
-	.word	SyntaxError                      ; $16 ^
+	.word	EorInteger                       ; $16 ^
 	.word	SyntaxError                      ; $17 _
 	.word	SyntaxError                      ; $18 `
 	.word	SyntaxError                      ; $19 !!25
 	.word	SyntaxError                      ; $1a !!26
 	.word	SyntaxError                      ; $1b {
-	.word	SyntaxError                      ; $1c |
+	.word	OraInteger                       ; $1c |
 	.word	SyntaxError                      ; $1d }
 	.word	SyntaxError                      ; $1e ~
 	.word	SyntaxError                      ; $1f 
@@ -40,14 +40,14 @@ VectorSetPunc:
 	.word	SyntaxError                      ; $23 #
 	.word	SyntaxError                      ; $24 $
 	.word	SyntaxError                      ; $25 %
-	.word	SyntaxError                      ; $26 &
+	.word	AndInteger                       ; $26 &
 	.word	SyntaxError                      ; $27 '
 	.word	SyntaxError                      ; $28 (
 	.word	SyntaxError                      ; $29 )
 	.word	SyntaxError                      ; $2a *
-	.word	Add                              ; $2b +
+	.word	AddInteger                       ; $2b +
 	.word	SyntaxError                      ; $2c ,
-	.word	SyntaxError                      ; $2d -
+	.word	SubInteger                       ; $2d -
 	.word	SyntaxError                      ; $2e .
 	.word	SyntaxError                      ; $2f /
 	.word	SyntaxError                      ; $30 0

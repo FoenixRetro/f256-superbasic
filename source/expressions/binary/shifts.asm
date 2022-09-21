@@ -12,15 +12,47 @@
 
 		.section code
 
+; ************************************************************************************************
+;
+;					Left/Right shift - difference is result on entry
+;
+; ************************************************************************************************
 
-ShiftLt: ;; [<<]
-		plx
-SRLoop:	dec 	NSMantissa0+1,x
-		bmi 	SRExit
-		jsr		NSMShiftLeft
-		bra 	SRLoop
-SRExit:	rts
 
+ShiftLeft: ;; [<<]
+		sec
+		bra 	ShiftMain
+ShiftRight: ;; [>>]		
+		clc
+ShiftMain:		
+		plx 								; restore X
+		php 								; save direction
+		.dispatchintegeronly 				; preprocess for integers.
+		;
+		lda 	NSMantissa0+1,x 			; check number < 32
+		and 	#$E0
+		ora 	NSMantissa1+1,x
+		ora 	NSMantissa2+1,x
+		ora 	NSMantissa3+1,x
+		bne 	_SMExit0 					; if >= 32 it will always return zero.
+_SMLoop:
+		dec 	NSMantissa0+1,x 			; predecrement, could do << 0
+		bmi 	_SMExit 					; exit if done.
+		plp 								; restore direcition setting
+		php		
+		bcc 	_SMRight
+		jsr 	NSMShiftLeft 				; shift left if CS
+		bra 	_SMLoop
+_SMRight:		
+		jsr 	NSMShiftRight 				; shift right if CC
+		bra 	_SMLoop
+		;
+_SMExit0:
+		jsr 	NSMSetZero 					; return zero.
+_SMExit:
+		plp 								; throw direction
+		rts
+		
 		.send code
 
 ; ************************************************************************************************

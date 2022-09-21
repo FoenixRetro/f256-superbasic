@@ -1,7 +1,10 @@
 
-	Write handlers and initial basic functions, no floats, clean up add and shift
+	#xxxx becomes &xxxx ? why not ?
+	Look at basic multiply (use unchanged with shift ?)
+	Add parenthesis to term.
+	Comparison operators 
 	Clear code (also reset procedures to arrays ? - scan later)
-	add parenthesis to term.
+	Float add, subtract, multiply, divide (?)
 
 Later:
 	Error : out of identifier space

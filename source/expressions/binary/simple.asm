@@ -12,26 +12,64 @@
 
 		.section code
 
+; ************************************************************************************************
 ;
-;		Dummy ADD and SHIFTLEFT routines.
+;									Macro to simplify simple handlers
 ;
-Add: 	;; [+]
-		plx
-		clc
+; ************************************************************************************************
+
+simple32 .macro
 		lda		NSMantissa0,x
-		adc 	NSMantissa0+1,x 	
+		\1 		NSMantissa0+1,x 	
 		sta 	NSMantissa0,x
 		lda		NSMantissa1,x
-		adc 	NSMantissa1+1,x 	
+		\1 		NSMantissa1+1,x 	
 		sta 	NSMantissa1,x
 		lda		NSMantissa2,x
-		adc 	NSMantissa2+1,x 	
+		\1 		NSMantissa2+1,x 	
 		sta 	NSMantissa2,x
 		lda		NSMantissa3,x
-		adc 	NSMantissa3+1,x 	
+		\1 		NSMantissa3+1,x 	
 		sta 	NSMantissa3,x
+		.endm
+
+; ************************************************************************************************
+;
+;									Simple Binary Operators
+;
+; ************************************************************************************************
+
+AddInteger: 	;; [+]
+		plx
+		.dispatcher NotDoneError,NotDoneError
+		clc
+		.simple32 adc
 		rts
 
+SubInteger: 	;; [-]
+		plx
+		.dispatcher NotDoneError,NotDoneError
+		sec
+		.simple32 sbc
+		rts
+
+AndInteger: 	;; [&]
+		plx
+		.dispatchintegeronly
+		.simple32 and
+		rts
+
+OraInteger: 	;; [|]
+		plx
+		.dispatchintegeronly
+		.simple32 ora
+		rts
+
+EorInteger: 	;; [^]
+		plx
+		.dispatchintegeronly
+		.simple32 eor
+		rts
 
 		.send code
 

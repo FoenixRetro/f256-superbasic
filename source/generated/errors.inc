@@ -56,3 +56,8 @@ error_data .macro
 	lda	#11
 	jmp	ErrorHandler
 	.endm
+ERRID_NOTDONE = 12
+error_notdone .macro
+	lda	#12
+	jmp	ErrorHandler
+	.endm

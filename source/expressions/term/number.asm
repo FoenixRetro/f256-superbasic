@@ -53,7 +53,7 @@ _ENIsOkay:
 
 _ENStartEncode:
 		and 	#15 						; put digit in mantissa
-		jsr 	NSMMantissaByte
+		jsr 	NSMSetByte
 		lda 	#ESTA_Low
 _ENExitChange:
 		sta 	EncodeState 				; save new state		

@@ -7,6 +7,8 @@ RangeError:
 	.error_range
 TypeError:
 	.error_type
+NotDoneError:
+	.error_notdone
 ErrorText:
 	.text	"Break",0
 	.text	"Syntax error",0
@@ -19,3 +21,4 @@ ErrorText:
 	.text	"String too long",0
 	.text	"Assertion failed",0
 	.text	"Out of data",0
+	.text	"Unimplemented",0
