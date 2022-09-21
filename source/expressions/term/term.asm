@@ -58,6 +58,8 @@ _ETNumber:
 _ETCheckUnary:		
 		cmp 	#KWC_STRING 				; string token
 		beq 	_ETString
+		cmp 	#KWC_HEXCONST 				; hex constant.
+		beq 	_ETHexConstant
 		cmp 	#KWC_FIRST_UNARY 			; check it actually is a unary function
 		bcc 	_ETSyntaxError
 		cmp 	#KWC_LAST_UNARY+1
@@ -70,6 +72,39 @@ _ETCheckUnary:
 
 _ETSyntaxError:
 		jmp 	SyntaxError
+
+		; ----------------------------------------------------------------------------------------
+		;
+		;		String $FE <total length> <ASCII digits> $0
+		;		
+		; ----------------------------------------------------------------------------------------
+
+_ETHexConstant:
+		.debug
+		iny 								; skip #
+		iny 								; skip count
+		jsr 	NSMMantissaZero 			; clear result
+_ETHLoop:
+		.cget 								; get next character
+		iny 								; and consume
+		cmp 	#0 							; exit if zero
+		beq 	_ETHExit
+		pha 								; save on stack.
+		jsr 	NSMShiftLeft 				; x 2
+		jsr 	NSMShiftLeft 				; x 4
+		jsr 	NSMShiftLeft 				; x 8
+		jsr 	NSMShiftLeft 				; x 16
+		pla 								; ASCII
+		cmp 	#'A'
+		bcc 	_ETHNotChar
+		sbc 	#7
+_ETHNotChar:
+		and 	#15 						; digit now
+		ora 	NSMantissa0,x 				; put in LS Nibble
+		sta 	NSMantissa0,x		
+		bra 	_ETHLoop 					; go round.
+_ETHExit:
+		rts
 
 		; ----------------------------------------------------------------------------------------
 		;

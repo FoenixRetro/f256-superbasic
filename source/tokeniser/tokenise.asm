@@ -82,6 +82,8 @@ _TKTokeniseLoop:
 _TKTokenisePunctuation:
 		cmp 	#'"'						; quoted string ?
 		beq 	_TKString
+		cmp 	#'#'						; hexadecimal constant (# only appears at end of identifiers)
+		beq 	_TKHexConstant
 		cmp 	#'<' 						; check for < > handlers.
 		beq 	_TKCheckDouble
 		cmp 	#'>'
@@ -104,8 +106,11 @@ _TKNoShift:
 		inx 								; consume the character
 		bra 	_TKTokeniseLoop 			; and loop round again.
 
-_TKString: 									; tokenise a string
+_TKString: 									; tokenise a string "Hello world"
 		jsr 	TokeniseString
+		bra 	_TKTokeniseLoop
+_TKHexConstant: 							; tokenise hex constant #A277
+		jsr 	TokeniseHexConstant
 		bra 	_TKTokeniseLoop
 
 		;----------------------------------------------------------------------------------------
@@ -244,6 +249,8 @@ _TKNoTShift:
 ; ************************************************************************************************
 
 TokeniseString:
+		lda 	#KWC_STRING 				; string token.
+		jsr 	TokeniseWriteByte
 		inx									; start of quoted string.
 		phx 								; push start of string on top
 		dex
@@ -255,36 +262,64 @@ _TSFindEnd:
 		bne 	_TSFindEnd
 _TSEndOfString:
 		ply  								; so now Y is first character, X is character after end.		
-		pha 								; save what we terminated with, so we know whether to skip.
-		stx 	zTemp0 						; save the end point.
-
-		lda 	#KWC_STRING 				; string token.
-		jsr 	TokeniseWriteByte
-
-		tya 								; work out the string length including the EOS.
+		pha 								; save terminating character
+		jsr 	TOWriteBlockXY 				; write X to Y as a data block
+		pla 								; terminating character
+		beq 	_TSNotQuote					; if it wasn't EOS skip it
+		inx
+_TSNotQuote:		
+		rts		
+;
+;		Write Y to X with a trailing NULL.
+;
+TOWriteBlockXY:
+		stx 	zTemp0 						; write end character
+		tya
 		eor 	#$FF
 		sec
 		adc 	zTemp0
-		inc 	a
-		jsr 	TokeniseWriteByte 			; write that length.
-		;
-_TSOutputString:
-		cpy 	zTemp0 						; reached the end.
-		beq 	_TSEndString
-		lda 	lineBuffer,y 				; output one
+		inc 	a 							; one extra for NULL
+		jsr 	TokeniseWriteByte
+_TOBlockLoop:
+		cpy 	zTemp0
+		beq 	_TOBlockExit
+		lda 	lineBuffer,y
+		jsr 	TokeniseWriteByte				
 		iny
+		bra 	_TOBlockLoop
+_TOBlockExit:
+		lda 	#0
 		jsr 	TokeniseWriteByte
-		bra 	_TSOutputString
-_TSEndString:
-		lda 	#0		 					; output EOS
+		rts
+
+; ************************************************************************************************
+;
+;									Tokenise a hex constant
+;
+; ************************************************************************************************
+
+TokeniseHexConstant:
+		lda 	#KWC_HEXCONST 				; hex constant token.
 		jsr 	TokeniseWriteByte
-		;
-		pla 								; did we end in " ?
-		cmp 	#'"'
-		bne 	_TSNoEndQuote
-		inx
-_TSNoEndQuote:
-		rts		
+		inx									; start of quoted string.
+		phx 								; push start of constant on top
+		dex
+_THFindLoop:							
+		inx 	
+		lda 	lineBuffer,x
+		cmp 	#"0"
+		bcc 	_THFoundEnd
+		cmp 	#"9"+1
+		bcc 	_THFindLoop
+		cmp 	#"A"
+		bcc 	_THFoundEnd
+		cmp 	#"F"+1
+		bcc 	_THFindLoop
+_THFoundEnd:
+		ply 								; restore start
+		jsr 	TOWriteBlockXY 				; output the block
+		rts
+
 		.send code
 
 ; ************************************************************************************************

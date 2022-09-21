@@ -1,7 +1,6 @@
 
 	Clear code (also reset procedures to arrays ? - scan later)
-	Add hex tokenising and terms (uses #)
-	Scanning for [x]
+	Scanning source for [x]
 	expressions - etc.
 	add parenthesis to term.
 
