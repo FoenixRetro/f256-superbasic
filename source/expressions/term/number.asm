@@ -20,6 +20,8 @@ ESTA_High = 2 								; loading up to 32 bit integer in the mantissa
 ;		Encode Number. If CS, then start a new number. Returns CS if the number is okay,
 ;		CC if not.
 ;
+;		A simple state machine.
+;
 ; ************************************************************************************************
 
 EncodeNumberStart:

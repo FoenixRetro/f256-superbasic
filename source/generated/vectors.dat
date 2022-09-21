@@ -2,7 +2,7 @@
 ;	This is automatically generated.
 ;
 VectorSetPunc:
-	.word	SyntaxError                      ; $00 <<
+	.word	ShiftLt                          ; $00 <<
 	.word	SyntaxError                      ; $01 <=
 	.word	SyntaxError                      ; $02 <>
 	.word	SyntaxError                      ; $03 !!3
@@ -45,7 +45,7 @@ VectorSetPunc:
 	.word	SyntaxError                      ; $28 (
 	.word	SyntaxError                      ; $29 )
 	.word	SyntaxError                      ; $2a *
-	.word	SyntaxError                      ; $2b +
+	.word	Add                              ; $2b +
 	.word	SyntaxError                      ; $2c ,
 	.word	SyntaxError                      ; $2d -
 	.word	SyntaxError                      ; $2e .
@@ -118,10 +118,10 @@ VectorSet1:
 	.word	SyntaxError                      ; $81 !1:SH1
 	.word	SyntaxError                      ; $82 !2:SH2
 	.word	SyntaxError                      ; $83 ASSERT
-	.word	SyntaxError                      ; $84 CLEAR
-	.word	SyntaxError                      ; $85 END
+	.word	ClearCommand                     ; $84 CLEAR
+	.word	EndCommand                       ; $85 END
 	.word	SyntaxError                      ; $86 LIST
-	.word	SyntaxError                      ; $87 NEW
+	.word	NewCommand                       ; $87 NEW
 	.word	SyntaxError                      ; $88 RESTORE
 	.word	SyntaxError                      ; $89 RUN
 	.word	SyntaxError                      ; $8a STOP

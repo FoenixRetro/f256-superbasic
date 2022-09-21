@@ -124,7 +124,8 @@ class TokenCollection(object):
 			self.addToken("!2:SH2"+str(i),CtrlToken("!2:SH2",i))
 		self.loadTokens()
 		self.allocateIDs() 																# allocate IDs.
-		self.createPunctuationTokens()
+		self.createPunctuationTokens() 													# create punctuation tokens
+		self.scanSource()																# look for code
 	#
 	#		Load tokens in
 	#
@@ -268,6 +269,20 @@ class TokenCollection(object):
 		h1.write("KWC_LAST_STRUCTURE = ${0:02x}\n".format(highAdjust))						
 		h1.write("KWC_FIRST_UNARY = ${0:02x}\n".format(lowUnary))
 		h1.write("KWC_LAST_UNARY = ${0:02x}\n".format(highUnary))
+	#
+	#		Scan source for keywords
+	#
+	def scanSource(self):
+		for root,dirs,files in os.walk("."):
+			for f in [x for x in files if x.endswith(".asm")]:
+				for s in open(root+os.sep+f).readlines():
+					if s.find(";;") > 0:
+						m = re.match("^(.*?)\\:\\s*\\;\\;\\s*\\[(.*?)\\]",s)
+						assert m is not None,"Bad line "+m
+						word = m.group(2).strip().upper()
+						assert word in self.tokens,"Not known "+word
+						assert self.tokens[word].getLabel() is None,"Duplicate "+word
+						self.tokens[word].setLabel(m.group(1).strip())
 
 if __name__ == "__main__":
 	note = ";\n;\tThis is automatically generated.\n;\n"

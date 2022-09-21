@@ -1,9 +1,9 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		00start.asm
-;		Purpose:	Start up code.
-;		Created:	18th September 2022
+;		Name:		simple.asm
+;		Purpose:	Simple binary operations
+;		Created:	21st September 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
@@ -12,24 +12,26 @@
 
 		.section code
 
-Start:	ldx 	#$FF 						; stack reset
-		txs	
-		;
-		jsr 	NewCommand 					; erase current program
-		jsr 	BackloadProgram
-		.set16  codePtr,BasicStart
-		ldy 	#4
-		ldx 	#1
-		jsr 	EvaluateExpression
-WarmStart:
-		.debug
-		bra 	WarmStart
+;
+;		Dummy ADD and SHIFTLEFT routines.
+;
+Add: 	;; [+]
+		plx
+		clc
+		lda		NSMantissa0,x
+		adc 	NSMantissa0+1,x 	
+		sta 	NSMantissa0,x
+		lda		NSMantissa1,x
+		adc 	NSMantissa1+1,x 	
+		sta 	NSMantissa1,x
+		lda		NSMantissa2,x
+		adc 	NSMantissa2+1,x 	
+		sta 	NSMantissa2,x
+		lda		NSMantissa3,x
+		adc 	NSMantissa3+1,x 	
+		sta 	NSMantissa3,x
+		rts
 
-ErrorHandler:		
-		.debug
-		jmp 	ErrorHandler
-
-		.include "../generated/vectors.dat"
 
 		.send code
 

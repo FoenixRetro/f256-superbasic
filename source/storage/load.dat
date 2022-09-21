@@ -1,4 +1,3 @@
-10 print #42A7	
-100 print "Hello";
+10 print 4<<2+3<<1
 
 
