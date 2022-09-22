@@ -3,11 +3,11 @@
 ;
 VectorSetPunc:
 	.word	ShiftLeft                        ; $00 <<
-	.word	SyntaxError                      ; $01 <=
-	.word	SyntaxError                      ; $02 <>
+	.word	BinaryCompareLessEqual           ; $01 <=
+	.word	BinaryCompareNotEqual            ; $02 <>
 	.word	SyntaxError                      ; $03 !!3
 	.word	SyntaxError                      ; $04 ><
-	.word	SyntaxError                      ; $05 >=
+	.word	BinaryCompareGreaterEqual        ; $05 >=
 	.word	ShiftRight                       ; $06 >>
 	.word	SyntaxError                      ; $07 !!7
 	.word	SyntaxError                      ; $08 !!8
@@ -62,9 +62,9 @@ VectorSetPunc:
 	.word	SyntaxError                      ; $39 9
 	.word	SyntaxError                      ; $3a :
 	.word	SyntaxError                      ; $3b ;
-	.word	SyntaxError                      ; $3c <
-	.word	SyntaxError                      ; $3d =
-	.word	SyntaxError                      ; $3e >
+	.word	BinaryCompareLess                ; $3c <
+	.word	BinaryCompareEqual               ; $3d =
+	.word	BinaryCompareGreater             ; $3e >
 	.word	SyntaxError                      ; $3f ?
 VectorSet0:
 	.word	SyntaxError                      ; $80 !0:EOF
@@ -75,49 +75,51 @@ VectorSet0:
 	.word	SyntaxError                      ; $85 ASC(
 	.word	SyntaxError                      ; $86 CHR$(
 	.word	SyntaxError                      ; $87 DEC(
-	.word	SyntaxError                      ; $88 GETDATE$(
-	.word	SyntaxError                      ; $89 GETTIME$(
-	.word	SyntaxError                      ; $8a HEX$(
-	.word	SyntaxError                      ; $8b INT(
-	.word	SyntaxError                      ; $8c ISVAL(
-	.word	SyntaxError                      ; $8d LEFT$(
-	.word	SyntaxError                      ; $8e LEN(
-	.word	SyntaxError                      ; $8f MID$(
-	.word	SyntaxError                      ; $90 NOT
-	.word	SyntaxError                      ; $91 PAGE
-	.word	SyntaxError                      ; $92 RIGHT$(
-	.word	SyntaxError                      ; $93 RND(
-	.word	SyntaxError                      ; $94 SGN(
-	.word	SyntaxError                      ; $95 SPC(
-	.word	SyntaxError                      ; $96 STR$(
-	.word	SyntaxError                      ; $97 VAL(
-	.word	SyntaxError                      ; $98 FOR
-	.word	SyntaxError                      ; $99 IF
-	.word	SyntaxError                      ; $9a PROC
-	.word	SyntaxError                      ; $9b REPEAT
-	.word	SyntaxError                      ; $9c WHILE
-	.word	SyntaxError                      ; $9d ENDIF
-	.word	SyntaxError                      ; $9e ENDPROC
-	.word	SyntaxError                      ; $9f NEXT
-	.word	SyntaxError                      ; $a0 UNTIL
-	.word	SyntaxError                      ; $a1 WEND
-	.word	SyntaxError                      ; $a2 CLS
-	.word	SyntaxError                      ; $a3 DATA
-	.word	SyntaxError                      ; $a4 DIM
-	.word	SyntaxError                      ; $a5 GOSUB
-	.word	SyntaxError                      ; $a6 GOTO
-	.word	SyntaxError                      ; $a7 LET
-	.word	SyntaxError                      ; $a8 PRINT
-	.word	SyntaxError                      ; $a9 READ
-	.word	SyntaxError                      ; $aa REM
-	.word	SyntaxError                      ; $ab RETURN
-	.word	SyntaxError                      ; $ac THEN
-	.word	SyntaxError                      ; $ad TO
+	.word	ReturnFalse                      ; $88 FALSE
+	.word	SyntaxError                      ; $89 GETDATE$(
+	.word	SyntaxError                      ; $8a GETTIME$(
+	.word	SyntaxError                      ; $8b HEX$(
+	.word	SyntaxError                      ; $8c INT(
+	.word	SyntaxError                      ; $8d ISVAL(
+	.word	SyntaxError                      ; $8e LEFT$(
+	.word	SyntaxError                      ; $8f LEN(
+	.word	SyntaxError                      ; $90 MID$(
+	.word	SyntaxError                      ; $91 NOT
+	.word	SyntaxError                      ; $92 PAGE
+	.word	SyntaxError                      ; $93 RIGHT$(
+	.word	SyntaxError                      ; $94 RND(
+	.word	SyntaxError                      ; $95 SGN(
+	.word	SyntaxError                      ; $96 SPC(
+	.word	SyntaxError                      ; $97 STR$(
+	.word	ReturnTrue                       ; $98 TRUE
+	.word	SyntaxError                      ; $99 VAL(
+	.word	SyntaxError                      ; $9a FOR
+	.word	SyntaxError                      ; $9b IF
+	.word	SyntaxError                      ; $9c PROC
+	.word	SyntaxError                      ; $9d REPEAT
+	.word	SyntaxError                      ; $9e WHILE
+	.word	SyntaxError                      ; $9f ENDIF
+	.word	SyntaxError                      ; $a0 ENDPROC
+	.word	SyntaxError                      ; $a1 NEXT
+	.word	SyntaxError                      ; $a2 UNTIL
+	.word	SyntaxError                      ; $a3 WEND
+	.word	SyntaxError                      ; $a4 CLS
+	.word	SyntaxError                      ; $a5 DATA
+	.word	SyntaxError                      ; $a6 DIM
+	.word	SyntaxError                      ; $a7 GOSUB
+	.word	SyntaxError                      ; $a8 GOTO
+	.word	SyntaxError                      ; $a9 LET
+	.word	SyntaxError                      ; $aa PRINT
+	.word	SyntaxError                      ; $ab READ
+	.word	SyntaxError                      ; $ac REM
+	.word	SyntaxError                      ; $ad RETURN
+	.word	SyntaxError                      ; $ae THEN
+	.word	SyntaxError                      ; $af TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
 	.word	SyntaxError                      ; $82 !2:SH2
-	.word	SyntaxError                      ; $83 ASSERT
+	.word	AssertCommand                    ; $83 ASSERT
 	.word	ClearCommand                     ; $84 CLEAR
 	.word	EndCommand                       ; $85 END
 	.word	SyntaxError                      ; $86 LIST

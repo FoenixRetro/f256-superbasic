@@ -19,7 +19,7 @@ DivZero: 	Division by zero
 !Range:		Out of Range
 !Type:		Type mismatch
 Memory:		Out of memory
-Argument:	Illegal argument
+!Argument:	Illegal argument
 Stop:		Stop
 String:		String too long
 Assert:		Assertion failed

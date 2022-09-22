@@ -1,5 +1,5 @@
 Progress:
-	Comparison operators. 
+Basic runner
 	Integer arithmetic testing.
 	Comparison strings.
 	Clear code (also reset procedures to arrays ? - scan later)
@@ -11,5 +11,4 @@ Later:
 	Code to access variables in term.
 	Encoding Decimals (e.g. .90132)
 	Variable code
-	add parenthesis to term.
 	

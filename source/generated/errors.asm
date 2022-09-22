@@ -7,6 +7,8 @@ RangeError:
 	.error_range
 TypeError:
 	.error_type
+ArgumentError:
+	.error_argument
 NotDoneError:
 	.error_notdone
 ErrorText:

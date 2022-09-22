@@ -16,7 +16,7 @@ include ../documents/common.make
 endif
 
 BINDIR = $(ROOTDIR)bin$(S)
-ASMOPTS = -b -Wall -Wno-portable -c -L output$(S)basic.lst -l output$(S)basic.lbl -Wall -q
+ASMOPTS = -q -b -Wall -Wno-portable -c -L output$(S)basic.lst -l output$(S)basic.lbl -Wall 
 APPNAME = basic.rom
 SCRIPTDIR = scripts$(S)
 EMULATOR = $(BINDIR)jr256$(APPSTEM)
