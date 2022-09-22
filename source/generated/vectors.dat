@@ -22,7 +22,7 @@ VectorSetPunc:
 	.word	SyntaxError                      ; $11 !!17
 	.word	SyntaxError                      ; $12 !!18
 	.word	SyntaxError                      ; $13 [
-	.word	SyntaxError                      ; $14 \
+	.word	IntegerDivide                    ; $14 \
 	.word	SyntaxError                      ; $15 ]
 	.word	EorInteger                       ; $16 ^
 	.word	SyntaxError                      ; $17 _
@@ -39,7 +39,7 @@ VectorSetPunc:
 	.word	SyntaxError                      ; $22 "
 	.word	SyntaxError                      ; $23 #
 	.word	SyntaxError                      ; $24 $
-	.word	SyntaxError                      ; $25 %
+	.word	IntegerModulus                   ; $25 %
 	.word	AndInteger                       ; $26 &
 	.word	SyntaxError                      ; $27 '
 	.word	SyntaxError                      ; $28 (

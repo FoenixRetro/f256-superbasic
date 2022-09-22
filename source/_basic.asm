@@ -14,6 +14,7 @@
 	.include	"./commands/end.asm"
 	.include	"./commands/new.asm"
 	.include	"./errors/charcheck.asm"
+	.include	"./expressions/binary/divide.asm"
 	.include	"./expressions/binary/multiply.asm"
 	.include	"./expressions/binary/shifts.asm"
 	.include	"./expressions/binary/simple.asm"

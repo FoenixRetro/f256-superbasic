@@ -51,25 +51,31 @@ NSMShiftUpTwo:
 ;
 ; ************************************************************************************************
 
+NSMSetZeroMantissaOnly:
+		lda 	#0
+		bra 	NSMSetMantissa
 NSMSetZero:
 		lda 	#0
 NSMSetByte:
-		sta 	NSMantissa0,x
+		stz 	NSExponent,x 				; zero exponent, as integer.
+		stz 	NSStatus,x 					; status zero (integer)
+NSMSetMantissa:		
+		sta 	NSMantissa0,x 				; mantissa
 		stz 	NSMantissa1,x
 		stz 	NSMantissa2,x
 		stz 	NSMantissa3,x
-		stz 	NSExponent,x 				; zero exponent, as integer.
-		stz 	NSStatus,x 					; status zero (integer)
 		rts
 				
 ; ************************************************************************************************
 ;
-;									Shift the mantissa left
+;									Rotate/Shift the mantissa left
 ;
 ; ************************************************************************************************
 
 NSMShiftLeft:		
-		asl 	NSMantissa0,x
+		clc
+NSMRotateLeft:
+		rol 	NSMantissa0,x
 		rol		NSMantissa1,x
 		rol		NSMantissa2,x
 		rol		NSMantissa3,x
@@ -86,6 +92,19 @@ NSMShiftRight:
 		ror		NSMantissa2,x
 		ror		NSMantissa1,x
 		ror		NSMantissa0,x
+		rts
+
+; ************************************************************************************************
+;
+;									   Check zero mantissa
+;
+; ************************************************************************************************
+
+NSMIsZero:
+		lda 	NSMantissa3,x
+		ora		NSMantissa2,x
+		ora		NSMantissa1,x
+		ora		NSMantissa0,x
 		rts
 
 		.send code

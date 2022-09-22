@@ -32,7 +32,7 @@ _MIExit:
 MultiplyShort:
 		phy 								; save Y
 		jsr 	NSMShiftUpTwo 				; copy S[X] to S[X+2]
-		jsr 	NSMSetZero 					; set S[X] to zero
+		jsr 	NSMSetZeroMantissaOnly 		; set mantissa S[X] to zero
 		ldy 	#0 							; Y is the shift count.
 		;
 		;		Main multiply loop.
@@ -79,14 +79,23 @@ _I32MShiftUpper:
 		bra 	_I32MLoop 					; try again.
 
 _I32MExit:
+		jsr 	CalculateSign
+		tya 								; shift in A
+		ply 								; restore Y and exit
+		rts
+
+; ************************************************************************************************
+;
+;								Calculate sign from the two signs
+;
+; ************************************************************************************************
+
+CalculateSign:
 		lda 	NSStatus,x 					; sign of result is 0 if same, 1 if different.
 		asl 	NSStatus,x 					; shift result left
 		eor 	NSStatus+1,x
 		asl 	a 							; shift bit 7 into carry
 		ror 	NSStatus,x 					; shift right into status byte.
-
-		tya 								; shift in A
-		ply 								; restore Y and exit
 		rts
 
 ; ************************************************************************************************

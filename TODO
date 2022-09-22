@@ -1,9 +1,9 @@
 Progress:
-
-	Division code, Modulus code.
-	Comparison operators 
+	Comparison operators. 
+	Integer arithmetic testing.
+	Comparison strings.
 	Clear code (also reset procedures to arrays ? - scan later)
-	Float add, subtract, multiply, divide (?)
+	Float add, subtract, multiply, divide,compare (?)
 
 Later:
 	Error : out of identifier space
@@ -13,15 +13,3 @@ Later:
 	Variable code
 	add parenthesis to term.
 	
-Notes:
-	Dispatch has to preserve X for unaries/binary operations.
-
-	phx
-	tax
-	jmp 	(xxx,X)
-
-	..
-	..
-
-	plx
-	(etc.)
