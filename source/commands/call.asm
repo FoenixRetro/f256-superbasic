@@ -1,9 +1,9 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		00start.asm
-;		Purpose:	Start up code.
-;		Created:	18th September 2022
+;		Name:		call.asm
+;		Purpose:	END command
+;		Created:	22nd September 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
@@ -12,23 +12,12 @@
 
 		.section code
 
-Start:	ldx 	#$FF 						; stack reset
-		txs	
-		;
-		jsr 	NewCommand 					; erase current program
-		jsr 	BackloadProgram
-		jmp 	CommandRun
+CallCommand: ;; [call]
+		jsr 	Evaluate16BitInteger
+		lda 	NSMantissa1
+		sta 	NSMantissa0+1
+		jmp 	(NSMantissa0)
 		
-WarmStart:
-		.debug
-		bra 	WarmStart
-
-ErrorHandler:		
-		.debug
-		jmp 	ErrorHandler
-
-		.include "../generated/vectors.dat"
-
 		.send code
 
 ; ************************************************************************************************

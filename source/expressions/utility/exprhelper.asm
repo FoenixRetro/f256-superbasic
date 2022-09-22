@@ -20,10 +20,8 @@
 
 EvaluateValue:
 		pha
-		phx
 		jsr		EvaluateExpressionAt0 		; expression
 		jsr 	Dereference					; derefernce it
-		plx
 		pla
 		rts
 		

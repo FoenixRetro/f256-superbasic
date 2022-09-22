@@ -38,31 +38,32 @@ KeywordSet0:
 	.text	4,$3f,"NEXT"           ; $a1 NEXT
 	.text	5,$8c,"UNTIL"          ; $a2 UNTIL
 	.text	4,$2e,"WEND"           ; $a3 WEND
-	.text	3,$e2,"CLS"            ; $a4 CLS
-	.text	4,$1a,"DATA"           ; $a5 DATA
-	.text	3,$da,"DIM"            ; $a6 DIM
-	.text	5,$80,"GOSUB"          ; $a7 GOSUB
-	.text	4,$39,"GOTO"           ; $a8 GOTO
-	.text	3,$e5,"LET"            ; $a9 LET
-	.text	5,$8d,"PRINT"          ; $aa PRINT
-	.text	4,$1c,"READ"           ; $ab READ
-	.text	3,$e4,"REM"            ; $ac REM
-	.text	6,$e0,"RETURN"         ; $ad RETURN
-	.text	4,$2f,"THEN"           ; $ae THEN
-	.text	2,$a3,"TO"             ; $af TO
+	.text	6,$d2,"ASSERT"         ; $a4 ASSERT
+	.text	4,$1c,"CALL"           ; $a5 CALL
+	.text	3,$e2,"CLS"            ; $a6 CLS
+	.text	4,$1a,"DATA"           ; $a7 DATA
+	.text	3,$da,"DIM"            ; $a8 DIM
+	.text	5,$80,"GOSUB"          ; $a9 GOSUB
+	.text	4,$39,"GOTO"           ; $aa GOTO
+	.text	3,$e5,"LET"            ; $ab LET
+	.text	5,$8d,"PRINT"          ; $ac PRINT
+	.text	4,$1c,"READ"           ; $ad READ
+	.text	3,$e4,"REM"            ; $ae REM
+	.text	6,$e0,"RETURN"         ; $af RETURN
+	.text	4,$2f,"THEN"           ; $b0 THEN
+	.text	2,$a3,"TO"             ; $b1 TO
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF
 	.text	0,$58,""               ; $81 !1:SH1
 	.text	0,$5a,""               ; $82 !2:SH2
-	.text	6,$d2,"ASSERT"         ; $83 ASSERT
-	.text	5,$67,"CLEAR"          ; $84 CLEAR
-	.text	3,$d7,"END"            ; $85 END
-	.text	4,$3c,"LIST"           ; $86 LIST
-	.text	3,$ea,"NEW"            ; $87 NEW
-	.text	7,$24,"RESTORE"        ; $88 RESTORE
-	.text	3,$f5,"RUN"            ; $89 RUN
-	.text	4,$46,"STOP"           ; $8a STOP
+	.text	5,$67,"CLEAR"          ; $83 CLEAR
+	.text	3,$d7,"END"            ; $84 END
+	.text	4,$3c,"LIST"           ; $85 LIST
+	.text	3,$ea,"NEW"            ; $86 NEW
+	.text	7,$24,"RESTORE"        ; $87 RESTORE
+	.text	3,$f5,"RUN"            ; $88 RUN
+	.text	4,$46,"STOP"           ; $89 STOP
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF

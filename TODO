@@ -1,6 +1,6 @@
 Progress:
-Basic runner
 	Integer arithmetic testing.
+	Shift tokens
 	Comparison strings.
 	Clear code (also reset procedures to arrays ? - scan later)
 	Float add, subtract, multiply, divide, compare (?) [short divide is wrong !]
@@ -11,4 +11,4 @@ Later:
 	Code to access variables in term.
 	Encoding Decimals (e.g. .90132)
 	Variable code
-	
+	Improve CALL	

@@ -67,7 +67,7 @@ VectorSetPunc:
 	.word	BinaryCompareGreater             ; $3e >
 	.word	SyntaxError                      ; $3f ?
 VectorSet0:
-	.word	SyntaxError                      ; $80 !0:EOF
+	.word	EOLCommand                       ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
 	.word	SyntaxError                      ; $82 !2:SH2
 	.word	SyntaxError                      ; $83 ABS(
@@ -103,30 +103,31 @@ VectorSet0:
 	.word	SyntaxError                      ; $a1 NEXT
 	.word	SyntaxError                      ; $a2 UNTIL
 	.word	SyntaxError                      ; $a3 WEND
-	.word	SyntaxError                      ; $a4 CLS
-	.word	SyntaxError                      ; $a5 DATA
-	.word	SyntaxError                      ; $a6 DIM
-	.word	SyntaxError                      ; $a7 GOSUB
-	.word	SyntaxError                      ; $a8 GOTO
-	.word	SyntaxError                      ; $a9 LET
-	.word	SyntaxError                      ; $aa PRINT
-	.word	SyntaxError                      ; $ab READ
-	.word	SyntaxError                      ; $ac REM
-	.word	SyntaxError                      ; $ad RETURN
-	.word	SyntaxError                      ; $ae THEN
-	.word	SyntaxError                      ; $af TO
+	.word	AssertCommand                    ; $a4 ASSERT
+	.word	CallCommand                      ; $a5 CALL
+	.word	SyntaxError                      ; $a6 CLS
+	.word	SyntaxError                      ; $a7 DATA
+	.word	SyntaxError                      ; $a8 DIM
+	.word	SyntaxError                      ; $a9 GOSUB
+	.word	SyntaxError                      ; $aa GOTO
+	.word	SyntaxError                      ; $ab LET
+	.word	SyntaxError                      ; $ac PRINT
+	.word	SyntaxError                      ; $ad READ
+	.word	SyntaxError                      ; $ae REM
+	.word	SyntaxError                      ; $af RETURN
+	.word	SyntaxError                      ; $b0 THEN
+	.word	SyntaxError                      ; $b1 TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
 	.word	SyntaxError                      ; $82 !2:SH2
-	.word	AssertCommand                    ; $83 ASSERT
-	.word	ClearCommand                     ; $84 CLEAR
-	.word	EndCommand                       ; $85 END
-	.word	SyntaxError                      ; $86 LIST
-	.word	NewCommand                       ; $87 NEW
-	.word	SyntaxError                      ; $88 RESTORE
-	.word	SyntaxError                      ; $89 RUN
-	.word	SyntaxError                      ; $8a STOP
+	.word	ClearCommand                     ; $83 CLEAR
+	.word	EndCommand                       ; $84 END
+	.word	SyntaxError                      ; $85 LIST
+	.word	NewCommand                       ; $86 NEW
+	.word	SyntaxError                      ; $87 RESTORE
+	.word	CommandRUN                       ; $88 RUN
+	.word	SyntaxError                      ; $89 STOP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
