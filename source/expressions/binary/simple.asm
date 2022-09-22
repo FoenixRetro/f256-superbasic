@@ -35,6 +35,22 @@ simple32 .macro
 
 ; ************************************************************************************************
 ;
+;								Two's complement math operators
+;
+; ************************************************************************************************
+
+AddTopTwoStack:		
+		clc
+		.simple32 adc
+		rts
+
+SubTopTwoStack:		
+		sec
+		.simple32 sbc
+		rts
+
+; ************************************************************************************************
+;
 ;									Simple Binary Operators
 ;
 ; ************************************************************************************************
@@ -42,18 +58,19 @@ simple32 .macro
 AddInteger: 	;; [+]
 		plx
 		.dispatcher NotDoneError,NotDoneError
-AddTopTwoStack:		
-		clc
-		.simple32 adc
-		rts
-
+AddCode:
+		lda 	NSStatus,x 					; signs are the same, can just add the mantissae.
+		eor 	NSStatus+1,x
+		bpl 	AddTopTwoStack
+		.debug
+		
 SubInteger: 	;; [-]
 		plx
 		.dispatcher NotDoneError,NotDoneError
-SubTopTwoStack:		
-		sec
-		.simple32 sbc
-		rts
+		lda 	NSStatus+1,x 				; negate the second value.
+		eor 	#$80
+		sta 	NSStatus+1,x
+		bra 	AddCode 					; and do the same code as add.
 
 AndInteger: 	;; [&]
 		plx

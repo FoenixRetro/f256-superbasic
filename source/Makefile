@@ -46,4 +46,5 @@ prelim:
 	python $(SCRIPTDIR)makebuild.py
 	python $(SCRIPTDIR)tokens.py
 
-
+test:
+	python $(SCRIPTDIR)tests.py >storage$(S)load.dat

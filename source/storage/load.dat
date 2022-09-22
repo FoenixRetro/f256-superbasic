@@ -1,5 +1,11 @@
-10 assert 2+3=6-1
-20 call #FFFF
-
-
-
+1000 assert 11+9 = 20
+1010 assert 15+15 = 30
+1020 assert 19+15 = 34
+1030 assert 8+8 = 16
+1040 assert 18+14 = 32
+1050 assert 18+15 = 33
+1060 assert 20+8 = 28
+1070 assert 19+10 = 29
+1080 assert 10+13 = 23
+1090 assert 13+19 = 32
+1100 call #ffff

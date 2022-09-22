@@ -1,5 +1,10 @@
 Progress:
-	Integer arithmetic testing.
+
+	Fix the problems caused by the idiot who wrote add/subtract.
+
+	Integer compare is wrong for the same reasons.
+
+	Continue Integer arithmetic testing.
 	Wire in unary functions and add testing for true/false.
 	Shift tokens
 	Comparison strings.
