@@ -1,16 +1,16 @@
 Progress:
 
-	Fix the problems caused by the idiot who wrote add/subtract.
-
 	Integer compare is wrong for the same reasons.
+	Test Integer Compare.
+	Wire in unary functions and add testing for true/false and general unary functions
 
-	Continue Integer arithmetic testing.
-	Wire in unary functions and add testing for true/false.
 	Shift tokens
 	Comparison strings.
 	Clear code (also reset procedures to arrays ? - scan later)
 	Float add, subtract, multiply, divide, compare (?) [short divide is wrong !]
-
+	Float testing code
+	Integer & Fractional functions
+	
 Later:
 	Error : out of identifier space
 	Todo : scan for procedures (part of CLEAR)	

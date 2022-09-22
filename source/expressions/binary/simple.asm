@@ -62,8 +62,16 @@ AddCode:
 		lda 	NSStatus,x 					; signs are the same, can just add the mantissae.
 		eor 	NSStatus+1,x
 		bpl 	AddTopTwoStack
-		.debug
-		
+		;
+		jsr 	SubTopTwoStack 				; do a physical subtraction
+		bit 	NSMantissa3,x 				; result is +ve, okay
+		bpl 	_AddExit 	
+		lda 	NSStatus+1,x 				; sign is that of 2nd value
+		sta 	NSStatus,x
+		jsr 	NSMNegateMantissa 			; negate the mantissa and exit
+_AddExit:
+		rts
+
 SubInteger: 	;; [-]
 		plx
 		.dispatcher NotDoneError,NotDoneError

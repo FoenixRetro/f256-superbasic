@@ -14,7 +14,7 @@
 
 ; ************************************************************************************************
 ;
-;							  		Negate mantissa
+;							 Negate mantissa/status/exponent value
 ;
 ; ************************************************************************************************
 
@@ -22,6 +22,28 @@ NSMNegate:									; negate int or float.
 		lda 	NSStatus,x
 		eor 	#NSBIsNegative
 		sta 	NSStatus,x
+		rts
+
+; ************************************************************************************************
+;
+;							  Negate mantissa only 2's complements
+;
+; ************************************************************************************************
+
+NSMNegateMantissa:								
+		sec
+		lda 	#0
+		sbc 	NSMantissa0,x
+		sta 	NSMantissa0,x
+		lda 	#0
+		sbc 	NSMantissa1,x
+		sta 	NSMantissa1,x
+		lda 	#0
+		sbc 	NSMantissa2,x
+		sta 	NSMantissa2,x
+		lda 	#0
+		sbc 	NSMantissa3,x
+		sta 	NSMantissa3,x
 		rts
 
 ; ************************************************************************************************
