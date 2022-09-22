@@ -1,10 +1,7 @@
 Progress:
-
-	Integer compare is wrong for the same reasons.
-	Test Integer Compare.
+	Speed up the backload by hacking the emulator.
 	Wire in unary functions and add testing for true/false and general unary functions
-
-	Shift tokens
+	Shift tokens, move ASSERT.
 	Comparison strings.
 	Clear code (also reset procedures to arrays ? - scan later)
 	Float add, subtract, multiply, divide, compare (?) [short divide is wrong !]

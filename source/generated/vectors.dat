@@ -113,7 +113,7 @@ VectorSet0:
 	.word	SyntaxError                      ; $ab LET
 	.word	SyntaxError                      ; $ac PRINT
 	.word	SyntaxError                      ; $ad READ
-	.word	SyntaxError                      ; $ae REM
+	.word	RemCommand                       ; $ae REM
 	.word	SyntaxError                      ; $af RETURN
 	.word	SyntaxError                      ; $b0 THEN
 	.word	SyntaxError                      ; $b1 TO

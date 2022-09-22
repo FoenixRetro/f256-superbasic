@@ -123,20 +123,35 @@ CompareBaseCode:
 		ora 	NSExponent+1,x  		
 		bne 	_CBCFloat
 		;
-		jsr 	SubTopTwoStack 				; unsigned
-		bvc 	_CBCNoOverflow 				; make signed
-		eor 	#$80
-_CBCNoOverflow:
-		bmi 	_CBCLess 					; if < return $FF
+		;		do the integer comparison.
+		;
+		lda 	NSStatus,x 					; are the signs different ?
+		eor 	NSStatus+1,x
+		bpl 	_CDCSameSign
+		;
+		lda 	NSStatus,x 					; if first one is -ve
+		bmi 	_CBCLess 					; return $FF
+_CBCGreater:
+		lda 	#1
+		rts		
+_CBCEqual:
+		lda 	#0
+		rts				
+		;
+		;		They are the same sign.
+		;
+_CDCSameSign:				
+		jsr 	SubTopTwoStack 				; unsigned subtract
 		;
 		jsr 	NSMIsZero 					; or the mantissa together
-		beq 	_CBCExit 					; if zero, return zero as equal
-		lda 	#1 							; return 1
-_CBCExit:
-		rts
+		beq 	_CBCEqual 					
+		;
+		lda 	NSMantissa3,x 				; sign of the result. if +ve return $01 else return $FF
+		eor 	NSStatus+1,x 				; however if both were -ve this is inverted
+		bpl 	_CBCGreater
 _CBCLess:
 		lda 	#$FF
-		rts				
+		rts
 
 _CBCString:
 		.debug

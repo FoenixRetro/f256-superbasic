@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.56.2625 listing file
 ; 64tass -q -b -Wall -Wno-portable -c -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Thu Sep 22 10:43:50 2022
+; Thu Sep 22 14:07:13 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -250,8 +250,8 @@
 .8010	a2 ff		ldx #$ff	Start:	ldx 	#$FF 						; stack reset
 .8012	9a		txs				txs
 .8013	20 3f 81	jsr $813f			jsr 	NewCommand 					; erase current program
-.8016	20 43 87	jsr $8743			jsr 	BackloadProgram
-.8019	4c 49 81	jmp $8149			jmp 	CommandRun
+.8016	20 50 87	jsr $8750			jsr 	BackloadProgram
+.8019	4c 56 81	jmp $8156			jmp 	CommandRun
 .801c					WarmStart:
 >801c	db						.byte 	$DB 						; causes a break in the emulator
 .801d	80 fd		bra $801c			bra 	WarmStart
@@ -262,136 +262,136 @@
 ;******  Processing file: ./aa_system/../generated/vectors.dat
 
 .8023					VectorSetPunc:
->8023	8d 81					.word	ShiftLeft                        ; $00 <<
->8025	0b 8c					.word	BinaryCompareLessEqual           ; $01 <=
->8027	02 8c					.word	BinaryCompareNotEqual            ; $02 <>
->8029	85 8d					.word	SyntaxError                      ; $03 !!3
->802b	85 8d					.word	SyntaxError                      ; $04 ><
->802d	14 8c					.word	BinaryCompareGreaterEqual        ; $05 >=
->802f	90 81					.word	ShiftRight                       ; $06 >>
->8031	85 8d					.word	SyntaxError                      ; $07 !!7
->8033	85 8d					.word	SyntaxError                      ; $08 !!8
->8035	85 8d					.word	SyntaxError                      ; $09 !!9
->8037	85 8d					.word	SyntaxError                      ; $0a !!10
->8039	85 8d					.word	SyntaxError                      ; $0b !!11
->803b	85 8d					.word	SyntaxError                      ; $0c !!12
->803d	85 8d					.word	SyntaxError                      ; $0d !!13
->803f	85 8d					.word	SyntaxError                      ; $0e !!14
->8041	85 8d					.word	SyntaxError                      ; $0f !!15
->8043	85 8d					.word	SyntaxError                      ; $10 @
->8045	85 8d					.word	SyntaxError                      ; $11 !!17
->8047	85 8d					.word	SyntaxError                      ; $12 !!18
->8049	85 8d					.word	SyntaxError                      ; $13 [
->804b	48 8c					.word	IntegerDivide                    ; $14 \
->804d	85 8d					.word	SyntaxError                      ; $15 ]
->804f	0d 83					.word	EorInteger                       ; $16 ^
->8051	85 8d					.word	SyntaxError                      ; $17 _
->8053	85 8d					.word	SyntaxError                      ; $18 `
->8055	85 8d					.word	SyntaxError                      ; $19 !!25
->8057	85 8d					.word	SyntaxError                      ; $1a !!26
->8059	85 8d					.word	SyntaxError                      ; $1b {
->805b	cb 82					.word	OraInteger                       ; $1c |
->805d	85 8d					.word	SyntaxError                      ; $1d }
->805f	85 8d					.word	SyntaxError                      ; $1e ~
->8061	85 8d					.word	SyntaxError                      ; $1f [7m<7F>[m
->8063	85 8d					.word	SyntaxError                      ; $20
->8065	85 8d					.word	SyntaxError                      ; $21 !
->8067	85 8d					.word	SyntaxError                      ; $22 "
->8069	85 8d					.word	SyntaxError                      ; $23 #
->806b	85 8d					.word	SyntaxError                      ; $24 $
->806d	94 8c					.word	IntegerModulus                   ; $25 %
->806f	89 82					.word	AndInteger                       ; $26 &
->8071	85 8d					.word	SyntaxError                      ; $27 '
->8073	85 8d					.word	SyntaxError                      ; $28 (
->8075	85 8d					.word	SyntaxError                      ; $29 )
->8077	04 8d					.word	MulInteger                       ; $2a *
->8079	23 82					.word	AddInteger                       ; $2b +
->807b	85 8d					.word	SyntaxError                      ; $2c ,
->807d	5e 82					.word	SubInteger                       ; $2d -
->807f	85 8d					.word	SyntaxError                      ; $2e .
->8081	85 8d					.word	SyntaxError                      ; $2f /
->8083	85 8d					.word	SyntaxError                      ; $30 0
->8085	85 8d					.word	SyntaxError                      ; $31 1
->8087	85 8d					.word	SyntaxError                      ; $32 2
->8089	85 8d					.word	SyntaxError                      ; $33 3
->808b	85 8d					.word	SyntaxError                      ; $34 4
->808d	85 8d					.word	SyntaxError                      ; $35 5
->808f	85 8d					.word	SyntaxError                      ; $36 6
->8091	85 8d					.word	SyntaxError                      ; $37 7
->8093	85 8d					.word	SyntaxError                      ; $38 8
->8095	85 8d					.word	SyntaxError                      ; $39 9
->8097	85 8d					.word	SyntaxError                      ; $3a :
->8099	85 8d					.word	SyntaxError                      ; $3b ;
->809b	ee 8b					.word	BinaryCompareLess                ; $3c <
->809d	e4 8b					.word	BinaryCompareEqual               ; $3d =
->809f	f8 8b					.word	BinaryCompareGreater             ; $3e >
->80a1	85 8d					.word	SyntaxError                      ; $3f ?
+>8023	9a 81					.word	ShiftLeft                        ; $00 <<
+>8025	18 8c					.word	BinaryCompareLessEqual           ; $01 <=
+>8027	0f 8c					.word	BinaryCompareNotEqual            ; $02 <>
+>8029	a4 8d					.word	SyntaxError                      ; $03 !!3
+>802b	a4 8d					.word	SyntaxError                      ; $04 ><
+>802d	21 8c					.word	BinaryCompareGreaterEqual        ; $05 >=
+>802f	9d 81					.word	ShiftRight                       ; $06 >>
+>8031	a4 8d					.word	SyntaxError                      ; $07 !!7
+>8033	a4 8d					.word	SyntaxError                      ; $08 !!8
+>8035	a4 8d					.word	SyntaxError                      ; $09 !!9
+>8037	a4 8d					.word	SyntaxError                      ; $0a !!10
+>8039	a4 8d					.word	SyntaxError                      ; $0b !!11
+>803b	a4 8d					.word	SyntaxError                      ; $0c !!12
+>803d	a4 8d					.word	SyntaxError                      ; $0d !!13
+>803f	a4 8d					.word	SyntaxError                      ; $0e !!14
+>8041	a4 8d					.word	SyntaxError                      ; $0f !!15
+>8043	a4 8d					.word	SyntaxError                      ; $10 @
+>8045	a4 8d					.word	SyntaxError                      ; $11 !!17
+>8047	a4 8d					.word	SyntaxError                      ; $12 !!18
+>8049	a4 8d					.word	SyntaxError                      ; $13 [
+>804b	67 8c					.word	IntegerDivide                    ; $14 \
+>804d	a4 8d					.word	SyntaxError                      ; $15 ]
+>804f	1a 83					.word	EorInteger                       ; $16 ^
+>8051	a4 8d					.word	SyntaxError                      ; $17 _
+>8053	a4 8d					.word	SyntaxError                      ; $18 `
+>8055	a4 8d					.word	SyntaxError                      ; $19 !!25
+>8057	a4 8d					.word	SyntaxError                      ; $1a !!26
+>8059	a4 8d					.word	SyntaxError                      ; $1b {
+>805b	d8 82					.word	OraInteger                       ; $1c |
+>805d	a4 8d					.word	SyntaxError                      ; $1d }
+>805f	a4 8d					.word	SyntaxError                      ; $1e ~
+>8061	a4 8d					.word	SyntaxError                      ; $1f [7m<7F>[m
+>8063	a4 8d					.word	SyntaxError                      ; $20
+>8065	a4 8d					.word	SyntaxError                      ; $21 !
+>8067	a4 8d					.word	SyntaxError                      ; $22 "
+>8069	a4 8d					.word	SyntaxError                      ; $23 #
+>806b	a4 8d					.word	SyntaxError                      ; $24 $
+>806d	b3 8c					.word	IntegerModulus                   ; $25 %
+>806f	96 82					.word	AndInteger                       ; $26 &
+>8071	a4 8d					.word	SyntaxError                      ; $27 '
+>8073	a4 8d					.word	SyntaxError                      ; $28 (
+>8075	a4 8d					.word	SyntaxError                      ; $29 )
+>8077	23 8d					.word	MulInteger                       ; $2a *
+>8079	30 82					.word	AddInteger                       ; $2b +
+>807b	a4 8d					.word	SyntaxError                      ; $2c ,
+>807d	6b 82					.word	SubInteger                       ; $2d -
+>807f	a4 8d					.word	SyntaxError                      ; $2e .
+>8081	a4 8d					.word	SyntaxError                      ; $2f /
+>8083	a4 8d					.word	SyntaxError                      ; $30 0
+>8085	a4 8d					.word	SyntaxError                      ; $31 1
+>8087	a4 8d					.word	SyntaxError                      ; $32 2
+>8089	a4 8d					.word	SyntaxError                      ; $33 3
+>808b	a4 8d					.word	SyntaxError                      ; $34 4
+>808d	a4 8d					.word	SyntaxError                      ; $35 5
+>808f	a4 8d					.word	SyntaxError                      ; $36 6
+>8091	a4 8d					.word	SyntaxError                      ; $37 7
+>8093	a4 8d					.word	SyntaxError                      ; $38 8
+>8095	a4 8d					.word	SyntaxError                      ; $39 9
+>8097	a4 8d					.word	SyntaxError                      ; $3a :
+>8099	a4 8d					.word	SyntaxError                      ; $3b ;
+>809b	fb 8b					.word	BinaryCompareLess                ; $3c <
+>809d	f1 8b					.word	BinaryCompareEqual               ; $3d =
+>809f	05 8c					.word	BinaryCompareGreater             ; $3e >
+>80a1	a4 8d					.word	SyntaxError                      ; $3f ?
 .80a3					VectorSet0:
->80a3	80 81					.word	EOLCommand                       ; $80 !0:EOF
->80a5	85 8d					.word	SyntaxError                      ; $81 !1:SH1
->80a7	85 8d					.word	SyntaxError                      ; $82 !2:SH2
->80a9	85 8d					.word	SyntaxError                      ; $83 ABS(
->80ab	85 8d					.word	SyntaxError                      ; $84 ALLOC(
->80ad	85 8d					.word	SyntaxError                      ; $85 ASC(
->80af	85 8d					.word	SyntaxError                      ; $86 CHR$(
->80b1	85 8d					.word	SyntaxError                      ; $87 DEC(
->80b3	e1 8b					.word	ReturnFalse                      ; $88 FALSE
->80b5	85 8d					.word	SyntaxError                      ; $89 GETDATE$(
->80b7	85 8d					.word	SyntaxError                      ; $8a GETTIME$(
->80b9	85 8d					.word	SyntaxError                      ; $8b HEX$(
->80bb	85 8d					.word	SyntaxError                      ; $8c INT(
->80bd	85 8d					.word	SyntaxError                      ; $8d ISVAL(
->80bf	85 8d					.word	SyntaxError                      ; $8e LEFT$(
->80c1	85 8d					.word	SyntaxError                      ; $8f LEN(
->80c3	85 8d					.word	SyntaxError                      ; $90 MID$(
->80c5	85 8d					.word	SyntaxError                      ; $91 NOT
->80c7	85 8d					.word	SyntaxError                      ; $92 PAGE
->80c9	85 8d					.word	SyntaxError                      ; $93 RIGHT$(
->80cb	85 8d					.word	SyntaxError                      ; $94 RND(
->80cd	85 8d					.word	SyntaxError                      ; $95 SGN(
->80cf	85 8d					.word	SyntaxError                      ; $96 SPC(
->80d1	85 8d					.word	SyntaxError                      ; $97 STR$(
->80d3	d6 8b					.word	ReturnTrue                       ; $98 TRUE
->80d5	85 8d					.word	SyntaxError                      ; $99 VAL(
->80d7	85 8d					.word	SyntaxError                      ; $9a FOR
->80d9	85 8d					.word	SyntaxError                      ; $9b IF
->80db	85 8d					.word	SyntaxError                      ; $9c PROC
->80dd	85 8d					.word	SyntaxError                      ; $9d REPEAT
->80df	85 8d					.word	SyntaxError                      ; $9e WHILE
->80e1	85 8d					.word	SyntaxError                      ; $9f ENDIF
->80e3	85 8d					.word	SyntaxError                      ; $a0 ENDPROC
->80e5	85 8d					.word	SyntaxError                      ; $a1 NEXT
->80e7	85 8d					.word	SyntaxError                      ; $a2 UNTIL
->80e9	85 8d					.word	SyntaxError                      ; $a3 WEND
+>80a3	8d 81					.word	EOLCommand                       ; $80 !0:EOF
+>80a5	a4 8d					.word	SyntaxError                      ; $81 !1:SH1
+>80a7	a4 8d					.word	SyntaxError                      ; $82 !2:SH2
+>80a9	a4 8d					.word	SyntaxError                      ; $83 ABS(
+>80ab	a4 8d					.word	SyntaxError                      ; $84 ALLOC(
+>80ad	a4 8d					.word	SyntaxError                      ; $85 ASC(
+>80af	a4 8d					.word	SyntaxError                      ; $86 CHR$(
+>80b1	a4 8d					.word	SyntaxError                      ; $87 DEC(
+>80b3	ee 8b					.word	ReturnFalse                      ; $88 FALSE
+>80b5	a4 8d					.word	SyntaxError                      ; $89 GETDATE$(
+>80b7	a4 8d					.word	SyntaxError                      ; $8a GETTIME$(
+>80b9	a4 8d					.word	SyntaxError                      ; $8b HEX$(
+>80bb	a4 8d					.word	SyntaxError                      ; $8c INT(
+>80bd	a4 8d					.word	SyntaxError                      ; $8d ISVAL(
+>80bf	a4 8d					.word	SyntaxError                      ; $8e LEFT$(
+>80c1	a4 8d					.word	SyntaxError                      ; $8f LEN(
+>80c3	a4 8d					.word	SyntaxError                      ; $90 MID$(
+>80c5	a4 8d					.word	SyntaxError                      ; $91 NOT
+>80c7	a4 8d					.word	SyntaxError                      ; $92 PAGE
+>80c9	a4 8d					.word	SyntaxError                      ; $93 RIGHT$(
+>80cb	a4 8d					.word	SyntaxError                      ; $94 RND(
+>80cd	a4 8d					.word	SyntaxError                      ; $95 SGN(
+>80cf	a4 8d					.word	SyntaxError                      ; $96 SPC(
+>80d1	a4 8d					.word	SyntaxError                      ; $97 STR$(
+>80d3	e3 8b					.word	ReturnTrue                       ; $98 TRUE
+>80d5	a4 8d					.word	SyntaxError                      ; $99 VAL(
+>80d7	a4 8d					.word	SyntaxError                      ; $9a FOR
+>80d9	a4 8d					.word	SyntaxError                      ; $9b IF
+>80db	a4 8d					.word	SyntaxError                      ; $9c PROC
+>80dd	a4 8d					.word	SyntaxError                      ; $9d REPEAT
+>80df	a4 8d					.word	SyntaxError                      ; $9e WHILE
+>80e1	a4 8d					.word	SyntaxError                      ; $9f ENDIF
+>80e3	a4 8d					.word	SyntaxError                      ; $a0 ENDPROC
+>80e5	a4 8d					.word	SyntaxError                      ; $a1 NEXT
+>80e7	a4 8d					.word	SyntaxError                      ; $a2 UNTIL
+>80e9	a4 8d					.word	SyntaxError                      ; $a3 WEND
 >80eb	21 81					.word	AssertCommand                    ; $a4 ASSERT
 >80ed	2f 81					.word	CallCommand                      ; $a5 CALL
->80ef	85 8d					.word	SyntaxError                      ; $a6 CLS
->80f1	85 8d					.word	SyntaxError                      ; $a7 DATA
->80f3	85 8d					.word	SyntaxError                      ; $a8 DIM
->80f5	85 8d					.word	SyntaxError                      ; $a9 GOSUB
->80f7	85 8d					.word	SyntaxError                      ; $aa GOTO
->80f9	85 8d					.word	SyntaxError                      ; $ab LET
->80fb	85 8d					.word	SyntaxError                      ; $ac PRINT
->80fd	85 8d					.word	SyntaxError                      ; $ad READ
->80ff	85 8d					.word	SyntaxError                      ; $ae REM
->8101	85 8d					.word	SyntaxError                      ; $af RETURN
->8103	85 8d					.word	SyntaxError                      ; $b0 THEN
->8105	85 8d					.word	SyntaxError                      ; $b1 TO
+>80ef	a4 8d					.word	SyntaxError                      ; $a6 CLS
+>80f1	a4 8d					.word	SyntaxError                      ; $a7 DATA
+>80f3	a4 8d					.word	SyntaxError                      ; $a8 DIM
+>80f5	a4 8d					.word	SyntaxError                      ; $a9 GOSUB
+>80f7	a4 8d					.word	SyntaxError                      ; $aa GOTO
+>80f9	a4 8d					.word	SyntaxError                      ; $ab LET
+>80fb	a4 8d					.word	SyntaxError                      ; $ac PRINT
+>80fd	a4 8d					.word	SyntaxError                      ; $ad READ
+>80ff	49 81					.word	RemCommand                       ; $ae REM
+>8101	a4 8d					.word	SyntaxError                      ; $af RETURN
+>8103	a4 8d					.word	SyntaxError                      ; $b0 THEN
+>8105	a4 8d					.word	SyntaxError                      ; $b1 TO
 .8107					VectorSet1:
->8107	85 8d					.word	SyntaxError                      ; $80 !0:EOF
->8109	85 8d					.word	SyntaxError                      ; $81 !1:SH1
->810b	85 8d					.word	SyntaxError                      ; $82 !2:SH2
+>8107	a4 8d					.word	SyntaxError                      ; $80 !0:EOF
+>8109	a4 8d					.word	SyntaxError                      ; $81 !1:SH1
+>810b	a4 8d					.word	SyntaxError                      ; $82 !2:SH2
 >810d	3b 81					.word	ClearCommand                     ; $83 CLEAR
 >810f	3c 81					.word	EndCommand                       ; $84 END
->8111	85 8d					.word	SyntaxError                      ; $85 LIST
+>8111	a4 8d					.word	SyntaxError                      ; $85 LIST
 >8113	3f 81					.word	NewCommand                       ; $86 NEW
->8115	85 8d					.word	SyntaxError                      ; $87 RESTORE
->8117	49 81					.word	CommandRUN                       ; $88 RUN
->8119	85 8d					.word	SyntaxError                      ; $89 STOP
+>8115	a4 8d					.word	SyntaxError                      ; $87 RESTORE
+>8117	56 81					.word	CommandRUN                       ; $88 RUN
+>8119	a4 8d					.word	SyntaxError                      ; $89 STOP
 .811b					VectorSet2:
->811b	85 8d					.word	SyntaxError                      ; $80 !0:EOF
->811d	85 8d					.word	SyntaxError                      ; $81 !1:SH1
->811f	85 8d					.word	SyntaxError                      ; $82 !2:SH2
+>811b	a4 8d					.word	SyntaxError                      ; $80 !0:EOF
+>811d	a4 8d					.word	SyntaxError                      ; $81 !1:SH1
+>811f	a4 8d					.word	SyntaxError                      ; $82 !2:SH2
 
 ;******  Return to file: ./aa_system/00start.asm
 
@@ -402,8 +402,8 @@
 ;******  Processing file: ./commands/assert.asm
 
 .8121					AssertCommand:
-.8121	20 2d 86	jsr $862d			jsr 	EvaluateInteger 			; the assert test
-.8124	20 e3 86	jsr $86e3			jsr 	NSMIsZero 					; exit if result is non zero.
+.8121	20 3a 86	jsr $863a			jsr 	EvaluateInteger 			; the assert test
+.8124	20 f0 86	jsr $86f0			jsr 	NSMIsZero 					; exit if result is non zero.
 .8127	d0 05		bne $812e			bne 	_ACExit
 .8129	a9 0a		lda #$0a		lda	#10
 .812b	4c 1f 80	jmp $801f		jmp	ErrorHandler
@@ -416,7 +416,7 @@
 ;******  Processing file: ./commands/call.asm
 
 .812f					CallCommand:
-.812f	20 42 86	jsr $8642			jsr 	Evaluate16BitInteger
+.812f	20 4f 86	jsr $864f			jsr 	Evaluate16BitInteger
 .8132	ad 10 06	lda $0610			lda 	NSMantissa1
 .8135	8d 09 06	sta $0609			sta 	NSMantissa0+1
 .8138	6c 08 06	jmp ($0608)			jmp 	(NSMantissa0)
@@ -443,7 +443,7 @@
 ;******  Processing file: ./commands/new.asm
 
 .813f					NewCommand:
-.813f	20 f0 86	jsr $86f0			jsr 	MemoryNew
+.813f	20 fd 86	jsr $86fd			jsr 	MemoryNew
 .8142	9c 00 10	stz $1000			stz 	VariableSpace 				; erase all variables.
 .8145	20 3b 81	jsr $813b			jsr 	ClearCommand 				; clear everything.
 .8148	60		rts				rts
@@ -451,576 +451,601 @@
 ;******  Return to file: _basic.asm
 
 
+;******  Processing file: ./commands/rem.asm
+
+.8149					RemCommand:
+.8149	b1 30		lda ($30),y			lda 	(codePtr),y
+.814b	c9 ff		cmp #$ff			cmp 	#KWC_STRING
+.814d	d0 06		bne $8155			bne 	_RMExit
+.814f	c8		iny				iny
+.8150	98		tya				tya
+.8151	38		sec				sec
+.8152	71 30		adc ($30),y			adc 	(codePtr),y
+.8154	a8		tay				tay
+.8155					_RMExit:
+.8155	60		rts				rts
+
+;******  Return to file: _basic.asm
+
+
 ;******  Processing file: ./commands/run.asm
 
-.8149					CommandRUN:
-.8149	20 3b 81	jsr $813b			jsr 	ClearCommand 				; clear variable/stacks/etc.
-.814c	a9 00		lda #$00			lda 	#(BasicStart & $FF)
-.814e	85 30		sta $30				sta 	codePtr
-.8150	a9 20		lda #$20			lda 	#(BasicStart >> 8)
-.8152	85 31		sta $31				sta 	codePtr+1
-.8154					RUNNewLine:
-.8154	b2 30		lda ($30)			lda 	(codePtr)
-.8156	f0 25		beq $817d			beq 	CRNoProgram         		; no then END.
-.8158	a2 ff		ldx #$ff			ldx 	#$FF 						; reset stack
-.815a	9a		txs				txs
-.815b					RUNCodePointerLine:
-.815b	a0 02		ldy #$02			ldy 	#2 							; start of program
-.815d					_CRIncMainLoop:
-.815d	c8		iny				iny
-.815e					_CRMainLoop:
-.815e	b1 30		lda ($30),y			lda 	(codePtr),y
-.8160	10 10		bpl $8172			bpl 	_CRNotKeyword
-.8162	c9 9a		cmp #$9a			cmp 	#KWC_LAST_UNARY+1 			; if after unary, legitimate command
-.8164	b0 04		bcs $816a			bcs 	_CRIsKeyword
-.8166	c9 83		cmp #$83			cmp 	#KWC_FIRST_UNARY 			; if unary, syntax error.
-.8168	b0 0d		bcs $8177			bcs		_CRSyntaxError
-.816a					_CRIsKeyword:
-.816a	c8		iny				iny 								; consume command
-.816b	0a		asl a				asl 	a 							; double losing the MSB which is '1' as tokens are $80-$FF
-.816c	aa		tax				tax 								; put in X for vector jump
-.816d	20 7a 81	jsr $817a			jsr 	_CRCallVector0 				; call the vector - effectively jsr (vectortable,X)
-.8170	80 ec		bra $815e			bra 	_CRMainLoop 				; and loop round
-.8172					_CRNotKeyword:
-.8172	c9 3a		cmp #$3a			cmp 	#KWD_COLON 					; if a :, consume it and go round.
-.8174	f0 e7		beq $815d			beq 	_CRIncMainLoop
->8176	db						.byte 	$DB 						; causes a break in the emulator
-.8177					_CRSyntaxError:
-.8177	4c 85 8d	jmp $8d85			jmp 	SyntaxError
-.817a					_CRCallVector0:
-.817a	7c a3 80	jmp ($80a3,x)			jmp 	(VectorSet0,x)
-.817d					CRNoProgram:
-.817d	4c 3c 81	jmp $813c			jmp 	EndCommand
-.8180					EOLCommand:
-.8180	18		clc				clc
-.8181	b2 30		lda ($30)			lda 	(codePtr)					; get offset
-.8183	65 30		adc $30				adc 	codePtr
-.8185	85 30		sta $30				sta 	codePtr
-.8187	90 02		bcc $818b			bcc 	_CREExit
-.8189	e6 31		inc $31				inc 	codePtr+1
-.818b					_CREExit:
-.818b	80 c7		bra $8154			bra 	RunNewLine
+.8156					CommandRUN:
+.8156	20 3b 81	jsr $813b			jsr 	ClearCommand 				; clear variable/stacks/etc.
+.8159	a9 00		lda #$00			lda 	#(BasicStart & $FF)
+.815b	85 30		sta $30				sta 	codePtr
+.815d	a9 20		lda #$20			lda 	#(BasicStart >> 8)
+.815f	85 31		sta $31				sta 	codePtr+1
+.8161					RUNNewLine:
+.8161	b2 30		lda ($30)			lda 	(codePtr)
+.8163	f0 25		beq $818a			beq 	CRNoProgram         		; no then END.
+.8165	a2 ff		ldx #$ff			ldx 	#$FF 						; reset stack
+.8167	9a		txs				txs
+.8168					RUNCodePointerLine:
+.8168	a0 02		ldy #$02			ldy 	#2 							; start of program
+.816a					_CRIncMainLoop:
+.816a	c8		iny				iny
+.816b					_CRMainLoop:
+.816b	b1 30		lda ($30),y			lda 	(codePtr),y
+.816d	10 10		bpl $817f			bpl 	_CRNotKeyword
+.816f	c9 9a		cmp #$9a			cmp 	#KWC_LAST_UNARY+1 			; if after unary, legitimate command
+.8171	b0 04		bcs $8177			bcs 	_CRIsKeyword
+.8173	c9 83		cmp #$83			cmp 	#KWC_FIRST_UNARY 			; if unary, syntax error.
+.8175	b0 0d		bcs $8184			bcs		_CRSyntaxError
+.8177					_CRIsKeyword:
+.8177	c8		iny				iny 								; consume command
+.8178	0a		asl a				asl 	a 							; double losing the MSB which is '1' as tokens are $80-$FF
+.8179	aa		tax				tax 								; put in X for vector jump
+.817a	20 87 81	jsr $8187			jsr 	_CRCallVector0 				; call the vector - effectively jsr (vectortable,X)
+.817d	80 ec		bra $816b			bra 	_CRMainLoop 				; and loop round
+.817f					_CRNotKeyword:
+.817f	c9 3a		cmp #$3a			cmp 	#KWD_COLON 					; if a :, consume it and go round.
+.8181	f0 e7		beq $816a			beq 	_CRIncMainLoop
+>8183	db						.byte 	$DB 						; causes a break in the emulator
+.8184					_CRSyntaxError:
+.8184	4c a4 8d	jmp $8da4			jmp 	SyntaxError
+.8187					_CRCallVector0:
+.8187	7c a3 80	jmp ($80a3,x)			jmp 	(VectorSet0,x)
+.818a					CRNoProgram:
+.818a	4c 3c 81	jmp $813c			jmp 	EndCommand
+.818d					EOLCommand:
+.818d	18		clc				clc
+.818e	b2 30		lda ($30)			lda 	(codePtr)					; get offset
+.8190	65 30		adc $30				adc 	codePtr
+.8192	85 30		sta $30				sta 	codePtr
+.8194	90 02		bcc $8198			bcc 	_CREExit
+.8196	e6 31		inc $31				inc 	codePtr+1
+.8198					_CREExit:
+.8198	80 c7		bra $8161			bra 	RunNewLine
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./errors/charcheck.asm
 
-.8bbd					CheckRightBracket:
-.8bbd	b1 30		lda ($30),y			lda 	(codePtr),y
-.8bbf	c8		iny				iny
-.8bc0	c9 29		cmp #$29			cmp 	#KWD_RPAREN 						; exit if matches
-.8bc2	d0 0f		bne $8bd3			bne 	CNAFail
-.8bc4	60		rts				rts
-.8bc5					CheckComma:
-.8bc5	b1 30		lda ($30),y			lda 	(codePtr),y
-.8bc7	c8		iny				iny
-.8bc8	c9 2c		cmp #$2c			cmp 	#KWD_COMMA 						; exit if matches
-.8bca	d0 07		bne $8bd3			bne 	CNAFail
-.8bcc	60		rts				rts
-.8bcd					CheckNextA:
-.8bcd	d1 30		cmp ($30),y			cmp 	(codePtr),y
-.8bcf	d0 02		bne $8bd3			bne 	CNAFail
-.8bd1	c8		iny				iny 								; skip character
-.8bd2	60		rts				rts 								; and exit
-.8bd3					CNAFail:
-.8bd3	4c 85 8d	jmp $8d85			jmp 	SyntaxError
+.8bca					CheckRightBracket:
+.8bca	b1 30		lda ($30),y			lda 	(codePtr),y
+.8bcc	c8		iny				iny
+.8bcd	c9 29		cmp #$29			cmp 	#KWD_RPAREN 						; exit if matches
+.8bcf	d0 0f		bne $8be0			bne 	CNAFail
+.8bd1	60		rts				rts
+.8bd2					CheckComma:
+.8bd2	b1 30		lda ($30),y			lda 	(codePtr),y
+.8bd4	c8		iny				iny
+.8bd5	c9 2c		cmp #$2c			cmp 	#KWD_COMMA 						; exit if matches
+.8bd7	d0 07		bne $8be0			bne 	CNAFail
+.8bd9	60		rts				rts
+.8bda					CheckNextA:
+.8bda	d1 30		cmp ($30),y			cmp 	(codePtr),y
+.8bdc	d0 02		bne $8be0			bne 	CNAFail
+.8bde	c8		iny				iny 								; skip character
+.8bdf	60		rts				rts 								; and exit
+.8be0					CNAFail:
+.8be0	4c a4 8d	jmp $8da4			jmp 	SyntaxError
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./expressions/binary/compare.asm
 
-.8bd6					ReturnTrue:
-.8bd6	a9 01		lda #$01			lda 	#1  						; set to 1
-.8bd8	20 b5 86	jsr $86b5			jsr 	NSMSetByte
-.8bdb	a9 80		lda #$80			lda 	#$80 						; set sign flag, so it is -1
-.8bdd	9d 00 06	sta $0600,x			sta 	NSStatus,x
-.8be0	60		rts				rts
-.8be1					ReturnFalse:
-.8be1	4c b3 86	jmp $86b3			jmp 	NSMSetZero 					; set it all to zero
-.8be4					BinaryCompareEqual:
-.8be4	fa		plx				plx
-.8be5	20 1d 8c	jsr $8c1d			jsr 	CompareBaseCode
-.8be8	c9 00		cmp #$00			cmp 	#0
-.8bea	f0 ea		beq $8bd6			beq 	ReturnTrue
-.8bec	80 f3		bra $8be1			bra 	ReturnFalse
-.8bee					BinaryCompareLess:
-.8bee	fa		plx				plx
-.8bef	20 1d 8c	jsr $8c1d			jsr 	CompareBaseCode
-.8bf2	c9 ff		cmp #$ff			cmp 	#$FF
-.8bf4	f0 e0		beq $8bd6			beq 	ReturnTrue
-.8bf6	80 e9		bra $8be1			bra 	ReturnFalse
-.8bf8					BinaryCompareGreater:
-.8bf8	fa		plx				plx
-.8bf9	20 1d 8c	jsr $8c1d			jsr 	CompareBaseCode
-.8bfc	c9 01		cmp #$01			cmp 	#1
-.8bfe	f0 d6		beq $8bd6			beq 	ReturnTrue
-.8c00	80 df		bra $8be1			bra 	ReturnFalse
-.8c02					BinaryCompareNotEqual:
-.8c02	20 1d 8c	jsr $8c1d			jsr 	CompareBaseCode
-.8c05	c9 00		cmp #$00			cmp 	#0
-.8c07	d0 cd		bne $8bd6			bne 	ReturnTrue
-.8c09	80 d6		bra $8be1			bra 	ReturnFalse
-.8c0b					BinaryCompareLessEqual:
-.8c0b	20 1d 8c	jsr $8c1d			jsr 	CompareBaseCode
-.8c0e	c9 01		cmp #$01			cmp 	#1
-.8c10	d0 c4		bne $8bd6			bne 	ReturnTrue
-.8c12	80 cd		bra $8be1			bra 	ReturnFalse
-.8c14					BinaryCompareGreaterEqual:
-.8c14	20 1d 8c	jsr $8c1d			jsr 	CompareBaseCode
-.8c17	c9 ff		cmp #$ff			cmp 	#$FF
-.8c19	d0 bb		bne $8bd6			bne 	ReturnTrue
-.8c1b	80 c4		bra $8be1			bra 	ReturnFalse
-.8c1d					CompareBaseCode:
-.8c1d	20 ce 83	jsr $83ce			jsr 	DereferenceTopTwo 			; make both values if references.
-.8c20	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; check if either is a string.
-.8c23	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
-.8c26	29 10		and #$10			and 	#NSTString
-.8c28	d0 1c		bne $8c46			bne 	_CBCString
-.8c2a	bd 28 06	lda $0628,x			lda 	NSExponent,x 				; check both are integers
-.8c2d	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
-.8c30	d0 15		bne $8c47			bne 	_CBCFloat
-.8c32	20 fd 81	jsr $81fd			jsr 	SubTopTwoStack 				; unsigned
-.8c35	50 02		bvc $8c39			bvc 	_CBCNoOverflow 				; make signed
-.8c37	49 80		eor #$80			eor 	#$80
-.8c39					_CBCNoOverflow:
-.8c39	30 08		bmi $8c43			bmi 	_CBCLess 					; if < return $FF
-.8c3b	20 e3 86	jsr $86e3			jsr 	NSMIsZero 					; or the mantissa together
-.8c3e	f0 02		beq $8c42			beq 	_CBCExit 					; if zero, return zero as equal
-.8c40	a9 01		lda #$01			lda 	#1 							; return 1
-.8c42					_CBCExit:
-.8c42	60		rts				rts
-.8c43					_CBCLess:
-.8c43	a9 ff		lda #$ff			lda 	#$FF
-.8c45	60		rts				rts
-.8c46					_CBCString:
->8c46	db						.byte 	$DB 						; causes a break in the emulator
-.8c47					_CBCFloat:
->8c47	db						.byte 	$DB 						; causes a break in the emulator
+.8be3					ReturnTrue:
+.8be3	a9 01		lda #$01			lda 	#1  						; set to 1
+.8be5	20 c2 86	jsr $86c2			jsr 	NSMSetByte
+.8be8	a9 80		lda #$80			lda 	#$80 						; set sign flag, so it is -1
+.8bea	9d 00 06	sta $0600,x			sta 	NSStatus,x
+.8bed	60		rts				rts
+.8bee					ReturnFalse:
+.8bee	4c c0 86	jmp $86c0			jmp 	NSMSetZero 					; set it all to zero
+.8bf1					BinaryCompareEqual:
+.8bf1	fa		plx				plx
+.8bf2	20 2a 8c	jsr $8c2a			jsr 	CompareBaseCode
+.8bf5	c9 00		cmp #$00			cmp 	#0
+.8bf7	f0 ea		beq $8be3			beq 	ReturnTrue
+.8bf9	80 f3		bra $8bee			bra 	ReturnFalse
+.8bfb					BinaryCompareLess:
+.8bfb	fa		plx				plx
+.8bfc	20 2a 8c	jsr $8c2a			jsr 	CompareBaseCode
+.8bff	c9 ff		cmp #$ff			cmp 	#$FF
+.8c01	f0 e0		beq $8be3			beq 	ReturnTrue
+.8c03	80 e9		bra $8bee			bra 	ReturnFalse
+.8c05					BinaryCompareGreater:
+.8c05	fa		plx				plx
+.8c06	20 2a 8c	jsr $8c2a			jsr 	CompareBaseCode
+.8c09	c9 01		cmp #$01			cmp 	#1
+.8c0b	f0 d6		beq $8be3			beq 	ReturnTrue
+.8c0d	80 df		bra $8bee			bra 	ReturnFalse
+.8c0f					BinaryCompareNotEqual:
+.8c0f	20 2a 8c	jsr $8c2a			jsr 	CompareBaseCode
+.8c12	c9 00		cmp #$00			cmp 	#0
+.8c14	d0 cd		bne $8be3			bne 	ReturnTrue
+.8c16	80 d6		bra $8bee			bra 	ReturnFalse
+.8c18					BinaryCompareLessEqual:
+.8c18	20 2a 8c	jsr $8c2a			jsr 	CompareBaseCode
+.8c1b	c9 01		cmp #$01			cmp 	#1
+.8c1d	d0 c4		bne $8be3			bne 	ReturnTrue
+.8c1f	80 cd		bra $8bee			bra 	ReturnFalse
+.8c21					BinaryCompareGreaterEqual:
+.8c21	20 2a 8c	jsr $8c2a			jsr 	CompareBaseCode
+.8c24	c9 ff		cmp #$ff			cmp 	#$FF
+.8c26	d0 bb		bne $8be3			bne 	ReturnTrue
+.8c28	80 c4		bra $8bee			bra 	ReturnFalse
+.8c2a					CompareBaseCode:
+.8c2a	20 db 83	jsr $83db			jsr 	DereferenceTopTwo 			; make both values if references.
+.8c2d	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; check if either is a string.
+.8c30	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
+.8c33	29 10		and #$10			and 	#NSTString
+.8c35	d0 2e		bne $8c65			bne 	_CBCString
+.8c37	bd 28 06	lda $0628,x			lda 	NSExponent,x 				; check both are integers
+.8c3a	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
+.8c3d	d0 27		bne $8c66			bne 	_CBCFloat
+.8c3f	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; are the signs different ?
+.8c42	5d 01 06	eor $0601,x			eor 	NSStatus+1,x
+.8c45	10 0b		bpl $8c52			bpl 	_CDCSameSign
+.8c47	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; if first one is -ve
+.8c4a	30 16		bmi $8c62			bmi 	_CBCLess 					; return $FF
+.8c4c					_CBCGreater:
+.8c4c	a9 01		lda #$01			lda 	#1
+.8c4e	60		rts				rts
+.8c4f					_CBCEqual:
+.8c4f	a9 00		lda #$00			lda 	#0
+.8c51	60		rts				rts
+.8c52					_CDCSameSign:
+.8c52	20 0a 82	jsr $820a			jsr 	SubTopTwoStack 				; unsigned subtract
+.8c55	20 f0 86	jsr $86f0			jsr 	NSMIsZero 					; or the mantissa together
+.8c58	f0 f5		beq $8c4f			beq 	_CBCEqual
+.8c5a	bd 20 06	lda $0620,x			lda 	NSMantissa3,x 				; sign of the result. if +ve return $01 else return $FF
+.8c5d	5d 01 06	eor $0601,x			eor 	NSStatus+1,x 				; however if both were -ve this is inverted
+.8c60	10 ea		bpl $8c4c			bpl 	_CBCGreater
+.8c62					_CBCLess:
+.8c62	a9 ff		lda #$ff			lda 	#$FF
+.8c64	60		rts				rts
+.8c65					_CBCString:
+>8c65	db						.byte 	$DB 						; causes a break in the emulator
+.8c66					_CBCFloat:
+>8c66	db						.byte 	$DB 						; causes a break in the emulator
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./expressions/binary/divide.asm
 
-.8c48					IntegerDivide:
-.8c48	fa		plx				plx
-.8c49	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
-.8c4c	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
-.8c4f	0a		asl a				asl 	a 							; shift reference bit into sign bit
-.8c50	0a		asl a				asl 	a
-.8c51	10 05		bpl $8c58			bpl 	_NotRef
-.8c53	48		pha				pha
-.8c54	20 ce 83	jsr $83ce			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
-.8c57	68		pla				pla
-.8c58					_NotRef:
-.8c58	29 c0		and #$c0			and 	#$C0 						; isolate the type bits which have been shifted
-.8c5a	1d 28 06	ora $0628,x			ora 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
-.8c5d	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
-.8c60	f0 03		beq $8c65			beq 	_IntegerCode 				; if clear, then we have two integers
-.8c62	4c 8f 8d	jmp $8d8f			jmp 	TypeError 					; anything else, type mismatch.
-.8c65					_IntegerCode:
-.8c65	20 87 8c	jsr $8c87			jsr 	CheckDivideZero 			; do div zero check
-.8c68	20 be 8c	jsr $8cbe			jsr 	Int32Divide 				; do the division
-.8c6b	bd 0a 06	lda $060a,x			lda 	NSMantissa0+2,x 			; copy result down from +2
-.8c6e	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
-.8c71	bd 12 06	lda $0612,x			lda 	NSMantissa1+2,x
-.8c74	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
-.8c77	bd 1a 06	lda $061a,x			lda 	NSMantissa2+2,x
-.8c7a	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
-.8c7d	bd 22 06	lda $0622,x			lda 	NSMantissa3+2,x
-.8c80	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
-.8c83	20 77 8d	jsr $8d77			jsr 	CalculateSign 				; calculate result sign
-.8c86	60		rts				rts
-.8c87					CheckDivideZero:
-.8c87	e8		inx				inx
-.8c88	20 e3 86	jsr $86e3			jsr 	NSMIsZero
-.8c8b	f0 02		beq $8c8f			beq 	_CDVError
-.8c8d	ca		dex				dex
-.8c8e	60		rts				rts
-.8c8f					_CDVError:
-.8c8f	a9 03		lda #$03		lda	#3
-.8c91	4c 1f 80	jmp $801f		jmp	ErrorHandler
-.8c94					IntegerModulus:
-.8c94	fa		plx				plx
-.8c95	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
-.8c98	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
-.8c9b	0a		asl a				asl 	a 							; shift reference bit into sign bit
-.8c9c	0a		asl a				asl 	a
-.8c9d	10 05		bpl $8ca4			bpl 	_NotRef
-.8c9f	48		pha				pha
-.8ca0	20 ce 83	jsr $83ce			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
-.8ca3	68		pla				pla
-.8ca4					_NotRef:
-.8ca4	29 c0		and #$c0			and 	#$C0 						; isolate the type bits which have been shifted
-.8ca6	1d 28 06	ora $0628,x			ora 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
-.8ca9	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
-.8cac	f0 03		beq $8cb1			beq 	_IntegerCode 				; if clear, then we have two integers
-.8cae	4c 8f 8d	jmp $8d8f			jmp 	TypeError 					; anything else, type mismatch.
-.8cb1					_IntegerCode:
-.8cb1	20 87 8c	jsr $8c87			jsr 	CheckDivideZero 			; do div zero check
-.8cb4	20 be 8c	jsr $8cbe			jsr 	Int32Divide 				; do the division
-.8cb7	1e 00 06	asl $0600,x			asl 	NSStatus,x 					; clear the sign bit.
-.8cba	5e 00 06	lsr $0600,x			lsr 	NSStatus,x
-.8cbd	60		rts				rts
-.8cbe					Int32Divide:
-.8cbe	48		pha				pha 								; save AXY
-.8cbf	5a		phy				phy
-.8cc0	20 8a 86	jsr $868a			jsr 	NSMShiftUpTwo 				; copy S[X] to S[X+2]
-.8cc3	20 af 86	jsr $86af			jsr 	NSMSetZeroMantissaOnly 		; set S[X] to zero
-.8cc6	a0 20		ldy #$20			ldy 	#32 						; loop 32 times
-.8cc8					_I32DivideLoop:
-.8cc8	e8		inx				inx
-.8cc9	e8		inx				inx
-.8cca	20 c8 86	jsr $86c8			jsr 	NSMShiftLeft				; shift S[X+2] S[X] left as a 64 bit element
-.8ccd	ca		dex				dex
-.8cce	ca		dex				dex
-.8ccf	20 c9 86	jsr $86c9			jsr 	NSMRotateLeft
-.8cd2	20 fa 8c	jsr $8cfa			jsr 	DivideCheckSubtract 		; check if subtract possible
-.8cd5	90 03		bcc $8cda			bcc 	_I32DivideNoCarryIn
-.8cd7	fe 0a 06	inc $060a,x			inc 	NSMantissa0+2,x 			; if possible, set Mantissa0[X+2].0
-.8cda					_I32DivideNoCarryIn:
-.8cda	88		dey				dey 								; loop round till division completed.
-.8cdb	d0 eb		bne $8cc8			bne 	_I32DivideLoop
-.8cdd	7a		ply				ply 								; restore AXY and exit
-.8cde	68		pla				pla
-.8cdf	60		rts				rts
-.8ce0					Int32ShiftDivide:
-.8ce0	48		pha				pha 								; save AXY
-.8ce1	5a		phy				phy
-.8ce2	20 8a 86	jsr $868a			jsr 	NSMShiftUpTwo 				; copy S[X] to S[X+2]
-.8ce5	20 af 86	jsr $86af			jsr 	NSMSetZeroMantissaOnly 		; set S[X] to zero
-.8ce8	a0 1f		ldy #$1f			ldy 	#31 						; loop 31 times.
-.8cea					_I32SDLoop:
-.8cea	20 fa 8c	jsr $8cfa			jsr 	DivideCheckSubtract 		; check if subtract possible
-.8ced	20 c9 86	jsr $86c9			jsr 	NSMRotateLeft				; shift 64 bit FPA left, rotating carry in
-.8cf0	e8		inx				inx
-.8cf1	20 c9 86	jsr $86c9			jsr 	NSMRotateLeft
-.8cf4	88		dey				dey 	 							; do 31 times
-.8cf5	d0 f3		bne $8cea			bne 	_I32SDLoop
-.8cf7	7a		ply				ply 								; restore AXY and exit
-.8cf8	68		pla				pla
-.8cf9	60		rts				rts
-.8cfa					DivideCheckSubtract:
-.8cfa	20 fd 81	jsr $81fd			jsr 	SubTopTwoStack 				; subtract Stack[X+1] from Stack[X+0]
-.8cfd	b0 04		bcs $8d03			bcs 	_DCSExit 					; if carry set, then could do, exit
-.8cff	20 d7 81	jsr $81d7			jsr 	AddTopTwoStack 				; add it back in
-.8d02	18		clc				clc 								; and return False
-.8d03					_DCSExit:
-.8d03	60		rts				rts
+.8c67					IntegerDivide:
+.8c67	fa		plx				plx
+.8c68	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
+.8c6b	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
+.8c6e	0a		asl a				asl 	a 							; shift reference bit into sign bit
+.8c6f	0a		asl a				asl 	a
+.8c70	10 05		bpl $8c77			bpl 	_NotRef
+.8c72	48		pha				pha
+.8c73	20 db 83	jsr $83db			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
+.8c76	68		pla				pla
+.8c77					_NotRef:
+.8c77	29 c0		and #$c0			and 	#$C0 						; isolate the type bits which have been shifted
+.8c79	1d 28 06	ora $0628,x			ora 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
+.8c7c	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
+.8c7f	f0 03		beq $8c84			beq 	_IntegerCode 				; if clear, then we have two integers
+.8c81	4c ae 8d	jmp $8dae			jmp 	TypeError 					; anything else, type mismatch.
+.8c84					_IntegerCode:
+.8c84	20 a6 8c	jsr $8ca6			jsr 	CheckDivideZero 			; do div zero check
+.8c87	20 dd 8c	jsr $8cdd			jsr 	Int32Divide 				; do the division
+.8c8a	bd 0a 06	lda $060a,x			lda 	NSMantissa0+2,x 			; copy result down from +2
+.8c8d	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
+.8c90	bd 12 06	lda $0612,x			lda 	NSMantissa1+2,x
+.8c93	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
+.8c96	bd 1a 06	lda $061a,x			lda 	NSMantissa2+2,x
+.8c99	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
+.8c9c	bd 22 06	lda $0622,x			lda 	NSMantissa3+2,x
+.8c9f	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
+.8ca2	20 96 8d	jsr $8d96			jsr 	CalculateSign 				; calculate result sign
+.8ca5	60		rts				rts
+.8ca6					CheckDivideZero:
+.8ca6	e8		inx				inx
+.8ca7	20 f0 86	jsr $86f0			jsr 	NSMIsZero
+.8caa	f0 02		beq $8cae			beq 	_CDVError
+.8cac	ca		dex				dex
+.8cad	60		rts				rts
+.8cae					_CDVError:
+.8cae	a9 03		lda #$03		lda	#3
+.8cb0	4c 1f 80	jmp $801f		jmp	ErrorHandler
+.8cb3					IntegerModulus:
+.8cb3	fa		plx				plx
+.8cb4	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
+.8cb7	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
+.8cba	0a		asl a				asl 	a 							; shift reference bit into sign bit
+.8cbb	0a		asl a				asl 	a
+.8cbc	10 05		bpl $8cc3			bpl 	_NotRef
+.8cbe	48		pha				pha
+.8cbf	20 db 83	jsr $83db			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
+.8cc2	68		pla				pla
+.8cc3					_NotRef:
+.8cc3	29 c0		and #$c0			and 	#$C0 						; isolate the type bits which have been shifted
+.8cc5	1d 28 06	ora $0628,x			ora 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
+.8cc8	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
+.8ccb	f0 03		beq $8cd0			beq 	_IntegerCode 				; if clear, then we have two integers
+.8ccd	4c ae 8d	jmp $8dae			jmp 	TypeError 					; anything else, type mismatch.
+.8cd0					_IntegerCode:
+.8cd0	20 a6 8c	jsr $8ca6			jsr 	CheckDivideZero 			; do div zero check
+.8cd3	20 dd 8c	jsr $8cdd			jsr 	Int32Divide 				; do the division
+.8cd6	1e 00 06	asl $0600,x			asl 	NSStatus,x 					; clear the sign bit.
+.8cd9	5e 00 06	lsr $0600,x			lsr 	NSStatus,x
+.8cdc	60		rts				rts
+.8cdd					Int32Divide:
+.8cdd	48		pha				pha 								; save AXY
+.8cde	5a		phy				phy
+.8cdf	20 97 86	jsr $8697			jsr 	NSMShiftUpTwo 				; copy S[X] to S[X+2]
+.8ce2	20 bc 86	jsr $86bc			jsr 	NSMSetZeroMantissaOnly 		; set S[X] to zero
+.8ce5	a0 20		ldy #$20			ldy 	#32 						; loop 32 times
+.8ce7					_I32DivideLoop:
+.8ce7	e8		inx				inx
+.8ce8	e8		inx				inx
+.8ce9	20 d5 86	jsr $86d5			jsr 	NSMShiftLeft				; shift S[X+2] S[X] left as a 64 bit element
+.8cec	ca		dex				dex
+.8ced	ca		dex				dex
+.8cee	20 d6 86	jsr $86d6			jsr 	NSMRotateLeft
+.8cf1	20 19 8d	jsr $8d19			jsr 	DivideCheckSubtract 		; check if subtract possible
+.8cf4	90 03		bcc $8cf9			bcc 	_I32DivideNoCarryIn
+.8cf6	fe 0a 06	inc $060a,x			inc 	NSMantissa0+2,x 			; if possible, set Mantissa0[X+2].0
+.8cf9					_I32DivideNoCarryIn:
+.8cf9	88		dey				dey 								; loop round till division completed.
+.8cfa	d0 eb		bne $8ce7			bne 	_I32DivideLoop
+.8cfc	7a		ply				ply 								; restore AXY and exit
+.8cfd	68		pla				pla
+.8cfe	60		rts				rts
+.8cff					Int32ShiftDivide:
+.8cff	48		pha				pha 								; save AXY
+.8d00	5a		phy				phy
+.8d01	20 97 86	jsr $8697			jsr 	NSMShiftUpTwo 				; copy S[X] to S[X+2]
+.8d04	20 bc 86	jsr $86bc			jsr 	NSMSetZeroMantissaOnly 		; set S[X] to zero
+.8d07	a0 1f		ldy #$1f			ldy 	#31 						; loop 31 times.
+.8d09					_I32SDLoop:
+.8d09	20 19 8d	jsr $8d19			jsr 	DivideCheckSubtract 		; check if subtract possible
+.8d0c	20 d6 86	jsr $86d6			jsr 	NSMRotateLeft				; shift 64 bit FPA left, rotating carry in
+.8d0f	e8		inx				inx
+.8d10	20 d6 86	jsr $86d6			jsr 	NSMRotateLeft
+.8d13	88		dey				dey 	 							; do 31 times
+.8d14	d0 f3		bne $8d09			bne 	_I32SDLoop
+.8d16	7a		ply				ply 								; restore AXY and exit
+.8d17	68		pla				pla
+.8d18	60		rts				rts
+.8d19					DivideCheckSubtract:
+.8d19	20 0a 82	jsr $820a			jsr 	SubTopTwoStack 				; subtract Stack[X+1] from Stack[X+0]
+.8d1c	b0 04		bcs $8d22			bcs 	_DCSExit 					; if carry set, then could do, exit
+.8d1e	20 e4 81	jsr $81e4			jsr 	AddTopTwoStack 				; add it back in
+.8d21	18		clc				clc 								; and return False
+.8d22					_DCSExit:
+.8d22	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./expressions/binary/multiply.asm
 
-.8d04					MulInteger:
-.8d04	fa		plx				plx
-.8d05	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
-.8d08	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
-.8d0b	0a		asl a				asl 	a 							; shift reference bit into sign bit
-.8d0c	0a		asl a				asl 	a
-.8d0d	10 05		bpl $8d14			bpl 	_NotRef
-.8d0f	48		pha				pha
-.8d10	20 ce 83	jsr $83ce			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
-.8d13	68		pla				pla
-.8d14					_NotRef:
-.8d14	0a		asl a				asl 	a 							; put MSB of type into A:7
-.8d15	30 0b		bmi $8d22			bmi 	_StringData 				; if the original bit 4 was set then do the string code.
-.8d17	bd 28 06	lda $0628,x			lda 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
-.8d1a	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
-.8d1d	f0 06		beq $8d25			beq 	_IntegerCode 				; if clear, then we have two integers
-.8d1f	4c 99 8d	jmp $8d99			jmp 	NotDoneError 							; otherwise at least one float.
-.8d22					_StringData:
-.8d22	4c 99 8d	jmp $8d99			jmp 	NotDoneError							; at least one string - don't know both are strings.
-.8d25					_IntegerCode:
-.8d25	20 32 8d	jsr $8d32			jsr 	MultiplyShort
-.8d28	c9 00		cmp #$00			cmp 	#0
-.8d2a	f0 05		beq $8d31			beq 	_MIExit
-.8d2c	a9 04		lda #$04		lda	#4
-.8d2e	4c 1f 80	jmp $801f		jmp	ErrorHandler
-.8d31					_MIExit:
-.8d31	60		rts				rts
-.8d32					MultiplyShort:
-.8d32	5a		phy				phy 								; save Y
-.8d33	20 8a 86	jsr $868a			jsr 	NSMShiftUpTwo 				; copy S[X] to S[X+2]
-.8d36	20 af 86	jsr $86af			jsr 	NSMSetZeroMantissaOnly 		; set mantissa S[X] to zero
-.8d39	a0 00		ldy #$00			ldy 	#0 							; Y is the shift count.
-.8d3b					_I32MLoop:
-.8d3b	bd 0a 06	lda $060a,x			lda 	NSMantissa0+2,x 			; check S[X+2] is zero
-.8d3e	1d 12 06	ora $0612,x			ora 	NSMantissa1+2,x
-.8d41	1d 1a 06	ora $061a,x			ora 	NSMantissa2+2,x
-.8d44	1d 22 06	ora $0622,x			ora 	NSMantissa3+2,x
-.8d47	f0 28		beq $8d71			beq 	_I32MExit 					; exit if zero
-.8d49	bd 0a 06	lda $060a,x			lda 	NSMantissa0+2,x 			; check LSB of n1
-.8d4c	29 01		and #$01			and 	#1
-.8d4e	f0 0e		beq $8d5e			beq 	_I32MNoAdd
-.8d50	20 d7 81	jsr $81d7			jsr 	AddTopTwoStack 				; if so add S[X+1] to S[X+0]
-.8d53	bd 20 06	lda $0620,x			lda 	NSMantissa3,x 				; has MantissaA overflowed ?
-.8d56	10 06		bpl $8d5e			bpl 	_I32MNoAdd
-.8d58					_I32ShiftRight:
-.8d58	20 d6 86	jsr $86d6			jsr 	NSMShiftRight 				; shift S[X] right
-.8d5b	c8		iny				iny 								; increment shift count
-.8d5c	80 0a		bra $8d68			bra 	_I32MShiftUpper 			; n2 is doubled by default.
-.8d5e					_I32MNoAdd:
-.8d5e	3c 21 06	bit $0621,x			bit 	NSMantissa3+1,x				; if we can't shift S[X+1] left, shift everything right
-.8d61	70 f5		bvs $8d58			bvs 	_I32ShiftRight 				; instead.
-.8d63	e8		inx				inx
-.8d64	20 c8 86	jsr $86c8			jsr 	NSMShiftLeft 				; shift additive S[X+1] left
-.8d67	ca		dex				dex
-.8d68					_I32MShiftUpper:
-.8d68	e8		inx				inx 								; shift S[X+2] right
-.8d69	e8		inx				inx
-.8d6a	20 d6 86	jsr $86d6			jsr 	NSMShiftRight
-.8d6d	ca		dex				dex
-.8d6e	ca		dex				dex
-.8d6f	80 ca		bra $8d3b			bra 	_I32MLoop 					; try again.
-.8d71					_I32MExit:
-.8d71	20 77 8d	jsr $8d77			jsr 	CalculateSign
-.8d74	98		tya				tya 								; shift in A
-.8d75	7a		ply				ply 								; restore Y and exit
-.8d76	60		rts				rts
-.8d77					CalculateSign:
-.8d77	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; sign of result is 0 if same, 1 if different.
-.8d7a	1e 00 06	asl $0600,x			asl 	NSStatus,x 					; shift result left
-.8d7d	5d 01 06	eor $0601,x			eor 	NSStatus+1,x
-.8d80	0a		asl a				asl 	a 							; shift bit 7 into carry
-.8d81	7e 00 06	ror $0600,x			ror 	NSStatus,x 					; shift right into status byte.
-.8d84	60		rts				rts
+.8d23					MulInteger:
+.8d23	fa		plx				plx
+.8d24	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
+.8d27	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
+.8d2a	0a		asl a				asl 	a 							; shift reference bit into sign bit
+.8d2b	0a		asl a				asl 	a
+.8d2c	10 05		bpl $8d33			bpl 	_NotRef
+.8d2e	48		pha				pha
+.8d2f	20 db 83	jsr $83db			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
+.8d32	68		pla				pla
+.8d33					_NotRef:
+.8d33	0a		asl a				asl 	a 							; put MSB of type into A:7
+.8d34	30 0b		bmi $8d41			bmi 	_StringData 				; if the original bit 4 was set then do the string code.
+.8d36	bd 28 06	lda $0628,x			lda 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
+.8d39	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
+.8d3c	f0 06		beq $8d44			beq 	_IntegerCode 				; if clear, then we have two integers
+.8d3e	4c b8 8d	jmp $8db8			jmp 	NotDoneError 							; otherwise at least one float.
+.8d41					_StringData:
+.8d41	4c b8 8d	jmp $8db8			jmp 	NotDoneError							; at least one string - don't know both are strings.
+.8d44					_IntegerCode:
+.8d44	20 51 8d	jsr $8d51			jsr 	MultiplyShort
+.8d47	c9 00		cmp #$00			cmp 	#0
+.8d49	f0 05		beq $8d50			beq 	_MIExit
+.8d4b	a9 04		lda #$04		lda	#4
+.8d4d	4c 1f 80	jmp $801f		jmp	ErrorHandler
+.8d50					_MIExit:
+.8d50	60		rts				rts
+.8d51					MultiplyShort:
+.8d51	5a		phy				phy 								; save Y
+.8d52	20 97 86	jsr $8697			jsr 	NSMShiftUpTwo 				; copy S[X] to S[X+2]
+.8d55	20 bc 86	jsr $86bc			jsr 	NSMSetZeroMantissaOnly 		; set mantissa S[X] to zero
+.8d58	a0 00		ldy #$00			ldy 	#0 							; Y is the shift count.
+.8d5a					_I32MLoop:
+.8d5a	bd 0a 06	lda $060a,x			lda 	NSMantissa0+2,x 			; check S[X+2] is zero
+.8d5d	1d 12 06	ora $0612,x			ora 	NSMantissa1+2,x
+.8d60	1d 1a 06	ora $061a,x			ora 	NSMantissa2+2,x
+.8d63	1d 22 06	ora $0622,x			ora 	NSMantissa3+2,x
+.8d66	f0 28		beq $8d90			beq 	_I32MExit 					; exit if zero
+.8d68	bd 0a 06	lda $060a,x			lda 	NSMantissa0+2,x 			; check LSB of n1
+.8d6b	29 01		and #$01			and 	#1
+.8d6d	f0 0e		beq $8d7d			beq 	_I32MNoAdd
+.8d6f	20 e4 81	jsr $81e4			jsr 	AddTopTwoStack 				; if so add S[X+1] to S[X+0]
+.8d72	bd 20 06	lda $0620,x			lda 	NSMantissa3,x 				; has MantissaA overflowed ?
+.8d75	10 06		bpl $8d7d			bpl 	_I32MNoAdd
+.8d77					_I32ShiftRight:
+.8d77	20 e3 86	jsr $86e3			jsr 	NSMShiftRight 				; shift S[X] right
+.8d7a	c8		iny				iny 								; increment shift count
+.8d7b	80 0a		bra $8d87			bra 	_I32MShiftUpper 			; n2 is doubled by default.
+.8d7d					_I32MNoAdd:
+.8d7d	3c 21 06	bit $0621,x			bit 	NSMantissa3+1,x				; if we can't shift S[X+1] left, shift everything right
+.8d80	70 f5		bvs $8d77			bvs 	_I32ShiftRight 				; instead.
+.8d82	e8		inx				inx
+.8d83	20 d5 86	jsr $86d5			jsr 	NSMShiftLeft 				; shift additive S[X+1] left
+.8d86	ca		dex				dex
+.8d87					_I32MShiftUpper:
+.8d87	e8		inx				inx 								; shift S[X+2] right
+.8d88	e8		inx				inx
+.8d89	20 e3 86	jsr $86e3			jsr 	NSMShiftRight
+.8d8c	ca		dex				dex
+.8d8d	ca		dex				dex
+.8d8e	80 ca		bra $8d5a			bra 	_I32MLoop 					; try again.
+.8d90					_I32MExit:
+.8d90	20 96 8d	jsr $8d96			jsr 	CalculateSign
+.8d93	98		tya				tya 								; shift in A
+.8d94	7a		ply				ply 								; restore Y and exit
+.8d95	60		rts				rts
+.8d96					CalculateSign:
+.8d96	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; sign of result is 0 if same, 1 if different.
+.8d99	1e 00 06	asl $0600,x			asl 	NSStatus,x 					; shift result left
+.8d9c	5d 01 06	eor $0601,x			eor 	NSStatus+1,x
+.8d9f	0a		asl a				asl 	a 							; shift bit 7 into carry
+.8da0	7e 00 06	ror $0600,x			ror 	NSStatus,x 					; shift right into status byte.
+.8da3	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./expressions/binary/shifts.asm
 
-.818d					ShiftLeft:
-.818d	38		sec				sec
-.818e	80 01		bra $8191			bra 	ShiftMain
-.8190					ShiftRight:
-.8190	18		clc				clc
-.8191					ShiftMain:
-.8191	fa		plx				plx 								; restore X
-.8192	08		php				php 								; save direction
-.8193	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
-.8196	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
-.8199	0a		asl a				asl 	a 							; shift reference bit into sign bit
-.819a	0a		asl a				asl 	a
-.819b	10 05		bpl $81a2			bpl 	_NotRef
-.819d	48		pha				pha
-.819e	20 ce 83	jsr $83ce			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
-.81a1	68		pla				pla
-.81a2					_NotRef:
-.81a2	29 c0		and #$c0			and 	#$C0 						; isolate the type bits which have been shifted
-.81a4	1d 28 06	ora $0628,x			ora 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
-.81a7	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
-.81aa	f0 03		beq $81af			beq 	_IntegerCode 				; if clear, then we have two integers
-.81ac	4c 8f 8d	jmp $8d8f			jmp 	TypeError 					; anything else, type mismatch.
-.81af					_IntegerCode:
-.81af	bd 09 06	lda $0609,x			lda 	NSMantissa0+1,x 			; check number < 32
-.81b2	29 e0		and #$e0			and 	#$E0
-.81b4	1d 11 06	ora $0611,x			ora 	NSMantissa1+1,x
-.81b7	1d 19 06	ora $0619,x			ora 	NSMantissa2+1,x
-.81ba	1d 21 06	ora $0621,x			ora 	NSMantissa3+1,x
-.81bd	d0 13		bne $81d2			bne 	_SMExit0 					; if >= 32 it will always return zero.
-.81bf					_SMLoop:
-.81bf	de 09 06	dec $0609,x			dec 	NSMantissa0+1,x 			; predecrement, could do << 0
-.81c2	30 11		bmi $81d5			bmi 	_SMExit 					; exit if done.
-.81c4	28		plp				plp 								; restore direcition setting
-.81c5	08		php				php
-.81c6	90 05		bcc $81cd			bcc 	_SMRight
-.81c8	20 c8 86	jsr $86c8			jsr 	NSMShiftLeft 				; shift left if CS
-.81cb	80 f2		bra $81bf			bra 	_SMLoop
-.81cd					_SMRight:
-.81cd	20 d6 86	jsr $86d6			jsr 	NSMShiftRight 				; shift right if CC
-.81d0	80 ed		bra $81bf			bra 	_SMLoop
-.81d2					_SMExit0:
-.81d2	20 b3 86	jsr $86b3			jsr 	NSMSetZero 					; return zero.
-.81d5					_SMExit:
-.81d5	28		plp				plp 								; throw direction
-.81d6	60		rts				rts
+.819a					ShiftLeft:
+.819a	38		sec				sec
+.819b	80 01		bra $819e			bra 	ShiftMain
+.819d					ShiftRight:
+.819d	18		clc				clc
+.819e					ShiftMain:
+.819e	fa		plx				plx 								; restore X
+.819f	08		php				php 								; save direction
+.81a0	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
+.81a3	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
+.81a6	0a		asl a				asl 	a 							; shift reference bit into sign bit
+.81a7	0a		asl a				asl 	a
+.81a8	10 05		bpl $81af			bpl 	_NotRef
+.81aa	48		pha				pha
+.81ab	20 db 83	jsr $83db			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
+.81ae	68		pla				pla
+.81af					_NotRef:
+.81af	29 c0		and #$c0			and 	#$C0 						; isolate the type bits which have been shifted
+.81b1	1d 28 06	ora $0628,x			ora 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
+.81b4	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
+.81b7	f0 03		beq $81bc			beq 	_IntegerCode 				; if clear, then we have two integers
+.81b9	4c ae 8d	jmp $8dae			jmp 	TypeError 					; anything else, type mismatch.
+.81bc					_IntegerCode:
+.81bc	bd 09 06	lda $0609,x			lda 	NSMantissa0+1,x 			; check number < 32
+.81bf	29 e0		and #$e0			and 	#$E0
+.81c1	1d 11 06	ora $0611,x			ora 	NSMantissa1+1,x
+.81c4	1d 19 06	ora $0619,x			ora 	NSMantissa2+1,x
+.81c7	1d 21 06	ora $0621,x			ora 	NSMantissa3+1,x
+.81ca	d0 13		bne $81df			bne 	_SMExit0 					; if >= 32 it will always return zero.
+.81cc					_SMLoop:
+.81cc	de 09 06	dec $0609,x			dec 	NSMantissa0+1,x 			; predecrement, could do << 0
+.81cf	30 11		bmi $81e2			bmi 	_SMExit 					; exit if done.
+.81d1	28		plp				plp 								; restore direcition setting
+.81d2	08		php				php
+.81d3	90 05		bcc $81da			bcc 	_SMRight
+.81d5	20 d5 86	jsr $86d5			jsr 	NSMShiftLeft 				; shift left if CS
+.81d8	80 f2		bra $81cc			bra 	_SMLoop
+.81da					_SMRight:
+.81da	20 e3 86	jsr $86e3			jsr 	NSMShiftRight 				; shift right if CC
+.81dd	80 ed		bra $81cc			bra 	_SMLoop
+.81df					_SMExit0:
+.81df	20 c0 86	jsr $86c0			jsr 	NSMSetZero 					; return zero.
+.81e2					_SMExit:
+.81e2	28		plp				plp 								; throw direction
+.81e3	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./expressions/binary/simple.asm
 
-.81d7					AddTopTwoStack:
-.81d7	18		clc				clc
-.81d8	bd 08 06	lda $0608,x			lda		NSMantissa0,x
-.81db	7d 09 06	adc $0609,x			adc 		NSMantissa0+1,x
-.81de	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
-.81e1	bd 10 06	lda $0610,x			lda		NSMantissa1,x
-.81e4	7d 11 06	adc $0611,x			adc 		NSMantissa1+1,x
-.81e7	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
-.81ea	bd 18 06	lda $0618,x			lda		NSMantissa2,x
-.81ed	7d 19 06	adc $0619,x			adc 		NSMantissa2+1,x
-.81f0	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
-.81f3	bd 20 06	lda $0620,x			lda		NSMantissa3,x
-.81f6	7d 21 06	adc $0621,x			adc 		NSMantissa3+1,x
-.81f9	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
-.81fc	60		rts				rts
-.81fd					SubTopTwoStack:
-.81fd	38		sec				sec
-.81fe	bd 08 06	lda $0608,x			lda		NSMantissa0,x
-.8201	fd 09 06	sbc $0609,x			sbc 		NSMantissa0+1,x
-.8204	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
-.8207	bd 10 06	lda $0610,x			lda		NSMantissa1,x
-.820a	fd 11 06	sbc $0611,x			sbc 		NSMantissa1+1,x
-.820d	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
-.8210	bd 18 06	lda $0618,x			lda		NSMantissa2,x
-.8213	fd 19 06	sbc $0619,x			sbc 		NSMantissa2+1,x
-.8216	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
-.8219	bd 20 06	lda $0620,x			lda		NSMantissa3,x
-.821c	fd 21 06	sbc $0621,x			sbc 		NSMantissa3+1,x
-.821f	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
-.8222	60		rts				rts
-.8223					AddInteger:
-.8223	fa		plx				plx
-.8224	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
-.8227	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
-.822a	0a		asl a				asl 	a 							; shift reference bit into sign bit
-.822b	0a		asl a				asl 	a
-.822c	10 05		bpl $8233			bpl 	_NotRef
-.822e	48		pha				pha
-.822f	20 ce 83	jsr $83ce			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
-.8232	68		pla				pla
-.8233					_NotRef:
-.8233	0a		asl a				asl 	a 							; put MSB of type into A:7
-.8234	30 0b		bmi $8241			bmi 	_StringData 				; if the original bit 4 was set then do the string code.
-.8236	bd 28 06	lda $0628,x			lda 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
-.8239	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
-.823c	f0 06		beq $8244			beq 	_IntegerCode 				; if clear, then we have two integers
-.823e	4c 99 8d	jmp $8d99			jmp 	NotDoneError 							; otherwise at least one float.
-.8241					_StringData:
-.8241	4c 99 8d	jmp $8d99			jmp 	NotDoneError							; at least one string - don't know both are strings.
-.8244					_IntegerCode:
-.8244					AddCode:
-.8244	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; signs are the same, can just add the mantissae.
-.8247	5d 01 06	eor $0601,x			eor 	NSStatus+1,x
-.824a	10 8b		bpl $81d7			bpl 	AddTopTwoStack
-.824c	20 fd 81	jsr $81fd			jsr 	SubTopTwoStack 				; do a physical subtraction
-.824f	3c 20 06	bit $0620,x			bit 	NSMantissa3,x 				; result is +ve, okay
-.8252	10 09		bpl $825d			bpl 	_AddExit
-.8254	bd 01 06	lda $0601,x			lda 	NSStatus+1,x 				; sign is that of 2nd value
-.8257	9d 00 06	sta $0600,x			sta 	NSStatus,x
-.825a	20 68 86	jsr $8668			jsr 	NSMNegateMantissa 			; negate the mantissa and exit
-.825d					_AddExit:
-.825d	60		rts				rts
-.825e					SubInteger:
-.825e	fa		plx				plx
-.825f	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
-.8262	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
-.8265	0a		asl a				asl 	a 							; shift reference bit into sign bit
-.8266	0a		asl a				asl 	a
-.8267	10 05		bpl $826e			bpl 	_NotRef
-.8269	48		pha				pha
-.826a	20 ce 83	jsr $83ce			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
-.826d	68		pla				pla
-.826e					_NotRef:
-.826e	0a		asl a				asl 	a 							; put MSB of type into A:7
-.826f	30 0b		bmi $827c			bmi 	_StringData 				; if the original bit 4 was set then do the string code.
-.8271	bd 28 06	lda $0628,x			lda 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
-.8274	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
-.8277	f0 06		beq $827f			beq 	_IntegerCode 				; if clear, then we have two integers
-.8279	4c 99 8d	jmp $8d99			jmp 	NotDoneError 							; otherwise at least one float.
-.827c					_StringData:
-.827c	4c 99 8d	jmp $8d99			jmp 	NotDoneError							; at least one string - don't know both are strings.
-.827f					_IntegerCode:
-.827f	bd 01 06	lda $0601,x			lda 	NSStatus+1,x 				; negate the second value.
-.8282	49 80		eor #$80			eor 	#$80
-.8284	9d 01 06	sta $0601,x			sta 	NSStatus+1,x
-.8287	80 bb		bra $8244			bra 	AddCode 					; and do the same code as add.
-.8289					AndInteger:
-.8289	fa		plx				plx
-.828a	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
-.828d	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
-.8290	0a		asl a				asl 	a 							; shift reference bit into sign bit
-.8291	0a		asl a				asl 	a
-.8292	10 05		bpl $8299			bpl 	_NotRef
-.8294	48		pha				pha
-.8295	20 ce 83	jsr $83ce			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
-.8298	68		pla				pla
-.8299					_NotRef:
-.8299	29 c0		and #$c0			and 	#$C0 						; isolate the type bits which have been shifted
-.829b	1d 28 06	ora $0628,x			ora 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
-.829e	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
-.82a1	f0 03		beq $82a6			beq 	_IntegerCode 				; if clear, then we have two integers
-.82a3	4c 8f 8d	jmp $8d8f			jmp 	TypeError 					; anything else, type mismatch.
-.82a6					_IntegerCode:
-.82a6	bd 08 06	lda $0608,x			lda		NSMantissa0,x
-.82a9	3d 09 06	and $0609,x			and 		NSMantissa0+1,x
-.82ac	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
-.82af	bd 10 06	lda $0610,x			lda		NSMantissa1,x
-.82b2	3d 11 06	and $0611,x			and 		NSMantissa1+1,x
-.82b5	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
-.82b8	bd 18 06	lda $0618,x			lda		NSMantissa2,x
-.82bb	3d 19 06	and $0619,x			and 		NSMantissa2+1,x
-.82be	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
-.82c1	bd 20 06	lda $0620,x			lda		NSMantissa3,x
-.82c4	3d 21 06	and $0621,x			and 		NSMantissa3+1,x
-.82c7	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
-.82ca	60		rts				rts
-.82cb					OraInteger:
-.82cb	fa		plx				plx
-.82cc	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
-.82cf	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
-.82d2	0a		asl a				asl 	a 							; shift reference bit into sign bit
-.82d3	0a		asl a				asl 	a
-.82d4	10 05		bpl $82db			bpl 	_NotRef
-.82d6	48		pha				pha
-.82d7	20 ce 83	jsr $83ce			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
-.82da	68		pla				pla
-.82db					_NotRef:
-.82db	29 c0		and #$c0			and 	#$C0 						; isolate the type bits which have been shifted
-.82dd	1d 28 06	ora $0628,x			ora 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
-.82e0	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
-.82e3	f0 03		beq $82e8			beq 	_IntegerCode 				; if clear, then we have two integers
-.82e5	4c 8f 8d	jmp $8d8f			jmp 	TypeError 					; anything else, type mismatch.
-.82e8					_IntegerCode:
-.82e8	bd 08 06	lda $0608,x			lda		NSMantissa0,x
-.82eb	1d 09 06	ora $0609,x			ora 		NSMantissa0+1,x
-.82ee	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
-.82f1	bd 10 06	lda $0610,x			lda		NSMantissa1,x
-.82f4	1d 11 06	ora $0611,x			ora 		NSMantissa1+1,x
-.82f7	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
-.82fa	bd 18 06	lda $0618,x			lda		NSMantissa2,x
-.82fd	1d 19 06	ora $0619,x			ora 		NSMantissa2+1,x
-.8300	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
-.8303	bd 20 06	lda $0620,x			lda		NSMantissa3,x
-.8306	1d 21 06	ora $0621,x			ora 		NSMantissa3+1,x
-.8309	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
-.830c	60		rts				rts
-.830d					EorInteger:
-.830d	fa		plx				plx
-.830e	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
-.8311	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
-.8314	0a		asl a				asl 	a 							; shift reference bit into sign bit
-.8315	0a		asl a				asl 	a
-.8316	10 05		bpl $831d			bpl 	_NotRef
-.8318	48		pha				pha
-.8319	20 ce 83	jsr $83ce			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
-.831c	68		pla				pla
-.831d					_NotRef:
-.831d	29 c0		and #$c0			and 	#$C0 						; isolate the type bits which have been shifted
-.831f	1d 28 06	ora $0628,x			ora 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
-.8322	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
-.8325	f0 03		beq $832a			beq 	_IntegerCode 				; if clear, then we have two integers
-.8327	4c 8f 8d	jmp $8d8f			jmp 	TypeError 					; anything else, type mismatch.
-.832a					_IntegerCode:
-.832a	bd 08 06	lda $0608,x			lda		NSMantissa0,x
-.832d	5d 09 06	eor $0609,x			eor 		NSMantissa0+1,x
-.8330	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
-.8333	bd 10 06	lda $0610,x			lda		NSMantissa1,x
-.8336	5d 11 06	eor $0611,x			eor 		NSMantissa1+1,x
-.8339	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
-.833c	bd 18 06	lda $0618,x			lda		NSMantissa2,x
-.833f	5d 19 06	eor $0619,x			eor 		NSMantissa2+1,x
-.8342	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
-.8345	bd 20 06	lda $0620,x			lda		NSMantissa3,x
-.8348	5d 21 06	eor $0621,x			eor 		NSMantissa3+1,x
-.834b	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
-.834e	60		rts				rts
+.81e4					AddTopTwoStack:
+.81e4	18		clc				clc
+.81e5	bd 08 06	lda $0608,x			lda		NSMantissa0,x
+.81e8	7d 09 06	adc $0609,x			adc 		NSMantissa0+1,x
+.81eb	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
+.81ee	bd 10 06	lda $0610,x			lda		NSMantissa1,x
+.81f1	7d 11 06	adc $0611,x			adc 		NSMantissa1+1,x
+.81f4	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
+.81f7	bd 18 06	lda $0618,x			lda		NSMantissa2,x
+.81fa	7d 19 06	adc $0619,x			adc 		NSMantissa2+1,x
+.81fd	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
+.8200	bd 20 06	lda $0620,x			lda		NSMantissa3,x
+.8203	7d 21 06	adc $0621,x			adc 		NSMantissa3+1,x
+.8206	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
+.8209	60		rts				rts
+.820a					SubTopTwoStack:
+.820a	38		sec				sec
+.820b	bd 08 06	lda $0608,x			lda		NSMantissa0,x
+.820e	fd 09 06	sbc $0609,x			sbc 		NSMantissa0+1,x
+.8211	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
+.8214	bd 10 06	lda $0610,x			lda		NSMantissa1,x
+.8217	fd 11 06	sbc $0611,x			sbc 		NSMantissa1+1,x
+.821a	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
+.821d	bd 18 06	lda $0618,x			lda		NSMantissa2,x
+.8220	fd 19 06	sbc $0619,x			sbc 		NSMantissa2+1,x
+.8223	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
+.8226	bd 20 06	lda $0620,x			lda		NSMantissa3,x
+.8229	fd 21 06	sbc $0621,x			sbc 		NSMantissa3+1,x
+.822c	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
+.822f	60		rts				rts
+.8230					AddInteger:
+.8230	fa		plx				plx
+.8231	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
+.8234	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
+.8237	0a		asl a				asl 	a 							; shift reference bit into sign bit
+.8238	0a		asl a				asl 	a
+.8239	10 05		bpl $8240			bpl 	_NotRef
+.823b	48		pha				pha
+.823c	20 db 83	jsr $83db			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
+.823f	68		pla				pla
+.8240					_NotRef:
+.8240	0a		asl a				asl 	a 							; put MSB of type into A:7
+.8241	30 0b		bmi $824e			bmi 	_StringData 				; if the original bit 4 was set then do the string code.
+.8243	bd 28 06	lda $0628,x			lda 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
+.8246	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
+.8249	f0 06		beq $8251			beq 	_IntegerCode 				; if clear, then we have two integers
+.824b	4c b8 8d	jmp $8db8			jmp 	NotDoneError 							; otherwise at least one float.
+.824e					_StringData:
+.824e	4c b8 8d	jmp $8db8			jmp 	NotDoneError							; at least one string - don't know both are strings.
+.8251					_IntegerCode:
+.8251					AddCode:
+.8251	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; signs are the same, can just add the mantissae.
+.8254	5d 01 06	eor $0601,x			eor 	NSStatus+1,x
+.8257	10 8b		bpl $81e4			bpl 	AddTopTwoStack
+.8259	20 0a 82	jsr $820a			jsr 	SubTopTwoStack 				; do a physical subtraction
+.825c	3c 20 06	bit $0620,x			bit 	NSMantissa3,x 				; result is +ve, okay
+.825f	10 09		bpl $826a			bpl 	_AddExit
+.8261	bd 01 06	lda $0601,x			lda 	NSStatus+1,x 				; sign is that of 2nd value
+.8264	9d 00 06	sta $0600,x			sta 	NSStatus,x
+.8267	20 75 86	jsr $8675			jsr 	NSMNegateMantissa 			; negate the mantissa and exit
+.826a					_AddExit:
+.826a	60		rts				rts
+.826b					SubInteger:
+.826b	fa		plx				plx
+.826c	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
+.826f	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
+.8272	0a		asl a				asl 	a 							; shift reference bit into sign bit
+.8273	0a		asl a				asl 	a
+.8274	10 05		bpl $827b			bpl 	_NotRef
+.8276	48		pha				pha
+.8277	20 db 83	jsr $83db			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
+.827a	68		pla				pla
+.827b					_NotRef:
+.827b	0a		asl a				asl 	a 							; put MSB of type into A:7
+.827c	30 0b		bmi $8289			bmi 	_StringData 				; if the original bit 4 was set then do the string code.
+.827e	bd 28 06	lda $0628,x			lda 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
+.8281	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
+.8284	f0 06		beq $828c			beq 	_IntegerCode 				; if clear, then we have two integers
+.8286	4c b8 8d	jmp $8db8			jmp 	NotDoneError 							; otherwise at least one float.
+.8289					_StringData:
+.8289	4c b8 8d	jmp $8db8			jmp 	NotDoneError							; at least one string - don't know both are strings.
+.828c					_IntegerCode:
+.828c	bd 01 06	lda $0601,x			lda 	NSStatus+1,x 				; negate the second value.
+.828f	49 80		eor #$80			eor 	#$80
+.8291	9d 01 06	sta $0601,x			sta 	NSStatus+1,x
+.8294	80 bb		bra $8251			bra 	AddCode 					; and do the same code as add.
+.8296					AndInteger:
+.8296	fa		plx				plx
+.8297	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
+.829a	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
+.829d	0a		asl a				asl 	a 							; shift reference bit into sign bit
+.829e	0a		asl a				asl 	a
+.829f	10 05		bpl $82a6			bpl 	_NotRef
+.82a1	48		pha				pha
+.82a2	20 db 83	jsr $83db			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
+.82a5	68		pla				pla
+.82a6					_NotRef:
+.82a6	29 c0		and #$c0			and 	#$C0 						; isolate the type bits which have been shifted
+.82a8	1d 28 06	ora $0628,x			ora 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
+.82ab	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
+.82ae	f0 03		beq $82b3			beq 	_IntegerCode 				; if clear, then we have two integers
+.82b0	4c ae 8d	jmp $8dae			jmp 	TypeError 					; anything else, type mismatch.
+.82b3					_IntegerCode:
+.82b3	bd 08 06	lda $0608,x			lda		NSMantissa0,x
+.82b6	3d 09 06	and $0609,x			and 		NSMantissa0+1,x
+.82b9	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
+.82bc	bd 10 06	lda $0610,x			lda		NSMantissa1,x
+.82bf	3d 11 06	and $0611,x			and 		NSMantissa1+1,x
+.82c2	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
+.82c5	bd 18 06	lda $0618,x			lda		NSMantissa2,x
+.82c8	3d 19 06	and $0619,x			and 		NSMantissa2+1,x
+.82cb	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
+.82ce	bd 20 06	lda $0620,x			lda		NSMantissa3,x
+.82d1	3d 21 06	and $0621,x			and 		NSMantissa3+1,x
+.82d4	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
+.82d7	60		rts				rts
+.82d8					OraInteger:
+.82d8	fa		plx				plx
+.82d9	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
+.82dc	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
+.82df	0a		asl a				asl 	a 							; shift reference bit into sign bit
+.82e0	0a		asl a				asl 	a
+.82e1	10 05		bpl $82e8			bpl 	_NotRef
+.82e3	48		pha				pha
+.82e4	20 db 83	jsr $83db			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
+.82e7	68		pla				pla
+.82e8					_NotRef:
+.82e8	29 c0		and #$c0			and 	#$C0 						; isolate the type bits which have been shifted
+.82ea	1d 28 06	ora $0628,x			ora 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
+.82ed	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
+.82f0	f0 03		beq $82f5			beq 	_IntegerCode 				; if clear, then we have two integers
+.82f2	4c ae 8d	jmp $8dae			jmp 	TypeError 					; anything else, type mismatch.
+.82f5					_IntegerCode:
+.82f5	bd 08 06	lda $0608,x			lda		NSMantissa0,x
+.82f8	1d 09 06	ora $0609,x			ora 		NSMantissa0+1,x
+.82fb	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
+.82fe	bd 10 06	lda $0610,x			lda		NSMantissa1,x
+.8301	1d 11 06	ora $0611,x			ora 		NSMantissa1+1,x
+.8304	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
+.8307	bd 18 06	lda $0618,x			lda		NSMantissa2,x
+.830a	1d 19 06	ora $0619,x			ora 		NSMantissa2+1,x
+.830d	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
+.8310	bd 20 06	lda $0620,x			lda		NSMantissa3,x
+.8313	1d 21 06	ora $0621,x			ora 		NSMantissa3+1,x
+.8316	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
+.8319	60		rts				rts
+.831a					EorInteger:
+.831a	fa		plx				plx
+.831b	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; OR the type data together
+.831e	1d 01 06	ora $0601,x			ora 	NSStatus+1,x
+.8321	0a		asl a				asl 	a 							; shift reference bit into sign bit
+.8322	0a		asl a				asl 	a
+.8323	10 05		bpl $832a			bpl 	_NotRef
+.8325	48		pha				pha
+.8326	20 db 83	jsr $83db			jsr 	DereferenceTopTwo 			; call the dereference code preserving A
+.8329	68		pla				pla
+.832a					_NotRef:
+.832a	29 c0		and #$c0			and 	#$C0 						; isolate the type bits which have been shifted
+.832c	1d 28 06	ora $0628,x			ora 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
+.832f	1d 29 06	ora $0629,x			ora 	NSExponent+1,x
+.8332	f0 03		beq $8337			beq 	_IntegerCode 				; if clear, then we have two integers
+.8334	4c ae 8d	jmp $8dae			jmp 	TypeError 					; anything else, type mismatch.
+.8337					_IntegerCode:
+.8337	bd 08 06	lda $0608,x			lda		NSMantissa0,x
+.833a	5d 09 06	eor $0609,x			eor 		NSMantissa0+1,x
+.833d	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
+.8340	bd 10 06	lda $0610,x			lda		NSMantissa1,x
+.8343	5d 11 06	eor $0611,x			eor 		NSMantissa1+1,x
+.8346	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
+.8349	bd 18 06	lda $0618,x			lda		NSMantissa2,x
+.834c	5d 19 06	eor $0619,x			eor 		NSMantissa2+1,x
+.834f	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
+.8352	bd 20 06	lda $0620,x			lda		NSMantissa3,x
+.8355	5d 21 06	eor $0621,x			eor 		NSMantissa3+1,x
+.8358	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
+.835b	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
@@ -1030,204 +1055,204 @@
 
 ;******  Processing file: ./expressions/../generated/precedence.dat
 
-.834f					PrecedenceLevel:
->834f	04					.byte	 4	; $00 <<
->8350	02					.byte	 2	; $01 <=
->8351	02					.byte	 2	; $02 <>
->8352	00					.byte	 0	; $03 !!3
->8353	00					.byte	 0	; $04 ><
->8354	02					.byte	 2	; $05 >=
->8355	04					.byte	 4	; $06 >>
->8356	00					.byte	 0	; $07 !!7
->8357	00					.byte	 0	; $08 !!8
->8358	00					.byte	 0	; $09 !!9
->8359	00					.byte	 0	; $0a !!10
->835a	00					.byte	 0	; $0b !!11
->835b	00					.byte	 0	; $0c !!12
->835c	00					.byte	 0	; $0d !!13
->835d	00					.byte	 0	; $0e !!14
->835e	00					.byte	 0	; $0f !!15
->835f	00					.byte	 0	; $10 @
->8360	00					.byte	 0	; $11 !!17
->8361	00					.byte	 0	; $12 !!18
->8362	00					.byte	 0	; $13 [
->8363	04					.byte	 4	; $14 \
->8364	00					.byte	 0	; $15 ]
->8365	01					.byte	 1	; $16 ^
->8366	00					.byte	 0	; $17 _
->8367	00					.byte	 0	; $18 `
->8368	00					.byte	 0	; $19 !!25
->8369	00					.byte	 0	; $1a !!26
->836a	00					.byte	 0	; $1b {
->836b	01					.byte	 1	; $1c |
->836c	00					.byte	 0	; $1d }
->836d	00					.byte	 0	; $1e ~
->836e	00					.byte	 0	; $1f [7m<7F>[m
->836f	00					.byte	 0	; $20
->8370	05					.byte	 5	; $21 !
->8371	00					.byte	 0	; $22 "
->8372	00					.byte	 0	; $23 #
->8373	05					.byte	 5	; $24 $
->8374	04					.byte	 4	; $25 %
->8375	01					.byte	 1	; $26 &
->8376	00					.byte	 0	; $27 '
->8377	00					.byte	 0	; $28 (
->8378	00					.byte	 0	; $29 )
->8379	04					.byte	 4	; $2a *
->837a	03					.byte	 3	; $2b +
->837b	00					.byte	 0	; $2c ,
->837c	03					.byte	 3	; $2d -
->837d	00					.byte	 0	; $2e .
->837e	04					.byte	 4	; $2f /
->837f	00					.byte	 0	; $30 0
->8380	00					.byte	 0	; $31 1
->8381	00					.byte	 0	; $32 2
->8382	00					.byte	 0	; $33 3
->8383	00					.byte	 0	; $34 4
->8384	00					.byte	 0	; $35 5
->8385	00					.byte	 0	; $36 6
->8386	00					.byte	 0	; $37 7
->8387	00					.byte	 0	; $38 8
->8388	00					.byte	 0	; $39 9
->8389	00					.byte	 0	; $3a :
->838a	00					.byte	 0	; $3b ;
->838b	02					.byte	 2	; $3c <
->838c	02					.byte	 2	; $3d =
->838d	02					.byte	 2	; $3e >
->838e	05					.byte	 5	; $3f ?
+.835c					PrecedenceLevel:
+>835c	04					.byte	 4	; $00 <<
+>835d	02					.byte	 2	; $01 <=
+>835e	02					.byte	 2	; $02 <>
+>835f	00					.byte	 0	; $03 !!3
+>8360	00					.byte	 0	; $04 ><
+>8361	02					.byte	 2	; $05 >=
+>8362	04					.byte	 4	; $06 >>
+>8363	00					.byte	 0	; $07 !!7
+>8364	00					.byte	 0	; $08 !!8
+>8365	00					.byte	 0	; $09 !!9
+>8366	00					.byte	 0	; $0a !!10
+>8367	00					.byte	 0	; $0b !!11
+>8368	00					.byte	 0	; $0c !!12
+>8369	00					.byte	 0	; $0d !!13
+>836a	00					.byte	 0	; $0e !!14
+>836b	00					.byte	 0	; $0f !!15
+>836c	00					.byte	 0	; $10 @
+>836d	00					.byte	 0	; $11 !!17
+>836e	00					.byte	 0	; $12 !!18
+>836f	00					.byte	 0	; $13 [
+>8370	04					.byte	 4	; $14 \
+>8371	00					.byte	 0	; $15 ]
+>8372	01					.byte	 1	; $16 ^
+>8373	00					.byte	 0	; $17 _
+>8374	00					.byte	 0	; $18 `
+>8375	00					.byte	 0	; $19 !!25
+>8376	00					.byte	 0	; $1a !!26
+>8377	00					.byte	 0	; $1b {
+>8378	01					.byte	 1	; $1c |
+>8379	00					.byte	 0	; $1d }
+>837a	00					.byte	 0	; $1e ~
+>837b	00					.byte	 0	; $1f [7m<7F>[m
+>837c	00					.byte	 0	; $20
+>837d	05					.byte	 5	; $21 !
+>837e	00					.byte	 0	; $22 "
+>837f	00					.byte	 0	; $23 #
+>8380	05					.byte	 5	; $24 $
+>8381	04					.byte	 4	; $25 %
+>8382	01					.byte	 1	; $26 &
+>8383	00					.byte	 0	; $27 '
+>8384	00					.byte	 0	; $28 (
+>8385	00					.byte	 0	; $29 )
+>8386	04					.byte	 4	; $2a *
+>8387	03					.byte	 3	; $2b +
+>8388	00					.byte	 0	; $2c ,
+>8389	03					.byte	 3	; $2d -
+>838a	00					.byte	 0	; $2e .
+>838b	04					.byte	 4	; $2f /
+>838c	00					.byte	 0	; $30 0
+>838d	00					.byte	 0	; $31 1
+>838e	00					.byte	 0	; $32 2
+>838f	00					.byte	 0	; $33 3
+>8390	00					.byte	 0	; $34 4
+>8391	00					.byte	 0	; $35 5
+>8392	00					.byte	 0	; $36 6
+>8393	00					.byte	 0	; $37 7
+>8394	00					.byte	 0	; $38 8
+>8395	00					.byte	 0	; $39 9
+>8396	00					.byte	 0	; $3a :
+>8397	00					.byte	 0	; $3b ;
+>8398	02					.byte	 2	; $3c <
+>8399	02					.byte	 2	; $3d =
+>839a	02					.byte	 2	; $3e >
+>839b	05					.byte	 5	; $3f ?
 
 ;******  Return to file: ./expressions/expression.asm
 
-.838f					EvaluateExpressionAt0:
-.838f	a2 00		ldx #$00			ldx 	#0 							; bottom stack level
-.8391					EvaluateExpression:
-.8391	a9 00		lda #$00			lda 	#0 							; lowest precedence level
-.8393					EvaluateExpressionAtPrecedence:
-.8393	48		pha				pha 								; save precedence level
-.8394	20 1b 85	jsr $851b			jsr 	EvaluateTerm 				; evaluate term into level X.
-.8397	68		pla				pla 								; restore precedence level.
-.8398					_EXPRLoop:
-.8398	85 36		sta $36				sta 	zTemp0 						; save current precedence level.
-.839a	b1 30		lda ($30),y			lda 	(codePtr),y
-.839c	c9 40		cmp #$40			cmp		#$40 						; if >= $40 cannot be an operator
-.839e	b0 25		bcs $83c5			bcs 	_EXPRExit
-.83a0	da		phx				phx 								; read the operator precedence
-.83a1	aa		tax				tax
-.83a2	bd 4f 83	lda $834f,x			lda 	PrecedenceLevel,x
-.83a5	fa		plx				plx
-.83a6	c9 00		cmp #$00			cmp 	#0							; if zero exit (not an operator)
-.83a8	f0 1b		beq $83c5			beq 	_EXPRExit
-.83aa	85 37		sta $37				sta 	zTemp0+1 					; save operator precedence level.
-.83ac	a5 36		lda $36				lda 	zTemp0 						; compare current precedence vs. operator precedence
-.83ae	c5 37		cmp $37				cmp 	zTemp0+1
-.83b0	b0 13		bcs $83c5			bcs		_EXPRExit 					; if current >= operator exit
-.83b2	48		pha				pha 								; save current precedence.
-.83b3	b1 30		lda ($30),y			lda 	(codePtr),y
-.83b5	c8		iny				iny
-.83b6	48		pha				pha
-.83b7	a5 37		lda $37				lda 	zTemp0+1 					; get operator precedence level
-.83b9	e8		inx				inx 								; work out the right hand side.
-.83ba	20 93 83	jsr $8393			jsr 	EvaluateExpressionAtPrecedence
-.83bd	ca		dex				dex
-.83be	68		pla				pla 								; get operator, call the code.
-.83bf	20 c8 83	jsr $83c8			jsr 	_EXPRCaller
-.83c2	68		pla				pla 								; restore precedence level
-.83c3	80 d3		bra $8398			bra 	_EXPRLoop 					; and go round.
-.83c5					_EXPRExit:
-.83c5	a5 36		lda $36				lda 	zTemp0 						; A = current precedence level.
-.83c7	60		rts				rts
-.83c8					_EXPRCaller:
-.83c8	da		phx				phx 								; save on stack, first thing is to restore it
-.83c9	0a		asl a				asl 	a 							; double so can use vectors into X
-.83ca	aa		tax				tax
-.83cb	7c 23 80	jmp ($8023,x)			jmp 	(VectorSetPunc,x) 			; and go to the code.
+.839c					EvaluateExpressionAt0:
+.839c	a2 00		ldx #$00			ldx 	#0 							; bottom stack level
+.839e					EvaluateExpression:
+.839e	a9 00		lda #$00			lda 	#0 							; lowest precedence level
+.83a0					EvaluateExpressionAtPrecedence:
+.83a0	48		pha				pha 								; save precedence level
+.83a1	20 28 85	jsr $8528			jsr 	EvaluateTerm 				; evaluate term into level X.
+.83a4	68		pla				pla 								; restore precedence level.
+.83a5					_EXPRLoop:
+.83a5	85 36		sta $36				sta 	zTemp0 						; save current precedence level.
+.83a7	b1 30		lda ($30),y			lda 	(codePtr),y
+.83a9	c9 40		cmp #$40			cmp		#$40 						; if >= $40 cannot be an operator
+.83ab	b0 25		bcs $83d2			bcs 	_EXPRExit
+.83ad	da		phx				phx 								; read the operator precedence
+.83ae	aa		tax				tax
+.83af	bd 5c 83	lda $835c,x			lda 	PrecedenceLevel,x
+.83b2	fa		plx				plx
+.83b3	c9 00		cmp #$00			cmp 	#0							; if zero exit (not an operator)
+.83b5	f0 1b		beq $83d2			beq 	_EXPRExit
+.83b7	85 37		sta $37				sta 	zTemp0+1 					; save operator precedence level.
+.83b9	a5 36		lda $36				lda 	zTemp0 						; compare current precedence vs. operator precedence
+.83bb	c5 37		cmp $37				cmp 	zTemp0+1
+.83bd	b0 13		bcs $83d2			bcs		_EXPRExit 					; if current >= operator exit
+.83bf	48		pha				pha 								; save current precedence.
+.83c0	b1 30		lda ($30),y			lda 	(codePtr),y
+.83c2	c8		iny				iny
+.83c3	48		pha				pha
+.83c4	a5 37		lda $37				lda 	zTemp0+1 					; get operator precedence level
+.83c6	e8		inx				inx 								; work out the right hand side.
+.83c7	20 a0 83	jsr $83a0			jsr 	EvaluateExpressionAtPrecedence
+.83ca	ca		dex				dex
+.83cb	68		pla				pla 								; get operator, call the code.
+.83cc	20 d5 83	jsr $83d5			jsr 	_EXPRCaller
+.83cf	68		pla				pla 								; restore precedence level
+.83d0	80 d3		bra $83a5			bra 	_EXPRLoop 					; and go round.
+.83d2					_EXPRExit:
+.83d2	a5 36		lda $36				lda 	zTemp0 						; A = current precedence level.
+.83d4	60		rts				rts
+.83d5					_EXPRCaller:
+.83d5	da		phx				phx 								; save on stack, first thing is to restore it
+.83d6	0a		asl a				asl 	a 							; double so can use vectors into X
+.83d7	aa		tax				tax
+.83d8	7c 23 80	jmp ($8023,x)			jmp 	(VectorSetPunc,x) 			; and go to the code.
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./expressions/term/dereference.asm
 
-.83ce					DereferenceTopTwo:
-.83ce	e8		inx				inx
-.83cf	20 d3 83	jsr $83d3			jsr 	Dereference 				; deref x+1
-.83d2	ca		dex				dex  								; falls through to deref x
-.83d3					Dereference:
-.83d3	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; get the status byte
-.83d6	29 20		and #$20			and 	#NSBIsReference 			; shift sign bit to carry, reference to bit 7
-.83d8	f0 57		beq $8431			beq 	_DRFExit 					; not a reference
-.83da	5a		phy				phy
-.83db	bd 08 06	lda $0608,x			lda 	NSMantissa0,x 				; copy address to dereference into zTemp0
-.83de	85 36		sta $36				sta 	zTemp0
-.83e0	bd 10 06	lda $0610,x			lda 	NSMantissa1,x
-.83e3	85 37		sta $37				sta 	zTemp0+1
-.83e5	9e 10 06	stz $0610,x			stz 	NSMantissa1,x 				; clear second byte.
-.83e8	b2 36		lda ($36)			lda 	(zTemp0) 					; do the first byte
-.83ea	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
-.83ed	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; get status byte.
-.83f0	29 18		and #$18			and 	#NSBTypeMask 				; what type is it ?
-.83f2	c9 10		cmp #$10			cmp 	#NSTString 					; if string, dereference two
-.83f4	f0 0f		beq $8405			beq 	_DRFDereferenceTwo
-.83f6	c9 08		cmp #$08			cmp 	#NSTFloat 					; if float, do full dereference.
-.83f8	f0 39		beq $8433			beq 	_DRFFull
-.83fa	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; must be integer - how many bytes ?
-.83fd	29 03		and #$03			and 	#3
-.83ff	f0 32		beq $8433			beq 	_DRFFull 					; the whole word
-.8401	c9 01		cmp #$01			cmp 	#1 							; is it 10 (e.g. 2 bytes)
-.8403	f0 07		beq $840c			beq		_DRFClear23 				; no, one byte, clear 2 & 3 and exit
-.8405					_DRFDereferenceTwo:
-.8405	a0 01		ldy #$01			ldy 	#1
-.8407	b1 36		lda ($36),y			lda 	(zTemp0),y
-.8409	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
-.840c					_DRFClear23:
-.840c	9e 18 06	stz $0618,x			stz 	NSMantissa2,x 				; clear upper bytes, only read 1 or 2 bytes
-.840f	9e 20 06	stz $0620,x			stz 	NSMantissa3,x
-.8412	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; make it a value of that type.
-.8415	29 18		and #$18			and 	#NSBTypeMask
-.8417	9d 00 06	sta $0600,x			sta 	NSStatus,x
-.841a	c9 10		cmp #$10			cmp 	#NSTString  				; is it a string
-.841c	d0 12		bne $8430			bne 	_DRFNotString
-.841e	bd 08 06	lda $0608,x			lda 	NSMantissa0,x 				; check address is zero
-.8421	1d 10 06	ora $0610,x			ora 	NSMantissa1,x
-.8424	d0 0a		bne $8430			bne 	_DRFNotString
-.8426	a9 32		lda #$32			lda 	#_DRFNullString & $FF 		; if so, return reference to ""
-.8428	9d 08 06	sta $0608,x			sta 	NSMantissa0,X
-.842b	a9 84		lda #$84			lda 	#_DRFNullString >> 8
-.842d	9d 10 06	sta $0610,x			sta 	NSMantissa1,X
-.8430					_DRFNotString
-.8430	7a		ply				ply 								; restore Y and exit
-.8431					_DRFExit:
-.8431	60		rts				rts
-.8432					_DRFNullString:
->8432	00						.byte 	0
-.8433					_DRFFull:
-.8433	a0 01		ldy #$01			ldy 	#1 							; get remaining 3 bytes.
-.8435	b1 36		lda ($36),y			lda 	(zTemp0),y
-.8437	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
-.843a	c8		iny				iny
-.843b	b1 36		lda ($36),y			lda 	(zTemp0),y
-.843d	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
-.8440	c8		iny				iny
-.8441	b1 36		lda ($36),y			lda 	(zTemp0),y
-.8443	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
-.8446	9e 28 06	stz $0628,x			stz 	NSExponent,x 				; clear exponent.
-.8449	bd 00 06	lda $0600,x			lda		NSStatus,x 					; see if type is integer
-.844c	29 18		and #$18			and 	#NSBTypeMask  				; type information only
-.844e	9d 00 06	sta $0600,x			sta 	NSStatus,x 					; update it back.
-.8451	f0 06		beq $8459			beq 	_DRFNoExponent
-.8453	c8		iny				iny 								; if not, read the exponent as well.
-.8454	b1 36		lda ($36),y			lda 	(zTemp0),y
-.8456	9d 28 06	sta $0628,x			sta 	NSExponent,x
-.8459					_DRFNoExponent:
-.8459	bd 20 06	lda $0620,x			lda 	NSMantissa3,x 				; is the most significant bit set ?
-.845c	10 0d		bpl $846b			bpl 	_DRFExit2 					; if not, then exit.
-.845e	29 7f		and #$7f			and 	#$7F 						; clear that bit.
-.8460	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
-.8463	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; set the sign flag
-.8466	09 80		ora #$80			ora 	#NSBIsNegative
-.8468	9d 00 06	sta $0600,x			sta 	NSStatus,x
-.846b					_DRFExit2:
-.846b	7a		ply				ply
-.846c	60		rts				rts
+.83db					DereferenceTopTwo:
+.83db	e8		inx				inx
+.83dc	20 e0 83	jsr $83e0			jsr 	Dereference 				; deref x+1
+.83df	ca		dex				dex  								; falls through to deref x
+.83e0					Dereference:
+.83e0	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; get the status byte
+.83e3	29 20		and #$20			and 	#NSBIsReference 			; shift sign bit to carry, reference to bit 7
+.83e5	f0 57		beq $843e			beq 	_DRFExit 					; not a reference
+.83e7	5a		phy				phy
+.83e8	bd 08 06	lda $0608,x			lda 	NSMantissa0,x 				; copy address to dereference into zTemp0
+.83eb	85 36		sta $36				sta 	zTemp0
+.83ed	bd 10 06	lda $0610,x			lda 	NSMantissa1,x
+.83f0	85 37		sta $37				sta 	zTemp0+1
+.83f2	9e 10 06	stz $0610,x			stz 	NSMantissa1,x 				; clear second byte.
+.83f5	b2 36		lda ($36)			lda 	(zTemp0) 					; do the first byte
+.83f7	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
+.83fa	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; get status byte.
+.83fd	29 18		and #$18			and 	#NSBTypeMask 				; what type is it ?
+.83ff	c9 10		cmp #$10			cmp 	#NSTString 					; if string, dereference two
+.8401	f0 0f		beq $8412			beq 	_DRFDereferenceTwo
+.8403	c9 08		cmp #$08			cmp 	#NSTFloat 					; if float, do full dereference.
+.8405	f0 39		beq $8440			beq 	_DRFFull
+.8407	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; must be integer - how many bytes ?
+.840a	29 03		and #$03			and 	#3
+.840c	f0 32		beq $8440			beq 	_DRFFull 					; the whole word
+.840e	c9 01		cmp #$01			cmp 	#1 							; is it 10 (e.g. 2 bytes)
+.8410	f0 07		beq $8419			beq		_DRFClear23 				; no, one byte, clear 2 & 3 and exit
+.8412					_DRFDereferenceTwo:
+.8412	a0 01		ldy #$01			ldy 	#1
+.8414	b1 36		lda ($36),y			lda 	(zTemp0),y
+.8416	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
+.8419					_DRFClear23:
+.8419	9e 18 06	stz $0618,x			stz 	NSMantissa2,x 				; clear upper bytes, only read 1 or 2 bytes
+.841c	9e 20 06	stz $0620,x			stz 	NSMantissa3,x
+.841f	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; make it a value of that type.
+.8422	29 18		and #$18			and 	#NSBTypeMask
+.8424	9d 00 06	sta $0600,x			sta 	NSStatus,x
+.8427	c9 10		cmp #$10			cmp 	#NSTString  				; is it a string
+.8429	d0 12		bne $843d			bne 	_DRFNotString
+.842b	bd 08 06	lda $0608,x			lda 	NSMantissa0,x 				; check address is zero
+.842e	1d 10 06	ora $0610,x			ora 	NSMantissa1,x
+.8431	d0 0a		bne $843d			bne 	_DRFNotString
+.8433	a9 3f		lda #$3f			lda 	#_DRFNullString & $FF 		; if so, return reference to ""
+.8435	9d 08 06	sta $0608,x			sta 	NSMantissa0,X
+.8438	a9 84		lda #$84			lda 	#_DRFNullString >> 8
+.843a	9d 10 06	sta $0610,x			sta 	NSMantissa1,X
+.843d					_DRFNotString
+.843d	7a		ply				ply 								; restore Y and exit
+.843e					_DRFExit:
+.843e	60		rts				rts
+.843f					_DRFNullString:
+>843f	00						.byte 	0
+.8440					_DRFFull:
+.8440	a0 01		ldy #$01			ldy 	#1 							; get remaining 3 bytes.
+.8442	b1 36		lda ($36),y			lda 	(zTemp0),y
+.8444	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
+.8447	c8		iny				iny
+.8448	b1 36		lda ($36),y			lda 	(zTemp0),y
+.844a	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
+.844d	c8		iny				iny
+.844e	b1 36		lda ($36),y			lda 	(zTemp0),y
+.8450	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
+.8453	9e 28 06	stz $0628,x			stz 	NSExponent,x 				; clear exponent.
+.8456	bd 00 06	lda $0600,x			lda		NSStatus,x 					; see if type is integer
+.8459	29 18		and #$18			and 	#NSBTypeMask  				; type information only
+.845b	9d 00 06	sta $0600,x			sta 	NSStatus,x 					; update it back.
+.845e	f0 06		beq $8466			beq 	_DRFNoExponent
+.8460	c8		iny				iny 								; if not, read the exponent as well.
+.8461	b1 36		lda ($36),y			lda 	(zTemp0),y
+.8463	9d 28 06	sta $0628,x			sta 	NSExponent,x
+.8466					_DRFNoExponent:
+.8466	bd 20 06	lda $0620,x			lda 	NSMantissa3,x 				; is the most significant bit set ?
+.8469	10 0d		bpl $8478			bpl 	_DRFExit2 					; if not, then exit.
+.846b	29 7f		and #$7f			and 	#$7F 						; clear that bit.
+.846d	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
+.8470	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; set the sign flag
+.8473	09 80		ora #$80			ora 	#NSBIsNegative
+.8475	9d 00 06	sta $0600,x			sta 	NSStatus,x
+.8478					_DRFExit2:
+.8478	7a		ply				ply
+.8479	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
@@ -1236,578 +1261,578 @@
 
 =1					ESTA_Low = 1 								; state 1 is 1 byte, switches when A >= 24.
 =2					ESTA_High = 2 								; loading up to 32 bit integer in the mantissa
-.846d					EncodeNumberStart:
-.846d	38		sec				sec
-.846e	80 01		bra $8471			bra 	EncodeNumberContinue+1
-.8470					EncodeNumberContinue:
-.8470	18		clc				clc
-.8471	08		php				php 								; save reset.
-.8472	c9 2e		cmp #$2e			cmp 	#"." 						; only accept 0-9 and .
-.8474	f0 0b		beq $8481			beq 	_ENIsOkay
-.8476	c9 30		cmp #$30			cmp 	#"0"
-.8478	90 04		bcc $847e			bcc 	_ENBadNumber
-.847a	c9 3a		cmp #$3a			cmp 	#"9"+1
-.847c	90 03		bcc $8481			bcc 	_ENIsOkay
-.847e					_ENBadNumber:
-.847e	28		plp				plp 								; throw saved reset
-.847f					_ENFail:
-.847f	18		clc				clc 								; not allowed
-.8480	60		rts				rts
-.8481					_ENIsOkay:
-.8481	28		plp				plp 								; are we restarting
-.8482	90 0c		bcc $8490			bcc 	_ENNoRestart
-.8484					_ENStartEncode:
-.8484	29 0f		and #$0f			and 	#15 						; put digit in mantissa
-.8486	20 b5 86	jsr $86b5			jsr 	NSMSetByte
-.8489	a9 01		lda #$01			lda 	#ESTA_Low
-.848b					_ENExitChange:
-.848b	8d 05 07	sta $0705			sta 	EncodeState 				; save new state
-.848e	38		sec				sec
-.848f	60		rts				rts
-.8490					_ENNoRestart:
-.8490	48		pha				pha 								; save on stack.
-.8491	ad 05 07	lda $0705			lda 	EncodeState 				; get current state
-.8494	c9 01		cmp #$01			cmp 	#ESTA_Low
-.8496	f0 05		beq $849d			beq  	_ESTALowState
-.8498	c9 02		cmp #$02			cmp 	#ESTA_High
-.849a	f0 23		beq $84bf			beq 	_ESTAHighState
->849c	db						.byte 	$DB 						; causes a break in the emulator
-.849d					_ESTALowState:
-.849d	68		pla				pla 								; get value back
-.849e	c9 2e		cmp #$2e			cmp 	#"."						; decimal point
-.84a0	f0 27		beq $84c9			beq 	_ESTASwitchFloat 			; then we need to do the floating point bit
-.84a2	29 0f		and #$0f			and 	#15 						; make digit
-.84a4	85 36		sta $36				sta 	zTemp0 						; save it.
-.84a6	bd 08 06	lda $0608,x			lda 	NSMantissa0,x 				; x mantissa0 x 10 and add it
-.84a9	0a		asl a				asl 	a
-.84aa	0a		asl a				asl 	a
-.84ab	7d 08 06	adc $0608,x			adc 	NSMantissa0,x
-.84ae	0a		asl a				asl 	a
-.84af	65 36		adc $36				adc 	zTemp0
-.84b1	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
-.84b4	c9 19		cmp #$19			cmp 	#25 						; if >= 25 cannot guarantee next will be okay
-.84b6	90 05		bcc $84bd			bcc 	_ESTANoSwitch 				; as could be 25 x 10 + 9
-.84b8	a9 02		lda #$02			lda 	#ESTA_High 					; so if so, switch to the high encoding state
-.84ba	8d 05 07	sta $0705			sta 	EncodeState
-.84bd					_ESTANoSwitch:
-.84bd	38		sec				sec
-.84be	60		rts				rts
-.84bf					_ESTAHighState:
-.84bf	68		pla				pla 								; get value back
-.84c0	c9 2e		cmp #$2e			cmp 	#"." 						; if DP switch to dloat
-.84c2	f0 05		beq $84c9			beq 	_ESTASwitchFloat
-.84c4	20 ca 84	jsr $84ca			jsr 	ESTAShiftDigitIntoMantissa 	; a routine does this.
-.84c7	38		sec				sec
-.84c8	60		rts				rts
-.84c9					_ESTASwitchFloat:
->84c9	db						.byte 	$DB 						; causes a break in the emulator
-.84ca					ESTAShiftDigitIntoMantissa:
-.84ca	29 0f		and #$0f			and 	#15 						; save digit
-.84cc	48		pha				pha
-.84cd	bd 20 06	lda $0620,x			lda 	NSMantissa3,x 				; push mantissa on stack
-.84d0	48		pha				pha
-.84d1	bd 18 06	lda $0618,x			lda 	NSMantissa2,x
-.84d4	48		pha				pha
-.84d5	bd 10 06	lda $0610,x			lda 	NSMantissa1,x
-.84d8	48		pha				pha
-.84d9	bd 08 06	lda $0608,x			lda 	NSMantissa0,x
-.84dc	48		pha				pha
-.84dd	20 c8 86	jsr $86c8			jsr 	NSMShiftLeft 				; x 2
-.84e0	20 c8 86	jsr $86c8			jsr 	NSMShiftLeft 				; x 4
-.84e3	18		clc				clc 								; pop mantissa and add
-.84e4	68		pla				pla
-.84e5	7d 08 06	adc $0608,x			adc 	NSMantissa0,x
-.84e8	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
-.84eb	68		pla				pla
-.84ec	7d 10 06	adc $0610,x			adc 	NSMantissa1,x
-.84ef	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
-.84f2	68		pla				pla
-.84f3	7d 18 06	adc $0618,x			adc 	NSMantissa2,x
-.84f6	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
-.84f9	68		pla				pla
-.84fa	7d 20 06	adc $0620,x			adc 	NSMantissa3,x
-.84fd	9d 20 06	sta $0620,x			sta 	NSMantissa3,x 				; x 5
-.8500	20 c8 86	jsr $86c8			jsr 	NSMShiftLeft 				; x 10
-.8503	68		pla				pla 								; add digit
-.8504	18		clc				clc
-.8505	7d 08 06	adc $0608,x			adc 	NSMantissa0,x
-.8508	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
-.850b	90 0d		bcc $851a			bcc 	_ESTASDExit
-.850d	fe 10 06	inc $0610,x			inc 	NSMantissa1,x
-.8510	d0 08		bne $851a			bne 	_ESTASDExit
-.8512	fe 18 06	inc $0618,x			inc 	NSMantissa2,x
-.8515	d0 03		bne $851a			bne 	_ESTASDExit
-.8517	fe 20 06	inc $0620,x			inc 	NSMantissa3,x
-.851a					_ESTASDExit:
-.851a	60		rts				rts
+.847a					EncodeNumberStart:
+.847a	38		sec				sec
+.847b	80 01		bra $847e			bra 	EncodeNumberContinue+1
+.847d					EncodeNumberContinue:
+.847d	18		clc				clc
+.847e	08		php				php 								; save reset.
+.847f	c9 2e		cmp #$2e			cmp 	#"." 						; only accept 0-9 and .
+.8481	f0 0b		beq $848e			beq 	_ENIsOkay
+.8483	c9 30		cmp #$30			cmp 	#"0"
+.8485	90 04		bcc $848b			bcc 	_ENBadNumber
+.8487	c9 3a		cmp #$3a			cmp 	#"9"+1
+.8489	90 03		bcc $848e			bcc 	_ENIsOkay
+.848b					_ENBadNumber:
+.848b	28		plp				plp 								; throw saved reset
+.848c					_ENFail:
+.848c	18		clc				clc 								; not allowed
+.848d	60		rts				rts
+.848e					_ENIsOkay:
+.848e	28		plp				plp 								; are we restarting
+.848f	90 0c		bcc $849d			bcc 	_ENNoRestart
+.8491					_ENStartEncode:
+.8491	29 0f		and #$0f			and 	#15 						; put digit in mantissa
+.8493	20 c2 86	jsr $86c2			jsr 	NSMSetByte
+.8496	a9 01		lda #$01			lda 	#ESTA_Low
+.8498					_ENExitChange:
+.8498	8d 05 07	sta $0705			sta 	EncodeState 				; save new state
+.849b	38		sec				sec
+.849c	60		rts				rts
+.849d					_ENNoRestart:
+.849d	48		pha				pha 								; save on stack.
+.849e	ad 05 07	lda $0705			lda 	EncodeState 				; get current state
+.84a1	c9 01		cmp #$01			cmp 	#ESTA_Low
+.84a3	f0 05		beq $84aa			beq  	_ESTALowState
+.84a5	c9 02		cmp #$02			cmp 	#ESTA_High
+.84a7	f0 23		beq $84cc			beq 	_ESTAHighState
+>84a9	db						.byte 	$DB 						; causes a break in the emulator
+.84aa					_ESTALowState:
+.84aa	68		pla				pla 								; get value back
+.84ab	c9 2e		cmp #$2e			cmp 	#"."						; decimal point
+.84ad	f0 27		beq $84d6			beq 	_ESTASwitchFloat 			; then we need to do the floating point bit
+.84af	29 0f		and #$0f			and 	#15 						; make digit
+.84b1	85 36		sta $36				sta 	zTemp0 						; save it.
+.84b3	bd 08 06	lda $0608,x			lda 	NSMantissa0,x 				; x mantissa0 x 10 and add it
+.84b6	0a		asl a				asl 	a
+.84b7	0a		asl a				asl 	a
+.84b8	7d 08 06	adc $0608,x			adc 	NSMantissa0,x
+.84bb	0a		asl a				asl 	a
+.84bc	65 36		adc $36				adc 	zTemp0
+.84be	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
+.84c1	c9 19		cmp #$19			cmp 	#25 						; if >= 25 cannot guarantee next will be okay
+.84c3	90 05		bcc $84ca			bcc 	_ESTANoSwitch 				; as could be 25 x 10 + 9
+.84c5	a9 02		lda #$02			lda 	#ESTA_High 					; so if so, switch to the high encoding state
+.84c7	8d 05 07	sta $0705			sta 	EncodeState
+.84ca					_ESTANoSwitch:
+.84ca	38		sec				sec
+.84cb	60		rts				rts
+.84cc					_ESTAHighState:
+.84cc	68		pla				pla 								; get value back
+.84cd	c9 2e		cmp #$2e			cmp 	#"." 						; if DP switch to dloat
+.84cf	f0 05		beq $84d6			beq 	_ESTASwitchFloat
+.84d1	20 d7 84	jsr $84d7			jsr 	ESTAShiftDigitIntoMantissa 	; a routine does this.
+.84d4	38		sec				sec
+.84d5	60		rts				rts
+.84d6					_ESTASwitchFloat:
+>84d6	db						.byte 	$DB 						; causes a break in the emulator
+.84d7					ESTAShiftDigitIntoMantissa:
+.84d7	29 0f		and #$0f			and 	#15 						; save digit
+.84d9	48		pha				pha
+.84da	bd 20 06	lda $0620,x			lda 	NSMantissa3,x 				; push mantissa on stack
+.84dd	48		pha				pha
+.84de	bd 18 06	lda $0618,x			lda 	NSMantissa2,x
+.84e1	48		pha				pha
+.84e2	bd 10 06	lda $0610,x			lda 	NSMantissa1,x
+.84e5	48		pha				pha
+.84e6	bd 08 06	lda $0608,x			lda 	NSMantissa0,x
+.84e9	48		pha				pha
+.84ea	20 d5 86	jsr $86d5			jsr 	NSMShiftLeft 				; x 2
+.84ed	20 d5 86	jsr $86d5			jsr 	NSMShiftLeft 				; x 4
+.84f0	18		clc				clc 								; pop mantissa and add
+.84f1	68		pla				pla
+.84f2	7d 08 06	adc $0608,x			adc 	NSMantissa0,x
+.84f5	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
+.84f8	68		pla				pla
+.84f9	7d 10 06	adc $0610,x			adc 	NSMantissa1,x
+.84fc	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
+.84ff	68		pla				pla
+.8500	7d 18 06	adc $0618,x			adc 	NSMantissa2,x
+.8503	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
+.8506	68		pla				pla
+.8507	7d 20 06	adc $0620,x			adc 	NSMantissa3,x
+.850a	9d 20 06	sta $0620,x			sta 	NSMantissa3,x 				; x 5
+.850d	20 d5 86	jsr $86d5			jsr 	NSMShiftLeft 				; x 10
+.8510	68		pla				pla 								; add digit
+.8511	18		clc				clc
+.8512	7d 08 06	adc $0608,x			adc 	NSMantissa0,x
+.8515	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
+.8518	90 0d		bcc $8527			bcc 	_ESTASDExit
+.851a	fe 10 06	inc $0610,x			inc 	NSMantissa1,x
+.851d	d0 08		bne $8527			bne 	_ESTASDExit
+.851f	fe 18 06	inc $0618,x			inc 	NSMantissa2,x
+.8522	d0 03		bne $8527			bne 	_ESTASDExit
+.8524	fe 20 06	inc $0620,x			inc 	NSMantissa3,x
+.8527					_ESTASDExit:
+.8527	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./expressions/term/term.asm
 
-.851b					EvaluateTerm:
-.851b	b1 30		lda ($30),y			lda 	(codePtr),y
-.851d	30 18		bmi $8537			bmi 	_ETCheckUnary 				; unary function ? (text ones)
-.851f	c9 40		cmp #$40			cmp 	#$40 						; 40-7F => identifier reference
-.8521	b0 6e		bcs $8591			bcs 	_ETVariable
-.8523	c9 30		cmp #$30			cmp 	#'0' 						; is it a number
-.8525	90 6e		bcc $8595			bcc 	_ETPuncUnary 				; if not it might be a punctuation unary.
-.8527	c9 3a		cmp #$3a			cmp 	#'9'+1
-.8529	b0 6a		bcs $8595			bcs 	_ETPuncUnary
-.852b	20 6d 84	jsr $846d			jsr 	EncodeNumberStart 			; can't fail as it's 0-9 !
-.852e					_ETNumber:
-.852e	c8		iny				iny 								; keep encoding until we have the numbers
-.852f	b1 30		lda ($30),y			lda 	(codePtr),y
-.8531	20 70 84	jsr $8470			jsr 	EncodeNumberContinue
-.8534	b0 f8		bcs $852e			bcs 	_ETNumber 					; go back if accepted.
-.8536	60		rts				rts
-.8537					_ETCheckUnary:
-.8537	c9 ff		cmp #$ff			cmp 	#KWC_STRING 				; string token
-.8539	f0 40		beq $857b			beq 	_ETString
-.853b	c9 fe		cmp #$fe			cmp 	#KWC_HEXCONST 				; hex constant.
-.853d	f0 11		beq $8550			beq 	_ETHexConstant
-.853f	c9 83		cmp #$83			cmp 	#KWC_FIRST_UNARY 			; check it actually is a unary function
-.8541	90 0a		bcc $854d			bcc 	_ETSyntaxError
-.8543	c9 9a		cmp #$9a			cmp 	#KWC_LAST_UNARY+1
-.8545	b0 06		bcs $854d			bcs 	_ETSyntaxError
-.8547	da		phx				phx 								; push X on the stack
-.8548	0a		asl a				asl 	a 							; put vector x 2 into X
-.8549	aa		tax				tax
-.854a	7c a3 80	jmp ($80a3,x)			jmp 	(VectorSet0,x) 				; and do it.
-.854d					_ETSyntaxError:
-.854d	4c 85 8d	jmp $8d85			jmp 	SyntaxError
-.8550					_ETHexConstant:
-.8550	c8		iny				iny 								; skip #
-.8551	c8		iny				iny 								; skip count
-.8552	20 b3 86	jsr $86b3			jsr 	NSMSetZero 					; clear result
-.8555					_ETHLoop:
-.8555	b1 30		lda ($30),y			lda 	(codePtr),y
-.8557	c8		iny				iny 								; and consume
-.8558	c9 00		cmp #$00			cmp 	#0 							; exit if zero
-.855a	f0 1e		beq $857a			beq 	_ETHExit
-.855c	48		pha				pha 								; save on stack.
-.855d	20 c8 86	jsr $86c8			jsr 	NSMShiftLeft 				; x 2
-.8560	20 c8 86	jsr $86c8			jsr 	NSMShiftLeft 				; x 4
-.8563	20 c8 86	jsr $86c8			jsr 	NSMShiftLeft 				; x 8
-.8566	20 c8 86	jsr $86c8			jsr 	NSMShiftLeft 				; x 16
-.8569	68		pla				pla 								; ASCII
-.856a	c9 41		cmp #$41			cmp 	#'A'
-.856c	90 02		bcc $8570			bcc 	_ETHNotChar
-.856e	e9 07		sbc #$07			sbc 	#7
-.8570					_ETHNotChar:
-.8570	29 0f		and #$0f			and 	#15 						; digit now
-.8572	1d 08 06	ora $0608,x			ora 	NSMantissa0,x 				; put in LS Nibble
-.8575	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
-.8578	80 db		bra $8555			bra 	_ETHLoop 					; go round.
-.857a					_ETHExit:
-.857a	60		rts				rts
-.857b					_ETString:
-.857b	c8		iny				iny 								; look at length
-.857c	b1 30		lda ($30),y			lda 	(codePtr),y
-.857e	48		pha				pha
-.857f	c8		iny				iny 								; first character
-.8580	20 2c 87	jsr $872c			jsr 	MemoryInline 				; put address of string at (codePtr),y on stack
-.8583	68		pla				pla 								; restore count and save
-.8584	85 36		sta $36				sta 	zTemp0
-.8586	98		tya				tya 								; add length to Y to skip it.
-.8587	18		clc				clc
-.8588	65 36		adc $36				adc 	zTemp0
-.858a	a8		tay				tay
-.858b	a9 10		lda #$10			lda 	#NSTString 					; mark as string
-.858d	9d 00 06	sta $0600,x			sta 	NSStatus,x
-.8590	60		rts				rts
-.8591					_ETVariable:
->8591	db						.byte 	$DB 						; causes a break in the emulator
-.8592	4c ff ff	jmp $ffff			jmp 	$FFFF
-.8595					_ETPuncUnary:
-.8595	c8		iny				iny 								; consume the unary character
-.8596	c9 2d		cmp #$2d			cmp 	#KWD_MINUS 					; unary minus
-.8598	f0 31		beq $85cb			beq 	_ETUnaryNegate
-.859a	c9 10		cmp #$10			cmp 	#KWD_AT 					; @ reference -> constant
-.859c	f0 3d		beq $85db			beq 	_ETDereference
-.859e	c9 28		cmp #$28			cmp 	#KWD_LPAREN 				; parenthesis
-.85a0	f0 58		beq $85fa			beq 	_ETParenthesis
-.85a2	c9 24		cmp #$24			cmp 	#KWD_DOLLAR
-.85a4	f0 43		beq $85e9			beq 	_ETStringReference
-.85a6	64 36		stz $36				stz 	zTemp0 						; zTemp0 is the indirection level.
-.85a8	c9 3f		cmp #$3f			cmp 	#KWD_QMARK 					; byte indirection (0) ?
-.85aa	f0 06		beq $85b2			beq 	_ETIndirection
-.85ac	e6 36		inc $36				inc 	zTemp0
-.85ae	c9 21		cmp #$21			cmp 	#KWD_PLING					; word indirection (1) \
-.85b0	d0 9b		bne $854d			bne 	_ETSyntaxError
-.85b2					_ETIndirection:
-.85b2	a5 36		lda $36				lda 	zTemp0 						; push indirection amount (0-1) => (1-2) on the stack
-.85b4	1a		inc a				inc 	a
-.85b5	48		pha				pha
-.85b6	20 1b 85	jsr $851b			jsr 	EvaluateTerm				; evaluate the term
-.85b9	20 d3 83	jsr $83d3			jsr 	Dereference 				; dereference it.
-.85bc	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; must be a +ve integer.
-.85bf	d0 07		bne $85c8			bne 	_ETTypeMismatch
-.85c1	68		pla				pla 								; indirection 1-2
-.85c2	09 20		ora #$20			ora 	#NSBIsReference 			; make it a reference.
-.85c4	9d 00 06	sta $0600,x			sta 	NSStatus,x
-.85c7	60		rts				rts
-.85c8					_ETTypeMismatch:
-.85c8	4c 8f 8d	jmp $8d8f			jmp 	TypeError
-.85cb					_ETUnaryNegate:
-.85cb	20 1b 85	jsr $851b			jsr 	EvaluateTerm				; evaluate the term
-.85ce	20 d3 83	jsr $83d3			jsr 	Dereference 				; dereference it.
-.85d1	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; must be a number
-.85d4	29 10		and #$10			and 	#NSTString
-.85d6	d0 f0		bne $85c8			bne 	_ETTypeMismatch
-.85d8	4c 5f 86	jmp $865f			jmp 	NSMNegate  					; just toggles the sign bit.
-.85db					_ETDereference:
-.85db	20 1b 85	jsr $851b			jsr 	EvaluateTerm				; evaluate the term
-.85de	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; must be a reference
-.85e1	29 20		and #$20			and 	#NSBIsReference
-.85e3	f0 e3		beq $85c8			beq 	_ETTypeMismatch
-.85e5	9e 00 06	stz $0600,x			stz 	NSStatus,x 					; make it an integer address
-.85e8	60		rts				rts
-.85e9					_ETStringReference:
-.85e9	20 1b 85	jsr $851b			jsr 	EvaluateTerm				; evaluate the term
-.85ec	20 d3 83	jsr $83d3			jsr 	Dereference 				; dereference it.
-.85ef	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; must be a +ve integer.
-.85f2	d0 d4		bne $85c8			bne 	_ETTypeMismatch
-.85f4	a9 10		lda #$10			lda 	#NSTString 					; make it a string
-.85f6	9d 00 06	sta $0600,x			sta 	NSStatus,x
-.85f9	60		rts				rts
-.85fa					_ETParenthesis:
-.85fa	20 91 83	jsr $8391			jsr 	EvaluateExpression 			; evaluate here, from lowest precedence
-.85fd	20 bd 8b	jsr $8bbd			jsr 	CheckRightBracket 			; check for )
-.8600	60		rts				rts
+.8528					EvaluateTerm:
+.8528	b1 30		lda ($30),y			lda 	(codePtr),y
+.852a	30 18		bmi $8544			bmi 	_ETCheckUnary 				; unary function ? (text ones)
+.852c	c9 40		cmp #$40			cmp 	#$40 						; 40-7F => identifier reference
+.852e	b0 6e		bcs $859e			bcs 	_ETVariable
+.8530	c9 30		cmp #$30			cmp 	#'0' 						; is it a number
+.8532	90 6e		bcc $85a2			bcc 	_ETPuncUnary 				; if not it might be a punctuation unary.
+.8534	c9 3a		cmp #$3a			cmp 	#'9'+1
+.8536	b0 6a		bcs $85a2			bcs 	_ETPuncUnary
+.8538	20 7a 84	jsr $847a			jsr 	EncodeNumberStart 			; can't fail as it's 0-9 !
+.853b					_ETNumber:
+.853b	c8		iny				iny 								; keep encoding until we have the numbers
+.853c	b1 30		lda ($30),y			lda 	(codePtr),y
+.853e	20 7d 84	jsr $847d			jsr 	EncodeNumberContinue
+.8541	b0 f8		bcs $853b			bcs 	_ETNumber 					; go back if accepted.
+.8543	60		rts				rts
+.8544					_ETCheckUnary:
+.8544	c9 ff		cmp #$ff			cmp 	#KWC_STRING 				; string token
+.8546	f0 40		beq $8588			beq 	_ETString
+.8548	c9 fe		cmp #$fe			cmp 	#KWC_HEXCONST 				; hex constant.
+.854a	f0 11		beq $855d			beq 	_ETHexConstant
+.854c	c9 83		cmp #$83			cmp 	#KWC_FIRST_UNARY 			; check it actually is a unary function
+.854e	90 0a		bcc $855a			bcc 	_ETSyntaxError
+.8550	c9 9a		cmp #$9a			cmp 	#KWC_LAST_UNARY+1
+.8552	b0 06		bcs $855a			bcs 	_ETSyntaxError
+.8554	da		phx				phx 								; push X on the stack
+.8555	0a		asl a				asl 	a 							; put vector x 2 into X
+.8556	aa		tax				tax
+.8557	7c a3 80	jmp ($80a3,x)			jmp 	(VectorSet0,x) 				; and do it.
+.855a					_ETSyntaxError:
+.855a	4c a4 8d	jmp $8da4			jmp 	SyntaxError
+.855d					_ETHexConstant:
+.855d	c8		iny				iny 								; skip #
+.855e	c8		iny				iny 								; skip count
+.855f	20 c0 86	jsr $86c0			jsr 	NSMSetZero 					; clear result
+.8562					_ETHLoop:
+.8562	b1 30		lda ($30),y			lda 	(codePtr),y
+.8564	c8		iny				iny 								; and consume
+.8565	c9 00		cmp #$00			cmp 	#0 							; exit if zero
+.8567	f0 1e		beq $8587			beq 	_ETHExit
+.8569	48		pha				pha 								; save on stack.
+.856a	20 d5 86	jsr $86d5			jsr 	NSMShiftLeft 				; x 2
+.856d	20 d5 86	jsr $86d5			jsr 	NSMShiftLeft 				; x 4
+.8570	20 d5 86	jsr $86d5			jsr 	NSMShiftLeft 				; x 8
+.8573	20 d5 86	jsr $86d5			jsr 	NSMShiftLeft 				; x 16
+.8576	68		pla				pla 								; ASCII
+.8577	c9 41		cmp #$41			cmp 	#'A'
+.8579	90 02		bcc $857d			bcc 	_ETHNotChar
+.857b	e9 07		sbc #$07			sbc 	#7
+.857d					_ETHNotChar:
+.857d	29 0f		and #$0f			and 	#15 						; digit now
+.857f	1d 08 06	ora $0608,x			ora 	NSMantissa0,x 				; put in LS Nibble
+.8582	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
+.8585	80 db		bra $8562			bra 	_ETHLoop 					; go round.
+.8587					_ETHExit:
+.8587	60		rts				rts
+.8588					_ETString:
+.8588	c8		iny				iny 								; look at length
+.8589	b1 30		lda ($30),y			lda 	(codePtr),y
+.858b	48		pha				pha
+.858c	c8		iny				iny 								; first character
+.858d	20 39 87	jsr $8739			jsr 	MemoryInline 				; put address of string at (codePtr),y on stack
+.8590	68		pla				pla 								; restore count and save
+.8591	85 36		sta $36				sta 	zTemp0
+.8593	98		tya				tya 								; add length to Y to skip it.
+.8594	18		clc				clc
+.8595	65 36		adc $36				adc 	zTemp0
+.8597	a8		tay				tay
+.8598	a9 10		lda #$10			lda 	#NSTString 					; mark as string
+.859a	9d 00 06	sta $0600,x			sta 	NSStatus,x
+.859d	60		rts				rts
+.859e					_ETVariable:
+>859e	db						.byte 	$DB 						; causes a break in the emulator
+.859f	4c ff ff	jmp $ffff			jmp 	$FFFF
+.85a2					_ETPuncUnary:
+.85a2	c8		iny				iny 								; consume the unary character
+.85a3	c9 2d		cmp #$2d			cmp 	#KWD_MINUS 					; unary minus
+.85a5	f0 31		beq $85d8			beq 	_ETUnaryNegate
+.85a7	c9 10		cmp #$10			cmp 	#KWD_AT 					; @ reference -> constant
+.85a9	f0 3d		beq $85e8			beq 	_ETDereference
+.85ab	c9 28		cmp #$28			cmp 	#KWD_LPAREN 				; parenthesis
+.85ad	f0 58		beq $8607			beq 	_ETParenthesis
+.85af	c9 24		cmp #$24			cmp 	#KWD_DOLLAR
+.85b1	f0 43		beq $85f6			beq 	_ETStringReference
+.85b3	64 36		stz $36				stz 	zTemp0 						; zTemp0 is the indirection level.
+.85b5	c9 3f		cmp #$3f			cmp 	#KWD_QMARK 					; byte indirection (0) ?
+.85b7	f0 06		beq $85bf			beq 	_ETIndirection
+.85b9	e6 36		inc $36				inc 	zTemp0
+.85bb	c9 21		cmp #$21			cmp 	#KWD_PLING					; word indirection (1) \
+.85bd	d0 9b		bne $855a			bne 	_ETSyntaxError
+.85bf					_ETIndirection:
+.85bf	a5 36		lda $36				lda 	zTemp0 						; push indirection amount (0-1) => (1-2) on the stack
+.85c1	1a		inc a				inc 	a
+.85c2	48		pha				pha
+.85c3	20 28 85	jsr $8528			jsr 	EvaluateTerm				; evaluate the term
+.85c6	20 e0 83	jsr $83e0			jsr 	Dereference 				; dereference it.
+.85c9	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; must be a +ve integer.
+.85cc	d0 07		bne $85d5			bne 	_ETTypeMismatch
+.85ce	68		pla				pla 								; indirection 1-2
+.85cf	09 20		ora #$20			ora 	#NSBIsReference 			; make it a reference.
+.85d1	9d 00 06	sta $0600,x			sta 	NSStatus,x
+.85d4	60		rts				rts
+.85d5					_ETTypeMismatch:
+.85d5	4c ae 8d	jmp $8dae			jmp 	TypeError
+.85d8					_ETUnaryNegate:
+.85d8	20 28 85	jsr $8528			jsr 	EvaluateTerm				; evaluate the term
+.85db	20 e0 83	jsr $83e0			jsr 	Dereference 				; dereference it.
+.85de	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; must be a number
+.85e1	29 10		and #$10			and 	#NSTString
+.85e3	d0 f0		bne $85d5			bne 	_ETTypeMismatch
+.85e5	4c 6c 86	jmp $866c			jmp 	NSMNegate  					; just toggles the sign bit.
+.85e8					_ETDereference:
+.85e8	20 28 85	jsr $8528			jsr 	EvaluateTerm				; evaluate the term
+.85eb	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; must be a reference
+.85ee	29 20		and #$20			and 	#NSBIsReference
+.85f0	f0 e3		beq $85d5			beq 	_ETTypeMismatch
+.85f2	9e 00 06	stz $0600,x			stz 	NSStatus,x 					; make it an integer address
+.85f5	60		rts				rts
+.85f6					_ETStringReference:
+.85f6	20 28 85	jsr $8528			jsr 	EvaluateTerm				; evaluate the term
+.85f9	20 e0 83	jsr $83e0			jsr 	Dereference 				; dereference it.
+.85fc	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; must be a +ve integer.
+.85ff	d0 d4		bne $85d5			bne 	_ETTypeMismatch
+.8601	a9 10		lda #$10			lda 	#NSTString 					; make it a string
+.8603	9d 00 06	sta $0600,x			sta 	NSStatus,x
+.8606	60		rts				rts
+.8607					_ETParenthesis:
+.8607	20 9e 83	jsr $839e			jsr 	EvaluateExpression 			; evaluate here, from lowest precedence
+.860a	20 ca 8b	jsr $8bca			jsr 	CheckRightBracket 			; check for )
+.860d	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./expressions/utility/exprhelper.asm
 
-.8601					EvaluateValue:
-.8601	48		pha				pha
-.8602	20 8f 83	jsr $838f			jsr		EvaluateExpressionAt0 		; expression
-.8605	20 d3 83	jsr $83d3			jsr 	Dereference					; derefernce it
-.8608	68		pla				pla
-.8609	60		rts				rts
-.860a					EvaluateNumber:
-.860a	20 01 86	jsr $8601			jsr 	EvaluateValue 				; get a value
-.860d	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; check if string.
-.8610	29 10		and #$10			and 	#NSBIsString
-.8612	d0 16		bne $862a			bne 	HelperTypeError
-.8614	60		rts				rts
-.8615					EvaluateString:
-.8615	20 01 86	jsr $8601			jsr 	EvaluateValue 				; get a value
-.8618	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; check if string.
-.861b	29 10		and #$10			and 	#NSBIsString
-.861d	f0 0b		beq $862a			beq 	HelperTypeError
-.861f					CopyAddressToTemp0:
-.861f	bd 08 06	lda $0608,x			lda 	NSMantissa0,x 				; copy address -> zTemp0
-.8622	85 36		sta $36				sta 	zTemp0
-.8624	bd 10 06	lda $0610,x			lda 	NSMantissa1,x
-.8627	85 37		sta $37				sta 	zTemp0+1
-.8629	60		rts				rts
-.862a					HelperTypeError:
-.862a	4c 8f 8d	jmp $8d8f			jmp 	TypeError
-.862d					EvaluateInteger:
-.862d	20 0a 86	jsr $860a			jsr 	EvaluateNumber
-.8630	bd 28 06	lda $0628,x			lda 	NSExponent,x 				; check exponent is zero
-.8633	d0 0a		bne $863f			bne 	HelperValueError 			; if not, it's a float.
-.8635	60		rts				rts
-.8636					EvaluateUnsignedInteger:
-.8636	20 2d 86	jsr $862d			jsr 	EvaluateInteger 			; check integer is +ve
-.8639	bd 00 06	lda $0600,x			lda 	NSStatus,x
-.863c	30 01		bmi $863f			bmi 	HelperValueError
-.863e	60		rts				rts
-.863f					HelperValueError:
-.863f	4c 94 8d	jmp $8d94			jmp 	ArgumentError
-.8642					Evaluate16BitInteger:
-.8642	20 36 86	jsr $8636			jsr	 	EvaluateUnsignedInteger		; get integer
-.8645	bd 20 06	lda $0620,x			lda 	NSMantissa3,x	 			; bytes 2 & 3 must be zero
-.8648	1d 18 06	ora $0618,x			ora 	NSMantissa2,x
-.864b	d0 f2		bne $863f			bne 	HelperValueError
-.864d	60		rts				rts
-.864e					Evaluate8BitInteger:
-.864e	20 36 86	jsr $8636			jsr	 	EvaluateUnsignedInteger 	; get an integer
-.8651	d0 ec		bne $863f			bne 	HelperValueError
-.8653	bd 20 06	lda $0620,x			lda 	NSMantissa3,x	 			; bytes 1, 2 & 3 must be zero
-.8656	1d 18 06	ora $0618,x			ora 	NSMantissa2,x
-.8659	1d 10 06	ora $0610,x			ora 	NSMantissa1,x
-.865c	d0 e1		bne $863f			bne 	HelperValueError
-.865e	60		rts				rts
+.860e					EvaluateValue:
+.860e	48		pha				pha
+.860f	20 9c 83	jsr $839c			jsr		EvaluateExpressionAt0 		; expression
+.8612	20 e0 83	jsr $83e0			jsr 	Dereference					; derefernce it
+.8615	68		pla				pla
+.8616	60		rts				rts
+.8617					EvaluateNumber:
+.8617	20 0e 86	jsr $860e			jsr 	EvaluateValue 				; get a value
+.861a	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; check if string.
+.861d	29 10		and #$10			and 	#NSBIsString
+.861f	d0 16		bne $8637			bne 	HelperTypeError
+.8621	60		rts				rts
+.8622					EvaluateString:
+.8622	20 0e 86	jsr $860e			jsr 	EvaluateValue 				; get a value
+.8625	bd 00 06	lda $0600,x			lda 	NSStatus,x 					; check if string.
+.8628	29 10		and #$10			and 	#NSBIsString
+.862a	f0 0b		beq $8637			beq 	HelperTypeError
+.862c					CopyAddressToTemp0:
+.862c	bd 08 06	lda $0608,x			lda 	NSMantissa0,x 				; copy address -> zTemp0
+.862f	85 36		sta $36				sta 	zTemp0
+.8631	bd 10 06	lda $0610,x			lda 	NSMantissa1,x
+.8634	85 37		sta $37				sta 	zTemp0+1
+.8636	60		rts				rts
+.8637					HelperTypeError:
+.8637	4c ae 8d	jmp $8dae			jmp 	TypeError
+.863a					EvaluateInteger:
+.863a	20 17 86	jsr $8617			jsr 	EvaluateNumber
+.863d	bd 28 06	lda $0628,x			lda 	NSExponent,x 				; check exponent is zero
+.8640	d0 0a		bne $864c			bne 	HelperValueError 			; if not, it's a float.
+.8642	60		rts				rts
+.8643					EvaluateUnsignedInteger:
+.8643	20 3a 86	jsr $863a			jsr 	EvaluateInteger 			; check integer is +ve
+.8646	bd 00 06	lda $0600,x			lda 	NSStatus,x
+.8649	30 01		bmi $864c			bmi 	HelperValueError
+.864b	60		rts				rts
+.864c					HelperValueError:
+.864c	4c b3 8d	jmp $8db3			jmp 	ArgumentError
+.864f					Evaluate16BitInteger:
+.864f	20 43 86	jsr $8643			jsr	 	EvaluateUnsignedInteger		; get integer
+.8652	bd 20 06	lda $0620,x			lda 	NSMantissa3,x	 			; bytes 2 & 3 must be zero
+.8655	1d 18 06	ora $0618,x			ora 	NSMantissa2,x
+.8658	d0 f2		bne $864c			bne 	HelperValueError
+.865a	60		rts				rts
+.865b					Evaluate8BitInteger:
+.865b	20 43 86	jsr $8643			jsr	 	EvaluateUnsignedInteger 	; get an integer
+.865e	d0 ec		bne $864c			bne 	HelperValueError
+.8660	bd 20 06	lda $0620,x			lda 	NSMantissa3,x	 			; bytes 1, 2 & 3 must be zero
+.8663	1d 18 06	ora $0618,x			ora 	NSMantissa2,x
+.8666	1d 10 06	ora $0610,x			ora 	NSMantissa1,x
+.8669	d0 e1		bne $864c			bne 	HelperValueError
+.866b	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./expressions/utility/utility.asm
 
-.865f					NSMNegate:
-.865f	bd 00 06	lda $0600,x			lda 	NSStatus,x
-.8662	49 80		eor #$80			eor 	#NSBIsNegative
-.8664	9d 00 06	sta $0600,x			sta 	NSStatus,x
-.8667	60		rts				rts
-.8668					NSMNegateMantissa:
-.8668	38		sec				sec
-.8669	a9 00		lda #$00			lda 	#0
-.866b	fd 08 06	sbc $0608,x			sbc 	NSMantissa0,x
-.866e	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
-.8671	a9 00		lda #$00			lda 	#0
-.8673	fd 10 06	sbc $0610,x			sbc 	NSMantissa1,x
-.8676	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
-.8679	a9 00		lda #$00			lda 	#0
-.867b	fd 18 06	sbc $0618,x			sbc 	NSMantissa2,x
-.867e	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
-.8681	a9 00		lda #$00			lda 	#0
-.8683	fd 20 06	sbc $0620,x			sbc 	NSMantissa3,x
-.8686	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
-.8689	60		rts				rts
-.868a					NSMShiftUpTwo:
-.868a	bd 08 06	lda $0608,x			lda 	NSMantissa0,x
-.868d	9d 0a 06	sta $060a,x			sta 	NSMantissa0+2,x
-.8690	bd 10 06	lda $0610,x			lda 	NSMantissa1,x
-.8693	9d 12 06	sta $0612,x			sta 	NSMantissa1+2,x
-.8696	bd 18 06	lda $0618,x			lda 	NSMantissa2,x
-.8699	9d 1a 06	sta $061a,x			sta 	NSMantissa2+2,x
-.869c	bd 20 06	lda $0620,x			lda 	NSMantissa3,x
-.869f	9d 22 06	sta $0622,x			sta 	NSMantissa3+2,x
-.86a2	bd 28 06	lda $0628,x			lda 	NSExponent,x
-.86a5	9d 2a 06	sta $062a,x			sta 	NSExponent+2,x
-.86a8	bd 00 06	lda $0600,x			lda 	NSStatus,x
-.86ab	9d 02 06	sta $0602,x			sta 	NSStatus+2,x
-.86ae	60		rts				rts
-.86af					NSMSetZeroMantissaOnly:
-.86af	a9 00		lda #$00			lda 	#0
-.86b1	80 08		bra $86bb			bra 	NSMSetMantissa
-.86b3					NSMSetZero:
-.86b3	a9 00		lda #$00			lda 	#0
-.86b5					NSMSetByte:
-.86b5	9e 28 06	stz $0628,x			stz 	NSExponent,x 				; zero exponent, as integer.
-.86b8	9e 00 06	stz $0600,x			stz 	NSStatus,x 					; status zero (integer)
-.86bb					NSMSetMantissa:
-.86bb	9d 08 06	sta $0608,x			sta 	NSMantissa0,x 				; mantissa
-.86be	9e 10 06	stz $0610,x			stz 	NSMantissa1,x
-.86c1	9e 18 06	stz $0618,x			stz 	NSMantissa2,x
-.86c4	9e 20 06	stz $0620,x			stz 	NSMantissa3,x
-.86c7	60		rts				rts
-.86c8					NSMShiftLeft:
-.86c8	18		clc				clc
-.86c9					NSMRotateLeft:
-.86c9	3e 08 06	rol $0608,x			rol 	NSMantissa0,x
-.86cc	3e 10 06	rol $0610,x			rol		NSMantissa1,x
-.86cf	3e 18 06	rol $0618,x			rol		NSMantissa2,x
-.86d2	3e 20 06	rol $0620,x			rol		NSMantissa3,x
-.86d5	60		rts				rts
-.86d6					NSMShiftRight:
-.86d6	5e 20 06	lsr $0620,x			lsr 	NSMantissa3,x
-.86d9	7e 18 06	ror $0618,x			ror		NSMantissa2,x
-.86dc	7e 10 06	ror $0610,x			ror		NSMantissa1,x
-.86df	7e 08 06	ror $0608,x			ror		NSMantissa0,x
+.866c					NSMNegate:
+.866c	bd 00 06	lda $0600,x			lda 	NSStatus,x
+.866f	49 80		eor #$80			eor 	#NSBIsNegative
+.8671	9d 00 06	sta $0600,x			sta 	NSStatus,x
+.8674	60		rts				rts
+.8675					NSMNegateMantissa:
+.8675	38		sec				sec
+.8676	a9 00		lda #$00			lda 	#0
+.8678	fd 08 06	sbc $0608,x			sbc 	NSMantissa0,x
+.867b	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
+.867e	a9 00		lda #$00			lda 	#0
+.8680	fd 10 06	sbc $0610,x			sbc 	NSMantissa1,x
+.8683	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
+.8686	a9 00		lda #$00			lda 	#0
+.8688	fd 18 06	sbc $0618,x			sbc 	NSMantissa2,x
+.868b	9d 18 06	sta $0618,x			sta 	NSMantissa2,x
+.868e	a9 00		lda #$00			lda 	#0
+.8690	fd 20 06	sbc $0620,x			sbc 	NSMantissa3,x
+.8693	9d 20 06	sta $0620,x			sta 	NSMantissa3,x
+.8696	60		rts				rts
+.8697					NSMShiftUpTwo:
+.8697	bd 08 06	lda $0608,x			lda 	NSMantissa0,x
+.869a	9d 0a 06	sta $060a,x			sta 	NSMantissa0+2,x
+.869d	bd 10 06	lda $0610,x			lda 	NSMantissa1,x
+.86a0	9d 12 06	sta $0612,x			sta 	NSMantissa1+2,x
+.86a3	bd 18 06	lda $0618,x			lda 	NSMantissa2,x
+.86a6	9d 1a 06	sta $061a,x			sta 	NSMantissa2+2,x
+.86a9	bd 20 06	lda $0620,x			lda 	NSMantissa3,x
+.86ac	9d 22 06	sta $0622,x			sta 	NSMantissa3+2,x
+.86af	bd 28 06	lda $0628,x			lda 	NSExponent,x
+.86b2	9d 2a 06	sta $062a,x			sta 	NSExponent+2,x
+.86b5	bd 00 06	lda $0600,x			lda 	NSStatus,x
+.86b8	9d 02 06	sta $0602,x			sta 	NSStatus+2,x
+.86bb	60		rts				rts
+.86bc					NSMSetZeroMantissaOnly:
+.86bc	a9 00		lda #$00			lda 	#0
+.86be	80 08		bra $86c8			bra 	NSMSetMantissa
+.86c0					NSMSetZero:
+.86c0	a9 00		lda #$00			lda 	#0
+.86c2					NSMSetByte:
+.86c2	9e 28 06	stz $0628,x			stz 	NSExponent,x 				; zero exponent, as integer.
+.86c5	9e 00 06	stz $0600,x			stz 	NSStatus,x 					; status zero (integer)
+.86c8					NSMSetMantissa:
+.86c8	9d 08 06	sta $0608,x			sta 	NSMantissa0,x 				; mantissa
+.86cb	9e 10 06	stz $0610,x			stz 	NSMantissa1,x
+.86ce	9e 18 06	stz $0618,x			stz 	NSMantissa2,x
+.86d1	9e 20 06	stz $0620,x			stz 	NSMantissa3,x
+.86d4	60		rts				rts
+.86d5					NSMShiftLeft:
+.86d5	18		clc				clc
+.86d6					NSMRotateLeft:
+.86d6	3e 08 06	rol $0608,x			rol 	NSMantissa0,x
+.86d9	3e 10 06	rol $0610,x			rol		NSMantissa1,x
+.86dc	3e 18 06	rol $0618,x			rol		NSMantissa2,x
+.86df	3e 20 06	rol $0620,x			rol		NSMantissa3,x
 .86e2	60		rts				rts
-.86e3					NSMIsZero:
-.86e3	bd 20 06	lda $0620,x			lda 	NSMantissa3,x
-.86e6	1d 18 06	ora $0618,x			ora		NSMantissa2,x
-.86e9	1d 10 06	ora $0610,x			ora		NSMantissa1,x
-.86ec	1d 08 06	ora $0608,x			ora		NSMantissa0,x
+.86e3					NSMShiftRight:
+.86e3	5e 20 06	lsr $0620,x			lsr 	NSMantissa3,x
+.86e6	7e 18 06	ror $0618,x			ror		NSMantissa2,x
+.86e9	7e 10 06	ror $0610,x			ror		NSMantissa1,x
+.86ec	7e 08 06	ror $0608,x			ror		NSMantissa0,x
 .86ef	60		rts				rts
+.86f0					NSMIsZero:
+.86f0	bd 20 06	lda $0620,x			lda 	NSMantissa3,x
+.86f3	1d 18 06	ora $0618,x			ora		NSMantissa2,x
+.86f6	1d 10 06	ora $0610,x			ora		NSMantissa1,x
+.86f9	1d 08 06	ora $0608,x			ora		NSMantissa0,x
+.86fc	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./generated/errors.asm
 
-.8d85					SyntaxError:
-.8d85	a9 02		lda #$02		lda	#2
-.8d87	4c 1f 80	jmp $801f		jmp	ErrorHandler
-.8d8a					RangeError:
-.8d8a	a9 04		lda #$04		lda	#4
-.8d8c	4c 1f 80	jmp $801f		jmp	ErrorHandler
-.8d8f					TypeError:
-.8d8f	a9 05		lda #$05		lda	#5
-.8d91	4c 1f 80	jmp $801f		jmp	ErrorHandler
-.8d94					ArgumentError:
-.8d94	a9 07		lda #$07		lda	#7
-.8d96	4c 1f 80	jmp $801f		jmp	ErrorHandler
-.8d99					NotDoneError:
-.8d99	a9 0c		lda #$0c		lda	#12
-.8d9b	4c 1f 80	jmp $801f		jmp	ErrorHandler
-.8d9e					ErrorText:
->8d9e	42 72 65 61 6b 00			.text	"Break",0
->8da4	53 79 6e 74 61 78 20 65			.text	"Syntax error",0
->8dac	72 72 6f 72 00
->8db1	44 69 76 69 73 69 6f 6e			.text	"Division by zero",0
->8db9	20 62 79 20 7a 65 72 6f 00
->8dc2	4f 75 74 20 6f 66 20 52			.text	"Out of Range",0
->8dca	61 6e 67 65 00
->8dcf	54 79 70 65 20 6d 69 73			.text	"Type mismatch",0
->8dd7	6d 61 74 63 68 00
->8ddd	4f 75 74 20 6f 66 20 6d			.text	"Out of memory",0
->8de5	65 6d 6f 72 79 00
->8deb	49 6c 6c 65 67 61 6c 20			.text	"Illegal argument",0
->8df3	61 72 67 75 6d 65 6e 74 00
->8dfc	53 74 6f 70 00				.text	"Stop",0
->8e01	53 74 72 69 6e 67 20 74			.text	"String too long",0
->8e09	6f 6f 20 6c 6f 6e 67 00
->8e11	41 73 73 65 72 74 69 6f			.text	"Assertion failed",0
->8e19	6e 20 66 61 69 6c 65 64 00
->8e22	4f 75 74 20 6f 66 20 64			.text	"Out of data",0
->8e2a	61 74 61 00
->8e2e	55 6e 69 6d 70 6c 65 6d			.text	"Unimplemented",0
->8e36	65 6e 74 65 64 00
+.8da4					SyntaxError:
+.8da4	a9 02		lda #$02		lda	#2
+.8da6	4c 1f 80	jmp $801f		jmp	ErrorHandler
+.8da9					RangeError:
+.8da9	a9 04		lda #$04		lda	#4
+.8dab	4c 1f 80	jmp $801f		jmp	ErrorHandler
+.8dae					TypeError:
+.8dae	a9 05		lda #$05		lda	#5
+.8db0	4c 1f 80	jmp $801f		jmp	ErrorHandler
+.8db3					ArgumentError:
+.8db3	a9 07		lda #$07		lda	#7
+.8db5	4c 1f 80	jmp $801f		jmp	ErrorHandler
+.8db8					NotDoneError:
+.8db8	a9 0c		lda #$0c		lda	#12
+.8dba	4c 1f 80	jmp $801f		jmp	ErrorHandler
+.8dbd					ErrorText:
+>8dbd	42 72 65 61 6b 00			.text	"Break",0
+>8dc3	53 79 6e 74 61 78 20 65			.text	"Syntax error",0
+>8dcb	72 72 6f 72 00
+>8dd0	44 69 76 69 73 69 6f 6e			.text	"Division by zero",0
+>8dd8	20 62 79 20 7a 65 72 6f 00
+>8de1	4f 75 74 20 6f 66 20 52			.text	"Out of Range",0
+>8de9	61 6e 67 65 00
+>8dee	54 79 70 65 20 6d 69 73			.text	"Type mismatch",0
+>8df6	6d 61 74 63 68 00
+>8dfc	4f 75 74 20 6f 66 20 6d			.text	"Out of memory",0
+>8e04	65 6d 6f 72 79 00
+>8e0a	49 6c 6c 65 67 61 6c 20			.text	"Illegal argument",0
+>8e12	61 72 67 75 6d 65 6e 74 00
+>8e1b	53 74 6f 70 00				.text	"Stop",0
+>8e20	53 74 72 69 6e 67 20 74			.text	"String too long",0
+>8e28	6f 6f 20 6c 6f 6e 67 00
+>8e30	41 73 73 65 72 74 69 6f			.text	"Assertion failed",0
+>8e38	6e 20 66 61 69 6c 65 64 00
+>8e41	4f 75 74 20 6f 66 20 64			.text	"Out of data",0
+>8e49	61 74 61 00
+>8e4d	55 6e 69 6d 70 6c 65 6d			.text	"Unimplemented",0
+>8e55	65 6e 74 65 64 00
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./memory.flat/memory.asm
 
-.86f0					MemoryNew:
-.86f0	a9 00		lda #$00			lda 	#(BasicStart & $FF)
-.86f2	85 30		sta $30				sta 	codePtr
-.86f4	a9 20		lda #$20			lda 	#(BasicStart >> 8)
-.86f6	85 31		sta $31				sta 	codePtr+1
-.86f8	a9 00		lda #$00			lda 	#0 							; write zero there erasing the program.
-.86fa	92 30		sta ($30)			sta 	(codePtr)
-.86fc	60		rts				rts
-.86fd					MemoryAppend:
+.86fd					MemoryNew:
 .86fd	a9 00		lda #$00			lda 	#(BasicStart & $FF)
 .86ff	85 30		sta $30				sta 	codePtr
 .8701	a9 20		lda #$20			lda 	#(BasicStart >> 8)
 .8703	85 31		sta $31				sta 	codePtr+1
-.8705					_MAFindEnd:
-.8705	b2 30		lda ($30)			lda 	(codePtr)
-.8707	f0 0d		beq $8716			beq 	_MAFoundEnd
-.8709	18		clc				clc
-.870a	b2 30		lda ($30)			lda 	(codePtr)					; get offset
-.870c	65 30		adc $30				adc 	codePtr
-.870e	85 30		sta $30				sta 	codePtr
-.8710	90 02		bcc $8714			bcc 	_CREExit
-.8712	e6 31		inc $31				inc 	codePtr+1
-.8714					_CREExit:
-.8714	80 ef		bra $8705			bra 	_MAFindEnd
-.8716					_MAFoundEnd:
-.8716	ac 06 07	ldy $0706			ldy 	tokenOffset 				; bytes to copy
-.8719	c0 04		cpy #$04			cpy 	#4 							; blank line
-.871b	f0 0e		beq $872b			beq 	_MANoLine
-.871d	a9 00		lda #$00			lda 	#0 							; end of program
-.871f	91 30		sta ($30),y			sta 	(codePtr),y
-.8721					_MACopy:
-.8721	88		dey				dey
-.8722	b9 06 07	lda $0706,y			lda 	tokenOffset,y
-.8725	91 30		sta ($30),y			sta 	(codePtr),y
-.8727	c0 00		cpy #$00			cpy 	#0
-.8729	d0 f6		bne $8721			bne 	_MACopy
-.872b					_MANoLine:
-.872b	60		rts				rts
-.872c					MemoryInline:
-.872c	98		tya				tya 								; put address into stack,x
-.872d	18		clc				clc
-.872e	65 30		adc $30				adc 	codePtr
-.8730	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
-.8733	a5 31		lda $31				lda 	codePtr+1
-.8735	69 00		adc #$00			adc 	#0
-.8737	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
-.873a	9e 18 06	stz $0618,x			stz 	NSMantissa2,x
-.873d	9e 20 06	stz $0620,x			stz 	NSMantissa3,x
-.8740	60		rts				rts
+.8705	a9 00		lda #$00			lda 	#0 							; write zero there erasing the program.
+.8707	92 30		sta ($30)			sta 	(codePtr)
+.8709	60		rts				rts
+.870a					MemoryAppend:
+.870a	a9 00		lda #$00			lda 	#(BasicStart & $FF)
+.870c	85 30		sta $30				sta 	codePtr
+.870e	a9 20		lda #$20			lda 	#(BasicStart >> 8)
+.8710	85 31		sta $31				sta 	codePtr+1
+.8712					_MAFindEnd:
+.8712	b2 30		lda ($30)			lda 	(codePtr)
+.8714	f0 0d		beq $8723			beq 	_MAFoundEnd
+.8716	18		clc				clc
+.8717	b2 30		lda ($30)			lda 	(codePtr)					; get offset
+.8719	65 30		adc $30				adc 	codePtr
+.871b	85 30		sta $30				sta 	codePtr
+.871d	90 02		bcc $8721			bcc 	_CREExit
+.871f	e6 31		inc $31				inc 	codePtr+1
+.8721					_CREExit:
+.8721	80 ef		bra $8712			bra 	_MAFindEnd
+.8723					_MAFoundEnd:
+.8723	ac 06 07	ldy $0706			ldy 	tokenOffset 				; bytes to copy
+.8726	c0 04		cpy #$04			cpy 	#4 							; blank line
+.8728	f0 0e		beq $8738			beq 	_MANoLine
+.872a	a9 00		lda #$00			lda 	#0 							; end of program
+.872c	91 30		sta ($30),y			sta 	(codePtr),y
+.872e					_MACopy:
+.872e	88		dey				dey
+.872f	b9 06 07	lda $0706,y			lda 	tokenOffset,y
+.8732	91 30		sta ($30),y			sta 	(codePtr),y
+.8734	c0 00		cpy #$00			cpy 	#0
+.8736	d0 f6		bne $872e			bne 	_MACopy
+.8738					_MANoLine:
+.8738	60		rts				rts
+.8739					MemoryInline:
+.8739	98		tya				tya 								; put address into stack,x
+.873a	18		clc				clc
+.873b	65 30		adc $30				adc 	codePtr
+.873d	9d 08 06	sta $0608,x			sta 	NSMantissa0,x
+.8740	a5 31		lda $31				lda 	codePtr+1
+.8742	69 00		adc #$00			adc 	#0
+.8744	9d 10 06	sta $0610,x			sta 	NSMantissa1,x
+.8747	9e 18 06	stz $0618,x			stz 	NSMantissa2,x
+.874a	9e 20 06	stz $0620,x			stz 	NSMantissa3,x
+.874d	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./memory.flat/variable.asm
 
-.8741					VariableOpen:
-.8741	60		rts				rts
-.8742					VariableClose:
-.8742	60		rts				rts
+.874e					VariableOpen:
+.874e	60		rts				rts
+.874f					VariableClose:
+.874f	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./tokeniser/backload.asm
 
-.8743					BackloadProgram:
-.8743	a2 ff		ldx #$ff			ldx 	#$FF
-.8745	ad fa ff	lda $fffa			lda 	$FFFA 						; read first byte
-.8748	30 1e		bmi $8768			bmi 	_BPExit
-.874a					_BPCopy:
-.874a	e8		inx				inx  								; copy byte in
-.874b	9d 06 08	sta $0806,x			sta 	lineBuffer,x
-.874e	9e 07 08	stz $0807,x			stz 	lineBuffer+1,x
-.8751	ad fa ff	lda $fffa			lda 	$FFFA 						; read next byte
-.8754	30 0a		bmi $8760			bmi 	_BPEndLine 					; -ve = EOL
-.8756	c9 09		cmp #$09			cmp 	#9 							; handle TAB
-.8758	d0 02		bne $875c			bne 	_BPNotTab
-.875a	a9 20		lda #$20			lda 	#' '
-.875c					_BPNotTab:
-.875c	c9 20		cmp #$20			cmp 	#' ' 						; < ' ' = EOL
-.875e	b0 ea		bcs $874a			bcs 	_BPCopy
-.8760					_BPEndLine:
-.8760	20 38 89	jsr $8938			jsr 	TokeniseLine 				; tokenise the line.
-.8763	20 fd 86	jsr $86fd			jsr 	MemoryAppend 				; append to current program
-.8766	80 db		bra $8743			bra 	BackloadProgram
-.8768					_BPExit:
-.8768	60		rts				rts
+.8750					BackloadProgram:
+.8750	a2 ff		ldx #$ff			ldx 	#$FF
+.8752	ad fa ff	lda $fffa			lda 	$FFFA 						; read first byte
+.8755	30 1e		bmi $8775			bmi 	_BPExit
+.8757					_BPCopy:
+.8757	e8		inx				inx  								; copy byte in
+.8758	9d 06 08	sta $0806,x			sta 	lineBuffer,x
+.875b	9e 07 08	stz $0807,x			stz 	lineBuffer+1,x
+.875e	ad fa ff	lda $fffa			lda 	$FFFA 						; read next byte
+.8761	30 0a		bmi $876d			bmi 	_BPEndLine 					; -ve = EOL
+.8763	c9 09		cmp #$09			cmp 	#9 							; handle TAB
+.8765	d0 02		bne $8769			bne 	_BPNotTab
+.8767	a9 20		lda #$20			lda 	#' '
+.8769					_BPNotTab:
+.8769	c9 20		cmp #$20			cmp 	#' ' 						; < ' ' = EOL
+.876b	b0 ea		bcs $8757			bcs 	_BPCopy
+.876d					_BPEndLine:
+.876d	20 45 89	jsr $8945			jsr 	TokeniseLine 				; tokenise the line.
+.8770	20 0a 87	jsr $870a			jsr 	MemoryAppend 				; append to current program
+.8773	80 db		bra $8750			bra 	BackloadProgram
+.8775					_BPExit:
+.8775	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./tokeniser/searchtokens.asm
 
-.8769					TokeniseSearchTable:
-.8769	84 37		sty $37				sty 	zTemp0+1 					; (zTemp0),y points to current token.
-.876b	85 36		sta $36				sta 	zTemp0
-.876d	a0 00		ldy #$00			ldy 	#0
-.876f	a9 80		lda #$80			lda 	#$80 						; token #
-.8771	85 38		sta $38				sta 	zTemp1
-.8773					_TSTLoop:
-.8773	b1 36		lda ($36),y			lda 	(zTemp0),y 					; length, 0 (skip) -ve (end)
-.8775	30 49		bmi $87c0			bmi 	_TSTFail 					; -ve = end of table
-.8777	f0 2e		beq $87a7			beq 	_TSTNext 					; zero, check next it's a dummy
-.8779	c8		iny				iny 								; get the hash
-.877a	b1 36		lda ($36),y			lda 	(zTemp0),y
-.877c	88		dey				dey
-.877d	cd 03 07	cmp $0703			cmp 	identHash 					; check they match, if not go to next
-.8780	d0 25		bne $87a7			bne 	_TSTNext
-.8782	ad 02 07	lda $0702			lda 	identTypeEnd 				; length of identifier
-.8785	38		sec				sec
-.8786	ed 00 07	sbc $0700			sbc 	identStart
-.8789	d1 36		cmp ($36),y			cmp 	(zTemp0),y 					; no match, then return.
-.878b	d0 1a		bne $87a7			bne 	_TSTNext
-.878d	5a		phy				phy 								; save Y , we might fail
-.878e	c8		iny				iny 								; point to text
-.878f	c8		iny				iny
-.8790	ae 00 07	ldx $0700			ldx 	identStart 					; offset in line buffer in X
-.8793					_TSTCompareName:
-.8793	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; compare text.
-.8796	d1 36		cmp ($36),y			cmp 	(zTemp0),y
-.8798	d0 0c		bne $87a6			bne 	_TSTNextPullY 				; fail, pullY and do next
-.879a	e8		inx				inx
-.879b	c8		iny				iny
-.879c	ec 02 07	cpx $0702			cpx 	identTypeEnd 				; complete match.
-.879f	d0 f2		bne $8793			bne 	_TSTCompareName
-.87a1	7a		ply				ply 								; throw Y
-.87a2	a5 38		lda $38				lda 	zTemp1 						; get token #
-.87a4	38		sec				sec 								; return with CS = passed.
-.87a5	60		rts				rts
-.87a6					_TSTNextPullY:
-.87a6	7a		ply				ply 								; restore current, fall through.
-.87a7					_TSTNext:
-.87a7	e6 38		inc $38				inc 	zTemp1 						; token counter
-.87a9	98		tya				tya
-.87aa	18		clc				clc
-.87ab	71 36		adc ($36),y			adc 	(zTemp0),y 					; add [Length] + 2 to Y
-.87ad	1a		inc a				inc 	a 							; +1
-.87ae	1a		inc a				inc 	a 							; +2
-.87af	a8		tay				tay
-.87b0	10 c1		bpl $8773			bpl 	_TSTLoop 					; if Y < $80 loop back
-.87b2	98		tya				tya 								; add Y to zTemp0 and reset Y
-.87b3	a0 00		ldy #$00			ldy 	#0   						; so we can use Y to search fast
-.87b5	18		clc				clc  								; but have tables > 255 bytes
-.87b6	65 36		adc $36				adc 	zTemp0 						; when Y gets >= 128 we reset Y
-.87b8	85 36		sta $36				sta 	zTemp0 						; and adjust the table pointer/
-.87ba	90 b7		bcc $8773			bcc 	_TSTLoop
-.87bc	e6 37		inc $37				inc 	zTemp0+1
-.87be	80 b3		bra $8773			bra 	_TSTLoop
-.87c0					_TSTFail:
-.87c0	18		clc				clc
-.87c1	60		rts				rts
+.8776					TokeniseSearchTable:
+.8776	84 37		sty $37				sty 	zTemp0+1 					; (zTemp0),y points to current token.
+.8778	85 36		sta $36				sta 	zTemp0
+.877a	a0 00		ldy #$00			ldy 	#0
+.877c	a9 80		lda #$80			lda 	#$80 						; token #
+.877e	85 38		sta $38				sta 	zTemp1
+.8780					_TSTLoop:
+.8780	b1 36		lda ($36),y			lda 	(zTemp0),y 					; length, 0 (skip) -ve (end)
+.8782	30 49		bmi $87cd			bmi 	_TSTFail 					; -ve = end of table
+.8784	f0 2e		beq $87b4			beq 	_TSTNext 					; zero, check next it's a dummy
+.8786	c8		iny				iny 								; get the hash
+.8787	b1 36		lda ($36),y			lda 	(zTemp0),y
+.8789	88		dey				dey
+.878a	cd 03 07	cmp $0703			cmp 	identHash 					; check they match, if not go to next
+.878d	d0 25		bne $87b4			bne 	_TSTNext
+.878f	ad 02 07	lda $0702			lda 	identTypeEnd 				; length of identifier
+.8792	38		sec				sec
+.8793	ed 00 07	sbc $0700			sbc 	identStart
+.8796	d1 36		cmp ($36),y			cmp 	(zTemp0),y 					; no match, then return.
+.8798	d0 1a		bne $87b4			bne 	_TSTNext
+.879a	5a		phy				phy 								; save Y , we might fail
+.879b	c8		iny				iny 								; point to text
+.879c	c8		iny				iny
+.879d	ae 00 07	ldx $0700			ldx 	identStart 					; offset in line buffer in X
+.87a0					_TSTCompareName:
+.87a0	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; compare text.
+.87a3	d1 36		cmp ($36),y			cmp 	(zTemp0),y
+.87a5	d0 0c		bne $87b3			bne 	_TSTNextPullY 				; fail, pullY and do next
+.87a7	e8		inx				inx
+.87a8	c8		iny				iny
+.87a9	ec 02 07	cpx $0702			cpx 	identTypeEnd 				; complete match.
+.87ac	d0 f2		bne $87a0			bne 	_TSTCompareName
+.87ae	7a		ply				ply 								; throw Y
+.87af	a5 38		lda $38				lda 	zTemp1 						; get token #
+.87b1	38		sec				sec 								; return with CS = passed.
+.87b2	60		rts				rts
+.87b3					_TSTNextPullY:
+.87b3	7a		ply				ply 								; restore current, fall through.
+.87b4					_TSTNext:
+.87b4	e6 38		inc $38				inc 	zTemp1 						; token counter
+.87b6	98		tya				tya
+.87b7	18		clc				clc
+.87b8	71 36		adc ($36),y			adc 	(zTemp0),y 					; add [Length] + 2 to Y
+.87ba	1a		inc a				inc 	a 							; +1
+.87bb	1a		inc a				inc 	a 							; +2
+.87bc	a8		tay				tay
+.87bd	10 c1		bpl $8780			bpl 	_TSTLoop 					; if Y < $80 loop back
+.87bf	98		tya				tya 								; add Y to zTemp0 and reset Y
+.87c0	a0 00		ldy #$00			ldy 	#0   						; so we can use Y to search fast
+.87c2	18		clc				clc  								; but have tables > 255 bytes
+.87c3	65 36		adc $36				adc 	zTemp0 						; when Y gets >= 128 we reset Y
+.87c5	85 36		sta $36				sta 	zTemp0 						; and adjust the table pointer/
+.87c7	90 b7		bcc $8780			bcc 	_TSTLoop
+.87c9	e6 37		inc $37				inc 	zTemp0+1
+.87cb	80 b3		bra $8780			bra 	_TSTLoop
+.87cd					_TSTFail:
+.87cd	18		clc				clc
+.87ce	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
@@ -1817,459 +1842,459 @@
 
 ;******  Processing file: ./tokeniser/../generated/kwdtext.dat
 
-.87c2					KeywordSet0:
->87c2	00 65					.text	0,$65,""               ; $80 !0:EOF
->87c4	00 58					.text	0,$58,""               ; $81 !1:SH1
->87c6	00 5a					.text	0,$5a,""               ; $82 !2:SH2
->87c8	04 fe 41 42 53 28			.text	4,$fe,"ABS("           ; $83 ABS(
->87ce	06 93 41 4c 4c 4f 43 28			.text	6,$93,"ALLOC("         ; $84 ALLOC(
->87d6	04 ff 41 53 43 28			.text	4,$ff,"ASC("           ; $85 ASC(
->87dc	05 29 43 48 52 24 28			.text	5,$29,"CHR$("          ; $86 CHR$(
->87e3	04 f4 44 45 43 28			.text	4,$f4,"DEC("           ; $87 DEC(
->87e9	05 6b 46 41 4c 53 45			.text	5,$6b,"FALSE"          ; $88 FALSE
->87f0	09 4a 47 45 54 44 41 54			.text	9,$4a,"GETDATE$("      ; $89 GETDATE$(
->87f8	45 24 28
->87fb	09 5b 47 45 54 54 49 4d			.text	9,$5b,"GETTIME$("      ; $8a GETTIME$(
->8803	45 24 28
->8806	05 31 48 45 58 24 28			.text	5,$31,"HEX$("          ; $8b HEX$(
->880d	04 13 49 4e 54 28			.text	4,$13,"INT("           ; $8c INT(
->8813	06 a7 49 53 56 41 4c 28			.text	6,$a7,"ISVAL("         ; $8d ISVAL(
->881b	06 77 4c 45 46 54 24 28			.text	6,$77,"LEFT$("         ; $8e LEFT$(
->8823	04 07 4c 45 4e 28			.text	4,$07,"LEN("           ; $8f LEN(
->8829	05 26 4d 49 44 24 28			.text	5,$26,"MID$("          ; $90 MID$(
->8830	03 f1 4e 4f 54				.text	3,$f1,"NOT"            ; $91 NOT
->8835	04 1d 50 41 47 45			.text	4,$1d,"PAGE"           ; $92 PAGE
->883b	07 ca 52 49 47 48 54 24			.text	7,$ca,"RIGHT$("        ; $93 RIGHT$(
->8843	28
->8844	04 0c 52 4e 44 28			.text	4,$0c,"RND("           ; $94 RND(
->884a	04 10 53 47 4e 28			.text	4,$10,"SGN("           ; $95 SGN(
->8850	04 0e 53 50 43 28			.text	4,$0e,"SPC("           ; $96 SPC(
->8856	05 45 53 54 52 24 28			.text	5,$45,"STR$("          ; $97 STR$(
->885d	04 40 54 52 55 45			.text	4,$40,"TRUE"           ; $98 TRUE
->8863	04 0b 56 41 4c 28			.text	4,$0b,"VAL("           ; $99 VAL(
->8869	03 e7 46 4f 52				.text	3,$e7,"FOR"            ; $9a FOR
->886e	02 8f 49 46				.text	2,$8f,"IF"             ; $9b IF
->8872	04 34 50 52 4f 43			.text	4,$34,"PROC"           ; $9c PROC
->8878	06 c1 52 45 50 45 41 54			.text	6,$c1,"REPEAT"         ; $9d REPEAT
->8880	05 79 57 48 49 4c 45			.text	5,$79,"WHILE"          ; $9e WHILE
->8887	05 66 45 4e 44 49 46			.text	5,$66,"ENDIF"          ; $9f ENDIF
->888e	07 0b 45 4e 44 50 52 4f			.text	7,$0b,"ENDPROC"        ; $a0 ENDPROC
->8896	43
->8897	04 3f 4e 45 58 54			.text	4,$3f,"NEXT"           ; $a1 NEXT
->889d	05 8c 55 4e 54 49 4c			.text	5,$8c,"UNTIL"          ; $a2 UNTIL
->88a4	04 2e 57 45 4e 44			.text	4,$2e,"WEND"           ; $a3 WEND
->88aa	06 d2 41 53 53 45 52 54			.text	6,$d2,"ASSERT"         ; $a4 ASSERT
->88b2	04 1c 43 41 4c 4c			.text	4,$1c,"CALL"           ; $a5 CALL
->88b8	03 e2 43 4c 53				.text	3,$e2,"CLS"            ; $a6 CLS
->88bd	04 1a 44 41 54 41			.text	4,$1a,"DATA"           ; $a7 DATA
->88c3	03 da 44 49 4d				.text	3,$da,"DIM"            ; $a8 DIM
->88c8	05 80 47 4f 53 55 42			.text	5,$80,"GOSUB"          ; $a9 GOSUB
->88cf	04 39 47 4f 54 4f			.text	4,$39,"GOTO"           ; $aa GOTO
->88d5	03 e5 4c 45 54				.text	3,$e5,"LET"            ; $ab LET
->88da	05 8d 50 52 49 4e 54			.text	5,$8d,"PRINT"          ; $ac PRINT
->88e1	04 1c 52 45 41 44			.text	4,$1c,"READ"           ; $ad READ
->88e7	03 e4 52 45 4d				.text	3,$e4,"REM"            ; $ae REM
->88ec	06 e0 52 45 54 55 52 4e			.text	6,$e0,"RETURN"         ; $af RETURN
->88f4	04 2f 54 48 45 4e			.text	4,$2f,"THEN"           ; $b0 THEN
->88fa	02 a3 54 4f				.text	2,$a3,"TO"             ; $b1 TO
->88fe	ff					.text	$FF
-.88ff					KeywordSet1:
->88ff	00 65					.text	0,$65,""               ; $80 !0:EOF
->8901	00 58					.text	0,$58,""               ; $81 !1:SH1
->8903	00 5a					.text	0,$5a,""               ; $82 !2:SH2
->8905	05 67 43 4c 45 41 52			.text	5,$67,"CLEAR"          ; $83 CLEAR
->890c	03 d7 45 4e 44				.text	3,$d7,"END"            ; $84 END
->8911	04 3c 4c 49 53 54			.text	4,$3c,"LIST"           ; $85 LIST
->8917	03 ea 4e 45 57				.text	3,$ea,"NEW"            ; $86 NEW
->891c	07 24 52 45 53 54 4f 52			.text	7,$24,"RESTORE"        ; $87 RESTORE
->8924	45
->8925	03 f5 52 55 4e				.text	3,$f5,"RUN"            ; $88 RUN
->892a	04 46 53 54 4f 50			.text	4,$46,"STOP"           ; $89 STOP
->8930	ff					.text	$FF
-.8931					KeywordSet2:
->8931	00 65					.text	0,$65,""               ; $80 !0:EOF
->8933	00 58					.text	0,$58,""               ; $81 !1:SH1
->8935	00 5a					.text	0,$5a,""               ; $82 !2:SH2
->8937	ff					.text	$FF
+.87cf					KeywordSet0:
+>87cf	00 65					.text	0,$65,""               ; $80 !0:EOF
+>87d1	00 58					.text	0,$58,""               ; $81 !1:SH1
+>87d3	00 5a					.text	0,$5a,""               ; $82 !2:SH2
+>87d5	04 fe 41 42 53 28			.text	4,$fe,"ABS("           ; $83 ABS(
+>87db	06 93 41 4c 4c 4f 43 28			.text	6,$93,"ALLOC("         ; $84 ALLOC(
+>87e3	04 ff 41 53 43 28			.text	4,$ff,"ASC("           ; $85 ASC(
+>87e9	05 29 43 48 52 24 28			.text	5,$29,"CHR$("          ; $86 CHR$(
+>87f0	04 f4 44 45 43 28			.text	4,$f4,"DEC("           ; $87 DEC(
+>87f6	05 6b 46 41 4c 53 45			.text	5,$6b,"FALSE"          ; $88 FALSE
+>87fd	09 4a 47 45 54 44 41 54			.text	9,$4a,"GETDATE$("      ; $89 GETDATE$(
+>8805	45 24 28
+>8808	09 5b 47 45 54 54 49 4d			.text	9,$5b,"GETTIME$("      ; $8a GETTIME$(
+>8810	45 24 28
+>8813	05 31 48 45 58 24 28			.text	5,$31,"HEX$("          ; $8b HEX$(
+>881a	04 13 49 4e 54 28			.text	4,$13,"INT("           ; $8c INT(
+>8820	06 a7 49 53 56 41 4c 28			.text	6,$a7,"ISVAL("         ; $8d ISVAL(
+>8828	06 77 4c 45 46 54 24 28			.text	6,$77,"LEFT$("         ; $8e LEFT$(
+>8830	04 07 4c 45 4e 28			.text	4,$07,"LEN("           ; $8f LEN(
+>8836	05 26 4d 49 44 24 28			.text	5,$26,"MID$("          ; $90 MID$(
+>883d	03 f1 4e 4f 54				.text	3,$f1,"NOT"            ; $91 NOT
+>8842	04 1d 50 41 47 45			.text	4,$1d,"PAGE"           ; $92 PAGE
+>8848	07 ca 52 49 47 48 54 24			.text	7,$ca,"RIGHT$("        ; $93 RIGHT$(
+>8850	28
+>8851	04 0c 52 4e 44 28			.text	4,$0c,"RND("           ; $94 RND(
+>8857	04 10 53 47 4e 28			.text	4,$10,"SGN("           ; $95 SGN(
+>885d	04 0e 53 50 43 28			.text	4,$0e,"SPC("           ; $96 SPC(
+>8863	05 45 53 54 52 24 28			.text	5,$45,"STR$("          ; $97 STR$(
+>886a	04 40 54 52 55 45			.text	4,$40,"TRUE"           ; $98 TRUE
+>8870	04 0b 56 41 4c 28			.text	4,$0b,"VAL("           ; $99 VAL(
+>8876	03 e7 46 4f 52				.text	3,$e7,"FOR"            ; $9a FOR
+>887b	02 8f 49 46				.text	2,$8f,"IF"             ; $9b IF
+>887f	04 34 50 52 4f 43			.text	4,$34,"PROC"           ; $9c PROC
+>8885	06 c1 52 45 50 45 41 54			.text	6,$c1,"REPEAT"         ; $9d REPEAT
+>888d	05 79 57 48 49 4c 45			.text	5,$79,"WHILE"          ; $9e WHILE
+>8894	05 66 45 4e 44 49 46			.text	5,$66,"ENDIF"          ; $9f ENDIF
+>889b	07 0b 45 4e 44 50 52 4f			.text	7,$0b,"ENDPROC"        ; $a0 ENDPROC
+>88a3	43
+>88a4	04 3f 4e 45 58 54			.text	4,$3f,"NEXT"           ; $a1 NEXT
+>88aa	05 8c 55 4e 54 49 4c			.text	5,$8c,"UNTIL"          ; $a2 UNTIL
+>88b1	04 2e 57 45 4e 44			.text	4,$2e,"WEND"           ; $a3 WEND
+>88b7	06 d2 41 53 53 45 52 54			.text	6,$d2,"ASSERT"         ; $a4 ASSERT
+>88bf	04 1c 43 41 4c 4c			.text	4,$1c,"CALL"           ; $a5 CALL
+>88c5	03 e2 43 4c 53				.text	3,$e2,"CLS"            ; $a6 CLS
+>88ca	04 1a 44 41 54 41			.text	4,$1a,"DATA"           ; $a7 DATA
+>88d0	03 da 44 49 4d				.text	3,$da,"DIM"            ; $a8 DIM
+>88d5	05 80 47 4f 53 55 42			.text	5,$80,"GOSUB"          ; $a9 GOSUB
+>88dc	04 39 47 4f 54 4f			.text	4,$39,"GOTO"           ; $aa GOTO
+>88e2	03 e5 4c 45 54				.text	3,$e5,"LET"            ; $ab LET
+>88e7	05 8d 50 52 49 4e 54			.text	5,$8d,"PRINT"          ; $ac PRINT
+>88ee	04 1c 52 45 41 44			.text	4,$1c,"READ"           ; $ad READ
+>88f4	03 e4 52 45 4d				.text	3,$e4,"REM"            ; $ae REM
+>88f9	06 e0 52 45 54 55 52 4e			.text	6,$e0,"RETURN"         ; $af RETURN
+>8901	04 2f 54 48 45 4e			.text	4,$2f,"THEN"           ; $b0 THEN
+>8907	02 a3 54 4f				.text	2,$a3,"TO"             ; $b1 TO
+>890b	ff					.text	$FF
+.890c					KeywordSet1:
+>890c	00 65					.text	0,$65,""               ; $80 !0:EOF
+>890e	00 58					.text	0,$58,""               ; $81 !1:SH1
+>8910	00 5a					.text	0,$5a,""               ; $82 !2:SH2
+>8912	05 67 43 4c 45 41 52			.text	5,$67,"CLEAR"          ; $83 CLEAR
+>8919	03 d7 45 4e 44				.text	3,$d7,"END"            ; $84 END
+>891e	04 3c 4c 49 53 54			.text	4,$3c,"LIST"           ; $85 LIST
+>8924	03 ea 4e 45 57				.text	3,$ea,"NEW"            ; $86 NEW
+>8929	07 24 52 45 53 54 4f 52			.text	7,$24,"RESTORE"        ; $87 RESTORE
+>8931	45
+>8932	03 f5 52 55 4e				.text	3,$f5,"RUN"            ; $88 RUN
+>8937	04 46 53 54 4f 50			.text	4,$46,"STOP"           ; $89 STOP
+>893d	ff					.text	$FF
+.893e					KeywordSet2:
+>893e	00 65					.text	0,$65,""               ; $80 !0:EOF
+>8940	00 58					.text	0,$58,""               ; $81 !1:SH1
+>8942	00 5a					.text	0,$5a,""               ; $82 !2:SH2
+>8944	ff					.text	$FF
 
 ;******  Return to file: ./tokeniser/tokenise.asm
 
-.8938					TokeniseLine:
-.8938	20 c0 8a	jsr $8ac0			jsr 	FixLineBufferCase 			; fix line case
-.893b	a9 03		lda #$03			lda 	#3 							; reset the token buffer to empty
-.893d	8d 06 07	sta $0706			sta 	tokenOffset
-.8940	9c 07 07	stz $0707			stz 	tokenLineNumber
-.8943	9c 08 07	stz $0708			stz 	tokenLineNumber+1
-.8946	a2 ff		ldx #$ff			ldx 	#$FF
-.8948					_TKFindFirst:
-.8948	e8		inx				inx
-.8949	bd 06 08	lda $0806,x			lda 	lineBuffer,x
-.894c	f0 79		beq $89c7			beq 	_TKExit
-.894e	c9 20		cmp #$20			cmp 	#' '
-.8950	90 f6		bcc $8948			bcc 	_TKFindFirst
-.8952	c9 30		cmp #$30			cmp 	#'0'
-.8954	90 07		bcc $895d			bcc 	_TKNoLineNumber
-.8956	c9 3a		cmp #$3a			cmp 	#'9'+1
-.8958	b0 03		bcs $895d			bcs 	_TKNoLineNumber
-.895a	20 ea 8a	jsr $8aea			jsr 	TokeniseExtractLineNumber
-.895d					_TKNoLineNumber:
-.895d					_TKTokeniseLoop:
-.895d	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; next character, exit if zero EOL.
-.8960	f0 65		beq $89c7			beq 	_TKExit
-.8962	e8		inx				inx
-.8963	c9 20		cmp #$20			cmp 	#' '
-.8965	f0 f6		beq $895d			beq 	_TKTokeniseLoop 			; keep looping if space found.
-.8967	ca		dex				dex 								; undo last get, A contains character, X is position.
-.8968	c9 5f		cmp #$5f			cmp 	#'_'						; _ A-Z is identifier *or* token
-.896a	f0 61		beq $89cd			beq 	_TKTokeniseIdentifier
-.896c	c9 41		cmp #$41			cmp 	#'A'
-.896e	90 04		bcc $8974			bcc 	_TKTokenisePunctuation
-.8970	c9 5b		cmp #$5b			cmp 	#'Z'+1
-.8972	90 59		bcc $89cd			bcc 	_TKTokeniseIdentifier
-.8974					_TKTokenisePunctuation:
-.8974	c9 22		cmp #$22			cmp 	#'"'						; quoted string ?
-.8976	f0 27		beq $899f			beq 	_TKString
-.8978	c9 23		cmp #$23			cmp 	#'#'						; hexadecimal constant (# only appears at end of identifiers)
-.897a	f0 28		beq $89a4			beq 	_TKHexConstant
-.897c	c9 3c		cmp #$3c			cmp 	#'<' 						; check for < > handlers.
-.897e	f0 29		beq $89a9			beq 	_TKCheckDouble
-.8980	c9 3e		cmp #$3e			cmp 	#'>'
-.8982	f0 25		beq $89a9			beq 	_TKCheckDouble
-.8984					_TKStandardPunctuation:
-.8984	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; get it back.
-.8987	c9 40		cmp #$40			cmp 	#64 						; are we >= 64
-.8989	90 0e		bcc $8999			bcc 	_TKNoShift
-.898b	48		pha				pha 								; save
-.898c	29 07		and #$07			and 	#7 							; lower 3 bits in zTemp0
-.898e	85 36		sta $36				sta 	zTemp0
-.8990	68		pla				pla
-.8991	29 20		and #$20			and 	#32 						; bit 5
-.8993	4a		lsr a				lsr 	a 							; shift into bit 3
-.8994	4a		lsr a				lsr 	a
-.8995	05 36		ora $36				ora 	zTemp0
-.8997	09 10		ora #$10			ora 	#$10						; now in the range 16-31
-.8999					_TKNoShift:
-.8999	20 2f 8b	jsr $8b2f			jsr 	TokeniseWriteByte 			; write the punctuation character
-.899c	e8		inx				inx 								; consume the character
-.899d	80 be		bra $895d			bra 	_TKTokeniseLoop 			; and loop round again.
-.899f					_TKString:
-.899f	20 4f 8a	jsr $8a4f			jsr 	TokeniseString
-.89a2	80 b9		bra $895d			bra 	_TKTokeniseLoop
-.89a4					_TKHexConstant:
-.89a4	20 8a 8a	jsr $8a8a			jsr 	TokeniseHexConstant
-.89a7	80 b4		bra $895d			bra 	_TKTokeniseLoop
-.89a9					_TKCheckDouble:
-.89a9	bd 07 08	lda $0807,x			lda 	lineBuffer+1,x 				; get next character
-.89ac	c9 3c		cmp #$3c			cmp 	#'<'						; if not < = > which are ASCII consecutive go back
-.89ae	90 d4		bcc $8984			bcc 	_TKStandardPunctuation
-.89b0	c9 3f		cmp #$3f			cmp 	#'>'+1
-.89b2	b0 d0		bcs $8984			bcs 	_TKStandardPunctuation
-.89b4	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; this is < (60) or > (62)
-.89b7	29 02		and #$02			and 	#2 							; now < (0) or > (2)
-.89b9	0a		asl a				asl 	a 							; now < (0) or > (4), CC also
-.89ba	7d 07 08	adc $0807,x			adc 	lineBuffer+1,x 				; add < = > codes - < code
-.89bd	38		sec				sec
-.89be	e9 3c		sbc #$3c			sbc 	#'<'
-.89c0	20 2f 8b	jsr $8b2f			jsr 	TokeniseWriteByte 			; this is in the range 0-7
-.89c3	e8		inx				inx 								; consume both
-.89c4	e8		inx				inx
-.89c5	80 96		bra $895d			bra 	_TKTokeniseLoop
-.89c7	a9 80		lda #$80	_TKExit:lda 	#KWC_EOL 					; write end of line byte
-.89c9	20 2f 8b	jsr $8b2f			jsr 	TokeniseWriteByte
-.89cc	60		rts				rts
-.89cd					_TKTokeniseIdentifier:
-.89cd	8e 00 07	stx $0700			stx 	identStart 					; save start
-.89d0	9c 04 07	stz $0704			stz 	identTypeByte 				; zero the type byte
-.89d3					_TKCheckLoop:
-.89d3	e8		inx				inx 								; look at next, we know first is identifier.
-.89d4	bd 06 08	lda $0806,x			lda  	lineBuffer,x
-.89d7	c9 5f		cmp #$5f			cmp 	#"_" 						; legal char _ 0-9 A-Z
-.89d9	f0 f8		beq $89d3			beq 	_TKCheckLoop
-.89db	c9 30		cmp #$30			cmp	 	#"0"
-.89dd	90 0c		bcc $89eb			bcc 	_TKEndIdentifier
-.89df	c9 3a		cmp #$3a			cmp 	#"9"+1
-.89e1	90 f0		bcc $89d3			bcc 	_TKCheckLoop
-.89e3	c9 41		cmp #$41			cmp	 	#"A"
-.89e5	90 04		bcc $89eb			bcc 	_TKEndIdentifier
-.89e7	c9 5b		cmp #$5b			cmp 	#"Z"+1
-.89e9	90 e8		bcc $89d3			bcc 	_TKCheckLoop
-.89eb					_TKEndIdentifier:
-.89eb	8e 01 07	stx $0701			stx 	identTypeStart 				; save start of type text (if any !)
-.89ee	a0 08		ldy #$08			ldy 	#$08 						; this is the identifier type byte for #
-.89f0	c9 23		cmp #$23			cmp 	#"#"						; followed by #
-.89f2	f0 06		beq $89fa			beq 	_TKHasTypeCharacter
-.89f4	a0 10		ldy #$10			ldy 	#$10 						; this is the identifier type byte for $
-.89f6	c9 24		cmp #$24			cmp 	#"$"						; followed by $ or #
-.89f8	d0 07		bne $8a01			bne 	_TKNoTypeCharacter
-.89fa					_TKHasTypeCharacter:
-.89fa	8c 04 07	sty $0704			sty 	identTypeByte 				; has # or $, save the type
-.89fd	e8		inx				inx 								; read next
-.89fe	bd 06 08	lda $0806,x			lda 	lineBuffer,x
-.8a01					_TKNoTypeCharacter:
-.8a01	c9 28		cmp #$28			cmp 	#"("						; is it open parenthesis (e.g. array)
-.8a03	d0 09		bne $8a0e			bne 	_TKNoArray
-.8a05	e8		inx				inx 								; skip the (
-.8a06	ad 04 07	lda $0704			lda 	identTypeByte 				; set bit 2 (e.g. array)
-.8a09	09 04		ora #$04			ora 	#$04
-.8a0b	8d 04 07	sta $0704			sta 	identTypeByte
-.8a0e					_TKNoArray:
-.8a0e	8e 02 07	stx $0702			stx 	identTypeEnd 				; save end marker, e.g. continue from here.
-.8a11	20 ab 8a	jsr $8aab			jsr 	TokeniseCalculateHash 		; calculate the has for those tokens
-.8a14	a0 87		ldy #$87			ldy 	#(KeywordSet0) >> 8
-.8a16	a9 c2		lda #$c2			lda 	#(KeywordSet0) & $FF
-.8a18	20 69 87	jsr $8769			jsr 	TokeniseSearchTable
-.8a1b	a2 00		ldx #$00			ldx 	#0
-.8a1d	b0 1f		bcs $8a3e			bcs 	_TKFoundToken
-.8a1f	a0 88		ldy #$88			ldy 	#(KeywordSet1) >> 8
-.8a21	a9 ff		lda #$ff			lda 	#(KeywordSet1) & $FF
-.8a23	20 69 87	jsr $8769			jsr 	TokeniseSearchTable
-.8a26	a2 81		ldx #$81			ldx 	#$81
-.8a28	b0 14		bcs $8a3e			bcs 	_TKFoundToken
-.8a2a	a0 88		ldy #$88			ldy 	#(KeywordSet1) >> 8
-.8a2c	a9 ff		lda #$ff			lda 	#(KeywordSet1) & $FF
-.8a2e	20 69 87	jsr $8769			jsr 	TokeniseSearchTable
-.8a31	a2 82		ldx #$82			ldx 	#$82
-.8a33	b0 09		bcs $8a3e			bcs 	_TKFoundToken
-.8a35	20 3b 8b	jsr $8b3b			jsr 	CheckCreateVariableRecord 	; failed all, it's a variable, create record if does not exist.
-.8a38	ae 02 07	ldx $0702			ldx 	identTypeEnd 				; X points to following byte
-.8a3b	4c 5d 89	jmp $895d			jmp 	_TKTokeniseLoop 			; and go round again.
-.8a3e					_TKFoundToken:
-.8a3e	48		pha				pha 								; save token
-.8a3f	8a		txa				txa 								; shift in X, is there one ?
-.8a40	f0 03		beq $8a45			beq 	_TKNoTShift
-.8a42	20 2f 8b	jsr $8b2f			jsr 	TokeniseWriteByte 			; if so, write it out
-.8a45					_TKNoTShift:
-.8a45	68		pla				pla 								; restore and write token
-.8a46	20 2f 8b	jsr $8b2f			jsr 	TokeniseWriteByte
-.8a49	ae 02 07	ldx $0702			ldx 	identTypeEnd 				; X points to following byte
-.8a4c	4c 5d 89	jmp $895d			jmp 	_TKTokeniseLoop 			; and go round again.
-.8a4f					TokeniseString:
-.8a4f	a9 ff		lda #$ff			lda 	#KWC_STRING 				; string token.
-.8a51	20 2f 8b	jsr $8b2f			jsr 	TokeniseWriteByte
-.8a54	e8		inx				inx									; start of quoted string.
-.8a55	da		phx				phx 								; push start of string on top
-.8a56	ca		dex				dex
-.8a57					_TSFindEnd:
-.8a57	e8		inx				inx
-.8a58	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; next character
-.8a5b	f0 04		beq $8a61			beq 	_TSEndOfString
-.8a5d	c9 22		cmp #$22			cmp 	#'"'
-.8a5f	d0 f6		bne $8a57			bne 	_TSFindEnd
-.8a61					_TSEndOfString:
-.8a61	7a		ply				ply  								; so now Y is first character, X is character after end.
-.8a62	48		pha				pha 								; save terminating character
-.8a63	20 6b 8a	jsr $8a6b			jsr 	TOWriteBlockXY 				; write X to Y as a data block
-.8a66	68		pla				pla 								; terminating character
-.8a67	f0 01		beq $8a6a			beq 	_TSNotQuote					; if it wasn't EOS skip it
-.8a69	e8		inx				inx
-.8a6a					_TSNotQuote:
-.8a6a	60		rts				rts
-.8a6b					TOWriteBlockXY:
-.8a6b	86 36		stx $36				stx 	zTemp0 						; write end character
-.8a6d	98		tya				tya
-.8a6e	49 ff		eor #$ff			eor 	#$FF
-.8a70	38		sec				sec
-.8a71	65 36		adc $36				adc 	zTemp0
-.8a73	1a		inc a				inc 	a 							; one extra for NULL
-.8a74	20 2f 8b	jsr $8b2f			jsr 	TokeniseWriteByte
-.8a77					_TOBlockLoop:
-.8a77	c4 36		cpy $36				cpy 	zTemp0
-.8a79	f0 09		beq $8a84			beq 	_TOBlockExit
-.8a7b	b9 06 08	lda $0806,y			lda 	lineBuffer,y
-.8a7e	20 2f 8b	jsr $8b2f			jsr 	TokeniseWriteByte
-.8a81	c8		iny				iny
-.8a82	80 f3		bra $8a77			bra 	_TOBlockLoop
-.8a84					_TOBlockExit:
-.8a84	a9 00		lda #$00			lda 	#0
-.8a86	20 2f 8b	jsr $8b2f			jsr 	TokeniseWriteByte
-.8a89	60		rts				rts
-.8a8a					TokeniseHexConstant:
-.8a8a	a9 fe		lda #$fe			lda 	#KWC_HEXCONST 				; hex constant token.
-.8a8c	20 2f 8b	jsr $8b2f			jsr 	TokeniseWriteByte
-.8a8f	e8		inx				inx									; start of quoted string.
-.8a90	da		phx				phx 								; push start of constant on top
-.8a91	ca		dex				dex
-.8a92					_THFindLoop:
-.8a92	e8		inx				inx
-.8a93	bd 06 08	lda $0806,x			lda 	lineBuffer,x
-.8a96	c9 30		cmp #$30			cmp 	#"0"
-.8a98	90 0c		bcc $8aa6			bcc 	_THFoundEnd
-.8a9a	c9 3a		cmp #$3a			cmp 	#"9"+1
-.8a9c	90 f4		bcc $8a92			bcc 	_THFindLoop
-.8a9e	c9 41		cmp #$41			cmp 	#"A"
-.8aa0	90 04		bcc $8aa6			bcc 	_THFoundEnd
-.8aa2	c9 47		cmp #$47			cmp 	#"F"+1
-.8aa4	90 ec		bcc $8a92			bcc 	_THFindLoop
-.8aa6					_THFoundEnd:
-.8aa6	7a		ply				ply 								; restore start
-.8aa7	20 6b 8a	jsr $8a6b			jsr 	TOWriteBlockXY 				; output the block
-.8aaa	60		rts				rts
+.8945					TokeniseLine:
+.8945	20 cd 8a	jsr $8acd			jsr 	FixLineBufferCase 			; fix line case
+.8948	a9 03		lda #$03			lda 	#3 							; reset the token buffer to empty
+.894a	8d 06 07	sta $0706			sta 	tokenOffset
+.894d	9c 07 07	stz $0707			stz 	tokenLineNumber
+.8950	9c 08 07	stz $0708			stz 	tokenLineNumber+1
+.8953	a2 ff		ldx #$ff			ldx 	#$FF
+.8955					_TKFindFirst:
+.8955	e8		inx				inx
+.8956	bd 06 08	lda $0806,x			lda 	lineBuffer,x
+.8959	f0 79		beq $89d4			beq 	_TKExit
+.895b	c9 20		cmp #$20			cmp 	#' '
+.895d	90 f6		bcc $8955			bcc 	_TKFindFirst
+.895f	c9 30		cmp #$30			cmp 	#'0'
+.8961	90 07		bcc $896a			bcc 	_TKNoLineNumber
+.8963	c9 3a		cmp #$3a			cmp 	#'9'+1
+.8965	b0 03		bcs $896a			bcs 	_TKNoLineNumber
+.8967	20 f7 8a	jsr $8af7			jsr 	TokeniseExtractLineNumber
+.896a					_TKNoLineNumber:
+.896a					_TKTokeniseLoop:
+.896a	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; next character, exit if zero EOL.
+.896d	f0 65		beq $89d4			beq 	_TKExit
+.896f	e8		inx				inx
+.8970	c9 20		cmp #$20			cmp 	#' '
+.8972	f0 f6		beq $896a			beq 	_TKTokeniseLoop 			; keep looping if space found.
+.8974	ca		dex				dex 								; undo last get, A contains character, X is position.
+.8975	c9 5f		cmp #$5f			cmp 	#'_'						; _ A-Z is identifier *or* token
+.8977	f0 61		beq $89da			beq 	_TKTokeniseIdentifier
+.8979	c9 41		cmp #$41			cmp 	#'A'
+.897b	90 04		bcc $8981			bcc 	_TKTokenisePunctuation
+.897d	c9 5b		cmp #$5b			cmp 	#'Z'+1
+.897f	90 59		bcc $89da			bcc 	_TKTokeniseIdentifier
+.8981					_TKTokenisePunctuation:
+.8981	c9 22		cmp #$22			cmp 	#'"'						; quoted string ?
+.8983	f0 27		beq $89ac			beq 	_TKString
+.8985	c9 23		cmp #$23			cmp 	#'#'						; hexadecimal constant (# only appears at end of identifiers)
+.8987	f0 28		beq $89b1			beq 	_TKHexConstant
+.8989	c9 3c		cmp #$3c			cmp 	#'<' 						; check for < > handlers.
+.898b	f0 29		beq $89b6			beq 	_TKCheckDouble
+.898d	c9 3e		cmp #$3e			cmp 	#'>'
+.898f	f0 25		beq $89b6			beq 	_TKCheckDouble
+.8991					_TKStandardPunctuation:
+.8991	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; get it back.
+.8994	c9 40		cmp #$40			cmp 	#64 						; are we >= 64
+.8996	90 0e		bcc $89a6			bcc 	_TKNoShift
+.8998	48		pha				pha 								; save
+.8999	29 07		and #$07			and 	#7 							; lower 3 bits in zTemp0
+.899b	85 36		sta $36				sta 	zTemp0
+.899d	68		pla				pla
+.899e	29 20		and #$20			and 	#32 						; bit 5
+.89a0	4a		lsr a				lsr 	a 							; shift into bit 3
+.89a1	4a		lsr a				lsr 	a
+.89a2	05 36		ora $36				ora 	zTemp0
+.89a4	09 10		ora #$10			ora 	#$10						; now in the range 16-31
+.89a6					_TKNoShift:
+.89a6	20 3c 8b	jsr $8b3c			jsr 	TokeniseWriteByte 			; write the punctuation character
+.89a9	e8		inx				inx 								; consume the character
+.89aa	80 be		bra $896a			bra 	_TKTokeniseLoop 			; and loop round again.
+.89ac					_TKString:
+.89ac	20 5c 8a	jsr $8a5c			jsr 	TokeniseString
+.89af	80 b9		bra $896a			bra 	_TKTokeniseLoop
+.89b1					_TKHexConstant:
+.89b1	20 97 8a	jsr $8a97			jsr 	TokeniseHexConstant
+.89b4	80 b4		bra $896a			bra 	_TKTokeniseLoop
+.89b6					_TKCheckDouble:
+.89b6	bd 07 08	lda $0807,x			lda 	lineBuffer+1,x 				; get next character
+.89b9	c9 3c		cmp #$3c			cmp 	#'<'						; if not < = > which are ASCII consecutive go back
+.89bb	90 d4		bcc $8991			bcc 	_TKStandardPunctuation
+.89bd	c9 3f		cmp #$3f			cmp 	#'>'+1
+.89bf	b0 d0		bcs $8991			bcs 	_TKStandardPunctuation
+.89c1	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; this is < (60) or > (62)
+.89c4	29 02		and #$02			and 	#2 							; now < (0) or > (2)
+.89c6	0a		asl a				asl 	a 							; now < (0) or > (4), CC also
+.89c7	7d 07 08	adc $0807,x			adc 	lineBuffer+1,x 				; add < = > codes - < code
+.89ca	38		sec				sec
+.89cb	e9 3c		sbc #$3c			sbc 	#'<'
+.89cd	20 3c 8b	jsr $8b3c			jsr 	TokeniseWriteByte 			; this is in the range 0-7
+.89d0	e8		inx				inx 								; consume both
+.89d1	e8		inx				inx
+.89d2	80 96		bra $896a			bra 	_TKTokeniseLoop
+.89d4	a9 80		lda #$80	_TKExit:lda 	#KWC_EOL 					; write end of line byte
+.89d6	20 3c 8b	jsr $8b3c			jsr 	TokeniseWriteByte
+.89d9	60		rts				rts
+.89da					_TKTokeniseIdentifier:
+.89da	8e 00 07	stx $0700			stx 	identStart 					; save start
+.89dd	9c 04 07	stz $0704			stz 	identTypeByte 				; zero the type byte
+.89e0					_TKCheckLoop:
+.89e0	e8		inx				inx 								; look at next, we know first is identifier.
+.89e1	bd 06 08	lda $0806,x			lda  	lineBuffer,x
+.89e4	c9 5f		cmp #$5f			cmp 	#"_" 						; legal char _ 0-9 A-Z
+.89e6	f0 f8		beq $89e0			beq 	_TKCheckLoop
+.89e8	c9 30		cmp #$30			cmp	 	#"0"
+.89ea	90 0c		bcc $89f8			bcc 	_TKEndIdentifier
+.89ec	c9 3a		cmp #$3a			cmp 	#"9"+1
+.89ee	90 f0		bcc $89e0			bcc 	_TKCheckLoop
+.89f0	c9 41		cmp #$41			cmp	 	#"A"
+.89f2	90 04		bcc $89f8			bcc 	_TKEndIdentifier
+.89f4	c9 5b		cmp #$5b			cmp 	#"Z"+1
+.89f6	90 e8		bcc $89e0			bcc 	_TKCheckLoop
+.89f8					_TKEndIdentifier:
+.89f8	8e 01 07	stx $0701			stx 	identTypeStart 				; save start of type text (if any !)
+.89fb	a0 08		ldy #$08			ldy 	#$08 						; this is the identifier type byte for #
+.89fd	c9 23		cmp #$23			cmp 	#"#"						; followed by #
+.89ff	f0 06		beq $8a07			beq 	_TKHasTypeCharacter
+.8a01	a0 10		ldy #$10			ldy 	#$10 						; this is the identifier type byte for $
+.8a03	c9 24		cmp #$24			cmp 	#"$"						; followed by $ or #
+.8a05	d0 07		bne $8a0e			bne 	_TKNoTypeCharacter
+.8a07					_TKHasTypeCharacter:
+.8a07	8c 04 07	sty $0704			sty 	identTypeByte 				; has # or $, save the type
+.8a0a	e8		inx				inx 								; read next
+.8a0b	bd 06 08	lda $0806,x			lda 	lineBuffer,x
+.8a0e					_TKNoTypeCharacter:
+.8a0e	c9 28		cmp #$28			cmp 	#"("						; is it open parenthesis (e.g. array)
+.8a10	d0 09		bne $8a1b			bne 	_TKNoArray
+.8a12	e8		inx				inx 								; skip the (
+.8a13	ad 04 07	lda $0704			lda 	identTypeByte 				; set bit 2 (e.g. array)
+.8a16	09 04		ora #$04			ora 	#$04
+.8a18	8d 04 07	sta $0704			sta 	identTypeByte
+.8a1b					_TKNoArray:
+.8a1b	8e 02 07	stx $0702			stx 	identTypeEnd 				; save end marker, e.g. continue from here.
+.8a1e	20 b8 8a	jsr $8ab8			jsr 	TokeniseCalculateHash 		; calculate the has for those tokens
+.8a21	a0 87		ldy #$87			ldy 	#(KeywordSet0) >> 8
+.8a23	a9 cf		lda #$cf			lda 	#(KeywordSet0) & $FF
+.8a25	20 76 87	jsr $8776			jsr 	TokeniseSearchTable
+.8a28	a2 00		ldx #$00			ldx 	#0
+.8a2a	b0 1f		bcs $8a4b			bcs 	_TKFoundToken
+.8a2c	a0 89		ldy #$89			ldy 	#(KeywordSet1) >> 8
+.8a2e	a9 0c		lda #$0c			lda 	#(KeywordSet1) & $FF
+.8a30	20 76 87	jsr $8776			jsr 	TokeniseSearchTable
+.8a33	a2 81		ldx #$81			ldx 	#$81
+.8a35	b0 14		bcs $8a4b			bcs 	_TKFoundToken
+.8a37	a0 89		ldy #$89			ldy 	#(KeywordSet1) >> 8
+.8a39	a9 0c		lda #$0c			lda 	#(KeywordSet1) & $FF
+.8a3b	20 76 87	jsr $8776			jsr 	TokeniseSearchTable
+.8a3e	a2 82		ldx #$82			ldx 	#$82
+.8a40	b0 09		bcs $8a4b			bcs 	_TKFoundToken
+.8a42	20 48 8b	jsr $8b48			jsr 	CheckCreateVariableRecord 	; failed all, it's a variable, create record if does not exist.
+.8a45	ae 02 07	ldx $0702			ldx 	identTypeEnd 				; X points to following byte
+.8a48	4c 6a 89	jmp $896a			jmp 	_TKTokeniseLoop 			; and go round again.
+.8a4b					_TKFoundToken:
+.8a4b	48		pha				pha 								; save token
+.8a4c	8a		txa				txa 								; shift in X, is there one ?
+.8a4d	f0 03		beq $8a52			beq 	_TKNoTShift
+.8a4f	20 3c 8b	jsr $8b3c			jsr 	TokeniseWriteByte 			; if so, write it out
+.8a52					_TKNoTShift:
+.8a52	68		pla				pla 								; restore and write token
+.8a53	20 3c 8b	jsr $8b3c			jsr 	TokeniseWriteByte
+.8a56	ae 02 07	ldx $0702			ldx 	identTypeEnd 				; X points to following byte
+.8a59	4c 6a 89	jmp $896a			jmp 	_TKTokeniseLoop 			; and go round again.
+.8a5c					TokeniseString:
+.8a5c	a9 ff		lda #$ff			lda 	#KWC_STRING 				; string token.
+.8a5e	20 3c 8b	jsr $8b3c			jsr 	TokeniseWriteByte
+.8a61	e8		inx				inx									; start of quoted string.
+.8a62	da		phx				phx 								; push start of string on top
+.8a63	ca		dex				dex
+.8a64					_TSFindEnd:
+.8a64	e8		inx				inx
+.8a65	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; next character
+.8a68	f0 04		beq $8a6e			beq 	_TSEndOfString
+.8a6a	c9 22		cmp #$22			cmp 	#'"'
+.8a6c	d0 f6		bne $8a64			bne 	_TSFindEnd
+.8a6e					_TSEndOfString:
+.8a6e	7a		ply				ply  								; so now Y is first character, X is character after end.
+.8a6f	48		pha				pha 								; save terminating character
+.8a70	20 78 8a	jsr $8a78			jsr 	TOWriteBlockXY 				; write X to Y as a data block
+.8a73	68		pla				pla 								; terminating character
+.8a74	f0 01		beq $8a77			beq 	_TSNotQuote					; if it wasn't EOS skip it
+.8a76	e8		inx				inx
+.8a77					_TSNotQuote:
+.8a77	60		rts				rts
+.8a78					TOWriteBlockXY:
+.8a78	86 36		stx $36				stx 	zTemp0 						; write end character
+.8a7a	98		tya				tya
+.8a7b	49 ff		eor #$ff			eor 	#$FF
+.8a7d	38		sec				sec
+.8a7e	65 36		adc $36				adc 	zTemp0
+.8a80	1a		inc a				inc 	a 							; one extra for NULL
+.8a81	20 3c 8b	jsr $8b3c			jsr 	TokeniseWriteByte
+.8a84					_TOBlockLoop:
+.8a84	c4 36		cpy $36				cpy 	zTemp0
+.8a86	f0 09		beq $8a91			beq 	_TOBlockExit
+.8a88	b9 06 08	lda $0806,y			lda 	lineBuffer,y
+.8a8b	20 3c 8b	jsr $8b3c			jsr 	TokeniseWriteByte
+.8a8e	c8		iny				iny
+.8a8f	80 f3		bra $8a84			bra 	_TOBlockLoop
+.8a91					_TOBlockExit:
+.8a91	a9 00		lda #$00			lda 	#0
+.8a93	20 3c 8b	jsr $8b3c			jsr 	TokeniseWriteByte
+.8a96	60		rts				rts
+.8a97					TokeniseHexConstant:
+.8a97	a9 fe		lda #$fe			lda 	#KWC_HEXCONST 				; hex constant token.
+.8a99	20 3c 8b	jsr $8b3c			jsr 	TokeniseWriteByte
+.8a9c	e8		inx				inx									; start of quoted string.
+.8a9d	da		phx				phx 								; push start of constant on top
+.8a9e	ca		dex				dex
+.8a9f					_THFindLoop:
+.8a9f	e8		inx				inx
+.8aa0	bd 06 08	lda $0806,x			lda 	lineBuffer,x
+.8aa3	c9 30		cmp #$30			cmp 	#"0"
+.8aa5	90 0c		bcc $8ab3			bcc 	_THFoundEnd
+.8aa7	c9 3a		cmp #$3a			cmp 	#"9"+1
+.8aa9	90 f4		bcc $8a9f			bcc 	_THFindLoop
+.8aab	c9 41		cmp #$41			cmp 	#"A"
+.8aad	90 04		bcc $8ab3			bcc 	_THFoundEnd
+.8aaf	c9 47		cmp #$47			cmp 	#"F"+1
+.8ab1	90 ec		bcc $8a9f			bcc 	_THFindLoop
+.8ab3					_THFoundEnd:
+.8ab3	7a		ply				ply 								; restore start
+.8ab4	20 78 8a	jsr $8a78			jsr 	TOWriteBlockXY 				; output the block
+.8ab7	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./tokeniser/utility.asm
 
-.8aab					TokeniseCalculateHash:
-.8aab	da		phx				phx
-.8aac	ae 00 07	ldx $0700			ldx 	identStart 					; needs to be same as in tokens.py - simple sum
-.8aaf	a9 00		lda #$00			lda 	#0
-.8ab1					_TCHLoop:
-.8ab1	18		clc				clc
-.8ab2	7d 06 08	adc $0806,x			adc 	lineBuffer,x
-.8ab5	e8		inx				inx
-.8ab6	ec 02 07	cpx $0702			cpx 	identTypeEnd 				; do the whole thing including type and array markers.
-.8ab9	d0 f6		bne $8ab1			bne 	_TCHLoop
-.8abb	8d 03 07	sta $0703			sta 	identHash 					; save the hash
-.8abe	fa		plx				plx
-.8abf	60		rts				rts
-.8ac0					FixLineBufferCase:
-.8ac0	a2 00		ldx #$00			ldx 	#0
-.8ac2					_FLBCLoop:
-.8ac2	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; get next character
-.8ac5	f0 22		beq $8ae9			beq 	_FLBCExit 					; end of string.
-.8ac7	c9 22		cmp #$22			cmp 	#'"'						; quote, go to in quotes
-.8ac9	f0 11		beq $8adc			beq 	_FLBCInQuotes
-.8acb	e8		inx				inx
-.8acc	c9 61		cmp #$61			cmp 	#'a'						; needs capitalising ?
-.8ace	90 f2		bcc $8ac2			bcc 	_FLBCLoop
-.8ad0	c9 7b		cmp #$7b			cmp 	#'z'+1
-.8ad2	b0 ee		bcs $8ac2			bcs 	_FLBCLoop
-.8ad4	38		sec				sec 								; make U/C
-.8ad5	e9 20		sbc #$20			sbc 	#32
-.8ad7	9d 05 08	sta $0805,x			sta	 	lineBuffer-1,x 				; write back
-.8ada	80 e6		bra $8ac2			bra 	_FLBCLoop
-.8adc					_FLBCInQuotes:
-.8adc	e8		inx				inx 								; advance
-.8add	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; get next
-.8ae0	f0 07		beq $8ae9			beq 	_FLBCExit 					; exit on EOS
-.8ae2	c9 22		cmp #$22			cmp 	#'"' 				 		; until " found
-.8ae4	d0 f6		bne $8adc			bne 	_FLBCInQuotes
-.8ae6	e8		inx				inx 								; skip over it
-.8ae7	80 d9		bra $8ac2			bra 	_FLBCLoop
-.8ae9					_FLBCExit:
-.8ae9	60		rts				rts
-.8aea					TokeniseExtractLineNumber:
-.8aea	ad 08 07	lda $0708			lda 	tokenLineNumber+1 			; push current value on stack
-.8aed	48		pha				pha
-.8aee	ad 07 07	lda $0707			lda 	tokenLineNumber
-.8af1	48		pha				pha
-.8af2	20 28 8b	jsr $8b28			jsr 	_TELNTimes2 				; line # x 4
-.8af5	20 28 8b	jsr $8b28			jsr 	_TELNTimes2 				; line # x 2
-.8af8	18		clc				clc 								; add stacked value
-.8af9	68		pla				pla
-.8afa	6d 07 07	adc $0707			adc 	tokenLineNumber
-.8afd	8d 07 07	sta $0707			sta 	tokenLineNumber
-.8b00	68		pla				pla
-.8b01	6d 08 07	adc $0708			adc 	tokenLineNumber+1
-.8b04	8d 08 07	sta $0708			sta 	tokenLineNumber+1 			; line # x 5
-.8b07	20 28 8b	jsr $8b28			jsr 	_TELNTimes2 				; line # x 10
-.8b0a	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; get and consume character
-.8b0d	e8		inx				inx
-.8b0e	29 0f		and #$0f			and 	#15 						; add to line #
-.8b10	18		clc				clc
-.8b11	6d 07 07	adc $0707			adc 	tokenLineNumber
-.8b14	8d 07 07	sta $0707			sta 	tokenLineNumber
-.8b17	90 03		bcc $8b1c			bcc 	_TLENNoCarry
-.8b19	ee 08 07	inc $0708			inc 	tokenLineNumber+1
-.8b1c					_TLENNoCarry:
-.8b1c	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; more digits ?
-.8b1f	c9 30		cmp #$30			cmp 	#'0'
-.8b21	90 04		bcc $8b27			bcc 	_TLENExit
-.8b23	c9 3a		cmp #$3a			cmp 	#'9'+1
-.8b25	90 c3		bcc $8aea			bcc 	TokeniseExtractLineNumber
-.8b27					_TLENExit:
-.8b27	60		rts				rts
-.8b28					_TELNTimes2:
-.8b28	0e 07 07	asl $0707			asl 	tokenLineNumber
-.8b2b	2e 08 07	rol $0708			rol 	tokenLineNumber+1
-.8b2e	60		rts				rts
-.8b2f					TokeniseWriteByte:
-.8b2f	da		phx				phx
-.8b30	ae 06 07	ldx $0706			ldx 	tokenOffset 				; next slot to write to
-.8b33	9d 06 07	sta $0706,x			sta 	tokenOffset,x 				; write byte out
-.8b36	ee 06 07	inc $0706			inc 	tokenOffset 				; advance slot.
-.8b39	fa		plx				plx
-.8b3a	60		rts				rts
+.8ab8					TokeniseCalculateHash:
+.8ab8	da		phx				phx
+.8ab9	ae 00 07	ldx $0700			ldx 	identStart 					; needs to be same as in tokens.py - simple sum
+.8abc	a9 00		lda #$00			lda 	#0
+.8abe					_TCHLoop:
+.8abe	18		clc				clc
+.8abf	7d 06 08	adc $0806,x			adc 	lineBuffer,x
+.8ac2	e8		inx				inx
+.8ac3	ec 02 07	cpx $0702			cpx 	identTypeEnd 				; do the whole thing including type and array markers.
+.8ac6	d0 f6		bne $8abe			bne 	_TCHLoop
+.8ac8	8d 03 07	sta $0703			sta 	identHash 					; save the hash
+.8acb	fa		plx				plx
+.8acc	60		rts				rts
+.8acd					FixLineBufferCase:
+.8acd	a2 00		ldx #$00			ldx 	#0
+.8acf					_FLBCLoop:
+.8acf	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; get next character
+.8ad2	f0 22		beq $8af6			beq 	_FLBCExit 					; end of string.
+.8ad4	c9 22		cmp #$22			cmp 	#'"'						; quote, go to in quotes
+.8ad6	f0 11		beq $8ae9			beq 	_FLBCInQuotes
+.8ad8	e8		inx				inx
+.8ad9	c9 61		cmp #$61			cmp 	#'a'						; needs capitalising ?
+.8adb	90 f2		bcc $8acf			bcc 	_FLBCLoop
+.8add	c9 7b		cmp #$7b			cmp 	#'z'+1
+.8adf	b0 ee		bcs $8acf			bcs 	_FLBCLoop
+.8ae1	38		sec				sec 								; make U/C
+.8ae2	e9 20		sbc #$20			sbc 	#32
+.8ae4	9d 05 08	sta $0805,x			sta	 	lineBuffer-1,x 				; write back
+.8ae7	80 e6		bra $8acf			bra 	_FLBCLoop
+.8ae9					_FLBCInQuotes:
+.8ae9	e8		inx				inx 								; advance
+.8aea	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; get next
+.8aed	f0 07		beq $8af6			beq 	_FLBCExit 					; exit on EOS
+.8aef	c9 22		cmp #$22			cmp 	#'"' 				 		; until " found
+.8af1	d0 f6		bne $8ae9			bne 	_FLBCInQuotes
+.8af3	e8		inx				inx 								; skip over it
+.8af4	80 d9		bra $8acf			bra 	_FLBCLoop
+.8af6					_FLBCExit:
+.8af6	60		rts				rts
+.8af7					TokeniseExtractLineNumber:
+.8af7	ad 08 07	lda $0708			lda 	tokenLineNumber+1 			; push current value on stack
+.8afa	48		pha				pha
+.8afb	ad 07 07	lda $0707			lda 	tokenLineNumber
+.8afe	48		pha				pha
+.8aff	20 35 8b	jsr $8b35			jsr 	_TELNTimes2 				; line # x 4
+.8b02	20 35 8b	jsr $8b35			jsr 	_TELNTimes2 				; line # x 2
+.8b05	18		clc				clc 								; add stacked value
+.8b06	68		pla				pla
+.8b07	6d 07 07	adc $0707			adc 	tokenLineNumber
+.8b0a	8d 07 07	sta $0707			sta 	tokenLineNumber
+.8b0d	68		pla				pla
+.8b0e	6d 08 07	adc $0708			adc 	tokenLineNumber+1
+.8b11	8d 08 07	sta $0708			sta 	tokenLineNumber+1 			; line # x 5
+.8b14	20 35 8b	jsr $8b35			jsr 	_TELNTimes2 				; line # x 10
+.8b17	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; get and consume character
+.8b1a	e8		inx				inx
+.8b1b	29 0f		and #$0f			and 	#15 						; add to line #
+.8b1d	18		clc				clc
+.8b1e	6d 07 07	adc $0707			adc 	tokenLineNumber
+.8b21	8d 07 07	sta $0707			sta 	tokenLineNumber
+.8b24	90 03		bcc $8b29			bcc 	_TLENNoCarry
+.8b26	ee 08 07	inc $0708			inc 	tokenLineNumber+1
+.8b29					_TLENNoCarry:
+.8b29	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; more digits ?
+.8b2c	c9 30		cmp #$30			cmp 	#'0'
+.8b2e	90 04		bcc $8b34			bcc 	_TLENExit
+.8b30	c9 3a		cmp #$3a			cmp 	#'9'+1
+.8b32	90 c3		bcc $8af7			bcc 	TokeniseExtractLineNumber
+.8b34					_TLENExit:
+.8b34	60		rts				rts
+.8b35					_TELNTimes2:
+.8b35	0e 07 07	asl $0707			asl 	tokenLineNumber
+.8b38	2e 08 07	rol $0708			rol 	tokenLineNumber+1
+.8b3b	60		rts				rts
+.8b3c					TokeniseWriteByte:
+.8b3c	da		phx				phx
+.8b3d	ae 06 07	ldx $0706			ldx 	tokenOffset 				; next slot to write to
+.8b40	9d 06 07	sta $0706,x			sta 	tokenOffset,x 				; write byte out
+.8b43	ee 06 07	inc $0706			inc 	tokenOffset 				; advance slot.
+.8b46	fa		plx				plx
+.8b47	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./tokeniser/variablerecord.asm
 
-.8b3b					CheckCreateVariableRecord:
-.8b3b	a9 00		lda #$00			lda 	#((VariableSpace) & $FF)
-.8b3d	85 36		sta $36				sta 	0+zTemp0
-.8b3f	a9 10		lda #$10			lda 	#((VariableSpace) >> 8)
-.8b41	85 37		sta $37				sta 	1+zTemp0
-.8b43	20 41 87	jsr $8741			jsr 	VariableOpen 				; make variable space available
-.8b46					_CCVSearch:
-.8b46	b2 36		lda ($36)			lda 	(zTemp0) 					; end of list
-.8b48	f0 2c		beq $8b76			beq 	_CCVFail
-.8b4a	a0 01		ldy #$01			ldy 	#1 							; read the hash
-.8b4c	b1 36		lda ($36),y			lda 	(zTemp0),y 					; does it match ?
-.8b4e	cd 03 07	cmp $0703			cmp 	identHash
-.8b51	d0 16		bne $8b69			bne 	_CCVNext
-.8b53	a0 08		ldy #$08			ldy 	#8 							; name in variable record
-.8b55	ae 00 07	ldx $0700			ldx 	identStart
-.8b58					_CCVCompare:
-.8b58	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; xor them. zero if the same, except
-.8b5b	51 36		eor ($36),y			eor 	(zTemp0),y 					; bit 7 is used for EOS.
-.8b5d	e8		inx				inx 								; advance pointers
-.8b5e	c8		iny				iny
-.8b5f	0a		asl a				asl 	a 							; A = 0 if they match, CS if end.
-.8b60	d0 07		bne $8b69			bne 	_CCVNext  					; didn't match go to next.
-.8b62	90 f4		bcc $8b58			bcc 	_CCVCompare 				; not finished yet.
-.8b64	ec 02 07	cpx $0702			cpx 	identTypeEnd 				; matched whole thing ?
-.8b67	f0 41		beq $8baa			beq 	_CCVFound 					; yes, we were successful
-.8b69					_CCVNext:
-.8b69	18		clc				clc
-.8b6a	b2 36		lda ($36)			lda 	(zTemp0) 					; add offset to pointer
-.8b6c	65 36		adc $36				adc 	zTemp0
-.8b6e	85 36		sta $36				sta 	zTemp0
-.8b70	90 d4		bcc $8b46			bcc 	_CCVSearch
-.8b72	e6 37		inc $37				inc 	zTemp0+1
-.8b74	80 d0		bra $8b46			bra 	_CCVSearch
-.8b76					_CCVFail:
-.8b76	a0 01		ldy #$01			ldy 	#1 							; create the new record. Offset 1 is hash
-.8b78	ad 03 07	lda $0703			lda 	identHash
-.8b7b	91 36		sta ($36),y			sta 	(zTemp0),y
-.8b7d	c8		iny				iny 								; offset 2 is the type byte
-.8b7e	ad 04 07	lda $0704			lda 	identTypeByte
-.8b81	91 36		sta ($36),y			sta 	(zTemp0),y
-.8b83	c8		iny				iny
-.8b84					_CCVData:
-.8b84	a9 00		lda #$00			lda 	#0 							; erase data 3-7
-.8b86	91 36		sta ($36),y			sta 	(zTemp0),y
-.8b88	c8		iny				iny
-.8b89	c0 08		cpy #$08			cpy 	#8
-.8b8b	90 f7		bcc $8b84			bcc 	_CCVData
-.8b8d	ae 00 07	ldx $0700			ldx 	identStart 					; copy name into 8 on.
-.8b90					_CCVCopyName:
-.8b90	bd 06 08	lda $0806,x			lda 	lineBuffer,x
+.8b48					CheckCreateVariableRecord:
+.8b48	a9 00		lda #$00			lda 	#((VariableSpace) & $FF)
+.8b4a	85 36		sta $36				sta 	0+zTemp0
+.8b4c	a9 10		lda #$10			lda 	#((VariableSpace) >> 8)
+.8b4e	85 37		sta $37				sta 	1+zTemp0
+.8b50	20 4e 87	jsr $874e			jsr 	VariableOpen 				; make variable space available
+.8b53					_CCVSearch:
+.8b53	b2 36		lda ($36)			lda 	(zTemp0) 					; end of list
+.8b55	f0 2c		beq $8b83			beq 	_CCVFail
+.8b57	a0 01		ldy #$01			ldy 	#1 							; read the hash
+.8b59	b1 36		lda ($36),y			lda 	(zTemp0),y 					; does it match ?
+.8b5b	cd 03 07	cmp $0703			cmp 	identHash
+.8b5e	d0 16		bne $8b76			bne 	_CCVNext
+.8b60	a0 08		ldy #$08			ldy 	#8 							; name in variable record
+.8b62	ae 00 07	ldx $0700			ldx 	identStart
+.8b65					_CCVCompare:
+.8b65	bd 06 08	lda $0806,x			lda 	lineBuffer,x 				; xor them. zero if the same, except
+.8b68	51 36		eor ($36),y			eor 	(zTemp0),y 					; bit 7 is used for EOS.
+.8b6a	e8		inx				inx 								; advance pointers
+.8b6b	c8		iny				iny
+.8b6c	0a		asl a				asl 	a 							; A = 0 if they match, CS if end.
+.8b6d	d0 07		bne $8b76			bne 	_CCVNext  					; didn't match go to next.
+.8b6f	90 f4		bcc $8b65			bcc 	_CCVCompare 				; not finished yet.
+.8b71	ec 02 07	cpx $0702			cpx 	identTypeEnd 				; matched whole thing ?
+.8b74	f0 41		beq $8bb7			beq 	_CCVFound 					; yes, we were successful
+.8b76					_CCVNext:
+.8b76	18		clc				clc
+.8b77	b2 36		lda ($36)			lda 	(zTemp0) 					; add offset to pointer
+.8b79	65 36		adc $36				adc 	zTemp0
+.8b7b	85 36		sta $36				sta 	zTemp0
+.8b7d	90 d4		bcc $8b53			bcc 	_CCVSearch
+.8b7f	e6 37		inc $37				inc 	zTemp0+1
+.8b81	80 d0		bra $8b53			bra 	_CCVSearch
+.8b83					_CCVFail:
+.8b83	a0 01		ldy #$01			ldy 	#1 							; create the new record. Offset 1 is hash
+.8b85	ad 03 07	lda $0703			lda 	identHash
+.8b88	91 36		sta ($36),y			sta 	(zTemp0),y
+.8b8a	c8		iny				iny 								; offset 2 is the type byte
+.8b8b	ad 04 07	lda $0704			lda 	identTypeByte
+.8b8e	91 36		sta ($36),y			sta 	(zTemp0),y
+.8b90	c8		iny				iny
+.8b91					_CCVData:
+.8b91	a9 00		lda #$00			lda 	#0 							; erase data 3-7
 .8b93	91 36		sta ($36),y			sta 	(zTemp0),y
-.8b95	e8		inx				inx
-.8b96	c8		iny				iny
-.8b97	ec 02 07	cpx $0702			cpx 	identTypeEnd
-.8b9a	d0 f4		bne $8b90			bne 	_CCVCopyName
-.8b9c	98		tya				tya 								; patch offset
-.8b9d	92 36		sta ($36)			sta 	(zTemp0)
-.8b9f	a9 00		lda #$00			lda 	#0 							; offset for next is zero.
-.8ba1	91 36		sta ($36),y			sta 	(zTemp0),y
-.8ba3	88		dey				dey
-.8ba4	b1 36		lda ($36),y			lda 	(zTemp0),y 					; set bit 7 of last bit
-.8ba6	09 80		ora #$80			ora 	#$80
-.8ba8	91 36		sta ($36),y			sta 	(zTemp0),y
-.8baa					_CCVFound:
-.8baa	20 42 87	jsr $8742			jsr 	VariableClose 				; map out variables, perhaps.
-.8bad	a5 37		lda $37				lda 	zTemp0+1 					; write out MSB
-.8baf	38		sec				sec
-.8bb0	e9 10		sbc #$10			sbc 	#(VariableSpace >> 8) 		; offset from the start
-.8bb2	09 40		ora #$40			ora 	#$40 						; make it a writeable token
-.8bb4	20 2f 8b	jsr $8b2f			jsr 	TokeniseWriteByte
-.8bb7	a5 36		lda $36				lda 	zTemp0 						; write out LSB
-.8bb9	20 2f 8b	jsr $8b2f			jsr 	TokeniseWriteByte
-.8bbc	60		rts				rts
+.8b95	c8		iny				iny
+.8b96	c0 08		cpy #$08			cpy 	#8
+.8b98	90 f7		bcc $8b91			bcc 	_CCVData
+.8b9a	ae 00 07	ldx $0700			ldx 	identStart 					; copy name into 8 on.
+.8b9d					_CCVCopyName:
+.8b9d	bd 06 08	lda $0806,x			lda 	lineBuffer,x
+.8ba0	91 36		sta ($36),y			sta 	(zTemp0),y
+.8ba2	e8		inx				inx
+.8ba3	c8		iny				iny
+.8ba4	ec 02 07	cpx $0702			cpx 	identTypeEnd
+.8ba7	d0 f4		bne $8b9d			bne 	_CCVCopyName
+.8ba9	98		tya				tya 								; patch offset
+.8baa	92 36		sta ($36)			sta 	(zTemp0)
+.8bac	a9 00		lda #$00			lda 	#0 							; offset for next is zero.
+.8bae	91 36		sta ($36),y			sta 	(zTemp0),y
+.8bb0	88		dey				dey
+.8bb1	b1 36		lda ($36),y			lda 	(zTemp0),y 					; set bit 7 of last bit
+.8bb3	09 80		ora #$80			ora 	#$80
+.8bb5	91 36		sta ($36),y			sta 	(zTemp0),y
+.8bb7					_CCVFound:
+.8bb7	20 4f 87	jsr $874f			jsr 	VariableClose 				; map out variables, perhaps.
+.8bba	a5 37		lda $37				lda 	zTemp0+1 					; write out MSB
+.8bbc	38		sec				sec
+.8bbd	e9 10		sbc #$10			sbc 	#(VariableSpace >> 8) 		; offset from the start
+.8bbf	09 40		ora #$40			ora 	#$40 						; make it a writeable token
+.8bc1	20 3c 8b	jsr $8b3c			jsr 	TokeniseWriteByte
+.8bc4	a5 36		lda $36				lda 	zTemp0 						; write out LSB
+.8bc6	20 3c 8b	jsr $8b3c			jsr 	TokeniseWriteByte
+.8bc9	60		rts				rts
 
 ;******  Return to file: _basic.asm
 

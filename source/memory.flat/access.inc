@@ -60,7 +60,14 @@ cnextline .macro
 		inc 	codePtr+1
 _CREExit:
 		.endm
-	
+
+cskipdatablock .macro
+		iny
+		tya
+		sec
+		adc 	(codePtr),y
+		tay
+		.endm	
 
 ; ************************************************************************************************
 ;

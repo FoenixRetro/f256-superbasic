@@ -15,6 +15,7 @@
 	.include	"./commands/clear.asm"
 	.include	"./commands/end.asm"
 	.include	"./commands/new.asm"
+	.include	"./commands/rem.asm"
 	.include	"./commands/run.asm"
 	.include	"./errors/charcheck.asm"
 	.include	"./expressions/binary/compare.asm"
