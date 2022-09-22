@@ -1,10 +1,9 @@
 Progress:
-	Speed up the backload by hacking the emulator.
 	Wire in unary functions and add testing for true/false and general unary functions
 	Shift tokens, move ASSERT.
 	Comparison strings.
 	Clear code (also reset procedures to arrays ? - scan later)
-	Float add, subtract, multiply, divide, compare (?) [short divide is wrong !]
+	Float add, subtract, multiply, divide, compare (?) [short divide is wrong !] [MinusZero issue]
 	Float testing code
 	Integer & Fractional functions
 	
@@ -15,3 +14,5 @@ Later:
 	Encoding Decimals (e.g. .90132)
 	Variable code
 	Improve CALL	
+
+WATCH OUT FOR -0 when comparing values !

@@ -20,6 +20,7 @@
 
 BackloadProgram:
 		ldx 	#$FF
+		stx 	$FFFA 						; fast mode
 		lda 	$FFFA 						; read first byte
 		bmi 	_BPExit
 _BPCopy:
@@ -39,6 +40,7 @@ _BPEndLine:
 		jsr 	MemoryAppend 				; append to current program
 		bra 	BackloadProgram
 _BPExit:
+		stz 	$FFFA 						; clear fast mode
 		rts
 		
 		.send code

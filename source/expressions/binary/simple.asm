@@ -84,18 +84,21 @@ AndInteger: 	;; [&]
 		plx
 		.dispatchintegeronly
 		.simple32 and
+		stz	 	NSStatus,x 					; ignore sign.
 		rts
 
 OraInteger: 	;; [|]
 		plx
 		.dispatchintegeronly
 		.simple32 ora
+		stz	 	NSStatus,x 					; ignore sign.
 		rts
 
 EorInteger: 	;; [^]
 		plx
 		.dispatchintegeronly
 		.simple32 eor
+		stz	 	NSStatus,x 					; ignore sign.
 		rts
 
 		.send code

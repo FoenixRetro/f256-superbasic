@@ -30,7 +30,6 @@ IntegerDivide: ;; [\]
 		sta 	NSMantissa2,x
 		lda 	NSMantissa3+2,x
 		sta 	NSMantissa3,x
-
 		jsr 	CalculateSign 				; calculate result sign
 		rts
 

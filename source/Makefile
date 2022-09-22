@@ -38,6 +38,9 @@ update-tools:
 	$(CCOPY) ..$(S)..$(S)junior-utilities$(S)makeboot$(APPSTEM) $(BINDIR)
 	$(CCOPY) ..$(S)..$(S)junior-utilities$(S)foenixmgr.ini .
 
+emu:
+	make -B -C ..$(S)..$(S)junior-emulator
+	
 basic : prelim
 	64tass $(ASMOPTS) _basic.asm -o $(APPNAME)
 

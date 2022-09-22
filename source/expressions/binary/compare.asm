@@ -86,6 +86,7 @@ BinaryCompareGreater: 			;; [>]
 ;;; 	| if a <> 1 then print "a is not equal to 1"
 ;;
 BinaryCompareNotEqual: 		;; [<>]
+		plx
 		.compare_not_equals 0
 ;;
 ;;	{<=}	
@@ -94,6 +95,7 @@ BinaryCompareNotEqual: 		;; [<>]
 ;;; 	| if a <= 1 then print "a is less than or equal to 1"
 ;;
 BinaryCompareLessEqual: 		;; [<=]
+		plx
 		.compare_not_equals 1
 
 ;;
@@ -103,6 +105,7 @@ BinaryCompareLessEqual: 		;; [<=]
 ;;; 	| if a >= 1 then print "a is greater than or equal to 1"
 ;;
 BinaryCompareGreaterEqual: 	;; [>=]
+		plx
 		.compare_not_equals $FF
 
 ; ***************************************************************************************
@@ -125,6 +128,10 @@ CompareBaseCode:
 		;
 		;		do the integer comparison.
 		;
+		jsr 	CompareFixMinusZero
+		inx
+		jsr 	CompareFixMinusZero
+		dex
 		lda 	NSStatus,x 					; are the signs different ?
 		eor 	NSStatus+1,x
 		bpl 	_CDCSameSign
@@ -142,10 +149,9 @@ _CBCEqual:
 		;
 _CDCSameSign:				
 		jsr 	SubTopTwoStack 				; unsigned subtract
-		;
 		jsr 	NSMIsZero 					; or the mantissa together
-		beq 	_CBCEqual 					
-		;
+		beq 	_CBCEqual 					; -0 == 0
+
 		lda 	NSMantissa3,x 				; sign of the result. if +ve return $01 else return $FF
 		eor 	NSStatus+1,x 				; however if both were -ve this is inverted
 		bpl 	_CBCGreater
@@ -157,6 +163,20 @@ _CBCString:
 		.debug
 _CBCFloat:
 		.debug				
+
+; ***************************************************************************************
+;
+; 						Fixup minus zero issue for comparison.
+;			  (If either compare is -0, then can give spurious results)
+;
+; ***************************************************************************************
+
+CompareFixMinusZero:
+		jsr 	NSMIsZero
+		bne 	_CFXMZNotZero
+		stz 	NSStatus,x
+_CFXMZNotZero:
+		rts
 
 ; ***************************************************************************************
 ;

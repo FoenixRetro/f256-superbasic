@@ -27,6 +27,7 @@ ErrorHandler:
 		.debug
 		jmp 	ErrorHandler
 
+		.align 2
 		.include "../generated/vectors.dat"
 
 		.send code
