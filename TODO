@@ -3,7 +3,7 @@ Progress:
 	Integer arithmetic testing.
 	Comparison strings.
 	Clear code (also reset procedures to arrays ? - scan later)
-	Float add, subtract, multiply, divide,compare (?)
+	Float add, subtract, multiply, divide, compare (?) [short divide is wrong !]
 
 Later:
 	Error : out of identifier space
