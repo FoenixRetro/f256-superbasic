@@ -1,4 +1,4 @@
-10 assert 0
+10 assert 2+3=6-1
 20 call #FFFF
 
 

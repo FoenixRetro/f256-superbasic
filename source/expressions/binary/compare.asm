@@ -51,6 +51,7 @@ ReturnFalse: ;; [false]
 ;;; 	| if a = 1 then print "a is 1"
 ;;
 BinaryCompareEqual: 			;; [=]
+		plx
 		.compare_equals 0
 
 ;;
@@ -60,6 +61,7 @@ BinaryCompareEqual: 			;; [=]
 ;;; 	| if a < 1 then print "a is less than 1"
 ;;
 BinaryCompareLess: 			;; [<]
+		plx
 		.compare_equals $FF
 
 ;;
@@ -69,6 +71,7 @@ BinaryCompareLess: 			;; [<]
 ;;; 	| if a > 1 then print "a is greater than 1"
 ;;
 BinaryCompareGreater: 			;; [>]
+		plx
 		.compare_equals 1
 
 ; ***************************************************************************************

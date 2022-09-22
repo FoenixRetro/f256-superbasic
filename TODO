@@ -1,5 +1,6 @@
 Progress:
 	Integer arithmetic testing.
+	Wire in unary functions and add testing for true/false.
 	Shift tokens
 	Comparison strings.
 	Clear code (also reset procedures to arrays ? - scan later)
