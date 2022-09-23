@@ -24,13 +24,13 @@ class TestAssertion(object):
 		return random.randint(-2000,2000)
 
 	def float(self):
-		return random.randint(-4,4)
+		return random.randint(-40,40)/10
 		
 	def string(self,maxLen = 6):
 		return "".join([chr(random.randint(97,117)) for x in range(0,random.randint(0,maxLen))])
 		
 	def str(self,n):
-		return str(n)
+		return str(n) if n == int(n) else "{0:.7f}".format(n)
 
 # *******************************************************************************************
 #
@@ -69,7 +69,7 @@ class FloatMath(TestAssertion):
 		if op == "/" and n2 == 0:				
 			return None 
 		r = eval("{0}{1}{2}".format(n1,op,n2))
-		return ["(({0}/1){1}({2}/1))".format(n1,op,n2),self.str(r)]
+		return ["({0}{1}{2})".format(n1,op,n2),self.str(r)]
 
 # *******************************************************************************************
 #
@@ -97,7 +97,7 @@ class FloatCompare(TestAssertion):
 		n2 = self.float()
 		op = [">","<","==",">=","<=","!="][random.randint(0,5)]							# pick a compare
 		r = -1 if eval("{0}{1}{2}".format(n1,op,n2)) else 0
-		return ["({0}/1){1}({2}/1)".format(n1,op.replace("!=","<>").replace("==","="),n2),r] 	# do translated to BASIC
+		return ["({0}{1}{2})".format(n1,op.replace("!=","<>").replace("==","="),n2),r] 	# do translated to BASIC
 
 # *******************************************************************************************
 #
@@ -126,17 +126,15 @@ class TestSet(object):
 		self.seed = random.randint(1,99999) if seed is None else seed 					# pick a seed if not provided
 		random.seed(self.seed)	
 		self.factories = [ 	 															# list of test factory classes
-							FloatCompare(),
-							FloatMath(),
-							IntegerCompare(),
-							IntegerMath(),
+							FloatCompare(),FloatMath(),
+							IntegerCompare(),IntegerMath(),
 							StringBinary()
 		]
 		self.lineNumber = 1
 		self.step = 1
 		sys.stderr.write("Seed = {0}\n".format(self.seed))
 
-	def create(self,handle,count = 500):
+	def create(self,handle,count = 1000):
 		handle.write("{0} rem \"Seed {1}\"\n".format(self.lineNumber,self.seed))		# put the seed in the BASIC listing
 		self.lineNumber += self.step
 		for i in range(0,count):														# create tests

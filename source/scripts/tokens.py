@@ -36,7 +36,7 @@ class TokenSource(object):
 				abs( 		asc( 		chr$( 		alloc(		page		dec( 		
 				hex$( 		left$( 		mid$( 		right$( 	rnd( 		sgn( 		
 				spc( 		str$( 		val(  		isval(		getdate$( 	gettime$( 	
-				not			len( 		int( 		true 		false	
+				not			len( 		int( 		true 		false		frac(
 
 			{0}							// Set 0
 				cls 		data 		dim 		let 		goto		gosub 		

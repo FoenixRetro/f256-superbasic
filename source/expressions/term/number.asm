@@ -14,6 +14,7 @@
 
 ESTA_Low = 1 								; state 1 is 1 byte, switches when A >= 24.
 ESTA_High = 2 								; loading up to 32 bit integer in the mantissa
+ESTA_Decimal = 3 							; fractional part.
 
 ; ************************************************************************************************
 ;
@@ -38,13 +39,17 @@ EncodeNumberContinue:
 		bcc 	_ENIsOkay
 _ENBadNumber:		
 		plp 								; throw saved reset
-_ENFail:		
+		lda 	EncodeState 				; decimal mode, construct final number
+		cmp 	#ESTA_Decimal
+		beq 	_ENConstructFinal		
+_ENFail:
 		clc 								; not allowed
 		rts
 ;
 _ENIsOkay:		
 		plp 								; are we restarting
 		bcc 	_ENNoRestart
+
 		; --------------------------------------------------------------------
 		;
 		;		First initialise
@@ -71,6 +76,8 @@ _ENNoRestart:
 		beq  	_ESTALowState	
 		cmp 	#ESTA_High
 		beq 	_ESTAHighState
+		cmp 	#ESTA_Decimal
+		beq 	_ESTADecimalState
 		.debug
 
 
@@ -123,7 +130,72 @@ _ESTAHighState:
 		; --------------------------------------------------------------------
 
 _ESTASwitchFloat:
-		.debug
+		stz 	DecimalCount
+		inx 								; zero the decimal additive.
+		jsr 	NSMSetZero
+		dex
+		lda 	#ESTA_Decimal 				; switch to decimal mode
+		bra 	_ENExitChange
+
+		; --------------------------------------------------------------------
+		;
+		;		Decimal Mode
+		;
+		; --------------------------------------------------------------------
+
+_ESTADecimalState:
+		pla 								; digit.
+		cmp 	#"." 						; fail on 2nd decimal point.
+		beq 	_ENFail
+		inx 								; put digit into fractional part of X+1
+		jsr 	ESTAShiftDigitIntoMantissa
+		dex
+		inc 	DecimalCount 				; bump the count of decimals
+		lda 	DecimalCount
+		cmp 	#11
+		beq 	_ESTADSFail
+		sec
+		rts
+_ESTADSFail:
+		jmp 	RangeError
+		
+		; --------------------------------------------------------------------
+		;
+		;		Build final number from components
+		;
+		; --------------------------------------------------------------------
+
+_ENConstructFinal:
+		lda 	DecimalCount 				; get decimal count
+		beq 	_ENCFExit 					; no decimals
+		phy
+		asl 	a 							; x 4 and CLC
+		asl 	a
+		adc 	DecimalCount
+		tay 
+		;
+		lda 	DecimalScalarTable-5,y 		; copy decimal scalar to X+2
+		sta 	NSMantissa0+2,x
+		lda 	DecimalScalarTable-5+1,y
+		sta 	NSMantissa1+2,x
+		lda 	DecimalScalarTable-5+2,y
+		sta 	NSMantissa2+2,x
+		lda 	DecimalScalarTable-5+3,y
+		sta 	NSMantissa3+2,x
+		lda 	DecimalScalarTable-5+4,y
+		sta 	NSExponent+2,x
+		lda 	#NSTFloat
+		sta 	NSStatus+2,x
+		;
+		ply
+		;
+		inx 								; multiply decimal const by decimal scalar
+		jsr 	FloatMultiply
+		dex
+		jsr 	FloatAdd 					; add to integer part.
+_ENCFExit:
+		clc 								; reject the digit.
+		rts
 
 ; ************************************************************************************************
 ;

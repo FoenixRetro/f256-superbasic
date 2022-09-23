@@ -1,9 +1,13 @@
 Progress:
-	Encoding Decimals (e.g. .90132), fix up float checks ?
-	Float testing code
 	Optimise normalisation & exponent shift in add.
+
 	Integer & Fractional functions
-	
+		ABS() SGN() LEN() RND() ASC() DEC() INT() ISVAL() VAL() NOT PAGE FRAC()
+
+	String allocation/soft/concreting code.
+		String concatenation
+		String unaries.
+
 Later:
 	Error : out of identifier space
 	Todo : scan for procedures (part of CLEAR)	
@@ -11,5 +15,3 @@ Later:
 	Variable code
 	Improve CALL	
 	Reset procedures to arrays ??
-
-WATCH OUT FOR -0 when comparing values !
