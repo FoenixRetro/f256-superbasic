@@ -26,6 +26,7 @@
 	.include	"./expressions/binary/simple.asm"
 	.include	"./expressions/expression.asm"
 	.include	"./expressions/float/addsub.asm"
+	.include	"./expressions/float/compare.asm"
 	.include	"./expressions/float/divide.asm"
 	.include	"./expressions/float/multiply.asm"
 	.include	"./expressions/float/utility.asm"

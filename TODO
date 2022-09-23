@@ -1,5 +1,4 @@
 Progress:
-	Float compare (?) 
 	Float checks (use /1 initially)
 	Add return B if zero check if works.
 	Encoding Decimals (e.g. .90132), fix up float checks ?

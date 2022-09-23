@@ -20,7 +20,7 @@ FloatingPointAdd:
 		jsr 	FloatPrepare 				; prepare for floats
 		bra 	FloatAdd
 FloatingPointSub:
-		jsr 	FloatPrepare 				; prepare for floats
+			jsr 	FloatPrepare 				; prepare for floats
 
 ; ************************************************************************************************
 ;
@@ -35,7 +35,7 @@ FloatSubtract:
 
 ; ************************************************************************************************
 ;
-;										Add FPB to FPA
+;							Add FPB to FPA, result not normalised
 ;									    (see binary.py)
 ;
 ; ************************************************************************************************
@@ -101,7 +101,6 @@ _FADifferentSigns:
 		jsr 	NSMNegateMantissa 			; negate (2'c) the mantissa
 
 _FAExit:
-		jsr 	NSNormalise 				; normalise the result
 		ply
 		pla
 		rts

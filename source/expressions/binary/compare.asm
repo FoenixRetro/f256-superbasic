@@ -167,7 +167,7 @@ _CBCString:
 		jmp 	CompareStrings
 		
 _CBCFloat:
-		.debug				
+		jmp 	CompareFloat
 
 ; ***************************************************************************************
 ;
