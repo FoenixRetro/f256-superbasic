@@ -57,7 +57,7 @@ SubTopTwoStack:
 
 AddInteger: 	;; [+]
 		plx
-		.dispatcher NotDoneError,NotDoneError
+		.dispatcher FloatingPointAdd,NotDoneError
 AddCode:
 		lda 	NSStatus,x 					; signs are the same, can just add the mantissae.
 		eor 	NSStatus+1,x
@@ -74,7 +74,7 @@ _AddExit:
 
 SubInteger: 	;; [-]
 		plx
-		.dispatcher NotDoneError,NotDoneError
+		.dispatcher FloatingPointSub,NotDoneError
 		lda 	NSStatus+1,x 				; negate the second value.
 		eor 	#$80
 		sta 	NSStatus+1,x

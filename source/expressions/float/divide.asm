@@ -24,8 +24,9 @@ FloatDivide:
 		pha
 		inx 
 		jsr 	NSNormalise		 			; normalise S[x+1] and error if zero.
-		beq 	_FDZero 					
 		dex
+		cmp 	#0
+		beq 	_FDZero 					
 
 		jsr 	NSNormalise		 			; normalise S[X] and exit if zero
 		beq 	_FDExit 					; return zero if zero (e.g. zero/something)

@@ -22,8 +22,9 @@ FloatingPointMultiply:
 FloatMultiply:	
 		pha
 		jsr 	NSNormalise		 			; normalise S[X] and exit if zero
-		beq 	_FDExit 					; return zero if zero (e.g. zero/something)
 		inx 
+		cmp 	#0
+		beq 	_FDExit 					; return zero if zero (e.g. zero/something)
 		jsr 	NSNormalise		 			; normalise S[x+1] and error if zero.
 		beq 	_FDSetZero 					
 		dex

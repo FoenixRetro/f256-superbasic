@@ -1,8 +1,10 @@
 Progress:
-	Float add, subtract,  compare (?) 
-	Encoding Decimals (e.g. .90132)
+	Float compare (?) 
+	Float checks (use /1 initially)
+	Add return B if zero check if works.
+	Encoding Decimals (e.g. .90132), fix up float checks ?
 	Float testing code
-	Optimise normalisation
+	Optimise normalisation & exponent shift in add.
 	Integer & Fractional functions
 	
 Later:
