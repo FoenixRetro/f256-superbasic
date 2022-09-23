@@ -49,7 +49,7 @@ VectorSetPunc:
 	.word	SyntaxError                      ; $2c ,
 	.word	SubInteger                       ; $2d -
 	.word	SyntaxError                      ; $2e .
-	.word	SyntaxError                      ; $2f /
+	.word	FDivideCommand                   ; $2f /
 	.word	SyntaxError                      ; $30 0
 	.word	SyntaxError                      ; $31 1
 	.word	SyntaxError                      ; $32 2

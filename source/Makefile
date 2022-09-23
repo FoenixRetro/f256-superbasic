@@ -40,7 +40,10 @@ update-tools:
 
 emu:
 	make -B -C ..$(S)..$(S)junior-emulator
-	
+
+stack:
+	python $(SCRIPTDIR)showstack.py
+		
 basic : prelim
 	64tass $(ASMOPTS) _basic.asm -o $(APPNAME)
 

@@ -101,17 +101,22 @@ _I32DivideNoCarryIn:
 Int32ShiftDivide:
 		pha 								; save AY
 		phy
-		jsr 	NSMShiftUpTwo 				; copy S[X] to S[X+2]
-		jsr 	NSMSetZeroMantissaOnly 		; set S[X] to zero
+
+		inx 								; clear S[X+2]
+		inx
+		jsr 	NSMSetZero
+		dex
+		dex
+
 		ldy 	#31 						; loop 31 times.
 _I32SDLoop:
 		jsr 	DivideCheckSubtract 		; check if subtract possible
+		inx
+		inx
 		jsr 	NSMRotateLeft				; shift 64 bit FPA left, rotating carry in
-		inx
-		inx
+		dex
+		dex
 		jsr 	NSMRotateLeft
-		dex
-		dex
 		dey 	 							; do 31 times
 		bne 	_I32SDLoop
 		ply 								; restore AY and exit

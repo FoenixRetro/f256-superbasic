@@ -17,7 +17,6 @@ ClearCommand: ;; [clear]
 		;		Scan through all the variables resetting them to zero.
 		;
 		.set16 	zTemp0,VariableSpace
-		.debug
 _ClearZeroLoop:		
 		lda 	(zTemp0) 					; end of variables
 		beq 	_ClearZeroEnd

@@ -25,6 +25,8 @@
 	.include	"./expressions/binary/shifts.asm"
 	.include	"./expressions/binary/simple.asm"
 	.include	"./expressions/expression.asm"
+	.include	"./expressions/float/divide.asm"
+	.include	"./expressions/float/utility.asm"
 	.include	"./expressions/term/dereference.asm"
 	.include	"./expressions/term/number.asm"
 	.include	"./expressions/term/term.asm"

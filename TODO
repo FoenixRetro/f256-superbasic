@@ -1,6 +1,7 @@
 Progress:
 	Float add, subtract, multiply, divide, compare (?) [short divide is wrong !] [MinusZero issue]
 	Float testing code
+	Optimise normalisation
 	Integer & Fractional functions
 	
 Later:
