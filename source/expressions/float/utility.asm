@@ -39,16 +39,20 @@ NSNormalise:
 		sta 	NSStatus,x
 
 		jsr 	NSMIsZero 					; if zero exit 
-		beq 	_NSNExit		
+		bne 	_NSNormaliseLoop 			; if so, normalise it.
+		asl 	NSStatus,x 					; clear the sign bit.
+		ror 	NSStatus,x 					; (no -0)
+		lda 	#0 							; set Z flag
+		rts
 
 _NSNormaliseLoop:		
 		bit 	NSMantissa3,x 				; bit 30 set ?
-		lda 	#$FF 						; clear Z flag
 		bvs 	_NSNExit 					; exit if so with Z flag clear
 		jsr 	NSMShiftLeft 				; shift mantissa left
 		dec 	NSExponent,x 				; adjust exponent
 		bra 	_NSNormaliseLoop
 _NSNExit:
+		lda 	#$FF 						; clear Z flag
 		rts
 
 ; ************************************************************************************************

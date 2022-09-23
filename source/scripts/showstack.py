@@ -29,4 +29,4 @@ for i in range(0,stackSize):
 		val = str(mantissa * pow(2,e))+"f"
 	if (status & 0x80) != 0:
 		val = "-"+val
-	print("{0} {1:08x} {2:02x} {3:02x} = {4}".format(i,mantissa,exponent,status,val))
+	print("L:{0} M:{1:08x} E:{2:02x} S:{3:02x} = {4}".format(i,mantissa,exponent,status,val))

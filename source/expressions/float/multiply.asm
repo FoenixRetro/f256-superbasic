@@ -1,8 +1,8 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		divide.asm
-;		Purpose:	Divide Stack[x] by Stack[x+1] floating point
+;		Name:		multiply.asm
+;		Purpose:	Multiply Stack[x] by Stack[x+1] floating point
 ;		Created:	23rd September 2022
 ;		Reviewed: 	
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
@@ -16,36 +16,31 @@
 ;
 ; ************************************************************************************************
 
-FDivideCommand: ;; [/]
-		plx	 								; restore stack position
+FloatingPointMultiply:
 		jsr 	FloatPrepare 				; prepare for floats
 
-FloatDivide:	
+FloatMultiply:	
 		pha
-		inx 
-		jsr 	NSNormalise		 			; normalise S[x+1] and error if zero.
-		beq 	_FDZero 					
-		dex
-
 		jsr 	NSNormalise		 			; normalise S[X] and exit if zero
 		beq 	_FDExit 					; return zero if zero (e.g. zero/something)
+		inx 
+		jsr 	NSNormalise		 			; normalise S[x+1] and error if zero.
+		beq 	_FDSetZero 					
+		dex
 
-		jsr 	Int32ShiftDivide 			; do the shift division for dividing.
-		jsr 	NSMCopyPlusTwoToZero 		; copy the mantissa down
-		jsr		NSNormalise 				; renormalise
-		jsr 	CalculateSign 				; calculate result sign
-
-		lda 	NSExponent,x 				; calculate exponent
-		sec
-		sbc 	NSExponent+1,x
-		sec
-		sbc 	#30
+		jsr 	MultiplyShort 				; calculate the result.		
+		adc 	NSExponent,x 				; calculate exponent including the shift.
+		clc
+		adc 	NSExponent+1,x
 		sta 	NSExponent,x
+		bra 	_FDExit
+
+_FDSetZero:
+		jsr 	NSMSetZero 					; return 0
 _FDExit:
+		jsr 	NSNormalise 				; normalise the result
 		pla
 		rts
-_FDZero:
-		.error_divzero
 
 ; ************************************************************************************************
 ;

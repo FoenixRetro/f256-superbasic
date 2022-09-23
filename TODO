@@ -1,5 +1,6 @@
 Progress:
-	Float add, subtract, multiply, divide, compare (?) [short divide is wrong !] [MinusZero issue]
+	Float add, subtract,  compare (?) 
+	Encoding Decimals (e.g. .90132)
 	Float testing code
 	Optimise normalisation
 	Integer & Fractional functions
@@ -8,7 +9,6 @@ Later:
 	Error : out of identifier space
 	Todo : scan for procedures (part of CLEAR)	
 	Code to access variables in term.
-	Encoding Decimals (e.g. .90132)
 	Variable code
 	Improve CALL	
 	Reset procedures to arrays ??

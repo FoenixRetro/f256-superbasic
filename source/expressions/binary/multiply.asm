@@ -12,7 +12,7 @@
 
 MulInteger: 	;; [*]
 		plx
-		.dispatcher NotDoneError,NotDoneError
+		.dispatcher FloatingPointMultiply,NotDoneError
 		jsr 	MultiplyShort
 		cmp 	#0
 		beq 	_MIExit
