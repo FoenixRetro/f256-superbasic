@@ -1,5 +1,4 @@
 Progress:
-	Wire in unary functions and add testing for true/false and general unary functions
 	Shift tokens, move ASSERT.
 	Comparison strings.
 	Clear code (also reset procedures to arrays ? - scan later)

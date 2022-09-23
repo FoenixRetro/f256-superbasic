@@ -68,14 +68,14 @@ VectorSetPunc:
 	.word	SyntaxError                      ; $3f ?
 VectorSet0:
 	.word	EOLCommand                       ; $80 !0:EOF
-	.word	SyntaxError                      ; $81 !1:SH1
+	.word	Shift1Command                    ; $81 !1:SH1
 	.word	SyntaxError                      ; $82 !2:SH2
 	.word	SyntaxError                      ; $83 ABS(
 	.word	SyntaxError                      ; $84 ALLOC(
 	.word	SyntaxError                      ; $85 ASC(
 	.word	SyntaxError                      ; $86 CHR$(
 	.word	SyntaxError                      ; $87 DEC(
-	.word	ReturnFalse                      ; $88 FALSE
+	.word	UnaryFalse                       ; $88 FALSE
 	.word	SyntaxError                      ; $89 GETDATE$(
 	.word	SyntaxError                      ; $8a GETTIME$(
 	.word	SyntaxError                      ; $8b HEX$(
@@ -91,7 +91,7 @@ VectorSet0:
 	.word	SyntaxError                      ; $95 SGN(
 	.word	SyntaxError                      ; $96 SPC(
 	.word	SyntaxError                      ; $97 STR$(
-	.word	ReturnTrue                       ; $98 TRUE
+	.word	UnaryTrue                        ; $98 TRUE
 	.word	SyntaxError                      ; $99 VAL(
 	.word	SyntaxError                      ; $9a FOR
 	.word	SyntaxError                      ; $9b IF
@@ -103,31 +103,31 @@ VectorSet0:
 	.word	SyntaxError                      ; $a1 NEXT
 	.word	SyntaxError                      ; $a2 UNTIL
 	.word	SyntaxError                      ; $a3 WEND
-	.word	AssertCommand                    ; $a4 ASSERT
-	.word	CallCommand                      ; $a5 CALL
-	.word	SyntaxError                      ; $a6 CLS
-	.word	SyntaxError                      ; $a7 DATA
-	.word	SyntaxError                      ; $a8 DIM
-	.word	SyntaxError                      ; $a9 GOSUB
-	.word	SyntaxError                      ; $aa GOTO
-	.word	SyntaxError                      ; $ab LET
-	.word	SyntaxError                      ; $ac PRINT
-	.word	SyntaxError                      ; $ad READ
-	.word	RemCommand                       ; $ae REM
-	.word	SyntaxError                      ; $af RETURN
-	.word	SyntaxError                      ; $b0 THEN
-	.word	SyntaxError                      ; $b1 TO
+	.word	CallCommand                      ; $a4 CALL
+	.word	SyntaxError                      ; $a5 CLS
+	.word	SyntaxError                      ; $a6 DATA
+	.word	SyntaxError                      ; $a7 DIM
+	.word	SyntaxError                      ; $a8 GOSUB
+	.word	SyntaxError                      ; $a9 GOTO
+	.word	SyntaxError                      ; $aa LET
+	.word	SyntaxError                      ; $ab PRINT
+	.word	SyntaxError                      ; $ac READ
+	.word	RemCommand                       ; $ad REM
+	.word	SyntaxError                      ; $ae RETURN
+	.word	SyntaxError                      ; $af THEN
+	.word	SyntaxError                      ; $b0 TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
 	.word	SyntaxError                      ; $82 !2:SH2
-	.word	ClearCommand                     ; $83 CLEAR
-	.word	EndCommand                       ; $84 END
-	.word	SyntaxError                      ; $85 LIST
-	.word	NewCommand                       ; $86 NEW
-	.word	SyntaxError                      ; $87 RESTORE
-	.word	CommandRUN                       ; $88 RUN
-	.word	SyntaxError                      ; $89 STOP
+	.word	AssertCommand                    ; $83 ASSERT
+	.word	ClearCommand                     ; $84 CLEAR
+	.word	EndCommand                       ; $85 END
+	.word	SyntaxError                      ; $86 LIST
+	.word	NewCommand                       ; $87 NEW
+	.word	SyntaxError                      ; $88 RESTORE
+	.word	CommandRUN                       ; $89 RUN
+	.word	SyntaxError                      ; $8a STOP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

@@ -30,19 +30,23 @@ compare_not_equals .macro
 ;
 ; ***************************************************************************************
 
-ReturnTrue: ;; [true]
+UnaryTrue: ;; [true]
+		plx
+ReturnTrue:		
 		lda 	#1  						; set to 1
 		jsr 	NSMSetByte 				
 		lda 	#$80 						; set sign flag, so it is -1
 		sta 	NSStatus,x 					
 		rts
 
-ReturnFalse: ;; [false]
+UnaryFalse: ;; [false]
+		plx
+ReturnFalse:		
 		jmp 	NSMSetZero 					; set it all to zero
 
 ; ***************************************************************************************
 ;
-; 								> = < (compare == vBinarye)
+; 								> = < (compare == value)
 ;
 ; ***************************************************************************************
 ;;
@@ -76,7 +80,7 @@ BinaryCompareGreater: 			;; [>]
 
 ; ***************************************************************************************
 ;
-; 								> = < (compare <> vBinarye)
+; 								> = < (compare <> value)
 ;
 ; ***************************************************************************************
 
