@@ -44,6 +44,7 @@ FloatAdd:
 		pha
 		phy
 		jsr 	NSNormalise 				; normalise S[X]
+		beq 	_FAReturn1
 
 		inx 								; normalise S[X+1]
 		jsr 	NSNormalise
@@ -100,7 +101,21 @@ _FADifferentSigns:
 
 		jsr 	NSMNegate 					; netate result
 		jsr 	NSMNegateMantissa 			; negate (2'c) the mantissa
+		bra 	_FAExit
 
+_FAReturn1:
+		lda 	NSMantissa0+1,x
+		sta 	NSMantissa0,x
+		lda 	NSMantissa1+1,x
+		sta 	NSMantissa1,x
+		lda 	NSMantissa2+1,x
+		sta 	NSMantissa2,x
+		lda 	NSMantissa3+1,x
+		sta 	NSMantissa3,x
+		lda 	NSExponent+1,x 				
+		sta 	NSExponent,x
+		lda 	NSStatus+1,x
+		sta 	NSStatus,x 			
 _FAExit:
 		ply
 		pla

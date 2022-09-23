@@ -23,6 +23,9 @@ class TestAssertion(object):
 			return random.randint(-20,20)
 		return random.randint(-2000,2000)
 
+	def float(self):
+		return random.randint(-4,4)
+		
 	def string(self,maxLen = 6):
 		return "".join([chr(random.randint(97,117)) for x in range(0,random.randint(0,maxLen))])
 		
@@ -59,8 +62,8 @@ class IntegerMath(TestAssertion):
 
 class FloatMath(TestAssertion):
 	def create(self):
-		n1 = self.shortInteger()
-		n2 = self.shortInteger()
+		n1 = self.float()
+		n2 = self.float()
 		opList = "+-*"
 		op = opList[random.randint(0,len(opList)-1)]
 		if op == "/" and n2 == 0:				
@@ -81,6 +84,20 @@ class IntegerCompare(TestAssertion):
 		op = [">","<","==",">=","<=","!="][random.randint(0,5)]							# pick a compare
 		r = -1 if eval("{0}{1}{2}".format(n1,op,n2)) else 0
 		return ["{0}{1}{2}".format(n1,op.replace("!=","<>").replace("==","="),n2),r] 	# do translated to BASIC
+
+# *******************************************************************************************
+#
+#								 Float Comparison class
+#
+# *******************************************************************************************
+
+class FloatCompare(TestAssertion):
+	def create(self):
+		n1 = self.float()
+		n2 = self.float()
+		op = [">","<","==",">=","<=","!="][random.randint(0,5)]							# pick a compare
+		r = -1 if eval("{0}{1}{2}".format(n1,op,n2)) else 0
+		return ["({0}/1){1}({2}/1)".format(n1,op.replace("!=","<>").replace("==","="),n2),r] 	# do translated to BASIC
 
 # *******************************************************************************************
 #
@@ -109,10 +126,11 @@ class TestSet(object):
 		self.seed = random.randint(1,99999) if seed is None else seed 					# pick a seed if not provided
 		random.seed(self.seed)	
 		self.factories = [ 	 															# list of test factory classes
-							FloatMath()
-#							IntegerCompare(),
-#							IntegerMath(),
-#							StringBinary()
+							FloatCompare(),
+							FloatMath(),
+							IntegerCompare(),
+							IntegerMath(),
+							StringBinary()
 		]
 		self.lineNumber = 1
 		self.step = 1

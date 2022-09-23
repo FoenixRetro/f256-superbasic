@@ -40,7 +40,7 @@ _BPEndLine:
 		jsr 	MemoryAppend 				; append to current program
 		bra 	BackloadProgram
 _BPExit:
-		stz 	$FFFA 						; clear fast mode
+		;stz 	$FFFA 						; clear fast mode
 		rts
 		
 		.send code
