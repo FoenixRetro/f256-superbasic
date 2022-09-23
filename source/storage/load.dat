@@ -1,1 +1,1 @@
-1 assert True
+1 assert "abc" > "abd"

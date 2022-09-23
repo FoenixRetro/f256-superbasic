@@ -164,7 +164,8 @@ _CBCLess:
 		rts
 
 _CBCString:
-		.debug
+		jmp 	CompareStrings
+		
 _CBCFloat:
 		.debug				
 

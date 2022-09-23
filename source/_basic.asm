@@ -21,6 +21,7 @@
 	.include	"./expressions/binary/compare.asm"
 	.include	"./expressions/binary/divide.asm"
 	.include	"./expressions/binary/multiply.asm"
+	.include	"./expressions/binary/scompare.asm"
 	.include	"./expressions/binary/shifts.asm"
 	.include	"./expressions/binary/simple.asm"
 	.include	"./expressions/expression.asm"
