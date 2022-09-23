@@ -41,6 +41,7 @@ FloatDivide:
 		sbc 	#30
 		sta 	NSExponent,x
 _FDExit:
+		.debug
 		rts
 _FDZero:
 		.error_divzero
