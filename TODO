@@ -1,5 +1,4 @@
 Progress:
-	Shift tokens, move ASSERT.
 	Comparison strings.
 	Clear code (also reset procedures to arrays ? - scan later)
 	Float add, subtract, multiply, divide, compare (?) [short divide is wrong !] [MinusZero issue]
