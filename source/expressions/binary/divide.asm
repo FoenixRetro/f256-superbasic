@@ -21,7 +21,9 @@ IntegerDivide: ;; [\]
 		.dispatchintegeronly
 		jsr 	CheckDivideZero 			; do div zero check
 		jsr 	Int32Divide 				; do the division
+		jsr 	CalculateSign 				; calculate result sign
 		;
+NSMCopyPlusTwoToZero:		
 		lda 	NSMantissa0+2,x 			; copy result down from +2
 		sta 	NSMantissa0,x
 		lda 	NSMantissa1+2,x
@@ -30,7 +32,6 @@ IntegerDivide: ;; [\]
 		sta 	NSMantissa2,x
 		lda 	NSMantissa3+2,x
 		sta 	NSMantissa3,x
-		jsr 	CalculateSign 				; calculate result sign
 		rts
 
 CheckDivideZero: 							; check Stack[X+1] not zero
@@ -98,7 +99,7 @@ _I32DivideNoCarryIn:
 ; ************************************************************************************************
 
 Int32ShiftDivide:
-		pha 								; save AXY
+		pha 								; save AY
 		phy
 		jsr 	NSMShiftUpTwo 				; copy S[X] to S[X+2]
 		jsr 	NSMSetZeroMantissaOnly 		; set S[X] to zero
@@ -107,10 +108,13 @@ _I32SDLoop:
 		jsr 	DivideCheckSubtract 		; check if subtract possible
 		jsr 	NSMRotateLeft				; shift 64 bit FPA left, rotating carry in
 		inx
+		inx
 		jsr 	NSMRotateLeft
+		dex
+		dex
 		dey 	 							; do 31 times
 		bne 	_I32SDLoop
-		ply 								; restore AXY and exit
+		ply 								; restore AY and exit
 		pla
 		rts
 
