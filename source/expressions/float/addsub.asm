@@ -20,7 +20,7 @@ FloatingPointAdd:
 		jsr 	FloatPrepare 				; prepare for floats
 		bra 	FloatAdd
 FloatingPointSub:
-			jsr 	FloatPrepare 				; prepare for floats
+		jsr 	FloatPrepare 				; prepare for floats
 
 ; ************************************************************************************************
 ;

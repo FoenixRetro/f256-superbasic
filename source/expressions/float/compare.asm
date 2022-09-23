@@ -17,7 +17,6 @@
 ; ************************************************************************************************
 
 CompareFloat:	
-		.debug
 		jsr 	FloatSubtract 				; Calculate S[X]-S[X+1]
 		;
 		;		At this point the mantissae are equal. If we were comparing integers

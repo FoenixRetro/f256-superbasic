@@ -53,6 +53,23 @@ class IntegerMath(TestAssertion):
 
 # *******************************************************************************************
 #
+#							Float mathematic/binary operation
+#
+# *******************************************************************************************
+
+class FloatMath(TestAssertion):
+	def create(self):
+		n1 = self.shortInteger()
+		n2 = self.shortInteger()
+		opList = "+-*"
+		op = opList[random.randint(0,len(opList)-1)]
+		if op == "/" and n2 == 0:				
+			return None 
+		r = eval("{0}{1}{2}".format(n1,op,n2))
+		return ["(({0}/1){1}({2}/1))".format(n1,op,n2),self.str(r)]
+
+# *******************************************************************************************
+#
 #								 Integer Comparison class
 #
 # *******************************************************************************************
@@ -92,9 +109,10 @@ class TestSet(object):
 		self.seed = random.randint(1,99999) if seed is None else seed 					# pick a seed if not provided
 		random.seed(self.seed)	
 		self.factories = [ 	 															# list of test factory classes
-							IntegerCompare(),
-							IntegerMath(),
-							StringBinary()
+							FloatMath()
+#							IntegerCompare(),
+#							IntegerMath(),
+#							StringBinary()
 		]
 		self.lineNumber = 1
 		self.step = 1
