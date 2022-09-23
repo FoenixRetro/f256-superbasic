@@ -35,6 +35,7 @@
 	.include	"./expressions/term/term.asm"
 	.include	"./expressions/utility/exprhelper.asm"
 	.include	"./expressions/utility/utility.asm"
+	.include	"./generated/constants.asm"
 	.include	"./generated/errors.asm"
 	.include	"./memory.flat/memory.asm"
 	.include	"./memory.flat/variable.asm"

@@ -51,6 +51,7 @@ prelim:
 	python $(SCRIPTDIR)errors.py $(LANGUAGE)
 	python $(SCRIPTDIR)makebuild.py
 	python $(SCRIPTDIR)tokens.py
+	python $(SCRIPTDIR)constants.py
 
 test:
 	python $(SCRIPTDIR)tests.py >storage$(S)load.dat
