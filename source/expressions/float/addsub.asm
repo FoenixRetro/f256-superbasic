@@ -44,11 +44,12 @@ FloatAdd:
 		pha
 		phy
 		jsr 	NSNormalise 				; normalise S[X]
-		beq 	_FAExit 					; if so, just return A
 
 		inx 								; normalise S[X+1]
 		jsr 	NSNormalise
 		dex
+		cmp 	#0
+		beq 	_FAExit 					; if so, just return A
 
 		lda 	NSExponent,x 				; are the exponents the same ?
 		cmp 	NSExponent+1,x

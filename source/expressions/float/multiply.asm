@@ -22,12 +22,12 @@ FloatingPointMultiply:
 FloatMultiply:	
 		pha
 		jsr 	NSNormalise		 			; normalise S[X] and exit if zero
-		inx 
-		cmp 	#0
 		beq 	_FDExit 					; return zero if zero (e.g. zero/something)
+		inx 
 		jsr 	NSNormalise		 			; normalise S[x+1] and error if zero.
-		beq 	_FDSetZero 					
 		dex
+		cmp 	#0
+		beq 	_FDSetZero 					
 
 		jsr 	MultiplyShort 				; calculate the result.		
 		adc 	NSExponent,x 				; calculate exponent including the shift.
