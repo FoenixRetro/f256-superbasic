@@ -1,6 +1,4 @@
 Progress:
-	Comparison strings.
-	Clear code (also reset procedures to arrays ? - scan later)
 	Float add, subtract, multiply, divide, compare (?) [short divide is wrong !] [MinusZero issue]
 	Float testing code
 	Integer & Fractional functions
@@ -12,5 +10,6 @@ Later:
 	Encoding Decimals (e.g. .90132)
 	Variable code
 	Improve CALL	
+	Reset procedures to arrays ??
 
 WATCH OUT FOR -0 when comparing values !

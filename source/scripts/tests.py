@@ -23,6 +23,9 @@ class TestAssertion(object):
 			return random.randint(-20,20)
 		return random.randint(-2000,2000)
 
+	def string(self,maxLen = 6):
+		return "".join([chr(random.randint(97,117)) for x in range(0,random.randint(0,maxLen))])
+		
 	def str(self,n):
 		return str(n)
 
@@ -64,6 +67,21 @@ class IntegerCompare(TestAssertion):
 
 # *******************************************************************************************
 #
+#								 String Comparison/Concat class
+#
+# *******************************************************************************************
+
+class StringBinary(TestAssertion):
+	def create(self):
+		s1 = self.string()
+		s2 = self.string()
+		op = [">","<","==",">=","<=","!="][random.randint(0,5)]							# pick a compare
+		ev = '"{0}"{1}"{2}"'.format(s1,op,s2)
+		r = -1 if eval(ev) else 0		
+		return [ev.replace("!=","<>").replace("==","="),r] 								# do translated to BASIC
+
+# *******************************************************************************************
+#
 #									Complete Test Set class
 #
 # *******************************************************************************************
@@ -75,7 +93,8 @@ class TestSet(object):
 		random.seed(self.seed)	
 		self.factories = [ 	 															# list of test factory classes
 							IntegerCompare(),
-							IntegerMath()
+							IntegerMath(),
+							StringBinary()
 		]
 		self.lineNumber = 1
 		self.step = 1
