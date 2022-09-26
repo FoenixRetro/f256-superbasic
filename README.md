@@ -1,2 +1,2 @@
 # superbasic
-Improved BASIC for C256 Junior
+Improved BASIC for F256 Junior
