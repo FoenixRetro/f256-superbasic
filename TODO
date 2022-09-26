@@ -1,12 +1,20 @@
 Progress:
+
+	Hardware out, , Print error message, Load BASIC code from memory not storage and make it work on r/h
+
 	Optimise normalisation & exponent shift in add.
 
 	Integer & Fractional functions
 		ABS() SGN() LEN() RND() ASC() DEC() INT() ISVAL() VAL() NOT PAGE FRAC()
 
-	String allocation/soft/concreting code.
+	String allocation/soft code.
 		String concatenation
 		String unaries.
+
+	Reading variable values / Assignment. Concreting strings. Generalise assignment
+
+	Parenthesis checker.
+
 
 Later:
 	Error : out of identifier space
