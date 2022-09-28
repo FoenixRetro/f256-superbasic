@@ -20,8 +20,9 @@ Start:	ldx 	#$FF 						; stack reset
 		jmp 	CommandRun
 		
 WarmStart:
-		.debug
-		bra 	WarmStart
+		lda 	#"W"
+		jsr 	$FFD2
+halt:	bra 	halt
 
 ErrorHandler:		
 		.debug

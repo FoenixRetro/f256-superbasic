@@ -21,13 +21,13 @@
 BackloadProgram:
 		ldx 	#$FF
 		stx 	$FFFA 						; fast mode
-		lda 	$FFFA 						; read first byte
+		jsr 	BLReadByte
 		bmi 	_BPExit
 _BPCopy:
 		inx  								; copy byte in
 		sta 	lineBuffer,x
 		stz 	lineBuffer+1,x
-		lda 	$FFFA 						; read next byte
+		jsr 	BLReadByte 					; read next byte
 		bmi 	_BPEndLine 					; -ve = EOL
 		cmp 	#9 							; handle TAB
 		bne 	_BPNotTab
@@ -42,7 +42,19 @@ _BPEndLine:
 _BPExit:
 		;stz 	$FFFA 						; clear fast mode
 		rts
-		
+
+
+BLReadByte:
+;		lda 	$FFFA
+;		rts
+_BLLoad:
+		lda 	$3000 						; hardcoded in the makefile.
+		inc 	_BLLoad+1
+		bne 	_BLNoCarry
+		inc 	_BLLoad+2
+_BLNoCarry:
+		cmp 	#0
+		rts
 		.send code
 
 ; ************************************************************************************************

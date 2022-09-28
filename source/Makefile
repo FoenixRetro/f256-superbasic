@@ -23,20 +23,29 @@ EMULATOR = $(BINDIR)jr256$(APPSTEM)
 TTYPORT = /dev/ttyUSB0
 LANGUAGE = en
 
+EMU_REPO= ..$(S)..$(S)junior-emulator
+UTL_REPO= ..$(S)..$(S)junior-utilities
+KRN_REPO= ..$(S)..$(S)junior-tinykernel
+
 all :  basic
 
 run : basic
-	$(EMULATOR) $(APPNAME)@8010
+	# 3000 is hardcoded in backload.asm
+	$(EMULATOR) $(APPNAME)@8000 storage$(S)load.dat@3000 
 
 go : basic 
-	$(BINDIR)makeboot $(APPSTEM) basic.rom upload.bin
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary upload.bin --address 8000
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address F000
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 3000
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary basic.rom --address 8000
 
-update-tools:
-	$(CCOPY) ..$(S)..$(S)junior-emulator$(S)jr256* $(BINDIR)
-	$(CCOPY) ..$(S)..$(S)junior-utilities$(S)fnxmgr.zip $(BINDIR)
-	$(CCOPY) ..$(S)..$(S)junior-utilities$(S)makeboot$(APPSTEM) $(BINDIR)
-	$(CCOPY) ..$(S)..$(S)junior-utilities$(S)foenixmgr.ini .
+tools:
+	make -B -C $(KRN_REPO)
+	make -B -C $(EMU_REPO)
+	make -B -C $(UTL_REPO)
+	$(CCOPY) $(EMU_REPO)$(S)bin$(S)jr256$(APPSTEM) $(BINDIR)
+	$(CCOPY) $(UTL_REPO)$(S)fnxmgr.zip $(BINDIR)
+	$(CCOPY) $(UTL_REPO)$(S)foenixmgr.ini .
+	$(CCOPY) $(KRN_REPO)$(S)monitor.rom $(BINDIR)
 
 emu:
 	make -B -C ..$(S)..$(S)junior-emulator
@@ -54,4 +63,4 @@ prelim:
 	python $(SCRIPTDIR)constants.py
 
 test:
-	python $(SCRIPTDIR)tests.py >storage$(S)load.dat
+	python $(SCRIPTDIR)tests.py 

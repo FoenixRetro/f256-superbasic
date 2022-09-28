@@ -36,6 +36,7 @@ RUNNewLine:
 		;
 RUNCodePointerLine:		
 		ldy 	#2 							; start of program
+		
 		; ----------------------------------------------------------------------------------------
 		;
 		; 		Main run loop, with/without preincrementing

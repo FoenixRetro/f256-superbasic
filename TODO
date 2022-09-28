@@ -1,6 +1,10 @@
 Progress:
 
-	Hardware out, , Print error message, Load BASIC code from memory not storage and make it work on r/h
+	Int32 -> String, make it print the line number on every ASSERT
+
+	Proper hardware interface (borrow)
+
+	Print error message, Load BASIC code from memory not storage and make it work on r/h
 
 	Optimise normalisation & exponent shift in add.
 

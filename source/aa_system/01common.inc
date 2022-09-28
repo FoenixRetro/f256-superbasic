@@ -34,7 +34,7 @@ BasicStart = $2000
 ;
 ;		Build address of ROM
 ;		
-CodeStart = $8010
+CodeStart = $8000
 ;
 ;		Start of variable/stack/string space. This is a fixed location in memory.
 ;

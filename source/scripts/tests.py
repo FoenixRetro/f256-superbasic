@@ -134,7 +134,7 @@ class TestSet(object):
 		self.step = 1
 		sys.stderr.write("Seed = {0}\n".format(self.seed))
 
-	def create(self,handle,count = 1000):
+	def create(self,handle,count = 140):
 		handle.write("{0} rem \"Seed {1}\"\n".format(self.lineNumber,self.seed))		# put the seed in the BASIC listing
 		self.lineNumber += self.step
 		for i in range(0,count):														# create tests
@@ -145,7 +145,11 @@ class TestSet(object):
 			handle.write("{0} assert {1} = {2}\n".format(self.lineNumber,test[0],test[1]))				
 			self.lineNumber += self.step
 		handle.write("{0} call #ffff\n".format(self.lineNumber))						# on emulator jmp $FFFF returns to OS
+		for i in range(0,16):
+			handle.write(chr(255))
 
 if __name__ == "__main__":
-	TestSet().create(sys.stdout)
+	h = open("storage/load.dat","w")
+	TestSet().create(h)
+	h.close()
 
