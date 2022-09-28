@@ -43,6 +43,12 @@ _BPExit:
 		;stz 	$FFFA 						; clear fast mode
 		rts
 
+; ************************************************************************************************
+;
+;		Read one byte from source - this can be the hardware access from storage/load.dat
+;		or the in memory loaded BASIC source
+;
+; ************************************************************************************************
 
 BLReadByte:
 ;		lda 	$FFFA
