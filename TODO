@@ -1,6 +1,6 @@
 Progress:
 
-	Optimise normalisation & exponent shift in add.
+	Optimise  exponent shift in add.
 
 	Integer & Fractional functions
 		ABS() SGN() LEN() RND() ASC() DEC() INT() ISVAL() VAL() NOT PAGE FRAC()

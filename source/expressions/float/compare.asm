@@ -20,13 +20,12 @@ CompareFloat:
 		jsr 	FloatSubtract 				; Calculate S[X]-S[X+1]
 		;
 		;		At this point the mantissae are equal. If we were comparing integers
-		; 		then this should be zero - if float we ignore the lowest byte, which gives
-		;		an approximation for equality of 1 part in 2^22.
-		; 		This is about 1 part in 4 million.
+		; 		then this should be zero - if float we ignore the lowest 9 bits, which gives
+		;		an approximation for equality of 1 part in 2^21
+		; 		This is about 1 part in 2 million.
 		;				
-		lda 	#0
-;		ora 	NSMantissa0,x 			 	; so we ignore this - by changing bits checked
-		ora 	NSMantissa1,x				; the accuracy can be tweaked.
+		lda 	NSMantissa1,x 			 	; so we ignore this - by changing bits checked
+		and 	#$FE
 		ora 	NSMantissa2,x
 		ora 	NSMantissa3,x
 		beq 	_FCExit 					; zero, so approximately identical
