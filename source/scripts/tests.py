@@ -116,7 +116,7 @@ class StringBinary(TestAssertion):
 
 class UnaryNumber(TestAssertion):
 	def create(self):
-		t1 = random.randint(0,5)
+		t1 = random.randint(0,10)
 		n1 = self.shortInteger() if random.randint(0,1) == 0 else self.float()
 		s1 = self.string()
 		if t1 == 0:
@@ -129,6 +129,9 @@ class UnaryNumber(TestAssertion):
 		elif t1 == 3:
 			a = ord(s1[0]) if s1 != "" else 0
 			return [ "asc(\"{0}\")".format(s1),str(a)]
+		elif t1 == 4:
+			s = int(abs(n1)) * (-1 if n1 < 0 else 1)
+			return [ "int({0})".format(str(n1)),str(s)]
 		else:
 			return None
 

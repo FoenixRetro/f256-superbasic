@@ -78,7 +78,7 @@ VectorSet0:
 	.word	UnaryFalse                       ; $88 FALSE
 	.word	SyntaxError                      ; $89 FRAC(
 	.word	SyntaxError                      ; $8a HEX$(
-	.word	SyntaxError                      ; $8b INT(
+	.word	IntUnary                         ; $8b INT(
 	.word	SyntaxError                      ; $8c ISVAL(
 	.word	SyntaxError                      ; $8d LEFT$(
 	.word	LenUnary                         ; $8e LEN(
