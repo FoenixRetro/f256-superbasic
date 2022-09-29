@@ -180,6 +180,10 @@ class UnaryString(TestAssertion):
 			l1 = random.randint(0,3)
 			s = s1[n1-1:][:l1]
 			return [ 'mid$(\"{0}\",{1},{2})'.format(s1,n1,l1),'"'+s+'"']
+		if t1 == 5:
+			s = str(random.randint(-1000,1000))+"."+str(random.randint(1,9))
+			return [ 'str$({0})'.format(s),'"'+s+'0000"']
+
 		else:
 			return None
 
@@ -204,7 +208,7 @@ class TestSet(object):
 		self.step = 1
 		sys.stderr.write("Seed = {0}\n".format(self.seed))
 
-	def create(self,handle,count = 140):
+	def create(self,handle,count = 300):
 		handle.write("{0} rem \"Seed {1}\"\n".format(self.lineNumber,self.seed))		# put the seed in the BASIC listing
 		self.lineNumber += self.step
 		for i in range(0,count):														# create tests

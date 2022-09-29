@@ -1,23 +1,15 @@
 Progress:
-
 	String concatenation
-	String unaries.
-		STR$() / General conversion function.
-
-	PRINT import.			
-
+	PRINT import/convert		
 	Reading variable values / Assignment. Concreting strings. Generalise assignment
-
 	Parenthesis checker.
-
+	Arrays, definition and usage.
 
 Later:
 	Expand rnd() (check MS Basic)
 	Error : out of identifier space
 	Error : string allocation space
 	Error : string temp allocate fails
-	Todo : scan for procedures (part of CLEAR)	
-	Code to access variables in term.
-	Variable code
+	Scan for procedures (part of CLEAR)	/ Reset procedures to arrays ??
 	Improve CALL	
-	Reset procedures to arrays ??
+
