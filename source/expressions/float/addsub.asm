@@ -128,12 +128,15 @@ _FAExit:
 ; ************************************************************************************************
 
 _FAShiftToExponent:
+		.debug
+
+_FAShiftToExponent2:
 		tya 								; compare Y to exponent  								
 		cmp 	NSExponent,x 				; reached the exponent required ?
 		beq 	_FASEExit 					; exit if so.
 		jsr 	NSMShiftRight	 			; shift the mantissa right
 		inc 	NSExponent,x 				; increment exponent
-		bra 	_FAShiftToExponent
+		bra 	_FAShiftToExponent2
 _FASEExit:
 		rts		
 
