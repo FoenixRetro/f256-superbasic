@@ -55,7 +55,7 @@ _ClearZeroEnd:
 		;
 		;		Reset the BASIC string pointer
 		;
-		; **TODO**		
+		jsr 	StringSystemInitialise		
 		;
 		;		Scan the program code for Procedures (possibly convert intarrys back above ?)
 		;

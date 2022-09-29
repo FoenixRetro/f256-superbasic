@@ -36,7 +36,7 @@ BasicStart = $2000
 ;		
 CodeStart = $8000
 ;
-;		Start of variable/stack/string space. This is a fixed location in memory.
+;		Start of variable/string space. This is a fixed location in memory.
 ;
 VariableSpace = $1000
 ;

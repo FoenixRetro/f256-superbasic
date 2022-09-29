@@ -28,7 +28,8 @@ zTemp1:
 		.fill 	2
 zTemp2:
 		.fill 	2
-	
+zsTemp:	 									; allocated string temporary.
+		.fill 	2	
 		.send zeropage
 
 ; ************************************************************************************************
@@ -100,7 +101,13 @@ decimalCount:								; decimal digit count
 randomSeed: 								; random seed
 		.fill 	4				
 lowMemPtr: 									; memory allocation after program.
-		.fill 	2		
+		.fill 	2	
+stringMemory: 								; allocate concrete strings from here
+		.fill 	2			
+stringInitialised: 							; string 
+		.fill 	1		
+stringTempPointer:							; temporary string
+		.fill 	2			
 ;
 ;		New tokenised line - these three *must* be contiguous as they are used as a single entity
 ;		

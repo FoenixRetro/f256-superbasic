@@ -46,6 +46,7 @@ RUNCodePointerLine:
 _CRIncMainLoop:
 		iny		
 _CRMainLoop:
+		stz 	stringInitialised 			; clear the temporary string initialised flag.
 		.cget 				 				; get next command to execute.
 		bpl 	_CRNotKeyword
 		cmp 	#KWC_LAST_UNARY+1 			; if after unary, legitimate command

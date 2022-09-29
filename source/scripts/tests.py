@@ -155,6 +155,25 @@ class UnaryNumber(TestAssertion):
 
 # *******************************************************************************************
 #
+#								 Unary functions returning strings
+#
+# *******************************************************************************************
+
+class UnaryString(TestAssertion):
+	def create(self):
+		t1 = random.randint(0,10)
+		s1 = self.string()
+		if t1 == 0:
+			n1 = random.randint(35,126)
+			return [ "chr$({0})".format(n1),'"{0}"'.format(chr(n1)) ]
+		if t1 == 1:
+			n1 = random.randint(0,11)
+			return [ "spc({0})".format(n1),'"{0}"'.format("            "[:n1]) ]
+		else:
+			return None
+
+# *******************************************************************************************
+#
 #									Complete Test Set class
 #
 # *******************************************************************************************
@@ -165,9 +184,10 @@ class TestSet(object):
 		self.seed = random.randint(1,99999) if seed is None else seed 					# pick a seed if not provided
 		random.seed(self.seed)	
 		self.factories = [ 	 															# list of test factory classes
-							FloatCompare(),FloatMath(),
-							IntegerCompare(),IntegerMath(),
-							StringBinary(),UnaryNumber()
+#							FloatCompare(),FloatMath(),
+#							IntegerCompare(),IntegerMath(),
+#							StringBinary(),UnaryNumber()
+							UnaryString()
 		]
 		self.lineNumber = 1
 		self.step = 1

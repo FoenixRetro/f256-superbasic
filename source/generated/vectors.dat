@@ -73,7 +73,7 @@ VectorSet0:
 	.word	AbsUnary                         ; $83 ABS(
 	.word	AllocUnary                       ; $84 ALLOC(
 	.word	AscUnary                         ; $85 ASC(
-	.word	SyntaxError                      ; $86 CHR$(
+	.word	ChrUnary                         ; $86 CHR$(
 	.word	UnaryFalse                       ; $87 FALSE
 	.word	FracUnary                        ; $88 FRAC(
 	.word	IntUnary                         ; $89 INT(
@@ -85,7 +85,7 @@ VectorSet0:
 	.word	SyntaxError                      ; $8f RIGHT$(
 	.word	Unary_Rnd                        ; $90 RND(
 	.word	SgnUnary                         ; $91 SGN(
-	.word	SyntaxError                      ; $92 SPC(
+	.word	SpcUnary                         ; $92 SPC(
 	.word	SyntaxError                      ; $93 STR$(
 	.word	UnaryTrue                        ; $94 TRUE
 	.word	ValUnary                         ; $95 VAL(

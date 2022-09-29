@@ -106,6 +106,7 @@ Evaluate8BitInteger:
 		ora 	NSMantissa2,x
 		ora 	NSMantissa1,x
 		bne 	HelperValueError
+		lda 	NSMantissa0,x
 		rts
 
 		.send code

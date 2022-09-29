@@ -1,9 +1,8 @@
 Progress:
 
-	String allocation/soft code.
-		String concatenation
-		String unaries.
-			CHR$() HEX$() LEFT$() MID$() RIGHT$() SPC() STR$()
+	String concatenation
+	String unaries.
+		LEFT$() MID$() RIGHT$() STR$()
 
 	PRINT import.			
 
@@ -15,6 +14,8 @@ Progress:
 Later:
 	Expand rnd() (check MS Basic)
 	Error : out of identifier space
+	Error : string allocation space
+	Error : string temp allocate fails
 	Todo : scan for procedures (part of CLEAR)	
 	Code to access variables in term.
 	Variable code
