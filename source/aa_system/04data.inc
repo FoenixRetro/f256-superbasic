@@ -107,7 +107,10 @@ tokenBuffer:
 		.fill 	253
 
 lineBuffer: 								; used for input - ASCII line goes here
-		.fill 	256
+		.fill 	MaxLineSize+1
+
+numberBuffer:								; buffer for numbers (32 bit binary + sign + ASCIIZ)
+		.fill 	34
 
 		.send 	storage
 

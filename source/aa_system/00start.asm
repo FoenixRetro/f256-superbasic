@@ -21,12 +21,9 @@ Start:	ldx 	#$FF 						; stack reset
 		
 WarmStart:
 		lda 	#"W"
-		jsr 	$FFD2
+		jsr 	EXTPrintCharacter
 halt:	bra 	halt
 
-ErrorHandler:		
-		.debug
-		jmp 	ErrorHandler
 
 		.align 2
 		.include "../generated/vectors.dat"

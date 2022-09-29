@@ -1,78 +1,92 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		01common.inc
-;		Purpose:	Common includes/defines/setups
-;		Created:	18th September 2022
+;		Name:		errors.asm
+;		Purpose:	Handle errors
+;		Created:	29th September 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
 
-; ************************************************************************************************
-;
-;										Configuration options
-;
-; ************************************************************************************************
-;
-;		Variables that have to be in zero page because it's used in (xx),y
-;
-ZeroPageMandatory = $30 
-;
-; 		Variables that would be nice to be in zero page, but it's not required
-;
-ZeroPagePreference = $600
-;
-;		Variables that can go anywhere
-;
-MemoryStorage = $700
-;
-;		Where program memory starts
-;
-BasicStart = $2000
-;
-;		Build address of ROM
-;		
-CodeStart = $8000
-;
-;		Start of variable/stack/string space. This is a fixed location in memory.
-;
-VariableSpace = $1000
-;
-;		End of variable/stack/string space
-;
-EndVariableSpace = $2000
-;
-;		Basic Math Stack Size
-;
-MathStackSize = 8
-;
-;		Basic Return Stack Size
-;
-BasicStackSize = 512
-;
-;		Max Input Line Length
-;	
-MaxLineSize = 80
+		.section code
 
 ; ************************************************************************************************
 ;
-;									Set up code and data sections
+;								Report error A
 ;
 ; ************************************************************************************************
 
-		* = ZeroPageMandatory 				; *must* be in zero page
-		.dsection zeropage
+ErrorHandler:		
+		tay 								; find the error text
+		beq 	_EHEnd
+		ldx 	#0
+_EHFind:		
+		dey 								; found the error text ?
+		beq 	_EHFound
+_EHFindZero:
+		lda 	ErrorText,x 				; find the next error
+		inx
+		cmp 	#0
+		bne 	_EHFindZero
+		bra 	_EHFind
+_EHFound:
+		lda 	ErrorText,x 				; print the message
+		jsr 	EXTPrintCharacter
+		inx
+		lda 	ErrorText,x
+		bne 	_EHFound		
 
-		* = ZeroPagePreference 				; not required to be in zero page, but preferable
-		.dsection zeropref
+		ldy 	#1 							; if line number zero don't print i
+		.cget
+		bne 	_EHAtMsg
+		iny
+		.cget
+		beq 	_EHCREnd
 
-		* = MemoryStorage 					; doesn't matter if zero page or not 
-		.dsection storage
+_EHAtMsg:		
+		ldx 	#_AtMsg >> 8 				; print " at "
+		lda 	#_AtMsg & $FF
+		jsr 	PrintStringXA
 
-		* = CodeStart
-		.dsection code
+		ldy 	#1 							; line number into XA
+		.cget
+		pha
+		iny
+		.cget
+		tax
+		pla
+		jsr 	ConvertInt16 				; convert XA to string
+		jsr 	PrintStringXA 				; and print it.
+
+_EHCREnd:
+		lda 	#13 						; new line
+		jsr 	EXTPrintCharacter
+_EHEnd:			
+		jmp 	WarmStart
+
+_AtMsg:	.text 	" at line ",0
+
+; ************************************************************************************************
+;
+;								  Print String at XA
+;
+; ************************************************************************************************
+
+PrintStringXA:
+		stx 	zTemp0+1
+		sta 	zTemp0
+		ldy 	#0
+_PSXALoop:
+		lda 	(zTemp0),y
+		beq 	_PSXAExit
+		jsr 	EXTPrintCharacter
+		iny
+		bra 	_PSXALoop
+_PSXAExit:
+		rts						
+		.send code
 
 ; ************************************************************************************************
 ;

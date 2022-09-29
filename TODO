@@ -1,10 +1,6 @@
 Progress:
 
-	Int32 -> String, make it print the line number on every ASSERT
-
-	Proper hardware interface (borrow)
-
-	Print error message, Load BASIC code from memory not storage and make it work on r/h
+	Make it print the line number on every ASSERT
 
 	Optimise normalisation & exponent shift in add.
 
