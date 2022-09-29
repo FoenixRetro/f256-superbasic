@@ -77,7 +77,7 @@ VectorSet0:
 	.word	UnaryFalse                       ; $87 FALSE
 	.word	FracUnary                        ; $88 FRAC(
 	.word	IntUnary                         ; $89 INT(
-	.word	SyntaxError                      ; $8a ISVAL(
+	.word	IsValUnary                       ; $8a ISVAL(
 	.word	SyntaxError                      ; $8b LEFT$(
 	.word	LenUnary                         ; $8c LEN(
 	.word	SyntaxError                      ; $8d MID$(
@@ -88,7 +88,7 @@ VectorSet0:
 	.word	SyntaxError                      ; $92 SPC(
 	.word	SyntaxError                      ; $93 STR$(
 	.word	UnaryTrue                        ; $94 TRUE
-	.word	SyntaxError                      ; $95 VAL(
+	.word	ValUnary                         ; $95 VAL(
 	.word	SyntaxError                      ; $96 FOR
 	.word	SyntaxError                      ; $97 IF
 	.word	SyntaxError                      ; $98 PROC

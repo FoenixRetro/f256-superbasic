@@ -30,6 +30,7 @@ EncodeNumberStart:
 		bra 	EncodeNumberContinue+1
 EncodeNumberContinue:
 		clc
+EncodeNumber:		
 		php 								; save reset.
 		cmp 	#"." 						; only accept 0-9 and .
 		beq 	_ENIsOkay
@@ -57,6 +58,8 @@ _ENIsOkay:
 		; --------------------------------------------------------------------
 
 _ENStartEncode:
+		cmp 	#'.'						; first is DP
+		beq 	_ENFirstDP
 		and 	#15 						; put digit in mantissa
 		jsr 	NSMSetByte
 		lda 	#ESTA_Low
@@ -64,6 +67,11 @@ _ENExitChange:
 		sta 	EncodeState 				; save new state		
 		sec
 		rts
+
+_ENFirstDP:
+		jsr 	NSMSetZero 					; clear integer part
+		bra 	_ESTASwitchFloat			; go straight to float and exi
+
 		; --------------------------------------------------------------------
 		;
 		;		Not restarting. Figure out what to do next
@@ -78,9 +86,8 @@ _ENNoRestart:
 		beq 	_ESTAHighState
 		cmp 	#ESTA_Decimal
 		beq 	_ESTADecimalState
-		.debug
-
-
+		.debug 								; should not happen !
+		
 		; --------------------------------------------------------------------
 		;
 		;		Inputting to a single byte.
@@ -92,14 +99,14 @@ _ESTALowState:
 		cmp 	#"."						; decimal point
 		beq 	_ESTASwitchFloat 			; then we need to do the floating point bit
 		and 	#15 						; make digit
-		sta 	zTemp0 						; save it.
+		sta 	DigitTemp 					; save it.
 		;
 		lda 	NSMantissa0,x 				; x mantissa0 x 10 and add it
 		asl 	a
 		asl 	a
 		adc 	NSMantissa0,x
 		asl 	a
-		adc 	zTemp0
+		adc 	DigitTemp
 		sta 	NSMantissa0,x
 		cmp 	#25 						; if >= 25 cannot guarantee next will be okay
 		bcc 	_ESTANoSwitch 				; as could be 25 x 10 + 9

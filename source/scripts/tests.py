@@ -148,6 +148,8 @@ class UnaryNumber(TestAssertion):
 		elif t1 == 6:
 			n = 0 if random.randint(0,3) == 0 else self.shortInteger()
 			return [ "not({0})".format(str(n)),str(0 if n != 0 else -1)]
+		if t1 == 7:
+			return [ "val(\"{0}\")".format(self.str(n1)),self.str(n1)]
 		else:
 			return None
 
@@ -163,10 +165,9 @@ class TestSet(object):
 		self.seed = random.randint(1,99999) if seed is None else seed 					# pick a seed if not provided
 		random.seed(self.seed)	
 		self.factories = [ 	 															# list of test factory classes
-							#FloatCompare(),FloatMath(),
-							#IntegerCompare(),IntegerMath(),
-							#StringBinary()
-							UnaryNumber()
+							FloatCompare(),FloatMath(),
+							IntegerCompare(),IntegerMath(),
+							StringBinary(),UnaryNumber()
 		]
 		self.lineNumber = 1
 		self.step = 1

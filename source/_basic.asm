@@ -45,6 +45,7 @@
 	.include	"./expressions/unary/not.asm"
 	.include	"./expressions/unary/rnd.asm"
 	.include	"./expressions/unary/sgn.asm"
+	.include	"./expressions/unary/val.asm"
 	.include	"./expressions/utility/exprhelper.asm"
 	.include	"./expressions/utility/utility.asm"
 	.include	"./generated/constants.asm"

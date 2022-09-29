@@ -1,7 +1,7 @@
 Progress:
 
 	Integer & Fractional functions
-		ISVAL() VAL() ALLOC()
+		ALLOC()
 
 	String allocation/soft code.
 		String concatenation
