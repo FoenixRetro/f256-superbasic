@@ -78,11 +78,11 @@ VectorSet0:
 	.word	FracUnary                        ; $88 FRAC(
 	.word	IntUnary                         ; $89 INT(
 	.word	IsValUnary                       ; $8a ISVAL(
-	.word	SyntaxError                      ; $8b LEFT$(
+	.word	Unary_Left                       ; $8b LEFT$(
 	.word	LenUnary                         ; $8c LEN(
-	.word	SyntaxError                      ; $8d MID$(
+	.word	Unary_Mid                        ; $8d MID$(
 	.word	Unary_Not                        ; $8e NOT(
-	.word	SyntaxError                      ; $8f RIGHT$(
+	.word	Unary_Right                      ; $8f RIGHT$(
 	.word	Unary_Rnd                        ; $90 RND(
 	.word	SgnUnary                         ; $91 SGN(
 	.word	SpcUnary                         ; $92 SPC(

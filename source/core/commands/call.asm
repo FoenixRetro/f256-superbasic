@@ -13,6 +13,7 @@
 		.section code
 
 CallCommand: ;; [call]
+		ldx 	#0
 		jsr 	Evaluate16BitInteger
 		lda 	NSMantissa1
 		sta 	NSMantissa0+1

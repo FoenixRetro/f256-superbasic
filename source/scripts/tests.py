@@ -29,7 +29,7 @@ class TestAssertion(object):
 	def smallFloat(self):
 		return random.randint(-9000,9000)/1000
 
-	def string(self,maxLen = 6):
+	def string(self,maxLen = 9):
 		return "".join([chr(random.randint(97,117)) for x in range(0,random.randint(0,maxLen))])
 		
 	def str(self,n):
@@ -169,6 +169,17 @@ class UnaryString(TestAssertion):
 		if t1 == 1:
 			n1 = random.randint(0,11)
 			return [ "spc({0})".format(n1),'"{0}"'.format("            "[:n1]) ]
+		if t1 == 2:
+			n1 = random.randint(0,len(s1)+2)
+			return [ 'left$(\"{0}\",{1})'.format(s1,n1),'"'+s1[:n1]+'"']
+		if t1 == 3:
+			n1 = random.randint(0,len(s1)+2)
+			return [ 'right$(\"{0}\",{1})'.format(s1,n1),'"'+s1[max(0,len(s1)-n1):]+'"']
+		if t1 == 4:
+			n1 = random.randint(1,len(s1)+1)
+			l1 = random.randint(0,3)
+			s = s1[n1-1:][:l1]
+			return [ 'mid$(\"{0}\",{1},{2})'.format(s1,n1,l1),'"'+s+'"']
 		else:
 			return None
 
@@ -184,9 +195,9 @@ class TestSet(object):
 		self.seed = random.randint(1,99999) if seed is None else seed 					# pick a seed if not provided
 		random.seed(self.seed)	
 		self.factories = [ 	 															# list of test factory classes
-#							FloatCompare(),FloatMath(),
-#							IntegerCompare(),IntegerMath(),
-#							StringBinary(),UnaryNumber()
+							FloatCompare(),FloatMath(),
+							IntegerCompare(),IntegerMath(),
+							StringBinary(),UnaryNumber(),
 							UnaryString()
 		]
 		self.lineNumber = 1

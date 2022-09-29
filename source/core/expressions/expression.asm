@@ -12,7 +12,7 @@
 
 		.section code
 
-		.include "../generated/precedence.dat"
+		.include "../../generated/precedence.dat"
 
 ; ************************************************************************************************
 ;

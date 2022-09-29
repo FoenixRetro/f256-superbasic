@@ -12,7 +12,7 @@
 
 		.section code
 
-		.include "../generated/kwdtext.dat"
+		.include "../../generated/kwdtext.dat"
 		
 ; ************************************************************************************************
 ;

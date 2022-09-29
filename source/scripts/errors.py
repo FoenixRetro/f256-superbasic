@@ -11,7 +11,7 @@
 
 import os,sys
 eText = []
-errors = open("errors/text/errors."+sys.argv[1],"r").readlines()
+errors = open("core/errors/text/errors."+sys.argv[1],"r").readlines()
 errors = [x.replace("\t"," ").strip() for x in errors if not x.startswith("#") and x.strip() != ""]
 
 note = ";\n;\tThis is automatically generated.\n;\n"

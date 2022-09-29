@@ -13,6 +13,7 @@
 		.section code
 
 AssertCommand: ;; [assert]
+		ldx 	#0
 		jsr 	EvaluateInteger 			; the assert test
 		jsr 	NSMIsZero 					; exit if result is non zero.
 		bne 	_ACExit

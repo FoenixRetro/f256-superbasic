@@ -20,7 +20,7 @@
 
 EvaluateValue:
 		pha
-		jsr		EvaluateExpressionAt0 		; expression
+		jsr		EvaluateExpression 			; expression
 		jsr 	Dereference					; derefernce it
 		pla
 		rts

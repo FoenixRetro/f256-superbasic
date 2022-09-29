@@ -2,7 +2,7 @@ Progress:
 
 	String concatenation
 	String unaries.
-		LEFT$() MID$() RIGHT$() STR$()
+		STR$() / General conversion function.
 
 	PRINT import.			
 
