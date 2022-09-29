@@ -1,13 +1,14 @@
 Progress:
 
-	Optimise  exponent shift in add.
-
 	Integer & Fractional functions
-		ABS() SGN() LEN() RND() ASC() DEC() INT() ISVAL() VAL() NOT PAGE FRAC()
+		NOT INT() ISVAL() VAL() DEC() FRAC() ALLOC()
 
 	String allocation/soft code.
 		String concatenation
 		String unaries.
+			CHR$() HEX$() LEFT$() MID$() RIGHT$() SPC() STR$()
+
+	PRINT import.			
 
 	Reading variable values / Assignment. Concreting strings. Generalise assignment
 
@@ -15,6 +16,7 @@ Progress:
 
 
 Later:
+	Expand rnd() (check MS Basic)
 	Error : out of identifier space
 	Todo : scan for procedures (part of CLEAR)	
 	Code to access variables in term.

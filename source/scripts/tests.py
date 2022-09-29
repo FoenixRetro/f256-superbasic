@@ -114,6 +114,24 @@ class StringBinary(TestAssertion):
 		r = -1 if eval(ev) else 0		
 		return [ev.replace("!=","<>").replace("==","="),r] 								# do translated to BASIC
 
+class UnaryNumber(TestAssertion):
+	def create(self):
+		t1 = random.randint(0,5)
+		n1 = self.shortInteger() if random.randint(0,1) == 0 else self.float()
+		s1 = self.string()
+		if t1 == 0:
+			return [ "abs({0})".format(str(n1)),str(abs(n1))]
+		elif t1 == 1:
+			s = 0 if (n1 == 0) else (-1 if n1 < 0 else 1)
+			return [ "sgn({0})".format(str(n1)),str(s)]
+		elif t1 == 2:
+			return [ "len(\"{0}\")".format(s1),str(len(s1))]
+		elif t1 == 3:
+			a = ord(s1[0]) if s1 != "" else 0
+			return [ "asc(\"{0}\")".format(s1),str(a)]
+		else:
+			return None
+
 # *******************************************************************************************
 #
 #									Complete Test Set class
@@ -126,9 +144,10 @@ class TestSet(object):
 		self.seed = random.randint(1,99999) if seed is None else seed 					# pick a seed if not provided
 		random.seed(self.seed)	
 		self.factories = [ 	 															# list of test factory classes
-							FloatCompare(),FloatMath(),
-							IntegerCompare(),IntegerMath(),
-							StringBinary()
+							#FloatCompare(),FloatMath(),
+							#IntegerCompare(),IntegerMath(),
+							#StringBinary()
+							UnaryNumber()
 		]
 		self.lineNumber = 1
 		self.step = 1

@@ -38,17 +38,16 @@ go : basic
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 3000
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary basic.rom --address 8000
 
-tools:
+tools: emu
 	make -B -C $(KRN_REPO)
-	make -B -C $(EMU_REPO)
 	make -B -C $(UTL_REPO)
-	$(CCOPY) $(EMU_REPO)$(S)bin$(S)jr256$(APPSTEM) $(BINDIR)
 	$(CCOPY) $(UTL_REPO)$(S)fnxmgr.zip $(BINDIR)
 	$(CCOPY) $(UTL_REPO)$(S)foenixmgr.ini .
 	$(CCOPY) $(KRN_REPO)$(S)monitor.rom $(BINDIR)
 
 emu:
-	make -B -C ..$(S)..$(S)junior-emulator
+	make -B -C $(EMU_REPO)
+	$(CCOPY) $(EMU_REPO)$(S)bin$(S)jr256$(APPSTEM) $(BINDIR)
 
 stack:
 	python $(SCRIPTDIR)showstack.py

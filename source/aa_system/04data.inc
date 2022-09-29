@@ -95,7 +95,11 @@ encodeState: 								; state for simple encoding FSM
 		.fill 	1
 
 decimalCount:								; decimal digit count
-		.fill 	1		
+		.fill 	1
+
+randomSeed: 								; random seed
+		.fill 	4				
+		
 ;
 ;		New tokenised line - these three *must* be contiguous as they are used as a single entity
 ;		

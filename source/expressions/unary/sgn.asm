@@ -1,9 +1,9 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		compare.asm
-;		Purpose:	X[S] to X[S+1]
-;		Created:	23rd September 2022
+;		Name:		sgn.asm
+;		Purpose:	Sign value
+;		Created:	29th September 2022
 ;		Reviewed: 	
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
@@ -12,32 +12,27 @@
 
 ; ************************************************************************************************
 ;
-;							Compare Stack vs 2nd. Return -1,0 or 1 in A
+; 										Sign value (e.g. -1,0 or 1)
 ;
 ; ************************************************************************************************
 
-CompareFloat:	
-		jsr 	FloatSubtract 				; Calculate S[X]-S[X+1]
+SgnUnary: ;; [sgn(]	
+		plx 								; restore stack pos
+		jsr 	EvaluateNumber 				; get a float or int
+		jsr 	CheckRightBracket
+		jsr 	NSMIsZero 					; if zero
+		beq 	_SGZero  					; return Int Zero
 		;
-		;		At this point the mantissae are equal. If we were comparing integers
-		; 		then this should be zero - if float we ignore the lowest 10 bits, which gives
-		;		an approximation for equality of 1 part in 2^20
-		; 		This is about 1 part in 1 million.
-		;			
-		lda 	NSMantissa1,x 			 	; so we ignore this - by changing bits checked
-		and 	#$FC
-		ora 	NSMantissa2,x
-		ora 	NSMantissa3,x
-		beq 	_FCExit 					; zero, so approximately identical
-		;
-		;		Not equal, so get result from sign.
-		;
-		lda 	#1 							; return +1 if result>0
-		bit 	NSStatus,x
-		bpl 	_FCExit
-_FCNegative:		
-		lda 	#$FF 						; and return -1 if result<0
-_FCExit:
+		lda 	NSStatus,x 					; get status w/sign
+		pha
+		lda 	#1 							; set to 1
+		jsr 	NSMSetByte
+		pla
+		and		#$80 						; copy the sign byte out
+		sta 	NSStatus,x
+		rts
+
+_SGZero:jsr 	NSMSetZero
 		rts
 
 ; ************************************************************************************************

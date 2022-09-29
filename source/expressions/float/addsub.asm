@@ -128,8 +128,9 @@ _FAExit:
 ; ************************************************************************************************
 
 _FAShiftToExponent:
-		.debug
-
+		;
+		; 	Possible byte shift optimise here, but is it worth it ?
+		;
 _FAShiftToExponent2:
 		tya 								; compare Y to exponent  								
 		cmp 	NSExponent,x 				; reached the exponent required ?

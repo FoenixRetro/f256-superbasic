@@ -68,6 +68,7 @@ _ETCheckUnary:
 		phx 								; push X on the stack
 		asl 	a 							; put vector x 2 into X
 		tax
+		iny 								; consume unary function token
 		jmp 	(VectorSet0,x) 				; and do it.
 
 _ETSyntaxError:
