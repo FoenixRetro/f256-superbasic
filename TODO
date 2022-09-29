@@ -1,7 +1,5 @@
 Progress:
 
-	Make it print the line number on every ASSERT
-
 	Optimise normalisation & exponent shift in add.
 
 	Integer & Fractional functions

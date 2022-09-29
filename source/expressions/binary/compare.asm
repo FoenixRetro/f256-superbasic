@@ -129,6 +129,10 @@ CompareBaseCode:
 		lda 	NSExponent,x 				; check both are integers
 		ora 	NSExponent+1,x  		
 		bne 	_CBCFloat
+		lda 	NSStatus,x
+		ora 	NSStatus+1,x
+		and 	#NSTFloat
+		bne 	_CBCFloat
 		;
 		;		do the integer comparison.
 		;

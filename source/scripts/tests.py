@@ -24,7 +24,7 @@ class TestAssertion(object):
 		return random.randint(-2000,2000)
 
 	def float(self):
-		return random.randint(-40,40)/10
+		return random.randint(-40000000,40000000)/1000
 		
 	def string(self,maxLen = 6):
 		return "".join([chr(random.randint(97,117)) for x in range(0,random.randint(0,maxLen))])
