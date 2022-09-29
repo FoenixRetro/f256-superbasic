@@ -33,10 +33,10 @@ class TokenSource(object):
 				next
 				endproc
 			{u} 						// Unary functions
-				abs( 		asc( 		chr$( 		alloc(		dec( 		frac(
-				hex$( 		left$( 		mid$( 		right$( 	rnd( 		sgn( 		
+				abs( 		asc( 		chr$( 		alloc(		frac(		len( 		
+				left$( 		mid$( 		right$( 	rnd( 		sgn( 		int( 				
 				spc( 		str$( 		val(  		isval(		true 		false
-				not			len( 		int( 				
+				not			
 
 			{0}							// Set 0
 				cls 		data 		dim 		let 		goto		gosub 		

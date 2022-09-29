@@ -17,66 +17,76 @@
 ; ************************************************************************************************
 
 FloatFractionalPart:
-		pha
-		phx
 		phy
-		;
-		lda 	NSExponent,x 				; if exponent = integer, return zero
-		beq 	_FFPZero
-		;
+
 		lda 	NSStatus,x 					; take absolute value
 		and 	#$7F
 		sta 	NSStatus,x
+		jsr 	NSNormalise
 
-		jsr 	NSNormaliseX
-		;
-		lda		FPAExponent 				; calculate bits to zero
-		clc 								; e.g. how many of the most significant
-		adc 	#32 			 			; bits we keep to keep the fractional part.
+		lda 	NSExponent,x 				; calculate exponent-$E0 = digits to blank
+		sec
+		sbc 	#$E0
+		bcc 	_FFPExit 					; already fractional
+
+		cmp 	#32 						; will be zero as blanking 32+ digits.
 		bcs 	_FFPZero
 		;
-		bcc 	_FFPExit 					; if bit shift <= 0 then exit now (already fractional)
-		beq 	_FFPExit
-		cmp 	#32 						; >= 32 ? this means the number does not have the precision to tell.
-		bcs 	_FFPZero 					; return zero as will be all blanked
+		tay 								; put count to do in Y
+		;
+		lda 	NSMantissa3,x 				; do each in turn.
+		jsr 	_FFPPartial
+		sta 	NSMantissa3,x
 
-		ldx 	#3 							; offset in the mantissa, start at the high byte
-		tay 								; count in Y
-_FFPLoop:
-		cpy 	#0 							; finished ?
-		beq 	_FFPExit
-		cpy 	#8 							; can we do a whole byte at once.
-		bcs 	_FFPFreeByte
+		lda 	NSMantissa2,x
+		jsr 	_FFPPartial
+		sta 	NSMantissa2,x
+
+		lda 	NSMantissa1,x
+		jsr 	_FFPPartial
+		sta 	NSMantissa1,x
+
+		lda 	NSMantissa0,x
+		jsr 	_FFPPartial
+		sta 	NSMantissa0,x
+		
+		jsr 	NSMIsZero 					; zeroed check.
+		bne 	_FFPExit
+
+_FFPZero:
+		jsr 	NSMSetZero
+_FFPExit:	
+		ply	
+		rts		
+;
+;		Clear up to 8 bits from A from the left, subtract from the todo count in Y
+;
+_FFPPartial:
+		cpy 	#0 							; no more to do
+		beq 	_FFFPPExit
+		cpy 	#8 							; whole byte to do ?
+		bcs 	_FFFPPWholeByte 
 		;
-		phy 								; 1-7 to do, so do that many shift lefts, then that
-_FFPShiftLeft: 								; many shift rights.
-		asl 	FPAMantissa,x 				; this zeros the first n bits.
-		dey
-		bne 	_FFPShiftLeft
+		phy
+_FFFPPLeft:
+		asl 	a
+		dey 	
+		bne 	_FFFPPLeft		
 		ply
-_FFPShiftRight:
-		lsr 	FPAMantissa,x
-		dey
-		bne 	_FFPShiftRight
-		bra 	_FFPExit
-		;
-_FFPFreeByte:
-		stz 	FPAMantissa,x 				; do a whole byte
-		dex 								; previous byte in mantissa, e.g. going right to left
-		tya 								; take 8 from count
+_FFFPPRight:
+		lsr 	a
+		dey 	
+		bne 	_FFFPPRight
+		bra 	_FFFPPExit
+
+_FFFPPWholeByte:
+		tya 								; subtract 8 from count
 		sec
 		sbc 	#8
 		tay
-		bra 	_FFPLoop
-
-_FFPZero:
-		ldx 	#FPX_A0 					; return zero
-		jsr 	NSSetZero
-_FFPExit:	
-		ply	
-		plx
-		pla
-		rts		
+		lda 	#0 							; and clear all
+_FFFPPExit:		
+		rts
 
 ; ************************************************************************************************
 ;

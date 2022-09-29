@@ -76,7 +76,7 @@ VectorSet0:
 	.word	SyntaxError                      ; $86 CHR$(
 	.word	SyntaxError                      ; $87 DEC(
 	.word	UnaryFalse                       ; $88 FALSE
-	.word	SyntaxError                      ; $89 FRAC(
+	.word	FracUnary                        ; $89 FRAC(
 	.word	SyntaxError                      ; $8a HEX$(
 	.word	IntUnary                         ; $8b INT(
 	.word	SyntaxError                      ; $8c ISVAL(

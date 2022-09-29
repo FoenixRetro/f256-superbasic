@@ -26,6 +26,9 @@ class TestAssertion(object):
 	def float(self):
 		return random.randint(-40000000,40000000)/1000
 		
+	def smallFloat(self):
+		return random.randint(-9000,9000)/1000
+
 	def string(self,maxLen = 6):
 		return "".join([chr(random.randint(97,117)) for x in range(0,random.randint(0,maxLen))])
 		
@@ -114,6 +117,12 @@ class StringBinary(TestAssertion):
 		r = -1 if eval(ev) else 0		
 		return [ev.replace("!=","<>").replace("==","="),r] 								# do translated to BASIC
 
+# *******************************************************************************************
+#
+#								 Unary functions returning numbers
+#
+# *******************************************************************************************
+
 class UnaryNumber(TestAssertion):
 	def create(self):
 		t1 = random.randint(0,10)
@@ -132,6 +141,10 @@ class UnaryNumber(TestAssertion):
 		elif t1 == 4:
 			s = int(abs(n1)) * (-1 if n1 < 0 else 1)
 			return [ "int({0})".format(str(n1)),str(s)]
+		elif t1 == 5:
+			n1 = self.smallFloat()				# Precision is lost if you have 999999.322 say
+			s = abs(n1)-int(abs(n1)) 
+			return [ "frac({0})".format(str(n1)),self.str(s)]
 		else:
 			return None
 
