@@ -107,7 +107,11 @@ stringMemory: 								; allocate concrete strings from here
 stringInitialised: 							; string 
 		.fill 	1		
 stringTempPointer:							; temporary string
-		.fill 	2			
+		.fill 	2		
+decimalPlaces: 								; no of decimals.
+		.fill 	1
+dbOffset:									; offset into decimal buffer.
+		.fill 	1		
 ;
 ;		New tokenised line - these three *must* be contiguous as they are used as a single entity
 ;		
@@ -123,6 +127,8 @@ lineBuffer: 								; used for input - ASCII line goes here
 
 numberBuffer:								; buffer for numbers (32 bit binary + sign + ASCIIZ)
 		.fill 	34
+decimalBuffer: 								; buffer for number -> string conversion.
+		.fill 	16		
 
 		.send 	storage
 

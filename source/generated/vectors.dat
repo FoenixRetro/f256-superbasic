@@ -86,7 +86,7 @@ VectorSet0:
 	.word	Unary_Rnd                        ; $90 RND(
 	.word	SgnUnary                         ; $91 SGN(
 	.word	SpcUnary                         ; $92 SPC(
-	.word	SyntaxError                      ; $93 STR$(
+	.word	Unary_Str                        ; $93 STR$(
 	.word	UnaryTrue                        ; $94 TRUE
 	.word	ValUnary                         ; $95 VAL(
 	.word	SyntaxError                      ; $96 FOR

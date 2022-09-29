@@ -53,6 +53,7 @@
 	.include	"./core/expressions/unary/number/val.asm"
 	.include	"./core/expressions/unary/string/chr.asm"
 	.include	"./core/expressions/unary/string/spc.asm"
+	.include	"./core/expressions/unary/string/str.asm"
 	.include	"./core/expressions/unary/string/substring.asm"
 	.include	"./core/expressions/utility/exprhelper.asm"
 	.include	"./core/expressions/utility/utility.asm"
