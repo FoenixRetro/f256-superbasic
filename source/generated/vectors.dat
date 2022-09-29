@@ -71,7 +71,7 @@ VectorSet0:
 	.word	Shift1Command                    ; $81 !1:SH1
 	.word	SyntaxError                      ; $82 !2:SH2
 	.word	AbsUnary                         ; $83 ABS(
-	.word	SyntaxError                      ; $84 ALLOC(
+	.word	AllocUnary                       ; $84 ALLOC(
 	.word	AscUnary                         ; $85 ASC(
 	.word	SyntaxError                      ; $86 CHR$(
 	.word	UnaryFalse                       ; $87 FALSE

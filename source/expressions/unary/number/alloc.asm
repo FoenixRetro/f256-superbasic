@@ -1,78 +1,77 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		01common.inc
-;		Purpose:	Common includes/defines/setups
-;		Created:	18th September 2022
+;		Name:		alloc.asm
+;		Purpose:	Memory allocation.
+;		Created:	29th September 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
 
-; ************************************************************************************************
-;
-;										Configuration options
-;
-; ************************************************************************************************
-;
-;		Variables that have to be in zero page because it's used in (xx),y
-;
-ZeroPageMandatory = $30 
-;
-; 		Variables that would be nice to be in zero page, but it's not required
-;
-ZeroPagePreference = $600
-;
-;		Variables that can go anywhere
-;
-MemoryStorage = $700
-;
-;		Where program memory starts and ends
-;
-BasicStart = $2000
-;
-;		Build address of ROM
-;		
-CodeStart = $8000
-;
-;		Start of variable/stack/string space. This is a fixed location in memory.
-;
-VariableSpace = $1000
-;
-;		End of variable space
-;
-EndVariableSpace = $2000
-;
-;		Basic Math Stack Size
-;
-MathStackSize = 8
-;
-;		Basic Return Stack Size
-;
-BasicStackSize = 512
-;
-;		Max Input Line Length
-;	
-MaxLineSize = 80
+		.section code
+
 
 ; ************************************************************************************************
 ;
-;									Set up code and data sections
+; 										Allocate memory
 ;
 ; ************************************************************************************************
 
-		* = ZeroPageMandatory 				; *must* be in zero page
-		.dsection zeropage
+AllocUnary: ;; [alloc(]	
+		plx 								; restore stack pos
+		jsr 	Evaluate16BitInteger		; get bytes required.
+		jsr 	CheckRightBracket
 
-		* = ZeroPagePreference 				; not required to be in zero page, but preferable
-		.dsection zeropref
+		phx 								; save X/Y
+		phy
 
-		* = MemoryStorage 					; doesn't matter if zero page or not 
-		.dsection storage
+		txa 								; copy X into Y
+		tay
 
-		* = CodeStart
-		.dsection code
+		lda		NSMantissa1,y 				; get size
+		tax
+		lda 	NSMantissa0,y
+
+		jsr 	AllocateXABytes 			; allocate memory
+
+		sta 	NSMantissa0,y 				; write address out.
+		txa
+		sta 	NSMantissa1,y
+
+		ply
+		plx
+		rts
+
+; ************************************************************************************************
+;
+;								Allocate XA bytes of memory
+;
+; ************************************************************************************************
+
+AllocateXABytes:
+		phy
+		ldy 	lowMemPtr 					; push current address on stack
+		phy
+		ldy 	lowMemPtr+1
+		phy
+
+		clc
+		adc 	lowMemPtr
+		sta 	lowMemPtr
+		txa
+		adc 	lowMemPtr+1
+		sta 	lowMemPtr+1
+
+		; ** TODO Check memory overflow **
+		
+		plx
+		pla
+		ply
+		rts
+
+		.send code
 
 ; ************************************************************************************************
 ;

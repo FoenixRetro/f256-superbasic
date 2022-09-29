@@ -97,10 +97,10 @@ digitTemp: 									; temporary in number conversion
 		.fill 	1
 decimalCount:								; decimal digit count
 		.fill 	1
-
 randomSeed: 								; random seed
 		.fill 	4				
-		
+lowMemPtr: 									; memory allocation after program.
+		.fill 	2		
 ;
 ;		New tokenised line - these three *must* be contiguous as they are used as a single entity
 ;		

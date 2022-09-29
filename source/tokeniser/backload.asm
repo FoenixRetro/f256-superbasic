@@ -41,6 +41,7 @@ _BPEndLine:
 		bra 	BackloadProgram
 _BPExit:
 		;stz 	$FFFA 						; clear fast mode
+		jsr 	ClearCommand 				; clear variables etc.
 		rts
 
 ; ************************************************************************************************

@@ -39,15 +39,21 @@ _ClearOneVariable:
 
 _ClearZeroEnd:
 		;
+		;		Reset the low memory allocation pointer
+		;
+		clc
+		lda 	zTemp0
+		adc 	#1
+		sta 	lowMemPtr
+		lda 	zTemp0+1
+		adc 	#0
+		sta 	lowMemPtr+1
+		;
 		;		Reset the BASIC Stack pointer
 		;
 		; **TODO**
 		;
 		;		Reset the BASIC string pointer
-		;
-		; **TODO**		
-		;
-		;		Reset the memory allocation pointer
 		;
 		; **TODO**		
 		;

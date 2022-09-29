@@ -1,8 +1,5 @@
 Progress:
 
-	Integer & Fractional functions
-		ALLOC()
-
 	String allocation/soft code.
 		String concatenation
 		String unaries.
