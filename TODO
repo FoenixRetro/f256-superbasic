@@ -1,7 +1,7 @@
 Progress:
 
 	Integer & Fractional functions
-		NOT ISVAL() VAL() ALLOC()
+		ISVAL() VAL() ALLOC()
 
 	String allocation/soft code.
 		String concatenation

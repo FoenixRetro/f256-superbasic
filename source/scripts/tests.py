@@ -145,6 +145,9 @@ class UnaryNumber(TestAssertion):
 			n1 = self.smallFloat()				# Precision is lost if you have 999999.322 say
 			s = abs(n1)-int(abs(n1)) 
 			return [ "frac({0})".format(str(n1)),self.str(s)]
+		elif t1 == 6:
+			n = 0 if random.randint(0,3) == 0 else self.shortInteger()
+			return [ "not({0})".format(str(n)),str(0 if n != 0 else -1)]
 		else:
 			return None
 

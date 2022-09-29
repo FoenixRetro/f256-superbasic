@@ -42,6 +42,7 @@
 	.include	"./expressions/unary/frac.asm"
 	.include	"./expressions/unary/int.asm"
 	.include	"./expressions/unary/len.asm"
+	.include	"./expressions/unary/not.asm"
 	.include	"./expressions/unary/rnd.asm"
 	.include	"./expressions/unary/sgn.asm"
 	.include	"./expressions/utility/exprhelper.asm"
