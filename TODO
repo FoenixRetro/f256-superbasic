@@ -1,8 +1,15 @@
 Progress:
 	String concatenation
 	PRINT import/convert		
-	Reading variable values / Assignment. Concreting strings. Generalise assignment
+	LET Reading variable values / Assignment. Concreting strings. Generalise assignment. Remember procedures look like int arrays()
 	Parenthesis checker.
+	GOTO GOSUB and RETURN
+	Initial speed tests.
+	REPEAT UNTIL
+	WHILE WEND and Skipper
+	IF THEN ... IF ELSE ENDIF
+	FOR ... NEXT
+	PROC / ENDPROC
 	Arrays, definition and usage.
 
 Later:

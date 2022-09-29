@@ -97,7 +97,8 @@ _CCVCopyName:
 		ora 	#$80
 		sta 	(zTemp0),y
 		;
-		;		Variable record at zTemp0
+		;
+		;		Variable record at zTemp0 - output to tokeniser
 		;		
 _CCVFound:
 		jsr 	VariableClose 				; map out variables, perhaps.
