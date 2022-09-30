@@ -14,6 +14,7 @@ Progress:
 
 Later:
 	Expand rnd() (check MS Basic)
+	Disable interrupts enable at end of line.
 	Error : out of identifier space
 	Error : string allocation space
 	Error : string temp allocate fails
