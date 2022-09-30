@@ -35,8 +35,34 @@ AssignNumber:
 		;
 		;		Assign an integer
 		;
-		.debug
-		; write zero to type on exit.
+		lda		NSExponent+1,x 				; is it a float
+		beq		_ANNotFloat
+		inx
+		jsr 	FloatIntegerPart 			; make it an integer
+		dex
+_ANNotFloat:		
+		lda 	NSStatus,x 					; check if byte/word reference.
+		and 	#3
+		bne 	_ANByteWord
+		;
+		;		4 byte integer assign
+		;
+		jsr 	_ANCopy4PackSign 			; copy all 4 bytes and sign
+		bra 	_ANExit 
+		;
+		;		1 or 2 byte/word assign
+		;
+_ANByteWord:
+		pha 								; save count
+		lda 	NSMantissa0+1,x 			; do byte
+		sta 	(zTemp0)
+		pla
+		cmp	 	#1
+		beq 	_ANExit
+		lda 	NSMantissa1+1,x 			; do word
+		ldy 	#1
+		sta 	(zTemp0),y
+		bra 	_ANExit
 
 		;
 		;		Assign a float

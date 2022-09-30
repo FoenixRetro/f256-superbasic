@@ -1,6 +1,8 @@
 Progress:	
-	Assignment.  
+	Add Non/Let options.
+	Int/Float assignment tests.
 	Concreting strings. 
+	String assignment tests.
 	GOTO GOSUB and RETURN
 	Initial speed tests.
 	REPEAT UNTIL

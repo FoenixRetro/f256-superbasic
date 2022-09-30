@@ -1,4 +1,8 @@
-1  print '''
-8  let xx#=-97
-110 print xx#
+1  print ''
+110 print ?#8000
+112 print !#8004
+140 let ?#8000 =37
+145 let !#8004 = 32766
+210 print ?#8000
+212 print !#8004
 140 end
