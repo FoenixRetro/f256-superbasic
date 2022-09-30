@@ -61,6 +61,7 @@
 	.include	"./common/expressions/utility/utility.asm"
 	.include	"./common/generated/constants.asm"
 	.include	"./common/generated/errors.asm"
+	.include	"./common/strings/assign.asm"
 	.include	"./common/strings/stringalloc.asm"
 	.include	"./common/tokeniser/backload.asm"
 	.include	"./common/tokeniser/searchtokens.asm"
