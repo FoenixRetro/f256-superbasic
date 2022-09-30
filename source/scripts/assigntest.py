@@ -226,48 +226,36 @@ class Parenthesis(TestAssertion):
 # *******************************************************************************************
 
 class TestSet(object):
-
-	def __init__(self,seed = None,handle = None):
-		self.handle = handle if handle is not None else open("storage/load.dat","w")
+	def __init__(self,seed = None):
 		random.seed() 																	# randomise against clock
 		self.seed = random.randint(1,99999) if seed is None else seed 					# pick a seed if not provided
 		random.seed(self.seed)	
-		self.factories = self.getFactoryList()
+		self.factories = [ 	 															# list of test factory classes
+							FloatCompare(),FloatMath(),
+							IntegerCompare(),IntegerMath(),
+							StringBinary(),UnaryNumber(),
+							UnaryString(),Parenthesis()
+		]
 		self.lineNumber = 1
 		self.step = 1
 		sys.stderr.write("Seed = {0}\n".format(self.seed))
 
-	def getFactoryList(self):
-		return [ 			 															# list of test factory classes
-			FloatCompare(),FloatMath(),
-			IntegerCompare(),IntegerMath(),
-			StringBinary(),UnaryNumber(),
-			UnaryString(),Parenthesis()
-		]
-
-	def startup(self):
-		return self
-
-	def create(self,count = 300):
-		self.handle.write("{0} rem \"Seed {1}\"\n".format(self.lineNumber,self.seed))	# put the seed in the BASIC listing
+	def create(self,handle,count = 300):
+		handle.write("{0} rem \"Seed {1}\"\n".format(self.lineNumber,self.seed))		# put the seed in the BASIC listing
 		self.lineNumber += self.step
 		for i in range(0,count):														# create tests
 			factory = random.randint(0,len(self.factories)-1)							# pick a factory
 			test = None 
 			while test is None:															# get a legitimate test
 				test = self.factories[factory].create()
-			self.handle.write("{0} assert {1} = {2}\n".format(self.lineNumber,test[0],test[1]))				
+			handle.write("{0} assert {1} = {2}\n".format(self.lineNumber,test[0],test[1]))				
 			self.lineNumber += self.step
-		self.handle.write("{0} call #ffff\n".format(self.lineNumber))					# on emulator jmp $FFFF returns to OS
-		return self 
-
-	def closedown(self):
-		return self
-
-	def terminate(self):
+		handle.write("{0} call #ffff\n".format(self.lineNumber))						# on emulator jmp $FFFF returns to OS
 		for i in range(0,16):
-			self.handle.write(chr(255))
+			handle.write(chr(255))
 
 if __name__ == "__main__":
-	TestSet().startup().create().closedown().terminate()
+	h = open("storage/load.dat","w")
+	TestSet().create(h)
+	h.close()
 
