@@ -39,6 +39,7 @@
 	.include	"./common/expressions/term/dereference.asm"
 	.include	"./common/expressions/term/number.asm"
 	.include	"./common/expressions/term/term.asm"
+	.include	"./common/expressions/term/variable.asm"
 	.include	"./common/expressions/unary/number/abs.asm"
 	.include	"./common/expressions/unary/number/alloc.asm"
 	.include	"./common/expressions/unary/number/asc.asm"

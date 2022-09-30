@@ -43,6 +43,7 @@ NSBIsReference = $20 						; bit 5 : is a reference
 NSBIsString = $10 							; bit 4 : set if string (procedures don't go on the stack)
 NSBTypeMask = $18 							; bits 4,3 : 00 int 01 float 10 string 11 procedure
 NSBRefMask = $03 							; bits 0,1 : Bytes of reference, -1 (e.g. 00 = 1 byte, 11 = 4 bytes)
+NSBIsArray = $04
 
 NSTInteger = $00 							; base types for bits 3..4
 NSTFloat = $08

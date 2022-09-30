@@ -1,5 +1,7 @@
 Progress:	
-	LET Reading variable values / Assignment. Concreting strings. Generalise assignment. Remember procedures look like int arrays()
+	LET Reading variable values 
+		Assignment. Generalise assignment. Remember procedures look like int arrays()
+		Concreting strings. 
 	GOTO GOSUB and RETURN
 	Initial speed tests.
 	REPEAT UNTIL

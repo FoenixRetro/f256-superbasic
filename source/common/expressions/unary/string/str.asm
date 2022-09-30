@@ -57,6 +57,9 @@ ConvertNumberToString:
 		lda 	#"-"
 		jsr 	WriteDecimalBuffer
 _CNTSNotNegative:
+		lda 	NSStatus,x 					; check if float
+		and 	#NSTFloat
+		beq 	_CNTSNotFloat
 
 		inx 								; round up
 		lda 	#1
@@ -67,6 +70,7 @@ _CNTSNotNegative:
 		lda 	#NSTFloat
 		sta 	NSStatus+1,x
 		jsr 	FloatAdd
+_CNTSNotFloat:
 
 		jsr 	MakePlusTwoString
 		jsr 	FloatFractionalPart 		; get the fractional part
