@@ -69,6 +69,17 @@ _CRIsKeyword:
 _CRNotKeyword:		
 		cmp 	#KWD_COLON 					; if a :, consume it and go round.
 		beq 	_CRIncMainLoop	
+		cmp 	#$40 						; variable/call reference
+		bcc 	_CRNotVariable
+_CRGoLet:		
+		jmp 	LetCommand
+
+_CRNotVariable:
+		cmp 	#KWD_QMARK
+		beq 	_CRGoLet
+		cmp 	#KWD_PLING
+		beq 	_CRGoLet
+
 		.debug
 
 _CRSyntaxError:
