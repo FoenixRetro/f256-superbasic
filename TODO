@@ -1,5 +1,4 @@
 Progress:
-	String concatenation
 	PRINT import/convert		
 	LET Reading variable values / Assignment. Concreting strings. Generalise assignment. Remember procedures look like int arrays()
 	GOTO GOSUB and RETURN

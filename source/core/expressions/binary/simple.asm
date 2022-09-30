@@ -57,7 +57,7 @@ SubTopTwoStack:
 
 AddInteger: 	;; [+]
 		plx
-		.dispatcher FloatingPointAdd,NotDoneError
+		.dispatcher FloatingPointAdd,StringConcat
 AddCode:
 		lda 	NSStatus,x 					; signs are the same, can just add the mantissae.
 		eor 	NSStatus+1,x

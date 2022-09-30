@@ -112,10 +112,13 @@ class StringBinary(TestAssertion):
 	def create(self):
 		s1 = self.string()
 		s2 = self.string()
-		op = [">","<","==",">=","<=","!="][random.randint(0,5)]							# pick a compare
-		ev = '"{0}"{1}"{2}"'.format(s1,op,s2)
-		r = -1 if eval(ev) else 0		
-		return [ev.replace("!=","<>").replace("==","="),r] 								# do translated to BASIC
+		if random.randint(0,2) > 0:
+			op = [">","<","==",">=","<=","!="][random.randint(0,5)]						# pick a compare
+			ev = '"{0}"{1}"{2}"'.format(s1,op,s2)
+			r = -1 if eval(ev) else 0		
+			return [ev.replace("!=","<>").replace("==","="),r] 							# do translated to BASIC
+		else:
+			return [ '"{0}"+"{1}"'.format(s1,s2),'"'+s1+s2+'"']
 
 # *******************************************************************************************
 #

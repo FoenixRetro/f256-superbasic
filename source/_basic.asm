@@ -24,6 +24,7 @@
 	.include	"./core/errors/charcheck.asm"
 	.include	"./core/errors/errors.asm"
 	.include	"./core/expressions/binary/compare.asm"
+	.include	"./core/expressions/binary/concat.asm"
 	.include	"./core/expressions/binary/divide.asm"
 	.include	"./core/expressions/binary/multiply.asm"
 	.include	"./core/expressions/binary/scompare.asm"
