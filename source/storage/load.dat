@@ -1,3 +1,4 @@
 10 print "Hello world";42;';22/7
 15 print "Next"
+16 print !#8000,?#8000
 20 end

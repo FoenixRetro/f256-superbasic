@@ -18,10 +18,11 @@
 ;
 ;		This can be:
 ;			a number (in ASCII)			$30-$39 	(0-9)
-;			a quoted string 			$FF 		
+;			a quoted string 			$FF <data>	
+;			a hex constant 				$FE <data>	
 ;			a variable 					$40-$7F
 ; 			a text unary function 		defined by constants
-;			a punctuation unary 		@ ?\!$ & ( -
+;			a punctuation unary 		@ ?!$ ( -
 ;
 ; ************************************************************************************************
 

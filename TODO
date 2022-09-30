@@ -17,3 +17,8 @@ Later:
 	Scan for procedures (part of CLEAR)	/ Reset procedures to arrays ??
 	Improve CALL	
 
+Character dispatchers
+
+	a-z for LET and Procedure call.
+	. for assembler label
+	! ? $ for strings and indirection
