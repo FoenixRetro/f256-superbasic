@@ -19,6 +19,7 @@
 	.include	"./core/commands/clear.asm"
 	.include	"./core/commands/end.asm"
 	.include	"./core/commands/new.asm"
+	.include	"./core/commands/print.asm"
 	.include	"./core/commands/rem.asm"
 	.include	"./core/commands/run.asm"
 	.include	"./core/errors/charcheck.asm"

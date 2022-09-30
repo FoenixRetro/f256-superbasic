@@ -75,6 +75,7 @@ _AtMsg:	.text 	" at line ",0
 ; ************************************************************************************************
 
 PrintStringXA:
+		phy
 		stx 	zTemp0+1
 		sta 	zTemp0
 		ldy 	#0
@@ -85,6 +86,7 @@ _PSXALoop:
 		iny
 		bra 	_PSXALoop
 _PSXAExit:
+		ply
 		rts						
 		.send code
 
