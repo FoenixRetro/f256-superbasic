@@ -57,8 +57,7 @@ ConvertNumberToString:
 		lda 	#"-"
 		jsr 	WriteDecimalBuffer
 _CNTSNotNegative:
-		lda 	NSStatus,x 					; check if float
-		and 	#NSTFloat
+		lda 	NSExponent,x 				; check if decimal
 		beq 	_CNTSNotFloat
 
 		inx 								; round up

@@ -1,7 +1,6 @@
 Progress:	
-	LET Reading variable values 
-		Assignment. Generalise assignment. Remember procedures look like int arrays()
-		Concreting strings. 
+	Assignment.  
+	Concreting strings. 
 	GOTO GOSUB and RETURN
 	Initial speed tests.
 	REPEAT UNTIL
@@ -9,7 +8,7 @@ Progress:
 	IF THEN ... IF ELSE ENDIF
 	FOR ... NEXT
 	PROC / ENDPROC
-	Arrays, definition and usage.
+	Arrays, definition and usage. Remember procedures look like int arrays()
 
 Later:
 	Expand rnd() (check MS Basic)
@@ -19,8 +18,7 @@ Later:
 	Scan for procedures (part of CLEAR)	/ Reset procedures to arrays ??
 	Improve CALL	
 
-Character dispatchers
-
+Character dispatchers from RUN: (todo)
 	a-z for LET and Procedure call.
 	. for assembler label
-	! ? $ for strings and indirection
+	! ? for indirection

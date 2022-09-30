@@ -22,7 +22,7 @@
 ;			a hex constant 				$FE <data>	
 ;			a variable 					$40-$7F
 ; 			a text unary function 		defined by constants
-;			a punctuation unary 		@ ?!$ ( -
+;			a punctuation unary 		@ ? ! ( -
 ;
 ; ************************************************************************************************
 
@@ -143,7 +143,7 @@ _ETVariable:
 
 		; ----------------------------------------------------------------------------------------
 		;
-		;		Punctuation Unary these are @ (deref) ?!$ (indirection) ( (parenthesis)
+		;		Punctuation Unary these are @ (deref) ?! (indirection) ( (parenthesis)
 		;		and - (negation)
 		;
 		; ----------------------------------------------------------------------------------------
@@ -156,8 +156,6 @@ _ETPuncUnary:
 		beq 	_ETDereference
 		cmp 	#KWD_LPAREN 				; parenthesis
 		beq 	_ETParenthesis
-		cmp 	#KWD_DOLLAR
-		beq 	_ETStringReference
 		stz 	zTemp0 						; zTemp0 is the indirection level.
 		cmp 	#KWD_QMARK 					; byte indirection (0) ?
 		beq 	_ETIndirection
@@ -212,22 +210,6 @@ _ETDereference:
 		and 	#NSBIsReference
 		beq 	_ETTypeMismatch
 		stz 	NSStatus,x 					; make it an integer address
-		rts
-
-		; ----------------------------------------------------------------------------------------
-		;
-		;		Converts an address to a string there, so if you do $256 his refers to the
-		;		ASCIIZ string at 256.
-		;
-		; ----------------------------------------------------------------------------------------
-
-_ETStringReference:		
-		jsr 	EvaluateTerm				; evaluate the term
-		jsr 	Dereference 				; dereference it.
-		lda 	NSStatus,x 					; must be a +ve integer.
-		bne 	_ETTypeMismatch
-		lda 	#NSTString 					; make it a string
-		sta 	NSStatus,x
 		rts
 
 		; ----------------------------------------------------------------------------------------

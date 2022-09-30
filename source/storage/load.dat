@@ -1,8 +1,4 @@
 1  print '''
-5  print 0
-6  print 42
-7  print 22/7
-8  let aaa=97
-110 print aaa
-120 print bbb
+8  let xx#=-97
+110 print xx#
 140 end

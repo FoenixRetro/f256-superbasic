@@ -105,7 +105,7 @@ VectorSet0:
 	.word	SyntaxError                      ; $a3 DIM
 	.word	SyntaxError                      ; $a4 GOSUB
 	.word	SyntaxError                      ; $a5 GOTO
-	.word	SyntaxError                      ; $a6 LET
+	.word	LetCommand                       ; $a6 LET
 	.word	Command_Print                    ; $a7 PRINT
 	.word	SyntaxError                      ; $a8 READ
 	.word	RemCommand                       ; $a9 REM
