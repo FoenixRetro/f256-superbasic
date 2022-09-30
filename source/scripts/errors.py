@@ -11,12 +11,12 @@
 
 import os,sys
 eText = []
-errors = open("core/errors/text/errors."+sys.argv[1],"r").readlines()
+errors = open("common/errors/text/errors."+sys.argv[1],"r").readlines()
 errors = [x.replace("\t"," ").strip() for x in errors if not x.startswith("#") and x.strip() != ""]
 
 note = ";\n;\tThis is automatically generated.\n;\n"
-h1 = open("generated/errors.inc","w")
-h2 = open("generated/errors.asm","w")
+h1 = open("common/generated/errors.inc","w")
+h2 = open("common/generated/errors.asm","w")
 h1.write(note)
 h2.write(note)
 for i in range(0,len(errors)):

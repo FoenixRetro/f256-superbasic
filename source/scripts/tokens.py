@@ -287,31 +287,31 @@ class TokenCollection(object):
 if __name__ == "__main__":
 	note = ";\n;\tThis is automatically generated.\n;\n"
 	t = TokenCollection()
-	h1 = open("generated/kwdtext.dat","w")
+	h1 = open("common/generated/kwdtext.dat","w")
 	h1.write(note)
 	for i in range(0,3):
 		t.dumpGroupText(i,h1)
 	h1.close()
 
-	h2 = open("generated/kwdconst.inc","w")
+	h2 = open("common/generated/kwdconst.inc","w")
 	h2.write(note)
 	for i in range(-1,1):
 		t.dumpGroupConstants(i,h2)
 	h2.close()
 
-	h = open("generated/precedence.dat","w")
+	h = open("common/generated/precedence.dat","w")
 	h.write(note)
 	t.dumpPrecedenceTable(h)
 	h.close()
 
-	h = open("generated/vectors.dat","w")
+	h = open("common/generated/vectors.dat","w")
 	h.write(note)
 	t.dumpVectorTable(-1,h)
 	for i in range(0,3):
 		t.dumpVectorTable(i,h)
 	h.close()
 
-	h1 = open("generated/kwdconst0.inc","w")
+	h1 = open("common/generated/kwdconst0.inc","w")
 	h1.write(note)
 	t.group0Info(h1)
 	h1.close()
