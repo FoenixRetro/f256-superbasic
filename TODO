@@ -1,6 +1,6 @@
 Progress:	
-	Add Non/Let options.
 	Int/Float assignment tests.
+	! ? as binary operators.
 	Concreting strings. 
 	String assignment tests.
 	GOTO GOSUB and RETURN
@@ -21,6 +21,4 @@ Later:
 	Improve CALL	
 
 Character dispatchers from RUN: (todo)
-	a-z for LET and Procedure call.
 	. for assembler label
-	! ? for indirection

@@ -71,9 +71,15 @@ _CRNotKeyword:
 		beq 	_CRIncMainLoop	
 		cmp 	#$40 						; variable/call reference
 		bcc 	_CRNotVariable
+;
+;		Implied LET
+;
 _CRGoLet:		
-		jmp 	LetCommand
-
+		jsr 	LetCommand
+		bra 	_CRMainLoop
+;
+;		Not colon, not a variable
+;	
 _CRNotVariable:
 		cmp 	#KWD_QMARK
 		beq 	_CRGoLet
