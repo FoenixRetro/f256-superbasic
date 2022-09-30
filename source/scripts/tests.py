@@ -189,6 +189,32 @@ class UnaryString(TestAssertion):
 
 # *******************************************************************************************
 #
+#								 Parenthesis check
+#
+# *******************************************************************************************
+
+class Parenthesis(TestAssertion):
+
+	def createExpression(self,level):
+		if level == 0: 													# level 0 = single term.
+			return str(random.randint(-10,10))
+		elements = []
+		for i in range(0,random.randint(1,3)):							# build a chain at this level.
+			elements.append(self.createExpression(level-1))
+			elements.append("+-*"[random.randint(0,2)])
+		expr = " ".join(elements[:-1])
+		return "("+expr+")"
+
+	def create(self,level=3):
+		try:
+			expr = self.createExpression(level)
+			v = eval(expr)
+			return [expr,v]
+		except ValueError:
+			return self.createValidExpression(level)
+
+# *******************************************************************************************
+#
 #									Complete Test Set class
 #
 # *******************************************************************************************
@@ -202,7 +228,7 @@ class TestSet(object):
 							FloatCompare(),FloatMath(),
 							IntegerCompare(),IntegerMath(),
 							StringBinary(),UnaryNumber(),
-							UnaryString()
+							UnaryString(),Parenthesis()
 		]
 		self.lineNumber = 1
 		self.step = 1
