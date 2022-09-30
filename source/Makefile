@@ -63,3 +63,6 @@ prelim:
 
 test:
 	python $(SCRIPTDIR)tests.py 
+
+astest:
+	python $(SCRIPTDIR)assign.py 	

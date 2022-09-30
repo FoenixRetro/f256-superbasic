@@ -35,6 +35,9 @@ class TestAssertion(object):
 	def str(self,n):
 		return str(n) if n == int(n) else "{0:.7f}".format(n)
 
+	def make(self,test):
+		return "assert {0} = {1}".format(test[0],test[1])
+
 # *******************************************************************************************
 #
 #							Integer mathematic/binary operation
@@ -42,7 +45,7 @@ class TestAssertion(object):
 # *******************************************************************************************
 
 class IntegerMath(TestAssertion):
-	def create(self):
+	def create(self,parent):
 		n1 = self.shortInteger()
 		n2 = self.shortInteger()
 		opList = "+-*/%&|^"
@@ -64,7 +67,7 @@ class IntegerMath(TestAssertion):
 # *******************************************************************************************
 
 class FloatMath(TestAssertion):
-	def create(self):
+	def create(self,parent):
 		n1 = self.float()
 		n2 = self.float()
 		opList = "+-*"
@@ -81,7 +84,7 @@ class FloatMath(TestAssertion):
 # *******************************************************************************************
 
 class IntegerCompare(TestAssertion):
-	def create(self):
+	def create(self,parent):
 		n1 = self.shortInteger()
 		n2 = self.shortInteger()
 		op = [">","<","==",">=","<=","!="][random.randint(0,5)]							# pick a compare
@@ -95,7 +98,7 @@ class IntegerCompare(TestAssertion):
 # *******************************************************************************************
 
 class FloatCompare(TestAssertion):
-	def create(self):
+	def create(self,parent):
 		n1 = self.float()
 		n2 = self.float()
 		op = [">","<","==",">=","<=","!="][random.randint(0,5)]							# pick a compare
@@ -109,7 +112,7 @@ class FloatCompare(TestAssertion):
 # *******************************************************************************************
 
 class StringBinary(TestAssertion):
-	def create(self):
+	def create(self,parent):
 		s1 = self.string()
 		s2 = self.string()
 		if random.randint(0,2) > 0:
@@ -127,7 +130,7 @@ class StringBinary(TestAssertion):
 # *******************************************************************************************
 
 class UnaryNumber(TestAssertion):
-	def create(self):
+	def create(self,parent):
 		t1 = random.randint(0,10)
 		n1 = self.shortInteger() if random.randint(0,1) == 0 else self.float()
 		s1 = self.string()
@@ -163,7 +166,7 @@ class UnaryNumber(TestAssertion):
 # *******************************************************************************************
 
 class UnaryString(TestAssertion):
-	def create(self):
+	def create(self,parent):
 		t1 = random.randint(0,10)
 		s1 = self.string()
 		if t1 == 0:
@@ -211,9 +214,9 @@ class Parenthesis(TestAssertion):
 		expr = " ".join(elements[:-1])
 		return "("+expr+")"
 
-	def create(self,level=3):
+	def create(self,parent):
 		try:
-			expr = self.createExpression(level)
+			expr = self.createExpression(3)
 			v = eval(expr)
 			return [expr,v]
 		except ValueError:
@@ -235,7 +238,15 @@ class TestSet(object):
 		self.factories = self.getFactoryList()
 		self.lineNumber = 1
 		self.step = 1
+		self.count = 300
 		sys.stderr.write("Seed = {0}\n".format(self.seed))
+
+	def do(self,count):
+		self.count = count 
+		return self 
+
+	def getCount(self):
+		return self.count 
 
 	def getFactoryList(self):
 		return [ 			 															# list of test factory classes
@@ -248,24 +259,24 @@ class TestSet(object):
 	def startup(self):
 		return self
 
-	def create(self,count = 300):
+	def create(self):
 		self.handle.write("{0} rem \"Seed {1}\"\n".format(self.lineNumber,self.seed))	# put the seed in the BASIC listing
 		self.lineNumber += self.step
-		for i in range(0,count):														# create tests
+		for i in range(0,self.count):														# create tests
 			factory = random.randint(0,len(self.factories)-1)							# pick a factory
 			test = None 
 			while test is None:															# get a legitimate test
-				test = self.factories[factory].create()
-			self.handle.write("{0} assert {1} = {2}\n".format(self.lineNumber,test[0],test[1]))				
+				test = self.factories[factory].create(self)
+			self.handle.write("{0} {1}\n".format(self.lineNumber,self.factories[factory].make(test)))
 			self.lineNumber += self.step
-		self.handle.write("{0} call #ffff\n".format(self.lineNumber))					# on emulator jmp $FFFF returns to OS
 		return self 
 
 	def closedown(self):
 		return self
 
 	def terminate(self):
-		for i in range(0,16):
+		self.handle.write("{0} call #ffff\n".format(self.lineNumber))					# on emulator jmp $FFFF returns to OS
+		for i in range(0,16): 															# high byte end line data.
 			self.handle.write(chr(255))
 
 if __name__ == "__main__":

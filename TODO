@@ -1,6 +1,4 @@
 Progress:	
-	Int/Float assignment tests.
-	! ? as binary operators.
 	Concreting strings. 
 	String assignment tests.
 	GOTO GOSUB and RETURN
