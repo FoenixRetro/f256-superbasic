@@ -57,6 +57,7 @@ _IntegerCode:
 
 dispatchintegeronly .macro
 		.dereferenceboth 					; remove reference, A << 2 in A
+		asl 	a
 		and 	#$C0 						; isolate the type bits which have been shifted
 		ora 	NSExponent,x 				; check if both exponents are zero, e.g. both integers
 		ora 	NSExponent+1,x

@@ -35,7 +35,7 @@ VectorSetPunc:
 	.word	SyntaxError                      ; $1e ~
 	.word	SyntaxError                      ; $1f 
 	.word	SyntaxError                      ; $20 
-	.word	SyntaxError                      ; $21 !
+	.word	WordIndirect                     ; $21 !
 	.word	SyntaxError                      ; $22 "
 	.word	SyntaxError                      ; $23 #
 	.word	SyntaxError                      ; $24 $
@@ -65,7 +65,7 @@ VectorSetPunc:
 	.word	BinaryCompareLess                ; $3c <
 	.word	BinaryCompareEqual               ; $3d =
 	.word	BinaryCompareGreater             ; $3e >
-	.word	SyntaxError                      ; $3f ?
+	.word	ByteIndirect                     ; $3f ?
 VectorSet0:
 	.word	EOLCommand                       ; $80 !0:EOF
 	.word	Shift1Command                    ; $81 !1:SH1

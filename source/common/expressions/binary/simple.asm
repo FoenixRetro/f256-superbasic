@@ -101,6 +101,28 @@ EorInteger: 	;; [^]
 		stz	 	NSStatus,x 					; ignore sign.
 		rts
 
+; ************************************************************************************************
+;
+;								Binary Indirection Operators
+;
+; ************************************************************************************************
+
+WordIndirect: 	;; [!]
+		plx
+		.dispatchintegeronly
+		jsr 	AddCode 					; add the two values
+		lda 	#NSBIsReference+2 			; make a 2 byte reference
+		sta 	NSStatus,x
+		rts
+
+ByteIndirect: 	;; [?]
+		plx
+		.dispatchintegeronly
+		jsr 	AddCode 					; add the two values
+		lda 	#NSBIsReference+1 			; make a 1 byte reference
+		sta 	NSStatus,x
+		rts
+
 		.send code
 
 ; ************************************************************************************************

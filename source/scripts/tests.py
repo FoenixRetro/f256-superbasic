@@ -151,7 +151,7 @@ class UnaryNumber(TestAssertion):
 		elif t1 == 6:
 			n = 0 if random.randint(0,3) == 0 else self.shortInteger()
 			return [ "not({0})".format(str(n)),str(0 if n != 0 else -1)]
-		if t1 == 7:
+		elif t1 == 7:
 			return [ "val(\"{0}\")".format(self.str(n1)),self.str(n1)]
 		else:
 			return None
@@ -169,21 +169,24 @@ class UnaryString(TestAssertion):
 		if t1 == 0:
 			n1 = random.randint(35,126)
 			return [ "chr$({0})".format(n1),'"{0}"'.format(chr(n1)) ]
-		if t1 == 1:
+		elif t1 == 1:
 			n1 = random.randint(0,11)
 			return [ "spc({0})".format(n1),'"{0}"'.format("            "[:n1]) ]
-		if t1 == 2:
+		elif t1 == 2:
 			n1 = random.randint(0,len(s1)+2)
 			return [ 'left$(\"{0}\",{1})'.format(s1,n1),'"'+s1[:n1]+'"']
-		if t1 == 3:
+		elif t1 == 3:
 			n1 = random.randint(0,len(s1)+2)
 			return [ 'right$(\"{0}\",{1})'.format(s1,n1),'"'+s1[max(0,len(s1)-n1):]+'"']
-		if t1 == 4:
+		elif t1 == 4:
 			n1 = random.randint(1,len(s1)+1)
 			l1 = random.randint(0,3)
 			s = s1[n1-1:][:l1]
 			return [ 'mid$(\"{0}\",{1},{2})'.format(s1,n1,l1),'"'+s+'"']
-		if t1 == 5:
+		elif t1 == 5:
+			s = str(random.randint(-1000,1000))
+			return [ 'str$({0})'.format(s),'"'+s+'"']
+		elif t1 == 6:
 			s = str(random.randint(-1000,1000))+"."+str(random.randint(1,9))
 			return [ 'str$({0})'.format(s),'"'+s+'0000"']
 
