@@ -22,5 +22,6 @@ Skip cases
 
 	- 00.3F 		-
 	- 40.82 		Skip 1 *except* 80
-	- 83.FD 		-
-	- FE,FF	 		Data skip
+	- 83.FB 		contains a shiftable section. (KWC_FIRST_UNARY)
+	- FC,FF	 		Data skip
+

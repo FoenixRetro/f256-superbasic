@@ -103,15 +103,16 @@ VectorSet0:
 	.word	SyntaxError                      ; $a1 CLS
 	.word	SyntaxError                      ; $a2 DATA
 	.word	SyntaxError                      ; $a3 DIM
-	.word	Command_GOSUB                    ; $a4 GOSUB
-	.word	GotoCommand                      ; $a5 GOTO
-	.word	LetCommand                       ; $a6 LET
-	.word	Command_Print                    ; $a7 PRINT
-	.word	SyntaxError                      ; $a8 READ
-	.word	RemCommand                       ; $a9 REM
-	.word	Command_RETURN                   ; $aa RETURN
-	.word	SyntaxError                      ; $ab THEN
-	.word	SyntaxError                      ; $ac TO
+	.word	SyntaxError                      ; $a4 DOWNTO
+	.word	Command_GOSUB                    ; $a5 GOSUB
+	.word	GotoCommand                      ; $a6 GOTO
+	.word	LetCommand                       ; $a7 LET
+	.word	Command_Print                    ; $a8 PRINT
+	.word	SyntaxError                      ; $a9 READ
+	.word	RemCommand                       ; $aa REM
+	.word	Command_RETURN                   ; $ab RETURN
+	.word	SyntaxError                      ; $ac THEN
+	.word	SyntaxError                      ; $ad TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
