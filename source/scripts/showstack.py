@@ -23,24 +23,47 @@ class LabelStore(object):
 	def get(self,lbl):
 		return self.labels[lbl.strip().lower()]
 
+class MemoryDump(object):
+	def __init__(self):
+		self.mem = [x for x in open("memory.dump","rb").read(-1)]
+	def read(self,addr):
+		return self.mem[addr]
+	def readWord(self,addr):
+		return self.read(addr)+(self.read(addr+1) << 8)
+	def readLong(self,addr):
+		return self.readword(addr)+(self.readword(addr+2) << 16)
+	def readString(self,p):
+		val = ""
+		while self.read(p) != 0:
+			val += chr(self.read(p))
+			p += 1
+		return val 
+
+	def decode(self,mantissa,exponent,status):
+		if (status & 0x10) != 0:
+			val = '"'+self.readString(mantissa & 0xFFFF)+'"'
+		else:
+			val = str(mantissa)
+			if (status & 0x08) != 0:
+				e = exponent if exponent < 128 else exponent-256
+				val = str(mantissa * pow(2,e))+"f"
+			if (status & 0x80) != 0:
+				val = "-"+val
+		return val 
+
 if __name__ == "__main__":
 	ls = LabelStore()
-	mem = [x for x in open("memory.dump","rb").read(-1)]
+	md = MemoryDump()
+
 	stackAt = ls.get("NSStatus")
 	stackSize = ls.get("MathStackSize")
 
 	for i in range(0,stackSize):
-		status = mem[stackAt+i]
-		mantissa = mem[stackAt+i+1*stackSize]
-		mantissa += (mem[stackAt+i+2*stackSize] << 8)
-		mantissa += (mem[stackAt+i+3*stackSize] << 16)
-		mantissa += (mem[stackAt+i+4*stackSize] << 24)
-		exponent = mem[stackAt+i+5*stackSize]
+		status = md.read(stackAt+i)
+		mantissa = md.read(stackAt+i+1*stackSize)
+		mantissa += (md.read(stackAt+i+2*stackSize) << 8)
+		mantissa += (md.read(stackAt+i+3*stackSize) << 16)
+		mantissa += (md.read(stackAt+i+4*stackSize) << 24)
+		exponent = md.read(stackAt+i+5*stackSize)
 
-		val = str(mantissa)
-		if (status & 0x08) != 0:
-			e = exponent if exponent < 128 else exponent-256
-			val = str(mantissa * pow(2,e))+"f"
-		if (status & 0x80) != 0:
-			val = "-"+val
-		print("L:{0} M:{1:08x} E:{2:02x} S:{3:02x} = {4}".format(i,mantissa,exponent,status,val))
+		print("L:{0} M:{1:08x} E:{2:02x} S:{3:02x} = {4}".format(i,mantissa,exponent,status,md.decode(mantissa,exponent,status)))

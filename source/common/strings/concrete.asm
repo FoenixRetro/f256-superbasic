@@ -55,7 +55,9 @@ _SAHaveLength:
 		sta 	zTemp2+1
 		sta 	NSMantissa1,x
 		;
-		pla 								; save length in first byte
+		pla 								; save length-3 (chars allowed) in first byte
+		sec
+		sbc 	#3
 		sta 	(zTemp2)
 		lda 	#0 							; clear the status byte.
 		ldy 	#1

@@ -51,7 +51,10 @@ emu:
 
 stack:
 	python $(SCRIPTDIR)showstack.py
-		
+	
+strings:
+	python $(SCRIPTDIR)showstring.py
+
 basic : prelim
 	64tass $(ASMOPTS) _basic.asm -o $(APPNAME)
 
@@ -62,7 +65,7 @@ prelim:
 	python $(SCRIPTDIR)constants.py
 
 test:
-	python $(SCRIPTDIR)tests.py 
+	python $(SCRIPTDIR)simpletests.py 
 
 astest:
 	python $(SCRIPTDIR)assign.py 	
