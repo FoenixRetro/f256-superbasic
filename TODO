@@ -1,10 +1,8 @@
 Progress:	
 
-	GOSUB and RETURN
-	REPEAT UNTIL
+	FOR ... NEXT
 	WHILE WEND and Skipper
 	IF ELSE ENDIF extension.
-	FOR ... NEXT
 	PROC / ENDPROC
 	Arrays, definition and usage. Remember procedures look like int arrays()
 
@@ -19,3 +17,10 @@ Later:
 
 Character dispatchers from RUN: (todo)
 	. for assembler label
+
+Skip cases
+
+	- 00.3F 		-
+	- 40.82 		Skip 1 *except* 80
+	- 83.FD 		-
+	- FE,FF	 		Data skip

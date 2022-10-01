@@ -40,8 +40,8 @@ class TokenSource(object):
 
 			{0}							// Set 0
 				cls 		data 		dim 		let 		goto		gosub 		
-				return 		print		rem  		then 		to			read
-				call
+				return 		print		rem  		then 		to			downto
+				call 		read
 			{1}							// Set 1
 				end 		new 		list 		run 		stop				
 				clear 		restore 	assert
