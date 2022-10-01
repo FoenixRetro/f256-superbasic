@@ -1,12 +1,9 @@
 Progress:	
 
-	Fix C/N bug.
-	Check nested WHILE, do the stars thing again.
-	IF ELSE ENDIF extension.
+	IF ELSE ENDIF extension, check nesting.
 	FOR ... NEXT
-
-	PROC / ENDPROC
 	Arrays, definition and usage. Remember procedures look like int arrays()
+	PROC / ENDPROC
 	LOCALs and Parameters (linked)
 
 Later:

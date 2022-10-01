@@ -1,2 +1,8 @@
+5 print "Hi"''
 10 n = 10
-30 c = n:print c,n
+20 while n > 0
+25 print n,"Going"
+31 c = n:while c > 0:print "*";:c = c - 1:wend:print "Done"
+32 n=n-1
+50 wend
+60 print "Out"

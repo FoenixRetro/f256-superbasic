@@ -19,6 +19,7 @@
 ; ************************************************************************************************
 
 ScanForward:
+
 		sta 	zTemp0 						; save XA as the two possible matches.
 		stx 	zTemp0+1
 		stz 	zTemp1 						; this is the structure count - goes up with WHILE/FOR
@@ -80,7 +81,6 @@ _ScanSkipOne:
 		;		Skip data structure
 		;
 _ScanSkipData:
-		iny 								; point at data length.
 		;
 		sty 	zTemp1+1 					; add that to Y - this is done because of macros
 		.cget

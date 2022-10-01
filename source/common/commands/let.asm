@@ -21,7 +21,7 @@ LetCommand: ;; [let]
 		jsr 	CheckNextA
 		;
 		inx 								; RHS
-		jsr 	EvaluateExpression
+		jsr 	EvaluateValue
 		dex
 		;
 		jsr 	AssignVariable
