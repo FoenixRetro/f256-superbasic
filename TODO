@@ -1,6 +1,5 @@
 Progress:	
-	Dump vars, dump strings
-	String assignment tests / string only tests
+
 	GOTO GOSUB and RETURN
 	Basic IF/THEN
 	Initial speed tests.

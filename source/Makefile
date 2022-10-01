@@ -69,3 +69,6 @@ test:
 
 astest:
 	python $(SCRIPTDIR)assign.py 	
+
+sastest:
+	python $(SCRIPTDIR)assign.py all	

@@ -10,7 +10,7 @@
 # *******************************************************************************************
 
 import os,sys,re,random
-from tests import *
+from simpletests import *
 
 # *******************************************************************************************
 #
@@ -44,6 +44,16 @@ class FloatVariable(Variable):
 	def getNewValue(self):
 		return str(random.randint(-444444444,444444444)/1000)
 
+class StringVariable(Variable):
+	def __init__(self,index):
+		Variable.__init__(self,index)
+		self.value = '""'
+	def getName(self):
+		return Variable.getName(self)+"$"
+	def getNewValue(self):
+		txt = "".join([chr(random.randint(0,25)+65) for x in range(1,random.randint(0,24))])
+		return '"'+txt+'"'
+
 # *******************************************************************************************
 #
 #						Repeated assignments generator
@@ -75,9 +85,11 @@ class AssignTestSet(TestSet):
 		self.variables = [] 															# create variables, all initially zero or ""
 		varCount = max(2,self.count // 3)
 		for i in range(0,varCount):
-			if i%2 == 0:
+			if i%3 == 0 or t.allStrings:
+				v = StringVariable(i)
+			elif i%3 == 1:
 				v = IntegerVariable(i)
-			if i%2 == 1:
+			elif i%3 == 2:
 				v = FloatVariable(i)
 			self.variables.append(v)
 		return self
@@ -89,5 +101,10 @@ class AssignTestSet(TestSet):
 		return self
 
 if __name__ == "__main__":
-	AssignTestSet().do(48).startup().create().closedown().terminate()
+	t =AssignTestSet()
+	t.allStrings = False
+	if len(sys.argv) == 2:
+		t.allStrings = True
+		t.do(200)
+	t.startup().create().closedown().terminate()
 
