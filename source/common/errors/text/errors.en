@@ -25,3 +25,4 @@ String:		String too long
 Assert:		Assertion failed
 Data:		Out of data
 !NotDone: 	Unimplemented
+Line: 		No such line number

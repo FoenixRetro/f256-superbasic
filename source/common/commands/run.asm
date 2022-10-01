@@ -21,11 +21,13 @@
 CommandRUN:	;; [run]
 		jsr 	ClearCommand 				; clear variable/stacks/etc.
 		.resetCodePointer 					; set code address to start
+
 		; ----------------------------------------------------------------------------------------
 		;
 		;		New line comes here		
 		;
 		; ----------------------------------------------------------------------------------------
+		
 RUNNewLine:		
 		.cget0 								; is there any program to run ?
 		beq 	CRNoProgram         		; no then END.

@@ -14,6 +14,7 @@
 	.include	"./common/commands/call.asm"
 	.include	"./common/commands/clear.asm"
 	.include	"./common/commands/end.asm"
+	.include	"./common/commands/goto.asm"
 	.include	"./common/commands/let.asm"
 	.include	"./common/commands/new.asm"
 	.include	"./common/commands/print.asm"
@@ -71,4 +72,4 @@
 	.include	"./variants/hardware/junior/memory.asm"
 	.include	"./variants/hardware/junior/vectors.asm"
 	.include	"./variants/memory.flat/memory.asm"
-	.include	"./variants/memory.flat/variable.asm"
+	.include	"./variants/memory.flat/transfer.asm"

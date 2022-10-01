@@ -23,7 +23,6 @@
 
 CheckCreateVariableRecord:
 		.set16 	zTemp0,VariableSpace 		; initialise pointer
-		jsr 	VariableOpen 				; make variable space available
 		;
 		;		Search the variable table to see if it already exists
 		;
@@ -101,7 +100,6 @@ _CCVCopyName:
 		;		Variable record at zTemp0 - output to tokeniser
 		;		
 _CCVFound:
-		jsr 	VariableClose 				; map out variables, perhaps.
 		lda 	zTemp0+1 					; write out MSB
 		sec
 		sbc 	#(VariableSpace >> 8) 		; offset from the start

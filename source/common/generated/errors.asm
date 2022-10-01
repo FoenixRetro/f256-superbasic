@@ -24,3 +24,4 @@ ErrorText:
 	.text	"Assertion failed",0
 	.text	"Out of data",0
 	.text	"Unimplemented",0
+	.text	"No such line number",0
