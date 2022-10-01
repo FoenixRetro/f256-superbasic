@@ -2,4 +2,5 @@
 15 a = 0
 20 print "Next",a
 25 a = a+1
-30 goto 20
+28 if a % 2 = 0 then print a;" is even"
+30 if a < 10 then goto 20

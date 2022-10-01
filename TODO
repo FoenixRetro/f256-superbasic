@@ -1,7 +1,6 @@
 Progress:	
 
 	Initial speed tests as far as possible.
-	Basic IF/THEN ; IF/GOTO
 	Stack
 	GOSUB and RETURN
 	REPEAT UNTIL

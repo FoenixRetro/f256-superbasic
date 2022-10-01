@@ -15,6 +15,7 @@
 	.include	"./common/commands/clear.asm"
 	.include	"./common/commands/end.asm"
 	.include	"./common/commands/goto.asm"
+	.include	"./common/commands/if.asm"
 	.include	"./common/commands/let.asm"
 	.include	"./common/commands/new.asm"
 	.include	"./common/commands/print.asm"

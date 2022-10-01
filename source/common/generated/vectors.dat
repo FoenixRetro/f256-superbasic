@@ -90,7 +90,7 @@ VectorSet0:
 	.word	UnaryTrue                        ; $94 TRUE
 	.word	ValUnary                         ; $95 VAL(
 	.word	SyntaxError                      ; $96 FOR
-	.word	SyntaxError                      ; $97 IF
+	.word	IfCommand                        ; $97 IF
 	.word	SyntaxError                      ; $98 PROC
 	.word	SyntaxError                      ; $99 REPEAT
 	.word	SyntaxError                      ; $9a WHILE
