@@ -87,8 +87,16 @@ _CRNotVariable:
 		beq 	_CRGoLet
 		cmp 	#KWD_PLING
 		beq 	_CRGoLet
-
+		cmp 	#KWD_QUOTE
+		beq 	_CRGoRem
 		.debug
+;
+;		' synonym for REM
+;
+_CRGoRem:
+		iny
+		jsr 	RemCommand
+		bra 	_CRMainLoop
 
 _CRSyntaxError:
 		jmp 	SyntaxError

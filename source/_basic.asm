@@ -25,7 +25,7 @@
 	.include	"./common/commands/rem.asm"
 	.include	"./common/commands/repeat.asm"
 	.include	"./common/commands/run.asm"
-	.include	"./common/commands/scanforward.asm"
+	.include	"./common/commands/utilities/scanforward.asm"
 	.include	"./common/commands/while.asm"
 	.include	"./common/errors/charcheck.asm"
 	.include	"./common/errors/errors.asm"

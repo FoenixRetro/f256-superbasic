@@ -1,3 +1,10 @@
-5 print
-10 for x = 2 downto 5
-20 print x
+5 ' "this is a comment"
+10 print
+20 c = 40
+30 while c > 0
+40 n = c
+50 while n > 0:print "*";:n = n -1 :wend
+60 print
+70 c= c -1
+80 wend
+90 end

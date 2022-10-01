@@ -82,11 +82,8 @@ _ScanSkipOne:
 		;
 _ScanSkipData:
 		;
-		sty 	zTemp1+1 					; add that to Y - this is done because of macros
-		.cget
-		sec 								; add extra one for the length
-		adc 	zTemp1+1
-		tay
+		dey 								; point at data token
+		.cskipdatablock 					; skip block
 		bra 	_ScanLoop
 		.send code
 
@@ -96,3 +93,4 @@ _ScanSkipData:
 ;		==== 			=====
 ;
 ; ************************************************************************************************
+

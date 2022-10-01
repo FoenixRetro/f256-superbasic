@@ -1,6 +1,6 @@
 Progress:	
 
-	FOR ... NEXT
+	NEXT
 	Arrays, definition and usage. Remember procedures look like int arrays()
 	PROC / ENDPROC
 	LOCALs and Parameters (linked)
@@ -13,6 +13,7 @@ Later:
 	Error : string temp allocate fails
 	Scan for procedures (part of CLEAR)	/ Reset procedures to arrays ??
 	Improve CALL	
+	Import Assembler
 
 Character dispatchers from RUN: (todo)
 	. for assembler label
