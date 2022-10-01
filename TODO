@@ -1,5 +1,6 @@
 Progress:	
 	Concreting strings. 
+	Dump vars, dump strings, read label file.
 	String assignment tests.
 	GOTO GOSUB and RETURN
 	Initial speed tests.

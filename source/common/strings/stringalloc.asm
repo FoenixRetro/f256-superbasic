@@ -17,7 +17,8 @@
 ; ************************************************************************************************
 
 StringSystemInitialise:
-		.set16	StringMemory,EndVariableSpace
+		.set16	StringMemory,EndVariableSpace-1
+		stz 	EndVariableSpace-1 			; put a zero at the end, so know end of string memory.
 		rts
 
 ; ************************************************************************************************
