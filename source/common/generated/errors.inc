@@ -66,3 +66,18 @@ error_line .macro
 	lda	#13
 	jmp	ErrorHandler
 	.endm
+ERRID_GOSUB = 14
+error_gosub .macro
+	lda	#14
+	jmp	ErrorHandler
+	.endm
+ERRID_REPEAT = 15
+error_repeat .macro
+	lda	#15
+	jmp	ErrorHandler
+	.endm
+ERRID_STACK = 16
+error_stack .macro
+	lda	#16
+	jmp	ErrorHandler
+	.endm

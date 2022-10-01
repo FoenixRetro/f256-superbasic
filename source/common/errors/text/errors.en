@@ -26,3 +26,6 @@ Assert:		Assertion failed
 Data:		Out of data
 !NotDone: 	Unimplemented
 Line: 		No such line number
+Gosub: 		Return without Gosub
+Repeat:		Until without Repeat
+Stack: 		BASIC Stack full

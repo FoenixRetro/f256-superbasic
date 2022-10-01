@@ -25,3 +25,6 @@ ErrorText:
 	.text	"Out of data",0
 	.text	"Unimplemented",0
 	.text	"No such line number",0
+	.text	"Return without Gosub",0
+	.text	"Until without Repeat",0
+	.text	"BASIC Stack full",0

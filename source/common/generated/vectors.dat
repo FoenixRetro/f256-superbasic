@@ -92,24 +92,24 @@ VectorSet0:
 	.word	SyntaxError                      ; $96 FOR
 	.word	IfCommand                        ; $97 IF
 	.word	SyntaxError                      ; $98 PROC
-	.word	SyntaxError                      ; $99 REPEAT
+	.word	Command_REPEAT                   ; $99 REPEAT
 	.word	SyntaxError                      ; $9a WHILE
 	.word	SyntaxError                      ; $9b ENDIF
 	.word	SyntaxError                      ; $9c ENDPROC
 	.word	SyntaxError                      ; $9d NEXT
-	.word	SyntaxError                      ; $9e UNTIL
+	.word	Command_UNTIL                    ; $9e UNTIL
 	.word	SyntaxError                      ; $9f WEND
 	.word	CallCommand                      ; $a0 CALL
 	.word	SyntaxError                      ; $a1 CLS
 	.word	SyntaxError                      ; $a2 DATA
 	.word	SyntaxError                      ; $a3 DIM
-	.word	SyntaxError                      ; $a4 GOSUB
+	.word	Command_GOSUB                    ; $a4 GOSUB
 	.word	GotoCommand                      ; $a5 GOTO
 	.word	LetCommand                       ; $a6 LET
 	.word	Command_Print                    ; $a7 PRINT
 	.word	SyntaxError                      ; $a8 READ
 	.word	RemCommand                       ; $a9 REM
-	.word	SyntaxError                      ; $aa RETURN
+	.word	Command_RETURN                   ; $aa RETURN
 	.word	SyntaxError                      ; $ab THEN
 	.word	SyntaxError                      ; $ac TO
 VectorSet1:
