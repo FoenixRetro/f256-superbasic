@@ -28,4 +28,6 @@ Data:		Out of data
 Line: 		No such line number
 Gosub: 		Return without Gosub
 Repeat:		Until without Repeat
+While:		Wend without While
 Stack: 		BASIC Stack full
+Struct:		Open Structure

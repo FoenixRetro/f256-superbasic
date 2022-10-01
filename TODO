@@ -1,10 +1,13 @@
 Progress:	
 
-	FOR ... NEXT
-	WHILE WEND and Skipper
+	Fix C/N bug.
+	Check nested WHILE, do the stars thing again.
 	IF ELSE ENDIF extension.
+	FOR ... NEXT
+
 	PROC / ENDPROC
 	Arrays, definition and usage. Remember procedures look like int arrays()
+	LOCALs and Parameters (linked)
 
 Later:
 	Expand rnd() (check MS Basic)

@@ -76,8 +76,18 @@ error_repeat .macro
 	lda	#15
 	jmp	ErrorHandler
 	.endm
-ERRID_STACK = 16
-error_stack .macro
+ERRID_WHILE = 16
+error_while .macro
 	lda	#16
+	jmp	ErrorHandler
+	.endm
+ERRID_STACK = 17
+error_stack .macro
+	lda	#17
+	jmp	ErrorHandler
+	.endm
+ERRID_STRUCT = 18
+error_struct .macro
+	lda	#18
 	jmp	ErrorHandler
 	.endm

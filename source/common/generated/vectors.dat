@@ -93,12 +93,12 @@ VectorSet0:
 	.word	IfCommand                        ; $97 IF
 	.word	SyntaxError                      ; $98 PROC
 	.word	Command_REPEAT                   ; $99 REPEAT
-	.word	SyntaxError                      ; $9a WHILE
+	.word	Command_WHILE                    ; $9a WHILE
 	.word	SyntaxError                      ; $9b ENDIF
 	.word	SyntaxError                      ; $9c ENDPROC
 	.word	SyntaxError                      ; $9d NEXT
 	.word	Command_UNTIL                    ; $9e UNTIL
-	.word	SyntaxError                      ; $9f WEND
+	.word	Command_WEND                     ; $9f WEND
 	.word	CallCommand                      ; $a0 CALL
 	.word	SyntaxError                      ; $a1 CLS
 	.word	SyntaxError                      ; $a2 DATA
