@@ -1,6 +1,5 @@
 Progress:	
 
-	IF ELSE ENDIF extension, check nesting.
 	FOR ... NEXT
 	Arrays, definition and usage. Remember procedures look like int arrays()
 	PROC / ENDPROC

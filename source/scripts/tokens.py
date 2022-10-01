@@ -29,6 +29,7 @@ class TokenSource(object):
 			{-} 						// Shift down
 				wend
 				endif
+				then
 				until
 				next
 				endproc
@@ -40,8 +41,9 @@ class TokenSource(object):
 
 			{0}							// Set 0
 				cls 		data 		dim 		let 		goto		gosub 		
-				return 		print		rem  		then 		to			downto
-				call 		read
+				return 		print		rem  		else 		to			downto
+				call 		read 		
+
 			{1}							// Set 1
 				end 		new 		list 		run 		stop				
 				clear 		restore 	assert

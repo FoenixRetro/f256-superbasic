@@ -32,22 +32,23 @@ KeywordSet0:
 	.text	5,$66,"ENDIF"          ; $9b ENDIF
 	.text	7,$0b,"ENDPROC"        ; $9c ENDPROC
 	.text	4,$3f,"NEXT"           ; $9d NEXT
-	.text	5,$8c,"UNTIL"          ; $9e UNTIL
-	.text	4,$2e,"WEND"           ; $9f WEND
-	.text	4,$1c,"CALL"           ; $a0 CALL
-	.text	3,$e2,"CLS"            ; $a1 CLS
-	.text	4,$1a,"DATA"           ; $a2 DATA
-	.text	3,$da,"DIM"            ; $a3 DIM
-	.text	6,$db,"DOWNTO"         ; $a4 DOWNTO
-	.text	5,$80,"GOSUB"          ; $a5 GOSUB
-	.text	4,$39,"GOTO"           ; $a6 GOTO
-	.text	3,$e5,"LET"            ; $a7 LET
-	.text	5,$8d,"PRINT"          ; $a8 PRINT
-	.text	4,$1c,"READ"           ; $a9 READ
-	.text	3,$e4,"REM"            ; $aa REM
-	.text	6,$e0,"RETURN"         ; $ab RETURN
-	.text	4,$2f,"THEN"           ; $ac THEN
-	.text	2,$a3,"TO"             ; $ad TO
+	.text	4,$2f,"THEN"           ; $9e THEN
+	.text	5,$8c,"UNTIL"          ; $9f UNTIL
+	.text	4,$2e,"WEND"           ; $a0 WEND
+	.text	4,$1c,"CALL"           ; $a1 CALL
+	.text	3,$e2,"CLS"            ; $a2 CLS
+	.text	4,$1a,"DATA"           ; $a3 DATA
+	.text	3,$da,"DIM"            ; $a4 DIM
+	.text	6,$db,"DOWNTO"         ; $a5 DOWNTO
+	.text	4,$29,"ELSE"           ; $a6 ELSE
+	.text	5,$80,"GOSUB"          ; $a7 GOSUB
+	.text	4,$39,"GOTO"           ; $a8 GOTO
+	.text	3,$e5,"LET"            ; $a9 LET
+	.text	5,$8d,"PRINT"          ; $aa PRINT
+	.text	4,$1c,"READ"           ; $ab READ
+	.text	3,$e4,"REM"            ; $ac REM
+	.text	6,$e0,"RETURN"         ; $ad RETURN
+	.text	2,$a3,"TO"             ; $ae TO
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF

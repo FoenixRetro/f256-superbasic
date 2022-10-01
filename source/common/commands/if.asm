@@ -8,9 +8,10 @@
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
+
 ; ************************************************************************************************
 ;
-;		Warning - disinfect your hands after editing this code.
+;										IF (two forms)
 ;
 ; ************************************************************************************************
 
@@ -22,24 +23,18 @@ IfCommand: ;; [if]
 		;
 		.cget 								; what follows ?
 		cmp 	#KWD_THEN  					; could be THEN <stuff> or GOTO
-		beq 	_IfOldStyle		
-		cmp 	#KWD_GOTO
-		bne 	_IfStructured
+		bne 	_IFStructured
+
 		; ------------------------------------------------------------------------
 		;
-		;		either IF ... THEN <statement> or IF .. GOTO <line number>	
+		;						 IF ... THEN <statement> 
 		;
 		; ------------------------------------------------------------------------
-_IfOldStyle:
+
+		iny 								; consume THEN
 		jsr 	NSMIsZero 					; is it zero
 		beq 	_IfFail 					; if fail, go to next line
-		.cget 								; is it if GOTO
-		iny 								; consume GOTO or THEN
-		cmp 	#KWD_GOTO 			
-		beq 	_IfGoto
 		rts 								; if THEN just continue
-_IfGoto:
-		jmp 	GotoCommand		
 _IfFail:
 		jmp 	EOLCommand
 
@@ -50,8 +45,34 @@ _IfFail:
 		; ------------------------------------------------------------------------
 
 _IfStructured:
-		.debug
-		bra 	_IfStructured
+		jsr 	NSMIsZero 					; is it zero
+		bne 	_IfExit 					; if not, then continue normally.
+		lda 	#KWD_ELSE 					; look for else/endif
+		ldx 	#KWD_ENDIF
+		jsr 	ScanForward 				; and run from there/
+_IfExit:
+		rts
+
+; ************************************************************************************************
+;
+;										ELSE code
+;
+; ************************************************************************************************
+
+ElseCode: ;; [else] 					
+		lda 	#KWD_ENDIF 					; else is only run after the if clause succeeds
+		tax 								; so just go to the structure exit
+		jsr 	ScanForward
+		rts
+
+; ************************************************************************************************
+;
+;										ENDIF code
+;
+; ************************************************************************************************
+
+EndIf:	;; [endif]							; endif code does nothing
+		rts
 
 		.send code
 
