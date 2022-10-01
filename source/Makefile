@@ -72,3 +72,6 @@ astest:
 
 sastest:
 	python $(SCRIPTDIR)assign.py all	
+
+benchmark:
+	cp ..$(S)documents$(S)benchmarks$(S)bm$(ID).bas storage$(S)load.dat
