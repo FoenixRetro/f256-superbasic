@@ -1,12 +1,13 @@
 Progress:	
 	Concreting strings. 
 	Dump vars, dump strings, read label file.
-	String assignment tests.
+	String assignment tests / string only tests
 	GOTO GOSUB and RETURN
+	Basic IF/THEN
 	Initial speed tests.
 	REPEAT UNTIL
 	WHILE WEND and Skipper
-	IF THEN ... IF ELSE ENDIF
+	IF ELSE ENDIF extension.
 	FOR ... NEXT
 	PROC / ENDPROC
 	Arrays, definition and usage. Remember procedures look like int arrays()
