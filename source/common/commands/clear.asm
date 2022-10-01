@@ -51,7 +51,7 @@ _ClearZeroEnd:
 		;
 		;		Reset the BASIC Stack pointer
 		;
-		; **TODO**
+		jsr 	StackReset
 		;
 		;		Reset the BASIC string pointer
 		;

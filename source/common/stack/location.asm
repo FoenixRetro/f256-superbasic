@@ -1,79 +1,57 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		01common.inc
-;		Purpose:	Common includes/defines/setups
-;		Created:	18th September 2022
+;		Name:		location.asm
+;		Purpose:	Store and retrieve the location from the TOS
+;		Created:	1st October 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
 
-; ************************************************************************************************
-;
-;										Configuration options
-;
-; ************************************************************************************************
-;
-;		Variables that have to be in zero page because it's used in (xx),y
-;
-ZeroPageMandatory = $30 
-;
-; 		Variables that would be nice to be in zero page, but it's not required
-;
-ZeroPagePreference = $600
-;
-;		Variables that can go anywhere
-;
-MemoryStorage = $700
-;
-;		Where program memory starts
-;
-BasicStart = $2000
-;
-;		Build address of ROM
-;		
-CodeStart = $8000
-;
-;		Start of variable/string space. This is a fixed location in memory.
-;
-VariableSpace = $1000
-;
-;		End of variable space
-;
-EndVariableSpace = $2000
-;
-;		Basic Math Stack Size
-;
-MathStackSize = 8
-;
-;		Basic Position and Return Stack Size
-;
-BasicStackSize = 512
-BasicStackBase = $1000-BasicStackSize
-;
-;		Max Input Line Length
-;	
-MaxLineSize = 80
+		.section code
 
 ; ************************************************************************************************
 ;
-;									Set up code and data sections
+;		Save the current code position and offset (in Y) on the stack. By convention, this is
+;		stored in the first 5 bytes above the stack frame marker.
 ;
 ; ************************************************************************************************
 
-		* = ZeroPageMandatory 				; *must* be in zero page
-		.dsection zeropage
+STKSaveCodePosition:
+		phy
+		tya 								; save Y
+		ldy 	#5
+		sta 	(basicStack),y
+		dey 								; save Code Pointer
+_STKSaveLoop:
+		lda 	codePtr-1,y 				; allows us to access the pointer w/out issues.
+		sta 	(basicStack),y
+		dey
+		bne 	_STKSaveLoop
+		ply
+		rts
 
-		* = ZeroPagePreference 				; not required to be in zero page, but preferable
-		.dsection zeropref
-
-		* = MemoryStorage 					; doesn't matter if zero page or not 
-		.dsection storage
-
-		* = CodeStart
-		.dsection code
+; ************************************************************************************************
+;
+;							Load TOS into current code positions
+;
+; ************************************************************************************************
+		
+STKLoadCodePosition:
+		ldy 	#1 							; load code pointer back
+_STKLoadLoop:
+		lda 	(basicStack),y
+		sta 	codePtr-1,y
+		iny
+		cpy 	#5
+		bne 	_STKLoadLoop
+		lda 	(basicStack),y 				; get Y offset
+		tay
+		rts
+				
+		.send code
 
 ; ************************************************************************************************
 ;
