@@ -1,12 +1,10 @@
-10 demo()
-20 end
-30 proc demo()
-40 print "Demo entry"
-50 demo2()
-60 demo2()
-65 print "Demo exit"
-70 endproc
-80 proc demo2()
-90 print "Demo2"
-100 endproc
-ÿÿÿÿ
+10 print "Start"
+20 LET k=0
+30 LET k=k+1
+40 LET a=k/2*3+4-5
+45 gosub 700
+46 FOR l = 1 to 5
+48 NEXT
+50 IF k<10000 THEN GOTO 30
+70 print "End":call #FFFF
+700 returnÿÿÿÿ
