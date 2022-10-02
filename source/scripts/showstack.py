@@ -46,7 +46,7 @@ class MemoryDump(object):
 			val = str(mantissa)
 			if (status & 0x08) != 0:
 				e = exponent if exponent < 128 else exponent-256
-				val = str(mantissa * pow(2,e))+"f"
+				val = "{0}f".format(round(mantissa * pow(2,e),3))
 			if (status & 0x80) != 0:
 				val = "-"+val
 		return val 

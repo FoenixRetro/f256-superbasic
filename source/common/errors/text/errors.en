@@ -35,3 +35,4 @@ Struct:		Open Structure
 Proc:		EndProc without call
 Redefine:	Array already defined
 ArraySize:	Array size 
+ArrayIdx:	Bad array index

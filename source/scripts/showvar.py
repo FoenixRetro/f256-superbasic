@@ -13,16 +13,16 @@ import os,sys,re
 from showstack import *
 
 def getData(md,a,t):
-	return md.decode(md.readLong(a),md.read(a+4),t)
-	return "{0:x}".format(a)
+	return md.decode(md.readLong(a),md.read(a+4),t) #+ (" @${0:02x}".format(a))
+	#return ("{0:x}".format(a)) 
 
-def extractArray(md,v,x2):
+def extractArray(md,v,x1):
 	a1 = md.read(v+5)
+	a2 = md.read(v+6)
 	p = md.readWord(v+3)
 	size = (2 if (md.read(v+2) & 0x10) != 0 else 5)
-	p = p + x2 * (a1+1) * size
-	array = "\t\t\t\t\t[" 
-	array = array+",".join([getData(md,p + i * size,md.read(v+2)) for i in range(0,a1+1)])
+	array = "\t\t\t\t[" 
+	array = array+",".join([getData(md,p + (i+x1*(a1+1)) * size,md.read(v+2)) for i in range(0,a1+1)])
 	return array+"]"
 	
 
@@ -58,14 +58,13 @@ if __name__ == "__main__":
 			name += ")"
 		print("\t@${0:04x} {1:16} [${2:02x}] = {3}".format(vs,name,md.read(vs+2),v))
 		if isArray:
-			a2 = md.read(vs+6)
-			if a2 == 0:
+			if md.read(vs+6) == 0:
 				print("{0}".format(extractArray(md,vs,0)))
 			else:
-				print("\t\t\t\t\t[")
-				for i in range(0,a2+1):
+				print("\t\t\t\t[")
+				for i in range(0,md.read(vs+6)+1):
 					print("\t{0}".format(extractArray(md,vs,i)))
-				print("\t\t\t\t\t]")
+				print("\t\t\t\t]")
 		vs += md.read(vs)
 
 

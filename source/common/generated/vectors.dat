@@ -97,7 +97,7 @@ VectorSet0:
 	.word	EndIf                            ; $9b ENDIF
 	.word	Command_ENDPROC                  ; $9c ENDPROC
 	.word	NextCommand                      ; $9d NEXT
-	.word	SyntaxError                      ; $9e THEN
+	.word	Unused4                          ; $9e THEN
 	.word	Command_UNTIL                    ; $9f UNTIL
 	.word	Command_WEND                     ; $a0 WEND
 	.word	CallCommand                      ; $a1 CALL
@@ -125,7 +125,7 @@ VectorSet1:
 	.word	NewCommand                       ; $87 NEW
 	.word	SyntaxError                      ; $88 RESTORE
 	.word	CommandRUN                       ; $89 RUN
-	.word	SyntaxError                      ; $8a STOP
+	.word	StopCommand                      ; $8a STOP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

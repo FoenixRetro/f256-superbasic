@@ -34,3 +34,4 @@ ErrorText:
 	.text	"EndProc without call",0
 	.text	"Array already defined",0
 	.text	"Array size",0
+	.text	"Bad array index",0

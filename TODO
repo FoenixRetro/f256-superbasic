@@ -1,8 +1,9 @@
 Progress:
-	Access arrays	
-	- Remember procedures look like int arrays()
-	
-	LOCALs and Parameters (linked)
+	Array test.	
+	Read/Data/Restore import ?
+	List
+	Import Assembler
+	Command Line & Editing.
 
 Later:
 	Expand rnd() (check MS Basic)
@@ -11,7 +12,6 @@ Later:
 	Error : string allocation space
 	Error : string temp allocate fails
 	Improve CALL	
-	Import Assembler
 
 Character dispatchers from RUN: (todo)
 	. for assembler label

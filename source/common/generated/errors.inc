@@ -111,3 +111,8 @@ error_arraysize .macro
 	lda	#22
 	jmp	ErrorHandler
 	.endm
+ERRID_ARRAYIDX = 23
+error_arrayidx .macro
+	lda	#23
+	jmp	ErrorHandler
+	.endm

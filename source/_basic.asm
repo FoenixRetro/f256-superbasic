@@ -27,6 +27,7 @@
 	.include	"./common/commands/rem.asm"
 	.include	"./common/commands/repeat.asm"
 	.include	"./common/commands/run.asm"
+	.include	"./common/commands/stop.asm"
 	.include	"./common/commands/utilities/procscan.asm"
 	.include	"./common/commands/utilities/scanforward.asm"
 	.include	"./common/commands/while.asm"
