@@ -1,7 +1,4 @@
 Progress:
-	Memory Allocate clears it.
-	Display arrays and contents.
-	
 	Access arrays	
 	- Remember procedures look like int arrays()
 	

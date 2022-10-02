@@ -1,4 +1,5 @@
 10 dim n1(2)
 30 dim xn1#(7)
 45 dim n2$(3,4)
+50 dim name$(3)
 ÿÿÿÿ
