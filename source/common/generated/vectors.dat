@@ -96,7 +96,7 @@ VectorSet0:
 	.word	Command_WHILE                    ; $9a WHILE
 	.word	EndIf                            ; $9b ENDIF
 	.word	SyntaxError                      ; $9c ENDPROC
-	.word	SyntaxError                      ; $9d NEXT
+	.word	NextCommand                      ; $9d NEXT
 	.word	SyntaxError                      ; $9e THEN
 	.word	Command_UNTIL                    ; $9f UNTIL
 	.word	Command_WEND                     ; $a0 WEND

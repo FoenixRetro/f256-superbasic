@@ -28,5 +28,6 @@ ErrorText:
 	.text	"Return without Gosub",0
 	.text	"Until without Repeat",0
 	.text	"Wend without While",0
+	.text	"Next without For",0
 	.text	"BASIC Stack full",0
 	.text	"Open Structure",0

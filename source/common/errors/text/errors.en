@@ -29,5 +29,6 @@ Line: 		No such line number
 Gosub: 		Return without Gosub
 Repeat:		Until without Repeat
 While:		Wend without While
+For: 		Next without For
 Stack: 		BASIC Stack full
 Struct:		Open Structure

@@ -10,11 +10,11 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		+15 		Step (1 or 255)
-;		+11..+14	Terminal value ((in 2's complement format.)
-;		+7..+10 	Value of index variable (in 2's complement format.)
-;		+5..+6 		Address of index variable
-;		+0..4 		Loop back address
+;		+16 		Step (1 or 255)
+;		+12..+15	Terminal value ((in 2's complement format.)
+;		+8..+11 	Value of index variable (in 2's complement format.)
+;		+6..+7 		Address of index variable
+;		+1..5 		Loop back address
 ;
 ; ************************************************************************************************
 
@@ -27,7 +27,7 @@
 ; ************************************************************************************************
 
 ForCommand: ;; [for]
-		lda 	#STK_FOR+8 					; allocate 16 bytes on the return stack.
+		lda 	#STK_FOR+9 					; allocate 18 bytes on the return stack.
 		jsr 	StackOpen 
 		;
 		;		Get an integer reference to Stack[0]
@@ -77,12 +77,12 @@ _FCNoSyntax:
 		lda 	#2 							
 _FCNotDownTo: 								; 0 if DOWNTO 2 if TO
 		dec 	a 							; 255 if DOWNTO, 1 if TO
-		ldy 	#15
+		ldy 	#16
 		sta 	(basicStack),y 				; copy that out to the Basic Stack.
 		;
 		;		Copy the reference where the index goes.
 		;
-		ldy 	#5
+		ldy 	#6
 		lda 	NSMantissa0
 		sta 	(basicStack),y
 		lda 	NSMantissa1
@@ -91,10 +91,10 @@ _FCNotDownTo: 								; 0 if DOWNTO 2 if TO
 		;
 		;		Copy the initial and terminal values in 2's complement
 		;
-		ldy 	#7 							; set initial index value
+		ldy 	#8 							; set initial index value
 		ldx 	#1
 		jsr 	FCIntegerToStack
-		ldy 	#11 						; set the terminal value
+		ldy 	#12 						; set the terminal value
 		ldx 	#2
 		jsr 	FCIntegerToStack
 		;
@@ -142,10 +142,10 @@ _FCNotNegative:
 CopyIndexToReference:
 		phy
 		; 
-		ldy 	#5 							; copy address-7 to write to zTemp0
-		sec 								; (because we copy from offset 7)
+		ldy 	#6 							; copy address-8 to write to zTemp0
+		sec 								; (because we copy from offset 8)
 		lda 	(basicStack),y
-		sbc 	#7
+		sbc 	#8
 		sta 	zTemp0
 		iny
 		lda 	(basicStack),y
@@ -154,11 +154,11 @@ CopyIndexToReference:
 		;
 		ldx 	#4 							; this is the copy counter/
 		;
-		ldy 	#7+3 		 				; the MSB of the mantissa
+		ldy 	#8+3 		 				; the MSB of the mantissa
 		lda 	(basicStack),y
 		asl 	a 							; into carry
 
-		ldy 	#7 							; where to copy from.
+		ldy 	#8 							; where to copy from.
 		bcc 	_CITRNormal		
 		;
 		sec
@@ -184,6 +184,84 @@ _CITRNormal:
 		dex 
 		bne 	_CITRNormal
 		ply 								; and exit.
+		rts
+
+; ************************************************************************************************
+;
+;										NEXT command
+;
+; ************************************************************************************************
+
+NextCommand: ;; [next]
+		lda 	#STK_FOR+9 					; check FOR is TOS
+		ldx 	#ERRID_FOR 					; this error
+		jsr 	StackCheckFrame		
+
+		phy
+		ldy 	#16 						; get the step count
+		lda 	(basicStack),y
+		sta 	zTemp0 						; this is the sign extend
+		bmi 	_NCStepNeg
+		stz 	zTemp0 						; which is 0 or 255
+_NCStepNeg:
+		;
+		;		Bump the index, and update the index variable
+		;
+		ldy 	#8 							; offset to bump
+		ldx 	#4 							; count to bump
+		clc
+_NCBump:
+		adc 	(basicStack),y 				; add it
+		sta 	(basicStack),y
+		lda 	zTemp0 						; get sign extend for next time.
+		iny 								; next byte
+		dex 								; do four times
+		bne 	_NCBump
+		jsr		CopyIndexToReference		; copy it to the reference variable.
+		;
+		;		Compare the index and terminal value
+		;
+		;		if TO , exit if terminal < index (e.g. 10 < 11)
+		;		if DOWNTO, exit if index < terminal (e.g. -3 < -2)
+		;
+		ldy 	#16 						; get step count again
+		lda 	(basicStack),y
+		asl 	a 							; sign bit to carry
+		;
+		lda 	#12 						; offset of LHS = terminal offset
+		sta 	zTemp1
+		bcc 	_NCCompRev 					; use if step is +ve
+		lda 	#8 							; now the LHS = index value
+_NCCompRev:
+		sta 	zTemp1 						; so zTemp0 is the index for LHS
+		eor 	#(8^12) 					; and zTemp0+1 is the index for RHS
+		sta 	zTemp1+1
+		ldx 	#4 							; bytes to compare
+		sec
+
+_NCCompare:		
+		ldy 	zTemp1 						; do compare using the two indices
+		lda 	(basicStack),y
+		ldy 	zTemp1+1
+		sbc 	(basicStack),y
+
+		inc 	zTemp1 						; bump the indices (inc,dex do not change C or V)
+		inc 	zTemp1+1
+		dex 								; do it 4 times.
+		bne 	_NCCompare
+		;
+		bvc 	_NCNoOverflow 				; convert to signed comparison
+		eor 	#$80
+_NCNoOverflow:
+		ply 								; restore Y position
+		asl 	a 							; is bit 7 set.
+		bcc 	_NCLoopback 				; if no , >= so loop back
+		;
+		jsr 	StackClose 					; exit the loop
+		rts
+
+_NCLoopBack:
+		jsr 	STKLoadCodePosition 		; loop back
 		rts
 
 		.send code

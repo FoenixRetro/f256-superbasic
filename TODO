@@ -1,6 +1,4 @@
 Progress:	
-
-	NEXT
 	Arrays, definition and usage. Remember procedures look like int arrays()
 	PROC / ENDPROC
 	LOCALs and Parameters (linked)
@@ -17,11 +15,4 @@ Later:
 
 Character dispatchers from RUN: (todo)
 	. for assembler label
-
-Skip cases
-
-	- 00.3F 		-
-	- 40.82 		Skip 1 *except* 80
-	- 83.FB 		contains a shiftable section. (KWC_FIRST_UNARY)
-	- FC,FF	 		Data skip
 
