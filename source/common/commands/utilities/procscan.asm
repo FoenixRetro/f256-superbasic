@@ -50,9 +50,9 @@ _PSLoop:
 		ldy 	#2
 		sta 	(zTemp0),y
 		;
-		ldx 	#0 							; copy codePtr in
+		ldx 	#0 							; copy code-Ptr in
 _PSCopy:
-		lda 	codePtr,x
+		lda 	safePtr,x
 		iny
 		sta 	(zTemp0),y
 		inx

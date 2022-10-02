@@ -26,7 +26,7 @@ STKSaveCodePosition:
 		sta 	(basicStack),y
 		dey 								; save Code Pointer
 _STKSaveLoop:
-		lda 	codePtr-1,y 				; allows us to access the pointer w/out issues.
+		lda 	safePtr-1,y 				; allows us to access the pointer w/out issues.
 		sta 	(basicStack),y
 		dey
 		bne 	_STKSaveLoop
@@ -43,12 +43,13 @@ STKLoadCodePosition:
 		ldy 	#1 							; load code pointer back
 _STKLoadLoop:
 		lda 	(basicStack),y
-		sta 	codePtr-1,y
+		sta 	safePtr-1,y
 		iny
 		cpy 	#5
 		bne 	_STKLoadLoop
 		lda 	(basicStack),y 				; get Y offset
 		tay
+		.cresync
 		rts
 				
 		.send code

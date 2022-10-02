@@ -32,15 +32,15 @@ CallProcedure:
 		;
 		ldy 	#1 							; copy code address back.
 		lda 	(zTemp0)
-		sta 	codePtr
+		sta 	safePtr
 		lda 	(zTemp0),y
-		sta 	codePtr+1
+		sta 	safePtr+1
 		iny
 		lda 	(zTemp0),y
-		sta 	codePtr+2
+		sta 	safePtr+2
 		iny
 		lda 	(zTemp0),y
-		sta 	codePtr+3
+		sta 	safePtr+3
 		iny 								; get Y offset -> Y
 		lda 	(zTemp0),y
 		tay

@@ -14,6 +14,7 @@
 	.include	"./common/commands/assert.asm"
 	.include	"./common/commands/call.asm"
 	.include	"./common/commands/clear.asm"
+	.include	"./common/commands/dim.asm"
 	.include	"./common/commands/end.asm"
 	.include	"./common/commands/for.asm"
 	.include	"./common/commands/gosub.asm"

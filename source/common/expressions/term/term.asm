@@ -118,7 +118,7 @@ _ETString:
 		.cget 								; push length on stack.
 		pha
 		iny 								; first character
-		jsr 	MemoryInline 				; put address of string at (codePtr),y on stack
+		jsr 	MemoryInline 				; put address of string at (code-Ptr),y on stack
 											; (may have to duplicate into soft memory)
 		pla 								; restore count and save
 		sta 	zTemp0 

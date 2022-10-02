@@ -29,7 +29,10 @@ zTemp1:
 zTemp2:
 		.fill 	2
 zsTemp:	 									; allocated string temporary.
-		.fill 	2	
+		.fill 	2
+
+safePtr = codePtr 							; minimise direct tinkering
+			
 		.send zeropage
 
 ; ************************************************************************************************

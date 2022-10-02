@@ -103,7 +103,7 @@ VectorSet0:
 	.word	CallCommand                      ; $a1 CALL
 	.word	SyntaxError                      ; $a2 CLS
 	.word	SyntaxError                      ; $a3 DATA
-	.word	SyntaxError                      ; $a4 DIM
+	.word	DimCommand                       ; $a4 DIM
 	.word	Unused3                          ; $a5 DOWNTO
 	.word	ElseCode                         ; $a6 ELSE
 	.word	Command_GOSUB                    ; $a7 GOSUB
