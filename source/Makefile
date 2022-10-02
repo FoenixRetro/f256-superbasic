@@ -57,6 +57,12 @@ stack:
 strings:
 	python $(SCRIPTDIR)showstring.py
 
+stack:
+	python $(SCRIPTDIR)showstack.py
+	
+vars:
+	python $(SCRIPTDIR)showvar.py
+	
 basic : prelim
 	64tass $(ASMOPTS) _basic.asm -o $(APPNAME)
 

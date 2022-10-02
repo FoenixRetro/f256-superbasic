@@ -31,7 +31,7 @@ class MemoryDump(object):
 	def readWord(self,addr):
 		return self.read(addr)+(self.read(addr+1) << 8)
 	def readLong(self,addr):
-		return self.readword(addr)+(self.readword(addr+2) << 16)
+		return self.readWord(addr)+(self.readWord(addr+2) << 16)
 	def readString(self,p):
 		val = ""
 		while self.read(p) != 0:
@@ -41,7 +41,7 @@ class MemoryDump(object):
 
 	def decode(self,mantissa,exponent,status):
 		if (status & 0x10) != 0:
-			val = '"'+self.readString(mantissa & 0xFFFF)+'"'
+			val = '"'+self.readString(mantissa & 0xFFFF)+'"' if (mantissa & 0xFFFF) != 0 else '""'
 		else:
 			val = str(mantissa)
 			if (status & 0x08) != 0:

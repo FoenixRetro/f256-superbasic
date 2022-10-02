@@ -400,4 +400,6 @@
 400 assert d7z0i4_98# = -39139.596
 401 assert c3p7j0_99$ = "EQZLGJBTIATHULR"
 402 call #ffff
+1100 proc test1()
+1110 proc test2()
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ

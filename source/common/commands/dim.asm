@@ -14,6 +14,7 @@
 
 DimCommand: ;; [dim]
 		.debug
+		.cget 							; is there a variable following ?
 		
 		.send code
 

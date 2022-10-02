@@ -1,5 +1,9 @@
-Progress:	
-	Arrays, definition and usage. Remember procedures look like int arrays()
+Progress:
+	DIM arrays
+	Display arrays.
+	Access arrays	
+	- Remember procedures look like int arrays()
+	
 	LOCALs and Parameters (linked)
 
 Later:
