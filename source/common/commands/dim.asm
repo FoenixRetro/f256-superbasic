@@ -69,7 +69,6 @@ DimCommand: ;; [dim]
 _DCOneDimension:
 		phy 							; save position
 
-		.debug
 		ldy 	#5 						; dimensions + 1 in AX (as zero based)
 		lda 	(zaTemp),y
 		tax

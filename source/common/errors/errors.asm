@@ -22,22 +22,25 @@ ErrorHandler:
 		tay 								; find the error text
 		beq 	_EHEnd
 		ldx 	#0
+		.set16 	zTemp0,ErrorText
 _EHFind:		
 		dey 								; found the error text ?
 		beq 	_EHFound
 _EHFindZero:
-		lda 	ErrorText,x 				; find the next error
-		inx
+		lda 	(zTemp0) 					; find the next error
+		inc 	zTemp0
+		bne 	_EHFNoCarry
+		inc 	zTemp0+1
+_EHFNoCarry:		
 		cmp 	#0
 		bne 	_EHFindZero
 		bra 	_EHFind
-_EHFound:
-		lda 	ErrorText,x 				; print the message
-		jsr 	EXTPrintCharacter
-		inx
-		lda 	ErrorText,x
-		bne 	_EHFound		
 
+_EHFound:
+		lda 	zTemp0 						; print message
+		ldx 	zTemp0+1
+		jsr 	PrintStringXA
+	
 		ldy 	#1 							; if line number zero don't print i
 		.cget
 		bne 	_EHAtMsg
