@@ -40,7 +40,8 @@ _PSLoop:
 		iny 								; LSB
 		.cget
 		sta 	zTemp0
-
+		iny 								; character after variable call.
+		
 		tya 								; save Y offset at +7
 		ldy 	#7
 		sta 	(zTemp0),y

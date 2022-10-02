@@ -32,3 +32,4 @@ While:		Wend without While
 For: 		Next without For
 Stack: 		BASIC Stack full
 Struct:		Open Structure
+Proc:		EndProc without call

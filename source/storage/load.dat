@@ -8,4 +8,5 @@
 70 endproc
 80 proc demo2()
 90 print "Demo2"
-100 endprocÿÿÿÿ
+100 endproc
+ÿÿÿÿ

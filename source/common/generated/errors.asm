@@ -31,3 +31,4 @@ ErrorText:
 	.text	"Next without For",0
 	.text	"BASIC Stack full",0
 	.text	"Open Structure",0
+	.text	"EndProc without call",0

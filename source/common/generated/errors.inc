@@ -96,3 +96,8 @@ error_struct .macro
 	lda	#19
 	jmp	ErrorHandler
 	.endm
+ERRID_PROC = 20
+error_proc .macro
+	lda	#20
+	jmp	ErrorHandler
+	.endm

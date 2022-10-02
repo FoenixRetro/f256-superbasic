@@ -17,6 +17,10 @@ LetCommand: ;; [let]
 		lda 	PrecedenceLevel+"*"			; precedence > this
 		jsr 	EvaluateExpressionAtPrecedence
 		;
+		lda 	NSStatus,x 					; is it a reference to an array
+		cmp		#NSTProcedure+NSBIsReference
+		beq 	_LetGoProc 					; it's a procedure call.
+		;
 		lda 	#"=" 						; check =
 		jsr 	CheckNextA
 		;
@@ -26,6 +30,9 @@ LetCommand: ;; [let]
 		;
 		jsr 	AssignVariable
 		rts
+
+_LetGoProc:
+		jmp 	CallProcedure		
 
 ; ************************************************************************************************
 ;
