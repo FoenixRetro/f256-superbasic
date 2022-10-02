@@ -66,6 +66,7 @@
 	.include	"./common/expressions/unary/string/str.asm"
 	.include	"./common/expressions/unary/string/substring.asm"
 	.include	"./common/expressions/utility/exprhelper.asm"
+	.include	"./common/expressions/utility/mult8x8.asm"
 	.include	"./common/expressions/utility/utility.asm"
 	.include	"./common/generated/constants.asm"
 	.include	"./common/generated/errors.asm"

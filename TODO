@@ -1,6 +1,6 @@
 Progress:	
-	Arrays, definition and usage. Remember procedures look like int arrays()
 	PROC / ENDPROC
+	Arrays, definition and usage. Remember procedures look like int arrays()
 	LOCALs and Parameters (linked)
 
 Later:
