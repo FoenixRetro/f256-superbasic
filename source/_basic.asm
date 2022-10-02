@@ -76,6 +76,7 @@
 	.include	"./common/strings/concrete.asm"
 	.include	"./common/strings/stringalloc.asm"
 	.include	"./common/tokeniser/backload.asm"
+	.include	"./common/tokeniser/procscan.asm"
 	.include	"./common/tokeniser/searchtokens.asm"
 	.include	"./common/tokeniser/tokenise.asm"
 	.include	"./common/tokeniser/utility.asm"

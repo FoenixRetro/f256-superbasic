@@ -1,9 +1,11 @@
-5  print
-10 for i = 1 to 10
-11 for j = 1 to i
-12 print "*";
-13 next
-20 print i
-30 next
-
-ÿÿÿÿ
+10 demo()
+20 end
+30 proc demo()
+40 print "Demo entry"
+50 demo2()
+60 demo2()
+65 print "Demo exit"
+70 endproc
+80 proc demo2()
+90 print "Demo2"
+100 endprocÿÿÿÿ

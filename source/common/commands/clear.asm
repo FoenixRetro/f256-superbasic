@@ -29,6 +29,14 @@ _ClearOneVariable:
 		cpy 	#8
 		bne 	_ClearOneVariable	
 
+		ldy 	#2 							; has it been marked procedure
+		lda 	(zTemp0),y
+		cmp 	#NSTProcedure
+		bne 	_ClearNotProcedure
+		lda 	#NSTInteger+NSBIsArray 		; set it back to an integer array
+		sta 	(zTemp0),y
+_ClearNotProcedure:
+
 		clc 								; go to the next variable
 		lda 	(zTemp0)
 		adc 	zTemp0
@@ -59,7 +67,7 @@ _ClearZeroEnd:
 		;
 		;		Scan the program code for Procedures (possibly convert intarrys back above ?)
 		;
-		; **TODO**		
+		jsr 	ProcedureScan
 		rts
 
 		.send code
