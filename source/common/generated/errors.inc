@@ -101,3 +101,13 @@ error_proc .macro
 	lda	#20
 	jmp	ErrorHandler
 	.endm
+ERRID_REDEFINE = 21
+error_redefine .macro
+	lda	#21
+	jmp	ErrorHandler
+	.endm
+ERRID_ARRAYSIZE = 22
+error_arraysize .macro
+	lda	#22
+	jmp	ErrorHandler
+	.endm

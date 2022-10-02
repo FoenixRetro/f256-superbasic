@@ -30,7 +30,8 @@ zTemp2:
 		.fill 	2
 zsTemp:	 									; allocated string temporary.
 		.fill 	2
-
+zaTemp: 									; allocated array temporary
+		.fill 	2
 safePtr = codePtr 							; minimise direct tinkering
 			
 		.send zeropage

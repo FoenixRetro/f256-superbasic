@@ -33,3 +33,5 @@ For: 		Next without For
 Stack: 		BASIC Stack full
 Struct:		Open Structure
 Proc:		EndProc without call
+Redefine:	Array already defined
+ArraySize:	Array size 

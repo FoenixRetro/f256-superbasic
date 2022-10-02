@@ -32,3 +32,5 @@ ErrorText:
 	.text	"BASIC Stack full",0
 	.text	"Open Structure",0
 	.text	"EndProc without call",0
+	.text	"Array already defined",0
+	.text	"Array size",0
