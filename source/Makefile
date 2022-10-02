@@ -57,9 +57,6 @@ stack:
 strings:
 	python $(SCRIPTDIR)showstring.py
 
-stack:
-	python $(SCRIPTDIR)showstack.py
-	
 vars:
 	python $(SCRIPTDIR)showvar.py
 	

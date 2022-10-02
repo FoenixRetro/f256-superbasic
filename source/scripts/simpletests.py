@@ -256,26 +256,29 @@ class TestSet(object):
 			UnaryString(),Parenthesis()
 		]
 
+	def nextLineNumber(self):
+		self.lineNumber += self.step
+		return self.lineNumber-self.step
+
 	def startup(self):
 		return self
 
 	def create(self):
 		self.handle.write("{0} rem \"Seed {1}\"\n".format(self.lineNumber,self.seed))	# put the seed in the BASIC listing
 		self.lineNumber += self.step
-		for i in range(0,self.count):														# create tests
+		for i in range(0,self.count):													# create tests
 			factory = random.randint(0,len(self.factories)-1)							# pick a factory
 			test = None 
 			while test is None:															# get a legitimate test
 				test = self.factories[factory].create(self)
-			self.handle.write("{0} {1}\n".format(self.lineNumber,self.factories[factory].make(test)))
-			self.lineNumber += self.step
+			self.handle.write("{0} {1}\n".format(self.nextLineNumber(),self.factories[factory].make(test)))
 		return self 
 
 	def closedown(self):
 		return self
 
 	def terminate(self):
-		self.handle.write("{0} call #ffff\n".format(self.lineNumber))					# on emulator jmp $FFFF returns to OS
+		self.handle.write("{0} call #ffff\n".format(self.nextLineNumber()))				# on emulator jmp $FFFF returns to OS
 		for i in range(0,16): 															# high byte end line data.
 			self.handle.write(chr(255))
 

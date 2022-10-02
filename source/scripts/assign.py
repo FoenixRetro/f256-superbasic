@@ -25,6 +25,8 @@ class Variable:
 			self.name = chr(index+65)
 		self.value = 0
 
+	def setup(self):
+		pass
 	def getName(self):
 		return self.name 
 	def getValue(self):
@@ -32,7 +34,9 @@ class Variable:
 	def updateValue(self):
 		newValue = self.getNewValue()
 		self.value = newValue 
-		return self.getValue()
+		return [self.getName(),self.getValue()]
+	def getChecks(self):
+		return ["assert {0} = {1}".format(self.getName(),self.getValue())]
 
 class IntegerVariable(Variable):
 	def getNewValue(self):
@@ -54,6 +58,7 @@ class StringVariable(Variable):
 		txt = "".join([chr(random.randint(0,25)+65) for x in range(1,random.randint(0,24))])
 		return '"'+txt+'"'
 
+
 # *******************************************************************************************
 #
 #						Repeated assignments generator
@@ -63,7 +68,7 @@ class StringVariable(Variable):
 class AssignOne(TestAssertion):
 	def create(self,parent):
 		v = parent.variables[random.randint(0,len(parent.variables)-1)]					# pick a variable
-		return [v.getName(), v.updateValue()]
+		return v.updateValue()
 	def make(self,data):
 		kwd = "let " if random.randint(0,1) == 0 else ""
 		return "{2}{0} = {1}".format(data[0],data[1],kwd)
@@ -92,12 +97,13 @@ class AssignTestSet(TestSet):
 			elif i%3 == 2:
 				v = FloatVariable(i)
 			self.variables.append(v)
+			v.setup()
 		return self
 
 	def closedown(self):
 		for v in self.variables:
-			self.handle.write("{0} assert {1} = {2}\n".format(self.lineNumber,v.getName(),v.getValue()))
-			self.lineNumber += self.step
+			for c in v.getChecks():
+				self.handle.write("{0} {1}\n".format(self.nextLineNumber(),c))
 		return self
 
 if __name__ == "__main__":
