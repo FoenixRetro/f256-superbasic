@@ -71,7 +71,13 @@ _ClearZeroEnd:
 		;
 		;		Restore the DATA pointer
 		;
-		jsr 	Command_Restore		
+		jsr 	Command_Restore	
+		;
+		;		Reset the assembler control and location values.
+		;
+		stz 	AssemblerAddress	
+		stz 	AssemblerAddress+1
+		stz 	AssemblerControl	
 		rts
 
 		.send code

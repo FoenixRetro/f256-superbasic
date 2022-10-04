@@ -65,6 +65,7 @@ basic : prelim
 
 prelim:
 	python $(SCRIPTDIR)errors.py $(LANGUAGE)
+	python $(SCRIPTDIR)opcodes.py >common$(S)generated$(S)asmcore.asm
 	python $(SCRIPTDIR)makebuild.py
 	python $(SCRIPTDIR)tokens.py
 	python $(SCRIPTDIR)constants.py

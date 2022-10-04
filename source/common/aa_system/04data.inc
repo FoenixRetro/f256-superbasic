@@ -123,6 +123,18 @@ inDataStatement:							; non zero when in data statement, e.g. pointing to data
 		.fill 	1				
 tbOffset:									; offset into token buffer
 		.fill 	1		
+AssemblerAddress:							; address being assembled at
+		.fill 	2
+AssemblerControl:							; assembler control byte - bit 0 (errors ok), bit 1 (listing on)
+		.fill 	1			
+ParamStart: 								; offset of parameter.
+		.fill 	2	
+IsGroup1:		 							; flag set if group.1
+		.fill 	1		
+BaseOpcode: 								; base opcode
+		.fill 	1		
+ModeMask: 									; modes allowed
+		.fill 	1		
 ;
 ;		New tokenised line - these three *must* be contiguous as they are used as a single entity
 ;		
