@@ -54,8 +54,8 @@ _LCMainLoop:
 		cmp 	#KWC_EOL 					; end of line ?
 		beq 	_LCExit
 		;
-		cmp 	#6 							; 0-5 are the double punctuations
-		beq 	_LCDoubles
+		cmp 	#16 						; 0-5 are the double punctuations
+		bcc 	_LCDoubles
 		cmp 	#32 						; 16-31 are shifted punctuation from 64-91
 		bcc 	_LCShiftPunc
 		cmp 	#64 						; 32-64 are as stored, punc and digits
@@ -74,10 +74,15 @@ _LCExit:
 		;	-------------------------------------------------------------------
 
 _LCDoubles:
-		.debug
-		iny
-		; ** TODO **
-		bra 	_LCMainLoop
+		pha
+		lsr 	a 							; put bit 2 into bit 1
+		and 	#2
+		ora 	#60 						; make < >
+		jsr 	LCLWrite
+		pla 								; restore, do lower bit
+		and 	#3
+		ora 	#60
+		bra		_LCPunctuation 				; print, increment, loop
 
 		;	-------------------------------------------------------------------
 		;
@@ -86,10 +91,16 @@ _LCDoubles:
 		;	-------------------------------------------------------------------
 
 _LCShiftPunc:
-		.debug
-		iny
-		; ** TODO **
-		bra 	_LCMainLoop
+		tax 								; save in X
+		and 	#7 							; lower 3 bits
+		beq 	_LCNoAdd
+		ora 	#24 						; adds $18 to it.
+_LCNoAdd:		
+		cpx 	#24 						; if >= 24 add $20
+		bcc 	_LCNoAdd2
+		ora 	#32 						; adds $20
+_LCNoAdd2:
+		ora 	#$40 						; shift into 64-127 range and fall through.				
 
 		;	-------------------------------------------------------------------
 		;
