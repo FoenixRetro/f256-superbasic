@@ -69,7 +69,7 @@ VectorSetPunc:
 VectorSet0:
 	.word	EOLCommand                       ; $80 !0:EOF
 	.word	Shift1Command                    ; $81 !1:SH1
-	.word	SyntaxError                      ; $82 !2:SH2
+	.word	Shift2Command                    ; $82 !2:SH2
 	.word	AbsUnary                         ; $83 ABS(
 	.word	AllocUnary                       ; $84 ALLOC(
 	.word	AscUnary                         ; $85 ASC(
@@ -118,14 +118,15 @@ VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
 	.word	SyntaxError                      ; $82 !2:SH2
-	.word	AssertCommand                    ; $83 ASSERT
-	.word	ClearCommand                     ; $84 CLEAR
-	.word	EndCommand                       ; $85 END
-	.word	Command_List                     ; $86 LIST
-	.word	NewCommand                       ; $87 NEW
-	.word	Command_Restore                  ; $88 RESTORE
-	.word	CommandRUN                       ; $89 RUN
-	.word	StopCommand                      ; $8a STOP
+	.word	AssembleCommand                  ; $83 ASSEMBLE
+	.word	AssertCommand                    ; $84 ASSERT
+	.word	ClearCommand                     ; $85 CLEAR
+	.word	EndCommand                       ; $86 END
+	.word	Command_List                     ; $87 LIST
+	.word	NewCommand                       ; $88 NEW
+	.word	Command_Restore                  ; $89 RESTORE
+	.word	CommandRUN                       ; $8a RUN
+	.word	StopCommand                      ; $8b STOP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

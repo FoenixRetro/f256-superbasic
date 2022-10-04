@@ -205,13 +205,14 @@ checktokens .macro
 		lda 	#(\1) & $FF
 		jsr 	TokeniseSearchTable
 		.endm
+
 		.checktokens KeywordSet0			; check the three token tables for the keyword.
 		ldx 	#0 							
 		bcs 	_TKFoundToken
 		.checktokens KeywordSet1
 		ldx 	#$81
 		bcs 	_TKFoundToken
-		.checktokens KeywordSet1
+		.checktokens KeywordSet2
 		ldx 	#$82
 		bcs 	_TKFoundToken
 

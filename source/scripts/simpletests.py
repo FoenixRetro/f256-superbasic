@@ -278,7 +278,7 @@ class TestSet(object):
 		return self
 
 	def terminate(self):
-		self.handle.write("{0} call #ffff\n".format(self.nextLineNumber()))				# on emulator jmp $FFFF returns to OS
+		self.handle.write("{0} call $ffff\n".format(self.nextLineNumber()))				# on emulator jmp $FFFF returns to OS
 		for i in range(0,16): 															# high byte end line data.
 			self.handle.write(chr(255))
 

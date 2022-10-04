@@ -102,9 +102,11 @@ encodeState: 								; state for simple encoding FSM
 digitTemp: 									; temporary in number conversion
 		.fill 	1
 decimalCount:								; decimal digit count
+
 		.fill 	1
 randomSeed: 								; random seed
 		.fill 	4				
+
 lowMemPtr: 									; memory allocation after program.
 		.fill 	2	
 stringMemory: 								; allocate concrete strings from here
@@ -113,16 +115,20 @@ stringInitialised: 							; string
 		.fill 	1		
 stringTempPointer:							; temporary string
 		.fill 	2		
+
 decimalPlaces: 								; no of decimals.
 		.fill 	1
 dbOffset:									; offset into decimal buffer.
 		.fill 	1		
+
 dataPointer:								; operates like code pointer for DATA statements
 		.fill 	5
 inDataStatement:							; non zero when in data statement, e.g. pointing to data
 		.fill 	1				
+
 tbOffset:									; offset into token buffer
 		.fill 	1		
+
 AssemblerAddress:							; address being assembled at
 		.fill 	2
 AssemblerControl:							; assembler control byte - bit 0 (errors ok), bit 1 (listing on)

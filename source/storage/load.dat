@@ -1,3 +1,4 @@
-10 a$ = "Hello"
-20 a = $7FFF
-30 print a,a$ÿÿÿÿ
+10 assemble $6000,3
+15 print
+20 nop:tax:tay:beq $6001:beq $6009
+ÿÿÿÿ

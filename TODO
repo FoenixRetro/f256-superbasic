@@ -1,9 +1,9 @@
 Progress:
-	Implement assemble keyword
 	Import Assembler code.	
-		- try basic tests on 3 and 4.
+		- test lda/sta etc. not ,X ,Y
 		- write TACOXYCheck
 		- do the lot.
+		- run the assembler check.
 
 	Command Line & Editing.
 

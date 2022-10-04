@@ -54,14 +54,15 @@ KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF
 	.text	0,$58,""               ; $81 !1:SH1
 	.text	0,$5a,""               ; $82 !2:SH2
-	.text	6,$d2,"ASSERT"         ; $83 ASSERT
-	.text	5,$67,"CLEAR"          ; $84 CLEAR
-	.text	3,$d7,"END"            ; $85 END
-	.text	4,$3c,"LIST"           ; $86 LIST
-	.text	3,$ea,"NEW"            ; $87 NEW
-	.text	7,$24,"RESTORE"        ; $88 RESTORE
-	.text	3,$f5,"RUN"            ; $89 RUN
-	.text	4,$46,"STOP"           ; $8a STOP
+	.text	8,$4c,"ASSEMBLE"       ; $83 ASSEMBLE
+	.text	6,$d2,"ASSERT"         ; $84 ASSERT
+	.text	5,$67,"CLEAR"          ; $85 CLEAR
+	.text	3,$d7,"END"            ; $86 END
+	.text	4,$3c,"LIST"           ; $87 LIST
+	.text	3,$ea,"NEW"            ; $88 NEW
+	.text	7,$24,"RESTORE"        ; $89 RESTORE
+	.text	3,$f5,"RUN"            ; $8a RUN
+	.text	4,$46,"STOP"           ; $8b STOP
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF

@@ -16,6 +16,7 @@
 	.include	"./common/assembler/aswrite.asm"
 	.include	"./common/assembler/instruction.asm"
 	.include	"./common/assembler/operands.asm"
+	.include	"./common/commands/assemble.asm"
 	.include	"./common/commands/assert.asm"
 	.include	"./common/commands/call.asm"
 	.include	"./common/commands/clear.asm"
