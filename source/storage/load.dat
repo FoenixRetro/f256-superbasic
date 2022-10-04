@@ -1,6 +1,6 @@
 40 print ''
 45 print #3A7
-50 list	
+50 list	50,140
 100 read a$,b,c
 105 print a$,b,c
 110 data "Hello"

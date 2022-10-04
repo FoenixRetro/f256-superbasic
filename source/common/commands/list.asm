@@ -19,7 +19,6 @@
 ; ************************************************************************************************
 
 Command_List:	;; [list]
-		.resetcodepointer
 		stz		NSMantissa0+4				; set the lower (slot 4) to 0 and upper (slot 7) to $FFFF
 		stz 	NSMantissa1+4 				
 		lda 	#$FF
@@ -30,7 +29,7 @@ Command_List:	;; [list]
 		cmp 	#KWD_COMMA 			
 		beq 	_CLSecond
 		jsr 	CLIsDigit 					; if not digit, list all
-		bcs 	_CLLoop
+		bcs 	_CLStart
 		ldx 	#4 							; get 1st range into slot 4
 		jsr 	Evaluate16BitInteger
 		.cget 								; comma follows ?
@@ -39,32 +38,61 @@ Command_List:	;; [list]
 		;
 		lda 	NSMantissa0+4 				; copy 4->7
 		sta 	NSMantissa0+7
-		sta 	NSMantissa1+4
+		lda 	NSMantissa1+4
 		sta 	NSMantissa1+7
-		bra 	_CLLoop
+		bra 	_CLStart
 
 _CLSecond:
 		iny 								; consume comma		
 		jsr 	CLIsDigit 					; digit found
-		bcs 	_CLLoop 					; if not, continue listing
+		bcs 	_CLStart 					; if not, continue listing
 		ldx 	#7 							; load 2nd range into slot 7
 		jsr 	Evaluate16BitInteger
+
+_CLStart
+		.resetcodepointer
 		;
 _CLLoop:
 		.cget0 								; any more ?
 		beq 	_CLExit
-		;
+		; 
+		ldx 	#4 							; check range every time, line numbers aren't in order.
+		jsr 	CLCompareLineNo 
+		bcc 	_CLNext
+		ldx 	#7
+		jsr 	CLCompareLineNo
+		beq 	_CLDoThisOne
+		bcs 	_CLNext
+_CLDoThisOne:		
 		jsr 	ListConvertLine 			; convert line into token Buffer
 		ldx 	#(tokenBuffer >> 8) 		; print that line
 		lda 	#(tokenBuffer & $FF) 	
 		jsr 	PrintStringXA
 		lda 	#13 						; new line
 		jsr 	EXTPrintCharacter
+_CLNext:		
 		.cnextline
 		bra 	_CLLoop
 _CLExit:
-		.debug				
 		jmp 	WarmStart
+
+; ************************************************************************************************
+;
+;		Compare Line# current line vs Line Number in S[X], returns CC/CS/Z/NZ as per 6502
+;
+; ************************************************************************************************
+
+CLCompareLineNo:
+		sec
+		ldy 	#1
+		.cget
+		sbc 	NSMantissa0,x
+		sta 	zTemp0
+		iny
+		.cget
+		sbc 	NSMantissa1,x
+		ora 	zTemp0
+		rts
 
 ; ************************************************************************************************
 ;
@@ -73,6 +101,7 @@ _CLExit:
 ; ************************************************************************************************
 
 CLIsDigit:
+		.cget
 		cmp 	#"0"
 		bcc	 	_CLIDExitFalse
 		cmp 	#"9"+1
