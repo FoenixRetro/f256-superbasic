@@ -48,6 +48,12 @@ class TokenSource(object):
 				end 		new 		list 		run 		stop				
 				clear 		restore 	assert 	
 
+			{2}							// Set 2 (Assembler Mnemonics)
+				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	
+				clc	cld	cli	clv	cmp	cpx	cpy	dec	dex	dey	eor	inc	inx	iny	
+				jmp	jsr	lda	ldx	ldy	lsr	nop	ora	pha	php	phx	phy	pla	plp	
+				plx	ply	rol	ror	rti	rts	sbc	sec	sed	sei	sta	stx	sty	stz	
+				tax	tay	trb	tsb	tsx	txa	txs	tya
 """		
 
 # *******************************************************************************************
