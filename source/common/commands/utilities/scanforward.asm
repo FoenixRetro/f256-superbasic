@@ -39,6 +39,10 @@ _ScanLoop:
 		cmp 	zTemp0+1
 		bne 	_ScanGoNext		
 _ScanMatch:									; if so, exit after skipping that token.
+		cmp 	#KWC_EOL 					; if asked for EOL, backtrack.
+		bne 	_ScanNotEndEOL
+		dey
+_ScanNotEndEOL:		
 		rts 					
 		;
 		;		Advance. Token in A

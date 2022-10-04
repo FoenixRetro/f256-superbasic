@@ -68,6 +68,10 @@ _ClearZeroEnd:
 		;		Scan the program code for Procedures (possibly convert intarrys back above ?)
 		;
 		jsr 	ProcedureScan
+		;
+		;		Restore the DATA pointer
+		;
+		jsr 	Command_Restore		
 		rts
 
 		.send code

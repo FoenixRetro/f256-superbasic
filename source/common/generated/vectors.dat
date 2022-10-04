@@ -102,7 +102,7 @@ VectorSet0:
 	.word	Command_WEND                     ; $a0 WEND
 	.word	CallCommand                      ; $a1 CALL
 	.word	SyntaxError                      ; $a2 CLS
-	.word	SyntaxError                      ; $a3 DATA
+	.word	Command_Data                     ; $a3 DATA
 	.word	DimCommand                       ; $a4 DIM
 	.word	Unused3                          ; $a5 DOWNTO
 	.word	ElseCode                         ; $a6 ELSE
@@ -110,7 +110,7 @@ VectorSet0:
 	.word	GotoCommand                      ; $a8 GOTO
 	.word	LetCommand                       ; $a9 LET
 	.word	Command_Print                    ; $aa PRINT
-	.word	SyntaxError                      ; $ab READ
+	.word	Command_Read                     ; $ab READ
 	.word	RemCommand                       ; $ac REM
 	.word	Command_RETURN                   ; $ad RETURN
 	.word	Unused2                          ; $ae TO
@@ -123,7 +123,7 @@ VectorSet1:
 	.word	EndCommand                       ; $85 END
 	.word	SyntaxError                      ; $86 LIST
 	.word	NewCommand                       ; $87 NEW
-	.word	SyntaxError                      ; $88 RESTORE
+	.word	Command_Restore                  ; $88 RESTORE
 	.word	CommandRUN                       ; $89 RUN
 	.word	StopCommand                      ; $8a STOP
 VectorSet2:

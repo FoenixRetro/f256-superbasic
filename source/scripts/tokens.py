@@ -46,7 +46,7 @@ class TokenSource(object):
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop				
-				clear 		restore 	assert
+				clear 		restore 	assert 	
 
 """		
 
