@@ -121,7 +121,7 @@ VectorSet1:
 	.word	AssertCommand                    ; $83 ASSERT
 	.word	ClearCommand                     ; $84 CLEAR
 	.word	EndCommand                       ; $85 END
-	.word	SyntaxError                      ; $86 LIST
+	.word	Command_List                     ; $86 LIST
 	.word	NewCommand                       ; $87 NEW
 	.word	Command_Restore                  ; $88 RESTORE
 	.word	CommandRUN                       ; $89 RUN

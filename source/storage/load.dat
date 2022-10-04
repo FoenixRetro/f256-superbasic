@@ -1,5 +1,10 @@
+40 print ''
+45 print #3A7
+50 list	
 100 read a$,b,c
+105 print a$,b,c
 110 data "Hello"
 120 data 42,"9"
-130 print a$,b,c
-ÿÿÿÿ
+130 for i = 1 to 30
+140 while i = 0
+Ã¿Ã¿Ã¿Ã¿

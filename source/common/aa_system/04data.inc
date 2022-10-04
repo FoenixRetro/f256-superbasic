@@ -121,6 +121,8 @@ dataPointer:								; operates like code pointer for DATA statements
 		.fill 	5
 inDataStatement:							; non zero when in data statement, e.g. pointing to data
 		.fill 	1				
+tbOffset:									; offset into token buffer
+		.fill 	1		
 ;
 ;		New tokenised line - these three *must* be contiguous as they are used as a single entity
 ;		
