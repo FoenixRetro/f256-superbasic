@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.56.2625 listing file
 ; 64tass -q -b -Wall -Wno-portable -c -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Tue Oct  4 12:03:59 2022
+; Tue Oct  4 12:20:51 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -1880,7 +1880,7 @@
 .896d	4c b5 88	jmp $88b5			jmp 	_LCMainLoop 				; and go around again.
 .8970					_LCData:
 .8970	48		pha				pha 								; save type $FE/$FF
-.8971	a2 23		ldx #$23			ldx 	#'#' 						; figure out # or "
+.8971	a2 24		ldx #$24			ldx 	#'$' 						; figure out $ or "
 .8973	c9 fe		cmp #$fe			cmp 	#$FE
 .8975	f0 02		beq $8979			beq 	_LCHaveOpener
 .8977	a2 22		ldx #$22			ldx 	#'"'
@@ -5457,7 +5457,7 @@
 .9a1a					_TKTokenisePunctuation:
 .9a1a	c9 22		cmp #$22			cmp 	#'"'						; quoted string ?
 .9a1c	f0 27		beq $9a45			beq 	_TKString
-.9a1e	c9 23		cmp #$23			cmp 	#'#'						; hexadecimal constant (# only appears at end of identifiers)
+.9a1e	c9 24		cmp #$24			cmp 	#'$'						; hexadecimal constant (# only appears at end of identifiers)
 .9a20	f0 28		beq $9a4a			beq 	_TKHexConstant
 .9a22	c9 3c		cmp #$3c			cmp 	#'<' 						; check for < > handlers.
 .9a24	f0 29		beq $9a4f			beq 	_TKCheckDouble

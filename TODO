@@ -1,9 +1,10 @@
 Progress:
-	Import Assembler code.
+	Implement assemble keyword
+	Import Assembler code.	
 		- try basic tests on 3 and 4.
 		- write TACOXYCheck
 		- do the lot.
-		
+
 	Command Line & Editing.
 
 Later:

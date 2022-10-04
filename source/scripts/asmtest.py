@@ -202,5 +202,5 @@ h.write("20 assemble #6000,1\n")
 h.write("30 .start\n")
 source = source.split("\n")
 for x in range(0,len(source)):
-	h.write("{0} {1}\n".format(x*10+100,source[x].replace("$","#").strip()))
+	h.write("{0} {1}\n".format(x*10+100,source[x].strip()))
 h.close()

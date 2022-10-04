@@ -82,7 +82,7 @@ _TKTokeniseLoop:
 _TKTokenisePunctuation:
 		cmp 	#'"'						; quoted string ?
 		beq 	_TKString
-		cmp 	#'#'						; hexadecimal constant (# only appears at end of identifiers)
+		cmp 	#'$'						; hexadecimal constant (# only appears at end of identifiers)
 		beq 	_TKHexConstant
 		cmp 	#'<' 						; check for < > handlers.
 		beq 	_TKCheckDouble

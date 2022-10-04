@@ -201,7 +201,7 @@ _LCNoSpace:
 
 _LCData:
 		pha 								; save type $FE/$FF
-		ldx 	#'#' 						; figure out # or "
+		ldx 	#'$' 						; figure out $ or "
 		cmp 	#$FE
 		beq 	_LCHaveOpener
 		ldx 	#'"'
