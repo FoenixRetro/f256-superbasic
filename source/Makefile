@@ -42,11 +42,15 @@ go : basic
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 3000
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary basic.rom --address 8000
 
-tools: emu
-	make -B -C $(KRN_REPO)
+tools: emu monitor fnxmgr
+
+fnxmgr:	
 	make -B -C $(UTL_REPO)
 	$(CCOPY) $(UTL_REPO)$(S)fnxmgr.zip $(BINDIR)
 	$(CCOPY) $(UTL_REPO)$(S)foenixmgr.ini .
+
+monitor:
+	make -B -C $(KRN_REPO)
 	$(CCOPY) $(KRN_REPO)$(S)monitor.rom $(BINDIR)
 
 emu:
