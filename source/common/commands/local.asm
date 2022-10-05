@@ -71,10 +71,33 @@ _LNTPushNumLoop:
 		ply
 		rts
 		;
-		;		Push string
+		;		Push string. Slightly different, as we push the string, then the length, but then we post the
+		;	 	address of the variable record, not the string, as this might be updated with a larger concreted
+		; 		string.
 		;
 _LNTPushString:
 		.debug
+		phy
+		ldy 	#0 							; output string
+_LNTPushStrLoop:		
+		lda 	(zTemp0),y
+		beq 	_LNTStringOut
+		jsr 	StackPushByte
+		iny
+		bra 	_LNTPushStrLoop
+_LNTStringOut:
+		tya									; output length
+		jsr 	StackPushByte
+		;
+		lda 	#0 							; clear original string.
+		sta 	(zTemp0)
+		;
+		lda 	NSMantissa0,x 				; output address of the string record *not* the string itself
+		jsr 	StackPushByte
+		lda 	NSMantissa1,x
+		jsr 	StackPushByte
+		ply
+		rts
 
 _LNTError:
 		jmp 	SyntaxError

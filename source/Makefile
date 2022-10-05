@@ -31,17 +31,28 @@ START = $(EMULATOR) $(APPNAME)@8000 storage$(S)load.dat@3000
 # 3000 is hardcoded in backload.asm
 
 all :  basic
-run : basic
-	
+#
+#		Run on emulator with/without autorun
+#	
+run : basic	
 	python scripts$(S)checkload.py
 	$(START)
 
+testbasic:prelim
+	64tass -D AUTORUN=1 $(ASMOPTS) _basic.asm -o $(APPNAME)
+
+#
+#		Run on real hardware
+#
 go : basic 
 	python scripts$(S)checkload.py
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address F000
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 3000
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary basic.rom --address 8000
 
+#
+#		Build and download tools
+#
 tools: emu monitor fnxmgr
 
 fnxmgr:	
@@ -56,7 +67,9 @@ monitor:
 emu:
 	make -B -C $(EMU_REPO)
 	$(CCOPY) $(EMU_REPO)$(S)bin$(S)jr256$(APPSTEM) $(BINDIR)
-
+#
+#		Show various things
+#
 stack:
 	python $(SCRIPTDIR)showstack.py
 	
@@ -65,12 +78,11 @@ strings:
 
 vars:
 	python $(SCRIPTDIR)showvar.py
-	
+#
+#		Builds with/without autorun
+#	
 basic : prelim
 	64tass -D AUTORUN=0 $(ASMOPTS) _basic.asm -o $(APPNAME)
-
-testbasic:
-	64tass -D AUTORUN=1 $(ASMOPTS) _basic.asm -o $(APPNAME)
 
 autorun:testbasic
 	$(START)
@@ -82,7 +94,9 @@ prelim:
 	python $(SCRIPTDIR)tokens.py
 	python $(SCRIPTDIR)constants.py
 	python $(SCRIPTDIR)timestamp.py
-
+#
+#		Run various tests.
+#
 test:
 	python $(SCRIPTDIR)simpletests.py 
 
