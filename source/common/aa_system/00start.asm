@@ -17,11 +17,11 @@ Start:	ldx 	#$FF 						; stack reset
 		;
 		jsr 	NewCommand 					; erase current program
 		jsr 	BackloadProgram
-;		.if 	AUTORUN=1
-;		jmp 	CommandRun
-;		.else
+		.if 	AUTORUN==1 					; run straight off
+		jmp 	CommandRun
+		.else
 		jmp 	WarmStart
-;		.endif
+		.endif
 
 		.align 2
 		.include "../generated/vectors.dat"

@@ -18,7 +18,6 @@
 
 MemoryDeleteLine:
 		jsr 	IMemoryFindEnd 				; find end to zTemp2.
-		.resetcodepointer 					; back to the start.
 		;
 		lda 	(codePtr) 					; size to delete => y
 		tay

@@ -27,12 +27,14 @@ EMU_REPO= ..$(S)..$(S)junior-emulator
 UTL_REPO= ..$(S)..$(S)junior-utilities
 KRN_REPO= ..$(S)..$(S)junior-tinykernel
 
-all :  basic
+START = $(EMULATOR) $(APPNAME)@8000 storage$(S)load.dat@3000 
+# 3000 is hardcoded in backload.asm
 
+all :  basic
 run : basic
-	# 3000 is hardcoded in backload.asm
+	
 	python scripts$(S)checkload.py
-	$(EMULATOR) $(APPNAME)@8000 storage$(S)load.dat@3000 
+	$(START)
 
 go : basic 
 	python scripts$(S)checkload.py
@@ -61,8 +63,14 @@ vars:
 	python $(SCRIPTDIR)showvar.py
 	
 basic : prelim
-	64tass $(ASMOPTS) _basic.asm -o $(APPNAME)
+	64tass -D AUTORUN=0 $(ASMOPTS) _basic.asm -o $(APPNAME)
 
+testbasic:
+	64tass -D AUTORUN=1 $(ASMOPTS) _basic.asm -o $(APPNAME)
+
+autorun:testbasic
+	$(START)
+	
 prelim:
 	python $(SCRIPTDIR)errors.py $(LANGUAGE)
 	python $(SCRIPTDIR)opcodes.py >common$(S)generated$(S)asmcore.asm
@@ -85,7 +93,7 @@ artest:
 benchmark:
 	cp ..$(S)documents$(S)benchmarks$(S)bm$(ID).bas storage$(S)load.dat
 
-assembler: basic
+assembler: 
 	python $(SCRIPTDIR)asmtest.py
 	64tass -q -b -c common$(S)generated$(S)asmtest.tass -L output$(S)asmtest.lst -o output$(S)asmtest.bin
 	$(EMULATOR) $(APPNAME)@8000 storage$(S)load.dat@3000 

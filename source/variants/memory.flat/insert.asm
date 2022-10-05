@@ -12,54 +12,27 @@
 
 ; ************************************************************************************************
 ;
-;						Insert line at XA into the program at the current point
+;						Insert line in tokenbuffer space at current codePtr point.
 ;		
 ; ************************************************************************************************
 
-MDLInsertLine:
-		stx 	zTemp0+1 					; save line address at zTemp0
-		sta 	zTemp0
-		jsr 	MDLFindEnd					; top of program at zTemp2
+MemoryInsertLine:
+		jsr 	IMemoryFindEnd 				; find end to zTemp2.
 		;
-		lda 	zTemp2+1 					; check space
-		inc 	a
-		cmp 	#LowMemory >> 8
-		bcs 	_MDLIMemory
-		;
-		.set16 	zTemp1,BasicStart 			; look for either program, or Top.
-		;
-_MDLIFind:
-		lda 	(zTemp1) 					; reached end
-		beq 	_MDLIFound 					; have found the insert point.
-		ldy 	#1 							; signed line numbe comparison.
-		lda 	(zTemp1),y
-		cmp 	(zTemp0),y
-		iny
-		lda 	(zTemp1),y
-		sbc 	(zTemp0),y
-		bcs 	_MDLIFound 					; found line >= required line.
-		;
-		lda 	(zTemp1) 					; advance to next
-		clc 	
-		adc 	zTemp1
-		sta 	zTemp1
-		bcc 	_MDLIFind
-		inc 	zTemp1+1
-		bra 	_MDLIFind
-		;
-		;		zTemp2 is top, zTemp0 is source to insert, zTemp1 is insert point.
+		;		zTemp2 is top, codePointer is insert point. Make space for the token buffer
+		;	 	data (offset, line#, buffer)
 		;
 _MDLIFound:
-		lda 	(zTemp0) 					; insert gap in Y
+		lda 	tokenOffset 				; insert gap in Y, the offset, e.g. length of the new line
 		tay
 _MDLIInsert:		
 		lda 	(zTemp2) 					; shift one byte up , at least one covers end case.
 		sta 	(zTemp2),y 					; work from top down.
 
-		lda 	zTemp1 						; done insert point ?
+		lda 	codePtr 					; done insert point ?
 		cmp 	zTemp2
 		bne 	_MDLINext
-		lda 	zTemp1+1
+		lda 	codePtr+1
 		cmp 	zTemp2+1
 		beq 	_MDLIHaveSpace
 _MDLINext:
@@ -70,21 +43,17 @@ _MDLINoBorrow:
 		dec 	zTemp2
 		bra 	_MDLIInsert
 		;
-		;		Space at zTemp1 for zTemp2 data
+		;		Now we have the space, copy the buffer in.
 		;
 _MDLIHaveSpace:		
-		lda 	(zTemp0) 					; bytes to copy
-		tay
+		ldy 	tokenOffset 				; bytes to copy
+		dey 								; from offset-1 to 0
 _MDLICopy:
+		lda 	tokenOffset,y
+		sta 	(codePtr),y
 		dey
-		lda 	(zTemp0),y
-		sta 	(zTemp1),y
-		cpy 	#$00
-		bne 	_MDLICopy
+		bpl 	_MDLICopy
 		rts
-
-_MDLIMemory:
-		ERR_MEMORY
 
 ; ************************************************************************************************
 ;

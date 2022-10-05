@@ -14,7 +14,7 @@
 
 ; ************************************************************************************************
 ;
-;				Set codePtr -> Line Number >= XA ; set CC if >=, set Z if found.
+;				Set codePtr -> Line Number >= XA ; set Carry if >=, set Z if found.
 ;		  If there is no larger number, codePtr points to EOS, carry clear, Z not known.
 ;
 ; ************************************************************************************************

@@ -102,5 +102,6 @@
 	.include	"./variants/hardware/junior/memory.asm"
 	.include	"./variants/hardware/junior/vectors.asm"
 	.include	"./variants/memory.flat/delete.asm"
+	.include	"./variants/memory.flat/insert.asm"
 	.include	"./variants/memory.flat/memory.asm"
 	.include	"./variants/memory.flat/search.asm"

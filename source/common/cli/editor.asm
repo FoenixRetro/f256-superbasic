@@ -19,20 +19,28 @@
 ; ***************************************************************************************
 
 EditProgramCode:
-		.debug
+		;
+		;		Delete first
+		;
+		lda 	TokenLineNumber 			; find the line.
+		ldx 	TokenLineNumber+1
+		jsr 	MemorySearch
+		bcc 	_EPCNoDelete 				; reached the end don't delete
+		bne 	_EPCNoDelete 				; found slot but didn't match, no delete
+		jsr 	MemoryDeleteLine 			; delete the line
+_EPCNoDelete:		
+		;
+		;		Insert the line.
+		;
+		lda 	TokenBuffer 				; buffer empty
+		cmp 	#KWC_EOL
+		beq 	_EPCNoInsert
 
-;		lda 	#TokenBuffer & $FF
-;		ldx 	#TokenBuffer >> 8
-;		jsr 	MDLDeleteLine
-;		;
-;		lda 	TokenBuffer 				; if offset is 4 (offset, lo, high , EOL)
-;		cmp 	#4
-;		beq 	_WSECExit 					; then it's delete only.
-;		lda 	#TokenBuffer & $FF
-;		ldx 	#TokenBuffer >> 8
-;		jsr 	MDLInsertLine 				; insert the new line.
-;_WSECExit:
-;		jsr 	MDLClose
+		lda 	TokenLineNumber 			; find the line - it cannot exist.
+		ldx 	TokenLineNumber+1 			; so this can't fail, it returns some point in the code.
+		jsr 	MemorySearch
+		jsr 	MemoryInsertLine 			; insert the line
+_EPCNoInsert:
 		rts
 	
 		.send code

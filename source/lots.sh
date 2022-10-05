@@ -1,7 +1,7 @@
 while :
 do
-	make test run
-	make astest run
-	make sastest run
-	make artest run
+	make test autorun
+	make astest autorun
+	make sastest autorun
+	make artest autorun
 done

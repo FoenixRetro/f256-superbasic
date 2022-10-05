@@ -1,6 +1,10 @@
 Progress:
 
-	Command Line & Editing.
+	Fix backspace bug
+	Bully line editor test.
+	Test editing, make editing use insert not append.
+	Make public/announce
+	Break in program, break in listing
 	Locals
 	Parameters
 	
@@ -10,8 +14,7 @@ Later:
 	Error : out of identifier space
 	Error : string allocation space
 	Error : string temp allocate fails
+	Error : out of program memory on insert.
 	Improve CALL	
 
-Character dispatchers from RUN: (todo)
-	. for assembler label
 
