@@ -1,30 +1,49 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		stack.inc
-;		Purpose:	StackConstants
-;		Created:	1st October 2022
+;		Name:		bytes.asm
+;		Purpose:	Push/Pull single bytes on the stack
+;		Created:	5th October 2022
 ;		Reviewed: 	
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
 
+		.section code
+
 ; ************************************************************************************************
 ;
-;								Marker IDs for stacked values
-;
-;	$Fx is reserved.
+;								Push A on the BASIC stack
 ;
 ; ************************************************************************************************
 
-STK_GOSUB = $E0
-STK_FOR = $D0
-STK_REPEAT = $C0
-STK_PROC = $B0
-STK_WHILE = $A0
-STK_LOCALN = $01
-STK_LOCALS = $02
+StackPushByte:
+		pha 								; save byte
+		lda 	BasicStack
+		bne 	_SPBNoBorrow
+		dec 	BasicStack+1
+_SPBNoBorrow:
+		dec 	BasicStack
+		pla 								; get back and write
+		sta 	(BasicStack)
+		rts				
+
+; ************************************************************************************************
+;
+;								Pop A off the BASIC stack
+;
+; ************************************************************************************************				
+
+StackPopByte:
+		lda 	(BasicStack)
+		inc 	BasicStack
+		bne 	_SPBNoCarry
+		inc 	BasicStack+1
+_SPBNoCarry:
+		rts
+					
+		.send code
 
 ; ************************************************************************************************
 ;

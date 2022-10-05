@@ -1,13 +1,13 @@
 10 a = 12
-20 print "Start ";A
+20 print "Start ";A,b
 30 demo1()
-40 print "End ";A
+40 print "End ";A,b
 50 end
 100 proc demo1()
-110 print "In demo1() ";A
-120 local a
-130 print "After local ";A
+110 print "In demo1() ";A,b
+120 local a,b:b = 99
+130 print "After local ";A,b
 140 a = 144
-150 print "After assignment ";A
+150 print "After assignment ";A,b
 160 endproc
 ÿÿÿÿ

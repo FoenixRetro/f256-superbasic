@@ -91,6 +91,7 @@
 	.include	"./common/generated/constants.asm"
 	.include	"./common/generated/errors.asm"
 	.include	"./common/generated/timestamp.asm"
+	.include	"./common/stack/bytes.asm"
 	.include	"./common/stack/frames.asm"
 	.include	"./common/stack/location.asm"
 	.include	"./common/stack/setup.asm"

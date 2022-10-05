@@ -65,6 +65,16 @@ _SCExit:
 ; ************************************************************************************************
 
 StackCheckFrame:
+		pha
+_StackRemoveLocals:		
+		lda 	(basicStack) 				; check for local, keep popping them
+		cmp 	#STK_LOCALS+1
+		bcs 	_SCNoLocal
+		jsr 	LocalPopValue
+		bra 	_StackRemoveLocals
+
+_SCNoLocal:		
+		pla
 		eor 	(basicStack) 				; xor with toS marker
 		and 	#$F0 						; check type bits
 		bne 	_SCFError 					; different, we have structures mixed up

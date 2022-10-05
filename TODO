@@ -1,8 +1,8 @@
 Progress:
 
+	Local Strings
 	Bully line editor test.
 	LET @ (and @xxx in RUN)
-	Locals
 	Parameters
 	Improve CALL	
 	Indenting
@@ -10,9 +10,10 @@ Progress:
 Later:
 	Expand rnd() (check MS Basic)
 	Disable interrupts enable at end of line command ?
+
 	Error : out of identifier space
 	Error : string allocation space
 	Error : string temp allocate fails
 	Error : out of program memory on insert.
-
+	Error : out of stack space (bytes and frames)
 
