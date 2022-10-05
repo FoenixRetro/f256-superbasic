@@ -53,6 +53,9 @@ _CLStart
 		.resetcodepointer
 		;
 _CLLoop:
+		jsr 	EXTBreakCheck 				; break check
+		beq 	_CLExit
+
 		.cget0 								; any more ?
 		beq 	_CLExit
 		; 

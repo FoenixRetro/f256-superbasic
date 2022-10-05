@@ -2,7 +2,7 @@ Progress:
 
 	Bully line editor test.
 	Test editing, make editing use insert not append.
-	Break in program, break in LISTing
+	LET @ (and @xxx in RUN)
 	Locals
 	Parameters
 	Improve CALL	

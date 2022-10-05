@@ -46,6 +46,11 @@ RUNCodePointerLine:
 		; ----------------------------------------------------------------------------------------
 
 _CRIncMainLoop:
+		asl 	breakCheck 					; clears 1 time in 8
+		bne 	_CRNoBreakCheck
+		jsr 	EXTBreakCheck 				; break check
+		beq 	_CRBreak
+_CRNoBreakCheck:		
 		iny		
 _CRMainLoop:
 		stz 	stringInitialised 			; clear the temporary string initialised flag.
@@ -107,6 +112,9 @@ _CRSyntaxError:
 _CRCallVector0:
 		jmp 	(VectorSet0,x)		
 
+_CRBreak:
+		.error_break
+		
 CRNoProgram:
 		jmp 	EndCommand
 		

@@ -116,6 +116,9 @@ stringInitialised: 							; string
 stringTempPointer:							; temporary string
 		.fill 	2		
 
+breakCheck:									; break check counter/shift
+		.fill 	1
+		
 decimalPlaces: 								; no of decimals.
 		.fill 	1
 dbOffset:									; offset into decimal buffer.
