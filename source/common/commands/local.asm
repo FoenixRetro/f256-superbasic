@@ -134,7 +134,37 @@ _LPVNumberCopy:
 		;
 _LPVString:
 		.debug
-
+		jsr 	StackPopByte 				; address of record => zTemp0
+		sta 	zTemp0+1
+		jsr 	StackPopByte
+		sta 	zTemp0
+		;
+		phx 								; save XY
+		phy
+		;
+		lda 	(zTemp0) 					; address to write string to => zTemp1
+		sta 	zTemp1
+		ldy 	#1
+		lda 	(zTemp0),y
+		sta 	zTemp1+1
+		;
+		jsr 	StackPopByte 				; # to get => x
+		tax
+		ldy 	#0 							; copy string out to target address (zTemp1)
+_LPVStringCopy:
+		dex
+		bmi 	_LPVStringCopied		
+		sta 	(zTemp1),y
+		iny
+		dex
+		bra 	_LPVStringCopy
+_LPVStringCopied:
+		lda 	#0 							; add NULL on end
+		sta 	(zTemp1),y
+		;
+		ply 								; restore YX and exit
+		plx
+		rts		
 ; ************************************************************************************************
 ;
 ;									Changes and Updates
