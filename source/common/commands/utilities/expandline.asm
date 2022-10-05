@@ -180,6 +180,7 @@ _LCFoundText:
 		ldy 	#2
 _LCCopyToken:								; copy token out.
 		lda 	(zTemp0),y
+		jsr 	LCLLowerCase
 		jsr 	LCLWrite
 		iny
 		dex

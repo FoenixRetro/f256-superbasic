@@ -1,20 +1,19 @@
 Progress:
 
-	Fix backspace bug
 	Bully line editor test.
 	Test editing, make editing use insert not append.
-	Make public/announce
-	Break in program, break in listing
+	Break in program, break in LISTing
 	Locals
 	Parameters
+	Improve CALL	
+	Indenting
 	
 Later:
 	Expand rnd() (check MS Basic)
-	Disable interrupts enable at end of line.
+	Disable interrupts enable at end of line command ?
 	Error : out of identifier space
 	Error : string allocation space
 	Error : string temp allocate fails
 	Error : out of program memory on insert.
-	Improve CALL	
 
 

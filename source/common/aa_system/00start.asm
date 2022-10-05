@@ -14,6 +14,9 @@
 
 Start:	ldx 	#$FF 						; stack reset
 		txs	
+		ldx 	#(Prompt >> 8) 				; prompt
+		lda 	#(Prompt & $FF)
+		jsr 	PrintStringXA
 		;
 		jsr 	NewCommand 					; erase current program
 		jsr 	BackloadProgram
@@ -23,6 +26,7 @@ Start:	ldx 	#$FF 						; stack reset
 		jmp 	WarmStart
 		.endif
 
+Prompt:	.text 	13,13,"*** F256 Junior SuperBASIC ***",13,13,0
 		.align 2
 		.include "../generated/vectors.dat"
 
