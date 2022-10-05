@@ -39,6 +39,11 @@ LocaliseNextTerm:
 		lda 	NSStatus,x
 		and 	#NSBIsReference 			; check it is a reference
 		bne		_LNTError
+		;
+		lda 	NSMantissa0,x 				; copy address of variable to zTemp0
+		sta 	zTemp0
+		lda 	NSMantissa1,x
+		sta  	zTemp0+1
 
 
 _LNTError:

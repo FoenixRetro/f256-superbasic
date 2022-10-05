@@ -5,6 +5,7 @@
 50 end
 100 proc demo1()
 110 print "In demo1() ";A
+120 local a
 130 print "After local ";A
 140 a = 144
 150 print "After assignment ";A
