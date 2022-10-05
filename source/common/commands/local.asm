@@ -73,14 +73,21 @@ _LNTPushNumLoop:
 		;
 		;		Push string. Slightly different, as we push the string, then the length, but then we post the
 		;	 	address of the variable record, not the string, as this might be updated with a larger concreted
-		; 		string.
+		; 		string. It won't be smaller definitely.
 		;
 _LNTPushString:
-		.debug
 		phy
-		ldy 	#0 							; output string
-_LNTPushStrLoop:		
+
+		lda 	(zTemp0) 					; put address of string in zTemp1
+		sta 	zTemp1
+		ldy 	#1
 		lda 	(zTemp0),y
+		sta 	zTemp1+1				
+		ldy 	#0 							; output string
+		cmp 	#0 							; if not assigned strin
+		beq 	_LNTStringOut
+_LNTPushStrLoop:		
+		lda 	(zTemp1),y
 		beq 	_LNTStringOut
 		jsr 	StackPushByte
 		iny
@@ -90,12 +97,16 @@ _LNTStringOut:
 		jsr 	StackPushByte
 		;
 		lda 	#0 							; clear original string.
-		sta 	(zTemp0)
+		sta 	(zTemp1)
 		;
 		lda 	NSMantissa0,x 				; output address of the string record *not* the string itself
 		jsr 	StackPushByte
 		lda 	NSMantissa1,x
 		jsr 	StackPushByte
+
+		lda 	#STK_LOCALS 				; push local-string marker.
+		jsr 	StackPushByte
+
 		ply
 		rts
 
@@ -114,7 +125,7 @@ LocalPopValue:
 		cmp 	#STK_LOCALN 				; if not local-N
 		bne 	_LPVString
 		;
-		;		Remove number
+		;		Restore number
 		;
 		jsr 	StackPopByte 				; address
 		sta 	zTemp0+1
@@ -130,16 +141,14 @@ _LPVNumberCopy:
 		ply 								; and complete		
 		rts
 		;
-		;		Remove string
+		;		Restore string
 		;
 _LPVString:
-		.debug
 		jsr 	StackPopByte 				; address of record => zTemp0
 		sta 	zTemp0+1
 		jsr 	StackPopByte
 		sta 	zTemp0
 		;
-		phx 								; save XY
 		phy
 		;
 		lda 	(zTemp0) 					; address to write string to => zTemp1
@@ -148,23 +157,25 @@ _LPVString:
 		lda 	(zTemp0),y
 		sta 	zTemp1+1
 		;
-		jsr 	StackPopByte 				; # to get => x
-		tax
-		ldy 	#0 							; copy string out to target address (zTemp1)
-_LPVStringCopy:
-		dex
-		bmi 	_LPVStringCopied		
+		jsr 	StackPopByte 				; # to get => y
+		tay		
+
+		lda 	zTemp1+1 					; if no target (e.g. was "" originally) exit
+		beq 	_LPVStringCopied
+
+		lda 	#0 							; NULL on end
 		sta 	(zTemp1),y
-		iny
-		dex
+_LPVStringCopy: 							; copy string out to target address (zTemp1)
+		dey
+		bmi 	_LPVStringCopied		
+		jsr 	StackPopByte
+		sta 	(zTemp1),y
 		bra 	_LPVStringCopy
 _LPVStringCopied:
-		lda 	#0 							; add NULL on end
-		sta 	(zTemp1),y
 		;
-		ply 								; restore YX and exit
 		plx
 		rts		
+
 ; ************************************************************************************************
 ;
 ;									Changes and Updates
