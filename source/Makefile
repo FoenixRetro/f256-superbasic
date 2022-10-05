@@ -84,3 +84,9 @@ artest:
 	
 benchmark:
 	cp ..$(S)documents$(S)benchmarks$(S)bm$(ID).bas storage$(S)load.dat
+
+assembler: basic
+	python $(SCRIPTDIR)asmtest.py
+	64tass -q -b -c common$(S)generated$(S)asmtest.tass -L output$(S)asmtest.lst -o output$(S)asmtest.bin
+	$(EMULATOR) $(APPNAME)@8000 storage$(S)load.dat@3000 
+	python $(SCRIPTDIR)asmcheck.py

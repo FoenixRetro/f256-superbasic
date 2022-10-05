@@ -1,12 +1,9 @@
 Progress:
-	Import Assembler code.	
-		- test lda/sta etc. not ,X ,Y
-		- write TACOXYCheck
-		- do the lot.
-		- run the assembler check.
 
 	Command Line & Editing.
-
+	Locals
+	Parameters
+	
 Later:
 	Expand rnd() (check MS Basic)
 	Disable interrupts enable at end of line.

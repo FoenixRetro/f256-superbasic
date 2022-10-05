@@ -15,6 +15,7 @@
 	.include	"./common/assembler/assembler.asm"
 	.include	"./common/assembler/aswrite.asm"
 	.include	"./common/assembler/instruction.asm"
+	.include	"./common/assembler/label.asm"
 	.include	"./common/assembler/operands.asm"
 	.include	"./common/commands/assemble.asm"
 	.include	"./common/commands/assert.asm"
@@ -99,4 +100,4 @@
 	.include	"./variants/hardware/junior/memory.asm"
 	.include	"./variants/hardware/junior/vectors.asm"
 	.include	"./variants/memory.flat/memory.asm"
-	.include	"./variants/memory.flat/transfer.asm"
+	.include	"./variants/memory.flat/search.asm"

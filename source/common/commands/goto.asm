@@ -24,9 +24,13 @@ GotoStackX:
 		pha 								; it is slightly inefficient, just in cases.
 		lda 	NSMantissa0,x
 		plx
-		jsr 	MemoryTransferAX 			; transfer to line number AX.
+		jsr 	SearchLineAX 				; transfer to line number AX.
+		bcc 	_GotoError 					; not found, off end.
+		bne 	_GotoError 					; not found exactly
 		jmp 	RunNewLine 					; and go straight to new line code.
-		
+_GotoError:
+		.error_line
+				
 		.send code
 
 ; ************************************************************************************************

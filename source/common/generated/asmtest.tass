@@ -61,7 +61,7 @@ start:
 		cpy #$09	
 		cpy $05		
 		cpy $0d0e	
-		dec	a	
+		dec a	
 		dec $05		
 		dec $0d0e	
 		dec $15, x	
@@ -77,7 +77,7 @@ start:
 		eor ($01,x)	
 		eor ($11), y	
 		eor ($12)	
-		inc	a	
+		inc a	
 		inc $05		
 		inc $0d0e	
 		inc $15, x	

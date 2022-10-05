@@ -142,7 +142,39 @@ CalculateOperand:
 ; ************************************************************************************************
 
 TACOCheckXY:	
-		.debug
+		.cget  								; get next	
+		and 	#$C0 						; check it is an identifier reference.
+		cmp 	#$40
+		bne 	_TCXYFail
+		;
+		.cget 								; get variable address to zTemp
+		clc 								
+		adc 	#((VariableSpace >> 8) - $40) & $FF		
+		sta 	zTemp0+1
+		iny
+		.cget 	
+		iny
+		sta 	zTemp0
+		phy 								; save position
+		;
+		ldy 	#2 							; type is integer ?
+		lda 	(zTemp0),y
+		bne 	_TCXYPopFail
+		ldy 	#8 							; get first character, should have bit 7 set as also last.
+		lda 	(zTemp0),y
+		cmp 	#'X'+$80 					; should be X or Y
+		beq 	_TCXYFound		
+		cmp 	#'Y'+$80
+		beq 	_TCXYFound		
+_TCXYPopFail:
+		ply
+_TCXYFail:
+		lda 	#0
+		rts		
+_TCXYFound:
+		ply 								; restore position
+		and 	#$7F 						; throw bit 7
+		rts
 
 ; ************************************************************************************************
 ;

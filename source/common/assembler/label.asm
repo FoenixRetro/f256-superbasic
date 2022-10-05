@@ -18,36 +18,37 @@
 ;
 ; ************************************************************************************************
 
-AssemblerLabel:
-		jsr 	EvaluateTermAutoCreate		; evaluate the term which is the var/array element to assign
-		lda 	FPAStatus 					; the status should be 1. e.g. a number reference
-		cmp 	#1
-		bne 	_ALSyntax
+LabelHere:
+		iny 								; skip .
+		ldx 	#0 							; get a term
+		jsr 	EvaluateTerm 				; get a term
+		lda 	NSStatus 					; needs to be an integer reference.
+		cmp 	#NSTInteger+NSBIsReference
+		bne 	_ALType
 		;
-		lda 	FPAMantissa 				; copy mantissa to zTemp0
+		lda 	NSMantissa0,x 				; copy reference address to zTemp0
 		sta 	zTemp0
-		lda 	FPAMantissa+1
+		lda 	NSMantissa1,x
 		sta 	zTemp0+1
 
-		phy
+		phy 								; copy address in.
 		ldy 	#1
-		lda 	PVariable 					; write P to lower 16 bits
+		lda	 	AssemblerAddress
 		sta 	(zTemp0)
-		lda 	PVariable+1
+		lda	 	AssemblerAddress+1
 		sta 	(zTemp0),y
 		iny
-		lda 	#0 							; upper bits zero
+		lda 	#0
 		sta 	(zTemp0),y
 		iny
 		sta 	(zTemp0),y
 		iny
-		lda 	#IntExponent 				; it's an integer exponent.
 		sta 	(zTemp0),y
 		ply
 		rts
 
-_ALSyntax:
-		jmp 	SyntaxError
+_ALType:
+		jmp 	TypeError
 
 		.send 	code
 

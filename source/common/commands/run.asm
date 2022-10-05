@@ -83,13 +83,16 @@ _CRGoLet:
 ;		Not colon, not a variable
 ;	
 _CRNotVariable:
-		cmp 	#KWD_QMARK
+		cmp 	#KWD_QMARK 					; handle ? !
 		beq 	_CRGoLet
 		cmp 	#KWD_PLING
 		beq 	_CRGoLet
-		cmp 	#KWD_QUOTE
+		cmp 	#KWD_QUOTE 					; handle ' (comment)
 		beq 	_CRGoRem
-		.debug
+		cmp 	#KWD_PERIOD 				; handle . (assembler label)
+		bne 	_CRSyntaxError
+		jsr 	LabelHere
+		bra 	_CRMainLoop
 ;
 ;		' synonym for REM
 ;

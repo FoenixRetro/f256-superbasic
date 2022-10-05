@@ -118,8 +118,8 @@ _AMXCheckOddities:
 		;
 		cpx 	#$00 					; requires zero page ?
 		bpl 	_AMXCONotZero
-		lda 	NSMantissa0+1
-		bne 	_AMXCOFail
+		lda 	NSMantissa1
+		bne 	_AMXCONext
 _AMXCONotZero:		
 		lda 	ExtraOpcode+1,y 		; get new opcode
 		bra 	_AMXOutputCode 			; and assemble it
