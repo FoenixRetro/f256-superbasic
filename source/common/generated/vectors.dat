@@ -109,11 +109,12 @@ VectorSet0:
 	.word	Command_GOSUB                    ; $a7 GOSUB
 	.word	GotoCommand                      ; $a8 GOTO
 	.word	LetCommand                       ; $a9 LET
-	.word	Command_Print                    ; $aa PRINT
-	.word	Command_Read                     ; $ab READ
-	.word	RemCommand                       ; $ac REM
-	.word	Command_RETURN                   ; $ad RETURN
-	.word	Unused2                          ; $ae TO
+	.word	Command_LOCAL                    ; $aa LOCAL
+	.word	Command_Print                    ; $ab PRINT
+	.word	Command_Read                     ; $ac READ
+	.word	RemCommand                       ; $ad REM
+	.word	Command_RETURN                   ; $ae RETURN
+	.word	Unused2                          ; $af TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

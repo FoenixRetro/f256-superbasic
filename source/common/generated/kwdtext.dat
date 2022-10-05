@@ -44,11 +44,12 @@ KeywordSet0:
 	.text	5,$80,"GOSUB"          ; $a7 GOSUB
 	.text	4,$39,"GOTO"           ; $a8 GOTO
 	.text	3,$e5,"LET"            ; $a9 LET
-	.text	5,$8d,"PRINT"          ; $aa PRINT
-	.text	4,$1c,"READ"           ; $ab READ
-	.text	3,$e4,"REM"            ; $ac REM
-	.text	6,$e0,"RETURN"         ; $ad RETURN
-	.text	2,$a3,"TO"             ; $ae TO
+	.text	5,$6b,"LOCAL"          ; $aa LOCAL
+	.text	5,$8d,"PRINT"          ; $ab PRINT
+	.text	4,$1c,"READ"           ; $ac READ
+	.text	3,$e4,"REM"            ; $ad REM
+	.text	6,$e0,"RETURN"         ; $ae RETURN
+	.text	2,$a3,"TO"             ; $af TO
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF

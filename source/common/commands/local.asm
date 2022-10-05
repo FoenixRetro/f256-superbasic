@@ -1,30 +1,49 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		stack.inc
-;		Purpose:	StackConstants
-;		Created:	1st October 2022
-;		Reviewed: 	
+;		Name:		local.asm
+;		Purpose:	LOCAL command
+;		Created:	5th October 2022
+;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
-; ************************************************************************************************
 
 ; ************************************************************************************************
 ;
-;								Marker IDs for stacked values
-;
-;	$Fx is reserved.
+;									Local - non array values
 ;
 ; ************************************************************************************************
 
-STK_GOSUB = $E0
-STK_FOR = $D0
-STK_REPEAT = $C0
-STK_PROC = $B0
-STK_WHILE = $A0
-STK_LOCALN = $90
-STK_LOCALS = $80
+		.section code
+
+Command_LOCAL: ;; [local]
+		ldx 	#0 							; at level 0
+		jsr 	LocaliseNextTerm 			; convert term to a local.
+		.cget 								; followed by comma ?
+		iny
+		cmp 	#KWD_COMMA
+		beq 	Command_LOCAL
+		dey 								; unpick pre-get
+		rts
+
+; ************************************************************************************************
+;
+;				Get a term reference and push its value on BASIC stack, using Stack[x]
+;
+; ************************************************************************************************
+
+LocaliseNextTerm:
+		.debug
+		jsr 	EvaluateTerm 				; evaluate the term
+		lda 	NSStatus,x
+		and 	#NSBIsReference 			; check it is a reference
+		bne		_LNTError
+
+
+_LNTError:
+		jmp 	SyntaxError
+		.send code
 
 ; ************************************************************************************************
 ;

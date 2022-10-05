@@ -32,6 +32,7 @@
 	.include	"./common/commands/if.asm"
 	.include	"./common/commands/let.asm"
 	.include	"./common/commands/list.asm"
+	.include	"./common/commands/local.asm"
 	.include	"./common/commands/new.asm"
 	.include	"./common/commands/print.asm"
 	.include	"./common/commands/procedure.asm"
