@@ -26,7 +26,10 @@ Start:	ldx 	#$FF 						; stack reset
 		jmp 	WarmStart
 		.endif
 
-Prompt:	.text 	13,13,"*** F256 Junior SuperBASIC ***",13,13,0
+Prompt:	.text 	13,13,"*** F256 Junior SuperBASIC ***",13,13
+		.text 	"Written by Paul Robson 2022.",13,13
+		.include "../generated/timestamp.asm"
+		.byte 	13,13,0
 		.align 2
 		.include "../generated/vectors.dat"
 

@@ -50,7 +50,7 @@ _CLSecond:
 		jsr 	Evaluate16BitInteger
 
 _CLStart
-		.resetcodepointer
+		.cresetcodepointer
 		;
 _CLLoop:
 		jsr 	EXTBreakCheck 				; break check

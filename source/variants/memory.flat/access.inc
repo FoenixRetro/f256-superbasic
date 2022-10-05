@@ -75,7 +75,7 @@ cskipdatablock .macro
 ;
 ; ************************************************************************************************
 
-setcodepointer 	.macro
+csetcodepointer 	.macro
 		lda 	#((\1) & $FF)
 		sta 	codePtr
 		lda 	#((\1) >> 8)
@@ -83,8 +83,8 @@ setcodepointer 	.macro
 		.cresync
 		.endm
 
-resetcodepointer 	.macro
-		.setcodepointer BasicStart
+cresetcodepointer 	.macro
+		.csetcodepointer BasicStart
 		.endm
 
 ; ************************************************************************************************

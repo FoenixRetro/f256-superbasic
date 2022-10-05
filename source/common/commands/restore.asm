@@ -20,7 +20,7 @@
 
 Command_Restore:	;; [restore]
 		jsr 	SwapDataCodePtrs 			; swap code and data
-		.resetcodepointer 					; back to the start
+		.cresetcodepointer 					; back to the start
 		jsr 	SwapDataCodePtrs 			; put them back
 		lda 	#3 							; start at offset 3, e.g. first instruction of first line.
 		sta 	dataPointer+4

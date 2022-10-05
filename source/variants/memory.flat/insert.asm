@@ -12,12 +12,20 @@
 
 ; ************************************************************************************************
 ;
-;						Insert line in tokenbuffer space at current codePtr point.
+;				Insert line in tokenbuffer space at current codePtr point (CC) end (CS)
 ;		
 ; ************************************************************************************************
 
 MemoryInsertLine:
+		php
 		jsr 	IMemoryFindEnd 				; find end to zTemp2.
+		plp
+		bcc 	_MDLIFound 					
+		;
+		lda 	zTemp2 						; if CS on entry append.
+		sta 	codePtr
+		lda 	zTemp2+1
+		sta 	codePtr+1
 		;
 		;		zTemp2 is top, codePointer is insert point. Make space for the token buffer
 		;	 	data (offset, line#, buffer)

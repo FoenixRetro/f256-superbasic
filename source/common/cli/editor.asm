@@ -39,6 +39,7 @@ _EPCNoDelete:
 		lda 	TokenLineNumber 			; find the line - it cannot exist.
 		ldx 	TokenLineNumber+1 			; so this can't fail, it returns some point in the code.
 		jsr 	MemorySearch
+		clc 								; insert at this point.
 		jsr 	MemoryInsertLine 			; insert the line
 _EPCNoInsert:
 		rts

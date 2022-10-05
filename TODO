@@ -1,7 +1,6 @@
 Progress:
 
 	Bully line editor test.
-	Test editing, make editing use insert not append.
 	LET @ (and @xxx in RUN)
 	Locals
 	Parameters

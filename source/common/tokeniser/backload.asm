@@ -37,7 +37,8 @@ _BPNotTab:
 		bcs 	_BPCopy
 _BPEndLine:		
 		jsr 	TokeniseLine 				; tokenise the line.
-		jsr 	MemoryAppend 				; append to current program
+		sec 								; append not insert
+		jsr 	MemoryInsertLine 			; append to current program
 		bra 	BackloadProgram
 _BPExit:
 		stz 	$FFFA 						; clear fast mode

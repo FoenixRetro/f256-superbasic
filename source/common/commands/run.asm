@@ -20,7 +20,7 @@
 
 CommandRUN:	;; [run]
 		jsr 	ClearCommand 				; clear variable/stacks/etc.
-		.resetCodePointer 					; set code address to start
+		.cresetCodePointer 					; set code address to start
 
 		; ----------------------------------------------------------------------------------------
 		;

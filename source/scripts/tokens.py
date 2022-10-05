@@ -281,9 +281,13 @@ class TokenCollection(object):
 	#		Scan source for keywords
 	#
 	def scanSource(self):
-		for root,dirs,files in os.walk("."):
-			for f in [x for x in files if x.endswith(".asm")]:
-				for s in open(root+os.sep+f).readlines():
+		h = open("_basic.asm")
+		codeFiles = h.readlines()
+		h.close()
+		for f1 in codeFiles:
+			if f1.strip() != "" and not f1.startswith(";"):
+				f = f1.split('"')[1]
+				for s in open(f).readlines():
 					if s.find(";;") > 0:
 						m = re.match("^(.*?)\\:\\s*\\;\\;\\s*\\[(.*?)\\]",s)
 						assert m is not None,"Bad line "+m
@@ -312,14 +316,14 @@ if __name__ == "__main__":
 	t.dumpPrecedenceTable(h)
 	h.close()
 
+	h1 = open("common/generated/kwdconst0.inc","w")
+	h1.write(note)
+	t.group0Info(h1)
+	h1.close()
+
 	h = open("common/generated/vectors.dat","w")
 	h.write(note)
 	t.dumpVectorTable(-1,h)
 	for i in range(0,3):
 		t.dumpVectorTable(i,h)
 	h.close()
-
-	h1 = open("common/generated/kwdconst0.inc","w")
-	h1.write(note)
-	t.group0Info(h1)
-	h1.close()

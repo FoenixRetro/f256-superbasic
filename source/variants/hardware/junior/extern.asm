@@ -1,8 +1,8 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		vectors.asm
-;		Purpose:	Vectored external functions
+;		Name:		extern.asm
+;		Purpose:	External functions
 ;		Created:	29th September 2022
 ;		Reviewed: 	
 ;		Author : 	Paul Robson (paul@robsons.org.uk)

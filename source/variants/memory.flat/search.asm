@@ -22,7 +22,7 @@
 MemorySearch:
 		sta 	zTemp0 						; save line number zTemp0
 		stx 	zTemp0+1
-		.resetCodePointer 					; point to start of program memory
+		.cresetCodePointer 					; point to start of program memory
 		;
 		;		Search loop. 
 		;

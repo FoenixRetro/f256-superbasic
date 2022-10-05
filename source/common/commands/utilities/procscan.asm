@@ -19,7 +19,7 @@
 ; ************************************************************************************************
 
 ProcedureScan:
-		.resetcodepointer 					; start of program
+		.cresetcodepointer 					; start of program
 _PSLoop:
 		.cget0 								; exit if at end
 		beq 	_PSExit

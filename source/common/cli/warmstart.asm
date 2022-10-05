@@ -33,7 +33,7 @@ WarmStart:
 		;		Run code in token buffer
 		;		
 		stz 	TokenOffset 				; zero offset, meaning it only runs one line.
-		.setCodePointer TokenOffset			; set up the code pointer.
+		.csetCodePointer TokenOffset		; set up the code pointer.
 		lda 	TokenBuffer 				; nothing to run
 		cmp 	#KWC_EOL
 		beq 	WarmStart

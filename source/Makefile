@@ -81,6 +81,7 @@ prelim:
 	python $(SCRIPTDIR)makebuild.py
 	python $(SCRIPTDIR)tokens.py
 	python $(SCRIPTDIR)constants.py
+	python $(SCRIPTDIR)timestamp.py
 
 test:
 	python $(SCRIPTDIR)simpletests.py 
