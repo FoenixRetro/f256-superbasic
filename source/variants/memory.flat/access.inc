@@ -75,11 +75,16 @@ cskipdatablock .macro
 ;
 ; ************************************************************************************************
 
-resetcodepointer 	.macro
-		lda 	#(BasicStart & $FF)
+setcodepointer 	.macro
+		lda 	#((\1) & $FF)
 		sta 	codePtr
-		lda 	#(BasicStart >> 8)
+		lda 	#((\1) >> 8)
 		sta 	codePtr+1
+		.cresync
+		.endm
+
+resetcodepointer 	.macro
+		.setcodepointer BasicStart
 		.endm
 
 ; ************************************************************************************************

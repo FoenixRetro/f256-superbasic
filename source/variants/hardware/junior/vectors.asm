@@ -60,7 +60,7 @@ _EISCWait:
 
 ; ************************************************************************************************
 ;
-;						Input line into input buffer returns line in XA
+;									Input line into lineBuffer
 ;
 ;		This can use ExtInputSingleCharacter *or* $FFCF, the screen editor or similar.
 ;
