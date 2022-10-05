@@ -14,6 +14,8 @@
 ;
 ;										Configuration options
 ;
+;			  Addresses should be on page boundaries (except for ZeroPageMandatory)
+;
 ; ************************************************************************************************
 ;
 ;		Variables that have to be in zero page because it's used in (xx),y
