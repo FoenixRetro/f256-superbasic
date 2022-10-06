@@ -1,10 +1,10 @@
-10 a$ = "Hello":n = 99
+10 a$ = "Hello":n = 42
 15 print a$,n
-20 do()
+20 do("Fred",97)
 100 print a$,n
 110 end
 120 '
-900 proc do()
+900 proc do(a$,n)
 910 print "In Do",a$,n
 920 endproc
 ÿÿÿÿ

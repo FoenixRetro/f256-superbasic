@@ -124,6 +124,9 @@ decimalPlaces: 								; no of decimals.
 dbOffset:									; offset into decimal buffer.
 		.fill 	1		
 
+lastParameter: 								; final stack offset when all parameters handled.
+		.fill 	1
+		
 dataPointer:								; operates like code pointer for DATA statements
 		.fill 	5
 inDataStatement:							; non zero when in data statement, e.g. pointing to data

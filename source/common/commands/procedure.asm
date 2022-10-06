@@ -14,20 +14,43 @@
 
 ; ************************************************************************************************
 ;
-;				Handed Procedure call from LET. The info on the record is in Stack,X
+;				Handed Procedure call from LET. The info on the record is in Stack[0]
 ;
 ; ************************************************************************************************
 
+ParameterStackPos = 2
+
 CallProcedure:
-		jsr 	CheckRightBracket
-		
+		;
+		;		Stack the parameters on the Evaluation stack.
+		;
+		ldx 	#ParameterStackPos 			; start storing parameters at 2.
+		.cget 								; found right bracket , no parameters ?
+		cmp 	#KWD_RPAREN 				
+		beq 	_CPEndParam
+_CPParamLoop:				
+		jsr 	EvaluateExpression 			; get parameter onto stack
+		inx 								; bump next stack
+		.cget 								; get next character and consume
+		iny
+		cmp 	#KWD_COMMA 					; if comma, go back and try again.
+		beq 	_CPParamLoop
+		dey 								; unpick.
+_CPEndParam:
+		stx 	LastParameter 				; save the last parameters index.
+		iny									; skip right bracket
+		;
+		;		Save return address
+		;
 		lda 	#STK_PROC+3 				; allocate 6 bytes on the return stack.
 		jsr 	StackOpen 
 		jsr 	STKSaveCodePosition 		; save loop position
 		;
-		lda 	NSMantissa0,x 				; copy variable (e.g. procedure) address to zTemp0
+		;		Copy the target address - the value in the identifier record - to codePtr
+		;
+		lda 	NSMantissa0 				; copy variable (e.g. procedure) address to zTemp0
 		sta 	zTemp0 						; this is the DATA not the RECORD
-		lda 	NSMantissa1,x
+		lda 	NSMantissa1
 		sta 	zTemp0+1
 		;
 		ldy 	#1 							; copy code address back.
@@ -45,6 +68,24 @@ CallProcedure:
 		lda 	(zTemp0),y
 		tay
 		.cresync 							; resync any code pointer stuff
+		;
+		;		Now handle any parameters
+		;
+		ldx 	#ParameterStackPos 			; start position of parameters
+		cpx	 	LastParameter 				; check no parameters at the start
+		beq 	_ParamExit 					; if so, exit.
+_ParamExtract:
+		dex 								; put a local term on the level before
+		jsr 	LocaliseNextTerm			; also pushes original param value to basic stack
+		jsr 	AssignVariable 				; assign stacked value to the variable.
+		inx 								; advance to next parameter to do.
+		inx
+		cpx 	LastParameter 				; are we done ?
+		beq 	_ParamExit
+		jsr 	CheckComma 					; comma seperating parameters
+		bra 	_ParamExtract
+
+_ParamExit:				
 		jsr 	CheckRightBracket 			; check )
 		rts 								; and continue from here
 		.send code
