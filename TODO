@@ -1,11 +1,11 @@
 Progress:
 
 	LET @ (and @xxx in RUN)
+	Implement RANDOM()
 	Improve CALL	
 	Indenting
 	
 Later:
-	Expand rnd() (check MS Basic)
 	Disable interrupts enable at end of line command ?
 
 	Error : out of identifier space

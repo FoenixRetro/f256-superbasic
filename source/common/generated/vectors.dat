@@ -82,39 +82,40 @@ VectorSet0:
 	.word	LenUnary                         ; $8c LEN(
 	.word	Unary_Mid                        ; $8d MID$(
 	.word	Unary_Not                        ; $8e NOT(
-	.word	Unary_Right                      ; $8f RIGHT$(
-	.word	Unary_Rnd                        ; $90 RND(
-	.word	SgnUnary                         ; $91 SGN(
-	.word	SpcUnary                         ; $92 SPC(
-	.word	Unary_Str                        ; $93 STR$(
-	.word	UnaryTrue                        ; $94 TRUE
-	.word	ValUnary                         ; $95 VAL(
-	.word	ForCommand                       ; $96 FOR
-	.word	IfCommand                        ; $97 IF
-	.word	Unused1                          ; $98 PROC
-	.word	Command_REPEAT                   ; $99 REPEAT
-	.word	Command_WHILE                    ; $9a WHILE
-	.word	EndIf                            ; $9b ENDIF
-	.word	Command_ENDPROC                  ; $9c ENDPROC
-	.word	NextCommand                      ; $9d NEXT
-	.word	Unused4                          ; $9e THEN
-	.word	Command_UNTIL                    ; $9f UNTIL
-	.word	Command_WEND                     ; $a0 WEND
-	.word	CallCommand                      ; $a1 CALL
-	.word	SyntaxError                      ; $a2 CLS
-	.word	Command_Data                     ; $a3 DATA
-	.word	DimCommand                       ; $a4 DIM
-	.word	Unused3                          ; $a5 DOWNTO
-	.word	ElseCode                         ; $a6 ELSE
-	.word	Command_GOSUB                    ; $a7 GOSUB
-	.word	GotoCommand                      ; $a8 GOTO
-	.word	LetCommand                       ; $a9 LET
-	.word	Command_LOCAL                    ; $aa LOCAL
-	.word	Command_Print                    ; $ab PRINT
-	.word	Command_Read                     ; $ac READ
-	.word	RemCommand                       ; $ad REM
-	.word	Command_RETURN                   ; $ae RETURN
-	.word	Unused2                          ; $af TO
+	.word	SyntaxError                      ; $8f RANDOM(
+	.word	Unary_Right                      ; $90 RIGHT$(
+	.word	Unary_Rnd                        ; $91 RND(
+	.word	SgnUnary                         ; $92 SGN(
+	.word	SpcUnary                         ; $93 SPC(
+	.word	Unary_Str                        ; $94 STR$(
+	.word	UnaryTrue                        ; $95 TRUE
+	.word	ValUnary                         ; $96 VAL(
+	.word	ForCommand                       ; $97 FOR
+	.word	IfCommand                        ; $98 IF
+	.word	Unused1                          ; $99 PROC
+	.word	Command_REPEAT                   ; $9a REPEAT
+	.word	Command_WHILE                    ; $9b WHILE
+	.word	EndIf                            ; $9c ENDIF
+	.word	Command_ENDPROC                  ; $9d ENDPROC
+	.word	NextCommand                      ; $9e NEXT
+	.word	Unused4                          ; $9f THEN
+	.word	Command_UNTIL                    ; $a0 UNTIL
+	.word	Command_WEND                     ; $a1 WEND
+	.word	CallCommand                      ; $a2 CALL
+	.word	SyntaxError                      ; $a3 CLS
+	.word	Command_Data                     ; $a4 DATA
+	.word	DimCommand                       ; $a5 DIM
+	.word	Unused3                          ; $a6 DOWNTO
+	.word	ElseCode                         ; $a7 ELSE
+	.word	Command_GOSUB                    ; $a8 GOSUB
+	.word	GotoCommand                      ; $a9 GOTO
+	.word	LetCommand                       ; $aa LET
+	.word	Command_LOCAL                    ; $ab LOCAL
+	.word	Command_Print                    ; $ac PRINT
+	.word	Command_Read                     ; $ad READ
+	.word	RemCommand                       ; $ae REM
+	.word	Command_RETURN                   ; $af RETURN
+	.word	Unused2                          ; $b0 TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

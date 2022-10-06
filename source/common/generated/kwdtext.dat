@@ -17,39 +17,40 @@ KeywordSet0:
 	.text	4,$07,"LEN("           ; $8c LEN(
 	.text	5,$26,"MID$("          ; $8d MID$(
 	.text	4,$19,"NOT("           ; $8e NOT(
-	.text	7,$ca,"RIGHT$("        ; $8f RIGHT$(
-	.text	4,$0c,"RND("           ; $90 RND(
-	.text	4,$10,"SGN("           ; $91 SGN(
-	.text	4,$0e,"SPC("           ; $92 SPC(
-	.text	5,$45,"STR$("          ; $93 STR$(
-	.text	4,$40,"TRUE"           ; $94 TRUE
-	.text	4,$0b,"VAL("           ; $95 VAL(
-	.text	3,$e7,"FOR"            ; $96 FOR
-	.text	2,$8f,"IF"             ; $97 IF
-	.text	4,$34,"PROC"           ; $98 PROC
-	.text	6,$c1,"REPEAT"         ; $99 REPEAT
-	.text	5,$79,"WHILE"          ; $9a WHILE
-	.text	5,$66,"ENDIF"          ; $9b ENDIF
-	.text	7,$0b,"ENDPROC"        ; $9c ENDPROC
-	.text	4,$3f,"NEXT"           ; $9d NEXT
-	.text	4,$2f,"THEN"           ; $9e THEN
-	.text	5,$8c,"UNTIL"          ; $9f UNTIL
-	.text	4,$2e,"WEND"           ; $a0 WEND
-	.text	4,$1c,"CALL"           ; $a1 CALL
-	.text	3,$e2,"CLS"            ; $a2 CLS
-	.text	4,$1a,"DATA"           ; $a3 DATA
-	.text	3,$da,"DIM"            ; $a4 DIM
-	.text	6,$db,"DOWNTO"         ; $a5 DOWNTO
-	.text	4,$29,"ELSE"           ; $a6 ELSE
-	.text	5,$80,"GOSUB"          ; $a7 GOSUB
-	.text	4,$39,"GOTO"           ; $a8 GOTO
-	.text	3,$e5,"LET"            ; $a9 LET
-	.text	5,$6b,"LOCAL"          ; $aa LOCAL
-	.text	5,$8d,"PRINT"          ; $ab PRINT
-	.text	4,$1c,"READ"           ; $ac READ
-	.text	3,$e4,"REM"            ; $ad REM
-	.text	6,$e0,"RETURN"         ; $ae RETURN
-	.text	2,$a3,"TO"             ; $af TO
+	.text	7,$e9,"RANDOM("        ; $8f RANDOM(
+	.text	7,$ca,"RIGHT$("        ; $90 RIGHT$(
+	.text	4,$0c,"RND("           ; $91 RND(
+	.text	4,$10,"SGN("           ; $92 SGN(
+	.text	4,$0e,"SPC("           ; $93 SPC(
+	.text	5,$45,"STR$("          ; $94 STR$(
+	.text	4,$40,"TRUE"           ; $95 TRUE
+	.text	4,$0b,"VAL("           ; $96 VAL(
+	.text	3,$e7,"FOR"            ; $97 FOR
+	.text	2,$8f,"IF"             ; $98 IF
+	.text	4,$34,"PROC"           ; $99 PROC
+	.text	6,$c1,"REPEAT"         ; $9a REPEAT
+	.text	5,$79,"WHILE"          ; $9b WHILE
+	.text	5,$66,"ENDIF"          ; $9c ENDIF
+	.text	7,$0b,"ENDPROC"        ; $9d ENDPROC
+	.text	4,$3f,"NEXT"           ; $9e NEXT
+	.text	4,$2f,"THEN"           ; $9f THEN
+	.text	5,$8c,"UNTIL"          ; $a0 UNTIL
+	.text	4,$2e,"WEND"           ; $a1 WEND
+	.text	4,$1c,"CALL"           ; $a2 CALL
+	.text	3,$e2,"CLS"            ; $a3 CLS
+	.text	4,$1a,"DATA"           ; $a4 DATA
+	.text	3,$da,"DIM"            ; $a5 DIM
+	.text	6,$db,"DOWNTO"         ; $a6 DOWNTO
+	.text	4,$29,"ELSE"           ; $a7 ELSE
+	.text	5,$80,"GOSUB"          ; $a8 GOSUB
+	.text	4,$39,"GOTO"           ; $a9 GOTO
+	.text	3,$e5,"LET"            ; $aa LET
+	.text	5,$6b,"LOCAL"          ; $ab LOCAL
+	.text	5,$8d,"PRINT"          ; $ac PRINT
+	.text	4,$1c,"READ"           ; $ad READ
+	.text	3,$e4,"REM"            ; $ae REM
+	.text	6,$e0,"RETURN"         ; $af RETURN
+	.text	2,$a3,"TO"             ; $b0 TO
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF

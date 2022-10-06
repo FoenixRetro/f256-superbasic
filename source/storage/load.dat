@@ -1,10 +1,9 @@
-10 a$ = "Hello":n = 42
-15 print a$,n
-20 do("Fred",97)
-100 print a$,n
-110 end
-120 '
-900 proc do(a$,n)
-910 print "In Do",a$,n
-920 endproc
+1 demo():demo():demo():end
+9 proc demo()
+10 print 'rnd(-37)
+20 print rnd(1)
+30 print rnd(1)
+40 print rnd(1)
+50 print rnd(1)
+60 endproc
 ÿÿÿÿ

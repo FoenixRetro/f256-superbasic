@@ -19,11 +19,30 @@
 ; ************************************************************************************************
 
 Unary_Rnd: ;; [rnd(]
+		plx
 		jsr 	EvaluateNumber 				; number to use.
 		jsr 	CheckRightBracket 			; closing bracket
+		jsr 	NSMIsZero 					; if zero, then don't generate a new number
+		beq 	_URCopySeed
+		lda 	NSStatus,x 					; if -ve, then seed using parameter
+		bpl 	_URDontSeed
 
+		lda 	NSMantissa0,x 				; copy - value to seed butchering it.
+		eor 	#$17
+		sta 	RandomSeed+0
+		lda 	NSMantissa1,x
+		eor 	#$A5
+		sta 	RandomSeed+1
+		lda 	NSMantissa2,x
+		eor 	#$C2
+		sta 	RandomSeed+2	
+		lda 	NSMantissa3,x
+		eor 	#$9D
+		sta 	RandomSeed+3
+		jsr 	Random32Bit
+_URDontSeed:
 		jsr 	Random32Bit 				; generate a number.
-
+_URCopySeed:
 		lda 	RandomSeed+0
 		sta 	NSMantissa0,x
 		lda 	RandomSeed+1
@@ -39,7 +58,6 @@ Unary_Rnd: ;; [rnd(]
 		sta 	NSExponent
 		lda 	#NSTFloat
 		sta 	NSStatus 					; positive.
-		.debug
 		rts
 
 ; ************************************************************************************************
