@@ -52,6 +52,7 @@ _CDVError:
 IntegerModulus: ;; [%]
 		plx
 		.dispatchintegeronly
+IntegerModulusNoCheck:		
 		jsr 	CheckDivideZero 			; do div zero check
 		jsr 	Int32Divide 				; do the division
 		asl 	NSStatus,x 					; clear the sign bit.

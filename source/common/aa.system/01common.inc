@@ -30,9 +30,10 @@ ZeroPagePreference = $600
 ;
 MemoryStorage = $700
 ;
-;		Where program memory starts
+;		Where program memory starts and stops
 ;
 BasicStart = $2000
+BasicEnd = $8000
 ;
 ;		Build address of ROM
 ;		

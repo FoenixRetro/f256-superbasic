@@ -1,15 +1,8 @@
 Progress:
-
-	Implement RANDOM()
-	Improve CALL	
-	Indenting
+	
+	Graphics code.
 	
 Later:
 	Disable interrupts enable at end of line command ?
-
-	Error : out of identifier space
-	Error : string allocation space
-	Error : string temp allocate fails
-	Error : out of program memory on insert.
-	Error : out of stack space (bytes and frames)
+	Indenting
 

@@ -19,6 +19,12 @@
 MemoryInsertLine:
 		php
 		jsr 	IMemoryFindEnd 				; find end to zTemp2.
+
+		lda 	zTemp2+1 					; space ?
+		inc 	a
+		cmp 	#(BasicEnd >> 8)-1
+		bcs 	_MDLIError
+		;
 		plp
 		bcc 	_MDLIFound 					
 		;
@@ -62,6 +68,9 @@ _MDLICopy:
 		dey
 		bpl 	_MDLICopy
 		rts
+
+_MDLIError:
+		.error_memory
 
 ; ************************************************************************************************
 ;

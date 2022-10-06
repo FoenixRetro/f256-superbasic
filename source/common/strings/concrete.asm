@@ -18,6 +18,7 @@
 
 StringConcrete:
 		phy 								; save position on stack
+		jsr 	CheckIdentifierStringSpace 	; check memory allocation.
 		;
 		;		ZTemp0 points to the string to be concreted.
 		;

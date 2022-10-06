@@ -1,9 +1,3 @@
-10 n1 = 42
-15 print @n1
-20 test(@n1)
-30 print n1
-40 end
-100 proc test(addr)
-110 @addr = -1
-120 endproc
-ÿÿÿÿ
+10 for i = 1 to 30
+20 print random(6);" ";
+30 next

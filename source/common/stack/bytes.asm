@@ -23,12 +23,19 @@ StackPushByte:
 		lda 	BasicStack
 		bne 	_SPBNoBorrow
 		dec 	BasicStack+1
+		pha
+		lda 	BasicStack+1
+		cmp 	#BasicStackBase >> 8
+		bcc 	_SPBMemory
 _SPBNoBorrow:
 		dec 	BasicStack
 		pla 								; get back and write
 		sta 	(BasicStack)
 		rts				
 
+_SPBMemory:
+		.error_stack
+		
 ; ************************************************************************************************
 ;
 ;								Pop A off the BASIC stack

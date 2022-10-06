@@ -78,6 +78,8 @@ _ClearZeroEnd:
 		stz 	AssemblerAddress	
 		stz 	AssemblerAddress+1
 		stz 	AssemblerControl	
+		;
+		jsr 	CheckIdentifierStringSpace 	; check identifier/string space 		
 		rts
 
 		.send code

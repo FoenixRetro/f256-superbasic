@@ -28,6 +28,7 @@ StringSystemInitialise:
 ; ************************************************************************************************
 
 StringSpaceInitialise:
+		jsr 	CheckIdentifierStringSpace 	; check memory allocation.
 		lda 	#$FF 						; only initialise once (set to $FF, bit used to test it)
 		sta 	StringInitialised
 		;

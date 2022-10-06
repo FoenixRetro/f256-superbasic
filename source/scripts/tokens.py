@@ -53,7 +53,7 @@ class TokenSource(object):
 				clc	cld	cli	clv	cmp	cpx	cpy	dec	dex	dey	eor	inc	inx	iny	
 				jmp	jsr	lda	ldx	ldy	lsr	nop	ora	pha	php	phx	phy	pla	plp	
 				plx	ply	rol	ror	rti	rts	sbc	sec	sed	sei	sta	stx	sty	stz	
-				tax	tay	trb	tsb	tsx	txa	txs	tya
+				tax	tay	trb	tsb	tsx	txa	txs	tya stp
 """		
 
 # *******************************************************************************************

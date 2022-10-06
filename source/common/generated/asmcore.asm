@@ -199,6 +199,9 @@ Assemble_cld: ;; [cld]
 Assemble_phx: ;; [phx]
 	jsr	AssembleGroup4
 	.byte $da
+Assemble_stp: ;; [stp]
+	jsr	AssembleGroup4
+	.byte $db
 Assemble_inx: ;; [inx]
 	jsr	AssembleGroup4
 	.byte $e8

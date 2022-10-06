@@ -82,7 +82,7 @@ VectorSet0:
 	.word	LenUnary                         ; $8c LEN(
 	.word	Unary_Mid                        ; $8d MID$(
 	.word	Unary_Not                        ; $8e NOT(
-	.word	SyntaxError                      ; $8f RANDOM(
+	.word	Unary_Random                     ; $8f RANDOM(
 	.word	Unary_Right                      ; $90 RIGHT$(
 	.word	Unary_Rnd                        ; $91 RND(
 	.word	SgnUnary                         ; $92 SGN(
@@ -186,14 +186,15 @@ VectorSet2:
 	.word	Assemble_sed                     ; $b5 SED
 	.word	Assemble_sei                     ; $b6 SEI
 	.word	Assemble_sta                     ; $b7 STA
-	.word	Assemble_stx                     ; $b8 STX
-	.word	Assemble_sty                     ; $b9 STY
-	.word	Assemble_stz                     ; $ba STZ
-	.word	Assemble_tax                     ; $bb TAX
-	.word	Assemble_tay                     ; $bc TAY
-	.word	Assemble_trb                     ; $bd TRB
-	.word	Assemble_tsb                     ; $be TSB
-	.word	Assemble_tsx                     ; $bf TSX
-	.word	Assemble_txa                     ; $c0 TXA
-	.word	Assemble_txs                     ; $c1 TXS
-	.word	Assemble_tya                     ; $c2 TYA
+	.word	Assemble_stp                     ; $b8 STP
+	.word	Assemble_stx                     ; $b9 STX
+	.word	Assemble_sty                     ; $ba STY
+	.word	Assemble_stz                     ; $bb STZ
+	.word	Assemble_tax                     ; $bc TAX
+	.word	Assemble_tay                     ; $bd TAY
+	.word	Assemble_trb                     ; $be TRB
+	.word	Assemble_tsb                     ; $bf TSB
+	.word	Assemble_tsx                     ; $c0 TSX
+	.word	Assemble_txa                     ; $c1 TXA
+	.word	Assemble_txs                     ; $c2 TXS
+	.word	Assemble_tya                     ; $c3 TYA

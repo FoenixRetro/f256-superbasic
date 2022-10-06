@@ -14,6 +14,25 @@
 
 ; ************************************************************************************************
 ;
+;										random function
+;
+; ************************************************************************************************
+
+Unary_Random: ;; [random(]
+		plx
+		jsr 	Random32Bit 				; get a random number
+		jsr 	URCopyToMantissa  			; put in mantissa
+		inx
+		jsr 	Evaluate16BitInteger 		; put modulus value in +1
+		dex
+		jsr 	IntegerModulusNoCheck 		; calculate modulus
+		stz 	NSStatus,x 					; make it an integer positive
+		stz 	NSExponent,x
+		jsr 	CheckRightBracket
+		rts
+
+; ************************************************************************************************
+;
 ;										rnd function
 ;
 ; ************************************************************************************************
@@ -43,6 +62,15 @@ Unary_Rnd: ;; [rnd(]
 _URDontSeed:
 		jsr 	Random32Bit 				; generate a number.
 _URCopySeed:
+		jsr 	URCopyToMantissa 			; copy into mantissa
+
+		lda 	#-31 						; force into 0-1 range
+		sta 	NSExponent
+		lda 	#NSTFloat
+		sta 	NSStatus 					; positive.
+		rts
+
+URCopyToMantissa:
 		lda 	RandomSeed+0
 		sta 	NSMantissa0,x
 		lda 	RandomSeed+1
@@ -52,12 +80,6 @@ _URCopySeed:
 		lda 	RandomSeed+3
 		and 	#$7F 						; make legal mantissa
 		sta 	NSMantissa3,x
-
-
-		lda 	#-31 						; force into 0-1 range
-		sta 	NSExponent
-		lda 	#NSTFloat
-		sta 	NSStatus 					; positive.
 		rts
 
 ; ************************************************************************************************
@@ -83,7 +105,7 @@ _Random1:
 _Random2:		
 		dey
 		bne 	_Random1
-
+		sta 	RandomSeed+0
 		ply
 		rts
 

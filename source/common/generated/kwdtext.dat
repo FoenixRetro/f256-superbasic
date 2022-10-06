@@ -123,15 +123,16 @@ KeywordSet2:
 	.text	3,$dc,"SED"            ; $b5 SED
 	.text	3,$e1,"SEI"            ; $b6 SEI
 	.text	3,$e8,"STA"            ; $b7 STA
-	.text	3,$ff,"STX"            ; $b8 STX
-	.text	3,$00,"STY"            ; $b9 STY
-	.text	3,$01,"STZ"            ; $ba STZ
-	.text	3,$ed,"TAX"            ; $bb TAX
-	.text	3,$ee,"TAY"            ; $bc TAY
-	.text	3,$e8,"TRB"            ; $bd TRB
-	.text	3,$e9,"TSB"            ; $be TSB
-	.text	3,$ff,"TSX"            ; $bf TSX
-	.text	3,$ed,"TXA"            ; $c0 TXA
-	.text	3,$ff,"TXS"            ; $c1 TXS
-	.text	3,$ee,"TYA"            ; $c2 TYA
+	.text	3,$f7,"STP"            ; $b8 STP
+	.text	3,$ff,"STX"            ; $b9 STX
+	.text	3,$00,"STY"            ; $ba STY
+	.text	3,$01,"STZ"            ; $bb STZ
+	.text	3,$ed,"TAX"            ; $bc TAX
+	.text	3,$ee,"TAY"            ; $bd TAY
+	.text	3,$e8,"TRB"            ; $be TRB
+	.text	3,$e9,"TSB"            ; $bf TSB
+	.text	3,$ff,"TSX"            ; $c0 TSX
+	.text	3,$ed,"TXA"            ; $c1 TXA
+	.text	3,$ff,"TXS"            ; $c2 TXS
+	.text	3,$ee,"TYA"            ; $c3 TYA
 	.text	$FF

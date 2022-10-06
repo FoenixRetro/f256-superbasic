@@ -65,8 +65,9 @@ AllocateXABytes:
 		txa
 		adc 	lowMemPtr+1
 		sta 	lowMemPtr+1
+		bcs 	CISSMemory
 
-		; ** TODO Check memory overflow **
+		jsr 	CheckIdentifierStringSpace 	; check identifier/string space 
 
 _ClearMemory:
 		lda 	lowMemPtr 					; cleared all memory allocated
@@ -87,6 +88,24 @@ _CMExit:
 		pla
 		ply
 		rts
+
+; ************************************************************************************************
+;
+;				Check there is sufficent space between lowMemPtr and StringMemory
+;
+; ************************************************************************************************
+
+CheckIdentifierStringSpace:
+		pha
+		lda 	lowMemPtr+1 				; get low memory pointer
+		clc
+		adc 	#2 							; need at least 2 256 byte pages
+		cmp 	StringMemory+1 				; is it >= StringMemory
+		bcs 	CISSMemory
+		pla
+		rts
+CISSMemory:
+		.error_memory
 
 		.send code
 
