@@ -103,7 +103,6 @@
 	.include	"./common/tokeniser/utility.asm"
 	.include	"./common/tokeniser/variablerecord.asm"
 	.include	"./variants/hardware/junior/extern.asm"
-	.include	"./variants/hardware/junior/memory.asm"
 	.include	"./variants/memory.flat/delete.asm"
 	.include	"./variants/memory.flat/insert.asm"
 	.include	"./variants/memory.flat/memory.asm"

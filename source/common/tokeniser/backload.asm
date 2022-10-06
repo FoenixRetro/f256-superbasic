@@ -19,8 +19,8 @@
 ; ************************************************************************************************
 
 BackloadProgram:
-		.if AUTORUN==1
 		ldx 	#$FF
+		.if AUTORUN==1
 		stx 	$FFFA 						; fast mode (autorun only)
 		.endif
 		jsr 	BLReadByte
