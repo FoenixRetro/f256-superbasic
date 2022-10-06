@@ -88,6 +88,8 @@ _CRGoLet:
 ;		Not colon, not a variable
 ;	
 _CRNotVariable:
+		cmp 	#KWD_AT 					; handle @ 
+		beq 	_CRGoLet
 		cmp 	#KWD_QMARK 					; handle ? !
 		beq 	_CRGoLet
 		cmp 	#KWD_PLING

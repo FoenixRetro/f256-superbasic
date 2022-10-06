@@ -1,9 +1,9 @@
-1 demo():demo():demo():end
-9 proc demo()
-10 print 'rnd(-37)
-20 print rnd(1)
-30 print rnd(1)
-40 print rnd(1)
-50 print rnd(1)
-60 endproc
+10 n1 = 42
+15 print @n1
+20 test(@n1)
+30 print n1
+40 end
+100 proc test(addr)
+110 @addr = -1
+120 endproc
 ÿÿÿÿ

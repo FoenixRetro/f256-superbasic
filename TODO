@@ -1,6 +1,5 @@
 Progress:
 
-	LET @ (and @xxx in RUN)
 	Implement RANDOM()
 	Improve CALL	
 	Indenting

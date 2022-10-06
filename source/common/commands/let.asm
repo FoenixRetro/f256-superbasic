@@ -14,6 +14,23 @@
 
 LetCommand: ;; [let]
 		ldx 	#0
+		.cget 								; check for @<let>
+		cmp 	#KWD_AT
+		bne 	_LCStandard
+		;
+		;		Handle let @value which is integer indirection.
+		;
+		iny 								; skip equal
+		jsr 	EvaluateTerm 				; get a number
+		jsr 	Dereference 				; dereference it 
+		lda 	NSStatus,x 					; check integer
+		eor 	#NSBIsReference	 			; toggle reference
+		sta 	NSStatus,x
+		and 	#NSBIsReference 			; if it is now a reference, continue
+		bne 	_LCMain
+		jmp 	TypeError 					; was a reference before.
+
+_LCStandard:
 		lda 	PrecedenceLevel+"*"			; precedence > this
 		jsr 	EvaluateExpressionAtPrecedence
 		;
@@ -21,6 +38,7 @@ LetCommand: ;; [let]
 		cmp		#NSTProcedure+NSBIsReference
 		beq 	_LetGoProc 					; it's a procedure call.
 		;
+_LCMain:		
 		lda 	#"=" 						; check =
 		jsr 	CheckNextA
 		;
