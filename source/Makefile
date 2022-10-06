@@ -117,3 +117,9 @@ assembler:
 	64tass -q -b -c common$(S)generated$(S)asmtest.tass -L output$(S)asmtest.lst -o output$(S)asmtest.bin
 	$(EMULATOR) $(APPNAME)@8000 storage$(S)load.dat@3000 
 	python $(SCRIPTDIR)asmcheck.py
+
+lineedit:
+	python $(SCRIPTDIR)linetest.py
+	64tass -D AUTORUN=1 $(ASMOPTS) _basic.asm -o $(APPNAME)
+	$(START)
+	python $(SCRIPTDIR)linecheck.py

@@ -9,6 +9,8 @@
 # *******************************************************************************************
 # *******************************************************************************************
 
+import sys 
+
 codeAt = 0x6000
 
 memory = [x for x in open("memory.dump","rb").read(-1)]
@@ -21,3 +23,4 @@ for x in range(0,len(asbin)):
 		count += 1
 if count == 0:
 	print("All opcodes assembled correctly.")
+sys.exit(0 if count == 0 else 1)

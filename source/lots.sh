@@ -4,4 +4,5 @@ do
 	make astest autorun
 	make sastest autorun
 	make artest autorun
+	make linetest
 done

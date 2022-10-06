@@ -19,8 +19,10 @@
 ; ************************************************************************************************
 
 BackloadProgram:
+		.if AUTORUN==1
 		ldx 	#$FF
-		stx 	$FFFA 						; fast mode
+		stx 	$FFFA 						; fast mode (autorun only)
+		.endif
 		jsr 	BLReadByte
 		bmi 	_BPExit
 _BPCopy:
@@ -37,11 +39,19 @@ _BPNotTab:
 		bcs 	_BPCopy
 _BPEndLine:		
 		jsr 	TokeniseLine 				; tokenise the line.
+
+		.if AUTORUN==1 						; if autorun do full insert/delete for testing
+		jsr 	EditProgramCode
+		.else
 		sec 								; append not insert
 		jsr 	MemoryInsertLine 			; append to current program
+		.endif
+
 		bra 	BackloadProgram
 _BPExit:
-		stz 	$FFFA 						; clear fast mode
+		.if AUTORUN==1
+		stz 	$FFFA 						; clear fast mode (autorun only)
+		.endif
 		jsr 	ClearCommand 				; clear variables etc.
 		rts
 

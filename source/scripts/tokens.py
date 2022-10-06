@@ -192,6 +192,12 @@ class TokenCollection(object):
 		self.tokens[w] = newToken 														# set up array/dictionary
 		self.tokenList.append(newToken)
 	#
+	#		Get a token
+	#
+	def getToken(self,w):
+		w = w.upper().strip()
+		return self.tokens[w] if w in self.tokens else None		
+	#
 	#		Allocate Token IDs
 	#
 	def allocateIDs(self):
