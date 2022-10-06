@@ -1,9 +1,9 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		00start.asm
-;		Purpose:	Start up code.
-;		Created:	18th September 2022
+;		Name:		graphics.asm
+;		Purpose:	Graphics startup/test code.
+;		Created:	6th October 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
@@ -11,28 +11,32 @@
 ; ************************************************************************************************
 
 		.section code
+RunDemos:		
+		stz 	1
+		lda 	#$0F
+		sta 	$D000
+		lda 	#1
+		sta 	$D100
+		stz 	$D101
+		stz 	$D102
+		lda 	#2
+		sta 	$D103
+		sta 	gxBasePage
 
-Start:	ldx 	#$FF 						; stack reset
-		txs	
-		ldx 	#(Prompt >> 8) 				; prompt
-		lda 	#(Prompt & $FF)
-		jsr 	PrintStringXA
-		;
-		jmp 	RunDemos
-		;
-		jsr 	NewCommand 					; erase current program
-		jsr 	BackloadProgram
-		.if 	AUTORUN==1 					; run straight off
-		jmp 	CommandRun
-		.else
-		jmp 	WarmStart
-		.endif
+		lda 	#240
+		sta 	gxHeight
 
-Prompt:	.text 	13,13,"*** F256 Junior SuperBASIC ***",13,13
-		.text 	"Written by Paul Robson 2022.",13,13
-		.include "../generated/timestamp.asm"
-		.byte 	13,13,0
+		lda 	#$FC
+		sta 	gxForeground
+		lda 	#1
+		sta 	gxBackground
 
+		lda 	#5
+		sta 	gxMappingPage
+		lda 	#$A0
+		sta 	gxMappingAddress
+
+h1:		bra 	h1
 		.send code
 
 ; ************************************************************************************************

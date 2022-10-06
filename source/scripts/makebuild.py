@@ -10,7 +10,12 @@
 # *******************************************************************************************
 
 import os,sys
-
+#
+#		Sort by module name - e.g. without the first directory
+#
+def sortKey(k):
+	k = ":".join(k.split(os.sep)[2:])
+	return(k)
 #
 #		Get a list of files involved
 #
@@ -26,8 +31,8 @@ for root,dirs,files in os.walk("."): 														# scan for directories
 			if fName.endswith(".inc"):
 				includeFiles.append(fName)
 
-includeFiles.sort()
-sourceFiles.sort()
+includeFiles.sort(key = lambda k:sortKey(k))
+sourceFiles.sort(key = lambda k:sortKey(k))
 
 #
 #		Create the composite file to build the whole thing.

@@ -1,7 +1,11 @@
 Progress:
 	
 	Graphics code.
-	
+		Clear graphics
+		Dispatch code to set fgr/bgr clear
+		Start on sorting, then rectangle drawing.
+		Possible XOR mode ?
+		
 Later:
 	Disable interrupts enable at end of line command ?
 	Indenting
