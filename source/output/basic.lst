@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.56.2625 listing file
 ; 64tass -D AUTORUN=0 -q -b -Wall -c -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Fri Oct  7 14:02:09 2022
+; Fri Oct  7 14:07:46 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -328,7 +328,7 @@
 ;******  Return to file: _basic.asm
 
 
-;******  Processing file: ./variants/memory.flat/access.inc
+;******  Processing file: ./hardware/memory.flat/access.inc
 
 
 ;******  Return to file: _basic.asm
@@ -356,7 +356,7 @@
 .8007	20 20 8e	jsr $8e20			jsr 	PrintStringXA
 .800a	9c 08 d0	stz $d008			stz 	$D008 						; remove boundary.
 .800d	9c 09 d0	stz $d009			stz 	$D009
-.8010	20 a1 80	jsr $80a1			jsr 	RunDemos
+.8010	20 83 80	jsr $8083			jsr 	RunDemos
 .8013	20 03 88	jsr $8803			jsr 	NewCommand 					; erase current program
 .8016	20 a5 9a	jsr $9aa5			jsr 	BackloadProgram
 .8019	4c 5f 83	jmp $835f			jmp 	WarmStart
@@ -369,9 +369,9 @@
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->805c	42 75 69 6c 74 20 46 72			.text "Built Friday 07-Oct-2022. Build 476."
+>805c	42 75 69 6c 74 20 46 72			.text "Built Friday 07-Oct-2022. Build 479."
 >8064	69 64 61 79 20 30 37 2d 4f 63 74 2d 32 30 32 32
->8074	2e 20 42 75 69 6c 64 20 34 37 36 2e
+>8074	2e 20 42 75 69 6c 64 20 34 37 39 2e
 
 ;******  Return to file: ./common/aa.system/00start.asm
 
@@ -380,31 +380,7 @@
 ;******  Return to file: _basic.asm
 
 
-;******  Processing file: ./variants/ab.graphics/access.asm
-
-.8083					GXOpenBitmap:
-.8083	78		sei				sei 								; no interrupts here
-.8084	a5 00		lda $00				lda 	0 							; save original MMU Control register
-.8086	8d 3e 06	sta $063e			sta 	gxOriginalMMUSetting
-.8089	a9 80		lda #$80			lda 	#GFXMappingLUT*16+$80+GFXMappingLUT
-.808b	85 00		sta $00				sta 	0
-.808d	a5 0d		lda $0d				lda 	GFXEditSlot 				; Save the original LUT slot value
-.808f	8d 3d 06	sta $063d			sta 	gxOriginalLUTValue
-.8092	58		cli				cli
-.8093	60		rts				rts
-.8094					GXCloseBitmap:
-.8094	78		sei				sei
-.8095	ad 3d 06	lda $063d			lda 	gxOriginalLUTValue 			; restore LUT slot value
-.8098	85 0d		sta $0d				sta 	GFXEditSlot
-.809a	ad 3e 06	lda $063e			lda 	gxOriginalMMUSetting 		; restore MMU Control register
-.809d	85 00		sta $00				sta 	0
-.809f	58		cli				cli
-.80a0	60		rts				rts
-
-;******  Return to file: _basic.asm
-
-
-;******  Processing file: ./variants/ab.graphics/data.asm
+;******  Processing file: ./hardware/ab.graphics/data.asm
 
 =5					GXMappingPage = 5
 =40960					GXMappingAddress = ($2000 * GXMappingPage)
@@ -442,43 +418,67 @@
 ;******  Return to file: _basic.asm
 
 
-;******  Processing file: ./variants/ab.graphics/graphics.asm
+;******  Processing file: ./hardware/ab.graphics/graphics.asm
 
-.80a1					RunDemos:
-.80a1	64 01		stz $01				stz 	1
-.80a3	a9 0f		lda #$0f			lda 	#$0F
-.80a5	8d 00 d0	sta $d000			sta 	$D000
-.80a8	a9 01		lda #$01			lda 	#1
-.80aa	8d 00 d1	sta $d100			sta 	$D100
-.80ad	9c 01 d1	stz $d101			stz 	$D101
-.80b0	9c 02 d1	stz $d102			stz 	$D102
-.80b3	a9 02		lda #$02			lda 	#2
-.80b5	8d 03 d1	sta $d103			sta 	$D103
-.80b8	a9 10		lda #$10			lda 	#16
-.80ba	8d 39 06	sta $0639			sta 	gxBasePage
-.80bd	a9 f0		lda #$f0			lda 	#240
-.80bf	8d 3a 06	sta $063a			sta 	gxHeight
-.80c2	a9 fc		lda #$fc			lda 	#$FC
-.80c4	8d 3b 06	sta $063b			sta 	gxForeground
-.80c7	a9 01		lda #$01			lda 	#1
-.80c9	8d 3c 06	sta $063c			sta 	gxBackground
-.80cc	20 83 80	jsr $8083			jsr 	GXOpenBitmap
-.80cf	ad 39 06	lda $0639			lda 	gxBasePage
-.80d2	85 0d		sta $0d				sta 	GFXEditSlot
-.80d4	a2 00		ldx #$00			ldx 	#0
-.80d6	aa		tax				tax
-.80d7					copyout:
-.80d7	9e 00 a3	stz $a300,x			stz 	$A300,x
-.80da	9e 00 a2	stz $a200,x			stz 	$A200,x
-.80dd	9e 00 a1	stz $a100,x			stz 	$A100,x
-.80e0	9d 00 a0	sta $a000,x			sta 	$A000,x
-.80e3	ca		dex				dex
-.80e4	d0 f1		bne $80d7			bne 	copyout
-.80e6	1a		inc a				inc 	a
-.80e7	d0 ee		bne $80d7			bne 	copyout
-.80e9	20 94 80	jsr $8094			jsr 	GXCloseBitmap
-.80ec	a9 01		lda #$01			lda 	#1
-.80ee	8d 00 d0	sta $d000			sta 	$D000
+.8083					RunDemos:
+.8083	64 01		stz $01				stz 	1
+.8085	a9 0f		lda #$0f			lda 	#$0F
+.8087	8d 00 d0	sta $d000			sta 	$D000
+.808a	a9 01		lda #$01			lda 	#1
+.808c	8d 00 d1	sta $d100			sta 	$D100
+.808f	9c 01 d1	stz $d101			stz 	$D101
+.8092	9c 02 d1	stz $d102			stz 	$D102
+.8095	a9 02		lda #$02			lda 	#2
+.8097	8d 03 d1	sta $d103			sta 	$D103
+.809a	a9 10		lda #$10			lda 	#16
+.809c	8d 39 06	sta $0639			sta 	gxBasePage
+.809f	a9 f0		lda #$f0			lda 	#240
+.80a1	8d 3a 06	sta $063a			sta 	gxHeight
+.80a4	a9 fc		lda #$fc			lda 	#$FC
+.80a6	8d 3b 06	sta $063b			sta 	gxForeground
+.80a9	a9 01		lda #$01			lda 	#1
+.80ab	8d 3c 06	sta $063c			sta 	gxBackground
+.80ae	20 d4 80	jsr $80d4			jsr 	GXOpenBitmap
+.80b1	ad 39 06	lda $0639			lda 	gxBasePage
+.80b4	85 0d		sta $0d				sta 	GFXEditSlot
+.80b6	a2 00		ldx #$00			ldx 	#0
+.80b8	aa		tax				tax
+.80b9					copyout:
+.80b9	9e 00 a3	stz $a300,x			stz 	$A300,x
+.80bc	9e 00 a2	stz $a200,x			stz 	$A200,x
+.80bf	9e 00 a1	stz $a100,x			stz 	$A100,x
+.80c2	9d 00 a0	sta $a000,x			sta 	$A000,x
+.80c5	ca		dex				dex
+.80c6	d0 f1		bne $80b9			bne 	copyout
+.80c8	1a		inc a				inc 	a
+.80c9	d0 ee		bne $80b9			bne 	copyout
+.80cb	20 e5 80	jsr $80e5			jsr 	GXCloseBitmap
+.80ce	a9 01		lda #$01			lda 	#1
+.80d0	8d 00 d0	sta $d000			sta 	$D000
+.80d3	60		rts				rts
+
+;******  Return to file: _basic.asm
+
+
+;******  Processing file: ./hardware/ab.graphics/utility/access.asm
+
+.80d4					GXOpenBitmap:
+.80d4	78		sei				sei 								; no interrupts here
+.80d5	a5 00		lda $00				lda 	0 							; save original MMU Control register
+.80d7	8d 3e 06	sta $063e			sta 	gxOriginalMMUSetting
+.80da	a9 80		lda #$80			lda 	#GFXMappingLUT*16+$80+GFXMappingLUT
+.80dc	85 00		sta $00				sta 	0
+.80de	a5 0d		lda $0d				lda 	GFXEditSlot 				; Save the original LUT slot value
+.80e0	8d 3d 06	sta $063d			sta 	gxOriginalLUTValue
+.80e3	58		cli				cli
+.80e4	60		rts				rts
+.80e5					GXCloseBitmap:
+.80e5	78		sei				sei
+.80e6	ad 3d 06	lda $063d			lda 	gxOriginalLUTValue 			; restore LUT slot value
+.80e9	85 0d		sta $0d				sta 	GFXEditSlot
+.80eb	ad 3e 06	lda $063e			lda 	gxOriginalMMUSetting 		; restore MMU Control register
+.80ee	85 00		sta $00				sta 	0
+.80f0	58		cli				cli
 .80f1	60		rts				rts
 
 ;******  Return to file: _basic.asm
@@ -5555,14 +5555,14 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->a865	42 75 69 6c 74 20 46 72			.text "Built Friday 07-Oct-2022. Build 476."
+>a865	42 75 69 6c 74 20 46 72			.text "Built Friday 07-Oct-2022. Build 479."
 >a86d	69 64 61 79 20 30 37 2d 4f 63 74 2d 32 30 32 32
->a87d	2e 20 42 75 69 6c 64 20 34 37 36 2e
+>a87d	2e 20 42 75 69 6c 64 20 34 37 39 2e
 
 ;******  Return to file: _basic.asm
 
 
-;******  Processing file: ./variants/hardware/junior/extern.asm
+;******  Processing file: ./hardware/hardware/junior/extern.asm
 
 .a889					EXTPrintCharacter:
 .a889	48		pha				pha
@@ -5615,7 +5615,7 @@
 ;******  Return to file: _basic.asm
 
 
-;******  Processing file: ./variants/memory.flat/delete.asm
+;******  Processing file: ./hardware/memory.flat/delete.asm
 
 .a8cd					MemoryDeleteLine:
 .a8cd	20 ec a8	jsr $a8ec			jsr 	IMemoryFindEnd 				; find end to zTemp2.
@@ -5657,7 +5657,7 @@
 ;******  Return to file: _basic.asm
 
 
-;******  Processing file: ./variants/memory.flat/insert.asm
+;******  Processing file: ./hardware/memory.flat/insert.asm
 
 .a904					MemoryInsertLine:
 .a904	08		php				php
@@ -5743,7 +5743,7 @@
 ;******  Return to file: _basic.asm
 
 
-;******  Processing file: ./variants/memory.flat/memory.asm
+;******  Processing file: ./hardware/memory.flat/memory.asm
 
 .99bc					MemoryNew:
 .99bc	a9 00		lda #$00			lda 	#((BasicStart) & $FF)
@@ -5768,7 +5768,7 @@
 ;******  Return to file: _basic.asm
 
 
-;******  Processing file: ./variants/memory.flat/search.asm
+;******  Processing file: ./hardware/memory.flat/search.asm
 
 .99de					MemorySearch:
 .99de	85 36		sta $36				sta 	zTemp0 						; save line number zTemp0
