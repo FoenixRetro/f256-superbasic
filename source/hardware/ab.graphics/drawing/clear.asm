@@ -1,95 +1,69 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		data.asm
-;		Purpose:	Data use for Graphics
+;		Name:		clear.asm
+;		Purpose:	Clear Screen
 ;		Created:	6th October 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
-;
-;		Page number to map in/out
-;
-GXMappingPage = 5
-;
-;		Address of that page
-;
-GXMappingAddress = ($2000 * GXMappingPage)
-;
-;		LUT to use for mapping
-;
-GFXMappingLUT = 0
-;
-;		LUT Edit slot
-;
-GFXEditSlot = 8 + GXMappingPage
-;
-;		Zero Page (reuse BASIC temps)
-;
-gzTemp0 = zTemp0
-gzTemp1 = zTemp1
 
-		.section storage
+ScreenSize200 = 320 * 200
+ScreenSize240 = 320 * 240
 
 ; ************************************************************************************************
 ;
-;										Graphics data area
-;								(maintain order for first section)
+;										Clear bitmap to colour A
 ;
 ; ************************************************************************************************
-;
-;		current X/Y coordinates
-;
-gxCurrentX:
-		.fill 	2		
-gxCurrentY:
-		.fill 	2		
-;
-;		last pair of X/Y coordinates
-;
-gxLastX:
-		.fill 	2		
-gxLastY:
-		.fill 	2		
-;
-;		Working coordinate sets
-;		
-gxX1:
-		.fill 	2
-gxY1:
-		.fill 	2
-gxX2:
-		.fill 	2
-gxY2:
-		.fill 	2
-;
-;		Base page of bitmap
-;
-gxBasePage:
-		.fill 	1
-;
-;		Height of screen
-;		
-gxHeight:
-		.fill 	1
-;
-;		Colours
-;		
-gxForeground:
-		.fill 	1
-gxBackground:
-		.fill 	1
-;
-;		Original LUT and MMU settings
-;		
-gxOriginalLUTValue:
-		.fill 	1
-gxOriginalMMUSetting:
-		.fill 	1		
 
-		.send storage
+		.section code
+
+GXClearBitmap:
+		pha
+		phy
+		sta 	gzTemp1
+
+		ldy 	#ScreenSize200 / 8192 		; X is pages to clear
+		lda 	gxHeight
+		cmp 	#200 						; 200 ?
+		ldy 	#ScreenSize240 / 8192
+_GXCalcLastPage:
+		tya 								; add to base page
+		clc
+		adc 	gxBasePage
+		sta 	GFXEditSlot  				; clear from this page back
+
+_GXClearAll:
+		jsr 	_GXClearBlock 				; clear 8k block
+		dec 	GFXEditSlot  				; back to previous
+		lda 	GFXEditSlot
+		cmp 	gxBasePage 					; until before base page
+		bcs 	_GXClearAll
+		ply
+		pla
+		rts
+
+_GXClearBlock:
+		;
+		;		Clear 1 8k block
+		;
+		.set16 	gzTemp0,GXMappingAddress
+_GXCB0:
+		lda 	gzTemp1
+		ldy 	#0
+_GXCB1:	sta 	(gzTemp0),y
+		iny
+		bne 	_GXCB1
+		inc 	gzTemp0+1
+		lda 	gzTemp0+1
+		cmp	 	#(GXMappingAddress >> 8)+$20
+		bne 	_GXCB0
+		rts
+
+		.send code
 
 ; ************************************************************************************************
 ;

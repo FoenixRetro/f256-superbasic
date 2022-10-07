@@ -14,8 +14,8 @@ ccccccrx xxxxxxxx yyyyyyyy
 
 cccccccc
 
-1 COLOUR (X fgr, Y bgr)
-2 CLEAR
+1 COLOUR (X fgr, Y mode)
+2 CLEAR (X colour)
 
 8 MOVE 		
 9 LINE 	

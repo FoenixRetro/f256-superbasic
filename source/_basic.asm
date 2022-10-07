@@ -15,6 +15,7 @@
 
 	.include	"./common/aa.system/00start.asm"
 	.include	"./hardware/ab.graphics/data.asm"
+	.include	"./hardware/ab.graphics/drawing/clear.asm"
 	.include	"./hardware/ab.graphics/graphics.asm"
 	.include	"./hardware/ab.graphics/utility/access.asm"
 	.include	"./common/assembler/assembler.asm"
