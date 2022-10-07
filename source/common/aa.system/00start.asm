@@ -17,8 +17,10 @@ Start:	ldx 	#$FF 						; stack reset
 		ldx 	#(Prompt >> 8) 				; prompt
 		lda 	#(Prompt & $FF)
 		jsr 	PrintStringXA
+		stz 	$D008 						; remove boundary.
+		stz 	$D009
 		;
-		jmp 	RunDemos
+		jsr 	RunDemos
 		;
 		jsr 	NewCommand 					; erase current program
 		jsr 	BackloadProgram

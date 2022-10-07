@@ -14,15 +14,15 @@ ccccccrx xxxxxxxx yyyyyyyy
 
 cccccccc
 
-0 Extension (not used at present)
 1 COLOUR (X fgr, Y bgr)
 2 CLEAR
-3 MOVE 		
-4 LINE 	
-5 RECT
-6 BOX
-7 ELLIPSE (reserved)
-8 FELLIPSE (reserved)
-9 DRAWC xxxxxxx character yyyyyyyy scale (from font memory),moves to next horizontal position (hflip/vflip option in upper bits of Y)
-10 DRAWS sprite xxxxxxx yyyyyyy x:y forms a x 64 sprite address (hflip/vflip option)
+
+8 MOVE 		
+9 LINE 	
+10 RECT
+11 Fill RECT
+12 ELLIPSE
+13 Fill ELLIPSE 
+14 DRAWC xxxxxxx character yyyyyyyy scale (from font memory),moves to next horizontal position (hflip/vflip option in upper bits of Y)
+15 DRAWS sprite xxxxxxx yyyyyyy x:y forms a x 64 sprite address (hflip/vflip option)
 

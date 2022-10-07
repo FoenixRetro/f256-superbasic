@@ -12,6 +12,7 @@
 	.include	"./variants/memory.flat/access.inc"
 	.include	"./common/stack/stack.inc"
 	.include	"./common/aa.system/00start.asm"
+	.include	"./variants/ab.graphics/access.asm"
 	.include	"./variants/ab.graphics/data.asm"
 	.include	"./variants/ab.graphics/graphics.asm"
 	.include	"./common/assembler/assembler.asm"

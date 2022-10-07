@@ -24,11 +24,11 @@ ZeroPageMandatory = $30
 ;
 ; 		Variables that would be nice to be in zero page, but it's not required
 ;
-ZeroPagePreference = $600
+ZeroPagePreference = $400
 ;
 ;		Variables that can go anywhere
 ;
-MemoryStorage = $700
+MemoryStorage = $480
 ;
 ;		Where program memory starts and stops
 ;
