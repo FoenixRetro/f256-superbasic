@@ -1,9 +1,7 @@
 Progress:
-
-	Line Drawing
-	Trap bad coordinates and do nothing.
 		
 	Graphics code.
+		Set mode.
 		Start on sorting, then rectangle drawing.
 		Possible XOR mode ?
 		

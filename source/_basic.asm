@@ -20,6 +20,7 @@
 	.include	"./hardware/ab.graphics/graphics.asm"
 	.include	"./hardware/ab.graphics/grtest.asm"
 	.include	"./hardware/ab.graphics/utility/access.asm"
+	.include	"./hardware/ab.graphics/utility/calculate.asm"
 	.include	"./hardware/ab.graphics/utility/sort.asm"
 	.include	"./common/assembler/assembler.asm"
 	.include	"./common/assembler/aswrite.asm"

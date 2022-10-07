@@ -19,14 +19,22 @@
 ; ************************************************************************************************
 
 GXLine:
+		jsr 	GXOpenBitmap
 		jsr 	GXSortY						; sort pairs so Y1 >= Y0 e.g. top to bottom.
 		jsr 	GXLineSetup 				; the calculations in the linescanner constructor
+		jsr 	GXPositionCalc 				; calculate position/offset.
 _GXDrawLoop:
+		ldy 	gsOffset 					; draw the pixel
+		lda 	(gsTemp),y
+		.plotpixel
+		sta 	(gsTemp),y
+
 		jsr 	GXLineIsComplete 			; is the line complete ?		
 		beq 	_GXLExit
 		jsr 	GXLineAdvance 				; code as per advance method
 		bra 	_GXDrawLoop
 _GXLExit:
+		jsr 	GXCloseBitmap
 		rts
 
 ; ************************************************************************************************
@@ -60,16 +68,18 @@ _GXLICCompareY: 							; compare Y
 
 GXLineAdvance:
 		clc 								; add adjust to position
-		lda 	GXAdjust
-		adc 	GXPosition
-		sta 	GXAdjust
+		lda 	GXPosition
+		adc 	GXAdjust
+		sta 	GXPosition
 		stz 	GXAddSelect 				; clear add select flag
+		bcs 	_GXLAOverflow 				; if carry out, overflowed.
 		cmp 	GXTotal 					; if exceeded total
 		bcc 	_GXLANoExtra
+_GXLAOverflow:		
 		dec 	GXAddSelect 				; set addselect to $FF
 		sec 								; subtract total and write back
 		sbc 	GXTotal 		
-		sta 	GXAdjust
+		sta 	GXPosition
 _GXLANoExtra:		
 		lda 	GXIsDiffYLarger
 		beq 	_GXDXLarger
@@ -109,6 +119,20 @@ GXAdjustX:
 		dec 	GXX0+1
 _GXAXNoBorrow:
 		dec 	GXX0
+		;
+		dec 	gsOffset 					; pixel left
+		lda 	gsOffset
+		cmp 	#$FF
+		bne 	_GXAYExit 					; underflow
+		dec 	gsTemp+1 					; borrow
+		lda 	gsTemp+1 					; gone off page
+		cmp 	#GXMappingAddress >> 8
+		bcs 	_GXAYExit	
+		clc
+		adc 	#$20 						; fix up
+		sta 	gsTemp+1
+		dec 	GFXEditSlot 				; back one page
+_GXAYExit:		
 		rts
 		;
 		;		Go right.
@@ -118,10 +142,21 @@ _GXAXRight:
 		bne 	_GXAXNoCarry
 		inc 	GXX0+1
 _GXAXNoCarry:
+		inc 	gsOffset 					; pixel right
+		bne 	_GXAXExit 					; if not overflowed, exit.
+		inc 	gsTemp+1 					; next line
+		lda 	gsTemp+1
+		cmp 	#((GXMappingAddress+$2000) >> 8) ; on to the next page ?
+		bcc 	_GXAXExit
+		sbc 	#$20 						; fix up
+		sta 	gsTemp+1
+		inc 	GFXEditSlot 				; next page
+_GXAXExit:		
 		rts
 
 GXIncrementY:
 		inc 	GXY0
+		jsr 	GXMovePositionDown
 		rts
 
 

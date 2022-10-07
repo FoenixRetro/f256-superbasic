@@ -30,9 +30,10 @@ RunDemos:
 		sta 	gxHeight
 
 		lda 	#$FC
-		sta 	gxForeground
-		lda 	#1
-		sta 	gxBackground
+		sta 	gxEORValue
+		lda 	#$FF
+		sta 	gxANDValue
+		.plot 	0,4,0
 
 plot:	.macro
 		lda 	#((\1)*2)+(((\2) >> 8) & 1)		
@@ -41,9 +42,20 @@ plot:	.macro
 		jsr 	GraphicDraw
 		.endm
 
-		.plot 	0,$E0,0
-		.plot 	16,30,30
-		.plot 	17,10,20
+			
+loop:	
+		ldx 	$7FFF
+		ldy 	#0
+		lda 	#16*2
+		jsr 	GraphicDraw
+		ldx 	$7FFF
+		ldy 	#239
+		lda 	#17*2
+		jsr 	GraphicDraw
+		inc 	$7FFF
+		bra 	loop
+		
+
 
 		rts
 

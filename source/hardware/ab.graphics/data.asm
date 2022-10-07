@@ -30,7 +30,13 @@ GFXEditSlot = 8 + GXMappingPage
 ;
 gzTemp0 = zTemp0
 gzTemp1 = zTemp1
+gsTemp = zTemp2
 
+plotpixel .macro
+		and 	gxANDValue
+		eor 	gxEORValue
+		.endm
+		
 		.section storage
 
 ; ************************************************************************************************
@@ -77,9 +83,9 @@ gxHeight:
 ;
 ;		Colours
 ;		
-gxForeground:
+gxEORValue:
 		.fill 	1
-gxBackground:
+gxANDValue:
 		.fill 	1
 ;
 ;		Original LUT and MMU settings
@@ -88,7 +94,11 @@ gxOriginalLUTValue:
 		.fill 	1
 gxOriginalMMUSetting:
 		.fill 	1		
-
+;
+;		Offset in calculation.
+;
+gsOffset:
+		.fill 	1
 		.send storage
 
 ; ************************************************************************************************
