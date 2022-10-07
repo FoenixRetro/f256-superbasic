@@ -10,19 +10,19 @@ Default height 240
 
 Graphics Command passed in AXY.
 
-ccccccrx xxxxxxxx yyyyyyyy
+cccccccx xxxxxxxx yyyyyyyy
 
 cccccccc
 
+0 CLEAR (X colour)
 1 COLOUR (X fgr, Y mode)
-2 CLEAR (X colour)
 
-8 MOVE 		
-9 LINE 	
-10 RECT
-11 Fill RECT
-12 ELLIPSE
-13 Fill ELLIPSE 
-14 DRAWC xxxxxxx character yyyyyyyy scale (from font memory),moves to next horizontal position (hflip/vflip option in upper bits of Y)
-15 DRAWS sprite xxxxxxx yyyyyyy x:y forms a x 64 sprite address (hflip/vflip option)
+16 MOVE 		
+17 LINE 	
+18 RECT
+19 Fill RECT
+20 ELLIPSE
+21 Fill ELLIPSE 
+22 DRAWC xxxxxxx character yyyyyyyy scale (from font memory),moves to next horizontal position (hflip/vflip option in upper bits of Y)
+23 DRAWS sprite xxxxxxx yyyyyyy x:y forms a x 64 sprite address (hflip/vflip option)
 

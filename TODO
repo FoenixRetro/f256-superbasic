@@ -1,8 +1,9 @@
 Progress:
-	
+
+	Line Drawing
+	Trap bad coordinates and do nothing.
+		
 	Graphics code.
-		Clear graphics
-		Dispatch code to set fgr/bgr clear
 		Start on sorting, then rectangle drawing.
 		Possible XOR mode ?
 		

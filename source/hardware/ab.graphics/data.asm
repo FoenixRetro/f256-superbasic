@@ -56,13 +56,13 @@ gxLastY:
 ;
 ;		Working coordinate sets
 ;		
+gxX0:
+		.fill 	2
+gxY0:
+		.fill 	2
 gxX1:
 		.fill 	2
 gxY1:
-		.fill 	2
-gxX2:
-		.fill 	2
-gxY2:
 		.fill 	2
 ;
 ;		Base page of bitmap

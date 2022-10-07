@@ -11,38 +11,76 @@
 ; ************************************************************************************************
 
 		.section code
-RunDemos:		
-		stz 	1
 
-		lda 	#$0F
-		sta 	$D000
-		lda 	#1
-		sta 	$D100
-		stz 	$D101
-		stz 	$D102
-		lda 	#2
-		sta 	$D103
+; ************************************************************************************************
+;
+;									Graphics Plot Routine
+;
+; ************************************************************************************************
 
-		lda 	#16
-		sta 	gxBasePage
+GraphicDraw:
+		cmp 	#$10*2 						; instructions 00-0F don't use 
+		bcs 	_GDCoordinate
+		;
+		;		Non coordinate functions
+		;
+		stx 	gzTemp0 					; save X/Y
+		sty 	gzTemp0+1
+		bra 	_GDExecuteA 				; and execute
+		;
+		;		Coordinate functions
+		;
+_GDCoordinate:
+		pha 								; save AXY
+		phx 
+		phy		
+		ldx 	#3 							; copy currentX to lastX
+_GDCopy1:		
+		lda 	gxCurrentX,x
+		sta 	gxLastX,x
+		dex
+		bpl 	_GDCopy1
+		;
+		pla 								; update Y
+		sta 	gxCurrentY
+		stz 	gxCurrentY+1
+		;
+		pla 
+		sta 	gxCurrentX
+		pla 								; get A (command+X.1) back
+		pha
+		and 	#1 							; put LSB as MSB of Current.X
+		sta 	gxCurrentX+1
+		;
+		ldx 	#7 								; copy current and last to gxXY/12 work area
+_GDCopy2:
+		lda 	gxCurrentX,x
+		sta 	gxX0,x
+		dex
+		bpl 	_GDCopy2		
+		pla 								; get command back
+		;
+		;		Execute command X
+		;		
+_GDExecuteA:
+		and 	#$FE 						; lose LSB
+		tax
+		jmp 	(GDVectors,x)
 
-		lda 	#240
-		sta 	gxHeight
-
-		lda 	#$FC
-		sta 	gxForeground
-		lda 	#1
-		sta 	gxBackground
-		
-		jsr 	GXOpenBitmap
-
-		lda 	#$20
-		jsr 	GXClearBitmap
-
-		jsr 	GXCloseBitmap
-
+GXMove:
 		rts
 
+; ************************************************************************************************
+;
+;										Vector table
+;
+; ************************************************************************************************
+
+GDVectors:
+		.word 	GXClearBitmap 				; $00 	  	: Clear Bitmap to X		
+		.fill 	15*2 						; $01-$0F 	: Reserved
+		.word 	GXMove 						; $10     	: Move (does nothing other than update coords)
+		.word 	GXLine 						; $11 		: Draw line
 		.send code
 
 ; ************************************************************************************************
