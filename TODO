@@ -3,7 +3,7 @@ Progress:
 	Graphics code.
 		Set mode/colour command
 		Ellipses/Circles
-		Characters and Sprites
+		Characters and Sprite
 		
 Later:
 	Disable interrupts enable at end of line command ?
