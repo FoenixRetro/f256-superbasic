@@ -81,6 +81,9 @@ GDVectors:
 		.fill 	15*2 						; $01-$0F 	: Reserved
 		.word 	GXMove 						; $10     	: Move (does nothing other than update coords)
 		.word 	GXLine 						; $11 		: Draw line
+		.word 	GXFrameRectangle 			; $12 		; Framed rectangle
+		.word 	GXFillRectangle 			; $13 		; Filled rectangle
+		
 		.send code
 
 ; ************************************************************************************************

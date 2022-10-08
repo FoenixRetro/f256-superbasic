@@ -33,7 +33,6 @@ RunDemos:
 		sta 	gxEORValue
 		lda 	#$FF
 		sta 	gxANDValue
-		.plot 	0,4,0
 
 plot:	.macro
 		lda 	#((\1)*2)+(((\2) >> 8) & 1)		
@@ -44,17 +43,16 @@ plot:	.macro
 
 			
 loop:	
-		ldx 	$7FFF
-		ldy 	#0
-		lda 	#16*2
+		.plot 	0,4,0
+		.plot 	16,10,10
+
+demo:	jsr 	Random32Bit 
+		inc 	gxEORValue
+		lda 	#18*2
+		ldx 	RandomSeed+0
+		ldy 	RandomSeed+1
 		jsr 	GraphicDraw
-		ldx 	$7FFF
-		ldy 	#239
-		lda 	#17*2
-		jsr 	GraphicDraw
-		inc 	$7FFF
-		bra 	loop
-		
+		bra 	demo
 
 
 		rts

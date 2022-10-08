@@ -1,9 +1,9 @@
 Progress:
 		
 	Graphics code.
-		Set mode.
-		Start on sorting, then rectangle drawing.
-		Possible XOR mode ?
+		Set mode/colour command
+		Ellipses/Circles
+		Characters and Sprites
 		
 Later:
 	Disable interrupts enable at end of line command ?

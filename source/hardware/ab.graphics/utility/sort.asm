@@ -14,6 +14,28 @@
 
 ; ************************************************************************************************
 ;
+;					 Sort X and Y coordinates - topleft/bottom right
+;
+; ************************************************************************************************
+
+GXSortXY:
+		jsr 	GXSortY 					; will be sorted on Y now
+		lda 	gxX0 						; compare X0 v X1
+		cmp 	gxX1
+		lda 	gXX0+1
+		sbc 	gXX1+1
+		bcc 	_GXSXYExit 					; X0 < X1 exit
+		ldx 	#0 							; swap them over
+		ldy 	#4
+		jsr 	GXSwapXY
+		inx 
+		iny
+		jsr 	GXSwapXY
+_GXSXYExit:
+		rts
+		
+; ************************************************************************************************
+;
 ;							Sort coordinate pairs so Y1 >= Y0
 ;
 ; ************************************************************************************************
