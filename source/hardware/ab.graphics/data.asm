@@ -34,7 +34,7 @@ gsTemp = zTemp2
 ;
 ;		Buffer for pixel data. Needs to be 32 pixels minimum. (Reusing number conversion buffer)
 ;
-pixelBuffer = numberBuffer
+gsPixelBuffer = numberBuffer
 
 plotpixel .macro
 		and 	gxANDValue

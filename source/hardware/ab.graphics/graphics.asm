@@ -88,7 +88,8 @@ GDVectors:
 		.word 	GXFrameCircle 				; $14 		; Framed circle
 		.word 	GXFillCircle 				; $15 		; Filled circle
 		.fill 	2*2 						; $16-$17 	; Reserved for ellipse.
-		.fill 	2*2 						; $18-$19	; Reserved for drawing functions
+		.word 	GXFontHandler 				; $18 		; Draw from font
+		.fill 	2 							; $19		; Reserved for drawing functions
 		.fill 	2 							; $1A 		; Point plot
 
 ; ************************************************************************************************

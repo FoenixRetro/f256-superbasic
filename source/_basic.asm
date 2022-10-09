@@ -19,6 +19,8 @@
 	.include	"./hardware/ab.graphics/drawing/clear.asm"
 	.include	"./hardware/ab.graphics/drawing/line.asm"
 	.include	"./hardware/ab.graphics/drawing/rect.asm"
+	.include	"./hardware/ab.graphics/drawing/render.asm"
+	.include	"./hardware/ab.graphics/drawing/sources/font.asm"
 	.include	"./hardware/ab.graphics/graphics.asm"
 	.include	"./hardware/ab.graphics/grtest.asm"
 	.include	"./hardware/ab.graphics/utility/access.asm"
