@@ -79,13 +79,61 @@ GXMove:
 GDVectors:
 		.fill 	2 							; $00 		; Open/Close Bitmap
 		.word 	GXClearBitmap 				; $01 	  	: Clear Bitmap to X		
-		.fill 	14*2 						; $02-$0F 	: Reserved
+		.word 	GXSetColourMode 			; $02 		; Set colour and drawing mode
+		.word 	GXSetDrawMode 				; $03 		; Set all mode bits
+		.fill 	12*2 						; $04-$0F 	: Reserved
 		.word 	GXMove 						; $10     	: Move (does nothing other than update coords)
 		.word 	GXLine 						; $11 		: Draw line
 		.word 	GXFrameRectangle 			; $12 		; Framed rectangle
 		.word 	GXFillRectangle 			; $13 		; Filled rectangle
-		.word 	GXFrameEllipse 				; $14 		; Framed ellipse
-		.word 	GXFillEllipse 				; $15 		; Filled ellipse
+		.word 	GXFrameCircle 				; $14 		; Framed circle
+		.word 	GXFillCircle 				; $15 		; Filled circle
+
+; ************************************************************************************************
+;
+;								Set colour, mode (bits 0 & 1)
+;
+; ************************************************************************************************
+
+GXSetColourMode:
+		ldx 	gzTemp0
+		stx 	gxColour 								; set colour
+		lda 	gzTemp0+1 								; mode
+		bra 	GXSetDrawCode
+GXSetDrawMode:
+		lda 	gzTemp0
+		sta 	gxMode 									; set drawing mode for chars/sprites
+GXSetDrawCode:		
+		and 	#3 										; only interested in bits 0-3
+		stz 	gxANDValue 								; initially AND with 0, and EOR with Colour
+		ldx 	gxColour
+		stx 	gxEORValue
+		cmp 	#2 										; if mode 2/3 And with colour
+		bcc 	_GXSDCNotAndColour
+		stx 	gxANDValue
+_GXSDCNotAndColour:		
+		bne 	_GXSDCNotAnd 							; mode 2, Don't EOR with colour
+		stz 	gxEORValue
+_GXSDCNotAnd:
+		lsr 	a 										; if bit 0 set, 1's complement AND value		
+		bcc 	_GXSDCNoFlip
+		lda	 	gxANDValue
+		eor 	#$FF
+		sta 	gxANDValue
+_GXSDCNoFlip:
+		rts		
+
+; ************************************************************************************************
+;											DRAWING MODES
+; ************************************************************************************************
+;
+;		Mode 0: AND 0 EOR Colour 				Sets Colour
+;		Mode 1: AND $FF EOR Colour 				Exclusive Or Colour
+; 		Mode 2: And Colour:EOR 0 				AND with Colour.
+;		Mode 3: AND ~Colour EOR Colour 			Or Colour
+;
+; ************************************************************************************************
+
 		.send code
 
 ; ************************************************************************************************

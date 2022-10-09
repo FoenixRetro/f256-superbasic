@@ -29,24 +29,19 @@ RunDemos:
 		lda 	#240
 		sta 	gxHeight
 
-		lda 	#$FC
-		sta 	gxEORValue
-		lda 	#$FF
-		sta 	gxANDValue
-
 plot:	.macro
 		lda 	#((\1)*2)+(((\2) >> 8) & 1)		
 		ldx 	#((\2) & $FF)
 		ldy 	#(\3)
 		jsr 	GraphicDraw
 		.endm
-
-			
+		
 loop:	
 		.plot 	1,4,0
-		.plot 	16,10,10
-		.plot 	21,300,200
-		.plot 	18,10,10
+		.plot 	2,$1C,1
+		.plot 	16,0,0
+		.plot 	21,319,239
+		.plot 	21,0,0
 		rts
 
 demo:	jsr 	Random32Bit 

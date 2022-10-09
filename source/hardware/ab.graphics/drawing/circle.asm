@@ -1,8 +1,8 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		ellipse.asm
-;		Purpose:	Ellipse drawing code
+;		Name:		circle.asm
+;		Purpose:	Circle drawing code
 ;		Created:	9th October 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
@@ -14,35 +14,35 @@
 
 ; ************************************************************************************************
 ;
-;									Draw/Fill Ellipse
+;									Draw/Fill Circle
 ;
 ; ************************************************************************************************
 
-GXFillEllipse:
+GXFillCircle:
 		lda 	#255
-		bra 	GXEllipse
-GXFrameEllipse:
+		bra 	GXCircle
+GXFrameCircle:
 		lda 	#0
-GXEllipse:		
+GXCircle:		
 		sta 	gIsFillMode					; save Fill flag 
 		jsr 	GXSortXY 					; topleft/bottomright
 		jsr 	GXOpenBitmap 				; start drawing		
-		jsr 	GXEllipseSetup 				; set up for drawing
+		jsr 	GXCircleSetup 				; set up for drawing
 		stz 	gYChanged
-_GXEllipseDraw:
+_GXCircleDraw:
 		lda 	gX 							; while x <= y
 		cmp 	gY
-		bcc 	_GXEllipseContinue		
+		bcc 	_GXCircleContinue		
 		bne 	_GXNoLast
 		jsr 	GXPlot1
 _GXNoLast:		
 		jsr 	GXCloseBitmap 				; close the bitmap
 		rts
 
-_GXEllipseContinue:
+_GXCircleContinue:
 		jsr 	GXPlot2 					; draw it
-		jsr 	GXEllipseMove 				; adjust the coordinates		
-		bra 	_GXEllipseDraw
+		jsr 	GXCircleMove 				; adjust the coordinates		
+		bra 	_GXCircleDraw
 
 ; ************************************************************************************************
 ;
@@ -93,12 +93,6 @@ _GXPlot0Always:
 		stz 	gzTemp0+1
 		rol 	gzTemp0+1
 		;
-		lda 	gxScalar+1 						; is scalar not $100 (e.g. ellipse not circle)
-		eor 	#1
-		ora 	gxScalar
-		beq 	_GXNoScalar
-		jsr 	GXScaleZTemp0
-_GXNoScalar		
 		lda 	gIsFillMode
 		adc 	#128
 		jsr 	GXDrawLineTemp0 				; routine from Rectangle.
@@ -135,7 +129,7 @@ _GXNoSx:
 ;
 ; ************************************************************************************************
 
-GXEllipseMove:
+GXCircleMove:
 		stz 	gYChanged 					; clear Y changed flag
 		lda 	gzTemp1+1 					; check sign of D
 		bpl 	_GXEMPositive
@@ -195,32 +189,17 @@ _GXA4Unsigned:
 
 ; ************************************************************************************************
 ;
-;										Ellipse setup
+;										Circle setup
 ;
 ; ************************************************************************************************
 
-GXEllipseSetup:
-		ldx 	#0 							; zero slot 0 & 1
-		jsr 	NSMSetZero
-		inx
-		jsr 	NSMSetZero
-		;
-		;		Put Width.256 in slot 0
-		;
-		sec
-		lda 	gxX1
-		sbc 	gXX0
-		sta 	NSMantissa1
-		lda 	gxX1+1
-		sbc 	gXX0+1
-		sta 	NSMantissa2
+GXCircleSetup:
 		;
 		;		Calculate R (y1-y0)/2, height in slot 1
 		;
 		sec
 		lda 	gxY1
 		sbc 	gxY0
-		sta 	NSMantissa0+1 				
 		lsr 	a
 		sta 	gRadius
 		;
@@ -248,15 +227,6 @@ GXEllipseSetup:
 		lda 	#0
 		sbc 	#0
 		sta 	gzTemp1+1
-		;
-		;		Calculate scalar.256
-		;
-		ldx 	#0
-		jsr 	Int32Divide
-		lda 	NSMantissa0+2
-		sta 	gxScalar
-		lda 	NSMantissa1+2
-		sta 	gxScalar+1
 		rts
 ;
 ;		Calculates midpoint for X/Y
@@ -273,38 +243,6 @@ _GXCalculateCentre:
 		ror 	gXX1,x
 		rts
 
-; ************************************************************************************************
-;
-;										Scale zTemp0 by Scalar
-;
-; ************************************************************************************************
-
-GXScaleZTemp0:
-		ldx 	#0
-		jsr 	NSMSetZero
-		inx
-		jsr 	NSMSetZero
-		;
-		lda 	gzTemp0
-		sta 	NSMantissa0
-		lda 	gzTemp0+1
-		sta 	NSMantissa1
-		;
-		lda 	gxScalar
-		sta 	NSMantissa0+1
-		lda 	gxScalar+1
-		sta 	NSMantissa1+1
-		;
-		ldx		#0
-		jsr 	MultiplyShort
-		;
-		lda 	NSMantissa1
-		sta 	gzTemp0
-		lda 	NSMantissa2
-		sta 	gzTemp0+1
-
-		rts
-
 		.send code
 
 		.section storage
@@ -318,8 +256,6 @@ gIsFillMode:
 		.fill 	1		
 gYChanged:
 		.fill  	1		
-gxScalar:
-		.fill 	1		
 		.send storage
 
 ; ************************************************************************************************
@@ -327,7 +263,7 @@ gxScalar:
 ;		Usage
 ;			gsTemp and gsOffset are used as usual
 ;			gzTemp0 holds the line length and is general workspace.
-;			x1,y1 hold the ellipse centre
+;			x1,y1 hold the circle centre
 ;			gX,gY are the coordinates x,y (note x, y both < 128)
 ;			d is stored in gzTemp1 (2 bytes)
 ;			r is stored in gRadius

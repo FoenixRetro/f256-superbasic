@@ -81,8 +81,15 @@ gxBasePage:
 gxHeight:
 		.fill 	1
 ;
+;		Mode byte for sprites/chars (vflip|hflip|size2|size1|size0|-|s1|s2)
+;		
+gxMode:
+		.fill 	1
+;
 ;		Colours
 ;		
+gxColour:
+		.fill 	1
 gxEORValue:
 		.fill 	1
 gxANDValue:

@@ -1,7 +1,7 @@
 Graphics Module
 ---------------
 
-Doesn't clip H/V.
+Doesn't clip H/V (V clipped on Char/Sprite Draw)
 Keeps track of the last two points.
 
 Default bitmap $10000 (must be on 8k boundary)
@@ -14,15 +14,19 @@ cccccccx xxxxxxxx yyyyyyyy
 
 cccccccc
 
-0 CLEAR (X colour)
-1 COLOUR (X fgr, Y mode)
+0 BITMAP (X address, Y page)
+1 CLEAR (X colour)
+2 COLOUR (X fgr, mode bits 0..1)
+3 MODE (X mode bits 7..0)
+
+Mode Bits: vflip|hflip|s2|s1|s0|-|m1|m0
 
 16 MOVE 		
 17 LINE 	
 18 RECT
 19 Fill RECT
-20 ELLIPSE
-21 Fill ELLIPSE 
-22 DRAWC xxxxxxx character yyyyyyyy scale (from font memory),moves to next horizontal position (hflip/vflip option in upper bits of Y)
-23 DRAWS sprite xxxxxxx yyyyyyy x:y forms a x 64 sprite address (hflip/vflip option)
+20 CIRCLE
+21 Fill CIRCLE
+22 DRAWC xxxxxxx character (advances horizontally)
+23 DRAWS sprite xxxxxxx yyyyyss x:y forms a x 64 address(doesn't reposition), ss is sprite size 8/16/24/32
 
