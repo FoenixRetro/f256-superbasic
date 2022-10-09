@@ -14,18 +14,19 @@ import math
 
 def plot(draw,x,y):
 	draw.point((x+160,y+120),fill = (0,255,0))
+	draw.point((-x+160,y+120),fill = (0,255,0))
 
 screen = Image.new("RGB",(320,240))
 draw = ImageDraw.Draw(screen)
 
-r = 100
+r = 45
 x = 0
 y = r 
 d = 3 - 2 * r 
 
 def plot2(draw,x,y):
-	plot(draw,x*3/2,y)			# scale here to make ellipse
-	plot(draw,x*3/2,-y)
+	plot(draw,x*2/2,y)			# scale here to make ellipse
+	plot(draw,x*2/2,-y)
 
 def plot1(draw,x,y):
 	plot2(draw,x,y)
@@ -39,7 +40,7 @@ while x <= y:
 	else:
 		x += 1
 		y -= 1
-		d = d + 2 * 2 * ((x-y) + 5)
+		d = d + 4 * (x-y) + 20
 
 
 

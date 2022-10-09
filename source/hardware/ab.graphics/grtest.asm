@@ -44,8 +44,8 @@ plot:	.macro
 			
 loop:	
 		.plot 	1,4,0
-		.plot 	16,210,10
-		.plot 	21,310,100
+		.plot 	16,10,10
+		.plot 	21,100,100
 		rts
 
 demo:	jsr 	Random32Bit 
