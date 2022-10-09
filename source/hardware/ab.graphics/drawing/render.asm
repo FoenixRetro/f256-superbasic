@@ -92,7 +92,8 @@ _GXROLLoop2:
 		lda 	gxPixelBuffer,x
 		beq 	_GXZeroPixel 				; don't draw if zero.
 		lda 	(gsTemp),y
-		.plotpixel 						
+		and 	gxANDValue
+		eor 	gxPixelBuffer,x
 		sta 	(gsTemp),y
 _GXZeroPixel:
 		iny 								; advance pointer

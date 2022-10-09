@@ -81,7 +81,8 @@ GDVectors:
 		.word 	GXClearBitmap 				; $02 	  	: Clear Bitmap to X		
 		.word 	GXSetColourMode 			; $03 		; Set colour and drawing mode
 		.word 	GXFontHandler 				; $04 		; Draw from font
-		.fill 	11*2 						; $05-$0F 	: Reserved
+		.word 	GXSpriteHandler 			; $05 		; Draw from sprite
+		.fill 	10*2 						; $06-$0F 	: Reserved
 		.word 	GXMove 						; $10     	: Move (does nothing other than update coords)
 		.word 	GXLine 						; $11 		: Draw line
 		.word 	GXFrameRectangle 			; $12 		; Framed rectangle

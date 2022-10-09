@@ -1,10 +1,11 @@
 Progress:
-		
+	- map the sprite area into the mappable page to read the sprite address.
+	- change to read using paging
+	- move the sprite up into paged RAM.
+	
 	Graphics code.
 		Plot points.
-		Characters and Sprite
-			- Check multiple characters
-			- Do for sprites.		
+		Horizontal repeated characters
 Later:
 	Disable interrupts enable at end of line command ?
 	Indenting

@@ -1,9 +1,9 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		grtest.asm
-;		Purpose:	Graphics test code.
-;		Created:	6th October 2022
+;		Name:		sprite.asm
+;		Purpose:	Sprite Source Handler
+;		Created:	9th October 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
@@ -11,51 +11,34 @@
 ; ************************************************************************************************
 
 		.section code
-RunDemos:		
-		stz 	1
 
-		lda 	#$0F
-		sta 	$D000
-		lda 	#1
-		sta 	$D100
-		stz 	$D101
-		stz 	$D102
-		lda 	#1
-		sta 	$D103
+; ************************************************************************************************
+;
+;								Access from Sprite Memory
+;
+; ************************************************************************************************
 
+GXSpriteHandler:
 		lda 	#8
-		sta 	gxBasePage
-
-		lda 	#240
-		sta 	gxHeight
-
-plot:	.macro
-		lda 	#((\1)*2)+(((\2) >> 8) & 1)		
-		ldx 	#((\2) & $FF)
-		ldy 	#(\3)
-		jsr 	GraphicDraw
-		.endm
-		
-loop:	
-		.plot 	2,$20,0
-		.plot 	3,$1C,0+8*3
-		.plot 	16,20,30
-		.plot 	5,0,0
+		ldx 	#GXSpriteAcquire & $FF
+		ldy 	#GXSpriteAcquire >> 8
+		jsr 	GXDrawGraphicElement
 		rts
 
-demo:	jsr 	Random32Bit 
-		inc 	gxEORValue
-		lda 	#16*2
-		ldx 	RandomSeed+0
-		ldy 	RandomSeed+1
-		jsr 	GraphicDraw
-		lda 	RandomSeed+2
-		and 	#127
+GXSpriteAcquire:
+		ldy 	#0
+		txa
+		asl 	a
+		asl 	a
+		asl 	a
 		tax
-		lda 	#4*2
-		jsr 	GraphicDraw
-		bra 	demo
-
+_GXSALoop:
+		lda 	$4100,x
+		inx
+		sta 	gxPixelBuffer,y
+		iny
+		cpy 	#8
+		bne 	_GXSALoop
 		rts
 
 		.send code

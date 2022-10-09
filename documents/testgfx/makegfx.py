@@ -30,9 +30,11 @@ class SpriteCollection(object):
 				pixel = gr.getpixel((x,y))
 				colour = 0 
 				if pixel[0] > 16:
-					colour = ((pixel[1] >> 5) << 5)
+					colour = ((pixel[0] >> 5) << 5)
 					colour += ((pixel[1] >> 5) << 2)
-					colour += ((pixel[1] >> 6) << 0)
+					colour += ((pixel[2] >> 6) << 0)
+					if colour == 0:
+						colour = 0x20
 				#print("{0} ${1:x}".format(pixel,colour))
 				self.data.append(colour)
 				self.offset += 1
@@ -55,7 +57,7 @@ class SpriteCollection(object):
 		for i in range(0,len(self.binIndex),2):
 			e = self.binIndex[i] + self.binIndex[i+1] * 256
 			if e != 0:
-				print((e & 3) * 8 + 8,(e & 0xFC) << 4)
+				print((e & 3) * 8 + 8,(e & 0xFFFC) << 4)
 
 sc = SpriteCollection()
 sc.importGraphic("sprite8.png")		

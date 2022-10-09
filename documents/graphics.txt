@@ -21,7 +21,7 @@ cccccccc
 			Mode Bits: vflip|hflip|s2|s1|s0|-|m1|m0
 			scale is (s2s1s0+1)
 	4 DRAWC xxxxxxx character (advances horizontally)
-	5 DRAWS sprite ID xxxxxx
+	5 DRAWS sprite ID xxxxxx (4+5 only support modes 0/1)
 
 *	16 MOVE 			
 *	17 LINE 	

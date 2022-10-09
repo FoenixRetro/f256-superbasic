@@ -27,7 +27,7 @@ EMU_REPO= ..$(S)..$(S)junior-emulator
 UTL_REPO= ..$(S)..$(S)junior-utilities
 KRN_REPO= ..$(S)..$(S)junior-tinykernel
 
-START = $(EMULATOR) $(APPNAME)@8000 storage$(S)load.dat@3000 
+START = $(EMULATOR) $(APPNAME)@8000 storage$(S)load.dat@3000 $(BINDIR)graphics.bin@4000
 # 3000 is hardcoded in backload.asm
 
 all :  basic
@@ -47,6 +47,7 @@ testbasic:prelim
 go : basic 
 	python scripts$(S)checkload.py
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address F000
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)graphics.bin --address 4000
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 3000
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary basic.rom --address 8000
 

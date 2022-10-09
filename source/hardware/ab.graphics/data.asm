@@ -14,6 +14,10 @@
 ;
 GXMappingPage = 3
 ;
+;		Sprite Graphics Page
+;
+GXSpritePage = 2
+;
 ;		Address of that page
 ;
 GXMappingAddress = ($2000 * GXMappingPage)
