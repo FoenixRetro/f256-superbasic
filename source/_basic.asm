@@ -16,6 +16,7 @@
 	.include	"./common/aa.system/00start.asm"
 	.include	"./hardware/ab.graphics/data.asm"
 	.include	"./hardware/ab.graphics/drawing/clear.asm"
+	.include	"./hardware/ab.graphics/drawing/ellipse.asm"
 	.include	"./hardware/ab.graphics/drawing/line.asm"
 	.include	"./hardware/ab.graphics/drawing/rect.asm"
 	.include	"./hardware/ab.graphics/graphics.asm"

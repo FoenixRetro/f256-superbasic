@@ -77,13 +77,15 @@ GXMove:
 ; ************************************************************************************************
 
 GDVectors:
-		.word 	GXClearBitmap 				; $00 	  	: Clear Bitmap to X		
-		.fill 	15*2 						; $01-$0F 	: Reserved
+		.fill 	2 							; $00 		; Open/Close Bitmap
+		.word 	GXClearBitmap 				; $01 	  	: Clear Bitmap to X		
+		.fill 	14*2 						; $02-$0F 	: Reserved
 		.word 	GXMove 						; $10     	: Move (does nothing other than update coords)
 		.word 	GXLine 						; $11 		: Draw line
 		.word 	GXFrameRectangle 			; $12 		; Framed rectangle
 		.word 	GXFillRectangle 			; $13 		; Filled rectangle
-		
+		.word 	GXFrameEllipse 				; $14 		; Framed ellipse
+		.word 	GXFillEllipse 				; $15 		; Filled ellipse
 		.send code
 
 ; ************************************************************************************************

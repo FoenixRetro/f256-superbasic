@@ -12,7 +12,7 @@
 ;
 ;		Page number to map in/out
 ;
-GXMappingPage = 5
+GXMappingPage = 3
 ;
 ;		Address of that page
 ;

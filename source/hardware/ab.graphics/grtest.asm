@@ -43,8 +43,10 @@ plot:	.macro
 
 			
 loop:	
-		.plot 	0,4,0
-		.plot 	16,10,10
+		.plot 	1,4,0
+		.plot 	16,210,10
+		.plot 	21,310,100
+		rts
 
 demo:	jsr 	Random32Bit 
 		inc 	gxEORValue
