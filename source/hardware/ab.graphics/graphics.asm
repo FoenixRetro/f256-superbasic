@@ -77,17 +77,19 @@ GXMove:
 ; ************************************************************************************************
 
 GDVectors:
-		.fill 	2 							; $00 		; Open/Close Bitmap
-		.word 	GXClearBitmap 				; $01 	  	: Clear Bitmap to X		
-		.word 	GXSetColourMode 			; $02 		; Set colour and drawing mode
-		.word 	GXSetDrawMode 				; $03 		; Set all mode bits
-		.fill 	12*2 						; $04-$0F 	: Reserved
+		.fill 	2*2 						; $00-$01 	; Open/Close Bitmap/Sprites
+		.word 	GXClearBitmap 				; $02 	  	: Clear Bitmap to X		
+		.word 	GXSetColourMode 			; $03 		; Set colour and drawing mode
+		.fill 	12*2 						; $03-$0F 	: Reserved
 		.word 	GXMove 						; $10     	: Move (does nothing other than update coords)
 		.word 	GXLine 						; $11 		: Draw line
 		.word 	GXFrameRectangle 			; $12 		; Framed rectangle
 		.word 	GXFillRectangle 			; $13 		; Filled rectangle
 		.word 	GXFrameCircle 				; $14 		; Framed circle
 		.word 	GXFillCircle 				; $15 		; Filled circle
+		.fill 	2*2 						; $16-$17 	; Reserved for ellipse.
+		.fill 	2*2 						; $18-$19	; Reserved for drawing functions
+		.fill 	2 							; $1A 		; Point plot
 
 ; ************************************************************************************************
 ;
@@ -98,12 +100,11 @@ GDVectors:
 GXSetColourMode:
 		ldx 	gzTemp0
 		stx 	gxColour 								; set colour
-		lda 	gzTemp0+1 								; mode
-		bra 	GXSetDrawCode
-GXSetDrawMode:
-		lda 	gzTemp0
-		sta 	gxMode 									; set drawing mode for chars/sprites
-GXSetDrawCode:		
+		lda 	gzTemp0+1 								;
+		sta 	gxMode 									; set mode
+		;
+		;		Now process bits 0/1 to set the drawing type. Normal (0) EOR (1) AND (2) OR (3)
+		;
 		and 	#3 										; only interested in bits 0-3
 		stz 	gxANDValue 								; initially AND with 0, and EOR with Colour
 		ldx 	gxColour

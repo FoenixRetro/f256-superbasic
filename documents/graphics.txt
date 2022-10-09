@@ -14,19 +14,20 @@ cccccccx xxxxxxxx yyyyyyyy
 
 cccccccc
 
-0 BITMAP (X address, Y page)
-1 CLEAR (X colour)
-2 COLOUR (X fgr, mode bits 0..1)
-3 MODE (X mode bits 7..0)
+	0 BITMAP (X address, Y page)
+	1 SPRITE (X on/off flag)
+*	2 CLEAR (X colour)
+*	3 COLOUR (X fgr, mode bits 7..0)
+			Mode Bits: vflip|hflip|s2|s1|s0|-|m1|m0
 
-Mode Bits: vflip|hflip|s2|s1|s0|-|m1|m0
-
-16 MOVE 		
-17 LINE 	
-18 RECT
-19 Fill RECT
-20 CIRCLE
-21 Fill CIRCLE
-22 DRAWC xxxxxxx character (advances horizontally)
-23 DRAWS sprite xxxxxxx yyyyyss x:y forms a x 64 address(doesn't reposition), ss is sprite size 8/16/24/32
-
+*	16 MOVE 			
+*	17 LINE 	
+*	18 RECT
+*	19 Fill RECT
+*	20 CIRCLE
+*	21 Fill CIRCLE
+	22 ELLIPSE
+	23 Fill ELLIPSE
+	24 DRAWC xxxxxxx character (advances horizontally)
+	25 DRAWS sprite xxxxxxx yyyyyss x:y forms a x 64 address(doesn't reposition), ss is sprite size 8/16/24/32
+	26 PLOT point

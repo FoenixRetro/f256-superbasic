@@ -31,6 +31,10 @@ GFXEditSlot = 8 + GXMappingPage
 gzTemp0 = zTemp0
 gzTemp1 = zTemp1
 gsTemp = zTemp2
+;
+;		Buffer for pixel data. Needs to be 32 pixels minimum. (Reusing number conversion buffer)
+;
+pixelBuffer = numberBuffer
 
 plotpixel .macro
 		and 	gxANDValue

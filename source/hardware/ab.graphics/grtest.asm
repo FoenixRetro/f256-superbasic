@@ -37,16 +37,16 @@ plot:	.macro
 		.endm
 		
 loop:	
-		.plot 	1,4,0
-		.plot 	2,$1C,1
-		.plot 	16,0,0
-		.plot 	21,319,239
-		.plot 	21,0,0
-		rts
+		.plot 	2,$20,0
+		.plot 	3,$1C,1
+;		.plot 	16,0,0
+;		.plot 	21,319,239
+;		.plot 	21,0,0
+;		rts
 
 demo:	jsr 	Random32Bit 
 		inc 	gxEORValue
-		lda 	#21*2
+		lda 	#20*2
 		ldx 	RandomSeed+0
 		ldy 	RandomSeed+1
 		jsr 	GraphicDraw
