@@ -51,7 +51,12 @@ GXPlot2:
 		jsr 	GXPlot1 						; plot and swap, fall through does twice
 GXPlot1:	
 		jsr 	GXPlot0 						; plot and negate
+		jsr 	_GXSwapXY
 		jsr 	GXPlot0 						; twice, undoing negation
+		jsr 	_GXSwapXY
+		rts
+
+_GXSwapXY:		
 		lda 	gX 								; swap X and Y
 		ldx	 	gY
 		sta 	gY
