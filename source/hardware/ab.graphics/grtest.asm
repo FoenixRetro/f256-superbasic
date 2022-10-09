@@ -45,17 +45,17 @@ plot:	.macro
 loop:	
 		.plot 	1,4,0
 		.plot 	16,10,10
-		.plot 	21,100,100
+		.plot 	21,300,200
+		.plot 	18,10,10
 		rts
 
 demo:	jsr 	Random32Bit 
 		inc 	gxEORValue
-		lda 	#18*2
+		lda 	#21*2
 		ldx 	RandomSeed+0
 		ldy 	RandomSeed+1
 		jsr 	GraphicDraw
 		bra 	demo
-
 
 		rts
 
