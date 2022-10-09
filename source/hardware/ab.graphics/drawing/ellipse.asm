@@ -51,21 +51,21 @@ GXPlot2:
 		jsr 	GXPlot1 						; plot and swap, fall through does twice
 GXPlot1:	
 		jsr 	GXPlot0 						; plot and negate
-		jsr 	_GXSwapXY
 		jsr 	GXPlot0 						; twice, undoing negation
-		jsr 	_GXSwapXY
-		rts
-
-_GXSwapXY:		
 		lda 	gX 								; swap X and Y
 		ldx	 	gY
 		sta 	gY
 		stx 	gX
+		lda 	gYChanged 						; toggle Y Changed flag
+		lda 	#$FF
+		sta 	gYChanged
 		rts
 		;
 		;		Draw offset gX (always +ve) gY (can be -ve)
 		;
 GXPlot0:
+		lda 	gYChanged
+		beq 	_GXPlot0Exit
 		ldx 	#2 								; copy Y1-A => Y0
 		lda 	gY
 		jsr 	_GXSubCopy
@@ -85,11 +85,11 @@ GXPlot0:
 		adc 	#128
 		jsr 	GXDrawLineTemp0 				; routine from Rectangle.
 
+_GXPlot0Exit:		
 		sec 									; GY = -GY
 		lda 	#0
 		sbc 	gY
 		sta 	gY
-_GXPlot0Exit:		
 		rts		
 ;
 ;		16 bit calc of XY1 - A => XY0 ; A is in gzTemp0
