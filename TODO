@@ -3,7 +3,8 @@ Progress:
 	Graphics code.
 		Plot points.
 		Characters and Sprite
-		
+			- Check multiple characters
+			- Do for sprites.		
 Later:
 	Disable interrupts enable at end of line command ?
 	Indenting

@@ -108,7 +108,7 @@ _GXDLTNoBorrow:
 		iny 								; next slot.
 		bne 	_GXDLTLine		
 		inc 	gsTemp+1 					; carry to next
-		jsr 	_GXDLTCheckWrap				; check for new page.
+		jsr 	GXDLTCheckWrap				; check for new page.
 		bra 	_GXDLTLine
 		;
 		;		Draw end points only.
@@ -125,7 +125,7 @@ _GXDLTEndPoints:
 		lda 	gsTemp+1
 		adc 	gzTemp0+1
 		sta 	gsTemp+1
-		jsr 	_GXDLTCheckWrap 			; fix up.
+		jsr 	GXDLTCheckWrap 			; fix up.
 
 		lda 	(gsTemp),y 					; set pixel on the right
 		.plotpixel
@@ -144,7 +144,7 @@ _GXDLTExit: 								; restore screen position.
 ;
 ;		Check if gsTemp needs wrapping round.
 ;
-_GXDLTCheckWrap:
+GXDLTCheckWrap:
 		lda 	gsTemp+1 					; check end of page
 		cmp 	#((GXMappingAddress+$2000) >> 8) 
 		bcc 	_GXDLTCWExit

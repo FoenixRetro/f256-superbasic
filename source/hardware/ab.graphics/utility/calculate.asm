@@ -22,6 +22,8 @@
 ;		The main calculation is GXY0*320 = GXY0 * 5 * 64
 ;
 GXPositionCalc:
+		lda 	gzTemp0 					; save temp memory slot
+		pha
 		;
 		;		Calculate GXY0 * 5 => gsTemp
 		;
@@ -73,6 +75,9 @@ _GXPCNoOverflow:
 		lda 	gzTemp0 					; get the page number
 		adc 	gxBasePage 					; by adding the base page
 		sta 	GFXEditSlot 				; and map it into memory.
+		;
+		pla 
+		sta 	gzTemp0
 		rts
 
 ; ************************************************************************************************

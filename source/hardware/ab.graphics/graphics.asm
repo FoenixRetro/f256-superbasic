@@ -80,17 +80,14 @@ GDVectors:
 		.fill 	2*2 						; $00-$01 	; Open/Close Bitmap/Sprites
 		.word 	GXClearBitmap 				; $02 	  	: Clear Bitmap to X		
 		.word 	GXSetColourMode 			; $03 		; Set colour and drawing mode
-		.fill 	12*2 						; $03-$0F 	: Reserved
+		.word 	GXFontHandler 				; $04 		; Draw from font
+		.fill 	11*2 						; $05-$0F 	: Reserved
 		.word 	GXMove 						; $10     	: Move (does nothing other than update coords)
 		.word 	GXLine 						; $11 		: Draw line
 		.word 	GXFrameRectangle 			; $12 		; Framed rectangle
 		.word 	GXFillRectangle 			; $13 		; Filled rectangle
 		.word 	GXFrameCircle 				; $14 		; Framed circle
 		.word 	GXFillCircle 				; $15 		; Filled circle
-		.fill 	2*2 						; $16-$17 	; Reserved for ellipse.
-		.word 	GXFontHandler 				; $18 		; Draw from font
-		.fill 	2 							; $19		; Reserved for drawing functions
-		.fill 	2 							; $1A 		; Point plot
 
 ; ************************************************************************************************
 ;

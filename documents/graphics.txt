@@ -19,6 +19,9 @@ cccccccc
 *	2 CLEAR (X colour)
 *	3 COLOUR (X fgr, mode bits 7..0)
 			Mode Bits: vflip|hflip|s2|s1|s0|-|m1|m0
+			scale is (s2s1s0+1)
+	4 DRAWC xxxxxxx character (advances horizontally)
+	5 DRAWS sprite xxxxxxx yyyyyss x:y forms a x 64 address(doesn't reposition), ss is sprite size 8/16/24/32
 
 *	16 MOVE 			
 *	17 LINE 	
@@ -28,6 +31,4 @@ cccccccc
 *	21 Fill CIRCLE
 	22 ELLIPSE
 	23 Fill ELLIPSE
-	24 DRAWC xxxxxxx character (advances horizontally)
-	25 DRAWS sprite xxxxxxx yyyyyss x:y forms a x 64 address(doesn't reposition), ss is sprite size 8/16/24/32
-	26 PLOT point
+	24 PLOT point
