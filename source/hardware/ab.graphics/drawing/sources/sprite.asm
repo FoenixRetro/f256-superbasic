@@ -37,7 +37,7 @@ GXSpriteAcquire:
 		asl 	a
 		tax
 _GXSALoop:
-		lda 	GXMappingAddress+$100,x
+		lda 	GXMappingAddress+$200,x
 		inx
 		sta 	gxPixelBuffer,y
 		iny

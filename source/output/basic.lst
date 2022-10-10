@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.56.2625 listing file
 ; 64tass -D AUTORUN=0 -q -b -Wall -c -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Mon Oct 10 10:53:02 2022
+; Mon Oct 10 12:45:01 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -369,9 +369,9 @@
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->805c	42 75 69 6c 74 20 4d 6f			.text "Built Monday 10-Oct-2022. Build 1176."
+>805c	42 75 69 6c 74 20 4d 6f			.text "Built Monday 10-Oct-2022. Build 1178."
 >8064	6e 64 61 79 20 31 30 2d 4f 63 74 2d 32 30 32 32
->8074	2e 20 42 75 69 6c 64 20 31 31 37 36 2e
+>8074	2e 20 42 75 69 6c 64 20 31 31 37 38 2e
 
 ;******  Return to file: ./common/aa.system/00start.asm
 
@@ -1101,7 +1101,7 @@
 .84e7	0a		asl a				asl 	a
 .84e8	aa		tax				tax
 .84e9					_GXSALoop:
-.84e9	bd 00 61	lda $6100,x			lda 	GXMappingAddress+$100,x
+.84e9	bd 00 62	lda $6200,x			lda 	GXMappingAddress+$200,x
 .84ec	e8		inx				inx
 .84ed	99 f7 05	sta $05f7,y			sta 	gxPixelBuffer,y
 .84f0	c8		iny				iny
@@ -6452,9 +6452,9 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->ae36	42 75 69 6c 74 20 4d 6f			.text "Built Monday 10-Oct-2022. Build 1176."
+>ae36	42 75 69 6c 74 20 4d 6f			.text "Built Monday 10-Oct-2022. Build 1178."
 >ae3e	6e 64 61 79 20 31 30 2d 4f 63 74 2d 32 30 32 32
->ae4e	2e 20 42 75 69 6c 64 20 31 31 37 36 2e
+>ae4e	2e 20 42 75 69 6c 64 20 31 31 37 38 2e
 
 ;******  Return to file: _basic.asm
 
