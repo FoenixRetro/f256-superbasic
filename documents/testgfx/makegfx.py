@@ -38,12 +38,22 @@ class SpriteCollection(object):
 				#print("{0} ${1:x}".format(pixel,colour))
 				self.data.append(colour)
 				self.offset += 1
-
+	#
+	#		Format:
+	#			256 low bytes
+	#			256 high bytes
+	#
+	#		00aaaaaa aallss
+	#
+	# 		00aaaaaaa is the address >> 6 (masked, >> 2)
+	#		ll is the LUT to use 0-3
+	# 		ss is the size (8/16/24/32)
+	#
 	def export(self):
 		self.binIndex = [ 0 ] * 512
 		slot = 0
 		for e in self.index:
-			a = ((e[0] >> 6) << 2)+((e[1] >> 3) - 1)
+			a = ((e[1] >> 3) - 1) + ((e[0] & 0xFFFC0) >> 2)
 			self.binIndex[slot] = a & 0xFF
 			self.binIndex[slot + 256] = a >> 8
 			slot += 1
@@ -56,7 +66,7 @@ class SpriteCollection(object):
 		for i in range(0,256):
 			e = self.binIndex[i] + self.binIndex[i+256] * 256
 			if e != 0:
-				print((e & 3) * 8 + 8,(e & 0xFFFC) << 4)
+				print("Address ${0:04x} Size {1:2} LUT {2}".format((e & 0xFFF0) << 2,(e & 3)*8+8,(e >> 2) & 3))
 
 sc = SpriteCollection()
 sc.importGraphic("sprite8.png")		

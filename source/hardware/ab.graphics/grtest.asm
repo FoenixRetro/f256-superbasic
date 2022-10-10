@@ -40,7 +40,7 @@ loop:
 		.plot 	2,$20,0
 		.plot 	3,$1C,0
 		.plot 	16,10,40
-		.plot 	5,0,0
+		.plot 	5,1,0
 		rts
 
 demo:	jsr 	Random32Bit 

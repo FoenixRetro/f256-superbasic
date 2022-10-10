@@ -1,9 +1,9 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		sprite.asm
-;		Purpose:	Sprite Source Handler
-;		Created:	9th October 2022
+;		Name:		find.asm
+;		Purpose:	Get address, size and LUT of sprite (address is offset from base)
+;		Created:	10th October 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
@@ -14,55 +14,61 @@
 
 ; ************************************************************************************************
 ;
-;								Access from Sprite Memory
+;					Get address, size and LUT of sprite A (assume already opened)
 ;
 ; ************************************************************************************************
 
-GXSpriteHandler:
-		lda 	gzTemp0+1 					; eor with mode
-		eor 	gxMode
-		sta 	gxUseMode
-
-		lda 	#GXSpritePage
-		sta 	GXSpriteBasePage
-
-		ldx 	gzTemp0 					; sprite #
-		phx
-		jsr 	GXOpenBitmap 				; can access sprite information
-		pla
-		jsr 	GXFindSprite 				; get the sprite address
-		jsr 	GXCloseBitmap
-
-		lda 	#8
-		ldx 	#GXSpriteAcquire & $FF
-		ldy 	#GXSpriteAcquire >> 8
-		jsr 	GXDrawGraphicElement
-		rts
-
-GXSpriteAcquire:
-		lda 	GXspriteBasePage		
-		sta 	GFXEditSlot
-		ldy 	#0
-		txa
-		asl 	a
-		asl 	a
-		asl 	a
+GXFindSprite:
 		tax
-_GXSALoop:
-		lda 	GXMappingAddress+$200,x
-		inx
-		sta 	gxPixelBuffer,y
-		iny
-		cpy 	#8
-		bne 	_GXSALoop
+
+		lda 	GXSpriteBasePage 			; access the base page of the sprite
+		sta 	GFXEditSlot
+		;
+		lda 	GXMappingAddress+256,x 		; MSB
+		sta 	GXSAddress+1
+		;
+		lda 	GXMappingAddress,x 			; LSB
+		pha 								; save twice
+		pha
+
+		and 	#3 							; get sprite size
+		sta 	GXSSizeRaw 					; save raw (0-3)
+		tax
+		lda 	_GXFXSSTTable,x 			; read sprite size
+
+		pla 								; get LUT
+		lsr		a
+		lsr		a
+		and 	#3
+		sta 	GXSLUT
+		;
+		pla 								; address, neeeds to be x 4
+		and 	#$F0
+		sta 	GXSAddress
+
+		asl 	GXSAddress
+		rol 	GXSAddress+1
+		asl 	GXSAddress
+		rol 	GXSAddress+1
+
 		rts
+	;		
+
+_GXFXSSTTable:
+		.byte 	8,16,24,32	
 
 		.send code
-
 		.section storage
-GXSpriteBasePage:
+GXSSize: 									; sprite size (in pixels)
 		.fill 	1
-		.send storage		
+GXSSizeRaw: 								; size (0-3)
+		.fill 	1		
+GXSLUT: 									; LUT to use
+		.fill 	1		
+GXSAddress: 								; offset from base page.
+		.fill 	2		
+		.send storage
+
 ; ************************************************************************************************
 ;
 ;									Changes and Updates
