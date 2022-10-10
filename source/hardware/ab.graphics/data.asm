@@ -16,7 +16,7 @@ GXMappingPage = 3
 ;
 ;		Sprite Graphics Page
 ;
-GXSpritePage = 2
+GXSpritePage = 24
 ;
 ;		Address of that page
 ;

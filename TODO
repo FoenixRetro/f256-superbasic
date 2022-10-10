@@ -1,8 +1,6 @@
 Progress:
-	- map the sprite area into the mappable page to read the sprite address.
-	- change to read using paging
-	- move the sprite up into paged RAM.
-	
+	Get sprite data out properly.
+		
 	Graphics code.
 		Plot points.
 		Horizontal repeated characters
