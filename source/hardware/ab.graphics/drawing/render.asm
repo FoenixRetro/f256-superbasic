@@ -23,9 +23,12 @@ GXDrawGraphicElement:
 		dec 	a
 		sta 	gxMask 						; and mask
 
+		lda 	gxY0 						; push Y on stack
+		pha 
+
 		stz 	gxVFlip 					; set the flip bytes
 		stz 	gxHFlip
-		bit 	gxMode
+		bit 	gxUseMode
 		bpl 	_GXNotVertical
 		sta 	gxVFlip
 _GXNotVertical:		
@@ -37,7 +40,7 @@ _GXNotHorizontal:
 		stx 	gxAcquireVector
 		jsr 	gxOpenBitmap 				; open the bitmap.
 
-		lda 	gxMode 						; scale bits
+		lda 	gxUseMode 					; scale bits
 		lsr 	a
 		lsr 	a
 		lsr 	a
@@ -66,6 +69,21 @@ _GXGELoop2:
 		cmp 	gxSize
 		bne 	_GXGELoop
 _GXDGEExit:
+		pla 								; restore Y for next time
+		sta 	gxY0
+		;
+		ldx 	gxScale 					; get scale (1-8)
+_GXShiftLeft:
+		clc
+		lda 	gxSize
+		adc 	gxX0
+		sta 	gxX0
+		bcc 	_GXSLNoCarry
+		inc 	gxX0+1
+_GXSLNoCarry:
+		dex
+		bne 	_GXShiftLeft		
+
 		jsr 	GXCloseBitmap
 		rts		
 
@@ -123,9 +141,11 @@ gxScale:
 		.fill 	1		
 gxVFlip:
 		.fill 	1		
-		.send storage
 gxHFlip:
 		.fill 	1		
+gxUseMode:
+		.fill 	1		
+		.send storage
 
 
 ; ************************************************************************************************

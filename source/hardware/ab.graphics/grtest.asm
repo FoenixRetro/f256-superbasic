@@ -11,7 +11,7 @@
 ; ************************************************************************************************
 
 		.section code
-RunDemos:		
+RunDemos:	
 		stz 	1
 
 		lda 	#$0F
@@ -38,8 +38,8 @@ plot:	.macro
 		
 loop:	
 		.plot 	2,$20,0
-		.plot 	3,$1C,0+8*3
-		.plot 	16,20,30
+		.plot 	3,$1C,0
+		.plot 	16,10,40
 		.plot 	5,0,0
 		rts
 
@@ -50,9 +50,10 @@ demo:	jsr 	Random32Bit
 		ldy 	RandomSeed+1
 		jsr 	GraphicDraw
 		lda 	RandomSeed+2
-		and 	#127
-		tax
-		lda 	#4*2
+		and 	#$1C
+		tay
+		lda 	#5*2
+		ldx 	#0
 		jsr 	GraphicDraw
 		bra 	demo
 

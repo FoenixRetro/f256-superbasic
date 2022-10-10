@@ -52,7 +52,7 @@ _GDCopy1:
 		and 	#1 							; put LSB as MSB of Current.X
 		sta 	gxCurrentX+1
 		;
-		ldx 	#7 								; copy current and last to gxXY/12 work area
+		ldx 	#7 							; copy current and last to gxXY/12 work area
 _GDCopy2:
 		lda 	gxCurrentX,x
 		sta 	gxX0,x
