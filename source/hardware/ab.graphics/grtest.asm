@@ -38,10 +38,10 @@ plot:	.macro
 		
 loop:	
 		.plot 	2,$20,0
-		.plot 	3,$1C,0
+		.plot 	3,0,0
 		.plot 	16,10,40
-		.plot 	5,1,0
-		rts
+		.plot 	5,2,0
+		;rts
 
 demo:	jsr 	Random32Bit 
 		inc 	gxEORValue
@@ -49,13 +49,19 @@ demo:	jsr 	Random32Bit
 		ldx 	RandomSeed+0
 		ldy 	RandomSeed+1
 		jsr 	GraphicDraw
+
 		lda 	RandomSeed+2
-		and 	#$1C
+		and 	#3
+		cmp 	#3
+		beq 	demo
+		tax
+		lda 	RandomSeed+2
+		and 	#$C0
 		tay
 		lda 	#5*2
-		ldx 	#0
 		jsr 	GraphicDraw
-		bra 	demo
+		lda 	gxEORValue
+		bne 	demo
 
 		rts
 

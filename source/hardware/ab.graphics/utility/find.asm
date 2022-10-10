@@ -35,6 +35,7 @@ GXFindSprite:
 		sta 	GXSSizeRaw 					; save raw (0-3)
 		tax
 		lda 	_GXFXSSTTable,x 			; read sprite size
+		sta 	GXSSize 					; save (8/16/24/32)
 
 		pla 								; get LUT
 		lsr		a

@@ -23,9 +23,6 @@ GXDrawGraphicElement:
 		dec 	a
 		sta 	gxMask 						; and mask
 
-		lda 	gxY0 						; push Y on stack
-		pha 
-
 		stz 	gxVFlip 					; set the flip bytes
 		stz 	gxHFlip
 		bit 	gxUseMode
@@ -35,6 +32,9 @@ _GXNotVertical:
 		bvc 	_GXNotHorizontal
 		sta 	gxHFlip
 _GXNotHorizontal:
+
+		lda 	gxY0 						; push Y on stack
+		pha 
 
 		sty 	gxAcquireVector+1 			; and acquisition vector
 		stx 	gxAcquireVector
