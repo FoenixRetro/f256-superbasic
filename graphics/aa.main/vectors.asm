@@ -26,7 +26,7 @@ GRVectorTable:
 	.word	GXFillCircle             ; $15 FillCircle
 	.word	GRUndefined              ; $16
 	.word	GRUndefined              ; $17
-	.word	GRUndefined              ; $18
+	.word	GXPlotPoint              ; $18 Plot
 	.word	GRUndefined              ; $19
 	.word	GRUndefined              ; $1a
 	.word	GRUndefined              ; $1b

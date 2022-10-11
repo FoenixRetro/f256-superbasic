@@ -1,9 +1,9 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		grtest.asm
-;		Purpose:	Graphics test code.
-;		Created:	6th October 2022
+;		Name:		plot.asm
+;		Purpose:	Plot point
+;		Created:	11th October 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
@@ -11,47 +11,22 @@
 ; ************************************************************************************************
 
 		.section code
-RunDemos:	
-		stz 	1
 
-		lda 	#$0F
-		sta 	$D000
-		lda 	#1
-		sta 	$D100
-		stz 	$D101
-		stz 	$D102
-		lda 	#1
-		sta 	$D103
+; ************************************************************************************************
+;
+;									Draw Point
+;
+; ************************************************************************************************
 
-		lda 	#8
-		sta 	gxBasePage
-
-		lda 	#240
-		sta 	gxHeight
-
-plot:	.macro
-		lda 	#((\1)*2)+(((\2) >> 8) & 1)		
-		ldx 	#((\2) & $FF)
-		ldy 	#(\3)
-		jsr 	GraphicDraw
-		.endm
-		
-loop:	
-		.plot 	2,$20,0
-		.plot 	3,$FF,0
-		.plot 	24,100,40
-		.plot 	24,102,40
-;		rts
-
-demo:	jsr 	Random32Bit 
-		inc 	gxEORValue
-		lda 	#24*2
-		ldx 	RandomSeed+0
-		ldy 	RandomSeed+1
-		jsr 	GraphicDraw
-
-		bra 	demo
-
+GXPlotPoint: ;; [24:Plot]
+		jsr 	GXOpenBitmap 				; start drawing
+		jsr 	GXPositionCalc 				; setup gsTemp, gsOffset and the position.
+		ldy 	gsOffset
+		lda 	(gsTemp),y 					; set pixel on the right
+		.plotpixel
+		sta 	(gsTemp),y
+		jsr 	GXCloseBitmap 				; stop drawing and exit
+		rts
 
 		.send code
 

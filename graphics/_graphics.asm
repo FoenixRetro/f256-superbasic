@@ -10,6 +10,8 @@ graphicsIntegrated = 1
 	.include	"./drawing/circle.asm"
 	.include	"./drawing/clear.asm"
 	.include	"./drawing/line.asm"
+	.include	"./drawing/mode.asm"
+	.include	"./drawing/plot.asm"
 	.include	"./drawing/rect.asm"
 	.include	"./drawing/render.asm"
 	.include	"./drawing/sources/font.asm"
