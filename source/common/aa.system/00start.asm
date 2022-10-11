@@ -35,6 +35,8 @@ Prompt:	.text 	13,13,"*** F256 Junior SuperBASIC ***",13,13
 		.include "../generated/timestamp.asm"
 		.byte 	13,13,0
 
+		.include "../../../graphics/_graphics.asm"
+
 		.send code
 
 ; ************************************************************************************************

@@ -1,7 +1,7 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		data.asm
+;		Name:		aa.data.asm
 ;		Purpose:	Data use for Graphics
 ;		Created:	6th October 2022
 ;		Reviewed: 	No
@@ -29,6 +29,14 @@ GFXMappingLUT = 0
 ;		LUT Edit slot
 ;
 GFXEditSlot = 8 + GXMappingPage
+
+; ************************************************************************************************
+;
+;									Allocate or Re-Use memory
+;
+; ************************************************************************************************
+
+.if graphicsIntegrated==1
 ;
 ;		Zero Page (reuse BASIC temps)
 ;
@@ -40,6 +48,14 @@ gsTemp = zsTemp
 ;		Buffer for pixel data. Needs to be 32 pixels minimum. (Reusing number conversion buffer)
 ;
 gxPixelBuffer = numberBuffer
+.else
+.endif
+
+; ************************************************************************************************
+;
+;										Drawing macro
+;
+; ************************************************************************************************
 
 plotpixel .macro
 		and 	gxANDValue

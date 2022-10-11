@@ -1,8 +1,8 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		graphics.asm
-;		Purpose:	Graphics startup/test code.
+;		Name:		main.asm
+;		Purpose:	Graphics main entry point.
 ;		Created:	6th October 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
