@@ -20,11 +20,11 @@ GXMappingAddress = ($2000 * GXMappingPage)
 ;
 ;		LUT to use for mapping
 ;
-GFXMappingLUT = 0
+GXMappingLUT = 0
 ;
 ;		LUT Edit slot
 ;
-GFXEditSlot = 8 + GXMappingPage
+GXEditSlot = 8 + GXMappingPage
 
 ; ************************************************************************************************
 ;
@@ -36,10 +36,10 @@ GFXEditSlot = 8 + GXMappingPage
 ;
 ;		Zero Page (reuse BASIC temps)
 ;
-gzTemp0 = zTemp0
-gzTemp1 = zTemp1
-gzTemp2 = zTemp2
-gsTemp = zsTemp
+gxzTemp0 = zTemp0
+gxzTemp1 = zTemp1
+gxzTemp2 = zTemp2
+gxzScreen = zsTemp
 ;
 ;		Buffer for pixel data. Needs to be 32 pixels minimum. (Reusing number conversion buffer)
 ;
@@ -140,7 +140,7 @@ GSCurrentSprite:
 ;
 ;		Base address for sprite area
 ;		
-GXSAddressBase:
+GXSpriteOffsetBase:
 		.fill 	2	
 
 		.send storage

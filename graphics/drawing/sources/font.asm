@@ -19,21 +19,21 @@
 ; ************************************************************************************************
 
 GXFontHandler: ;; [4:DrawFont]
-		lda 	gzTemp0+1 					; eor with mode
+		lda 	gxzTemp0+1 					; eor with mode
 		eor 	gxMode
 		sta 	gxUseMode
 		
-		stz 	gzTemp0+1 					; gzTemp0 is font #
-		asl	 	gzTemp0 					; x 2
-		rol	 	gzTemp0+1
-		asl	 	gzTemp0 					; x 4
-		rol	 	gzTemp0+1
-		asl	 	gzTemp0 					; x 8		
-		rol	 	gzTemp0+1
+		stz 	gxzTemp0+1 					; gxzTemp0 is font #
+		asl	 	gxzTemp0 					; x 2
+		rol	 	gxzTemp0+1
+		asl	 	gxzTemp0 					; x 4
+		rol	 	gxzTemp0+1
+		asl	 	gxzTemp0 					; x 8		
+		rol	 	gxzTemp0+1
 		
-		lda 	gzTemp0+1 					; put in page C0
+		lda 	gxzTemp0+1 					; put in page C0
 		ora 	#$C0
-		sta 	gzTemp0+1
+		sta 	gxzTemp0+1
 
 		lda 	#8 							; size 8x8
 		ldx 	#GXGetGraphicDataFont & $FF ; XY = Graphic Data retrieval routine
@@ -49,7 +49,7 @@ GXGetGraphicDataFont:
 		ldx 	1 							; preserve old value
 		lda 	#1 							; access page 1 (font memory)
 		sta 	1
-		lda 	(gzTemp0),y 				; read the font element.
+		lda 	(gxzTemp0),y 				; read the font element.
 		stx 	1 							; put old value back.
 		ldx 	#0 							; do 8 times
 _GXExpand:

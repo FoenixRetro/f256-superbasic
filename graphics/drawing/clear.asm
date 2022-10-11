@@ -17,7 +17,7 @@ ScreenSize240 = 320 * 240
 
 ; ************************************************************************************************
 ;
-;								Clear bitmap to colour gzTemp0
+;								Clear bitmap to colour gxzTemp0
 ;
 ; ************************************************************************************************
 
@@ -31,12 +31,12 @@ _GXCalcLastPage:
 		tya 								; add to base page
 		clc
 		adc 	gxBasePage
-		sta 	GFXEditSlot  				; clear from this page back
+		sta 	GXEditSlot  				; clear from this page back
 
 _GXClearAll:
 		jsr 	_GXClearBlock 				; clear 8k block
-		dec 	GFXEditSlot  				; back to previous
-		lda 	GFXEditSlot
+		dec 	GXEditSlot  				; back to previous
+		lda 	GXEditSlot
 		cmp 	gxBasePage 					; until before base page
 		bcs 	_GXClearAll
 		jsr 	GXCloseBitmap	 			; stop access
@@ -47,22 +47,22 @@ _GXClearBlock:
 ;
 ;		Clear 1 8k block
 ;
-		.set16 	gzTemp1,GXMappingAddress
+		.set16 	gxzTemp1,GXMappingAddress
 _GXCB0:
-		lda 	gzTemp0
+		lda 	gxzTemp0
 		ldy 	#0
 _GXCB1:	
-		sta 	(gzTemp1),y
+		sta 	(gxzTemp1),y
 		iny
-		sta 	(gzTemp1),y
+		sta 	(gxzTemp1),y
 		iny
-		sta 	(gzTemp1),y
+		sta 	(gxzTemp1),y
 		iny
-		sta 	(gzTemp1),y
+		sta 	(gxzTemp1),y
 		iny
 		bne 	_GXCB1
-		inc 	gzTemp1+1
-		lda 	gzTemp1+1
+		inc 	gxzTemp1+1
+		lda 	gxzTemp1+1
 		cmp	 	#(GXMappingAddress >> 8)+$20
 		bne 	_GXCB0
 		rts

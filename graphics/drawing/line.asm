@@ -25,9 +25,9 @@ GXLine: ;; [17:Line]
 		jsr 	GXPositionCalc 				; calculate position/offset.
 _GXDrawLoop:
 		ldy 	gsOffset 					; draw the pixel
-		lda 	(gsTemp),y
+		lda 	(gxzScreen),y
 		.plotpixel
-		sta 	(gsTemp),y
+		sta 	(gxzScreen),y
 
 		jsr 	GXLineIsComplete 			; is the line complete ?		
 		beq 	_GXLExit
@@ -125,14 +125,14 @@ _GXAXNoBorrow:
 		lda 	gsOffset
 		cmp 	#$FF
 		bne 	_GXAYExit 					; underflow
-		dec 	gsTemp+1 					; borrow
-		lda 	gsTemp+1 					; gone off page
+		dec 	gxzScreen+1 					; borrow
+		lda 	gxzScreen+1 					; gone off page
 		cmp 	#GXMappingAddress >> 8
 		bcs 	_GXAYExit	
 		clc
 		adc 	#$20 						; fix up
-		sta 	gsTemp+1
-		dec 	GFXEditSlot 				; back one page
+		sta 	gxzScreen+1
+		dec 	GXEditSlot 				; back one page
 _GXAYExit:		
 		rts
 		;
@@ -145,13 +145,13 @@ _GXAXRight:
 _GXAXNoCarry:
 		inc 	gsOffset 					; pixel right
 		bne 	_GXAXExit 					; if not overflowed, exit.
-		inc 	gsTemp+1 					; next line
-		lda 	gsTemp+1
+		inc 	gxzScreen+1 					; next line
+		lda 	gxzScreen+1
 		cmp 	#((GXMappingAddress+$2000) >> 8) ; on to the next page ?
 		bcc 	_GXAXExit
 		sbc 	#$20 						; fix up
-		sta 	gsTemp+1
-		inc 	GFXEditSlot 				; next page
+		sta 	gxzScreen+1
+		inc 	GXEditSlot 				; next page
 _GXAXExit:		
 		rts
 

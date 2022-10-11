@@ -24,14 +24,14 @@ GXFillCircle: ;; [21:FillCircle]
 GXFrameCircle: ;; [20:FrameCircle]
 		lda 	#0
 GXCircle:		
-		sta 	gIsFillMode					; save Fill flag 
+		sta 	gxIsFillMode					; save Fill flag 
 		jsr 	GXSortXY 					; topleft/bottomright
 		jsr 	GXOpenBitmap 				; start drawing		
 		jsr 	GXCircleSetup 				; set up for drawing
-		stz 	gYChanged
+		stz 	gxYChanged
 _GXCircleDraw:
-		lda 	gX 							; while x <= y
-		cmp 	gY
+		lda 	gXCentre					; while x <= y
+		cmp 	gYCentre
 		bcc 	_GXCircleContinue		
 		bne 	_GXNoLast
 		jsr 	GXPlot1
@@ -54,18 +54,18 @@ _GXCircleContinue:
 GXPlot2:	
 		jsr 	GXPlot1 						; plot and swap, fall through does twice
 GXPlot1:	
-		lda 	gY 								; if y = 0, don't do it twice (xor)
+		lda 	gYCentre 						; if y = 0, don't do it twice (xor)
 		beq 	_GXPlot1Only
 		jsr 	GXPlot0 						; plot and negate
 _GXPlot1Only:
 		jsr 	GXPlot0 						; twice, undoing negation
-		lda 	gX 								; swap X and Y
-		ldx	 	gY
-		sta 	gY
-		stx 	gX
-		lda 	gYChanged 						; toggle Y Changed flag
+		lda 	gXCentre 						; swap X and Y
+		ldx	 	gYCentre
+		sta 	gYCentre
+		stx 	gXCentre
+		lda 	gxYChanged 						; toggle Y Changed flag
 		lda 	#$FF
-		sta 	gYChanged
+		sta 	gxYChanged
 		rts
 		jsr 	GXPlot0 						; do once
 
@@ -74,54 +74,54 @@ _GXPlot1Only:
 		;
 		;		Draw offset gX (always +ve) gY (can be -ve)
 		;
-GXPlot0:lda 	gIsFillMode 					; outline mode, always draw as X or Y will change
+GXPlot0:lda 	gxIsFillMode 					; outline mode, always draw as X or Y will change
 		beq 	_GXPlot0Always
-		lda 	gYChanged						; fill mode, only draw if changed.
+		lda 	gxYChanged						; fill mode, only draw if changed.
 		beq 	GXPlot0Exit
 _GXPlot0Always:		
 		ldx 	#2 								; copy Y1-A => Y0
-		lda 	gY
+		lda 	gYCentre
 		jsr 	GXSubCopy
 		ldx 	#0 								; copy X1-A => X0, 
-		lda 	gX
+		lda 	gXCentre
 		jsr 	GXSubCopy 
 		pha 									; save last offset X
 		jsr 	GXPositionCalc 					; calculate position/offset.
 		pla
 		;	
-		asl 	a 								; store 2 x last offset in gzTemp0
-		sta 	gzTemp0 		
-		stz 	gzTemp0+1
-		rol 	gzTemp0+1
+		asl 	a 								; store 2 x last offset in gxzTemp0
+		sta 	gxzTemp0 		
+		stz 	gxzTemp0+1
+		rol 	gxzTemp0+1
 		;
-		lda 	gIsFillMode
+		lda 	gxIsFillMode
 		adc 	#128
 		jsr 	GXDrawLineTemp0 				; routine from Rectangle.
 		sec 									; GY = -GY
 		lda 	#0
-		sbc 	gY
-		sta 	gY
+		sbc 	gYCentre
+		sta 	gYCentre
 GXPlot0Exit:		
 		rts		
 ;
-;		16 bit calc of XY1 - A => XY0 ; A is in gzTemp0
+;		16 bit calc of XY1 - A => XY0 ; A is in gxzTemp0
 ;		
 GXSubCopy:
-		sta 	gzTemp0
-		stz 	gzTemp0+1
+		sta 	gxzTemp0
+		stz 	gxzTemp0+1
 		and 	#$80
 		beq 	_GXNoSx
-		dec 	gzTemp0+1
+		dec 	gxzTemp0+1
 _GXNoSx:		
 		;
 		sec
 		lda 	gXX1,x
-		sbc 	gzTemp0
+		sbc 	gxzTemp0
 		sta 	gXX0,x
 		lda 	gXX1+1,x
-		sbc 	gzTemp0+1
+		sbc 	gxzTemp0+1
 		sta 	gXX0+1,x
-		lda 	gzTemp0 						; return A
+		lda 	gxzTemp0 						; return A
 		rts
 
 ; ************************************************************************************************
@@ -131,14 +131,14 @@ _GXNoSx:
 ; ************************************************************************************************
 
 GXCircleMove:
-		stz 	gYChanged 					; clear Y changed flag
-		lda 	gzTemp1+1 					; check sign of D
+		stz 	gxYChanged 					; clear Y changed flag
+		lda 	gxzTemp1+1 					; check sign of D
 		bpl 	_GXEMPositive
 		;
 		;		D < 0 : inc X, add 4x+6
 		;
-		inc 	gX 							; X++
-		lda 	gX 							
+		inc 	gXCentre 					; X++
+		lda 	gXCentre 							
 		jsr 	_GXAdd4TimesToD 			; add 4 x A to D
 		lda 	#6  						; and add 6
 		bra 	_GXEMAddD
@@ -146,46 +146,46 @@ GXCircleMove:
 		;		D >= 0 : inc X, dec Y, add 4(x-y)+10
 		;
 _GXEMPositive:
-		inc 	gX 							; X++
-		dec 	gy 							; Y--
+		inc 	gXCentre					; X++
+		dec 	gyCentre 					; Y--
 		;
 		sec 								; calculate X-Y
-		lda 	gX
-		sbc 	gY
+		lda 	gXCentre
+		sbc 	gYCentre
 		jsr 	_GXAdd4TimesToD 			; add 4 x A to D
 		lda 	#10  						; and add 10
-		dec 	gYChanged
+		dec 	gxYChanged
 _GXEMAddD:
 		clc
-		adc 	gzTemp1
-		sta 	gzTemp1
+		adc 	gxzTemp1
+		sta 	gxzTemp1
 		bcc 	_GXEMNoCarry
-		inc 	gzTemp1+1
+		inc 	gxzTemp1+1
 _GXEMNoCarry:		
 		rts	
 ;
 ;		Add 4 x A (signed) to D
 ;
 _GXAdd4TimesToD:
-		sta 	gzTemp0 					; make 16 bit signed.
+		sta 	gxzTemp0 					; make 16 bit signed.
 		and 	#$80
 		beq 	_GXA4Unsigned
 		lda 	#$FF
 _GXA4Unsigned:
-		sta 	gzTemp0+1
+		sta 	gxzTemp0+1
 		;
-		asl 	gzTemp0  					; x 4
-		rol 	gzTemp0+1
-		asl 	gzTemp0 
-		rol 	gzTemp0+1
+		asl 	gxzTemp0  					; x 4
+		rol 	gxzTemp0+1
+		asl 	gxzTemp0 
+		rol 	gxzTemp0+1
 		;
 		clc 								; add
-		lda		gzTemp0
-		adc 	gzTemp1
-		sta 	gzTemp1
-		lda		gzTemp0+1
-		adc 	gzTemp1+1
-		sta 	gzTemp1+1
+		lda		gxzTemp0
+		adc 	gxzTemp1
+		sta 	gxzTemp1
+		lda		gxzTemp0+1
+		adc 	gxzTemp1+1
+		sta 	gxzTemp1+1
 		rts
 
 ; ************************************************************************************************
@@ -202,7 +202,7 @@ GXCircleSetup:
 		lda 	gxY1
 		sbc 	gxY0
 		lsr 	a
-		sta 	gRadius
+		sta 	gxRadius
 		;
 		;		Calculate centres (x0+x1)/2
 		;
@@ -213,21 +213,21 @@ GXCircleSetup:
 		;
 		;		X = 0, Y = R
 		;
-		stz 	gX
-		lda 	gRadius
-		sta 	gY
+		stz 	gXCentre
+		lda 	gxRadius
+		sta 	gYCentre
 		;
 		;		d = 3 - 2 x R
 		;
 		asl 	a 							; R x 2
-		sta 	gzTemp0
+		sta 	gxzTemp0
 		sec		
 		lda 	#3
-		sbc 	gzTemp0	
-		sta 	gzTemp1
+		sbc 	gxzTemp0	
+		sta 	gxzTemp1
 		lda 	#0
 		sbc 	#0
-		sta 	gzTemp1+1
+		sta 	gxzTemp1+1
 		rts
 ;
 ;		Calculates midpoint for X/Y
@@ -247,27 +247,27 @@ _GXCalculateCentre:
 		.send code
 
 		.section storage
-gRadius:
+gxRadius:
 		.fill 	1
-gX:
+gXCentre:
 		.fill 	1		
-gY:
+gYCentre:
 		.fill 	1		
-gIsFillMode:
+gxIsFillMode:
 		.fill 	1		
-gYChanged:
+gxYChanged:
 		.fill  	1		
 		.send storage
 
 ; ************************************************************************************************
 ;
 ;		Usage
-;			gsTemp and gsOffset are used as usual
-;			gzTemp0 holds the line length and is general workspace.
+;			gxzScreen and gsOffset are used as usual
+;			gxzTemp0 holds the line length and is general workspace.
 ;			x1,y1 hold the circle centre
 ;			gX,gY are the coordinates x,y (note x, y both < 128)
-;			d is stored in gzTemp1 (2 bytes)
-;			r is stored in gRadius
+;			d is stored in gxzTemp1 (2 bytes)
+;			r is stored in gxRadius
 ;
 ; ************************************************************************************************
 ;

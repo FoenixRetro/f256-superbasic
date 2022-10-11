@@ -18,14 +18,14 @@
 ;
 ; ************************************************************************************************
 
-GraphicDraw:
+GXGraphicDraw:
 		cmp 	#$10*2 						; instructions 00-0F don't use 
 		bcs 	_GDCoordinate
 		;
 		;		Non coordinate functions
 		;
-		stx 	gzTemp0 					; save X/Y
-		sty 	gzTemp0+1
+		stx 	gxzTemp0 					; save X/Y
+		sty 	gxzTemp0+1
 		bra 	_GDExecuteA 				; and execute
 		;
 		;		Coordinate functions

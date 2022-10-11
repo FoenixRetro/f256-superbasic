@@ -20,11 +20,11 @@
 
 GXPlotPoint: ;; [24:Plot]
 		jsr 	GXOpenBitmap 				; start drawing
-		jsr 	GXPositionCalc 				; setup gsTemp, gsOffset and the position.
+		jsr 	GXPositionCalc 				; setup gxzScreen, gsOffset and the position.
 		ldy 	gsOffset
-		lda 	(gsTemp),y 					; set pixel on the right
+		lda 	(gxzScreen),y 					; set pixel on the right
 		.plotpixel
-		sta 	(gsTemp),y
+		sta 	(gxzScreen),y
 		jsr 	GXCloseBitmap 				; stop drawing and exit
 		clc
 		rts

@@ -30,7 +30,7 @@ GXRectangle:
 		;
 		;		Do the top line first. 
 		;
-		jsr 	GXPositionCalc 				; setup gsTemp, gsOffset and the position.
+		jsr 	GXPositionCalc 				; setup gxzScreen, gsOffset and the position.
 		sec 								; sec = Draw line
 		jsr 	GXDrawLineX1X0 				; draw a line length X1-X0		
 
@@ -68,27 +68,27 @@ GXDrawLineX1X0:
 		sec 								
 		lda		gXX1
 		sbc 	gXX0
-		sta 	gzTemp0 	
+		sta 	gxzTemp0 	
 		lda 	gXX1+1
 		sbc 	gXX0+1
-		sta 	gzTemp0+1
+		sta 	gxzTemp0+1
 		plp
 		;
 ; ************************************************************************************************
 ;
-;					Draw solid line/ends from current position length gzTemp0
+;					Draw solid line/ends from current position length gxzTemp0
 ;
 ; ************************************************************************************************
 
 GXDrawLineTemp0:		
 
-		lda 	gsTemp 						; push gsTemp, gsOffset and GFXEditSlot on stack
+		lda 	gxzScreen 						; push gxzScreen, gsOffset and GXEditSlot on stack
 		pha
-		lda 	gsTemp+1
+		lda 	gxzScreen+1
 		pha
 		lda 	gsOffset
 		pha
-		lda 	GFXEditSlot
+		lda 	GXEditSlot
 		pha
 		ldy 	gsOffset 					; Y offset
 		bcc 	_GXDLTEndPoints 			; if CC draw end points only.
@@ -96,62 +96,62 @@ GXDrawLineTemp0:
 		;		Draw solid line.
 		;
 _GXDLTLine:
-		lda 	(gsTemp),y 					; set pixel
+		lda 	(gxzScreen),y 					; set pixel
 		.plotpixel
-		sta 	(gsTemp),y
+		sta 	(gxzScreen),y
 		;
-		lda 	gzTemp0 					; decrement counter
+		lda 	gxzTemp0 					; decrement counter
 		bne 	_GXDLTNoBorrow 
-		dec 	gzTemp0+1 					; borrow, if goes -ve then exit
+		dec 	gxzTemp0+1 					; borrow, if goes -ve then exit
 		bmi 	_GXDLTExit
 _GXDLTNoBorrow:
-		dec 	gzTemp0
+		dec 	gxzTemp0
 		iny 								; next slot.
 		bne 	_GXDLTLine		
-		inc 	gsTemp+1 					; carry to next
+		inc 	gxzScreen+1 					; carry to next
 		jsr 	GXDLTCheckWrap				; check for new page.
 		bra 	_GXDLTLine
 		;
 		;		Draw end points only.
 		;
 _GXDLTEndPoints:
-		lda 	(gsTemp),y 					; set pixel
+		lda 	(gxzScreen),y 					; set pixel
 		.plotpixel
-		sta 	(gsTemp),y
+		sta 	(gxzScreen),y
 		;
 		tya 								; advance to right side
 		clc
-		adc 	gzTemp0
+		adc 	gxzTemp0
 		tay
-		lda 	gsTemp+1
-		adc 	gzTemp0+1
-		sta 	gsTemp+1
+		lda 	gxzScreen+1
+		adc 	gxzTemp0+1
+		sta 	gxzScreen+1
 		jsr 	GXDLTCheckWrap 			; fix up.
 
-		lda 	(gsTemp),y 					; set pixel on the right
+		lda 	(gxzScreen),y 					; set pixel on the right
 		.plotpixel
-		sta 	(gsTemp),y
+		sta 	(gxzScreen),y
 
 _GXDLTExit: 								; restore screen position.
 		pla
-		sta 	GFXEditSlot
+		sta 	GXEditSlot
 		pla
 		sta 	gsOffset
 		pla
-		sta 	gsTemp+1
+		sta 	gxzScreen+1
 		pla
-		sta 	gsTemp
+		sta 	gxzScreen
 		rts		
 ;
-;		Check if gsTemp needs wrapping round.
+;		Check if gxzScreen needs wrapping round.
 ;
 GXDLTCheckWrap:
-		lda 	gsTemp+1 					; check end of page
+		lda 	gxzScreen+1 					; check end of page
 		cmp 	#((GXMappingAddress+$2000) >> 8) 
 		bcc 	_GXDLTCWExit
 		sbc 	#$20 						; fix up
-		sta 	gsTemp+1
-		inc 	GFXEditSlot
+		sta 	gxzScreen+1
+		inc 	GXEditSlot
 _GXDLTCWExit:	
 		rts		
 

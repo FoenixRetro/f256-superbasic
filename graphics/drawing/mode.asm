@@ -19,9 +19,9 @@
 ; ************************************************************************************************
 
 GXSetColourMode: ;; [3:Colour]
-		ldx 	gzTemp0
+		ldx 	gxzTemp0
 		stx 	gxColour 								; set colour
-		lda 	gzTemp0+1 								;
+		lda 	gxzTemp0+1 								;
 		sta 	gxMode 									; set mode
 		;
 		;		Now process bits 0/1 to set the drawing type. Normal (0) EOR (1) AND (2) OR (3)

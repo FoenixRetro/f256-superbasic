@@ -23,10 +23,10 @@ GXOpenBitmap:
 		lda 	0 							; save original MMU Control register
 		sta 	gxOriginalMMUSetting
 											; Edit and use the mapping LUT
-		lda 	#GFXMappingLUT*16+$80+GFXMappingLUT
+		lda 	#GXMappingLUT*16+$80+GXMappingLUT
 		sta 	0
 
-		lda 	GFXEditSlot 				; Save the original LUT slot value
+		lda 	GXEditSlot 				; Save the original LUT slot value
 		sta 	gxOriginalLUTValue
 		cli
 		rts
@@ -40,7 +40,7 @@ GXOpenBitmap:
 GXCloseBitmap:
 		sei
 		lda 	gxOriginalLUTValue 			; restore LUT slot value
-		sta 	GFXEditSlot
+		sta 	GXEditSlot
 		lda 	gxOriginalMMUSetting 		; restore MMU Control register
 		sta 	0
 		cli

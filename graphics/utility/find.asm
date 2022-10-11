@@ -22,35 +22,35 @@ GXFindSprite:
 		tax
 
 		lda 	GXSpritePage 				; access the base page of the sprite
-		sta 	GFXEditSlot
+		sta 	GXEditSlot
 		;
 		lda 	GXMappingAddress+256,x 		; MSB
-		sta 	GXSAddress+1
+		sta 	GXSpriteOffset+1
 		;
 		lda 	GXMappingAddress,x 			; LSB
 		pha 								; save twice
 		pha
 
 		and 	#3 							; get sprite size
-		sta 	GXSSizeRaw 					; save raw (0-3)
+		sta 	GXSizeBits 					; save raw (0-3)
 		tax
 		lda 	_GXFXSSTTable,x 			; read sprite size
-		sta 	GXSSize 					; save (8/16/24/32)
+		sta 	GXSizePixels 					; save (8/16/24/32)
 
 		pla 								; get LUT
 		lsr		a
 		lsr		a
 		and 	#3
-		sta 	GXSLUT
+		sta 	GXSpriteLUT
 		;
 		pla 								; address, neeeds to be x 4
 		and 	#$F0
-		sta 	GXSAddress
+		sta 	GXSpriteOffset
 
-		asl 	GXSAddress
-		rol 	GXSAddress+1
-		asl 	GXSAddress
-		rol 	GXSAddress+1
+		asl 	GXSpriteOffset
+		rol 	GXSpriteOffset+1
+		asl 	GXSpriteOffset
+		rol 	GXSpriteOffset+1
 
 		rts
 	;		
@@ -61,13 +61,13 @@ _GXFXSSTTable:
 		.send code
 		.section storage
 
-GXSSize: 									; sprite size (in pixels)
+GXSizePixels: 									; sprite size (in pixels)
 		.fill 	1
-GXSSizeRaw: 								; size (0-3)
+GXSizeBits: 								; size (0-3)
 		.fill 	1		
-GXSLUT: 									; LUT to use
+GXSpriteLUT: 									; LUT to use
 		.fill 	1		
-GXSAddress: 								; offset from base page.
+GXSpriteOffset: 								; offset from base page.
 		.fill 	2		
 
 		.send storage

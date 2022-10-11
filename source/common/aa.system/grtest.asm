@@ -18,7 +18,7 @@ plot:	.macro
 		lda 	#((\1)*2)+(((\2) >> 8) & 1)		
 		ldx 	#((\2) & $FF)
 		ldy 	#(\3)
-		jsr 	GraphicDraw
+		jsr 	GXGraphicDraw
 		.endm
 		
 loop:	
@@ -33,7 +33,7 @@ loop:
 		.plot 	5,1,1*8
 		.plot 	5,2,1*8
 		.plot 	16,10,10
-		.plot 	18,100,100
+		.plot 	20,100,100
 
 		.plot 	6,3,1
 		.plot 	7,2,0
@@ -44,7 +44,7 @@ demo:	jsr 	Random32Bit
 		lda 	#24*2
 		ldx 	RandomSeed+0
 		ldy 	RandomSeed+1
-		jsr 	GraphicDraw
+		jsr 	GXGraphicDraw
 
 		bra 	demo
 

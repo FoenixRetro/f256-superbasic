@@ -14,7 +14,7 @@
 
 ; ************************************************************************************************
 ;
-;		For GXX0,GXY0 calculate position in gsTemp, offset in gsOffset and select current
+;		For GXX0,GXY0 calculate position in gxzScreen, offset in gsOffset and select current
 ;		segment.
 ;
 ; ************************************************************************************************
@@ -22,67 +22,67 @@
 ;		The main calculation is GXY0*320 = GXY0 * 5 * 64
 ;
 GXPositionCalc:
-		lda 	gzTemp0 					; save temp memory slot
+		lda 	gxzTemp0 					; save temp memory slot
 		pha
 		;
-		;		Calculate GXY0 * 5 => gsTemp
+		;		Calculate GXY0 * 5 => gxzScreen
 		;
-		lda 	GXY0 						; gsTemp = Y0
-		sta 	gsTemp
-		stz 	gsTemp+1
+		lda 	GXY0 						; gxzScreen = Y0
+		sta 	gxzScreen
+		stz 	gxzScreen+1
 		;
-		asl 	gsTemp 						; gsTemp = Y0 * 4
-		rol 	gsTemp+1
-		asl 	gsTemp
-		rol 	gsTemp+1
+		asl 	gxzScreen 						; gxzScreen = Y0 * 4
+		rol 	gxzScreen+1
+		asl 	gxzScreen
+		rol 	gxzScreen+1
 		;
-		clc 								; gsTemp = Y0 * 5, as it's still in A
-		adc 	gsTemp
-		sta 	gsTemp
+		clc 								; gxzScreen = Y0 * 5, as it's still in A
+		adc 	gxzScreen
+		sta 	gxzScreen
 		bcc 	_GXPCNoCarry
-		inc 	gsTemp+1
+		inc 	gxzScreen+1
 _GXPCNoCarry:
-		asl 	gsTemp 						; now Y0 * 10. Needs to be multiplied by another
-		rol 	gsTemp+1 					; 32. At this point the MSB contains the offset
-		lda	 	gsTemp+1 					; so save this in zTemp0 and zero it.
-		sta 	gzTemp0 					
-		stz 	gsTemp+1
+		asl 	gxzScreen 						; now Y0 * 10. Needs to be multiplied by another
+		rol 	gxzScreen+1 					; 32. At this point the MSB contains the offset
+		lda	 	gxzScreen+1 					; so save this in zTemp0 and zero it.
+		sta 	gxzTemp0 					
+		stz 	gxzScreen+1
 		;
 		lda 	#5 							; now multiply by 32, this puts this in the range 0..8191
 _GXPCMultiply32:
-		asl 	gsTemp
-		rol 	gsTemp+1
+		asl 	gxzScreen
+		rol 	gxzScreen+1
 		dec 	a
 		bne 	_GXPCMultiply32
 		;
 		clc
-		lda 	GXX0 						; add X to this value, put the result in gsOffset, gsTemp has to be on a page boundary
-		adc 	gsTemp 						
+		lda 	GXX0 						; add X to this value, put the result in gsOffset, gxzScreen has to be on a page boundary
+		adc 	gxzScreen 						
 		sta 	gsOffset
 		lda 	GXX0+1
-		adc 	gsTemp+1
+		adc 	gxzScreen+1
 		;
 		cmp 	#$20 						; has it overflowed into the next one ?
 		bcc 	_GXPCNoOverflow
 		and 	#$1F 						; fix it up
-		inc 	gzTemp0 					; add 1 to the page number
+		inc 	gxzTemp0 					; add 1 to the page number
 _GXPCNoOverflow:
 		ora 	#(GXMappingAddress >> 8) 	; make it the address mapped in.
-		sta 	gsTemp+1
-		stz 	gsTemp
+		sta 	gxzScreen+1
+		stz 	gxzScreen
 		;
 		clc
-		lda 	gzTemp0 					; get the page number
+		lda 	gxzTemp0 					; get the page number
 		adc 	gxBasePage 					; by adding the base page
-		sta 	GFXEditSlot 				; and map it into memory.
+		sta 	GXEditSlot 				; and map it into memory.
 		;
 		pla 
-		sta 	gzTemp0
+		sta 	gxzTemp0
 		rts
 
 ; ************************************************************************************************
 ;
-;						Move the (gsTemp),gsOffset down one line
+;						Move the (gxzScreen),gsOffset down one line
 ;
 ; ************************************************************************************************
 
@@ -91,15 +91,15 @@ GXMovePositionDown:
 		lda 	gsOffset
 		adc 	#64
 		sta 	gsOffset
-		lda 	gsTemp+1
+		lda 	gxzScreen+1
 		adc 	#1
-		sta 	gsTemp+1
+		sta 	gxzScreen+1
 		cmp 	#((GXMappingAddress+$2000) >> 8) ; on to the next page
 		bcc 	_GXMPDExit
 		sec  								; next page
 		sbc 	#$20 	
-		sta 	gsTemp+1
-		inc 	GFXEditSlot
+		sta 	gxzScreen+1
+		inc 	GXEditSlot
 _GXMPDExit:
 		rts		
 		.send 	code

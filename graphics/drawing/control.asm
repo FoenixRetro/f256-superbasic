@@ -21,7 +21,7 @@
 GXControlBitmap: ;; [0:BITMAPCTL]
 		stz 	1
 		
-		lda 	gzTemp0 					; get control bits
+		lda 	gxzTemp0 					; get control bits
 		lsr 	a 							; bit 0 into carry.
 		lda 	$D000 						; read Vicky MCR
 		ora 	#7 							; turn graphics, text, textoverlay on.
@@ -31,20 +31,20 @@ GXControlBitmap: ;; [0:BITMAPCTL]
 _CBNotOn:		
 		sta 	$D000 						; update Vicky MCR
 
-		lda 	gzTemp0 					; get control settings (bits 0-2)
+		lda 	gxzTemp0 					; get control settings (bits 0-2)
 		and 	#7
 		sta 	$D100 						; write in Vicky Bitmap Control Register #0
 
-		lda 	gzTemp0+1 					; get the base page
+		lda 	gxzTemp0+1 					; get the base page
 		bne 	_CBNotDefault
 		lda 	#8  						; if zero, use 8 e.g. bitmap at $10000
 _CBNotDefault:		
 		sta 	gxBasePage
 		jsr 	GXCalculateBaseAddress 	 	; convert page# to address
 
-		lda 	gzTemp0+1 					; copy address into Bitmap address registers
+		lda 	gxzTemp0+1 					; copy address into Bitmap address registers
 		sta 	$D103
-		lda 	gzTemp0
+		lda 	gxzTemp0
 		sta 	$D102
 		stz 	$D101
 
@@ -66,7 +66,7 @@ _CBHaveHeight
 
 GXControlSprite: ;; [1:SPRITECTL]
 		stz 	1
-		lda 	gzTemp0 					; get control bits
+		lda 	gxzTemp0 					; get control bits
 		lsr 	a 							; bit 0 into carry.
 		lda 	$D000 						; read Vicky MCR
 		ora 	#7 							; turn graphics, text, textoverlay on.
@@ -76,16 +76,16 @@ GXControlSprite: ;; [1:SPRITECTL]
 _CSNotOn:		
 		sta 	$D000 						; update Vicky MCR
 
-		lda 	gzTemp0+1 					; get the base page
+		lda 	gxzTemp0+1 					; get the base page
 		bne 	_CSNotDefault
 		lda 	#24  						; if zero, use 24 e.g. sprites at $30000
 _CSNotDefault:		
 		sta 	gxSpritePage
 		jsr 	GXCalculateBaseAddress 	 	; convert page# to address
 		lda 	zTemp0
-		sta 	GXSAddressBase
+		sta 	GXSpriteOffsetBase
 		lda 	zTemp0+1
-		sta 	GXSAddressBase+1
+		sta 	GXSpriteOffsetBase+1
 		;
 		ldx 	#0 							; disable all sprites, clears all sprite memory.
 _CSClear:
@@ -105,12 +105,12 @@ _CSClear:
 ; ************************************************************************************************
 
 GXCalculateBaseAddress:
-		sta 	gzTemp0
-		stz 	gzTemp0+1
+		sta 	gxzTemp0
+		stz 	gxzTemp0+1
 		lda 	#5
 _GXShift:
-		asl 	gzTemp0	
-		rol 	gzTemp0+1
+		asl 	gxzTemp0	
+		rol 	gxzTemp0+1
 		dec		a
 		bne 	_GXShift
 		rts		

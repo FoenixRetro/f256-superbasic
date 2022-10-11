@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.56.2625 listing file
 ; 64tass -D AUTORUN=0 -q -b -Wall -c -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Tue Oct 11 16:32:05 2022
+; Tue Oct 11 16:45:40 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -387,9 +387,9 @@
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->805c	42 75 69 6c 74 20 54 75			.text "Built Tuesday 11-Oct-2022. Build 1469."
+>805c	42 75 69 6c 74 20 54 75			.text "Built Tuesday 11-Oct-2022. Build 1481."
 >8064	65 73 64 61 79 20 31 31 2d 4f 63 74 2d 32 30 32
->8074	32 2e 20 42 75 69 6c 64 20 31 34 36 39 2e
+>8074	32 2e 20 42 75 69 6c 64 20 31 34 38 31 2e
 
 ;******  Return to file: ./common/aa.system/00start.asm
 
@@ -403,12 +403,12 @@
 
 =3					GXMappingPage = 3
 =24576					GXMappingAddress = ($2000 * GXMappingPage)
-=0					GFXMappingLUT = 0
-=11					GFXEditSlot = 8 + GXMappingPage
-=$36					gzTemp0 = zTemp0
-=$38					gzTemp1 = zTemp1
-=$3a					gzTemp2 = zTemp2
-=$3c					gsTemp = zsTemp
+=0					GXMappingLUT = 0
+=11					GXEditSlot = 8 + GXMappingPage
+=$36					gxzTemp0 = zTemp0
+=$38					gxzTemp1 = zTemp1
+=$3a					gxzTemp2 = zTemp2
+=$3c					gxzScreen = zsTemp
 =$5f7					gxPixelBuffer = numberBuffer
 .0629					gxCurrentX:
 >0629							.fill 	2
@@ -448,7 +448,7 @@
 >0642							.fill 	1
 .0643					GSCurrentSprite:
 >0643							.fill 	2
-.0645					GXSAddressBase:
+.0645					GXSpriteOffsetBase:
 >0645							.fill 	2
 
 ;******  Return to file: ./common/aa.system/../../../graphics/_graphics.asm
@@ -456,11 +456,11 @@
 
 ;******  Processing file: ./common/aa.system/../../../graphics/./aa.main/main.asm
 
-.8085					GraphicDraw:
+.8085					GXGraphicDraw:
 .8085	c9 20		cmp #$20			cmp 	#$10*2 						; instructions 00-0F don't use
 .8087	b0 06		bcs $808f			bcs 	_GDCoordinate
-.8089	86 36		stx $36				stx 	gzTemp0 					; save X/Y
-.808b	84 37		sty $37				sty 	gzTemp0+1
+.8089	86 36		stx $36				stx 	gxzTemp0 					; save X/Y
+.808b	84 37		sty $37				sty 	gxzTemp0+1
 .808d	80 3d		bra $80cc			bra 	_GDExecuteA 				; and execute
 .808f					_GDCoordinate:
 .808f	48		pha				pha 								; save AXY
@@ -557,14 +557,14 @@
 .8112					GXFrameCircle:
 .8112	a9 00		lda #$00			lda 	#0
 .8114					GXCircle:
-.8114	8d 4a 06	sta $064a			sta 	gIsFillMode					; save Fill flag
+.8114	8d 4a 06	sta $064a			sta 	gxIsFillMode					; save Fill flag
 .8117	20 01 88	jsr $8801			jsr 	GXSortXY 					; topleft/bottomright
 .811a	20 36 87	jsr $8736			jsr 	GXOpenBitmap 				; start drawing
 .811d	20 0d 82	jsr $820d			jsr 	GXCircleSetup 				; set up for drawing
-.8120	9c 4b 06	stz $064b			stz 	gYChanged
+.8120	9c 4b 06	stz $064b			stz 	gxYChanged
 .8123					_GXCircleDraw:
-.8123	ad 48 06	lda $0648			lda 	gX 							; while x <= y
-.8126	cd 49 06	cmp $0649			cmp 	gY
+.8123	ad 48 06	lda $0648			lda 	gXCentre					; while x <= y
+.8126	cd 49 06	cmp $0649			cmp 	gYCentre
 .8129	90 0a		bcc $8135			bcc 	_GXCircleContinue
 .812b	d0 03		bne $8130			bne 	_GXNoLast
 .812d	20 40 81	jsr $8140			jsr 	GXPlot1
@@ -579,131 +579,131 @@
 .813d					GXPlot2:
 .813d	20 40 81	jsr $8140			jsr 	GXPlot1 						; plot and swap, fall through does twice
 .8140					GXPlot1:
-.8140	ad 49 06	lda $0649			lda 	gY 								; if y = 0, don't do it twice (xor)
+.8140	ad 49 06	lda $0649			lda 	gYCentre 						; if y = 0, don't do it twice (xor)
 .8143	f0 03		beq $8148			beq 	_GXPlot1Only
 .8145	20 64 81	jsr $8164			jsr 	GXPlot0 						; plot and negate
 .8148					_GXPlot1Only:
 .8148	20 64 81	jsr $8164			jsr 	GXPlot0 						; twice, undoing negation
-.814b	ad 48 06	lda $0648			lda 	gX 								; swap X and Y
-.814e	ae 49 06	ldx $0649			ldx	 	gY
-.8151	8d 49 06	sta $0649			sta 	gY
-.8154	8e 48 06	stx $0648			stx 	gX
-.8157	ad 4b 06	lda $064b			lda 	gYChanged 						; toggle Y Changed flag
+.814b	ad 48 06	lda $0648			lda 	gXCentre 						; swap X and Y
+.814e	ae 49 06	ldx $0649			ldx	 	gYCentre
+.8151	8d 49 06	sta $0649			sta 	gYCentre
+.8154	8e 48 06	stx $0648			stx 	gXCentre
+.8157	ad 4b 06	lda $064b			lda 	gxYChanged 						; toggle Y Changed flag
 .815a	a9 ff		lda #$ff			lda 	#$FF
-.815c	8d 4b 06	sta $064b			sta 	gYChanged
+.815c	8d 4b 06	sta $064b			sta 	gxYChanged
 .815f	60		rts				rts
 .8160	20 64 81	jsr $8164			jsr 	GXPlot0 						; do once
 .8163	60		rts				rts
-.8164	ad 4a 06	lda $064a	GXPlot0:lda 	gIsFillMode 					; outline mode, always draw as X or Y will change
+.8164	ad 4a 06	lda $064a	GXPlot0:lda 	gxIsFillMode 					; outline mode, always draw as X or Y will change
 .8167	f0 05		beq $816e			beq 	_GXPlot0Always
-.8169	ad 4b 06	lda $064b			lda 	gYChanged						; fill mode, only draw if changed.
+.8169	ad 4b 06	lda $064b			lda 	gxYChanged						; fill mode, only draw if changed.
 .816c	f0 2d		beq $819b			beq 	GXPlot0Exit
 .816e					_GXPlot0Always:
 .816e	a2 02		ldx #$02			ldx 	#2 								; copy Y1-A => Y0
-.8170	ad 49 06	lda $0649			lda 	gY
+.8170	ad 49 06	lda $0649			lda 	gYCentre
 .8173	20 9c 81	jsr $819c			jsr 	GXSubCopy
 .8176	a2 00		ldx #$00			ldx 	#0 								; copy X1-A => X0,
-.8178	ad 48 06	lda $0648			lda 	gX
+.8178	ad 48 06	lda $0648			lda 	gXCentre
 .817b	20 9c 81	jsr $819c			jsr 	GXSubCopy
 .817e	48		pha				pha 									; save last offset X
 .817f	20 54 87	jsr $8754			jsr 	GXPositionCalc 					; calculate position/offset.
 .8182	68		pla				pla
-.8183	0a		asl a				asl 	a 								; store 2 x last offset in gzTemp0
-.8184	85 36		sta $36				sta 	gzTemp0
-.8186	64 37		stz $37				stz 	gzTemp0+1
-.8188	26 37		rol $37				rol 	gzTemp0+1
-.818a	ad 4a 06	lda $064a			lda 	gIsFillMode
+.8183	0a		asl a				asl 	a 								; store 2 x last offset in gxzTemp0
+.8184	85 36		sta $36				sta 	gxzTemp0
+.8186	64 37		stz $37				stz 	gxzTemp0+1
+.8188	26 37		rol $37				rol 	gxzTemp0+1
+.818a	ad 4a 06	lda $064a			lda 	gxIsFillMode
 .818d	69 80		adc #$80			adc 	#128
 .818f	20 e2 84	jsr $84e2			jsr 	GXDrawLineTemp0 				; routine from Rectangle.
 .8192	38		sec				sec 									; GY = -GY
 .8193	a9 00		lda #$00			lda 	#0
-.8195	ed 49 06	sbc $0649			sbc 	gY
-.8198	8d 49 06	sta $0649			sta 	gY
+.8195	ed 49 06	sbc $0649			sbc 	gYCentre
+.8198	8d 49 06	sta $0649			sta 	gYCentre
 .819b					GXPlot0Exit:
 .819b	60		rts				rts
 .819c					GXSubCopy:
-.819c	85 36		sta $36				sta 	gzTemp0
-.819e	64 37		stz $37				stz 	gzTemp0+1
+.819c	85 36		sta $36				sta 	gxzTemp0
+.819e	64 37		stz $37				stz 	gxzTemp0+1
 .81a0	29 80		and #$80			and 	#$80
 .81a2	f0 02		beq $81a6			beq 	_GXNoSx
-.81a4	c6 37		dec $37				dec 	gzTemp0+1
+.81a4	c6 37		dec $37				dec 	gxzTemp0+1
 .81a6					_GXNoSx:
 .81a6	38		sec				sec
 .81a7	bd 35 06	lda $0635,x			lda 	gXX1,x
-.81aa	e5 36		sbc $36				sbc 	gzTemp0
+.81aa	e5 36		sbc $36				sbc 	gxzTemp0
 .81ac	9d 31 06	sta $0631,x			sta 	gXX0,x
 .81af	bd 36 06	lda $0636,x			lda 	gXX1+1,x
-.81b2	e5 37		sbc $37				sbc 	gzTemp0+1
+.81b2	e5 37		sbc $37				sbc 	gxzTemp0+1
 .81b4	9d 32 06	sta $0632,x			sta 	gXX0+1,x
-.81b7	a5 36		lda $36				lda 	gzTemp0 						; return A
+.81b7	a5 36		lda $36				lda 	gxzTemp0 						; return A
 .81b9	60		rts				rts
 .81ba					GXCircleMove:
-.81ba	9c 4b 06	stz $064b			stz 	gYChanged 					; clear Y changed flag
-.81bd	a5 39		lda $39				lda 	gzTemp1+1 					; check sign of D
+.81ba	9c 4b 06	stz $064b			stz 	gxYChanged 					; clear Y changed flag
+.81bd	a5 39		lda $39				lda 	gxzTemp1+1 					; check sign of D
 .81bf	10 0d		bpl $81ce			bpl 	_GXEMPositive
-.81c1	ee 48 06	inc $0648			inc 	gX 							; X++
-.81c4	ad 48 06	lda $0648			lda 	gX
+.81c1	ee 48 06	inc $0648			inc 	gXCentre 					; X++
+.81c4	ad 48 06	lda $0648			lda 	gXCentre
 .81c7	20 ed 81	jsr $81ed			jsr 	_GXAdd4TimesToD 			; add 4 x A to D
 .81ca	a9 06		lda #$06			lda 	#6  						; and add 6
 .81cc	80 15		bra $81e3			bra 	_GXEMAddD
 .81ce					_GXEMPositive:
-.81ce	ee 48 06	inc $0648			inc 	gX 							; X++
-.81d1	ce 49 06	dec $0649			dec 	gy 							; Y--
+.81ce	ee 48 06	inc $0648			inc 	gXCentre					; X++
+.81d1	ce 49 06	dec $0649			dec 	gyCentre 					; Y--
 .81d4	38		sec				sec 								; calculate X-Y
-.81d5	ad 48 06	lda $0648			lda 	gX
-.81d8	ed 49 06	sbc $0649			sbc 	gY
+.81d5	ad 48 06	lda $0648			lda 	gXCentre
+.81d8	ed 49 06	sbc $0649			sbc 	gYCentre
 .81db	20 ed 81	jsr $81ed			jsr 	_GXAdd4TimesToD 			; add 4 x A to D
 .81de	a9 0a		lda #$0a			lda 	#10  						; and add 10
-.81e0	ce 4b 06	dec $064b			dec 	gYChanged
+.81e0	ce 4b 06	dec $064b			dec 	gxYChanged
 .81e3					_GXEMAddD:
 .81e3	18		clc				clc
-.81e4	65 38		adc $38				adc 	gzTemp1
-.81e6	85 38		sta $38				sta 	gzTemp1
+.81e4	65 38		adc $38				adc 	gxzTemp1
+.81e6	85 38		sta $38				sta 	gxzTemp1
 .81e8	90 02		bcc $81ec			bcc 	_GXEMNoCarry
-.81ea	e6 39		inc $39				inc 	gzTemp1+1
+.81ea	e6 39		inc $39				inc 	gxzTemp1+1
 .81ec					_GXEMNoCarry:
 .81ec	60		rts				rts
 .81ed					_GXAdd4TimesToD:
-.81ed	85 36		sta $36				sta 	gzTemp0 					; make 16 bit signed.
+.81ed	85 36		sta $36				sta 	gxzTemp0 					; make 16 bit signed.
 .81ef	29 80		and #$80			and 	#$80
 .81f1	f0 02		beq $81f5			beq 	_GXA4Unsigned
 .81f3	a9 ff		lda #$ff			lda 	#$FF
 .81f5					_GXA4Unsigned:
-.81f5	85 37		sta $37				sta 	gzTemp0+1
-.81f7	06 36		asl $36				asl 	gzTemp0  					; x 4
-.81f9	26 37		rol $37				rol 	gzTemp0+1
-.81fb	06 36		asl $36				asl 	gzTemp0
-.81fd	26 37		rol $37				rol 	gzTemp0+1
+.81f5	85 37		sta $37				sta 	gxzTemp0+1
+.81f7	06 36		asl $36				asl 	gxzTemp0  					; x 4
+.81f9	26 37		rol $37				rol 	gxzTemp0+1
+.81fb	06 36		asl $36				asl 	gxzTemp0
+.81fd	26 37		rol $37				rol 	gxzTemp0+1
 .81ff	18		clc				clc 								; add
-.8200	a5 36		lda $36				lda		gzTemp0
-.8202	65 38		adc $38				adc 	gzTemp1
-.8204	85 38		sta $38				sta 	gzTemp1
-.8206	a5 37		lda $37				lda		gzTemp0+1
-.8208	65 39		adc $39				adc 	gzTemp1+1
-.820a	85 39		sta $39				sta 	gzTemp1+1
+.8200	a5 36		lda $36				lda		gxzTemp0
+.8202	65 38		adc $38				adc 	gxzTemp1
+.8204	85 38		sta $38				sta 	gxzTemp1
+.8206	a5 37		lda $37				lda		gxzTemp0+1
+.8208	65 39		adc $39				adc 	gxzTemp1+1
+.820a	85 39		sta $39				sta 	gxzTemp1+1
 .820c	60		rts				rts
 .820d					GXCircleSetup:
 .820d	38		sec				sec
 .820e	ad 37 06	lda $0637			lda 	gxY1
 .8211	ed 33 06	sbc $0633			sbc 	gxY0
 .8214	4a		lsr a				lsr 	a
-.8215	8d 47 06	sta $0647			sta 	gRadius
+.8215	8d 47 06	sta $0647			sta 	gxRadius
 .8218	a2 00		ldx #$00			ldx 	#0
 .821a	20 3c 82	jsr $823c			jsr 	_GXCalculateCentre
 .821d	a2 02		ldx #$02			ldx 	#2
 .821f	20 3c 82	jsr $823c			jsr 	_GXCalculateCentre
-.8222	9c 48 06	stz $0648			stz 	gX
-.8225	ad 47 06	lda $0647			lda 	gRadius
-.8228	8d 49 06	sta $0649			sta 	gY
+.8222	9c 48 06	stz $0648			stz 	gXCentre
+.8225	ad 47 06	lda $0647			lda 	gxRadius
+.8228	8d 49 06	sta $0649			sta 	gYCentre
 .822b	0a		asl a				asl 	a 							; R x 2
-.822c	85 36		sta $36				sta 	gzTemp0
+.822c	85 36		sta $36				sta 	gxzTemp0
 .822e	38		sec				sec
 .822f	a9 03		lda #$03			lda 	#3
-.8231	e5 36		sbc $36				sbc 	gzTemp0
-.8233	85 38		sta $38				sta 	gzTemp1
+.8231	e5 36		sbc $36				sbc 	gxzTemp0
+.8233	85 38		sta $38				sta 	gxzTemp1
 .8235	a9 00		lda #$00			lda 	#0
 .8237	e9 00		sbc #$00			sbc 	#0
-.8239	85 39		sta $39				sta 	gzTemp1+1
+.8239	85 39		sta $39				sta 	gxzTemp1+1
 .823b	60		rts				rts
 .823c					_GXCalculateCentre:
 .823c	38		sec				sec
@@ -716,15 +716,15 @@
 .824d	9d 36 06	sta $0636,x			sta 	gXX1+1,x
 .8250	7e 35 06	ror $0635,x			ror 	gXX1,x
 .8253	60		rts				rts
-.0647					gRadius:
+.0647					gxRadius:
 >0647							.fill 	1
-.0648					gX:
+.0648					gXCentre:
 >0648							.fill 	1
-.0649					gY:
+.0649					gYCentre:
 >0649							.fill 	1
-.064a					gIsFillMode:
+.064a					gxIsFillMode:
 >064a							.fill 	1
-.064b					gYChanged:
+.064b					gxYChanged:
 >064b							.fill  	1
 
 ;******  Return to file: ./common/aa.system/../../../graphics/_graphics.asm
@@ -744,11 +744,11 @@
 .8260	98		tya				tya 								; add to base page
 .8261	18		clc				clc
 .8262	6d 39 06	adc $0639			adc 	gxBasePage
-.8265	85 0b		sta $0b				sta 	GFXEditSlot  				; clear from this page back
+.8265	85 0b		sta $0b				sta 	GXEditSlot  				; clear from this page back
 .8267					_GXClearAll:
 .8267	20 78 82	jsr $8278			jsr 	_GXClearBlock 				; clear 8k block
-.826a	c6 0b		dec $0b				dec 	GFXEditSlot  				; back to previous
-.826c	a5 0b		lda $0b				lda 	GFXEditSlot
+.826a	c6 0b		dec $0b				dec 	GXEditSlot  				; back to previous
+.826c	a5 0b		lda $0b				lda 	GXEditSlot
 .826e	cd 39 06	cmp $0639			cmp 	gxBasePage 					; until before base page
 .8271	b0 f4		bcs $8267			bcs 	_GXClearAll
 .8273	20 47 87	jsr $8747			jsr 	GXCloseBitmap	 			; stop access
@@ -756,24 +756,24 @@
 .8277	60		rts				rts
 .8278					_GXClearBlock:
 .8278	a9 00		lda #$00			lda 	#((GXMappingAddress) & $FF)
-.827a	85 38		sta $38				sta 	0+gzTemp1
+.827a	85 38		sta $38				sta 	0+gxzTemp1
 .827c	a9 60		lda #$60			lda 	#((GXMappingAddress) >> 8)
-.827e	85 39		sta $39				sta 	1+gzTemp1
+.827e	85 39		sta $39				sta 	1+gxzTemp1
 .8280					_GXCB0:
-.8280	a5 36		lda $36				lda 	gzTemp0
+.8280	a5 36		lda $36				lda 	gxzTemp0
 .8282	a0 00		ldy #$00			ldy 	#0
 .8284					_GXCB1:
-.8284	91 38		sta ($38),y			sta 	(gzTemp1),y
+.8284	91 38		sta ($38),y			sta 	(gxzTemp1),y
 .8286	c8		iny				iny
-.8287	91 38		sta ($38),y			sta 	(gzTemp1),y
+.8287	91 38		sta ($38),y			sta 	(gxzTemp1),y
 .8289	c8		iny				iny
-.828a	91 38		sta ($38),y			sta 	(gzTemp1),y
+.828a	91 38		sta ($38),y			sta 	(gxzTemp1),y
 .828c	c8		iny				iny
-.828d	91 38		sta ($38),y			sta 	(gzTemp1),y
+.828d	91 38		sta ($38),y			sta 	(gxzTemp1),y
 .828f	c8		iny				iny
 .8290	d0 f2		bne $8284			bne 	_GXCB1
-.8292	e6 39		inc $39				inc 	gzTemp1+1
-.8294	a5 39		lda $39				lda 	gzTemp1+1
+.8292	e6 39		inc $39				inc 	gxzTemp1+1
+.8294	a5 39		lda $39				lda 	gxzTemp1+1
 .8296	c9 80		cmp #$80			cmp	 	#(GXMappingAddress >> 8)+$20
 .8298	d0 e6		bne $8280			bne 	_GXCB0
 .829a	60		rts				rts
@@ -785,7 +785,7 @@
 
 .829b					GXControlBitmap:
 .829b	64 01		stz $01				stz 	1
-.829d	a5 36		lda $36				lda 	gzTemp0 					; get control bits
+.829d	a5 36		lda $36				lda 	gxzTemp0 					; get control bits
 .829f	4a		lsr a				lsr 	a 							; bit 0 into carry.
 .82a0	ad 00 d0	lda $d000			lda 	$D000 						; read Vicky MCR
 .82a3	09 07		ora #$07			ora 	#7 							; turn graphics, text, textoverlay on.
@@ -794,18 +794,18 @@
 .82a9	09 08		ora #$08			ora 	#$08 						; bitmap on if 1 on 0 off
 .82ab					_CBNotOn:
 .82ab	8d 00 d0	sta $d000			sta 	$D000 						; update Vicky MCR
-.82ae	a5 36		lda $36				lda 	gzTemp0 					; get control settings (bits 0-2)
+.82ae	a5 36		lda $36				lda 	gxzTemp0 					; get control settings (bits 0-2)
 .82b0	29 07		and #$07			and 	#7
 .82b2	8d 00 d1	sta $d100			sta 	$D100 						; write in Vicky Bitmap Control Register #0
-.82b5	a5 37		lda $37				lda 	gzTemp0+1 					; get the base page
+.82b5	a5 37		lda $37				lda 	gxzTemp0+1 					; get the base page
 .82b7	d0 02		bne $82bb			bne 	_CBNotDefault
 .82b9	a9 08		lda #$08			lda 	#8  						; if zero, use 8 e.g. bitmap at $10000
 .82bb					_CBNotDefault:
 .82bb	8d 39 06	sta $0639			sta 	gxBasePage
 .82be	20 17 83	jsr $8317			jsr 	GXCalculateBaseAddress 	 	; convert page# to address
-.82c1	a5 37		lda $37				lda 	gzTemp0+1 					; copy address into Bitmap address registers
+.82c1	a5 37		lda $37				lda 	gxzTemp0+1 					; copy address into Bitmap address registers
 .82c3	8d 03 d1	sta $d103			sta 	$D103
-.82c6	a5 36		lda $36				lda 	gzTemp0
+.82c6	a5 36		lda $36				lda 	gxzTemp0
 .82c8	8d 02 d1	sta $d102			sta 	$D102
 .82cb	9c 01 d1	stz $d101			stz 	$D101
 .82ce	a2 f0		ldx #$f0			ldx 	#240 						; height is 240
@@ -819,7 +819,7 @@
 .82dd	60		rts				rts
 .82de					GXControlSprite:
 .82de	64 01		stz $01				stz 	1
-.82e0	a5 36		lda $36				lda 	gzTemp0 					; get control bits
+.82e0	a5 36		lda $36				lda 	gxzTemp0 					; get control bits
 .82e2	4a		lsr a				lsr 	a 							; bit 0 into carry.
 .82e3	ad 00 d0	lda $d000			lda 	$D000 						; read Vicky MCR
 .82e6	09 07		ora #$07			ora 	#7 							; turn graphics, text, textoverlay on.
@@ -828,16 +828,16 @@
 .82ec	09 20		ora #$20			ora 	#$20 						; sprite on if 1 on 0 off
 .82ee					_CSNotOn:
 .82ee	8d 00 d0	sta $d000			sta 	$D000 						; update Vicky MCR
-.82f1	a5 37		lda $37				lda 	gzTemp0+1 					; get the base page
+.82f1	a5 37		lda $37				lda 	gxzTemp0+1 					; get the base page
 .82f3	d0 02		bne $82f7			bne 	_CSNotDefault
 .82f5	a9 18		lda #$18			lda 	#24  						; if zero, use 24 e.g. sprites at $30000
 .82f7					_CSNotDefault:
 .82f7	8d 3a 06	sta $063a			sta 	gxSpritePage
 .82fa	20 17 83	jsr $8317			jsr 	GXCalculateBaseAddress 	 	; convert page# to address
 .82fd	a5 36		lda $36				lda 	zTemp0
-.82ff	8d 45 06	sta $0645			sta 	GXSAddressBase
+.82ff	8d 45 06	sta $0645			sta 	GXSpriteOffsetBase
 .8302	a5 37		lda $37				lda 	zTemp0+1
-.8304	8d 46 06	sta $0646			sta 	GXSAddressBase+1
+.8304	8d 46 06	sta $0646			sta 	GXSpriteOffsetBase+1
 .8307	a2 00		ldx #$00			ldx 	#0 							; disable all sprites, clears all sprite memory.
 .8309					_CSClear:
 .8309	9e 00 d9	stz $d900,x			stz 	$D900,x
@@ -848,12 +848,12 @@
 .8315	18		clc				clc
 .8316	60		rts				rts
 .8317					GXCalculateBaseAddress:
-.8317	85 36		sta $36				sta 	gzTemp0
-.8319	64 37		stz $37				stz 	gzTemp0+1
+.8317	85 36		sta $36				sta 	gxzTemp0
+.8319	64 37		stz $37				stz 	gxzTemp0+1
 .831b	a9 05		lda #$05			lda 	#5
 .831d					_GXShift:
-.831d	06 36		asl $36				asl 	gzTemp0
-.831f	26 37		rol $37				rol 	gzTemp0+1
+.831d	06 36		asl $36				asl 	gxzTemp0
+.831f	26 37		rol $37				rol 	gxzTemp0+1
 .8321	3a		dec a				dec		a
 .8322	d0 f9		bne $831d			bne 	_GXShift
 .8324	60		rts				rts
@@ -870,10 +870,10 @@
 .832e	20 54 87	jsr $8754			jsr 	GXPositionCalc 				; calculate position/offset.
 .8331					_GXDrawLoop:
 .8331	ac 42 06	ldy $0642			ldy 	gsOffset 					; draw the pixel
-.8334	b1 3c		lda ($3c),y			lda 	(gsTemp),y
+.8334	b1 3c		lda ($3c),y			lda 	(gxzScreen),y
 .8336	2d 3f 06	and $063f			and 	gxANDValue
 .8339	4d 3e 06	eor $063e			eor 	gxEORValue
-.833c	91 3c		sta ($3c),y			sta 	(gsTemp),y
+.833c	91 3c		sta ($3c),y			sta 	(gxzScreen),y
 .833e	20 4d 83	jsr $834d			jsr 	GXLineIsComplete 			; is the line complete ?
 .8341	f0 05		beq $8348			beq 	_GXLExit
 .8343	20 68 83	jsr $8368			jsr 	GXLineAdvance 				; code as per advance method
@@ -937,14 +937,14 @@
 .83b7	ad 42 06	lda $0642			lda 	gsOffset
 .83ba	c9 ff		cmp #$ff			cmp 	#$FF
 .83bc	d0 0f		bne $83cd			bne 	_GXAYExit 					; underflow
-.83be	c6 3d		dec $3d				dec 	gsTemp+1 					; borrow
-.83c0	a5 3d		lda $3d				lda 	gsTemp+1 					; gone off page
+.83be	c6 3d		dec $3d				dec 	gxzScreen+1 					; borrow
+.83c0	a5 3d		lda $3d				lda 	gxzScreen+1 					; gone off page
 .83c2	c9 60		cmp #$60			cmp 	#GXMappingAddress >> 8
 .83c4	b0 07		bcs $83cd			bcs 	_GXAYExit
 .83c6	18		clc				clc
 .83c7	69 20		adc #$20			adc 	#$20 						; fix up
-.83c9	85 3d		sta $3d				sta 	gsTemp+1
-.83cb	c6 0b		dec $0b				dec 	GFXEditSlot 				; back one page
+.83c9	85 3d		sta $3d				sta 	gxzScreen+1
+.83cb	c6 0b		dec $0b				dec 	GXEditSlot 				; back one page
 .83cd					_GXAYExit:
 .83cd	60		rts				rts
 .83ce					_GXAXRight:
@@ -954,13 +954,13 @@
 .83d6					_GXAXNoCarry:
 .83d6	ee 42 06	inc $0642			inc 	gsOffset 					; pixel right
 .83d9	d0 0e		bne $83e9			bne 	_GXAXExit 					; if not overflowed, exit.
-.83db	e6 3d		inc $3d				inc 	gsTemp+1 					; next line
-.83dd	a5 3d		lda $3d				lda 	gsTemp+1
+.83db	e6 3d		inc $3d				inc 	gxzScreen+1 					; next line
+.83dd	a5 3d		lda $3d				lda 	gxzScreen+1
 .83df	c9 80		cmp #$80			cmp 	#((GXMappingAddress+$2000) >> 8) ; on to the next page ?
 .83e1	90 06		bcc $83e9			bcc 	_GXAXExit
 .83e3	e9 20		sbc #$20			sbc 	#$20 						; fix up
-.83e5	85 3d		sta $3d				sta 	gsTemp+1
-.83e7	e6 0b		inc $0b				inc 	GFXEditSlot 				; next page
+.83e5	85 3d		sta $3d				sta 	gxzScreen+1
+.83e7	e6 0b		inc $0b				inc 	GXEditSlot 				; next page
 .83e9					_GXAXExit:
 .83e9	60		rts				rts
 .83ea					GXIncrementY:
@@ -1031,9 +1031,9 @@
 ;******  Processing file: ./common/aa.system/../../../graphics/./drawing/mode.asm
 
 .8450					GXSetColourMode:
-.8450	a6 36		ldx $36				ldx 	gzTemp0
+.8450	a6 36		ldx $36				ldx 	gxzTemp0
 .8452	8e 3d 06	stx $063d			stx 	gxColour 								; set colour
-.8455	a5 37		lda $37				lda 	gzTemp0+1 								;
+.8455	a5 37		lda $37				lda 	gxzTemp0+1 								;
 .8457	8d 3c 06	sta $063c			sta 	gxMode 									; set mode
 .845a	29 03		and #$03			and 	#3 										; only interested in bits 0-3
 .845c	9c 3f 06	stz $063f			stz 	gxANDValue 								; initially AND with 0, and EOR with Colour
@@ -1062,12 +1062,12 @@
 
 .847e					GXPlotPoint:
 .847e	20 36 87	jsr $8736			jsr 	GXOpenBitmap 				; start drawing
-.8481	20 54 87	jsr $8754			jsr 	GXPositionCalc 				; setup gsTemp, gsOffset and the position.
+.8481	20 54 87	jsr $8754			jsr 	GXPositionCalc 				; setup gxzScreen, gsOffset and the position.
 .8484	ac 42 06	ldy $0642			ldy 	gsOffset
-.8487	b1 3c		lda ($3c),y			lda 	(gsTemp),y 					; set pixel on the right
+.8487	b1 3c		lda ($3c),y			lda 	(gxzScreen),y 					; set pixel on the right
 .8489	2d 3f 06	and $063f			and 	gxANDValue
 .848c	4d 3e 06	eor $063e			eor 	gxEORValue
-.848f	91 3c		sta ($3c),y			sta 	(gsTemp),y
+.848f	91 3c		sta ($3c),y			sta 	(gxzScreen),y
 .8491	20 47 87	jsr $8747			jsr 	GXCloseBitmap 				; stop drawing and exit
 .8494	18		clc				clc
 .8495	60		rts				rts
@@ -1086,7 +1086,7 @@
 .849a	08		php				php 								; save Fill flag (CS)
 .849b	20 36 87	jsr $8736			jsr 	GXOpenBitmap 				; start drawing
 .849e	20 01 88	jsr $8801			jsr 	GXSortXY 					; sort both X and Y so top left/bottom right
-.84a1	20 54 87	jsr $8754			jsr 	GXPositionCalc 				; setup gsTemp, gsOffset and the position.
+.84a1	20 54 87	jsr $8754			jsr 	GXPositionCalc 				; setup gxzScreen, gsOffset and the position.
 .84a4	38		sec				sec 								; sec = Draw line
 .84a5	20 cf 84	jsr $84cf			jsr 	GXDrawLineX1X0 				; draw a line length X1-X0
 .84a8	ad 33 06	lda $0633			lda 	gxY0 						; reached end of rectangle ?
@@ -1115,72 +1115,72 @@
 .84d0	38		sec				sec
 .84d1	ad 35 06	lda $0635			lda		gXX1
 .84d4	ed 31 06	sbc $0631			sbc 	gXX0
-.84d7	85 36		sta $36				sta 	gzTemp0
+.84d7	85 36		sta $36				sta 	gxzTemp0
 .84d9	ad 36 06	lda $0636			lda 	gXX1+1
 .84dc	ed 32 06	sbc $0632			sbc 	gXX0+1
-.84df	85 37		sta $37				sta 	gzTemp0+1
+.84df	85 37		sta $37				sta 	gxzTemp0+1
 .84e1	28		plp				plp
 .84e2					GXDrawLineTemp0:
-.84e2	a5 3c		lda $3c				lda 	gsTemp 						; push gsTemp, gsOffset and GFXEditSlot on stack
+.84e2	a5 3c		lda $3c				lda 	gxzScreen 						; push gxzScreen, gsOffset and GXEditSlot on stack
 .84e4	48		pha				pha
-.84e5	a5 3d		lda $3d				lda 	gsTemp+1
+.84e5	a5 3d		lda $3d				lda 	gxzScreen+1
 .84e7	48		pha				pha
 .84e8	ad 42 06	lda $0642			lda 	gsOffset
 .84eb	48		pha				pha
-.84ec	a5 0b		lda $0b				lda 	GFXEditSlot
+.84ec	a5 0b		lda $0b				lda 	GXEditSlot
 .84ee	48		pha				pha
 .84ef	ac 42 06	ldy $0642			ldy 	gsOffset 					; Y offset
 .84f2	90 1e		bcc $8512			bcc 	_GXDLTEndPoints 			; if CC draw end points only.
 .84f4					_GXDLTLine:
-.84f4	b1 3c		lda ($3c),y			lda 	(gsTemp),y 					; set pixel
+.84f4	b1 3c		lda ($3c),y			lda 	(gxzScreen),y 					; set pixel
 .84f6	2d 3f 06	and $063f			and 	gxANDValue
 .84f9	4d 3e 06	eor $063e			eor 	gxEORValue
-.84fc	91 3c		sta ($3c),y			sta 	(gsTemp),y
-.84fe	a5 36		lda $36				lda 	gzTemp0 					; decrement counter
+.84fc	91 3c		sta ($3c),y			sta 	(gxzScreen),y
+.84fe	a5 36		lda $36				lda 	gxzTemp0 					; decrement counter
 .8500	d0 04		bne $8506			bne 	_GXDLTNoBorrow
-.8502	c6 37		dec $37				dec 	gzTemp0+1 					; borrow, if goes -ve then exit
+.8502	c6 37		dec $37				dec 	gxzTemp0+1 					; borrow, if goes -ve then exit
 .8504	30 2e		bmi $8534			bmi 	_GXDLTExit
 .8506					_GXDLTNoBorrow:
-.8506	c6 36		dec $36				dec 	gzTemp0
+.8506	c6 36		dec $36				dec 	gxzTemp0
 .8508	c8		iny				iny 								; next slot.
 .8509	d0 e9		bne $84f4			bne 	_GXDLTLine
-.850b	e6 3d		inc $3d				inc 	gsTemp+1 					; carry to next
+.850b	e6 3d		inc $3d				inc 	gxzScreen+1 					; carry to next
 .850d	20 42 85	jsr $8542			jsr 	GXDLTCheckWrap				; check for new page.
 .8510	80 e2		bra $84f4			bra 	_GXDLTLine
 .8512					_GXDLTEndPoints:
-.8512	b1 3c		lda ($3c),y			lda 	(gsTemp),y 					; set pixel
+.8512	b1 3c		lda ($3c),y			lda 	(gxzScreen),y 					; set pixel
 .8514	2d 3f 06	and $063f			and 	gxANDValue
 .8517	4d 3e 06	eor $063e			eor 	gxEORValue
-.851a	91 3c		sta ($3c),y			sta 	(gsTemp),y
+.851a	91 3c		sta ($3c),y			sta 	(gxzScreen),y
 .851c	98		tya				tya 								; advance to right side
 .851d	18		clc				clc
-.851e	65 36		adc $36				adc 	gzTemp0
+.851e	65 36		adc $36				adc 	gxzTemp0
 .8520	a8		tay				tay
-.8521	a5 3d		lda $3d				lda 	gsTemp+1
-.8523	65 37		adc $37				adc 	gzTemp0+1
-.8525	85 3d		sta $3d				sta 	gsTemp+1
+.8521	a5 3d		lda $3d				lda 	gxzScreen+1
+.8523	65 37		adc $37				adc 	gxzTemp0+1
+.8525	85 3d		sta $3d				sta 	gxzScreen+1
 .8527	20 42 85	jsr $8542			jsr 	GXDLTCheckWrap 			; fix up.
-.852a	b1 3c		lda ($3c),y			lda 	(gsTemp),y 					; set pixel on the right
+.852a	b1 3c		lda ($3c),y			lda 	(gxzScreen),y 					; set pixel on the right
 .852c	2d 3f 06	and $063f			and 	gxANDValue
 .852f	4d 3e 06	eor $063e			eor 	gxEORValue
-.8532	91 3c		sta ($3c),y			sta 	(gsTemp),y
+.8532	91 3c		sta ($3c),y			sta 	(gxzScreen),y
 .8534					_GXDLTExit:
 .8534	68		pla				pla
-.8535	85 0b		sta $0b				sta 	GFXEditSlot
+.8535	85 0b		sta $0b				sta 	GXEditSlot
 .8537	68		pla				pla
 .8538	8d 42 06	sta $0642			sta 	gsOffset
 .853b	68		pla				pla
-.853c	85 3d		sta $3d				sta 	gsTemp+1
+.853c	85 3d		sta $3d				sta 	gxzScreen+1
 .853e	68		pla				pla
-.853f	85 3c		sta $3c				sta 	gsTemp
+.853f	85 3c		sta $3c				sta 	gxzScreen
 .8541	60		rts				rts
 .8542					GXDLTCheckWrap:
-.8542	a5 3d		lda $3d				lda 	gsTemp+1 					; check end of page
+.8542	a5 3d		lda $3d				lda 	gxzScreen+1 					; check end of page
 .8544	c9 80		cmp #$80			cmp 	#((GXMappingAddress+$2000) >> 8)
 .8546	90 06		bcc $854e			bcc 	_GXDLTCWExit
 .8548	e9 20		sbc #$20			sbc 	#$20 						; fix up
-.854a	85 3d		sta $3d				sta 	gsTemp+1
-.854c	e6 0b		inc $0b				inc 	GFXEditSlot
+.854a	85 3d		sta $3d				sta 	gxzScreen+1
+.854c	e6 0b		inc $0b				inc 	GXEditSlot
 .854e					_GXDLTCWExit:
 .854e	60		rts				rts
 
@@ -1214,23 +1214,23 @@
 .857c	29 07		and #$07			and		#7
 .857e	1a		inc a				inc 	a
 .857f	8d 58 06	sta $0658			sta 	gxScale
-.8582	64 38		stz $38				stz 	gzTemp1						; start first line
+.8582	64 38		stz $38				stz 	gxzTemp1						; start first line
 .8584					_GXGELoop:
-.8584	a5 38		lda $38				lda 	gzTemp1 					; current line number to read.
+.8584	a5 38		lda $38				lda 	gxzTemp1 					; current line number to read.
 .8586	4d 59 06	eor $0659			eor 	gxVFlip
 .8589	aa		tax				tax 								; get the Xth line.
 .858a	20 c8 85	jsr $85c8			jsr 	_GXCallAcquire 				; get that data.
 .858d	ad 58 06	lda $0658			lda 	gxScale 					; do scale identical copies of that line.
-.8590	85 39		sta $39				sta 	gzTemp1+1
+.8590	85 39		sta $39				sta 	gxzTemp1+1
 .8592					_GXGELoop2:
 .8592	ad 33 06	lda $0633			lda 	gxY0 						; off screen
 .8595	cd 3b 06	cmp $063b			cmp 	gxHeight
 .8598	b0 10		bcs $85aa			bcs 	_GXDGEExit
 .859a	20 cb 85	jsr $85cb			jsr 	GXRenderOneLine 			; render line
-.859d	c6 39		dec $39				dec 	gzTemp1+1 					; scale times.
+.859d	c6 39		dec $39				dec 	gxzTemp1+1 					; scale times.
 .859f	d0 f1		bne $8592			bne 	_GXGELoop2
-.85a1	e6 38		inc $38				inc 	gzTemp1 					; done all lines.
-.85a3	a5 38		lda $38				lda 	gzTemp1
+.85a1	e6 38		inc $38				inc 	gxzTemp1 					; done all lines.
+.85a3	a5 38		lda $38				lda 	gxzTemp1
 .85a5	cd 54 06	cmp $0654			cmp 	gxSize
 .85a8	d0 da		bne $8584			bne 	_GXGELoop
 .85aa					_GXDGEExit:
@@ -1255,30 +1255,30 @@
 .85cb					GXRenderOneLine:
 .85cb	20 54 87	jsr $8754			jsr 	GXPositionCalc 				; calculate position/offset.
 .85ce	ac 42 06	ldy $0642			ldy 	gsOffset 					; Y contains position.
-.85d1	64 3a		stz $3a				stz 	gzTemp2 					; do size pixels
+.85d1	64 3a		stz $3a				stz 	gxzTemp2 					; do size pixels
 .85d3					_GXROLLoop1:
 .85d3	ad 58 06	lda $0658			lda 	gxScale 					; set to do 'scale' times
-.85d6	85 3b		sta $3b				sta 	gzTemp2+1
+.85d6	85 3b		sta $3b				sta 	gxzTemp2+1
 .85d8					_GXROLLoop2:
-.85d8	a5 3a		lda $3a				lda 	gzTemp2 					; get current pixel
+.85d8	a5 3a		lda $3a				lda 	gxzTemp2 					; get current pixel
 .85da	4d 5a 06	eor $065a			eor 	gxHFlip
 .85dd	aa		tax				tax 								; read from the pixel buffer
 .85de	bd f7 05	lda $05f7,x			lda 	gxPixelBuffer,x
 .85e1	f0 0a		beq $85ed			beq 	_GXZeroPixel 				; don't draw if zero.
-.85e3	b1 3c		lda ($3c),y			lda 	(gsTemp),y
+.85e3	b1 3c		lda ($3c),y			lda 	(gxzScreen),y
 .85e5	2d 3f 06	and $063f			and 	gxANDValue
 .85e8	5d f7 05	eor $05f7,x			eor 	gxPixelBuffer,x
-.85eb	91 3c		sta ($3c),y			sta 	(gsTemp),y
+.85eb	91 3c		sta ($3c),y			sta 	(gxzScreen),y
 .85ed					_GXZeroPixel:
 .85ed	c8		iny				iny 								; advance pointer
 .85ee	d0 05		bne $85f5			bne 	_GXNoShift
-.85f0	e6 3d		inc $3d				inc 	gsTemp+1 					; carry to next
+.85f0	e6 3d		inc $3d				inc 	gxzScreen+1 					; carry to next
 .85f2	20 42 85	jsr $8542			jsr 	GXDLTCheckWrap				; check for new page.
 .85f5					_GXNoShift:
-.85f5	c6 3b		dec $3b				dec 	gzTemp2+1 					; do the inner loop gxScale times.
+.85f5	c6 3b		dec $3b				dec 	gxzTemp2+1 					; do the inner loop gxScale times.
 .85f7	d0 df		bne $85d8			bne 	_GXROLLoop2
-.85f9	e6 3a		inc $3a				inc 	gzTemp2 					; next pixel.
-.85fb	a5 3a		lda $3a				lda 	gzTemp2
+.85f9	e6 3a		inc $3a				inc 	gxzTemp2 					; next pixel.
+.85fb	a5 3a		lda $3a				lda 	gxzTemp2
 .85fd	cd 54 06	cmp $0654			cmp 	gxSize
 .8600	d0 d1		bne $85d3			bne 	_GXROLLoop1
 .8602	ee 33 06	inc $0633			inc 	gxY0
@@ -1304,19 +1304,19 @@
 ;******  Processing file: ./common/aa.system/../../../graphics/./drawing/sources/font.asm
 
 .8606					GXFontHandler:
-.8606	a5 37		lda $37				lda 	gzTemp0+1 					; eor with mode
+.8606	a5 37		lda $37				lda 	gxzTemp0+1 					; eor with mode
 .8608	4d 3c 06	eor $063c			eor 	gxMode
 .860b	8d 5b 06	sta $065b			sta 	gxUseMode
-.860e	64 37		stz $37				stz 	gzTemp0+1 					; gzTemp0 is font #
-.8610	06 36		asl $36				asl	 	gzTemp0 					; x 2
-.8612	26 37		rol $37				rol	 	gzTemp0+1
-.8614	06 36		asl $36				asl	 	gzTemp0 					; x 4
-.8616	26 37		rol $37				rol	 	gzTemp0+1
-.8618	06 36		asl $36				asl	 	gzTemp0 					; x 8
-.861a	26 37		rol $37				rol	 	gzTemp0+1
-.861c	a5 37		lda $37				lda 	gzTemp0+1 					; put in page C0
+.860e	64 37		stz $37				stz 	gxzTemp0+1 					; gxzTemp0 is font #
+.8610	06 36		asl $36				asl	 	gxzTemp0 					; x 2
+.8612	26 37		rol $37				rol	 	gxzTemp0+1
+.8614	06 36		asl $36				asl	 	gxzTemp0 					; x 4
+.8616	26 37		rol $37				rol	 	gxzTemp0+1
+.8618	06 36		asl $36				asl	 	gxzTemp0 					; x 8
+.861a	26 37		rol $37				rol	 	gxzTemp0+1
+.861c	a5 37		lda $37				lda 	gxzTemp0+1 					; put in page C0
 .861e	09 c0		ora #$c0			ora 	#$C0
-.8620	85 37		sta $37				sta 	gzTemp0+1
+.8620	85 37		sta $37				sta 	gxzTemp0+1
 .8622	a9 08		lda #$08			lda 	#8 							; size 8x8
 .8624	a2 2c		ldx #$2c			ldx 	#GXGetGraphicDataFont & $FF ; XY = Graphic Data retrieval routine
 .8626	a0 86		ldy #$86			ldy 	#GXGetGraphicDataFont >> 8
@@ -1328,7 +1328,7 @@
 .862e	a6 01		ldx $01				ldx 	1 							; preserve old value
 .8630	a9 01		lda #$01			lda 	#1 							; access page 1 (font memory)
 .8632	85 01		sta $01				sta 	1
-.8634	b1 36		lda ($36),y			lda 	(gzTemp0),y 				; read the font element.
+.8634	b1 36		lda ($36),y			lda 	(gxzTemp0),y 				; read the font element.
 .8636	86 01		stx $01				stx 	1 							; put old value back.
 .8638	a2 00		ldx #$00			ldx 	#0 							; do 8 times
 .863a					_GXExpand:
@@ -1351,60 +1351,60 @@
 ;******  Processing file: ./common/aa.system/../../../graphics/./drawing/sources/sprite.asm
 
 .864e					GXSpriteHandler:
-.864e	a5 37		lda $37				lda 	gzTemp0+1 					; eor with mode
+.864e	a5 37		lda $37				lda 	gxzTemp0+1 					; eor with mode
 .8650	4d 3c 06	eor $063c			eor 	gxMode
 .8653	8d 5b 06	sta $065b			sta 	gxUseMode
-.8656	a6 36		ldx $36				ldx 	gzTemp0 					; sprite #
+.8656	a6 36		ldx $36				ldx 	gxzTemp0 					; sprite #
 .8658	da		phx				phx
 .8659	20 36 87	jsr $8736			jsr 	GXOpenBitmap 				; can access sprite information
 .865c	68		pla				pla
 .865d	20 c5 87	jsr $87c5			jsr 	GXFindSprite 				; get the sprite address
 .8660	20 47 87	jsr $8747			jsr 	GXCloseBitmap
-.8663	ad 5c 06	lda $065c			lda 	GXSSize 					; return size
+.8663	ad 5c 06	lda $065c			lda 	GXSizePixels 					; return size
 .8666	a2 6e		ldx #$6e			ldx 	#GXSpriteAcquire & $FF
 .8668	a0 86		ldy #$86			ldy 	#GXSpriteAcquire >> 8
 .866a	20 4f 85	jsr $854f			jsr 	GXDrawGraphicElement
 .866d	60		rts				rts
 .866e					GXSpriteAcquire:
 .866e	ad 3a 06	lda $063a			lda 	GXSpritePage				; point to base page
-.8671	85 0b		sta $0b				sta 	GFXEditSlot
+.8671	85 0b		sta $0b				sta 	GXEditSlot
 .8673	86 36		stx $36				stx 	zTemp0 						; row number x 1,2,3,4
 .8675	a9 00		lda #$00			lda 	#0
-.8677	ae 5d 06	ldx $065d			ldx 	GXSSizeRaw
+.8677	ae 5d 06	ldx $065d			ldx 	GXSizeBits
 .867a					_GXTimesRowNumber:
 .867a	18		clc				clc
 .867b	65 36		adc $36				adc 	zTemp0
 .867d	ca		dex				dex
 .867e	10 fa		bpl $867a			bpl 	_GXTimesRowNumber
-.8680	64 37		stz $37				stz 	gzTemp0+1
+.8680	64 37		stz $37				stz 	gxzTemp0+1
 .8682	0a		asl a				asl 	a 							; row x 2,4,6,8
-.8683	26 37		rol $37				rol 	gzTemp0+1
+.8683	26 37		rol $37				rol 	gxzTemp0+1
 .8685	0a		asl a				asl 	a 							; row x 4,8,12,16
-.8686	26 37		rol $37				rol 	gzTemp0+1
+.8686	26 37		rol $37				rol 	gxzTemp0+1
 .8688	0a		asl a				asl 	a 							; row x 8,16,24,32
-.8689	26 37		rol $37				rol 	gzTemp0+1
-.868b	85 36		sta $36				sta 	gzTemp0
+.8689	26 37		rol $37				rol 	gxzTemp0+1
+.868b	85 36		sta $36				sta 	gxzTemp0
 .868d	18		clc				clc 								; add base address.
-.868e	a5 36		lda $36				lda 	gzTemp0
-.8690	6d 5f 06	adc $065f			adc 	GXSAddress
-.8693	85 36		sta $36				sta 	gzTemp0
-.8695	a5 37		lda $37				lda 	gzTemp0+1
-.8697	6d 60 06	adc $0660			adc 	GXSAddress+1
+.868e	a5 36		lda $36				lda 	gxzTemp0
+.8690	6d 5f 06	adc $065f			adc 	GXSpriteOffset
+.8693	85 36		sta $36				sta 	gxzTemp0
+.8695	a5 37		lda $37				lda 	gxzTemp0+1
+.8697	6d 60 06	adc $0660			adc 	GXSpriteOffset+1
 .869a					_GXSAFindPage:
 .869a	c9 20		cmp #$20			cmp 	#$20 						; on this page
 .869c	90 06		bcc $86a4			bcc 	_GXSAFoundPage
 .869e	e9 20		sbc #$20			sbc 	#$20 						; forward one page
-.86a0	e6 0b		inc $0b				inc 	GFXEditSlot
+.86a0	e6 0b		inc $0b				inc 	GXEditSlot
 .86a2	80 f6		bra $869a			bra 	_GXSAFindPage
 .86a4					_GXSAFoundPage:
 .86a4	09 60		ora #$60			ora 	#(GXMappingAddress >> 8) 	; physical address of page.
-.86a6	85 37		sta $37				sta 	gzTemp0+1 					; gzTemp0 now points to the page
+.86a6	85 37		sta $37				sta 	gxzTemp0+1 					; gxzTemp0 now points to the page
 .86a8	a0 00		ldy #$00			ldy 	#0
 .86aa					_GXSACopyLoop:
-.86aa	b1 36		lda ($36),y			lda 	(gzTemp0),y
+.86aa	b1 36		lda ($36),y			lda 	(gxzTemp0),y
 .86ac	99 f7 05	sta $05f7,y			sta 	gxPixelBuffer,y
 .86af	c8		iny				iny
-.86b0	cc 5c 06	cpy $065c			cpy 	GXSSize
+.86b0	cc 5c 06	cpy $065c			cpy 	GXSizePixels
 .86b3	d0 f5		bne $86aa			bne 	_GXSACopyLoop
 .86b5	60		rts				rts
 
@@ -1414,24 +1414,24 @@
 ;******  Processing file: ./common/aa.system/../../../graphics/./drawing/sprite.asm
 
 .86b6					GXSelect:
-.86b6	a5 36		lda $36				lda 	gzTemp0 					; illegal sprite #
+.86b6	a5 36		lda $36				lda 	gxzTemp0 					; illegal sprite #
 .86b8	c9 40		cmp #$40			cmp 	#64
 .86ba	b0 28		bcs $86e4			bcs 	_GXSFail
-.86bc	a4 37		ldy $37				ldy 	gzTemp0+1 					; control value.
+.86bc	a4 37		ldy $37				ldy 	gxzTemp0+1 					; control value.
 .86be	a9 00		lda #$00			lda  	#0 							; multiply sprite # x 8 => A
-.86c0	06 36		asl $36				asl 	gzTemp0
-.86c2	06 36		asl $36				asl 	gzTemp0
-.86c4	06 36		asl $36				asl 	gzTemp0
+.86c0	06 36		asl $36				asl 	gxzTemp0
+.86c2	06 36		asl $36				asl 	gxzTemp0
+.86c4	06 36		asl $36				asl 	gxzTemp0
 .86c6	2a		rol a				rol 	a
 .86c7	69 d9		adc #$d9			adc 	#$D9 						; sprite area
-.86c9	8d 44 06	sta $0644			sta 	GSCurrentSprite+1 			; address to GSCurrentSprite and gzTemp
-.86cc	85 37		sta $37				sta 	gzTemp0+1
-.86ce	a5 36		lda $36				lda 	gzTemp0
+.86c9	8d 44 06	sta $0644			sta 	GSCurrentSprite+1 			; address to GSCurrentSprite and gxzTemp
+.86cc	85 37		sta $37				sta 	gxzTemp0+1
+.86ce	a5 36		lda $36				lda 	gxzTemp0
 .86d0	8d 43 06	sta $0643			sta 	GSCurrentSprite
 .86d3	98		tya				tya 								; control value
 .86d4	29 01		and #$01			and 	#1
 .86d6	64 01		stz $01				stz 	1 							; access sprite control.
-.86d8	92 36		sta ($36)			sta 	(gzTemp0) 					; write to control register
+.86d8	92 36		sta ($36)			sta 	(gxzTemp0) 					; write to control register
 .86da	a9 40		lda #$40			lda 	#64
 .86dc	8d 1c d9	sta $d91c			sta 	$D91C
 .86df	8d 1e d9	sta $d91e			sta 	$D91E
@@ -1443,40 +1443,40 @@
 .86e6					GXSelectImage:
 .86e6	ad 44 06	lda $0644			lda 	GSCurrentSprite+1 			; check sprite selected
 .86e9	f0 49		beq $8734			beq 	_GXSIFail
-.86eb	a5 36		lda $36				lda 	gzTemp0 					; sprite image
+.86eb	a5 36		lda $36				lda 	gxzTemp0 					; sprite image
 .86ed	48		pha				pha
 .86ee	20 36 87	jsr $8736			jsr 	GXOpenBitmap
 .86f1	68		pla				pla
 .86f2	20 c5 87	jsr $87c5			jsr 	GXFindSprite
 .86f5	a0 01		ldy #$01			ldy 	#1
 .86f7	ad 43 06	lda $0643			lda 	GSCurrentSprite
-.86fa	85 36		sta $36				sta 	gzTemp0
+.86fa	85 36		sta $36				sta 	gxzTemp0
 .86fc	ad 44 06	lda $0644			lda 	GSCurrentSprite+1
-.86ff	85 37		sta $37				sta 	gzTemp0+1
-.8701	ad 5f 06	lda $065f			lda 	GXSAddress
-.8704	91 36		sta ($36),y			sta	 	(gzTemp0),y
+.86ff	85 37		sta $37				sta 	gxzTemp0+1
+.8701	ad 5f 06	lda $065f			lda 	GXSpriteOffset
+.8704	91 36		sta ($36),y			sta	 	(gxzTemp0),y
 .8706	18		clc				clc
-.8707	ad 60 06	lda $0660			lda 	GXSAddress+1
-.870a	6d 45 06	adc $0645			adc 	GXSAddressBase
+.8707	ad 60 06	lda $0660			lda 	GXSpriteOffset+1
+.870a	6d 45 06	adc $0645			adc 	GXSpriteOffsetBase
 .870d	c8		iny				iny
-.870e	91 36		sta ($36),y			sta	 	(gzTemp0),y
-.8710	ad 46 06	lda $0646			lda 	GXSAddressBase+1
+.870e	91 36		sta ($36),y			sta	 	(gxzTemp0),y
+.8710	ad 46 06	lda $0646			lda 	GXSpriteOffsetBase+1
 .8713	69 00		adc #$00			adc 	#0
 .8715	c8		iny				iny
-.8716	91 36		sta ($36),y			sta	 	(gzTemp0),y
-.8718	b2 36		lda ($36)			lda 	(gzTemp0)					; get LSB into gzTemp1
+.8716	91 36		sta ($36),y			sta	 	(gxzTemp0),y
+.8718	b2 36		lda ($36)			lda 	(gxzTemp0)					; get LSB into gxzTemp1
 .871a	29 01		and #$01			and 	#1
-.871c	85 38		sta $38				sta 	gzTemp1
-.871e	ad 5d 06	lda $065d			lda 	GXSSizeRaw 					; get raw size
+.871c	85 38		sta $38				sta 	gxzTemp1
+.871e	ad 5d 06	lda $065d			lda 	GXSizeBits 					; get raw size
 .8721	49 03		eor #$03			eor 	#3 							; make it right (00=32 etc.)
 .8723	2a		rol a				rol 	a 							; x 2
 .8724	0a		asl a				asl 	a 							; x 4
 .8725	0a		asl a				asl 	a 							; x 8
 .8726	0a		asl a				asl 	a 							; x 16
-.8727	0d 5e 06	ora $065e			ora 	GXSLUT 						; Or with LUT
+.8727	0d 5e 06	ora $065e			ora 	GXSpriteLUT 						; Or with LUT
 .872a	0a		asl a				asl 	a 							; 1 shift
-.872b	05 38		ora $38				ora 	gzTemp1 					; Or in the enable bit
-.872d	92 36		sta ($36)			sta 	(gzTemp0) 					; and write back
+.872b	05 38		ora $38				ora 	gxzTemp1 					; Or in the enable bit
+.872d	92 36		sta ($36)			sta 	(gxzTemp0) 					; and write back
 .872f	20 47 87	jsr $8747			jsr 	GXCloseBitmap
 .8732	18		clc				clc
 .8733	60		rts				rts
@@ -1493,16 +1493,16 @@
 .8736	78		sei				sei 								; no interrupts here
 .8737	a5 00		lda $00				lda 	0 							; save original MMU Control register
 .8739	8d 41 06	sta $0641			sta 	gxOriginalMMUSetting
-.873c	a9 80		lda #$80			lda 	#GFXMappingLUT*16+$80+GFXMappingLUT
+.873c	a9 80		lda #$80			lda 	#GXMappingLUT*16+$80+GXMappingLUT
 .873e	85 00		sta $00				sta 	0
-.8740	a5 0b		lda $0b				lda 	GFXEditSlot 				; Save the original LUT slot value
+.8740	a5 0b		lda $0b				lda 	GXEditSlot 				; Save the original LUT slot value
 .8742	8d 40 06	sta $0640			sta 	gxOriginalLUTValue
 .8745	58		cli				cli
 .8746	60		rts				rts
 .8747					GXCloseBitmap:
 .8747	78		sei				sei
 .8748	ad 40 06	lda $0640			lda 	gxOriginalLUTValue 			; restore LUT slot value
-.874b	85 0b		sta $0b				sta 	GFXEditSlot
+.874b	85 0b		sta $0b				sta 	GXEditSlot
 .874d	ad 41 06	lda $0641			lda 	gxOriginalMMUSetting 		; restore MMU Control register
 .8750	85 00		sta $00				sta 	0
 .8752	58		cli				cli
@@ -1514,67 +1514,67 @@
 ;******  Processing file: ./common/aa.system/../../../graphics/./utility/calculate.asm
 
 .8754					GXPositionCalc:
-.8754	a5 36		lda $36				lda 	gzTemp0 					; save temp memory slot
+.8754	a5 36		lda $36				lda 	gxzTemp0 					; save temp memory slot
 .8756	48		pha				pha
-.8757	ad 33 06	lda $0633			lda 	GXY0 						; gsTemp = Y0
-.875a	85 3c		sta $3c				sta 	gsTemp
-.875c	64 3d		stz $3d				stz 	gsTemp+1
-.875e	06 3c		asl $3c				asl 	gsTemp 						; gsTemp = Y0 * 4
-.8760	26 3d		rol $3d				rol 	gsTemp+1
-.8762	06 3c		asl $3c				asl 	gsTemp
-.8764	26 3d		rol $3d				rol 	gsTemp+1
-.8766	18		clc				clc 								; gsTemp = Y0 * 5, as it's still in A
-.8767	65 3c		adc $3c				adc 	gsTemp
-.8769	85 3c		sta $3c				sta 	gsTemp
+.8757	ad 33 06	lda $0633			lda 	GXY0 						; gxzScreen = Y0
+.875a	85 3c		sta $3c				sta 	gxzScreen
+.875c	64 3d		stz $3d				stz 	gxzScreen+1
+.875e	06 3c		asl $3c				asl 	gxzScreen 						; gxzScreen = Y0 * 4
+.8760	26 3d		rol $3d				rol 	gxzScreen+1
+.8762	06 3c		asl $3c				asl 	gxzScreen
+.8764	26 3d		rol $3d				rol 	gxzScreen+1
+.8766	18		clc				clc 								; gxzScreen = Y0 * 5, as it's still in A
+.8767	65 3c		adc $3c				adc 	gxzScreen
+.8769	85 3c		sta $3c				sta 	gxzScreen
 .876b	90 02		bcc $876f			bcc 	_GXPCNoCarry
-.876d	e6 3d		inc $3d				inc 	gsTemp+1
+.876d	e6 3d		inc $3d				inc 	gxzScreen+1
 .876f					_GXPCNoCarry:
-.876f	06 3c		asl $3c				asl 	gsTemp 						; now Y0 * 10. Needs to be multiplied by another
-.8771	26 3d		rol $3d				rol 	gsTemp+1 					; 32. At this point the MSB contains the offset
-.8773	a5 3d		lda $3d				lda	 	gsTemp+1 					; so save this in zTemp0 and zero it.
-.8775	85 36		sta $36				sta 	gzTemp0
-.8777	64 3d		stz $3d				stz 	gsTemp+1
+.876f	06 3c		asl $3c				asl 	gxzScreen 						; now Y0 * 10. Needs to be multiplied by another
+.8771	26 3d		rol $3d				rol 	gxzScreen+1 					; 32. At this point the MSB contains the offset
+.8773	a5 3d		lda $3d				lda	 	gxzScreen+1 					; so save this in zTemp0 and zero it.
+.8775	85 36		sta $36				sta 	gxzTemp0
+.8777	64 3d		stz $3d				stz 	gxzScreen+1
 .8779	a9 05		lda #$05			lda 	#5 							; now multiply by 32, this puts this in the range 0..8191
 .877b					_GXPCMultiply32:
-.877b	06 3c		asl $3c				asl 	gsTemp
-.877d	26 3d		rol $3d				rol 	gsTemp+1
+.877b	06 3c		asl $3c				asl 	gxzScreen
+.877d	26 3d		rol $3d				rol 	gxzScreen+1
 .877f	3a		dec a				dec 	a
 .8780	d0 f9		bne $877b			bne 	_GXPCMultiply32
 .8782	18		clc				clc
-.8783	ad 31 06	lda $0631			lda 	GXX0 						; add X to this value, put the result in gsOffset, gsTemp has to be on a page boundary
-.8786	65 3c		adc $3c				adc 	gsTemp
+.8783	ad 31 06	lda $0631			lda 	GXX0 						; add X to this value, put the result in gsOffset, gxzScreen has to be on a page boundary
+.8786	65 3c		adc $3c				adc 	gxzScreen
 .8788	8d 42 06	sta $0642			sta 	gsOffset
 .878b	ad 32 06	lda $0632			lda 	GXX0+1
-.878e	65 3d		adc $3d				adc 	gsTemp+1
+.878e	65 3d		adc $3d				adc 	gxzScreen+1
 .8790	c9 20		cmp #$20			cmp 	#$20 						; has it overflowed into the next one ?
 .8792	90 04		bcc $8798			bcc 	_GXPCNoOverflow
 .8794	29 1f		and #$1f			and 	#$1F 						; fix it up
-.8796	e6 36		inc $36				inc 	gzTemp0 					; add 1 to the page number
+.8796	e6 36		inc $36				inc 	gxzTemp0 					; add 1 to the page number
 .8798					_GXPCNoOverflow:
 .8798	09 60		ora #$60			ora 	#(GXMappingAddress >> 8) 	; make it the address mapped in.
-.879a	85 3d		sta $3d				sta 	gsTemp+1
-.879c	64 3c		stz $3c				stz 	gsTemp
+.879a	85 3d		sta $3d				sta 	gxzScreen+1
+.879c	64 3c		stz $3c				stz 	gxzScreen
 .879e	18		clc				clc
-.879f	a5 36		lda $36				lda 	gzTemp0 					; get the page number
+.879f	a5 36		lda $36				lda 	gxzTemp0 					; get the page number
 .87a1	6d 39 06	adc $0639			adc 	gxBasePage 					; by adding the base page
-.87a4	85 0b		sta $0b				sta 	GFXEditSlot 				; and map it into memory.
+.87a4	85 0b		sta $0b				sta 	GXEditSlot 				; and map it into memory.
 .87a6	68		pla				pla
-.87a7	85 36		sta $36				sta 	gzTemp0
+.87a7	85 36		sta $36				sta 	gxzTemp0
 .87a9	60		rts				rts
 .87aa					GXMovePositionDown:
 .87aa	18		clc				clc 								; add 320 to offset/temp+1
 .87ab	ad 42 06	lda $0642			lda 	gsOffset
 .87ae	69 40		adc #$40			adc 	#64
 .87b0	8d 42 06	sta $0642			sta 	gsOffset
-.87b3	a5 3d		lda $3d				lda 	gsTemp+1
+.87b3	a5 3d		lda $3d				lda 	gxzScreen+1
 .87b5	69 01		adc #$01			adc 	#1
-.87b7	85 3d		sta $3d				sta 	gsTemp+1
+.87b7	85 3d		sta $3d				sta 	gxzScreen+1
 .87b9	c9 80		cmp #$80			cmp 	#((GXMappingAddress+$2000) >> 8) ; on to the next page
 .87bb	90 07		bcc $87c4			bcc 	_GXMPDExit
 .87bd	38		sec				sec  								; next page
 .87be	e9 20		sbc #$20			sbc 	#$20
-.87c0	85 3d		sta $3d				sta 	gsTemp+1
-.87c2	e6 0b		inc $0b				inc 	GFXEditSlot
+.87c0	85 3d		sta $3d				sta 	gxzScreen+1
+.87c2	e6 0b		inc $0b				inc 	GXEditSlot
 .87c4					_GXMPDExit:
 .87c4	60		rts				rts
 
@@ -1586,39 +1586,39 @@
 .87c5					GXFindSprite:
 .87c5	aa		tax				tax
 .87c6	ad 3a 06	lda $063a			lda 	GXSpritePage 				; access the base page of the sprite
-.87c9	85 0b		sta $0b				sta 	GFXEditSlot
+.87c9	85 0b		sta $0b				sta 	GXEditSlot
 .87cb	bd 00 61	lda $6100,x			lda 	GXMappingAddress+256,x 		; MSB
-.87ce	8d 60 06	sta $0660			sta 	GXSAddress+1
+.87ce	8d 60 06	sta $0660			sta 	GXSpriteOffset+1
 .87d1	bd 00 60	lda $6000,x			lda 	GXMappingAddress,x 			; LSB
 .87d4	48		pha				pha 								; save twice
 .87d5	48		pha				pha
 .87d6	29 03		and #$03			and 	#3 							; get sprite size
-.87d8	8d 5d 06	sta $065d			sta 	GXSSizeRaw 					; save raw (0-3)
+.87d8	8d 5d 06	sta $065d			sta 	GXSizeBits 					; save raw (0-3)
 .87db	aa		tax				tax
 .87dc	bd fd 87	lda $87fd,x			lda 	_GXFXSSTTable,x 			; read sprite size
-.87df	8d 5c 06	sta $065c			sta 	GXSSize 					; save (8/16/24/32)
+.87df	8d 5c 06	sta $065c			sta 	GXSizePixels 					; save (8/16/24/32)
 .87e2	68		pla				pla 								; get LUT
 .87e3	4a		lsr a				lsr		a
 .87e4	4a		lsr a				lsr		a
 .87e5	29 03		and #$03			and 	#3
-.87e7	8d 5e 06	sta $065e			sta 	GXSLUT
+.87e7	8d 5e 06	sta $065e			sta 	GXSpriteLUT
 .87ea	68		pla				pla 								; address, neeeds to be x 4
 .87eb	29 f0		and #$f0			and 	#$F0
-.87ed	8d 5f 06	sta $065f			sta 	GXSAddress
-.87f0	0e 5f 06	asl $065f			asl 	GXSAddress
-.87f3	2e 60 06	rol $0660			rol 	GXSAddress+1
-.87f6	0e 5f 06	asl $065f			asl 	GXSAddress
-.87f9	2e 60 06	rol $0660			rol 	GXSAddress+1
+.87ed	8d 5f 06	sta $065f			sta 	GXSpriteOffset
+.87f0	0e 5f 06	asl $065f			asl 	GXSpriteOffset
+.87f3	2e 60 06	rol $0660			rol 	GXSpriteOffset+1
+.87f6	0e 5f 06	asl $065f			asl 	GXSpriteOffset
+.87f9	2e 60 06	rol $0660			rol 	GXSpriteOffset+1
 .87fc	60		rts				rts
 .87fd					_GXFXSSTTable:
 >87fd	08 10 18 20					.byte 	8,16,24,32
-.065c					GXSSize:
+.065c					GXSizePixels:
 >065c							.fill 	1
-.065d					GXSSizeRaw:
+.065d					GXSizeBits:
 >065d							.fill 	1
-.065e					GXSLUT:
+.065e					GXSpriteLUT:
 >065e							.fill 	1
-.065f					GXSAddress:
+.065f					GXSpriteOffset:
 >065f							.fill 	2
 
 ;******  Return to file: ./common/aa.system/../../../graphics/_graphics.asm
@@ -1679,66 +1679,66 @@
 .8842	a9 00		lda #$00			lda 	#((0)*2)+(((1) >> 8) & 1)
 .8844	a2 01		ldx #$01			ldx 	#((1) & $FF)
 .8846	a0 00		ldy #$00			ldy 	#(0)
-.8848	20 85 80	jsr $8085			jsr 	GraphicDraw
+.8848	20 85 80	jsr $8085			jsr 	GXGraphicDraw
 .884b	a9 02		lda #$02			lda 	#((1)*2)+(((1) >> 8) & 1)
 .884d	a2 01		ldx #$01			ldx 	#((1) & $FF)
 .884f	a0 00		ldy #$00			ldy 	#(0)
-.8851	20 85 80	jsr $8085			jsr 	GraphicDraw
+.8851	20 85 80	jsr $8085			jsr 	GXGraphicDraw
 .8854	a9 04		lda #$04			lda 	#((2)*2)+((($03) >> 8) & 1)
 .8856	a2 03		ldx #$03			ldx 	#(($03) & $FF)
 .8858	a0 00		ldy #$00			ldy 	#(0)
-.885a	20 85 80	jsr $8085			jsr 	GraphicDraw
+.885a	20 85 80	jsr $8085			jsr 	GXGraphicDraw
 .885d	a9 06		lda #$06			lda 	#((3)*2)+((($FF) >> 8) & 1)
 .885f	a2 ff		ldx #$ff			ldx 	#(($FF) & $FF)
 .8861	a0 00		ldy #$00			ldy 	#(0)
-.8863	20 85 80	jsr $8085			jsr 	GraphicDraw
+.8863	20 85 80	jsr $8085			jsr 	GXGraphicDraw
 .8866	a9 30		lda #$30			lda 	#((24)*2)+(((130) >> 8) & 1)
 .8868	a2 82		ldx #$82			ldx 	#((130) & $FF)
 .886a	a0 1e		ldy #$1e			ldy 	#(30)
-.886c	20 85 80	jsr $8085			jsr 	GraphicDraw
+.886c	20 85 80	jsr $8085			jsr 	GXGraphicDraw
 .886f	a9 08		lda #$08			lda 	#((4)*2)+((('Q') >> 8) & 1)
 .8871	a2 51		ldx #$51			ldx 	#(('Q') & $FF)
 .8873	a0 08		ldy #$08			ldy 	#(1*8)
-.8875	20 85 80	jsr $8085			jsr 	GraphicDraw
+.8875	20 85 80	jsr $8085			jsr 	GXGraphicDraw
 .8878	a9 08		lda #$08			lda 	#((4)*2)+((('X') >> 8) & 1)
 .887a	a2 58		ldx #$58			ldx 	#(('X') & $FF)
 .887c	a0 08		ldy #$08			ldy 	#(1*8)
-.887e	20 85 80	jsr $8085			jsr 	GraphicDraw
+.887e	20 85 80	jsr $8085			jsr 	GXGraphicDraw
 .8881	a9 0a		lda #$0a			lda 	#((5)*2)+(((0) >> 8) & 1)
 .8883	a2 00		ldx #$00			ldx 	#((0) & $FF)
 .8885	a0 08		ldy #$08			ldy 	#(1*8)
-.8887	20 85 80	jsr $8085			jsr 	GraphicDraw
+.8887	20 85 80	jsr $8085			jsr 	GXGraphicDraw
 .888a	a9 0a		lda #$0a			lda 	#((5)*2)+(((1) >> 8) & 1)
 .888c	a2 01		ldx #$01			ldx 	#((1) & $FF)
 .888e	a0 08		ldy #$08			ldy 	#(1*8)
-.8890	20 85 80	jsr $8085			jsr 	GraphicDraw
+.8890	20 85 80	jsr $8085			jsr 	GXGraphicDraw
 .8893	a9 0a		lda #$0a			lda 	#((5)*2)+(((2) >> 8) & 1)
 .8895	a2 02		ldx #$02			ldx 	#((2) & $FF)
 .8897	a0 08		ldy #$08			ldy 	#(1*8)
-.8899	20 85 80	jsr $8085			jsr 	GraphicDraw
+.8899	20 85 80	jsr $8085			jsr 	GXGraphicDraw
 .889c	a9 20		lda #$20			lda 	#((16)*2)+(((10) >> 8) & 1)
 .889e	a2 0a		ldx #$0a			ldx 	#((10) & $FF)
 .88a0	a0 0a		ldy #$0a			ldy 	#(10)
-.88a2	20 85 80	jsr $8085			jsr 	GraphicDraw
-.88a5	a9 24		lda #$24			lda 	#((18)*2)+(((100) >> 8) & 1)
+.88a2	20 85 80	jsr $8085			jsr 	GXGraphicDraw
+.88a5	a9 28		lda #$28			lda 	#((20)*2)+(((100) >> 8) & 1)
 .88a7	a2 64		ldx #$64			ldx 	#((100) & $FF)
 .88a9	a0 64		ldy #$64			ldy 	#(100)
-.88ab	20 85 80	jsr $8085			jsr 	GraphicDraw
+.88ab	20 85 80	jsr $8085			jsr 	GXGraphicDraw
 .88ae	a9 0c		lda #$0c			lda 	#((6)*2)+(((3) >> 8) & 1)
 .88b0	a2 03		ldx #$03			ldx 	#((3) & $FF)
 .88b2	a0 01		ldy #$01			ldy 	#(1)
-.88b4	20 85 80	jsr $8085			jsr 	GraphicDraw
+.88b4	20 85 80	jsr $8085			jsr 	GXGraphicDraw
 .88b7	a9 0e		lda #$0e			lda 	#((7)*2)+(((2) >> 8) & 1)
 .88b9	a2 02		ldx #$02			ldx 	#((2) & $FF)
 .88bb	a0 00		ldy #$00			ldy 	#(0)
-.88bd	20 85 80	jsr $8085			jsr 	GraphicDraw
+.88bd	20 85 80	jsr $8085			jsr 	GXGraphicDraw
 .88c0	60		rts				rts
 .88c1	20 3a 9f	jsr $9f3a	demo:	jsr 	Random32Bit
 .88c4	ee 3e 06	inc $063e			inc 	gxEORValue
 .88c7	a9 30		lda #$30			lda 	#24*2
 .88c9	ae 88 04	ldx $0488			ldx 	RandomSeed+0
 .88cc	ac 89 04	ldy $0489			ldy 	RandomSeed+1
-.88cf	20 85 80	jsr $8085			jsr 	GraphicDraw
+.88cf	20 85 80	jsr $8085			jsr 	GXGraphicDraw
 .88d2	80 ed		bra $88c1			bra 	demo
 
 ;******  Return to file: _basic.asm
@@ -6835,9 +6835,9 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->b0f8	42 75 69 6c 74 20 54 75			.text "Built Tuesday 11-Oct-2022. Build 1469."
+>b0f8	42 75 69 6c 74 20 54 75			.text "Built Tuesday 11-Oct-2022. Build 1481."
 >b100	65 73 64 61 79 20 31 31 2d 4f 63 74 2d 32 30 32
->b110	32 2e 20 42 75 69 6c 64 20 31 34 36 39 2e
+>b110	32 2e 20 42 75 69 6c 64 20 31 34 38 31 2e
 
 ;******  Return to file: _basic.asm
 

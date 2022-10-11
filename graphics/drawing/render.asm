@@ -48,24 +48,24 @@ _GXNotHorizontal:
 		inc 	a
 		sta 	gxScale
 
-		stz 	gzTemp1						; start first line
+		stz 	gxzTemp1						; start first line
 _GXGELoop:
-		lda 	gzTemp1 					; current line number to read.
+		lda 	gxzTemp1 					; current line number to read.
 		eor 	gxVFlip
 		tax 								; get the Xth line.
 		jsr 	_GXCallAcquire 				; get that data.
 		lda 	gxScale 					; do scale identical copies of that line.
-		sta 	gzTemp1+1
+		sta 	gxzTemp1+1
 _GXGELoop2:
 		lda 	gxY0 						; off screen
 		cmp 	gxHeight
 		bcs 	_GXDGEExit
 
 		jsr 	GXRenderOneLine 			; render line
-		dec 	gzTemp1+1 					; scale times.
+		dec 	gxzTemp1+1 					; scale times.
 		bne 	_GXGELoop2		
-		inc 	gzTemp1 					; done all lines.
-		lda 	gzTemp1
+		inc 	gxzTemp1 					; done all lines.
+		lda 	gxzTemp1
 		cmp 	gxSize
 		bne 	_GXGELoop
 _GXDGEExit:
@@ -100,30 +100,30 @@ _GXCallAcquire:
 GXRenderOneLine:
 		jsr 	GXPositionCalc 				; calculate position/offset.
 		ldy 	gsOffset 					; Y contains position.
-		stz 	gzTemp2 					; do size pixels
+		stz 	gxzTemp2 					; do size pixels
 _GXROLLoop1:
 		lda 	gxScale 					; set to do 'scale' times
-		sta 	gzTemp2+1
+		sta 	gxzTemp2+1
 _GXROLLoop2:
-		lda 	gzTemp2 					; get current pixel
+		lda 	gxzTemp2 					; get current pixel
 		eor 	gxHFlip
 		tax 								; read from the pixel buffer
 		lda 	gxPixelBuffer,x
 		beq 	_GXZeroPixel 				; don't draw if zero.
-		lda 	(gsTemp),y
+		lda 	(gxzScreen),y
 		and 	gxANDValue
 		eor 	gxPixelBuffer,x
-		sta 	(gsTemp),y
+		sta 	(gxzScreen),y
 _GXZeroPixel:
 		iny 								; advance pointer
 		bne 	_GXNoShift
-		inc 	gsTemp+1 					; carry to next
+		inc 	gxzScreen+1 					; carry to next
 		jsr 	GXDLTCheckWrap				; check for new page.
 _GXNoShift:		
-		dec 	gzTemp2+1 					; do the inner loop gxScale times.
+		dec 	gxzTemp2+1 					; do the inner loop gxScale times.
 		bne 	_GXROLLoop2 
-		inc 	gzTemp2 					; next pixel.
-		lda 	gzTemp2
+		inc 	gxzTemp2 					; next pixel.
+		lda 	gxzTemp2
 		cmp 	gxSize
 		bne 	_GXROLLoop1
 		inc 	gxY0
