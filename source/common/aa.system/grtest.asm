@@ -24,9 +24,9 @@ plot:	.macro
 loop:	
 		.plot 	0,1,0
 		.plot 	1,1,0
-		.plot 	2,$20,0
+		.plot 	2,$03,0
 		.plot 	3,$FF,0
-		.plot 	16,30,130
+		.plot 	24,130,30
 		.plot 	4,'Q',1*8
 		.plot 	4,'X',1*8
 		.plot 	5,0,1*8
@@ -34,6 +34,9 @@ loop:
 		.plot 	5,2,1*8
 		.plot 	16,10,10
 		.plot 	18,100,100
+
+		.plot 	6,3,1
+		.plot 	7,2,0
 		rts
 
 demo:	jsr 	Random32Bit 

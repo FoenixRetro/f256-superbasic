@@ -20,6 +20,7 @@
 
 GXControlBitmap: ;; [0:BITMAPCTL]
 		stz 	1
+		
 		lda 	gzTemp0 					; get control bits
 		lsr 	a 							; bit 0 into carry.
 		lda 	$D000 						; read Vicky MCR
@@ -82,30 +83,18 @@ _CSNotDefault:
 		sta 	gxSpritePage
 		jsr 	GXCalculateBaseAddress 	 	; convert page# to address
 		lda 	zTemp0
-		sta 	GXSAddress
+		sta 	GXSAddressBase
 		lda 	zTemp0+1
-		sta 	GXSAddress+1
+		sta 	GXSAddressBase+1
 		;
 		ldx 	#0 							; disable all sprites, clears all sprite memory.
 _CSClear:
 		stz 	$D900,x
 		stz 	$DA00,x
 		dex
-		bne 	_CSClear
+		bne 	_CSClear	
 		;
-		lda 	#2
-		jsr 	GXFindSprite
-		lda 	#1+$18
-		sta 	$D900
-		lda 	GXSAddress
-		sta	 	$D901
-		lda 	GXSAddress+1
-		sta	 	$D902
-		lda 	#3
-		sta 	$D903
-		lda 	#64
-		sta 	$D904
-		sta 	$D906
+		stz 	GSCurrentSprite+1 			; no sprite selected.
 		clc
 		rts
 

@@ -60,6 +60,7 @@ _GXFXSSTTable:
 
 		.send code
 		.section storage
+
 GXSSize: 									; sprite size (in pixels)
 		.fill 	1
 GXSSizeRaw: 								; size (0-3)
@@ -68,6 +69,7 @@ GXSLUT: 									; LUT to use
 		.fill 	1		
 GXSAddress: 								; offset from base page.
 		.fill 	2		
+
 		.send storage
 
 ; ************************************************************************************************

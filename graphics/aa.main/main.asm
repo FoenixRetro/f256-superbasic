@@ -73,11 +73,14 @@ _GDCopy2:
 		;		
 _GDExecuteA:
 		and 	#$FE 						; lose LSB
+		cmp 	#GRFirstFreeCode*2 			; bad ?
+		bcs 	_GDError2
 		tax
 		jmp 	(GRVectorTable,x)
 
 _GDError:
 		pla 								; throw command
+_GDError2:		
 		sec
 		rts
 

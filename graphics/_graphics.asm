@@ -17,6 +17,7 @@ graphicsIntegrated = 1
 	.include	"./drawing/render.asm"
 	.include	"./drawing/sources/font.asm"
 	.include	"./drawing/sources/sprite.asm"
+	.include	"./drawing/sprite.asm"
 	.include	"./utility/access.asm"
 	.include	"./utility/calculate.asm"
 	.include	"./utility/find.asm"

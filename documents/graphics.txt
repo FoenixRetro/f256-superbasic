@@ -18,23 +18,21 @@ cccccccc
 Returns CS error , CC okay
 
 *	0 BITMAPCTL  X = lut1|lut0|enable, Y = Page # (0 => 8)
-	1 SPRITECTL X = bit 0 enable Y = Page # (0 => 24)
+*	1 SPRITECTL X = bit 0 enable Y = Page # (0 => 24)
 *	2 CLEAR (X colour)
 *	3 COLOUR (X fgr, mode bits 7..0)
 			Mode Bits: vflip|hflip|s2|s1|s0|-|m1|m0
 			scale is (s2s1s0+1)
 *	4 DRAWC xxxxxxx character (advances horizontally), 2nd byte eor with mode bits.
 *	5 DRAWS sprite ID xxxxxx (4+5 only support modes 0/1), 2nd byte eor with mode bits.
-	6 SPUSE X = sprite# select sprite , Y = 0 = show, 1 = hide
-	7 SPIMAGE X = set sprite image to X
-
+	6 SPRUSE X = sprite# select sprite , Y = 0 = show, 1 = hide
+	7 SPRIMG X = set selected sprite image to X, Y = 0
 *	16 MOVE 			
 *	17 LINE 	
 *	18 RECT
 *	19 Fill RECT
 *	20 CIRCLE
 *	21 Fill CIRCLE
-
 *	24 PLOT point
 	25 SPMOVE to x,y (fix up sprite positioning)
 
