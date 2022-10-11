@@ -22,12 +22,19 @@ plot:	.macro
 		.endm
 		
 loop:	
-		.plot 	0,0,0
+		.plot 	0,1,0
+		.plot 	1,1,0
 		.plot 	2,$20,0
 		.plot 	3,$FF,0
-		.plot 	24,322,220
-		.plot 	24,102,40
-;		rts
+		.plot 	16,30,130
+		.plot 	4,'Q',1*8
+		.plot 	4,'X',1*8
+		.plot 	5,0,1*8
+		.plot 	5,1,1*8
+		.plot 	5,2,1*8
+		.plot 	16,10,10
+		.plot 	18,100,100
+		rts
 
 demo:	jsr 	Random32Bit 
 		inc 	gxEORValue

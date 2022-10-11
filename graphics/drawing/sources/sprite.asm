@@ -23,9 +23,6 @@ GXSpriteHandler: ;; [5:DrawSprite]
 		eor 	gxMode
 		sta 	gxUseMode
 
-		lda 	#GXSpritePage
-		sta 	GXSpriteBasePage
-
 		ldx 	gzTemp0 					; sprite #
 		phx
 		jsr 	GXOpenBitmap 				; can access sprite information
@@ -40,7 +37,7 @@ GXSpriteHandler: ;; [5:DrawSprite]
 		rts
 
 GXSpriteAcquire:
-		lda 	GXspriteBasePage			; point to base page
+		lda 	GXSpritePage				; point to base page
 		sta 	GFXEditSlot
 		;
 		;		Multiply Row Number by Sprite Size (0,1,2,3) + 1 * 8 e.g. 8,16,24 or 32
@@ -96,11 +93,7 @@ _GXSACopyLoop:
 		rts
 
 		.send code
-
-		.section storage
-GXSpriteBasePage:
-		.fill 	1
-		.send storage		
+	
 ; ************************************************************************************************
 ;
 ;									Changes and Updates

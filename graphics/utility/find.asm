@@ -21,7 +21,7 @@
 GXFindSprite:
 		tax
 
-		lda 	GXSpriteBasePage 			; access the base page of the sprite
+		lda 	GXSpritePage 				; access the base page of the sprite
 		sta 	GFXEditSlot
 		;
 		lda 	GXMappingAddress+256,x 		; MSB

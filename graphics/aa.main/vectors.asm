@@ -3,7 +3,7 @@
 ;
 GRVectorTable:
 	.word	GXControlBitmap          ; $00 BITMAPCTL
-	.word	GRUndefined              ; $01
+	.word	GXControlSprite          ; $01 SPRITECTL
 	.word	GXClearBitmap            ; $02 Clear
 	.word	GXSetColourMode          ; $03 Colour
 	.word	GXFontHandler            ; $04 DrawFont

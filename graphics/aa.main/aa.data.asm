@@ -14,10 +14,6 @@
 ;
 GXMappingPage = 3
 ;
-;		Sprite Graphics Page
-;
-GXSpritePage = 24
-;
 ;		Address of that page
 ;
 GXMappingAddress = ($2000 * GXMappingPage)
@@ -99,6 +95,11 @@ gxY1:
 ;		Base page of bitmap
 ;
 gxBasePage:
+		.fill 	1
+;
+;		Base page of sprite Data
+;		
+gxSpritePage:
 		.fill 	1
 ;
 ;		Height of screen

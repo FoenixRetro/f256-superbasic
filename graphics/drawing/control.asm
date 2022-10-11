@@ -20,19 +20,18 @@
 
 GXControlBitmap: ;; [0:BITMAPCTL]
 		stz 	1
-		ldx 	gzTemp0 					; get control bits
+		lda 	gzTemp0 					; get control bits
 		lsr 	a 							; bit 0 into carry.
 		lda 	$D000 						; read Vicky MCR
 		ora 	#7 							; turn graphics, text, textoverlay on.
 		and 	#$F7 						; clear bitmap bit
-		bcs 	_CBNotOn
-		ora 	#$08 						; bitmap on if 0 (default), 1 turns off.
+		bcc 	_CBNotOn
+		ora 	#$08 						; bitmap on if 1 on 0 off
 _CBNotOn:		
 		sta 	$D000 						; update Vicky MCR
 
 		lda 	gzTemp0 					; get control settings (bits 0-2)
 		and 	#7
-		eor 	#1 							; bitmap enable works backwards.
 		sta 	$D100 						; write in Vicky Bitmap Control Register #0
 
 		lda 	gzTemp0+1 					; get the base page
@@ -55,6 +54,58 @@ _CBNotDefault:
 		ldx 	#200 						; if bit 0 set 320x200
 _CBHaveHeight		
 		stx 	gxHeight
+		clc
+		rts
+
+; ************************************************************************************************
+;
+;										Sprite Control
+;
+; ************************************************************************************************
+
+GXControlSprite: ;; [1:SPRITECTL]
+		stz 	1
+		lda 	gzTemp0 					; get control bits
+		lsr 	a 							; bit 0 into carry.
+		lda 	$D000 						; read Vicky MCR
+		ora 	#7 							; turn graphics, text, textoverlay on.
+		and 	#$DF 						; clear sprite bit
+		bcc 	_CSNotOn
+		ora 	#$20 						; sprite on if 1 on 0 off
+_CSNotOn:		
+		sta 	$D000 						; update Vicky MCR
+
+		lda 	gzTemp0+1 					; get the base page
+		bne 	_CSNotDefault
+		lda 	#24  						; if zero, use 24 e.g. sprites at $30000
+_CSNotDefault:		
+		sta 	gxSpritePage
+		jsr 	GXCalculateBaseAddress 	 	; convert page# to address
+		lda 	zTemp0
+		sta 	GXSAddress
+		lda 	zTemp0+1
+		sta 	GXSAddress+1
+		;
+		ldx 	#0 							; disable all sprites, clears all sprite memory.
+_CSClear:
+		stz 	$D900,x
+		stz 	$DA00,x
+		dex
+		bne 	_CSClear
+		;
+		lda 	#2
+		jsr 	GXFindSprite
+		lda 	#1+$18
+		sta 	$D900
+		lda 	GXSAddress
+		sta	 	$D901
+		lda 	GXSAddress+1
+		sta	 	$D902
+		lda 	#3
+		sta 	$D903
+		lda 	#64
+		sta 	$D904
+		sta 	$D906
 		clc
 		rts
 
