@@ -16,7 +16,7 @@ cccccccc
 
 Returns CS error , CC okay
 
-	0 BITMAPCTL  X = lut1|lut0|enable, Y = Page # (0 => 8)
+*	0 BITMAPCTL  X = lut1|lut0|disable, Y = Page # (0 => 8)
 	1 SPRITECTL X = bit 0 on/off Y = Page # (0 => 24)
 *	2 CLEAR (X colour)
 *	3 COLOUR (X fgr, mode bits 7..0)
@@ -24,6 +24,8 @@ Returns CS error , CC okay
 			scale is (s2s1s0+1)
 *	4 DRAWC xxxxxxx character (advances horizontally), 2nd byte eor with mode bits.
 *	5 DRAWS sprite ID xxxxxx (4+5 only support modes 0/1), 2nd byte eor with mode bits.
+	6 SPUSE X = sprite# select sprite, Y = 0 = show, 1 = hide
+	7 SPIMAGE X = set sprite image
 
 *	16 MOVE 			
 *	17 LINE 	
@@ -32,4 +34,25 @@ Returns CS error , CC okay
 *	20 CIRCLE
 *	21 Fill CIRCLE
 
-	24 PLOT point
+*	24 PLOT point
+	25 SPMOVE to x,y (fix up sprite positioning)
+
+	BITMAP ON|OFF 		(ON = 0, OFF = 1)
+	SPRITES ON|OFF
+	LINE
+	SPRITE n
+	TEXT "xxxx"
+	RECT
+	CIRCLE
+
+	modifiers:
+		x,y 			- just move
+		HERE 			- draw without moving
+		TO x,y 			- move & draw
+		COLOUR c[,m]	- set colour and mode.
+		COLOR 			  (synonym)
+		SCALE <n> 		- set scale for DRAWC/DRAWS
+		SOLID 			- set solid/outline mode.
+		OUTLINE
+		SHOW 			- show/hide current sprite.
+		HIDE

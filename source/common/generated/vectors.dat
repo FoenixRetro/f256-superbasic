@@ -74,61 +74,80 @@ VectorSet0:
 	.word	AllocUnary                       ; $84 ALLOC(
 	.word	AscUnary                         ; $85 ASC(
 	.word	ChrUnary                         ; $86 CHR$(
-	.word	UnaryFalse                       ; $87 FALSE
-	.word	FracUnary                        ; $88 FRAC(
-	.word	IntUnary                         ; $89 INT(
-	.word	IsValUnary                       ; $8a ISVAL(
-	.word	Unary_Left                       ; $8b LEFT$(
-	.word	LenUnary                         ; $8c LEN(
-	.word	Unary_Mid                        ; $8d MID$(
-	.word	Unary_Not                        ; $8e NOT(
-	.word	Unary_Random                     ; $8f RANDOM(
-	.word	Unary_Right                      ; $90 RIGHT$(
-	.word	Unary_Rnd                        ; $91 RND(
-	.word	SgnUnary                         ; $92 SGN(
-	.word	SpcUnary                         ; $93 SPC(
-	.word	Unary_Str                        ; $94 STR$(
-	.word	UnaryTrue                        ; $95 TRUE
-	.word	ValUnary                         ; $96 VAL(
-	.word	ForCommand                       ; $97 FOR
-	.word	IfCommand                        ; $98 IF
-	.word	Unused1                          ; $99 PROC
-	.word	Command_REPEAT                   ; $9a REPEAT
-	.word	Command_WHILE                    ; $9b WHILE
-	.word	EndIf                            ; $9c ENDIF
-	.word	Command_ENDPROC                  ; $9d ENDPROC
-	.word	NextCommand                      ; $9e NEXT
-	.word	Unused4                          ; $9f THEN
-	.word	Command_UNTIL                    ; $a0 UNTIL
-	.word	Command_WEND                     ; $a1 WEND
-	.word	CallCommand                      ; $a2 CALL
-	.word	SyntaxError                      ; $a3 CLS
-	.word	Command_Data                     ; $a4 DATA
-	.word	DimCommand                       ; $a5 DIM
-	.word	Unused3                          ; $a6 DOWNTO
-	.word	ElseCode                         ; $a7 ELSE
-	.word	Command_GOSUB                    ; $a8 GOSUB
-	.word	GotoCommand                      ; $a9 GOTO
-	.word	LetCommand                       ; $aa LET
-	.word	Command_LOCAL                    ; $ab LOCAL
-	.word	Command_Print                    ; $ac PRINT
-	.word	Command_Read                     ; $ad READ
-	.word	RemCommand                       ; $ae REM
-	.word	Command_RETURN                   ; $af RETURN
-	.word	Unused2                          ; $b0 TO
+	.word	SyntaxError                      ; $87 EVENT(
+	.word	UnaryFalse                       ; $88 FALSE
+	.word	FracUnary                        ; $89 FRAC(
+	.word	IntUnary                         ; $8a INT(
+	.word	IsValUnary                       ; $8b ISVAL(
+	.word	Unary_Left                       ; $8c LEFT$(
+	.word	LenUnary                         ; $8d LEN(
+	.word	Unary_Mid                        ; $8e MID$(
+	.word	Unary_Not                        ; $8f NOT(
+	.word	SyntaxError                      ; $90 OFF
+	.word	SyntaxError                      ; $91 ON
+	.word	Unary_Random                     ; $92 RANDOM(
+	.word	Unary_Right                      ; $93 RIGHT$(
+	.word	Unary_Rnd                        ; $94 RND(
+	.word	SgnUnary                         ; $95 SGN(
+	.word	SpcUnary                         ; $96 SPC(
+	.word	Unary_Str                        ; $97 STR$(
+	.word	SyntaxError                      ; $98 TIMER(
+	.word	UnaryTrue                        ; $99 TRUE
+	.word	ValUnary                         ; $9a VAL(
+	.word	ForCommand                       ; $9b FOR
+	.word	IfCommand                        ; $9c IF
+	.word	Unused1                          ; $9d PROC
+	.word	Command_REPEAT                   ; $9e REPEAT
+	.word	Command_WHILE                    ; $9f WHILE
+	.word	EndIf                            ; $a0 ENDIF
+	.word	Command_ENDPROC                  ; $a1 ENDPROC
+	.word	NextCommand                      ; $a2 NEXT
+	.word	Unused4                          ; $a3 THEN
+	.word	Command_UNTIL                    ; $a4 UNTIL
+	.word	Command_WEND                     ; $a5 WEND
+	.word	CallCommand                      ; $a6 CALL
+	.word	SyntaxError                      ; $a7 CIRCLE
+	.word	SyntaxError                      ; $a8 CLS
+	.word	SyntaxError                      ; $a9 COLOR
+	.word	SyntaxError                      ; $aa COLOUR
+	.word	Command_Data                     ; $ab DATA
+	.word	DimCommand                       ; $ac DIM
+	.word	Unused3                          ; $ad DOWNTO
+	.word	ElseCode                         ; $ae ELSE
+	.word	Command_GOSUB                    ; $af GOSUB
+	.word	GotoCommand                      ; $b0 GOTO
+	.word	SyntaxError                      ; $b1 HERE
+	.word	SyntaxError                      ; $b2 HIDE
+	.word	LetCommand                       ; $b3 LET
+	.word	SyntaxError                      ; $b4 LINE
+	.word	Command_LOCAL                    ; $b5 LOCAL
+	.word	SyntaxError                      ; $b6 OUTLINE
+	.word	Command_Print                    ; $b7 PRINT
+	.word	Command_Read                     ; $b8 READ
+	.word	SyntaxError                      ; $b9 RECT
+	.word	RemCommand                       ; $ba REM
+	.word	Command_RETURN                   ; $bb RETURN
+	.word	SyntaxError                      ; $bc SCALE
+	.word	SyntaxError                      ; $bd SHOW
+	.word	SyntaxError                      ; $be SOLID
+	.word	SyntaxError                      ; $bf SPRITE
+	.word	SyntaxError                      ; $c0 TEXT
+	.word	Unused2                          ; $c1 TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
 	.word	SyntaxError                      ; $82 !2:SH2
 	.word	AssembleCommand                  ; $83 ASSEMBLE
 	.word	AssertCommand                    ; $84 ASSERT
-	.word	ClearCommand                     ; $85 CLEAR
-	.word	EndCommand                       ; $86 END
-	.word	Command_List                     ; $87 LIST
-	.word	NewCommand                       ; $88 NEW
-	.word	Command_Restore                  ; $89 RESTORE
-	.word	CommandRUN                       ; $8a RUN
-	.word	StopCommand                      ; $8b STOP
+	.word	SyntaxError                      ; $85 BITMAP
+	.word	ClearCommand                     ; $86 CLEAR
+	.word	EndCommand                       ; $87 END
+	.word	Command_List                     ; $88 LIST
+	.word	NewCommand                       ; $89 NEW
+	.word	Command_Restore                  ; $8a RESTORE
+	.word	CommandRUN                       ; $8b RUN
+	.word	SyntaxError                      ; $8c SPRITES
+	.word	StopCommand                      ; $8d STOP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

@@ -12,22 +12,7 @@
 
 		.section code
 RunDemos:	
-		stz 	1
 
-		lda 	#$0F
-		sta 	$D000
-		lda 	#1
-		sta 	$D100
-		stz 	$D101
-		stz 	$D102
-		lda 	#1
-		sta 	$D103
-
-		lda 	#8
-		sta 	gxBasePage
-
-		lda 	#240
-		sta 	gxHeight
 
 plot:	.macro
 		lda 	#((\1)*2)+(((\2) >> 8) & 1)		
@@ -37,6 +22,7 @@ plot:	.macro
 		.endm
 		
 loop:	
+		.plot 	0,0,0
 		.plot 	2,$20,0
 		.plot 	3,$FF,0
 		.plot 	24,322,220

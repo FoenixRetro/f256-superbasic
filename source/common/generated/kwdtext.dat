@@ -9,48 +9,65 @@ KeywordSet0:
 	.text	6,$93,"ALLOC("         ; $84 ALLOC(
 	.text	4,$ff,"ASC("           ; $85 ASC(
 	.text	5,$29,"CHR$("          ; $86 CHR$(
-	.text	5,$6b,"FALSE"          ; $87 FALSE
-	.text	5,$44,"FRAC("          ; $88 FRAC(
-	.text	4,$13,"INT("           ; $89 INT(
-	.text	6,$a7,"ISVAL("         ; $8a ISVAL(
-	.text	6,$77,"LEFT$("         ; $8b LEFT$(
-	.text	4,$07,"LEN("           ; $8c LEN(
-	.text	5,$26,"MID$("          ; $8d MID$(
-	.text	4,$19,"NOT("           ; $8e NOT(
-	.text	7,$e9,"RANDOM("        ; $8f RANDOM(
-	.text	7,$ca,"RIGHT$("        ; $90 RIGHT$(
-	.text	4,$0c,"RND("           ; $91 RND(
-	.text	4,$10,"SGN("           ; $92 SGN(
-	.text	4,$0e,"SPC("           ; $93 SPC(
-	.text	5,$45,"STR$("          ; $94 STR$(
-	.text	4,$40,"TRUE"           ; $95 TRUE
-	.text	4,$0b,"VAL("           ; $96 VAL(
-	.text	3,$e7,"FOR"            ; $97 FOR
-	.text	2,$8f,"IF"             ; $98 IF
-	.text	4,$34,"PROC"           ; $99 PROC
-	.text	6,$c1,"REPEAT"         ; $9a REPEAT
-	.text	5,$79,"WHILE"          ; $9b WHILE
-	.text	5,$66,"ENDIF"          ; $9c ENDIF
-	.text	7,$0b,"ENDPROC"        ; $9d ENDPROC
-	.text	4,$3f,"NEXT"           ; $9e NEXT
-	.text	4,$2f,"THEN"           ; $9f THEN
-	.text	5,$8c,"UNTIL"          ; $a0 UNTIL
-	.text	4,$2e,"WEND"           ; $a1 WEND
-	.text	4,$1c,"CALL"           ; $a2 CALL
-	.text	3,$e2,"CLS"            ; $a3 CLS
-	.text	4,$1a,"DATA"           ; $a4 DATA
-	.text	3,$da,"DIM"            ; $a5 DIM
-	.text	6,$db,"DOWNTO"         ; $a6 DOWNTO
-	.text	4,$29,"ELSE"           ; $a7 ELSE
-	.text	5,$80,"GOSUB"          ; $a8 GOSUB
-	.text	4,$39,"GOTO"           ; $a9 GOTO
-	.text	3,$e5,"LET"            ; $aa LET
-	.text	5,$6b,"LOCAL"          ; $ab LOCAL
-	.text	5,$8d,"PRINT"          ; $ac PRINT
-	.text	4,$1c,"READ"           ; $ad READ
-	.text	3,$e4,"REM"            ; $ae REM
-	.text	6,$e0,"RETURN"         ; $af RETURN
-	.text	2,$a3,"TO"             ; $b0 TO
+	.text	6,$aa,"EVENT("         ; $87 EVENT(
+	.text	5,$6b,"FALSE"          ; $88 FALSE
+	.text	5,$44,"FRAC("          ; $89 FRAC(
+	.text	4,$13,"INT("           ; $8a INT(
+	.text	6,$a7,"ISVAL("         ; $8b ISVAL(
+	.text	6,$77,"LEFT$("         ; $8c LEFT$(
+	.text	4,$07,"LEN("           ; $8d LEN(
+	.text	5,$26,"MID$("          ; $8e MID$(
+	.text	4,$19,"NOT("           ; $8f NOT(
+	.text	3,$db,"OFF"            ; $90 OFF
+	.text	2,$9d,"ON"             ; $91 ON
+	.text	7,$e9,"RANDOM("        ; $92 RANDOM(
+	.text	7,$ca,"RIGHT$("        ; $93 RIGHT$(
+	.text	4,$0c,"RND("           ; $94 RND(
+	.text	4,$10,"SGN("           ; $95 SGN(
+	.text	4,$0e,"SPC("           ; $96 SPC(
+	.text	5,$45,"STR$("          ; $97 STR$(
+	.text	6,$a9,"TIMER("         ; $98 TIMER(
+	.text	4,$40,"TRUE"           ; $99 TRUE
+	.text	4,$0b,"VAL("           ; $9a VAL(
+	.text	3,$e7,"FOR"            ; $9b FOR
+	.text	2,$8f,"IF"             ; $9c IF
+	.text	4,$34,"PROC"           ; $9d PROC
+	.text	6,$c1,"REPEAT"         ; $9e REPEAT
+	.text	5,$79,"WHILE"          ; $9f WHILE
+	.text	5,$66,"ENDIF"          ; $a0 ENDIF
+	.text	7,$0b,"ENDPROC"        ; $a1 ENDPROC
+	.text	4,$3f,"NEXT"           ; $a2 NEXT
+	.text	4,$2f,"THEN"           ; $a3 THEN
+	.text	5,$8c,"UNTIL"          ; $a4 UNTIL
+	.text	4,$2e,"WEND"           ; $a5 WEND
+	.text	4,$1c,"CALL"           ; $a6 CALL
+	.text	6,$b2,"CIRCLE"         ; $a7 CIRCLE
+	.text	3,$e2,"CLS"            ; $a8 CLS
+	.text	5,$7f,"COLOR"          ; $a9 COLOR
+	.text	6,$d4,"COLOUR"         ; $aa COLOUR
+	.text	4,$1a,"DATA"           ; $ab DATA
+	.text	3,$da,"DIM"            ; $ac DIM
+	.text	6,$db,"DOWNTO"         ; $ad DOWNTO
+	.text	4,$29,"ELSE"           ; $ae ELSE
+	.text	5,$80,"GOSUB"          ; $af GOSUB
+	.text	4,$39,"GOTO"           ; $b0 GOTO
+	.text	4,$24,"HERE"           ; $b1 HERE
+	.text	4,$1a,"HIDE"           ; $b2 HIDE
+	.text	3,$e5,"LET"            ; $b3 LET
+	.text	4,$28,"LINE"           ; $b4 LINE
+	.text	5,$6b,"LOCAL"          ; $b5 LOCAL
+	.text	7,$20,"OUTLINE"        ; $b6 OUTLINE
+	.text	5,$8d,"PRINT"          ; $b7 PRINT
+	.text	4,$1c,"READ"           ; $b8 READ
+	.text	4,$2e,"RECT"           ; $b9 RECT
+	.text	3,$e4,"REM"            ; $ba REM
+	.text	6,$e0,"RETURN"         ; $bb RETURN
+	.text	5,$68,"SCALE"          ; $bc SCALE
+	.text	4,$41,"SHOW"           ; $bd SHOW
+	.text	5,$7b,"SOLID"          ; $be SOLID
+	.text	6,$d7,"SPRITE"         ; $bf SPRITE
+	.text	4,$45,"TEXT"           ; $c0 TEXT
+	.text	2,$a3,"TO"             ; $c1 TO
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF
@@ -58,13 +75,15 @@ KeywordSet1:
 	.text	0,$5a,""               ; $82 !2:SH2
 	.text	8,$4c,"ASSEMBLE"       ; $83 ASSEMBLE
 	.text	6,$d2,"ASSERT"         ; $84 ASSERT
-	.text	5,$67,"CLEAR"          ; $85 CLEAR
-	.text	3,$d7,"END"            ; $86 END
-	.text	4,$3c,"LIST"           ; $87 LIST
-	.text	3,$ea,"NEW"            ; $88 NEW
-	.text	7,$24,"RESTORE"        ; $89 RESTORE
-	.text	3,$f5,"RUN"            ; $8a RUN
-	.text	4,$46,"STOP"           ; $8b STOP
+	.text	6,$bd,"BITMAP"         ; $85 BITMAP
+	.text	5,$67,"CLEAR"          ; $86 CLEAR
+	.text	3,$d7,"END"            ; $87 END
+	.text	4,$3c,"LIST"           ; $88 LIST
+	.text	3,$ea,"NEW"            ; $89 NEW
+	.text	7,$24,"RESTORE"        ; $8a RESTORE
+	.text	3,$f5,"RUN"            ; $8b RUN
+	.text	7,$2a,"SPRITES"        ; $8c SPRITES
+	.text	4,$46,"STOP"           ; $8d STOP
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF

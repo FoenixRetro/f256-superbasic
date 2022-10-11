@@ -37,16 +37,19 @@ class TokenSource(object):
 				abs( 		asc( 		chr$( 		alloc(		frac(		len( 		
 				left$( 		mid$( 		right$( 	rnd( 		sgn( 		int( 				
 				spc( 		str$( 		val(  		isval(		true 		false
-				not(		random(	
+				not(		random(	 	on 			off 		timer( 		event(
 
 			{0}							// Set 0
 				cls 		data 		dim 		let 		goto		gosub 		
 				return 		print		rem  		else 		to			downto
-				call 		read 		local
+				call 		read 		local 		line 		sprite 		rect
+				text 		circle 		here 		color 		colour 		scale
+				solid 		outline 	show 		hide 		gfx
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop				
-				clear 		restore 	assert 		assemble
+				clear 		restore 	assert 		assemble 	bitmap
+				sprites
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	

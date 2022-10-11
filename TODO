@@ -1,12 +1,17 @@
 Progress:
 
 	Graphics code.	
-		Error checking.
-		Changing Kerning ?
 		Open/Close Bitmap
 		Sprite handling.
 		
+	Graphics Interface
+	General graphics command and running in BASIC
+	Specific chained commands.
+	Timing functions
+	Gamepad function (cheat, use keyboard)
+	
 Later:
 	Disable interrupts enable at end of line command ?
+	Changing Kerning ?
 	Indenting
 

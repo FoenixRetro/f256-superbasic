@@ -9,6 +9,7 @@ graphicsIntegrated = 1
 	.include	"./aa.main/vectors.asm"
 	.include	"./drawing/circle.asm"
 	.include	"./drawing/clear.asm"
+	.include	"./drawing/control.asm"
 	.include	"./drawing/line.asm"
 	.include	"./drawing/mode.asm"
 	.include	"./drawing/plot.asm"
