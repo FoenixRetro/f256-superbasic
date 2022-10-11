@@ -35,6 +35,7 @@ _GXDrawLoop:
 		bra 	_GXDrawLoop
 _GXLExit:
 		jsr 	GXCloseBitmap
+		clc
 		rts
 
 ; ************************************************************************************************

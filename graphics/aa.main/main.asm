@@ -52,6 +52,15 @@ _GDCopy1:
 		and 	#1 							; put LSB as MSB of Current.X
 		sta 	gxCurrentX+1
 		;
+		beq 	_GDXOkay 					; check X range
+		lda 	gxCurrentX
+		cmp 	#64 						; >= 320
+		bcs 	_GDError
+_GDXOkay: 									; check Y >= Height
+		lda 	gxCurrentY
+		cmp 	gxHeight
+		bcs 	_GDError		
+		;
 		ldx 	#7 							; copy current and last to gxXY/12 work area
 _GDCopy2:
 		lda 	gxCurrentX,x
@@ -67,7 +76,13 @@ _GDExecuteA:
 		tax
 		jmp 	(GRVectorTable,x)
 
+_GDError:
+		pla 								; throw command
+		sec
+		rts
+
 GXMove: ;; [16:Move]
+		clc
 		rts
 
 GRUndefined:

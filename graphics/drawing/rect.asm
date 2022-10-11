@@ -54,6 +54,7 @@ _GXLastLine: 								; draw the last solid line.
 _GXRectangleExit:
 		pla 								; throw fill flag.		
 		jsr 	GXCloseBitmap 				; stop drawing and exit
+		clc
 		rts
 
 ; ************************************************************************************************

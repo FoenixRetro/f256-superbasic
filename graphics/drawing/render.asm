@@ -85,6 +85,7 @@ _GXSLNoCarry:
 		bne 	_GXShiftLeft		
 
 		jsr 	GXCloseBitmap
+		clc
 		rts		
 
 _GXCallAcquire:

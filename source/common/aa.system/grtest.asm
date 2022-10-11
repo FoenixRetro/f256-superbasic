@@ -39,7 +39,7 @@ plot:	.macro
 loop:	
 		.plot 	2,$20,0
 		.plot 	3,$FF,0
-		.plot 	24,100,40
+		.plot 	24,322,220
 		.plot 	24,102,40
 ;		rts
 

@@ -26,6 +26,7 @@ GXPlotPoint: ;; [24:Plot]
 		.plotpixel
 		sta 	(gsTemp),y
 		jsr 	GXCloseBitmap 				; stop drawing and exit
+		clc
 		rts
 
 		.send code

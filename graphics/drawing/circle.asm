@@ -37,6 +37,7 @@ _GXCircleDraw:
 		jsr 	GXPlot1
 _GXNoLast:		
 		jsr 	GXCloseBitmap 				; close the bitmap
+		clc
 		rts
 
 _GXCircleContinue:
