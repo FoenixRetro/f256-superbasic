@@ -6,6 +6,7 @@ graphicsIntegrated = 1
 
 	.include	"./aa.main/aa.data.asm"
 	.include	"./aa.main/main.asm"
+	.include	"./aa.main/vectors.asm"
 	.include	"./drawing/circle.asm"
 	.include	"./drawing/clear.asm"
 	.include	"./drawing/line.asm"

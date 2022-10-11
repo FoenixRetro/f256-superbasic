@@ -65,30 +65,13 @@ _GDCopy2:
 _GDExecuteA:
 		and 	#$FE 						; lose LSB
 		tax
-		jmp 	(GDVectors,x)
+		jmp 	(GRVectorTable,x)
 
-GXMove:
+GXMove: ;; [16:Move]
 		rts
 
-; ************************************************************************************************
-;
-;										Vector table
-;
-; ************************************************************************************************
-
-GDVectors:
-		.fill 	2*2 						; $00-$01 	; Open/Close Bitmap/Sprites
-		.word 	GXClearBitmap 				; $02 	  	: Clear Bitmap to X		
-		.word 	GXSetColourMode 			; $03 		; Set colour and drawing mode
-		.word 	GXFontHandler 				; $04 		; Draw from font
-		.word 	GXSpriteHandler 			; $05 		; Draw from sprite
-		.fill 	10*2 						; $06-$0F 	: Reserved
-		.word 	GXMove 						; $10     	: Move (does nothing other than update coords)
-		.word 	GXLine 						; $11 		: Draw line
-		.word 	GXFrameRectangle 			; $12 		; Framed rectangle
-		.word 	GXFillRectangle 			; $13 		; Filled rectangle
-		.word 	GXFrameCircle 				; $14 		; Framed circle
-		.word 	GXFillCircle 				; $15 		; Filled circle
+GRUndefined:
+		.debug
 
 ; ************************************************************************************************
 ;
@@ -96,7 +79,7 @@ GDVectors:
 ;
 ; ************************************************************************************************
 
-GXSetColourMode:
+GXSetColourMode: ;; [3:Colour]
 		ldx 	gzTemp0
 		stx 	gxColour 								; set colour
 		lda 	gzTemp0+1 								;

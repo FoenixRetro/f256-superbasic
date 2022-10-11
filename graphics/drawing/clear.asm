@@ -21,7 +21,7 @@ ScreenSize240 = 320 * 240
 ;
 ; ************************************************************************************************
 
-GXClearBitmap:
+GXClearBitmap: ;; [2:Clear]
 		pha
 		phy
 		jsr 	GXOpenBitmap 				; start access

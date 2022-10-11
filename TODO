@@ -3,6 +3,8 @@ Progress:
 	Graphics code.
 		Plot points.
 		Changing Kerning ?
+		Open Bitmap
+		Sprite handling.
 		
 Later:
 	Disable interrupts enable at end of line command ?

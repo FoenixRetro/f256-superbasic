@@ -89,6 +89,7 @@ autorun:testbasic
 	$(START)
 	
 prelim:
+	make -C ../graphics integrated
 	python $(SCRIPTDIR)errors.py $(LANGUAGE)
 	python $(SCRIPTDIR)opcodes.py >common$(S)generated$(S)asmcore.asm
 	python $(SCRIPTDIR)makebuild.py

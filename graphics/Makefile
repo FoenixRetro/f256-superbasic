@@ -16,4 +16,4 @@ include ../documents/common.make
 endif
 
 integrated:
-	python scripts$(S)makebuild.py >_graphics.asm 1
+	python scripts$(S)makebuild.py 1

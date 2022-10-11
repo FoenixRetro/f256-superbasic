@@ -18,10 +18,10 @@
 ;
 ; ************************************************************************************************
 
-GXFillRectangle:
+GXFillRectangle: ;; [19:FillRect]
 		sec
 		bra 	GXRectangle
-GXFrameRectangle:
+GXFrameRectangle: ;; [18:FrameRect]
 		clc
 GXRectangle:		
 		php 								; save Fill flag (CS)

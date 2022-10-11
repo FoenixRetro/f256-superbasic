@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-GXLine:
+GXLine: ;; [17:Line]
 		jsr 	GXOpenBitmap
 		jsr 	GXSortY						; sort pairs so Y1 >= Y0 e.g. top to bottom.
 		jsr 	GXLineSetup 				; the calculations in the linescanner constructor
