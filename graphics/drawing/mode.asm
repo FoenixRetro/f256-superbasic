@@ -1,9 +1,9 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		main.asm
-;		Purpose:	Graphics main entry point.
-;		Created:	6th October 2022
+;		Name:		mode.asm
+;		Purpose:	Graphics set drawing mode
+;		Created:	11th October 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
@@ -14,64 +14,36 @@
 
 ; ************************************************************************************************
 ;
-;									Graphics Plot Routine
+;								Set colour, mode (bits 0 & 1)
 ;
 ; ************************************************************************************************
 
-GraphicDraw:
-		cmp 	#$10*2 						; instructions 00-0F don't use 
-		bcs 	_GDCoordinate
+GXSetColourMode: ;; [3:Colour]
+		ldx 	gzTemp0
+		stx 	gxColour 								; set colour
+		lda 	gzTemp0+1 								;
+		sta 	gxMode 									; set mode
 		;
-		;		Non coordinate functions
+		;		Now process bits 0/1 to set the drawing type. Normal (0) EOR (1) AND (2) OR (3)
 		;
-		stx 	gzTemp0 					; save X/Y
-		sty 	gzTemp0+1
-		bra 	_GDExecuteA 				; and execute
-		;
-		;		Coordinate functions
-		;
-_GDCoordinate:
-		pha 								; save AXY
-		phx 
-		phy		
-		ldx 	#3 							; copy currentX to lastX
-_GDCopy1:		
-		lda 	gxCurrentX,x
-		sta 	gxLastX,x
-		dex
-		bpl 	_GDCopy1
-		;
-		pla 								; update Y
-		sta 	gxCurrentY
-		stz 	gxCurrentY+1
-		;
-		pla 
-		sta 	gxCurrentX
-		pla 								; get A (command+X.1) back
-		pha
-		and 	#1 							; put LSB as MSB of Current.X
-		sta 	gxCurrentX+1
-		;
-		ldx 	#7 							; copy current and last to gxXY/12 work area
-_GDCopy2:
-		lda 	gxCurrentX,x
-		sta 	gxX0,x
-		dex
-		bpl 	_GDCopy2		
-		pla 								; get command back
-		;
-		;		Execute command X
-		;		
-_GDExecuteA:
-		and 	#$FE 						; lose LSB
-		tax
-		jmp 	(GRVectorTable,x)
-
-GXMove: ;; [16:Move]
-		rts
-
-GRUndefined:
-		.debug	
+		and 	#3 										; only interested in bits 0-3
+		stz 	gxANDValue 								; initially AND with 0, and EOR with Colour
+		ldx 	gxColour
+		stx 	gxEORValue
+		cmp 	#2 										; if mode 2/3 And with colour
+		bcc 	_GXSDCNotAndColour
+		stx 	gxANDValue
+_GXSDCNotAndColour:		
+		bne 	_GXSDCNotAnd 							; mode 2, Don't EOR with colour
+		stz 	gxEORValue
+_GXSDCNotAnd:
+		lsr 	a 										; if bit 0 set, 1's complement AND value		
+		bcc 	_GXSDCNoFlip
+		lda	 	gxANDValue
+		eor 	#$FF
+		sta 	gxANDValue
+_GXSDCNoFlip:
+		rts		
 
 ; ************************************************************************************************
 ;											DRAWING MODES
