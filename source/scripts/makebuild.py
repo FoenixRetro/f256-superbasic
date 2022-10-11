@@ -24,7 +24,7 @@ sourceFiles = []																			# source files in order
 
 for root,dirs,files in os.walk("."): 														# scan for directories
 	for f in files: 																		# look for files that are .inc or .asm
-		if f != "_basic.asm":
+		if f.find("_") < 0:
 			fName = root + os.sep + f
 			if fName.endswith(".asm"):
 				sourceFiles.append(fName)

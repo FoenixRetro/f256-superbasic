@@ -40,10 +40,6 @@ GXSelect: ;; [6:SPRUSE]
 		stz 	1 							; access sprite control.
 		sta 	(gxzTemp0) 					; write to control register		
 
-		lda 	#64
-		sta 	$D91C
-		sta 	$D91E
-
 		clc
 		rts
 
@@ -60,6 +56,8 @@ _GXSFail:
 GXSelectImage: ;; [7:SPRIMG]
 		lda 	GSCurrentSprite+1 			; check sprite selected
 		beq 	_GXSIFail
+
+		stz 	1
 
 		lda 	gxzTemp0 					; sprite image
 		pha
@@ -109,6 +107,37 @@ GXSelectImage: ;; [7:SPRIMG]
 _GXSIFail:
 		sec
 		rts
+
+; ************************************************************************************************
+;
+;									Move Sprite
+;
+; ************************************************************************************************		
+
+GXMoveSprite: ;; [25:SPRMOVE]
+		lda 	GSCurrentSprite+1 			; check sprite selected
+		beq 	_GXSIFail
+		sta 	gxzTemp0+1
+		ldy 	#4
+		lda 	GSCurrentSprite
+		sta 	gxzTemp0
+		;
+		lda 	gxX0						; copy position.
+		sta 	(gxzTemp0),y
+		iny
+		lda 	gxX0+1
+		sta 	(gxzTemp0),y
+		iny
+		lda 	gxY0
+		sta 	(gxzTemp0),y
+
+		clc
+		rts
+
+_GXSIFail:
+		sec
+		rts
+
 		.send code
 
 ; ************************************************************************************************

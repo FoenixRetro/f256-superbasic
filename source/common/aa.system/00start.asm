@@ -20,7 +20,7 @@ Start:	ldx 	#$FF 						; stack reset
 		stz 	$D008 						; remove boundary.
 		stz 	$D009
 		;
-		jsr 	RunDemos
+		;jsr 	RunDemos
 		;
 		jsr 	NewCommand 					; erase current program
 		jsr 	BackloadProgram

@@ -37,6 +37,15 @@ loop:
 
 		.plot 	6,3,1
 		.plot 	7,2,0
+		.plot   25,200,200
+
+		.plot 	6,4,1
+		.plot 	7,1,0
+		.plot   25,100,200
+
+		.plot 	6,5,1
+		.plot 	7,0,0
+		.plot   25,50,200
 		rts
 
 demo:	jsr 	Random32Bit 

@@ -1,11 +1,8 @@
 Progress:
 
-	Graphics code.	
-		Sprite handling.
-		
 	Graphics Interface
-	General graphics command and running in BASIC
-	Specific chained commands.
+		General graphics command and running in BASIC
+		Specific chained commands.
 	Timing functions
 	Gamepad function (cheat, use keyboard)
 	
