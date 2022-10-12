@@ -121,7 +121,7 @@ VectorSet0:
 	.word	Command_GOSUB                    ; $b3 GOSUB
 	.word	GotoCommand                      ; $b4 GOTO
 	.word	SyntaxError                      ; $b5 HERE
-	.word	SyntaxError                      ; $b6 IMAGE
+	.word	ImageCommand                     ; $b6 IMAGE
 	.word	LetCommand                       ; $b7 LET
 	.word	LineCommand                      ; $b8 LINE
 	.word	Command_LOCAL                    ; $b9 LOCAL
@@ -132,8 +132,8 @@ VectorSet0:
 	.word	RemCommand                       ; $be REM
 	.word	Command_RETURN                   ; $bf RETURN
 	.word	SyntaxError                      ; $c0 SOLID
-	.word	SyntaxError                      ; $c1 SPRITE
-	.word	SyntaxError                      ; $c2 TEXT
+	.word	SpriteCommand                    ; $c1 SPRITE
+	.word	TextCommand                      ; $c2 TEXT
 	.word	Unused2                          ; $c3 TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF

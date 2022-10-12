@@ -37,18 +37,6 @@ GXSelect: ;; [7:SPRUSE]
 		sta 	gxzTemp0+1
 		lda 	gxzTemp0
 		sta 	GSCurrentSprite
-		;
-		tya 								; control value
-		and 	#1 
-		sta 	gxzTemp1 					; save it handily.
-
-		stz 	1 							; access sprite control.
-
-		lda 	(gxzTemp0) 					; update enable bit only.
-		and 	#$FE
-		ora 	gxzTemp1
-		sta 	(gxzTemp0) 					; write to control register		
-
 		clc
 		rts
 
@@ -71,10 +59,12 @@ GXSelectImage: ;; [8:SPRIMG]
 
 		stz 	1
 
+		lda 	gxzTemp0+1 					; push show/hide on the stack.
+		bne 	_GXSIHide
+
 		lda 	gxzTemp0 					; sprite image
 		pha
 		jsr 	GXOpenBitmap
-
 		pla		
 		jsr 	GXFindSprite
 
@@ -97,10 +87,6 @@ GXSelectImage: ;; [8:SPRIMG]
 		iny
 		sta	 	(gxzTemp0),y
 
-		lda 	(gxzTemp0)					; get LSB into gxzTemp1
-		and 	#1
-		sta 	gxzTemp1
-
 		lda 	GXSizeBits 					; get raw size
 		eor 	#3 							; make it right (00=32 etc.)
 		rol 	a 							; x 2
@@ -109,11 +95,19 @@ GXSelectImage: ;; [8:SPRIMG]
 		asl 	a 							; x 16
 		ora 	GXSpriteLUT 						; Or with LUT
 		asl 	a 							; 1 shift
-		ora 	gxzTemp1 					; Or in the enable bit
-
+		ora 	#1 							; enable sprite.
 		sta 	(gxzTemp0) 					; and write back
-
 		jsr 	GXCloseBitmap 				
+		clc
+		rts
+
+_GXSIHide:
+		lda 	GSCurrentSprite
+		sta 	gxzTemp0
+		lda 	GSCurrentSprite+1
+		sta 	gxzTemp0+1
+		lda 	#0
+		sta 	(gxzTemp0)
 		clc
 		rts
 

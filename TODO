@@ -1,7 +1,5 @@
 Progress:
-	Graphics Interface
-		Specific chained commands (complete)
-		Check any call coordinates.
+	Calls failing in grcommand.asm
 	Timing functions timer() event()
 	Gamepad function (cheat, use keyboard)
 	Random() no parameter

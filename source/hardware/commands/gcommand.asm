@@ -35,6 +35,86 @@ ShapeDraw:
 
 ; ************************************************************************************************
 ;
+;									 	Sprite
+;
+; ************************************************************************************************
+
+SpriteCommand: ;; [SPRITE]
+		ldx 	#0 				
+		jsr 	Evaluate8BitInteger 		; get image number.
+		phy
+		lda 	#7*2 						; use that image.
+		ldx 	NSMantissa0
+		ldy 	#255
+		jsr 	GXGraphicDraw
+		lda 	#25*2
+		ply
+		jsr 	RunGraphicsCommand
+		bra 	ExecuteGraphicCommand
+
+; ************************************************************************************************
+;
+;									 	Image
+;
+; ************************************************************************************************
+
+ImageCommand: ;; [IMAGE]
+		ldx 	#0 				
+		jsr 	Evaluate8BitInteger 		; get image number.
+		jsr 	RunGraphicsCommand
+ImageRunDraw:
+		lda 	#16*2 						; move cursor
+		jsr 	GXGraphicDraw		
+		lda 	gxDrawScale
+		asl 	a
+		asl 	a
+		asl 	a
+		tay
+		lda 	#6*2 						; image drawing
+		ldx 	NSMantissa0
+		jsr 	GXGraphicDraw		
+		rts
+
+; ************************************************************************************************
+;
+;									 	Text
+;
+; ************************************************************************************************
+
+TextCommand: ;; [Text]
+		ldx 	#0 				
+		jsr 	EvaluateString 				; get text
+		jsr 	RunGraphicsCommand
+TextRunDraw:
+		lda 	#16*2 						; move cursor
+		jsr 	GXGraphicDraw		
+		ldy 	#0
+_IRDLoop:
+		lda 	NSMantissa1 				; access character
+		sta 	zTemp0+1
+		lda 	NSMantissa0
+		sta 	zTemp0		
+		lda 	(zTemp0),y
+		beq 	_IRDExit
+
+		phy									; save string pos
+		pha 								; save char
+		lda 	gxDrawScale 				; get scale
+		asl 	a
+		asl 	a
+		asl 	a
+		tay
+		lda 	#5*2 						; char drawing
+		plx 								; char to draw
+		jsr 	GXGraphicDraw		
+		ply 								; restore string pos
+		iny
+		bcc 	_IRDLoop 					; go back if no error.
+_IRDExit:		
+		rts
+
+; ************************************************************************************************
+;
 ;									 		Line
 ;
 ; ************************************************************************************************
@@ -73,9 +153,11 @@ RunGraphicsCommand:
 _RGINoCarry:
 		sta 	GXHandler
 		stx 	GXHandler+1
+		; ------------------------------------------------------------------
 		;
 		;		Now start processing commands
 		;
+		; ------------------------------------------------------------------
 _RGICommandLoop:
 		.cget 								; next token
 		iny
@@ -94,18 +176,25 @@ _RGICommandLoop:
 		cmp 	#KWD_BY 					; by offset
 		beq 	_RGI_By
 		cmp 	#KWD_FROM 					; from
-		beq 	_RGI_Move
+		beq 	_RGI_Move2
 		cmp 	#KWD_DIM 					; dim (set scale)
 		beq 	_RGI_Dim
 		cmp 	#KWD_COLOUR 				; colour or Color
 		beq 	_RGI_Colour
 		cmp 	#KWD_COLOR
 		beq 	_RGI_Colour
+		ldx 	gxCommandID
+		cpx 	#25*2 						; if not sprite
+		bne 	_RGI_Move 					; move
+		jmp		_RGI_SpriteInstructions 	
+		; ------------------------------------------------------------------
 		;
 		;		Just move.
 		;
-		dey 								; unpick get.
+		; ------------------------------------------------------------------
 _RGI_Move:		
+		dey 								; unpick get.
+_RGI_Move2:		
 		jsr 	GCGetCoordinatePair 		; move to here
 		jsr 	GCCopyPairToStore 			; save
 		phy
@@ -118,9 +207,11 @@ _RGI_Move:
 _RGI_Exit:
 		dey 								; unpick : / EOL
 		rts
+		; ------------------------------------------------------------------
 		;
 		;		Set Solid/Fill
 		;
+		; ------------------------------------------------------------------
 _RGI_Solid:
 		lda 	#2
 		sta 	gxFillSolid
@@ -128,15 +219,19 @@ _RGI_Solid:
 _RGI_Frame:
 		stz 	gxFillSolid
 		bra 	_RGICommandLoop		
+		; ------------------------------------------------------------------
 		;
 		;		Draw, or whatever, at a coordinate pair
 		;
+		; ------------------------------------------------------------------
 _RGI_To:
 		jsr 	GCGetCoordinatePair 		; get coordinate pair into slot #1,#2
 		jsr 	GCCopyPairToStore
+		; ------------------------------------------------------------------
 		;
 		;		Draw, or whatever here.
 		;
+		; ------------------------------------------------------------------
 _RGI_Here:		
 		phy
 		jsr 	GCLoadAXY 					; load it into AXY
@@ -160,22 +255,27 @@ _RGI_By:
 		adc 	gxYPos
 		sta 	gxYPos
 		bra 	_RGI_Here
+		; ------------------------------------------------------------------
 		;
-		;		DIM Set Dimension
+		;		DIM Set Dimension (scale for drawn sprites/images)
 		;
+		; ------------------------------------------------------------------
 _RGI_Dim:
+		ldx	 	#1
 		jsr 	Evaluate8BitInteger
+		lda 	NSMantissa0+1
 		cmp 	#0
 		beq 	_RGIRange
 		cmp 	#8+1
 		bcs		_RGIRange
 		dec 	a
-		.debug
-		sta 	gxScale
+		sta 	gxDrawScale
 		jmp 	_RGICommandLoop
+		; ------------------------------------------------------------------
 		;
 		; 		Handle Colour/Color
 		;
+		; ------------------------------------------------------------------
 _RGI_Colour:
 		ldx 	#1 							; colour
 		jsr 	Evaluate8BitInteger		
@@ -199,6 +299,42 @@ _RGIRange:
 		jmp 	RangeError
 _RGICallHandler:
 		jmp 	(GXHandler)
+		;
+		;		Additional sprite instructions
+		;
+_RGI_SpriteInstructions:
+		cmp 	#KWD_OFF
+		beq 	_RGISpriteOff
+		cmp 	#KWD_IMAGE
+		beq 	_RGISetImage
+		jmp 	_RGI_Move
+
+		; ------------------------------------------------------------------
+		; 
+		;		Set sprite off
+		;
+		; ------------------------------------------------------------------
+_RGISpriteOff:
+		phy
+		ldy 	#1
+		ldx 	#0
+_RGIDoCommandLoop:		
+		lda 	#8*2
+		jsr 	GXGraphicDraw
+		ply
+		jmp 	_RGICommandLoop
+		; ------------------------------------------------------------------
+		;
+		;		Set Image
+		;
+		; ------------------------------------------------------------------
+_RGISetImage:
+		ldx 	#1
+		jsr 	Evaluate8BitInteger
+		phy
+		tax
+		ldy 	#0
+		bra 	_RGIDoCommandLoop
 
 ; ************************************************************************************************
 ;

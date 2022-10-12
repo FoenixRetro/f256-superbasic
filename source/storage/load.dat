@@ -2,10 +2,7 @@
 100 bitmap on
 110 sprites on
 120 bitmap clear 0
-123 line 50,10 colour $1C to 300,200 colour $E0 to 319,5
-
-130 rect 20,120 to 200,180
-135 circle solid colour $E0,1 from 10,170 to 50,210
-136 circle outline 100,170 color $F8 to 150,210 
-140 line 210,170 by 10,10
+220 sprite 0 to 100,100  image 2
+225 for i = 1 to 5000:next
+230 sprite 0 off
 ÿÿÿÿ
