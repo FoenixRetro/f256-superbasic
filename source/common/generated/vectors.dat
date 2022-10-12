@@ -108,45 +108,46 @@ VectorSet0:
 	.word	SyntaxError                      ; $a6 BY
 	.word	CallCommand                      ; $a7 CALL
 	.word	SyntaxError                      ; $a8 CIRCLE
-	.word	SyntaxError                      ; $a9 CLS
-	.word	SyntaxError                      ; $aa COLOR
-	.word	SyntaxError                      ; $ab COLOUR
-	.word	Command_Data                     ; $ac DATA
-	.word	DimCommand                       ; $ad DIM
-	.word	Unused3                          ; $ae DOWNTO
-	.word	ElseCode                         ; $af ELSE
-	.word	GfxCommand                       ; $b0 GFX
-	.word	Command_GOSUB                    ; $b1 GOSUB
-	.word	GotoCommand                      ; $b2 GOTO
-	.word	SyntaxError                      ; $b3 HERE
-	.word	LetCommand                       ; $b4 LET
-	.word	SyntaxError                      ; $b5 LINE
-	.word	Command_LOCAL                    ; $b6 LOCAL
-	.word	SyntaxError                      ; $b7 OUTLINE
-	.word	Command_Print                    ; $b8 PRINT
-	.word	Command_Read                     ; $b9 READ
-	.word	SyntaxError                      ; $ba RECT
-	.word	RemCommand                       ; $bb REM
-	.word	Command_RETURN                   ; $bc RETURN
-	.word	SyntaxError                      ; $bd SOLID
-	.word	SyntaxError                      ; $be SPRITE
-	.word	SyntaxError                      ; $bf TEXT
-	.word	Unused2                          ; $c0 TO
+	.word	ClearCommand                     ; $a9 CLEAR
+	.word	SyntaxError                      ; $aa CLS
+	.word	SyntaxError                      ; $ab COLOR
+	.word	SyntaxError                      ; $ac COLOUR
+	.word	Command_Data                     ; $ad DATA
+	.word	DimCommand                       ; $ae DIM
+	.word	Unused3                          ; $af DOWNTO
+	.word	ElseCode                         ; $b0 ELSE
+	.word	GfxCommand                       ; $b1 GFX
+	.word	Command_GOSUB                    ; $b2 GOSUB
+	.word	GotoCommand                      ; $b3 GOTO
+	.word	SyntaxError                      ; $b4 HERE
+	.word	SyntaxError                      ; $b5 IMAGE
+	.word	LetCommand                       ; $b6 LET
+	.word	SyntaxError                      ; $b7 LINE
+	.word	Command_LOCAL                    ; $b8 LOCAL
+	.word	SyntaxError                      ; $b9 OUTLINE
+	.word	Command_Print                    ; $ba PRINT
+	.word	Command_Read                     ; $bb READ
+	.word	SyntaxError                      ; $bc RECT
+	.word	RemCommand                       ; $bd REM
+	.word	Command_RETURN                   ; $be RETURN
+	.word	SyntaxError                      ; $bf SOLID
+	.word	SyntaxError                      ; $c0 SPRITE
+	.word	SyntaxError                      ; $c1 TEXT
+	.word	Unused2                          ; $c2 TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
 	.word	SyntaxError                      ; $82 !2:SH2
 	.word	AssembleCommand                  ; $83 ASSEMBLE
 	.word	AssertCommand                    ; $84 ASSERT
-	.word	SyntaxError                      ; $85 BITMAP
-	.word	ClearCommand                     ; $86 CLEAR
-	.word	EndCommand                       ; $87 END
-	.word	Command_List                     ; $88 LIST
-	.word	NewCommand                       ; $89 NEW
-	.word	Command_Restore                  ; $8a RESTORE
-	.word	CommandRUN                       ; $8b RUN
-	.word	SyntaxError                      ; $8c SPRITES
-	.word	StopCommand                      ; $8d STOP
+	.word	BitmapCtrl                       ; $85 BITMAP
+	.word	EndCommand                       ; $86 END
+	.word	Command_List                     ; $87 LIST
+	.word	NewCommand                       ; $88 NEW
+	.word	Command_Restore                  ; $89 RESTORE
+	.word	CommandRUN                       ; $8a RUN
+	.word	SpritesCtrl                      ; $8b SPRITES
+	.word	StopCommand                      ; $8c STOP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

@@ -1,7 +1,7 @@
 
-100 gfx	1,1,0
-110 gfx	2,1,0
-120 gfx	3,$00,0
+100 bitmap on
+110 sprites on
+120 bitmap clear 0
 121 gfx 4,$10,0
 122 for i = 0 to 19
 123 gfx 16,i*16,0:gfx 17,i*16,239
@@ -16,14 +16,14 @@
 200 gfx	16,0,0
 210 gfx	20,100,100
 212 repeat
-215 for i = 1 to 255
+215 for i = 1 to 239
 220 gfx	7,3,1
 230 gfx	8,2,0
 240 gfx 25,200,i
 
 250 gfx	7,4,1
 260 gfx	8,1,0
-270 gfx 25,0,0
+270 gfx 25,100,240-i	
 
 280 gfx	7,5,1
 290 gfx	8,0,0

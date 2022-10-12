@@ -44,12 +44,11 @@ class TokenSource(object):
 				return 		print		rem  		else 		to			downto
 				call 		read 		local 		line 		sprite 		rect
 				text 		circle 		here 		color 		colour 		by
-				solid 		outline 	gfx			
+				solid 		outline 	gfx			clear 		image
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop				
-				clear 		restore 	assert 		assemble 	bitmap
-				sprites
+				restore 	assert 		assemble 	bitmap		sprites
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	

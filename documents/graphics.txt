@@ -37,10 +37,9 @@ Returns CS error , CC okay
 *	24 PLOT point
 *	25 SPRMOVE to x,y (fix up sprite positioning)
 
-	BITMAP ON|OFF 		(ON = 0, OFF = 1)
-	SPRITES ON|OFF
 	LINE
 	SPRITE n
+	IMAGE n
 	TEXT "xxxx"
 	RECT
 	CIRCLE
@@ -57,5 +56,5 @@ Returns CS error , CC okay
 		OUTLINE
 		OFF 			- show/hide current sprite.
 		ON
+		IMAGE 			- set sprite image
 
-centred sprites ?

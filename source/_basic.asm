@@ -30,6 +30,7 @@
 	.include	"./common/commands/dim.asm"
 	.include	"./common/commands/end.asm"
 	.include	"./common/commands/for.asm"
+	.include	"./hardware/commands/gcommands.asm"
 	.include	"./hardware/commands/gfx.asm"
 	.include	"./common/commands/gosub.asm"
 	.include	"./common/commands/goto.asm"

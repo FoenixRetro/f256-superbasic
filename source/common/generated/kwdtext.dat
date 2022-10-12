@@ -43,30 +43,32 @@ KeywordSet0:
 	.text	2,$9b,"BY"             ; $a6 BY
 	.text	4,$1c,"CALL"           ; $a7 CALL
 	.text	6,$b2,"CIRCLE"         ; $a8 CIRCLE
-	.text	3,$e2,"CLS"            ; $a9 CLS
-	.text	5,$7f,"COLOR"          ; $aa COLOR
-	.text	6,$d4,"COLOUR"         ; $ab COLOUR
-	.text	4,$1a,"DATA"           ; $ac DATA
-	.text	3,$da,"DIM"            ; $ad DIM
-	.text	6,$db,"DOWNTO"         ; $ae DOWNTO
-	.text	4,$29,"ELSE"           ; $af ELSE
-	.text	3,$e5,"GFX"            ; $b0 GFX
-	.text	5,$80,"GOSUB"          ; $b1 GOSUB
-	.text	4,$39,"GOTO"           ; $b2 GOTO
-	.text	4,$24,"HERE"           ; $b3 HERE
-	.text	3,$e5,"LET"            ; $b4 LET
-	.text	4,$28,"LINE"           ; $b5 LINE
-	.text	5,$6b,"LOCAL"          ; $b6 LOCAL
-	.text	7,$20,"OUTLINE"        ; $b7 OUTLINE
-	.text	5,$8d,"PRINT"          ; $b8 PRINT
-	.text	4,$1c,"READ"           ; $b9 READ
-	.text	4,$2e,"RECT"           ; $ba RECT
-	.text	3,$e4,"REM"            ; $bb REM
-	.text	6,$e0,"RETURN"         ; $bc RETURN
-	.text	5,$7b,"SOLID"          ; $bd SOLID
-	.text	6,$d7,"SPRITE"         ; $be SPRITE
-	.text	4,$45,"TEXT"           ; $bf TEXT
-	.text	2,$a3,"TO"             ; $c0 TO
+	.text	5,$67,"CLEAR"          ; $a9 CLEAR
+	.text	3,$e2,"CLS"            ; $aa CLS
+	.text	5,$7f,"COLOR"          ; $ab COLOR
+	.text	6,$d4,"COLOUR"         ; $ac COLOUR
+	.text	4,$1a,"DATA"           ; $ad DATA
+	.text	3,$da,"DIM"            ; $ae DIM
+	.text	6,$db,"DOWNTO"         ; $af DOWNTO
+	.text	4,$29,"ELSE"           ; $b0 ELSE
+	.text	3,$e5,"GFX"            ; $b1 GFX
+	.text	5,$80,"GOSUB"          ; $b2 GOSUB
+	.text	4,$39,"GOTO"           ; $b3 GOTO
+	.text	4,$24,"HERE"           ; $b4 HERE
+	.text	5,$63,"IMAGE"          ; $b5 IMAGE
+	.text	3,$e5,"LET"            ; $b6 LET
+	.text	4,$28,"LINE"           ; $b7 LINE
+	.text	5,$6b,"LOCAL"          ; $b8 LOCAL
+	.text	7,$20,"OUTLINE"        ; $b9 OUTLINE
+	.text	5,$8d,"PRINT"          ; $ba PRINT
+	.text	4,$1c,"READ"           ; $bb READ
+	.text	4,$2e,"RECT"           ; $bc RECT
+	.text	3,$e4,"REM"            ; $bd REM
+	.text	6,$e0,"RETURN"         ; $be RETURN
+	.text	5,$7b,"SOLID"          ; $bf SOLID
+	.text	6,$d7,"SPRITE"         ; $c0 SPRITE
+	.text	4,$45,"TEXT"           ; $c1 TEXT
+	.text	2,$a3,"TO"             ; $c2 TO
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF
@@ -75,14 +77,13 @@ KeywordSet1:
 	.text	8,$4c,"ASSEMBLE"       ; $83 ASSEMBLE
 	.text	6,$d2,"ASSERT"         ; $84 ASSERT
 	.text	6,$bd,"BITMAP"         ; $85 BITMAP
-	.text	5,$67,"CLEAR"          ; $86 CLEAR
-	.text	3,$d7,"END"            ; $87 END
-	.text	4,$3c,"LIST"           ; $88 LIST
-	.text	3,$ea,"NEW"            ; $89 NEW
-	.text	7,$24,"RESTORE"        ; $8a RESTORE
-	.text	3,$f5,"RUN"            ; $8b RUN
-	.text	7,$2a,"SPRITES"        ; $8c SPRITES
-	.text	4,$46,"STOP"           ; $8d STOP
+	.text	3,$d7,"END"            ; $86 END
+	.text	4,$3c,"LIST"           ; $87 LIST
+	.text	3,$ea,"NEW"            ; $88 NEW
+	.text	7,$24,"RESTORE"        ; $89 RESTORE
+	.text	3,$f5,"RUN"            ; $8a RUN
+	.text	7,$2a,"SPRITES"        ; $8b SPRITES
+	.text	4,$46,"STOP"           ; $8c STOP
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF
