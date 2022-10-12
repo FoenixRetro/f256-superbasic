@@ -1,9 +1,9 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		00start.asm
-;		Purpose:	Start up code.
-;		Created:	18th September 2022
+;		Name:		gfx.asm
+;		Purpose:	Simple GFX command
+;		Created:	12th October 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
@@ -12,30 +12,31 @@
 
 		.section code
 
-Start:	ldx 	#$FF 						; stack reset
-		txs	
-		ldx 	#(Prompt >> 8) 				; prompt
-		lda 	#(Prompt & $FF)
-		jsr 	PrintStringXA
-		stz 	$D008 						; remove boundary.
-		stz 	$D009
+GfxCommand: ;; [gfx]
+		ldx 	#0
+		jsr 	Evaluate8BitInteger 		; command
+		jsr 	CheckComma
+		inx
+		jsr 	Evaluate16BitInteger 		; X
+		jsr 	CheckComma
+		inx
+		jsr 	Evaluate8BitInteger 		; Y
 		;
-		; jsr 	RunDemos
+		lda 	NSMantissa1+1  				; shift bit 0 of X into CS, should now be zero
+		lsr 	a
+		bne 	_GfxError
+		rol 	NSMantissa0 				; rotate into command
+		bcs 	_GfxError 					; bit 7 should have been zero
 		;
-		jsr 	NewCommand 					; erase current program
-		jsr 	BackloadProgram
-		.if 	AUTORUN==1 					; run straight off
-		jmp 	CommandRun
-		.else
-		jmp 	WarmStart
-		.endif
-
-Prompt:	.text 	13,13,"*** F256 Junior SuperBASIC ***",13,13
-		.text 	"Written by Paul Robson 2022.",13,13
-		.include "../generated/timestamp.asm"
-		.byte 	13,13,0
-
-		.include "../../../graphics/_graphics.asm"
+		phy 								; save pos
+		lda 	NSMantissa0 				; do the command
+		ldx 	NSMantissa0+1
+		ldy 	NSMantissa0+2
+		jsr 	GXGraphicDraw
+		ply 								; restore pos and exit.
+		rts
+_GfxError:
+		jmp 	RangeError		
 
 		.send code
 

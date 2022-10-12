@@ -1,9 +1,7 @@
 Progress:
-
 	Graphics Interface
-		General graphics command and running in BASIC
 		Specific chained commands.
-	Timing functions
+	yayTiming functions
 	Gamepad function (cheat, use keyboard)
 	
 Later:

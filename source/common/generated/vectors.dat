@@ -114,7 +114,7 @@ VectorSet0:
 	.word	DimCommand                       ; $ac DIM
 	.word	Unused3                          ; $ad DOWNTO
 	.word	ElseCode                         ; $ae ELSE
-	.word	SyntaxError                      ; $af GFX
+	.word	GfxCommand                       ; $af GFX
 	.word	Command_GOSUB                    ; $b0 GOSUB
 	.word	GotoCommand                      ; $b1 GOTO
 	.word	SyntaxError                      ; $b2 HERE

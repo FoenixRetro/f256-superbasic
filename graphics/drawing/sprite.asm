@@ -37,7 +37,13 @@ GXSelect: ;; [6:SPRUSE]
 		;
 		tya 								; control value
 		and 	#1 
+		sta 	gxzTemp1 					; save it handily.
+
 		stz 	1 							; access sprite control.
+
+		lda 	(gxzTemp0) 					; update enable bit only.
+		and 	#$FE
+		ora 	gxzTemp1
 		sta 	(gxzTemp0) 					; write to control register		
 
 		clc
@@ -98,6 +104,7 @@ GXSelectImage: ;; [7:SPRIMG]
 		ora 	GXSpriteLUT 						; Or with LUT
 		asl 	a 							; 1 shift
 		ora 	gxzTemp1 					; Or in the enable bit
+
 		sta 	(gxzTemp0) 					; and write back
 
 		jsr 	GXCloseBitmap 				
