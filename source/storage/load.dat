@@ -1,7 +1,5 @@
-100 gfx	0,1,0
-110 gfx	2,0,0
-112 repeat
-115 gfx 3,random(256),0
-120 gfx 16,random(319),random(239)
-130 gfx 17,random(319),random(239)
-140 until false
+1 printMessage("Hello",42)
+2 end
+3 proc printMessage(msg$,n)
+4 print msg$+" World"+str$(n)
+5 endprocÿÿÿÿ

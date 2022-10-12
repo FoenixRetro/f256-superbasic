@@ -1,11 +1,13 @@
 Progress:
 	Graphics Interface
 		Specific chained commands.
-	yayTiming functions
+	Timing functions timer() event()
 	Gamepad function (cheat, use keyboard)
+	Random() no parameter
+	Changing Kerning ?
+	Indenting
+	Rem without quote marks.
 	
 Later:
 	Disable interrupts enable at end of line command ?
-	Changing Kerning ?
-	Indenting
 
