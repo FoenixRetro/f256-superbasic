@@ -2,7 +2,6 @@
 100 bitmap on
 110 sprites on
 120 bitmap clear 0
-121 gfx 4,$10,0
 123 line 50,10 colour $1C to 300,200 colour $E0 to 319,5
 
 130 rect 20,120 to 200,180
