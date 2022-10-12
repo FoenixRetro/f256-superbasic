@@ -25,6 +25,11 @@ GXInitialise: ;; [0:Initialise]
 		clc
 		stz 	GXSpritesOn
 		stz 	GXBitmapsOn
+		ldx 	#15
+_GXIClear:
+		stz 	gxCurrentX,x
+		dex
+		bpl 	_GXIClear	
 		rts
 
 ; ************************************************************************************************
@@ -33,10 +38,12 @@ GXInitialise: ;; [0:Initialise]
 ;
 ; ************************************************************************************************
 
-GXControlBitmap: ;; [1:BITMAPCTL]
+GXControlBitmap: ;; [1:BitmapCtl]
 		stz 	1
 		
 		lda 	gxzTemp0 					; get control bits
+		and 	#1 							; set bitmap flag
+		sta 	gxBitmapsOn
 		lsr 	a 							; bit 0 into carry.
 		lda 	$D000 						; read Vicky MCR
 		ora 	#7 							; turn graphics, text, textoverlay on.
@@ -79,9 +86,11 @@ _CBHaveHeight
 ;
 ; ************************************************************************************************
 
-GXControlSprite: ;; [2:SPRITECTL]
+GXControlSprite: ;; [2:SpriteCtl]
 		stz 	1
 		lda 	gxzTemp0 					; get control bits
+		and 	#1 							; set sprites flag
+		sta 	gxSpritesOn
 		lsr 	a 							; bit 0 into carry.
 		lda 	$D000 						; read Vicky MCR
 		ora 	#7 							; turn graphics, text, textoverlay on.

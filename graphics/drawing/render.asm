@@ -18,7 +18,8 @@
 ;
 ; ************************************************************************************************
 
-GXDrawGraphicElement:
+GXDrawGraphicElement:	
+	
 		sta 	gxSize 						; save size 
 		dec 	a
 		sta 	gxMask 						; and mask
@@ -32,6 +33,8 @@ _GXNotVertical:
 		bvc 	_GXNotHorizontal
 		sta 	gxHFlip
 _GXNotHorizontal:
+		lda 	gxBitmapsOn 				; check BMP on 
+		beq 	_GXSLFail
 
 		lda 	gxY0 						; push Y on stack
 		pha 
@@ -87,6 +90,9 @@ _GXSLNoCarry:
 		jsr 	GXCloseBitmap
 		clc
 		rts		
+_GXSLFail:
+		sec
+		rts
 
 _GXCallAcquire:
 		jmp 	(gxAcquireVector)

@@ -25,6 +25,8 @@ GXFrameCircle: ;; [20:FrameCircle]
 		lda 	#0
 GXCircle:		
 		sta 	gxIsFillMode					; save Fill flag 
+		lda 	gxBitmapsOn
+		beq 	_GXCFail
 		jsr 	GXSortXY 					; topleft/bottomright
 		jsr 	GXOpenBitmap 				; start drawing		
 		jsr 	GXCircleSetup 				; set up for drawing
@@ -45,6 +47,9 @@ _GXCircleContinue:
 		jsr 	GXCircleMove 				; adjust the coordinates		
 		bra 	_GXCircleDraw
 
+_GXCFail:
+		sec
+		rts
 ; ************************************************************************************************
 ;
 ;									Plot line/points

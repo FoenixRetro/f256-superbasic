@@ -14,7 +14,13 @@
 
 Start:	ldx 	#$FF 						; stack reset
 		txs	
-		jsr 	EXTInitialise
+		jsr 	EXTInitialise 				; hardware initialise
+
+		lda 	#0 							; graphics system initialise.
+		txa
+		tay
+		jsr 	GXGraphicDraw
+
 		ldx 	#(Prompt >> 8) 				; prompt
 		lda 	#(Prompt & $FF)
 		jsr 	PrintStringXA

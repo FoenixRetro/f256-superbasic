@@ -19,6 +19,8 @@
 ; ************************************************************************************************
 
 GXLine: ;; [17:Line]
+		lda 	GXBitmapsOn
+		beq 	_GXLFail
 		jsr 	GXOpenBitmap
 		jsr 	GXSortY						; sort pairs so Y1 >= Y0 e.g. top to bottom.
 		jsr 	GXLineSetup 				; the calculations in the linescanner constructor
@@ -37,6 +39,9 @@ _GXLExit:
 		jsr 	GXCloseBitmap
 		clc
 		rts
+_GXLFail:
+		sec
+		rts		
 
 ; ************************************************************************************************
 ;

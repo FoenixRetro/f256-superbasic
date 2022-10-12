@@ -23,7 +23,9 @@ GXFillRectangle: ;; [19:FillRect]
 		bra 	GXRectangle
 GXFrameRectangle: ;; [18:FrameRect]
 		clc
-GXRectangle:		
+GXRectangle:	
+		lda 	gxBitmapsOn
+		beq 	_GXRFail	
 		php 								; save Fill flag (CS)
 		jsr 	GXOpenBitmap 				; start drawing
 		jsr 	GXSortXY 					; sort both X and Y so top left/bottom right
@@ -57,6 +59,10 @@ _GXRectangleExit:
 		clc
 		rts
 
+_GXRFail:
+		sec
+		rts
+		
 ; ************************************************************************************************
 ;
 ;					Draw solid line/ends from current position length x1-x0

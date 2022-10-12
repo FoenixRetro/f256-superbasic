@@ -17,7 +17,7 @@ cccccccc
 
 Returns CS error , CC okay
 
-	0 INIT
+*	0 INIT
 *	1 BITMAPCTL  X = lut1|lut0|enable, Y = Page # (0 => 8)
 *	2 SPRITECTL X = bit 0 enable Y = Page # (0 => 24)
 *	3 CLEAR (X colour)
@@ -26,8 +26,8 @@ Returns CS error , CC okay
 			scale is (s2s1s0+1)
 *	5 DRAWC xxxxxxx character (advances horizontally), 2nd byte eor with mode bits.
 *	6 DRAWS sprite ID xxxxxx (4+5 only support modes 0/1), 2nd byte eor with mode bits.
-	7 SPRUSE X = sprite# select sprite , Y = 1 = show, 0 = hide
-	8 SPRIMG X = set selected sprite image to X, Y = 0
+*	7 SPRUSE X = sprite# select sprite , Y = 1 = show, 0 = hide
+*	8 SPRIMG X = set selected sprite image to X, Y = 0
 *	16 MOVE 			
 *	17 LINE 	
 *	18 RECT
@@ -35,7 +35,7 @@ Returns CS error , CC okay
 *	20 CIRCLE
 *	21 Fill CIRCLE
 *	24 PLOT point
-	25 SPRMOVE to x,y (fix up sprite positioning)
+*	25 SPRMOVE to x,y (fix up sprite positioning)
 
 	BITMAP ON|OFF 		(ON = 0, OFF = 1)
 	SPRITES ON|OFF

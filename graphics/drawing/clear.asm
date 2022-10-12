@@ -22,6 +22,8 @@ ScreenSize240 = 320 * 240
 ; ************************************************************************************************
 
 GXClearBitmap: ;; [3:Clear]
+		lda 	gxBitmapsOn 				; check BMP running.
+		beq 	_GXCBFail
 		jsr 	GXOpenBitmap 				; start access
 		ldy 	#ScreenSize200 / 8192 		; X is pages to clear
 		lda 	gxHeight
@@ -41,6 +43,9 @@ _GXClearAll:
 		bcs 	_GXClearAll
 		jsr 	GXCloseBitmap	 			; stop access
 		clc
+		rts
+_GXCBFail:
+		sec
 		rts
 
 _GXClearBlock:

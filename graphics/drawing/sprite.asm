@@ -19,6 +19,9 @@
 ; ************************************************************************************************
 
 GXSelect: ;; [7:SPRUSE]
+		lda 	gxSpritesOn
+		beq 	_GXSFail
+
 		lda 	gxzTemp0 					; illegal sprite #
 		cmp 	#64
 		bcs 	_GXSFail
@@ -60,6 +63,9 @@ _GXSFail:
 ; ************************************************************************************************
 
 GXSelectImage: ;; [8:SPRIMG]
+		lda 	gxSpritesOn
+		beq 	_GXSIFail
+
 		lda 	GSCurrentSprite+1 			; check sprite selected
 		beq 	_GXSIFail
 
@@ -122,8 +128,12 @@ _GXSIFail:
 ; ************************************************************************************************		
 
 GXMoveSprite: ;; [25:SPRMOVE]
+		lda 	gxSpritesOn
+		beq 	_GXSIFail
+
 		lda 	GSCurrentSprite+1 			; check sprite selected
 		beq 	_GXSIFail
+
 		sta 	gxzTemp0+1
 		ldy 	#4
 		lda 	GSCurrentSprite
