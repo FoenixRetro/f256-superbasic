@@ -51,24 +51,25 @@ KeywordSet0:
 	.text	3,$da,"DIM"            ; $ae DIM
 	.text	6,$db,"DOWNTO"         ; $af DOWNTO
 	.text	4,$29,"ELSE"           ; $b0 ELSE
-	.text	3,$e5,"GFX"            ; $b1 GFX
-	.text	5,$80,"GOSUB"          ; $b2 GOSUB
-	.text	4,$39,"GOTO"           ; $b3 GOTO
-	.text	4,$24,"HERE"           ; $b4 HERE
-	.text	5,$63,"IMAGE"          ; $b5 IMAGE
-	.text	3,$e5,"LET"            ; $b6 LET
-	.text	4,$28,"LINE"           ; $b7 LINE
-	.text	5,$6b,"LOCAL"          ; $b8 LOCAL
-	.text	7,$20,"OUTLINE"        ; $b9 OUTLINE
-	.text	5,$8d,"PRINT"          ; $ba PRINT
-	.text	4,$1c,"READ"           ; $bb READ
-	.text	4,$2e,"RECT"           ; $bc RECT
-	.text	3,$e4,"REM"            ; $bd REM
-	.text	6,$e0,"RETURN"         ; $be RETURN
-	.text	5,$7b,"SOLID"          ; $bf SOLID
-	.text	6,$d7,"SPRITE"         ; $c0 SPRITE
-	.text	4,$45,"TEXT"           ; $c1 TEXT
-	.text	2,$a3,"TO"             ; $c2 TO
+	.text	4,$34,"FROM"           ; $b1 FROM
+	.text	3,$e5,"GFX"            ; $b2 GFX
+	.text	5,$80,"GOSUB"          ; $b3 GOSUB
+	.text	4,$39,"GOTO"           ; $b4 GOTO
+	.text	4,$24,"HERE"           ; $b5 HERE
+	.text	5,$63,"IMAGE"          ; $b6 IMAGE
+	.text	3,$e5,"LET"            ; $b7 LET
+	.text	4,$28,"LINE"           ; $b8 LINE
+	.text	5,$6b,"LOCAL"          ; $b9 LOCAL
+	.text	7,$20,"OUTLINE"        ; $ba OUTLINE
+	.text	5,$8d,"PRINT"          ; $bb PRINT
+	.text	4,$1c,"READ"           ; $bc READ
+	.text	4,$2e,"RECT"           ; $bd RECT
+	.text	3,$e4,"REM"            ; $be REM
+	.text	6,$e0,"RETURN"         ; $bf RETURN
+	.text	5,$7b,"SOLID"          ; $c0 SOLID
+	.text	6,$d7,"SPRITE"         ; $c1 SPRITE
+	.text	4,$45,"TEXT"           ; $c2 TEXT
+	.text	2,$a3,"TO"             ; $c3 TO
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF

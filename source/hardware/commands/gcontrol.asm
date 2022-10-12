@@ -48,6 +48,7 @@ BitmapSwitch:
 		stz 	gxXPos
 		stz 	gxXPos+1
 		stz 	gxYPos
+		stz 	gxDrawScale
 		lda 	#16*2 						; home cursor
 		ldx 	#0
 		ldy 	#0

@@ -35,7 +35,7 @@ ShapeDraw:
 
 ; ************************************************************************************************
 ;
-;									 Line
+;									 		Line
 ;
 ; ************************************************************************************************
 
@@ -59,7 +59,7 @@ _EGCError:
 
 ; ************************************************************************************************
 ;
-;									Run a graphics command
+;								  Run a graphics command sequence
 ;
 ; ************************************************************************************************
 
@@ -93,10 +93,19 @@ _RGICommandLoop:
 		beq 	_RGI_Solid
 		cmp 	#KWD_BY 					; by offset
 		beq 	_RGI_By
+		cmp 	#KWD_FROM 					; from
+		beq 	_RGI_Move
+		cmp 	#KWD_DIM 					; dim (set scale)
+		beq 	_RGI_Dim
+		cmp 	#KWD_COLOUR 				; colour or Color
+		beq 	_RGI_Colour
+		cmp 	#KWD_COLOR
+		beq 	_RGI_Colour
 		;
 		;		Just move.
 		;
 		dey 								; unpick get.
+_RGI_Move:		
 		jsr 	GCGetCoordinatePair 		; move to here
 		jsr 	GCCopyPairToStore 			; save
 		phy
@@ -151,7 +160,43 @@ _RGI_By:
 		adc 	gxYPos
 		sta 	gxYPos
 		bra 	_RGI_Here
+		;
+		;		DIM Set Dimension
+		;
+_RGI_Dim:
+		jsr 	Evaluate8BitInteger
+		cmp 	#0
+		beq 	_RGIRange
+		cmp 	#8+1
+		bcs		_RGIRange
+		dec 	a
+		.debug
+		sta 	gxScale
+		jmp 	_RGICommandLoop
+		;
+		; 		Handle Colour/Color
+		;
+_RGI_Colour:
+		ldx 	#1 							; colour
+		jsr 	Evaluate8BitInteger		
+		ldx 	#2 							; default zero for 2nd parameter
+		jsr 	NSMSetZero
+		.cget
+		cmp 	#KWD_COMMA 					; check , => mode.
+		bne 	_RGICDefaultMode
+		iny
+		jsr 	Evaluate8BitInteger		
+_RGICDefaultMode:		
+		phy
+		lda 	#4*2 						; set colour.
+		ldx 	NSMantissa0+1
+		ldy 	NSMantissa0+2
+		jsr 	GXGraphicDraw
+		ply
+		jmp 	_RGICommandLoop 			; and go round
 
+_RGIRange:
+		jmp 	RangeError
 _RGICallHandler:
 		jmp 	(GXHandler)
 
@@ -213,6 +258,8 @@ gxYPos: 									; y position
 		.fill 	1		
 gxHandler: 									; handler address
 		.fill 	2
+gxDrawScale: 								; default scale 0-7
+		.fill 	1		
 		.send storage
 
 ; ************************************************************************************************
