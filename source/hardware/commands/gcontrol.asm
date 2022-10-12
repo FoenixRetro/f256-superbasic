@@ -2,8 +2,8 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		gcommands.asm
-;		Purpose:	GFX commands
+;		Name:		gcontrol.asm
+;		Purpose:	GFX Control Commands
 ;		Created:	12th October 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
