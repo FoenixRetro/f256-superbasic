@@ -58,3 +58,13 @@ Returns CS error , CC okay
 		ON
 		IMAGE 			- set sprite image
 
+Done : 
+		x,y
+		HERE
+		TO
+		BY x,y 			(all)
+		COLOUR/COLOUR c,n (all)
+
+		DIM (set scale for drawing) (ignored if not used)
+		SOLID/OUTLINE (ignored if not used)
+		IMAGE/OFF/ON (sprites ?)

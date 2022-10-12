@@ -40,6 +40,18 @@ BitmapSwitch:
 		ldy 	#0 							; gfx 1,on/off,0
 		lda 	#1*2
 		jsr 	GXGraphicDraw
+		lda 	#4*2 						; set colour to $FF
+		ldy 	#0
+		ldx 	#$FF
+		jsr 	GXGraphicDraw
+		stz 	gxFillSolid
+		stz 	gxXPos
+		stz 	gxXPos+1
+		stz 	gxYPos
+		lda 	#16*2 						; home cursor
+		ldx 	#0
+		ldy 	#0
+		jsr 	GXGraphicDraw
 		ply
 		rts
 
