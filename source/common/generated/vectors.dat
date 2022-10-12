@@ -105,20 +105,20 @@ VectorSet0:
 	.word	Unused4                          ; $a3 THEN
 	.word	Command_UNTIL                    ; $a4 UNTIL
 	.word	Command_WEND                     ; $a5 WEND
-	.word	CallCommand                      ; $a6 CALL
-	.word	SyntaxError                      ; $a7 CIRCLE
-	.word	SyntaxError                      ; $a8 CLS
-	.word	SyntaxError                      ; $a9 COLOR
-	.word	SyntaxError                      ; $aa COLOUR
-	.word	Command_Data                     ; $ab DATA
-	.word	DimCommand                       ; $ac DIM
-	.word	Unused3                          ; $ad DOWNTO
-	.word	ElseCode                         ; $ae ELSE
-	.word	GfxCommand                       ; $af GFX
-	.word	Command_GOSUB                    ; $b0 GOSUB
-	.word	GotoCommand                      ; $b1 GOTO
-	.word	SyntaxError                      ; $b2 HERE
-	.word	SyntaxError                      ; $b3 HIDE
+	.word	SyntaxError                      ; $a6 BY
+	.word	CallCommand                      ; $a7 CALL
+	.word	SyntaxError                      ; $a8 CIRCLE
+	.word	SyntaxError                      ; $a9 CLS
+	.word	SyntaxError                      ; $aa COLOR
+	.word	SyntaxError                      ; $ab COLOUR
+	.word	Command_Data                     ; $ac DATA
+	.word	DimCommand                       ; $ad DIM
+	.word	Unused3                          ; $ae DOWNTO
+	.word	ElseCode                         ; $af ELSE
+	.word	GfxCommand                       ; $b0 GFX
+	.word	Command_GOSUB                    ; $b1 GOSUB
+	.word	GotoCommand                      ; $b2 GOTO
+	.word	SyntaxError                      ; $b3 HERE
 	.word	LetCommand                       ; $b4 LET
 	.word	SyntaxError                      ; $b5 LINE
 	.word	Command_LOCAL                    ; $b6 LOCAL
@@ -128,12 +128,10 @@ VectorSet0:
 	.word	SyntaxError                      ; $ba RECT
 	.word	RemCommand                       ; $bb REM
 	.word	Command_RETURN                   ; $bc RETURN
-	.word	SyntaxError                      ; $bd SCALE
-	.word	SyntaxError                      ; $be SHOW
-	.word	SyntaxError                      ; $bf SOLID
-	.word	SyntaxError                      ; $c0 SPRITE
-	.word	SyntaxError                      ; $c1 TEXT
-	.word	Unused2                          ; $c2 TO
+	.word	SyntaxError                      ; $bd SOLID
+	.word	SyntaxError                      ; $be SPRITE
+	.word	SyntaxError                      ; $bf TEXT
+	.word	Unused2                          ; $c0 TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

@@ -14,11 +14,26 @@
 
 ; ************************************************************************************************
 ;
+;										Initialise:
+;
+; ************************************************************************************************
+
+GXInitialise: ;; [0:Initialise]
+		stz 	1
+		lda 	#1
+		sta 	$D000
+		clc
+		stz 	GXSpritesOn
+		stz 	GXBitmapsOn
+		rts
+
+; ************************************************************************************************
+;
 ;										Bitmap Control
 ;
 ; ************************************************************************************************
 
-GXControlBitmap: ;; [0:BITMAPCTL]
+GXControlBitmap: ;; [1:BITMAPCTL]
 		stz 	1
 		
 		lda 	gxzTemp0 					; get control bits
@@ -64,7 +79,7 @@ _CBHaveHeight
 ;
 ; ************************************************************************************************
 
-GXControlSprite: ;; [1:SPRITECTL]
+GXControlSprite: ;; [2:SPRITECTL]
 		stz 	1
 		lda 	gxzTemp0 					; get control bits
 		lsr 	a 							; bit 0 into carry.

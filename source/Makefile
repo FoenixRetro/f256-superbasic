@@ -86,6 +86,7 @@ basic : prelim
 	64tass -D AUTORUN=0 $(ASMOPTS) _basic.asm -o $(APPNAME)
 
 autorun:testbasic
+	python scripts$(S)checkload.py
 	$(START)
 	
 prelim:

@@ -33,6 +33,7 @@ GfxCommand: ;; [gfx]
 		ldx 	NSMantissa0+1
 		ldy 	NSMantissa0+2
 		jsr 	GXGraphicDraw
+		bcs 	_GfxError
 		ply 								; restore pos and exit.
 		rts
 _GfxError:

@@ -17,16 +17,17 @@ cccccccc
 
 Returns CS error , CC okay
 
-*	0 BITMAPCTL  X = lut1|lut0|enable, Y = Page # (0 => 8)
-*	1 SPRITECTL X = bit 0 enable Y = Page # (0 => 24)
-*	2 CLEAR (X colour)
-*	3 COLOUR (X fgr, mode bits 7..0)
+	0 INIT
+*	1 BITMAPCTL  X = lut1|lut0|enable, Y = Page # (0 => 8)
+*	2 SPRITECTL X = bit 0 enable Y = Page # (0 => 24)
+*	3 CLEAR (X colour)
+*	4 COLOUR (X fgr, mode bits 7..0)
 			Mode Bits: vflip|hflip|s2|s1|s0|-|m1|m0
 			scale is (s2s1s0+1)
-*	4 DRAWC xxxxxxx character (advances horizontally), 2nd byte eor with mode bits.
-*	5 DRAWS sprite ID xxxxxx (4+5 only support modes 0/1), 2nd byte eor with mode bits.
-	6 SPRUSE X = sprite# select sprite , Y = 1 = show, 0 = hide
-	7 SPRIMG X = set selected sprite image to X, Y = 0
+*	5 DRAWC xxxxxxx character (advances horizontally), 2nd byte eor with mode bits.
+*	6 DRAWS sprite ID xxxxxx (4+5 only support modes 0/1), 2nd byte eor with mode bits.
+	7 SPRUSE X = sprite# select sprite , Y = 1 = show, 0 = hide
+	8 SPRIMG X = set selected sprite image to X, Y = 0
 *	16 MOVE 			
 *	17 LINE 	
 *	18 RECT
@@ -46,12 +47,15 @@ Returns CS error , CC okay
 
 	modifiers:
 		x,y 			- just move
-		HERE 			- draw without moving
+		HERE 			- draw without moving (BY 0,0)
 		TO x,y 			- move & draw
+		BY x,y 			- move offset x,y and draw.
 		COLOUR c[,m]	- set colour and mode.
 		COLOR 			  (synonym)
-		SCALE <n> 		- set scale for DRAWC/DRAWS
+		DIM <n> 		- set scale for DRAWC/DRAWS
 		SOLID 			- set solid/outline mode.
 		OUTLINE
-		SHOW 			- show/hide current sprite.
-		HIDE
+		OFF 			- show/hide current sprite.
+		ON
+
+centred sprites ?

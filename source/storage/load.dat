@@ -1,5 +1,12 @@
-1 printMessage("Hello",42)
-2 end
-3 proc printMessage(msg$,n)
-4 print msg$+" World"+str$(n)
-5 endprocÿÿÿÿ
+90 gfx 0,0,0
+100 gfx	1,1,0
+110 gfx	2,1,0
+120 gfx	3,$01,0
+130 gfx	4,$FF,0
+
+250 gfx	7,4,1
+260 gfx	8,2,0
+270 gfx 25,16,16
+
+310 print "Done"
+ÿÿÿÿ

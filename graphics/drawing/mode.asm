@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-GXSetColourMode: ;; [3:Colour]
+GXSetColourMode: ;; [4:Colour]
 		ldx 	gxzTemp0
 		stx 	gxColour 								; set colour
 		lda 	gxzTemp0+1 								;

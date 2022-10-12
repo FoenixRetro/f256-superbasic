@@ -1,4 +1,7 @@
 Progress:
+	Sprite in wrong place at 0,0
+	Clear XY positions
+	Check bitmap/sprite for all instructions.
 	Graphics Interface
 		Specific chained commands.
 	Timing functions timer() event()
@@ -11,3 +14,5 @@ Progress:
 Later:
 	Disable interrupts enable at end of line command ?
 
+
+EditProgramCode breaks Graphics somehow, Insert doesn't ??

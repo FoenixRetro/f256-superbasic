@@ -43,8 +43,8 @@ class TokenSource(object):
 				cls 		data 		dim 		let 		goto		gosub 		
 				return 		print		rem  		else 		to			downto
 				call 		read 		local 		line 		sprite 		rect
-				text 		circle 		here 		color 		colour 		scale
-				solid 		outline 	show 		hide 		gfx
+				text 		circle 		here 		color 		colour 		by
+				solid 		outline 	gfx			
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop				

@@ -40,6 +40,7 @@ _BPNotTab:
 _BPEndLine:		
 		jsr 	TokeniseLine 				; tokenise the line.
 
+
 		.if AUTORUN==1 						; if autorun do full insert/delete for testing
 		jsr 	EditProgramCode
 		.else

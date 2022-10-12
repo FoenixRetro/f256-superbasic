@@ -5,15 +5,15 @@
 GRFirstFreeCode = 26
 
 GRVectorTable:
-	.word	GXControlBitmap          ; $00 BITMAPCTL
-	.word	GXControlSprite          ; $01 SPRITECTL
-	.word	GXClearBitmap            ; $02 Clear
-	.word	GXSetColourMode          ; $03 Colour
-	.word	GXFontHandler            ; $04 DrawFont
-	.word	GXSpriteHandler          ; $05 DrawSprite
-	.word	GXSelect                 ; $06 SPRUSE
-	.word	GXSelectImage            ; $07 SPRIMG
-	.word	GRUndefined              ; $08
+	.word	GXInitialise             ; $00 Initialise
+	.word	GXControlBitmap          ; $01 BITMAPCTL
+	.word	GXControlSprite          ; $02 SPRITECTL
+	.word	GXClearBitmap            ; $03 Clear
+	.word	GXSetColourMode          ; $04 Colour
+	.word	GXFontHandler            ; $05 DrawFont
+	.word	GXSpriteHandler          ; $06 DrawSprite
+	.word	GXSelect                 ; $07 SPRUSE
+	.word	GXSelectImage            ; $08 SPRIMG
 	.word	GRUndefined              ; $09
 	.word	GRUndefined              ; $0a
 	.word	GRUndefined              ; $0b

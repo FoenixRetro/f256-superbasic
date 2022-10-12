@@ -40,20 +40,20 @@ KeywordSet0:
 	.text	4,$2f,"THEN"           ; $a3 THEN
 	.text	5,$8c,"UNTIL"          ; $a4 UNTIL
 	.text	4,$2e,"WEND"           ; $a5 WEND
-	.text	4,$1c,"CALL"           ; $a6 CALL
-	.text	6,$b2,"CIRCLE"         ; $a7 CIRCLE
-	.text	3,$e2,"CLS"            ; $a8 CLS
-	.text	5,$7f,"COLOR"          ; $a9 COLOR
-	.text	6,$d4,"COLOUR"         ; $aa COLOUR
-	.text	4,$1a,"DATA"           ; $ab DATA
-	.text	3,$da,"DIM"            ; $ac DIM
-	.text	6,$db,"DOWNTO"         ; $ad DOWNTO
-	.text	4,$29,"ELSE"           ; $ae ELSE
-	.text	3,$e5,"GFX"            ; $af GFX
-	.text	5,$80,"GOSUB"          ; $b0 GOSUB
-	.text	4,$39,"GOTO"           ; $b1 GOTO
-	.text	4,$24,"HERE"           ; $b2 HERE
-	.text	4,$1a,"HIDE"           ; $b3 HIDE
+	.text	2,$9b,"BY"             ; $a6 BY
+	.text	4,$1c,"CALL"           ; $a7 CALL
+	.text	6,$b2,"CIRCLE"         ; $a8 CIRCLE
+	.text	3,$e2,"CLS"            ; $a9 CLS
+	.text	5,$7f,"COLOR"          ; $aa COLOR
+	.text	6,$d4,"COLOUR"         ; $ab COLOUR
+	.text	4,$1a,"DATA"           ; $ac DATA
+	.text	3,$da,"DIM"            ; $ad DIM
+	.text	6,$db,"DOWNTO"         ; $ae DOWNTO
+	.text	4,$29,"ELSE"           ; $af ELSE
+	.text	3,$e5,"GFX"            ; $b0 GFX
+	.text	5,$80,"GOSUB"          ; $b1 GOSUB
+	.text	4,$39,"GOTO"           ; $b2 GOTO
+	.text	4,$24,"HERE"           ; $b3 HERE
 	.text	3,$e5,"LET"            ; $b4 LET
 	.text	4,$28,"LINE"           ; $b5 LINE
 	.text	5,$6b,"LOCAL"          ; $b6 LOCAL
@@ -63,12 +63,10 @@ KeywordSet0:
 	.text	4,$2e,"RECT"           ; $ba RECT
 	.text	3,$e4,"REM"            ; $bb REM
 	.text	6,$e0,"RETURN"         ; $bc RETURN
-	.text	5,$68,"SCALE"          ; $bd SCALE
-	.text	4,$41,"SHOW"           ; $be SHOW
-	.text	5,$7b,"SOLID"          ; $bf SOLID
-	.text	6,$d7,"SPRITE"         ; $c0 SPRITE
-	.text	4,$45,"TEXT"           ; $c1 TEXT
-	.text	2,$a3,"TO"             ; $c2 TO
+	.text	5,$7b,"SOLID"          ; $bd SOLID
+	.text	6,$d7,"SPRITE"         ; $be SPRITE
+	.text	4,$45,"TEXT"           ; $bf TEXT
+	.text	2,$a3,"TO"             ; $c0 TO
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF

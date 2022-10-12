@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-GXSelect: ;; [6:SPRUSE]
+GXSelect: ;; [7:SPRUSE]
 		lda 	gxzTemp0 					; illegal sprite #
 		cmp 	#64
 		bcs 	_GXSFail
@@ -59,7 +59,7 @@ _GXSFail:
 ;
 ; ************************************************************************************************
 
-GXSelectImage: ;; [7:SPRIMG]
+GXSelectImage: ;; [8:SPRIMG]
 		lda 	GSCurrentSprite+1 			; check sprite selected
 		beq 	_GXSIFail
 
@@ -129,13 +129,23 @@ GXMoveSprite: ;; [25:SPRMOVE]
 		lda 	GSCurrentSprite
 		sta 	gxzTemp0
 		;
-		lda 	gxX0						; copy position.
+		lda 	#64 						; calculate 32-SpriteSize/2 (actually (64-SpriteSize)/2)
+		sec
+		sbc 	GXSizePixels
+		lsr 	a
+		pha
+		;
+		clc
+		adc 	gxX0						; copy position.
 		sta 	(gxzTemp0),y
 		iny
 		lda 	gxX0+1
+		adc 	#0
 		sta 	(gxzTemp0),y
 		iny
-		lda 	gxY0
+		pla
+		clc
+		adc 	gxY0
 		sta 	(gxzTemp0),y
 
 		clc

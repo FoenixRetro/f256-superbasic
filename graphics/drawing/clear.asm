@@ -21,7 +21,7 @@ ScreenSize240 = 320 * 240
 ;
 ; ************************************************************************************************
 
-GXClearBitmap: ;; [2:Clear]
+GXClearBitmap: ;; [3:Clear]
 		jsr 	GXOpenBitmap 				; start access
 		ldy 	#ScreenSize200 / 8192 		; X is pages to clear
 		lda 	gxHeight

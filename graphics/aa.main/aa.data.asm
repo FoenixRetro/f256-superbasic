@@ -92,6 +92,13 @@ gxX1:
 gxY1:
 		.fill 	2
 ;
+;		Sprites/Bitmaps on flags
+;		
+gxSpritesOn:
+		.fill 	1
+gxBitmapsOn:
+		.fill 	1		
+;
 ;		Base page of bitmap
 ;
 gxBasePage:

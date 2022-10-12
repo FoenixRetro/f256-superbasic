@@ -14,16 +14,16 @@
 
 Start:	ldx 	#$FF 						; stack reset
 		txs	
+		jsr 	EXTInitialise
 		ldx 	#(Prompt >> 8) 				; prompt
 		lda 	#(Prompt & $FF)
 		jsr 	PrintStringXA
-		stz 	$D008 						; remove boundary.
-		stz 	$D009
 		;
 		; jsr 	RunDemos
 		;
 		jsr 	NewCommand 					; erase current program
 		jsr 	BackloadProgram
+
 		.if 	AUTORUN==1 					; run straight off
 		jmp 	CommandRun
 		.else

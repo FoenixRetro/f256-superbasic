@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-GXSpriteHandler: ;; [5:DrawSprite]
+GXSpriteHandler: ;; [6:DrawSprite]
 		lda 	gxzTemp0+1 					; eor with mode
 		eor 	gxMode
 		sta 	gxUseMode
