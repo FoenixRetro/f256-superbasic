@@ -253,11 +253,13 @@ _RGI_Here:
 		jsr 	_RGICallHandler 			; go do whatever it is.
 		ply
 		bra 	_RGICommandLoop 			; and go round
+		; ------------------------------------------------------------------
 		;
 		;		By Offset
 		;
+		; ------------------------------------------------------------------
 _RGI_By:
-		jsr 	GCGetCoordinatePair 		; get coordinate pair into slot #1,#2
+		jsr 	GCSignedCoordinatePair 		; get coordinate pair into slot #1,#2
 		clc
 		lda 	NSMantissa0+1 				; copy it into space.
 		adc 	gxxPos
@@ -364,6 +366,15 @@ GCGetCoordinatePair:
 		inx
 		jsr 	Evaluate16BitInteger
 		rts
+
+GCSignedCoordinatePair:
+		ldx 	#1
+		jsr 	Evaluate16BitIntegerSigned
+		jsr 	CheckComma
+		inx
+		jsr 	Evaluate16BitIntegerSigned
+		rts
+
 _GCCPRange:
 		jmp 	RangeError		
 

@@ -95,6 +95,23 @@ Evaluate16BitInteger:
 
 ; ************************************************************************************************
 ;
+;							Evaluate a 16 bit value (signed, 2's complement)
+;
+; ************************************************************************************************
+
+Evaluate16BitIntegerSigned:
+		jsr	 	EvaluateInteger				; get integer
+		lda 	NSMantissa3,x	 			; bytes 2 & 3 must be zero
+		ora 	NSMantissa2,x
+		bne 	HelperValueError
+		lda 	NSStatus,x 					; signed ?
+		bpl 	_EISNotSigned
+		jsr 	NSMNegateMantissa
+_EISNotSigned:		
+		rts
+
+; ************************************************************************************************
+;
 ;									Evaluate an 8 bit value => A
 ;
 ; ************************************************************************************************

@@ -14,6 +14,8 @@
 
 UnaryTimer: ;; [timer(]
 		plx
+		jsr 	CheckRightBracket
+TimerToStackX:		
 		jsr 	NSMSetZero 					; zero result
 		stz 	1 							; access I/O
 		lda 	$D659 						; copy timer in
@@ -22,7 +24,6 @@ UnaryTimer: ;; [timer(]
 		sta 	NSMantissa1,x
 		lda 	$D65B
 		sta 	NSMantissa2,x
-		jsr 	CheckRightBracket
 		rts
 
 		.send code

@@ -29,6 +29,7 @@
 	.include	"./common/commands/data.asm"
 	.include	"./common/commands/dim.asm"
 	.include	"./common/commands/end.asm"
+	.include	"./hardware/commands/event.asm"
 	.include	"./common/commands/for.asm"
 	.include	"./hardware/commands/gcommand.asm"
 	.include	"./hardware/commands/gcontrol.asm"

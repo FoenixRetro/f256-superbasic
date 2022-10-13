@@ -37,7 +37,8 @@ class TokenSource(object):
 				abs( 		asc( 		chr$( 		alloc(		frac(		len( 		
 				left$( 		mid$( 		right$( 	rnd( 		sgn( 		int( 				
 				spc( 		str$( 		val(  		isval(		true 		false
-				not(		random(	 	on 			off 		timer( 		event(
+				not(		random(	 	timer( 		event( 		joyx(		joyy(
+				joyb(
 
 			{0}							// Set 0
 				cls 		data 		dim 		let 		goto		gosub 		
@@ -45,7 +46,7 @@ class TokenSource(object):
 				call 		read 		local 		line 		sprite 		rect
 				text 		circle 		here 		color 		colour 		by
 				solid 		outline 	gfx			clear 		image 		from
-				plot
+				plot 		on 			off
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop				

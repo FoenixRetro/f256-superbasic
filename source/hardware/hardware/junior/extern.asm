@@ -21,7 +21,7 @@ EXTInitialise:
 		stz 	$D004 						; Disable border
 		stz 	$D008
 		stz 	$D009
-		lda 	#1 							; Timer On at 70Hz
+		lda 	#1+8						; Timer On at 70Hz counting up.
 		sta 	$D658
 		rts
 				
