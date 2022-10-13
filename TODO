@@ -1,4 +1,5 @@
 Progress:
+	Python App to generate line# and handle REM.
 	Recreate python script/app to make sprites
 	Create work area functionality.
 
@@ -7,4 +8,4 @@ Later:
 	Changing Kerning ?
 	Indenting
 	Rem without quote marks.
-	
+	Image requires sprites on.

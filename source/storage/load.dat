@@ -1,403 +1,64 @@
-1 rem "Seed 6909"
-2 let d3u4_94 = 64587042
-3 let z6_82 = -307619444
-4 f2_9$ = "WSDWGJUR"
-5 j9i0z0_18$ = "FUAMKZQN"
-6 let f9_33$ = "EIUPTGBJYJFCDNL"
-7 let w6r4r2_36$ = "YKKCXF"
-8 let s9j7l7_54$ = "UZDHQMXPSUVMPWVLFBFL"
-9 m6m8o1_58 = 366080243
-10 l8_87$ = "YZCKKTZVUKWREZZ"
-11 e2_24$ = "GXDGPTREKLYNZVM"
-12 b9v5_91 = 106069878
-13 let p4r0_99$ = "LBYCBQPGRLXLVYEG"
-14 let g7_85 = 76424230
-15 let e1_72$ = "FEMZVACIRSEHGBO"
-16 let o5t3_26# = -65302.328
-17 n3n6_73 = -224787393
-18 e2z4h2_19 = -265737190
-19 let d9a2_76 = -59814977
-20 let p2_95# = 217425.846
-21 let p4r0_99$ = "QNXFIXWLVCYLHJIUACDXVS"
-22 k5w7g6_44# = -269784.647
-23 f7i0s8_0$ = "ONIANXUQHZSTZLUKLB"
-24 let z1a7i7_92# = 346365.144
-25 let p2_95# = 74154.61
-26 b9v5_91 = -302942155
-27 let i9_78$ = "HRGVFJAOT"
-28 let f5_66$ = "ZGJCU"
-29 r5p2_89# = 383721.969
-30 let q1t9_53# = 192958.816
-31 let s5_17# = -385312.103
-32 let l9a2t3_70 = -230879347
-33 j9o1_74# = 385292.843
-34 s4u1a6_71# = -227524.871
-35 let p2_95# = 83337.801
-36 let f8d2q8_69$ = "RUWSATNDLPV"
-37 let j0_50# = 417045.284
-38 j9o1_74# = -130468.438
-39 s5_17# = -55415.577
-40 let m0o4_64 = -381033869
-41 f9_33$ = "N"
-42 let s7n1_21$ = "UUWPCISORVTPHOWAY"
-43 let q1t9_53# = 349500.727
-44 g7_85 = -156406601
-45 u3_39$ = "EOO"
-46 let m0o4_64 = 193252062
-47 let z8k6_51$ = "DVYQYO"
-48 let g7k6_30$ = "IRALSJRYJNHPILWRMCVYKMY"
-49 r5p2_89# = -60685.44
-50 let l8_87$ = "SINSAOQKJUXJTYLHBPGU"
-51 z4_27$ = "TOEOMCWKDEEAHUXXTSI"
-52 let l8_87$ = "ALUHQCZARQAVJEOA"
-53 f9_33$ = "JYMPBSW"
-54 B = 59163282
-55 let j9i0z0_18$ = "YTPPERHSMDIKIWTBUVGWJC"
-56 i1_6$ = "LQZKPHLCTVWYQXXMAJN"
-57 m4c7a3_79 = 111634040
-58 l8_87$ = "BSJKXEKVKJJPUZXSHZMP"
-59 d3u4_94 = 157614100
-60 let w6r4r2_36$ = "EKVPFKMMLDQPGWKMS"
-61 b3_20# = 138581.512
-62 let m6_3$ = "DUBYHAMUYTJVND"
-63 f8d2q8_69$ = "BSURDUEYPPFEF"
-64 let b3_20# = -125689.78
-65 let m1w5c8_37 = 233064246
-66 let b9v5_91 = -408261887
-67 k4d5r6_68# = 155877.879
-68 let n3n6_73 = -326313524
-69 p1n3_22 = -310627753
-70 let m4_86# = -407593.123
-71 C# = -25944.36
-72 let r0_11# = 23952.891
-73 let l9a2t3_70 = -129102436
-74 let k5w7g6_44# = -422233.18
-75 let m9_65# = -381559.512
-76 w3z8r7_8# = -359748.692
-77 let h8x9_63$ = "RRSBIYVVQGKP"
-78 let t1o8_31 = 14785833
-79 d9a2_76 = -6326657
-80 let m4_86# = -78599.227
-81 m0o4_64 = -234146324
-82 l9a2t3_70 = 91941557
-83 e1_72$ = "MHOTP"
-84 let r5p2_89# = 113538.622
-85 let j9o1_74# = 241891.235
-86 let f7i0s8_0$ = ""
-87 let k2_57$ = "DQ"
-88 m1w5c8_37 = -144040317
-89 let s4u1a6_71# = 111312.497
-90 let f9_33$ = "LYIP"
-91 l3e4v8_60$ = "WNSCFEJNBV"
-92 j5y3g6_29# = -79382.537
-93 let e0_45$ = "X"
-94 C# = -327088.83
-95 e2_24$ = "DDKLISYVFVWFUBSCI"
-96 let g3p2e8_41# = 386232.009
-97 let m6_3$ = "DPKMXNF"
-98 w3z8r7_8# = 232641.869
-99 let j0_50# = 440180.37
-100 j7u6i0_49 = 13879446
-101 let e1_72$ = "V"
-102 m6m8o1_58 = -416020571
-103 m6m8o1_58 = 46629891
-104 let c1z5_23# = -334571.707
-105 z8k6_51$ = ""
-106 g7k6_30$ = "EZXUSQQFDXMF"
-107 o5t3_26# = -373151.862
-108 let t1o8_31 = -171547803
-109 let u1a7_12$ = "FTMYFPVUOTSOKGHAS"
-110 e2_24$ = "NZQIRU"
-111 let t3_56# = -366527.6
-112 m6m8o1_58 = -135738578
-113 x6c3_15$ = "RSWLWFFXRNNC"
-114 let m6_3$ = "JRVJHA"
-115 N = -416415635
-116 f8d2q8_69$ = "ZAFNROXECEVEWYB"
-117 k3g0c7_97 = -305065781
-118 h6_25 = -242603947
-119 k2_57$ = ""
-120 let m4c7a3_79 = 262384814
-121 let m0o4_64 = 307425830
-122 let r0_11# = -339587.021
-123 t2r9_52 = 285119085
-124 let s4u1a6_71# = -113593.681
-125 B = 399522359
-126 i1_6$ = ""
-127 let j7u6i0_49 = -409241518
-128 c1z5_23# = -184941.088
-129 let z4_27$ = "KOZQOSS"
-130 b9v5_91 = 403419921
-131 h6_25 = 303086907
-132 p1n3_22 = -232513201
-133 j0d5l4_81$ = "VCITLQX"
-134 let g7_85 = 27784922
-135 let g5b6m1_38# = 337290.891
-136 let H = -250010271
-137 let m1w5c8_37 = -308034603
-138 f5_66$ = "HBAVFIASZ"
-139 let f8d2q8_69$ = "ZBBHDTYEULCLMEGEEOMO"
-140 e2z4h2_19 = 199487141
-141 e2p5q3_5# = -166450.328
-142 g7k6_30$ = "NZDZWQBYEZ"
-143 m9_65# = -354619.905
-144 f4_59# = -230281.086
-145 let o6w9g9_4 = 39237722
-146 let m4c7a3_79 = 92200972
-147 g5b6m1_38# = 357255.667
-148 c5_88 = 323221312
-149 let z4_27$ = "ZQUNOSGTBXDINAW"
-150 let w3z8r7_8# = -28153.004
-151 z8t0n6_84$ = "RGJBXUOMJZQWMVNOPNLP"
-152 f4_59# = -311322.904
-153 let r0_11# = -84899.853
-154 let r7p3r4_46 = 292330952
-155 let j5y3g6_29# = 71333.475
-156 c0_90$ = ""
-157 let f7i0s8_0$ = "OBUZBTHQN"
-158 let l3f2x4_40 = 108726508
-159 let e9_48$ = "QHT"
-160 let e4y6_55 = -144001765
-161 k8_61 = -205857125
-162 N = -83240478
-163 h6_25 = 117373
-164 r7p3r4_46 = 90942409
-165 e2p5q3_5# = -135228.781
-166 let m4c7a3_79 = -350341325
-167 let j7u6i0_49 = -11931483
-168 s9j7l7_54$ = "IB"
-169 u6_80# = -260917.484
-170 let i9_78$ = "MESROBBSRY"
-171 m4_86# = 203402.05
-172 let j0d5l4_81$ = "YIXVZEWMJO"
-173 v0h9_42$ = "PNZJKVWRRNTZ"
-174 let u6_43 = 318463596
-175 let b6p4_96$ = "K"
-176 e7j3q2_14# = -286924.988
-177 j0_50# = 280813.146
-178 m7f4d3_35# = 47693.182
-179 let l8_87$ = "QDTMZ"
-180 f2_9$ = "IFINIPIPHSSH"
-181 f7i0s8_0$ = "COSXYJBTOOKYLZWILRTFJ"
-182 let t5d9a4_67 = -278098684
-183 let r0_11# = 76213.577
-184 let k2_57$ = ""
-185 t1o8_31 = 272214667
-186 let g5b6m1_38# = -45379.71
-187 e9_48$ = "GGPXFZMDKMBJVBP"
-188 N = 249855323
-189 let r0_11# = 147005.357
-190 l5_16 = -202325035
-191 let j5y3g6_29# = -137341.101
-192 let d3u4_94 = -195560461
-193 let h8x9_63$ = "ZMXMX"
-194 let i1_6$ = "HPVSRIIRFCGHENOFQRY"
-195 m4c7a3_79 = -175744741
-196 let e2z4h2_19 = 230341975
-197 let e9_48$ = "QBMRAYXMX"
-198 s7n1_21$ = "QMBMTVNFCZNTELPEOTHVS"
-199 let C# = 257512.875
-200 let k2_57$ = "SUHTWHTBQZYEOHK"
-201 B = 159135325
-202 let d9a2_76 = -132067166
-203 j7u6i0_49 = -97808506
-204 i9_78$ = "YRIYOXHBA"
-205 s7_77# = -117399.99
-206 let u3_39$ = "UDNUNNLBLFCSETCNVMN"
-207 let u6_80# = -74602.555
-208 let s7n1_21$ = "JCREPYRDNKOBWXCQTFZRPMF"
-209 r0_11# = -12558.18
-210 m9_65# = -262980.008
-211 let e4y6_55 = -124906717
-212 p4d3_34 = 90103100
-213 let k8_61 = 199575558
-214 z6_82 = 158401444
-215 g7k6_30$ = "ZUTJNBUMLQSXFGWRLOSWRD"
-216 j7u6i0_49 = -280871176
-217 p4d3_34 = 71905886
-218 u6_43 = -119304936
-219 let s4u1a6_71# = -71886.122
-220 e1_72$ = "MPGCXKTTUCDYPRNYJFZ"
-221 let t2r9_52 = 180170643
-222 u1a7_12$ = "XEHJXUPHHLXLCCCOQGXUG"
-223 j0_50# = 78523.927
-224 let h8x9_63$ = "NUAZQZZSHDQPBG"
-225 m4c7a3_79 = 181505009
-226 let z8k6_51$ = "WVHTTLRZUG"
-227 H = 106012762
-228 k2_57$ = "BJWEMGUJHPX"
-229 u6_80# = -422798.59
-230 u1a7_12$ = "YLYEWTJZS"
-231 g7_85 = 428398381
-232 g7k6_30$ = "MQCFDMUGOYLEOSCTVSJIO"
-233 let u1_98# = -262798.851
-234 x6c3_15$ = "TKISYVDDIDOTCLYG"
-235 c0_90$ = "NSYNYOLNPLUWWIP"
-236 H = 249784194
-237 let g3p2e8_41# = 97974.315
-238 let n3n6_73 = 352321087
-239 e1_72$ = "UXTBSYNLGDPHDFXLIK"
-240 s9j7l7_54$ = "I"
-241 k3g0c7_97 = 100936301
-242 j7u6i0_49 = 267775597
-243 let g7_85 = -156030032
-244 j0d5l4_81$ = "LBVLQFCGM"
-245 e7j3q2_14# = -84482.7
-246 let q5g1_93$ = "JXLKQCBGPFEMATUIEGL"
-247 e2z4h2_19 = 388810156
-248 z1a7i7_92# = -27927.246
-249 m6_3$ = "PIIPGKWYPJO"
-250 t2r9_52 = -319453843
-251 let q5g1_93$ = "KNWQXEEFZXXLWGQDU"
-252 b9v5_91 = 61654381
-253 let p4d3_34 = 248815096
-254 let v0h9_42$ = "CVTLEPVSI"
-255 let l9a2t3_70 = 307521383
-256 let z6_82 = -295057724
-257 let j9i0z0_18$ = "JO"
-258 let p4r0_99$ = "GWTFVRYXIA"
-259 let q1t9_53# = -289710.993
-260 g7k6_30$ = "CVTNHSKSWNQTJRXZIXXMKC"
-261 let e7j3q2_14# = 271978.257
-262 p7n3k7_47# = 425956.189
-263 t3_56# = -103612.525
-264 let g7_85 = -409727031
-265 let e1_72$ = "FPZPNKIPDXGQPAPIY"
-266 b3_20# = -84572.655
-267 p1n3_22 = 340027302
-268 k8_61 = 211227809
-269 let m9_65# = 70348.964
-270 f4_59# = -33800.149
-271 s7n1_21$ = "YOOVFVHVIXIWOC"
-272 let l3e4v8_60$ = "GCFVB"
-273 let m2o9_83# = 10382.435
-274 a8l7r1_10 = 319739158
-275 m6m8o1_58 = 163627081
-276 n8m6_75$ = "CEUFSUI"
-277 s5_17# = 53781.659
-278 m6m8o1_58 = 211519207
-279 let v0h9_42$ = "NPUCS"
-280 let j9o1_74# = 249087.628
-281 e9_48$ = "XXLMPVWNJCIQR"
-282 t1o8_31 = -142048336
-283 p7n3k7_47# = -332748.255
-284 let u1_98# = 5987.628
-285 f7i0s8_0$ = "GYRLTYBG"
-286 let l5_16 = -207154759
-287 f4_59# = 146025.031
-288 let c5_88 = 26370084
-289 u6_43 = -168300022
-290 let N = -427398661
-291 let r5p2_89# = -395437.154
-292 let j9o1_74# = 385267.145
-293 t5d9a4_67 = -154617258
-294 m4_86# = -264945.631
-295 q1j3_28 = -26106424
-296 k4d5r6_68# = -45372.197
-297 let c1z5_23# = 425113.182
-298 let r7p3r4_46 = 398297926
-299 let w3z8r7_8# = 400301.468
-300 u6_80# = -32167.841
-301 let q1t9_53# = -185855.573
-302 assert f7i0s8_0$ = "GYRLTYBG"
-303 assert B = 159135325
-304 assert C# = 257512.875
-305 assert m6_3$ = "PIIPGKWYPJO"
-306 assert o6w9g9_4 = 39237722
-307 assert e2p5q3_5# = -135228.781
-308 assert i1_6$ = "HPVSRIIRFCGHENOFQRY"
-309 assert H = 249784194
-310 assert w3z8r7_8# = 400301.468
-311 assert f2_9$ = "IFINIPIPHSSH"
-312 assert a8l7r1_10 = 319739158
-313 assert r0_11# = -12558.18
-314 assert u1a7_12$ = "YLYEWTJZS"
-315 assert N = -427398661
-316 assert e7j3q2_14# = 271978.257
-317 assert x6c3_15$ = "TKISYVDDIDOTCLYG"
-318 assert l5_16 = -207154759
-319 assert s5_17# = 53781.659
-320 assert j9i0z0_18$ = "JO"
-321 assert e2z4h2_19 = 388810156
-322 assert b3_20# = -84572.655
-323 assert s7n1_21$ = "YOOVFVHVIXIWOC"
-324 assert p1n3_22 = 340027302
-325 assert c1z5_23# = 425113.182
-326 assert e2_24$ = "NZQIRU"
-327 assert h6_25 = 117373
-328 assert o5t3_26# = -373151.862
-329 assert z4_27$ = "ZQUNOSGTBXDINAW"
-330 assert q1j3_28 = -26106424
-331 assert j5y3g6_29# = -137341.101
-332 assert g7k6_30$ = "CVTNHSKSWNQTJRXZIXXMKC"
-333 assert t1o8_31 = -142048336
-334 assert k2k5v1_32# = 0
-335 assert f9_33$ = "LYIP"
-336 assert p4d3_34 = 248815096
-337 assert m7f4d3_35# = 47693.182
-338 assert w6r4r2_36$ = "EKVPFKMMLDQPGWKMS"
-339 assert m1w5c8_37 = -308034603
-340 assert g5b6m1_38# = -45379.71
-341 assert u3_39$ = "UDNUNNLBLFCSETCNVMN"
-342 assert l3f2x4_40 = 108726508
-343 assert g3p2e8_41# = 97974.315
-344 assert v0h9_42$ = "NPUCS"
-345 assert u6_43 = -168300022
-346 assert k5w7g6_44# = -422233.18
-347 assert e0_45$ = "X"
-348 assert r7p3r4_46 = 398297926
-349 assert p7n3k7_47# = -332748.255
-350 assert e9_48$ = "XXLMPVWNJCIQR"
-351 assert j7u6i0_49 = 267775597
-352 assert j0_50# = 78523.927
-353 assert z8k6_51$ = "WVHTTLRZUG"
-354 assert t2r9_52 = -319453843
-355 assert q1t9_53# = -185855.573
-356 assert s9j7l7_54$ = "I"
-357 assert e4y6_55 = -124906717
-358 assert t3_56# = -103612.525
-359 assert k2_57$ = "BJWEMGUJHPX"
-360 assert m6m8o1_58 = 211519207
-361 assert f4_59# = 146025.031
-362 assert l3e4v8_60$ = "GCFVB"
-363 assert k8_61 = 211227809
-364 assert i4g1_62# = 0
-365 assert h8x9_63$ = "NUAZQZZSHDQPBG"
-366 assert m0o4_64 = 307425830
-367 assert m9_65# = 70348.964
-368 assert f5_66$ = "HBAVFIASZ"
-369 assert t5d9a4_67 = -154617258
-370 assert k4d5r6_68# = -45372.197
-371 assert f8d2q8_69$ = "ZBBHDTYEULCLMEGEEOMO"
-372 assert l9a2t3_70 = 307521383
-373 assert s4u1a6_71# = -71886.122
-374 assert e1_72$ = "FPZPNKIPDXGQPAPIY"
-375 assert n3n6_73 = 352321087
-376 assert j9o1_74# = 385267.145
-377 assert n8m6_75$ = "CEUFSUI"
-378 assert d9a2_76 = -132067166
-379 assert s7_77# = -117399.99
-380 assert i9_78$ = "YRIYOXHBA"
-381 assert m4c7a3_79 = 181505009
-382 assert u6_80# = -32167.841
-383 assert j0d5l4_81$ = "LBVLQFCGM"
-384 assert z6_82 = -295057724
-385 assert m2o9_83# = 10382.435
-386 assert z8t0n6_84$ = "RGJBXUOMJZQWMVNOPNLP"
-387 assert g7_85 = -409727031
-388 assert m4_86# = -264945.631
-389 assert l8_87$ = "QDTMZ"
-390 assert c5_88 = 26370084
-391 assert r5p2_89# = -395437.154
-392 assert c0_90$ = "NSYNYOLNPLUWWIP"
-393 assert b9v5_91 = 61654381
-394 assert z1a7i7_92# = -27927.246
-395 assert q5g1_93$ = "KNWQXEEFZXXLWGQDU"
-396 assert d3u4_94 = -195560461
-397 assert p2_95# = 83337.801
-398 assert b6p4_96$ = "K"
-399 assert k3g0c7_97 = 100936301
-400 assert u1_98# = 5987.628
-401 assert p4r0_99$ = "GWTFVRYXIA"
-402 call $ffff
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
+100 '
+110 ' "Squash, gotta start somewhere."
+120 '
+130 bitmap on:sprites on:bitmap clear 0:cls
+140 score = 0:showscore()
+150 upper = 20:lower = 230:showframe()
+160 batx = 32:baty = 120:batSize = 30:drawbat()
+165 ballx = 64:bally = 120:ballxi = 2:ballyi = 2:drawball()
+170 repeat
+180 movebat():moveball()
+190 until false
+
+
+990  '
+991  ' "Update the score"
+992  '
+1000 proc showscore()
+1010 local a$:a$ = right$("000"+str$(score),4)
+1015 rect solid colour 0 from 256,2 to 319,18
+1020 text a$ dim 2 colour $FE,0 to 256,2
+1030 endproc
+1040 '
+1050 ' "Draw framework"
+1055 '
+1060 proc showframe()
+1070 line 0,upper colour $FF to 319,upper to 319,lower to 0,lower
+1100 endproc
+1110 '
+1120 ' "Draw/Erase the bat"
+1130 '
+1140 proc drawbat()
+1150 rect solid colour $FC,1 from batx-4,baty-batSize\2 to batx,baty+batSize\2
+1160 endproc
+1200 '
+1210 ' "Move the bat"
+1220 '
+1230 proc movebat()
+1240 local yi:yi = joyy(0)*4
+1250 if yi <> 0
+1260  	drawbat()
+1270 	baty = baty + yi
+1272 	if baty-batSize\2 < upper | baty+batSize\2 > lower then baty = baty - yi
+1280 	drawbat()
+1290 endif
+1300 endproc
+1310 '
+1320 ' "Move the ball"
+1330 '
+1400 proc moveball()
+1405 drawball()
+1410 ballx = ballx + ballxi:bally = bally+ballyi
+1411 if bally < upper | bally > lower then ballyi = -ballyi
+1412 if ballx > 314 then ballxi = -ballxi:score = score + 1:showscore()
+1415 if ballx < batx-16 then ballxi = -ballxi
+1417 drawball()
+1420 endproc
+1430
+1440 '
+1450 ' 	"Draw the ball"
+1460 '
+1500 proc drawball()
+1510 rect solid colour $1F,1 from ballx-2,bally-2 to ballx+2,bally+2
+1520 endproc
+����

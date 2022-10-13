@@ -67,7 +67,7 @@ ImageCommand: ;; [IMAGE]
 		jsr 	Evaluate8BitInteger 		; get image number.
 		jsr 	RunGraphicsCommand
 ImageRunDraw:
-		lda 	#16*2 						; move cursor
+		ora 	#16*2 						; move cursor
 		jsr 	GXGraphicDraw		
 		lda 	gxDrawScale
 		asl 	a
@@ -90,7 +90,7 @@ TextCommand: ;; [Text]
 		jsr 	EvaluateString 				; get text
 		jsr 	RunGraphicsCommand
 TextRunDraw:
-		lda 	#16*2 						; move cursor
+		ora 	#16*2 						; move cursor
 		jsr 	GXGraphicDraw		
 		ldy 	#0
 _IRDLoop:

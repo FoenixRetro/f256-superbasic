@@ -25,6 +25,7 @@
 	.include	"./common/commands/assert.asm"
 	.include	"./common/commands/call.asm"
 	.include	"./common/commands/clear.asm"
+	.include	"./hardware/commands/cls.asm"
 	.include	"./common/commands/data.asm"
 	.include	"./common/commands/dim.asm"
 	.include	"./common/commands/end.asm"

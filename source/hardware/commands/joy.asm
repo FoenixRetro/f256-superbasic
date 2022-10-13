@@ -53,7 +53,11 @@ UnaryJoyB: ;; [joyb(]
 		jsr 	Evaluate8BitInteger 		; ignore the parameter
 		jsr 	CheckRightBracket
 		jsr 	EXTReadController 			; read the controller.
-		and 	#16
+		lsr 	a
+		lsr 	a
+		lsr 	a
+		lsr 	a
+		and 	#1
 		jsr 	NSMSetByte
 		rts				
 
