@@ -1,9 +1,6 @@
 Progress:
-	add PLOT
-	Calls failing in grcommand.asm
 	Timing functions event()
 	Gamepad function (cheat, use keyboard)
-	Random() no parameter
 	Fix BY
 
 Later:

@@ -45,12 +45,16 @@ SpriteCommand: ;; [SPRITE]
 		phy
 		lda 	#7*2 						; use that image.
 		ldx 	NSMantissa0
+		cpx 	#64 						; 0-63 only
+		bcs 	_SCRange
 		ldy 	#255
 		jsr 	GXGraphicDraw
 		lda 	#25*2
 		ply
 		jsr 	RunGraphicsCommand
 		bra 	ExecuteGraphicCommand
+_SCRange:
+		jmp 	RangeError
 
 ; ************************************************************************************************
 ;
@@ -112,6 +116,17 @@ _IRDLoop:
 		bcc 	_IRDLoop 					; go back if no error.
 _IRDExit:		
 		rts
+
+; ************************************************************************************************
+;
+;									 	  Plot Point
+;
+; ************************************************************************************************
+
+PlotCommand: ;; [PLOT]
+		lda 	#24*2 						; command ID to use
+		jsr 	RunGraphicsCommand
+		bra 	ExecuteGraphicCommand
 
 ; ************************************************************************************************
 ;
@@ -378,8 +393,6 @@ GCCopyPairToStore:
 		lda 	NSMantissa0+2
 		sta 	gxYPos
 		rts
-
-
 		.send code
 
 		.section storage

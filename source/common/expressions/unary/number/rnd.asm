@@ -22,10 +22,14 @@ Unary_Random: ;; [random(]
 		plx
 		jsr 	Random32Bit 				; get a random number
 		jsr 	URCopyToMantissa  			; put in mantissa
+		.cget 								; ) follows
+		cmp 	#KWD_RPAREN
+		beq 	_URNoModulus
 		inx
 		jsr 	Evaluate16BitInteger 		; put modulus value in +1
 		dex
 		jsr 	IntegerModulusNoCheck 		; calculate modulus
+_URNoModulus:		
 		stz 	NSStatus,x 					; make it an integer positive
 		stz 	NSExponent,x
 		jsr 	CheckRightBracket
@@ -78,7 +82,7 @@ URCopyToMantissa:
 		lda 	RandomSeed+2
 		sta 	NSMantissa2,x
 		lda 	RandomSeed+3
-		and 	#$7F 						; make legal mantissa
+		and 	#$3F 						; make legal mantissa
 		sta 	NSMantissa3,x
 		rts
 

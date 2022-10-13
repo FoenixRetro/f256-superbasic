@@ -1,5 +1,4 @@
-
-105 repeat
-110 print timer()
-120 until false
+100 for i = 1 to 10
+110 print random()
+120 next
 ÿÿÿÿ

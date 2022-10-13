@@ -126,15 +126,16 @@ VectorSet0:
 	.word	LineCommand                      ; $b8 LINE
 	.word	Command_LOCAL                    ; $b9 LOCAL
 	.word	SyntaxError                      ; $ba OUTLINE
-	.word	Command_Print                    ; $bb PRINT
-	.word	Command_Read                     ; $bc READ
-	.word	RectangleCommand                 ; $bd RECT
-	.word	RemCommand                       ; $be REM
-	.word	Command_RETURN                   ; $bf RETURN
-	.word	SyntaxError                      ; $c0 SOLID
-	.word	SpriteCommand                    ; $c1 SPRITE
-	.word	TextCommand                      ; $c2 TEXT
-	.word	Unused2                          ; $c3 TO
+	.word	PlotCommand                      ; $bb PLOT
+	.word	Command_Print                    ; $bc PRINT
+	.word	Command_Read                     ; $bd READ
+	.word	RectangleCommand                 ; $be RECT
+	.word	RemCommand                       ; $bf REM
+	.word	Command_RETURN                   ; $c0 RETURN
+	.word	SyntaxError                      ; $c1 SOLID
+	.word	SpriteCommand                    ; $c2 SPRITE
+	.word	TextCommand                      ; $c3 TEXT
+	.word	Unused2                          ; $c4 TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
