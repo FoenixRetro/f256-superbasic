@@ -51,7 +51,7 @@ _GXNotHorizontal:
 		inc 	a
 		sta 	gxScale
 
-		stz 	gxzTemp1						; start first line
+		stz 	gxzTemp1					; start first line
 _GXGELoop:
 		lda 	gxzTemp1 					; current line number to read.
 		eor 	gxVFlip
@@ -115,7 +115,11 @@ _GXROLLoop2:
 		eor 	gxHFlip
 		tax 								; read from the pixel buffer
 		lda 	gxPixelBuffer,x
-		beq 	_GXZeroPixel 				; don't draw if zero.
+		bne 	_GXDraw 					; draw if non zero
+		lda 	gxUseMode 					; check to see if solid background
+		and 	#4
+		beq 	_GXZeroPixel		
+_GXDraw:		
 		lda 	(gxzScreen),y
 		and 	gxANDValue
 		eor 	gxPixelBuffer,x
@@ -123,7 +127,7 @@ _GXROLLoop2:
 _GXZeroPixel:
 		iny 								; advance pointer
 		bne 	_GXNoShift
-		inc 	gxzScreen+1 					; carry to next
+		inc 	gxzScreen+1 				; carry to next
 		jsr 	GXDLTCheckWrap				; check for new page.
 _GXNoShift:		
 		dec 	gxzTemp2+1 					; do the inner loop gxScale times.
