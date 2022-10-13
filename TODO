@@ -1,8 +1,7 @@
 Progress:
-	Gamepad function (cheat, use keyboard)
 	Recreate python script/app to make sprites
 	Create work area functionality.
-	
+
 Later:
 	Disable interrupts enable at end of line command ?
 	Changing Kerning ?

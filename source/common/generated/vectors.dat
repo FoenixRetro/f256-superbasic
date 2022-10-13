@@ -79,9 +79,9 @@ VectorSet0:
 	.word	FracUnary                        ; $89 FRAC(
 	.word	IntUnary                         ; $8a INT(
 	.word	IsValUnary                       ; $8b ISVAL(
-	.word	SyntaxError                      ; $8c JOYB(
-	.word	SyntaxError                      ; $8d JOYX(
-	.word	SyntaxError                      ; $8e JOYY(
+	.word	UnaryJoyB                        ; $8c JOYB(
+	.word	UnaryJoyX                        ; $8d JOYX(
+	.word	UnaryJoyY                        ; $8e JOYY(
 	.word	Unary_Left                       ; $8f LEFT$(
 	.word	LenUnary                         ; $90 LEN(
 	.word	Unary_Mid                        ; $91 MID$(

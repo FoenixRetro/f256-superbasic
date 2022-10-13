@@ -83,6 +83,11 @@ _VHNoSecondIndex:
 		;		So first check if the number of indices match
 		;
 		phy 								; save position
+
+		ldy 	#2 							; check first index is not-zero, e.g. array defined
+		lda 	(zaTemp),y
+		beq 	_VHBadIndex
+		
 		lda 	NSMantissa0,x 				; copy record address to zaTemp
 		sta 	zaTemp
 		lda 	NSMantissa1,x

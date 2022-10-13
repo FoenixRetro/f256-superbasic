@@ -14,7 +14,6 @@
 
 
 	.include	"./common/aa.system/00start.asm"
-	.include	"./common/aa.system/grtest.asm"
 	.include	"./common/assembler/assembler.asm"
 	.include	"./common/assembler/aswrite.asm"
 	.include	"./common/assembler/instruction.asm"
@@ -37,6 +36,7 @@
 	.include	"./common/commands/gosub.asm"
 	.include	"./common/commands/goto.asm"
 	.include	"./common/commands/if.asm"
+	.include	"./hardware/commands/joy.asm"
 	.include	"./common/commands/let.asm"
 	.include	"./common/commands/list.asm"
 	.include	"./common/commands/local.asm"
