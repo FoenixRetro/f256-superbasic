@@ -33,12 +33,43 @@ class SpriteImage(object):
 		assert self.spriteSize <= 32
 		self.xOffset = int(self.spriteSize/2 - self.image.size[0] / 2) 							# offset in graphic to make square centred sprite
 		self.yOffset = int(self.spriteSize/2 - self.image.size[1] / 2)
-		print(self.spriteSize,self.xOffset,self.yOffset,self.image.size)
+		#print(self.spriteSize,self.xOffset,self.yOffset,self.image.size)
+	#
+	#		Get sprite data
+	#
+	def getData(self):
+		data = []
+		for y in range(0,self.spriteSize):
+			for x in range(0,self.spriteSize):
+				d = 0
+				rgb = self.read((x,y))
+				if rgb is not None:
+					d = self.rgbConvert(rgb)
+				data.append(d)
+		return(data)
+	#
+	#		Get sprite size
+	#
+	def getSize(self):
+		return self.spriteSize
+	#
+	#		Get byte requirement
+	#
+	def getDataSize(self):
+		return self.spriteSize * self.spriteSize
 	#
 	#		Translate a coordinate pair
 	#
 	def translate(self,cp):
 		return cp 
+	#
+	#		Convert [r,g,b] to pixel data
+	#
+	def rgbConvert(self,pixel):
+		colour = ((pixel[0] >> 5) << 5)
+		colour += ((pixel[1] >> 5) << 2)
+		colour += ((pixel[2] >> 6) << 0)
+		return colour
 	#
 	#		Read a pixel value. Return [R,G,B] or None
 	#
@@ -143,9 +174,12 @@ class SpriteImage(object):
 	# 			print("Address ${0:04x} Size {1:2} LUT {2}".format((e & 0xFFF0) << 2,(e & 3)*8+8,(e >> 2) & 3))
 
 
-s = SpriteImage("sprite32.png")
+s = SpriteImage("sprite8.png")
 for y in range(0,s.spriteSize):
 	s1 = ""
 	for x in range(0,s.spriteSize):
 		s1 += "." if s.read((x,y)) is None else "*"
 	print(s1)
+print(s.getSize())
+print(s.getDataSize())
+print(s.getData())
