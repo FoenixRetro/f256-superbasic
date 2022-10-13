@@ -91,7 +91,7 @@ VectorSet0:
 	.word	SgnUnary                         ; $95 SGN(
 	.word	SpcUnary                         ; $96 SPC(
 	.word	Unary_Str                        ; $97 STR$(
-	.word	SyntaxError                      ; $98 TIMER(
+	.word	UnaryTimer                       ; $98 TIMER(
 	.word	UnaryTrue                        ; $99 TRUE
 	.word	ValUnary                         ; $9a VAL(
 	.word	ForCommand                       ; $9b FOR

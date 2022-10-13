@@ -1,8 +1,5 @@
 
-100 bitmap on
-110 sprites on
-120 bitmap clear 0
-220 sprite 0 to 100,100  image 2
-225 for i = 1 to 5000:next
-230 sprite 0 off
+105 repeat
+110 print timer()
+120 until false
 ÿÿÿÿ

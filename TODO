@@ -1,11 +1,14 @@
 Progress:
+	add PLOT
 	Calls failing in grcommand.asm
-	Timing functions timer() event()
+	Timing functions event()
 	Gamepad function (cheat, use keyboard)
 	Random() no parameter
+	Fix BY
+
+Later:
+	Disable interrupts enable at end of line command ?
 	Changing Kerning ?
 	Indenting
 	Rem without quote marks.
 	
-Later:
-	Disable interrupts enable at end of line command ?

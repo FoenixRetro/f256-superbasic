@@ -48,6 +48,7 @@
 	.include	"./common/commands/restore.asm"
 	.include	"./common/commands/run.asm"
 	.include	"./common/commands/stop.asm"
+	.include	"./hardware/commands/timer.asm"
 	.include	"./common/commands/utilities/expandline.asm"
 	.include	"./common/commands/utilities/procscan.asm"
 	.include	"./common/commands/utilities/scanforward.asm"
