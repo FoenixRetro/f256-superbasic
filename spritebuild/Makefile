@@ -16,5 +16,6 @@ include ../documents/common.make
 endif
 
 all :  
-	python spritebuild.py
+	python spritebuild.py sprites.def
 	$(CCOPY) graphics.bin ..$(S)bin
+	$(CCOPY) spritebuild.py ..$(S)bin
