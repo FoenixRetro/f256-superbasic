@@ -1,3 +1,6 @@
-100 bitmap on:bitmap clear $1C
-110 text "Hello" Dim 2 color $FF,1 to 20,20
+100 bitmap on:bitmap clear $00:sprites on
+110 text "Hello" Dim 2 color $FF,1 to 20,200
+120 for i = 0 to 6
+130 sprite i image i to i*40+20,140
+140 next
 ÿÿÿÿ

@@ -50,7 +50,11 @@ go : basic
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)graphics.bin --address 30000
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 3000
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary basic.rom --address 8000
-
+#
+#		Create sprites
+#
+sprites:
+	make -B -C ..$(S)spritebuild
 #
 #		Build and download tools
 #

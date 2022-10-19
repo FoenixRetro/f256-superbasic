@@ -10,11 +10,11 @@
 # ************************************************************************************************
 
 ifeq ($(OS),Windows_NT)
-include ..\common.make
+include ..\documents\common.make
 else
-include ../common.make
+include ../documents/common.make
 endif
 
 all :  
-	python makegfx.py
-	$(CCOPY) graphics.bin ..$(S)..$(S)bin
+	python spritebuild.py
+	$(CCOPY) graphics.bin ..$(S)bin

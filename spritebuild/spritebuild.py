@@ -22,6 +22,10 @@ class SpriteImage(object):
 	def __init__(self,imageFile):
 		self.image = Image.open(imageFile).convert("RGBA") 										# get image and convert to RGBA format.
 		self.background = self.image.getpixel((0,0))  											# top left pixel is background colour
+		self.baseName = os.path.splitext(imageFile.split(os.sep)[-1])[0].lower() 				# get base name
+		self.isVflip = False
+		self.isHflip = False
+		self.rotateAngle = 0
 		while self.clipImage():																	# reduce to minimum size.
 			pass
 		self.calculateSizeAndOffset()															# figure out size of finished sprite and offset.
@@ -34,6 +38,13 @@ class SpriteImage(object):
 		self.xOffset = int(self.spriteSize/2 - self.image.size[0] / 2) 							# offset in graphic to make square centred sprite
 		self.yOffset = int(self.spriteSize/2 - self.image.size[1] / 2)
 		#print(self.spriteSize,self.xOffset,self.yOffset,self.image.size)
+	#
+	#		Get name of sprite
+	#
+	def getName(self):
+		if not self.isVflip and not self.isHflip and self.rotateAngle == 0:
+			return self.baseName
+		return self.baseName + "_" + ("v" if self.isVflip else "") + ("h" if self.isHflip else "") + (str(self.rotateAngle) if self.rotateAngle != 0 else "")
 	#
 	#		Get sprite data
 	#
@@ -61,7 +72,29 @@ class SpriteImage(object):
 	#		Translate a coordinate pair
 	#
 	def translate(self,cp):
+		if self.isHflip:
+			cp = [self.spriteSize-1-cp[0],cp[1]]
+		if self.isVflip:
+			cp = [cp[0],self.spriteSize-1-cp[1]]
+		if self.rotateAngle != 0:
+			for i in range(0,self.rotateAngle // 90):
+				cp = [cp[1],self.spriteSize-1-cp[0]]
 		return cp 
+	#
+	#		Set translations
+	#
+	def vFlip(self):
+		self.isVflip = True
+		return self 
+	#
+	def hFlip(self):
+		self.isHflip = True
+		return self 
+	#
+	def rotate(self,angle):
+		assert angle >= 0 and angle < 360 and angle % 90 == 0,"Rotation only through 90 degree steps at present"
+		self.rotateAngle = angle 
+		return self 
 	#
 	#		Convert [r,g,b] to pixel data
 	#
@@ -122,64 +155,71 @@ class SpriteImage(object):
 	#
 	def isBackground(self,x,y):
 		return self.image.getpixel((x,y)) == self.background 
-
-	# def importGraphic(self,name):
-	# 	gr = Image.open(name)
-	# 	assert gr.size[0] == gr.size[1],"Not square"
-	# 	size = gr.size[0]
-	# 	assert size == 8 or size == 16 or size == 24 or size == 32
-	# 	gr = gr.convert("RGBA")
-	# 	self.index.append([self.offset,size])
-	# 	for y in range(0,size):
-	# 		for x in range(0,size):
-	# 			pixel = gr.getpixel((x,y))
-	# 			colour = 0 
-	# 			if pixel[0] > 16:
-	# 				colour = ((pixel[0] >> 5) << 5)
-	# 				colour += ((pixel[1] >> 5) << 2)
-	# 				colour += ((pixel[2] >> 6) << 0)
-	# 				if colour == 0:
-	# 					colour = 0x20
-	# 			#print("{0} ${1:x}".format(pixel,colour))
-	# 			self.data.append(colour)
-	# 			self.offset += 1
 	#
-	#		Format:
-	#			256 low bytes
-	#			256 high bytes
+	#		Display a rough text version of the sprite.
 	#
-	#		00aaaaaa aallss
+	def printSprite(self):
+		for y in range(0,self.spriteSize):
+			s1 = ""
+			for x in range(0,self.spriteSize):
+				s1 += "." if s.read((x,y)) is None else "*"
+			print(s1)
+
+# *******************************************************************************************
+#
+#								Sprite Collection class
+#
+# *******************************************************************************************
+
+class SpriteCollection(object):
+	def __init__(self):
+		self.spriteList = []
 	#
-	# 		00aaaaaaa is the address >> 6 (masked, >> 2)
-	#		ll is the LUT to use 0-3
-	# 		ss is the size (8/16/24/32)
+	#		Add a new sprite
 	#
-	# def export(self):
-	# 	self.binIndex = [ 0 ] * 512
-	# 	slot = 0
-	# 	for e in self.index:
-	# 		a = ((e[1] >> 3) - 1) + ((e[0] & 0xFFFC0) >> 2)
-	# 		self.binIndex[slot] = a & 0xFF
-	# 		self.binIndex[slot + 256] = a >> 8
-	# 		slot += 1
-	# 	h = open("graphics.bin","wb")
-	# 	h.write(bytes(self.binIndex))
-	# 	h.write(bytes(self.data))
-	# 	h.close()
+	def add(self,sprite):
+		self.spriteList.append(sprite)
+	#
+	#		Output the sprite graphics object. This has a 512 byte index preceding it containing
+	#		256 low bytes first, then 256 high bytes.
+	#	
+	#		The bytes have the formula 00aaaaaa aaaallss
+	#
+	# 		aaaaaaaaaaa is the offset shifted 6 right (e.g. / 64) from the start
+	#		ll  		is the LUT to use (0 at present)
+	#		ss 			is the size of the sprite (0-3 are 8,16,24,32)
+	#
+	def outputSprite(self,file = "graphics.bin"):
+			spriteIndex = [ 0 ] * 256 			
+			position = 0x200 
+			for i in range(0,len(self.spriteList)):
+				s = self.spriteList[i]
+				offset = (position >> 6) 									
+				size = (s.getSize() >> 3)-1
+				lut = 0 
+				spriteIndex[i] = (offset << 4) + (lut << 2) + (size << 0)
+				position += s.getDataSize()
+			#
+			h = open(file,"wb")
+			for i in range(0,256):
+				h.write(bytes([spriteIndex[i] & 0xFF]))
+			for i in range(0,256):
+				h.write(bytes([spriteIndex[i] >> 8]))
+			for s in self.spriteList:
+				h.write(bytes(s.getData()))
 
-	# def showIndex(self):
-	# 	for i in range(0,256):
-	# 		e = self.binIndex[i] + self.binIndex[i+256] * 256
-	# 		if e != 0:
-	# 			print("Address ${0:04x} Size {1:2} LUT {2}".format((e & 0xFFF0) << 2,(e & 3)*8+8,(e >> 2) & 3))
+			h.close()
 
 
-s = SpriteImage("sprite8.png")
-for y in range(0,s.spriteSize):
-	s1 = ""
-	for x in range(0,s.spriteSize):
-		s1 += "." if s.read((x,y)) is None else "*"
-	print(s1)
-print(s.getSize())
-print(s.getDataSize())
-print(s.getData())
+
+
+
+c = SpriteCollection()
+c.add(SpriteImage("sprite8.png"))
+c.add(SpriteImage("sprite16.png"))
+c.add(SpriteImage("sprite24.png"))
+c.add(SpriteImage("sprite32.png").rotate(0))
+c.add(SpriteImage("sprite32.png").rotate(90))
+c.add(SpriteImage("sprite32.png").rotate(180))
+c.add(SpriteImage("sprite32.png").rotate(270))
+c.outputSprite()
