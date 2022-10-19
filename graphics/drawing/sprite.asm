@@ -151,7 +151,10 @@ GXMoveSprite: ;; [25:SPRMOVE]
 		clc
 		adc 	gxY0
 		sta 	(gxzTemp0),y
-
+		lda 	#0
+		adc 	#0
+		iny
+		sta 	(gxzTemp0),y
 		clc
 		rts
 

@@ -40,7 +40,7 @@ run : basic
 
 testbasic:prelim
 	64tass -D AUTORUN=1 $(ASMOPTS) _basic.asm -o $(APPNAME)
-
+	$(CCOPY) $(APPNAME) $(BINDIR)
 #
 #		Run on real hardware
 #
@@ -88,6 +88,7 @@ vars:
 #	
 basic : prelim
 	64tass -D AUTORUN=0 $(ASMOPTS) _basic.asm -o $(APPNAME)
+	$(CCOPY) $(APPNAME) $(BINDIR)
 
 autorun:testbasic
 	python scripts$(S)checkload.py

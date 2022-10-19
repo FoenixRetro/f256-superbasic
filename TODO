@@ -1,6 +1,7 @@
 Progress:
+	Graphics limit testing back in.
 	Create work area functionality.
-
+	Text s$DIM 2 listing issue.
 Later:
 	Disable interrupts enable at end of line command ?
 	Changing Kerning ?

@@ -1,0 +1,5 @@
+#
+#		Sprite images are indexed from 0, so the ball is image 0 and the bat is image 1. 
+#
+graphics/ball.png
+graphics/bat.png
