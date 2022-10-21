@@ -1,7 +1,7 @@
 Progress:
-	Graphics limit testing back in.
-	Create work area functionality.
-	Text s$DIM 2 listing issue.
+	Squash procedure bug.
+	Complete squash.
+	Text s$DIM 2 listing issue (should allow for end being $ and this isn't a natural seperator also #)
 Later:
 	Disable interrupts enable at end of line command ?
 	Changing Kerning ?

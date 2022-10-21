@@ -51,6 +51,30 @@ _GDCopy1:
 		pha
 		and 	#1 							; put LSB as MSB of Current.X
 		sta 	gxCurrentX+1
+		pla 								; get command back
+		and 	#$FE 						; lose LSB, chuck the stray X bit
+		pha 								; push back.
+		cmp 	#25*2 						; move sprite does not clip.
+		beq 	_GDCopyToWorkArea
+		;
+		;		See if coordinate is in range, if so, reject it as error.
+		;
+		lda 	gxCurrentX+1 				; X < 256 X okay
+		beq 	_GDCheckY
+		lda 	gxCurrentX 					; otherwise X < 320 = 256 + 64
+		cmp 	#64
+		bcs 	_GDError1
+_GDCheckY:
+		lda 	gxCurrentY 					; check Y < Height.
+		cmp 	gxHeight
+		bcc 	_GDCopyToWorkArea
+_GDError1:
+		pla
+_GDError2:		
+		sec
+		rts
+
+_GDCopyToWorkArea:
 		;
 		ldx 	#7 							; copy current and last to gxXY/12 work area
 _GDCopy2:
@@ -58,20 +82,15 @@ _GDCopy2:
 		sta 	gxX0,x
 		dex
 		bpl 	_GDCopy2		
-		pla 								; get command back
 		;
 		;		Execute command X
 		;		
-_GDExecuteA:
-		and 	#$FE 						; lose LSB
+		pla 								; get command
+_GDExecuteA:		
 		cmp 	#GRFirstFreeCode*2 			; bad ?
 		bcs 	_GDError2
 		tax
 		jmp 	(GRVectorTable,x)
-
-_GDError2:		
-		sec
-		rts
 
 GXMove: ;; [16:Move]
 		clc
