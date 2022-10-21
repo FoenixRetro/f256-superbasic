@@ -29,7 +29,7 @@ CallProcedure:
 		cmp 	#KWD_RPAREN 				
 		beq 	_CPEndParam
 _CPParamLoop:				
-		jsr 	EvaluateExpression 			; get parameter onto stack
+		jsr 	EvaluateValue 				; get parameter onto stack
 		inx 								; bump next stack
 		.cget 								; get next character and consume
 		iny
@@ -112,5 +112,7 @@ Command_ENDPROC:	;; [endproc]
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		21/10/22 		Calling EvaluateExpression so wasn't working for references, changed to 
+;						EvaluateValue.
 ;
 ; ************************************************************************************************

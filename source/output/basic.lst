@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.56.2625 listing file
 ; 64tass -D AUTORUN=1 -q -b -Wall -c -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Fri Oct 21 18:48:35 2022
+; Fri Oct 21 20:23:34 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -394,9 +394,9 @@
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->805d	42 75 69 6c 74 20 46 72			.text "Built Friday 21-Oct-2022. Build 2180."
+>805d	42 75 69 6c 74 20 46 72			.text "Built Friday 21-Oct-2022. Build 2187."
 >8065	69 64 61 79 20 32 31 2d 4f 63 74 2d 32 30 32 32
->8075	2e 20 42 75 69 6c 64 20 32 31 38 30 2e
+>8075	2e 20 42 75 69 6c 64 20 32 31 38 37 2e
 
 ;******  Return to file: ./common/aa.system/00start.asm
 
@@ -3533,7 +3533,7 @@
 .935f	c9 29		cmp #$29			cmp 	#KWD_RPAREN
 .9361	f0 0c		beq $936f			beq 	_CPEndParam
 .9363					_CPParamLoop:
-.9363	20 14 9d	jsr $9d14			jsr 	EvaluateExpression 			; get parameter onto stack
+.9363	20 1a a4	jsr $a41a			jsr 	EvaluateValue 				; get parameter onto stack
 .9366	e8		inx				inx 								; bump next stack
 .9367	b1 30		lda ($30),y			lda 	(codePtr),y
 .9369	c8		iny				iny
@@ -7383,9 +7383,9 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->b470	42 75 69 6c 74 20 46 72			.text "Built Friday 21-Oct-2022. Build 2180."
+>b470	42 75 69 6c 74 20 46 72			.text "Built Friday 21-Oct-2022. Build 2187."
 >b478	69 64 61 79 20 32 31 2d 4f 63 74 2d 32 30 32 32
->b488	2e 20 42 75 69 6c 64 20 32 31 38 30 2e
+>b488	2e 20 42 75 69 6c 64 20 32 31 38 37 2e
 
 ;******  Return to file: _basic.asm
 
