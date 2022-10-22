@@ -85,6 +85,7 @@
 	.include	"./common/expressions/unary/number/frac.asm"
 	.include	"./common/expressions/unary/number/int.asm"
 	.include	"./common/expressions/unary/number/len.asm"
+	.include	"./common/expressions/unary/number/minmax.asm"
 	.include	"./common/expressions/unary/number/not.asm"
 	.include	"./common/expressions/unary/number/rnd.asm"
 	.include	"./common/expressions/unary/number/sgn.asm"

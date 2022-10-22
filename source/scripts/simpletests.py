@@ -38,6 +38,9 @@ class TestAssertion(object):
 	def make(self,test):
 		return "assert {0} = {1}".format(test[0],test[1])
 
+	def toDisplay(self,v):
+		return '"'+v+'"' if isinstance(v,str) else self.str(v)
+
 # *******************************************************************************************
 #
 #							Integer mathematic/binary operation
@@ -156,6 +159,14 @@ class UnaryNumber(TestAssertion):
 			return [ "not({0})".format(str(n)),str(0 if n != 0 else -1)]
 		elif t1 == 7:
 			return [ "val(\"{0}\")".format(self.str(n1)),self.str(n1)]
+		elif t1 == 8:
+			isString = random.randint(0,1) == 0
+			isMin = random.randint(0,1) == 0
+			cList = [s1 if isString else n1] 
+			for i in range(1,random.randint(1,4)):
+				cList.append(self.string() if isString else self.shortInteger() if random.randint(0,1) == 0 else self.float())
+			result = self.toDisplay(min(cList) if isMin else max(cList))
+			return [ "{0}({1})".format("min" if isMin else "max",",".join([self.toDisplay(x) for x in cList])),result ]
 		else:
 			return None
 

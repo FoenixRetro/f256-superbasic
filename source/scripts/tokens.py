@@ -38,7 +38,7 @@ class TokenSource(object):
 				left$( 		mid$( 		right$( 	rnd( 		sgn( 		int( 				
 				spc( 		str$( 		val(  		isval(		true 		false
 				not(		random(	 	timer( 		event( 		joyx(		joyy(
-				joyb(
+				joyb( 		min(		max( 		hit(
 
 			{0}							// Set 0
 				cls 		data 		dim 		let 		goto		gosub 		
