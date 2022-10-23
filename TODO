@@ -1,6 +1,8 @@
 Progress:
 	Collision functions -> gfx library and command
 	Text s$DIM 2 listing issue (should allow for end being $ and this isn't a natural seperator also # and all punctuation.... except ( ?)
+	Sprite/Image with a bad image number.
+	
 Later:
 	Disable interrupts enable at end of line command ?
 	Changing Kerning ?

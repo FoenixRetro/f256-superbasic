@@ -1,0 +1,7 @@
+1000 '
+1010 ' "Simple PNG Game. Testing the BASICs :)"
+1020 '
+1030 cls:bitmap on:sprites on:bitmap clear 0
+1040 for i = 0 to 15
+1050 sprite i image i to (i & 7) * 34 + 17,20+(i >> 3)*34
+1060 next
