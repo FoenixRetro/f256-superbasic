@@ -15,8 +15,9 @@ else
 include ../../../documents/common.make
 endif
 
-GRAPHICS = alien11:16,10 alien12:34,11 alien21:15,30 alien22:39,30 alien31:16,46 alien32:52,46 \
-		   explosion:96,15 base:169,43 bullet1:170,20 bullet21:62,13 bullet22:76,13 saucer:130,29
+GRAPHICS = alien11:21,16 alien12:59,11 alien21:31,50 alien22:68,50 saucer:142,42 \
+		   base:121,90 explosion:15,116 missile1:44,116 missile2:72,116 \
+		   alien31:32,75 alien32:70,75
 
 BINDIR = ..$(S)..$(S)..$(S)bin$(S)
 
