@@ -36,16 +36,16 @@ UnaryEvent: ;; [event(]
 		dex
 		dex
 		;
-		lda 	NSMantissa0+1 				; copy reference to zTemp0
+		lda 	NSMantissa0+1,x 			; copy reference to zTemp0
 		sta 	zTemp0
-		lda 	NSMantissa1+1
+		lda 	NSMantissa1+1,x
 		sta 	zTemp0+1
 		;
 		phy
 		;
 		ldy 	#3 							; check bit 7 of last bit, the packed sign bit
 		lda 	(zTemp0),y
-		bmi 	_UEFalse
+		bmi 	_UEFalse 					; exit if signed.
 		;
 		ldy 	#0 							; has it timed out (24 bit)
 		lda 	NSMantissa0,x

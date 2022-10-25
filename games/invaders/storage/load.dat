@@ -2,6 +2,53 @@
 1010 ' "Simple PNG Game. Testing the BASICs :)"
 1020 '
 1030 cls:bitmap on:sprites on:bitmap clear 0
-1040 for i = 0 to 15
-1050 sprite i image i to (i & 7) * 34 + 17,20+(i >> 3)*34
-1060 next
+1040 defineVariables()
+1050 resetlevel()
+1060 repeat
+1070 if event(moveInvadersEvent,invaderSpeed) then moveInvaders()
+1080 until false
+1090 end
+1100 proc moveInvaders()
+1110 xInvaders = xInvaders + xiInvaders
+1120 if xInvaders < leftEdge
+1130 xInvaders = leftEdge
+1140 yInvaders = yInvaders + abs(xiInvaders)
+1150 xiInvaders = -xiInvaders
+1160 endif
+1170 if xInvaders > rightEdge
+1180 xInvaders = rightEdge
+1190 yInvaders = yInvaders + abs(xiInvaders)
+1200 xiInvaders = -xiInvaders
+1210 endif
+1220 drawInvaders(xInvaders,yInvaders)
+1230 endproc
+1240 proc drawInvaders(xPos,yPos)
+1250 local x,y,s
+1260 altGraphic = 1 - altGraphic
+1270 for x = 0 to 7
+1280 s = x * 5
+1290 if colHeight(x) > 0
+1300 for y = 0 to colHeight(x)-1
+1310 sprite s image graphic(y)+altGraphic to xPos+x*24,yPos+y*24
+1320 s = s + 1
+1330 next
+1340 endif
+1350 next
+1360 endproc
+1370 proc calculateSpeed()
+1380 invaderSpeed = 4+invTotal*2
+1390 endproc
+1400 proc defineVariables()
+1410 local i
+1420 dim colheight(7),graphic(4)
+1430 for i = 0 to 4:graphic(i) = i % 3 * 2:next:altGraphic = 0
+1440 endproc
+1450 proc resetlevel()
+1460 local i
+1470 for i = 0 to 7:colHeight(i) = 5:next
+1480 invTotal = 5*8
+1490 leftEdge = 8:rightEdge = 320-8-7*24
+1500 xInvaders = 160-7*12:yInvaders = 26:xiInvaders = 8
+1510 drawInvaders(xInvaders,yInvaders)
+1520 calculateSpeed()
+1530 endproc

@@ -49,3 +49,12 @@ program:
 #
 run: sprites program
 	$(START)	
+#
+#		Run on hardware
+#
+go:
+	$(CCOPY) $(BINDIR)foenixmgr.ini .	
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address F000
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary graphics.bin --address 30000
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 3000
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)basic.rom --address 8000
