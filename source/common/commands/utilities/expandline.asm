@@ -36,11 +36,27 @@ _LCCopyNumber:
 		iny		
 		lda 	(zTemp0),y
 		bne 	_LCCopyNumber
+
+		jsr 	ScanGetCurrentLineStep 		; adjustment to indent
+		pha 								; save on stack
+		bpl 	_LCNoAdjust 				; don't adjust indent if +ve, do after.
+		clc 								; add to list indent and make 0 if goes -ve.
+		adc 	listIndent
+		sta 	listIndent 
+		bpl 	_LCNoAdjust
+		stz 	listIndent 
+_LCNoAdjust:
+		clc		 							; work out actual indent.
+		lda 	listIndent
+		asl 	a
+		adc 	#6
+		sta 	zTemp0
+
 _LCPadOut:
 		lda 	#' '						; pad out to 6 characters
 		jsr 	LCLWrite
 		lda 	tbOffset
-		cmp 	#6
+		cmp 	zTemp0
 		bne 	_LCPadOut
 		ldy 	#3 							; start position.
 		;	-------------------------------------------------------------------
@@ -65,7 +81,16 @@ _LCMainLoop:
 		cmp 	#254 						; 128-253 are tokenised words
 		bcc 	_LCTokens
 		jmp 	_LCData 					; 254-5 are data objects
+		;
+		;		Exit - do +ve indent here.
+		;
 _LCExit:		
+		pla 								; get old indent adjust
+		bmi 	_LCExit2
+		clc 								; add to indent if +ve
+		adc 	listIndent
+		sta 	listIndent
+_LCExit2:
 		rts
 		;	-------------------------------------------------------------------
 		;

@@ -19,6 +19,7 @@
 ; ************************************************************************************************
 
 Command_List:	;; [list]
+		stz 	listIndent 					; reset indent.
 		stz		NSMantissa0+4				; set the lower (slot 4) to 0 and upper (slot 7) to $FFFF
 		stz 	NSMantissa1+4 				
 		lda 	#$FF
