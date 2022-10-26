@@ -109,6 +109,10 @@ _LCNoAdd2:
 		;	-------------------------------------------------------------------
 
 _LCPunctuation:
+		cmp 	#':' 						; check if :
+		bne 	_LCPContinue
+		jsr 	LCDeleteLastSpace
+_LCPContinue:		
 		iny 								; consume character
 		jsr 	LCLWrite 					; write it out.
 		bra 	_LCMainLoop 				; go round again.
@@ -247,6 +251,26 @@ LCLWrite:
 
 ; ************************************************************************************************
 ;
+;								 If last space then delete it.
+;
+; ************************************************************************************************
+
+LCDeleteLastSpace:
+		pha
+		phx
+		ldx 	tbOffset
+		beq 	_LCDLSExit
+		lda 	tokenBuffer-1,x
+		cmp 	#' '
+		bne 	_LCDLSExit
+		dec 	tbOffset
+_LCDLSExit:
+		plx
+		pla
+		rts		
+
+; ************************************************************************************************
+;
 ;							Is a space required, if so print it
 ;
 ; ************************************************************************************************
@@ -254,6 +278,12 @@ LCLWrite:
 LCCheckSpaceRequired:
 		ldx 	tbOffset		
 		lda 	tokenBuffer-1,x 			; previous character
+		cmp 	#'$' 						; $ # and ) require that token space.
+		beq 	_LCCSRSpace
+		cmp 	#')'
+		beq 	_LCCSRSpace
+		cmp 	#'#'
+		beq 	_LCCSRSpace
 		jsr 	LCLLowerCase 				; saves a little effort
 		cmp 	#"0" 						; check if it was 0-9 A-Z a-z if so need space.
 		bcc 	_LCCSRExit
@@ -266,11 +296,12 @@ LCCheckSpaceRequired:
 _LCCSRSpace: 								; output the space
 		lda 	#' '
 		jsr 	LCLWrite
+
 _LCCSRExit:
 		rts		
 ; ************************************************************************************************
 ;
-;										Convert to L/C
+;										Convert to L/C or U/C
 ;
 ; ************************************************************************************************
 
@@ -281,6 +312,15 @@ LCLLowerCase:
 		bcs 	_LCLLCOut
 		adc 	#$20
 _LCLLCOut:
+		rts
+
+LCLUpperCase:
+		cmp 	#"a"
+		bcc 	_LCLUCOut
+		cmp 	#"z"+1
+		bcs 	_LCLUCOut
+		sbc 	#$1F
+_LCLUCOut:
 		rts
 
 		.send code

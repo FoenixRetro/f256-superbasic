@@ -3,11 +3,19 @@
 '
 cls:bitmap on:sprites on:bitmap clear 0
 defineVariables()
-resetlevel()
+resetlevel():resetPlayer()
 repeat
 	if event(moveInvadersEvent,invaderSpeed) then moveInvaders()
+	if event(movePlayerEvent,3) then movePlayer()
 until false
-end:tax
+end:
+'
+'		Move the player
+'
+proc movePlayer()
+	xPlayer = min(304,max(16,xPlayer+joyx(0)<<2))
+	sprite 63 image 6 to xPlayer,220
+endproc
 '
 '		Move invaders across/down
 '
@@ -54,6 +62,12 @@ proc defineVariables()
 	local i
 	dim colheight(7),graphic(4)
 	for i = 0 to 4:graphic(i) = i % 3 * 2:next:altGraphic = 0
+endproc
+'
+'		Reset the player
+'
+proc resetPlayer()
+	xPlayer = 160
 endproc
 '
 '		Set up new level
