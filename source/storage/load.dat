@@ -1,10 +1,12 @@
-100 code = alloc(32)
+100 code = alloc(64)
 110 assemble code,3
-120 lda #1:sta 0
+120 lda #0:sta 1
 130 lda #$F:sta $D000
 140 lda #0:sta $D001
 150 lda #1:sta $D100
-160 stz $D101:stz $D102:stz $D103
-170 .halt: bra halt
+160 stz $D101:stz $D102:lda #1:sta $D103
+161 stz $D108:stz $D110
+170 rts
 180 call code
+190 print "Done"
 ÿÿÿÿ
