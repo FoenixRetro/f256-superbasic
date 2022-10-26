@@ -20,3 +20,4 @@ for f in sys.argv[1:]:
 			l = l[:n+1]+("" if comment == "" else ' "'+comment+'"')			
 		print("{0} {1}".format(line,l))
 		line += 10
+print("{0}{0}{0}{0}\n".format(chr(255)))
