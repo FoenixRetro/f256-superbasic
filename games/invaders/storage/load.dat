@@ -4,82 +4,85 @@
 1030 cls:bitmap on:sprites on:bitmap clear 0
 1040 defineVariables()
 1050 resetlevel():resetPlayer()
-1060 repeat
-1070 if event(moveInvadersEvent,invaderSpeed) then moveInvaders()
-1080 if event(movePlayerEvent,3) then movePlayer()
-1090 until false
-1100 end:
-1110 '
-1120 ' "Move the player"
+1060 image 6 colour $FF,$0 to 0,0
+1070 text chr$(80) colour $FF,$40 to 32,0
+1080 repeat
+1090 if event(moveInvadersEvent,invaderSpeed) then moveInvaders()
+1100 if event(movePlayerEvent,3) then movePlayer()
+1110 until false
+1120 end:
 1130 '
-1140 proc movePlayer()
-1150 xPlayer = min(304,max(16,xPlayer+joyx(0)<<2))
-1160 sprite 63 image 6 to xPlayer,220
-1170 endproc
-1180 '
-1190 ' "Move invaders across/down"
+1140 ' "Move the player"
+1150 '
+1160 proc movePlayer()
+1170 xPlayer = min(304,max(16,xPlayer+joyx(0)<<2))
+1180 sprite 63 image 6 to xPlayer,220
+1190 endproc
 1200 '
-1210 proc moveInvaders()
-1220 xInvaders = xInvaders + xiInvaders
-1230 if xInvaders < leftEdge
-1240 xInvaders = leftEdge
-1250 yInvaders = yInvaders + abs(xiInvaders)
-1260 xiInvaders = -xiInvaders
-1270 endif
-1280 if xInvaders > rightEdge
-1290 xInvaders = rightEdge
-1300 yInvaders = yInvaders + abs(xiInvaders)
-1310 xiInvaders = -xiInvaders
-1320 endif
-1330 drawInvaders(xInvaders,yInvaders)
-1340 endproc
-1350 '
-1360 ' "Draw invaders sprites at correct position"
+1210 ' "Move invaders across/down"
+1220 '
+1230 proc moveInvaders()
+1240 xInvaders = xInvaders + xiInvaders
+1250 if xInvaders < leftEdge
+1260 xInvaders = leftEdge
+1270 yInvaders = yInvaders + abs(xiInvaders)
+1280 xiInvaders = -xiInvaders
+1290 endif
+1300 if xInvaders > rightEdge
+1310 xInvaders = rightEdge
+1320 yInvaders = yInvaders + abs(xiInvaders)
+1330 xiInvaders = -xiInvaders
+1340 endif
+1350 drawInvaders(xInvaders,yInvaders)
+1360 endproc
 1370 '
-1380 proc drawInvaders(xPos,yPos)
-1390 local x,y,s
-1400 altGraphic = 1 - altGraphic
-1410 for x = 0 to 7
-1420 s = x * 5
-1430 if colHeight(x) > 0
-1440 for y = 0 to colHeight(x)-1
-1450 sprite s image graphic(y)+altGraphic to xPos+x*24,yPos+y*24
-1460 s = s + 1
-1470 next
-1480 endif
+1380 ' "Draw invaders sprites at correct position"
+1390 '
+1400 proc drawInvaders(xPos,yPos)
+1410 local x,y,s
+1420 altGraphic = 1 - altGraphic
+1430 for x = 0 to 7
+1440 s = x * 5
+1450 if colHeight(x) > 0
+1460 for y = 0 to colHeight(x)-1
+1470 sprite s image graphic(y)+altGraphic to xPos+x*24,yPos+y*24
+1480 s = s + 1
 1490 next
-1500 endproc
-1510 '
-1520 ' "Calculate invader movement rate"
+1500 endif
+1510 next
+1520 endproc
 1530 '
-1540 proc calculateSpeed()
-1550 invaderSpeed = 4+invTotal*2
-1560 endproc
-1570 '
-1580 ' "Set up variables"
-1590 '
-1600 proc defineVariables()
-1610 local i
-1620 dim colheight(7),graphic(4)
-1630 for i = 0 to 4:graphic(i) = i % 3 * 2:next:altGraphic = 0
-1640 endproc
-1650 '
-1660 ' "Reset the player"
-1670 '
-1680 proc resetPlayer()
-1690 xPlayer = 160
-1700 endproc
-1710 '
-1720 ' "Set up new level"
-1730 '
-1740 proc resetlevel()
-1750 local i
-1760 for i = 0 to 7:colHeight(i) = 5:next
-1770 invTotal = 5*8
-1780 leftEdge = 8:rightEdge = 320-8-7*24
-1790 xInvaders = 160-7*12:yInvaders = 26:xiInvaders = 8
-1800 drawInvaders(xInvaders,yInvaders)
-1810 calculateSpeed()
-1820 endproc
+1540 ' "Calculate invader movement rate"
+1550 '
+1560 proc calculateSpeed()
+1570 invaderSpeed = 4+invTotal*2
+1580 invaderSpeed = 0
+1590 endproc
+1600 '
+1610 ' "Set up variables"
+1620 '
+1630 proc defineVariables()
+1640 local i
+1650 dim colheight(7),graphic(4)
+1660 for i = 0 to 4:graphic(i) = i % 3 * 2:next:altGraphic = 0
+1670 endproc
+1680 '
+1690 ' "Reset the player"
+1700 '
+1710 proc resetPlayer()
+1720 xPlayer = 160
+1730 endproc
+1740 '
+1750 ' "Set up new level"
+1760 '
+1770 proc resetlevel()
+1780 local i
+1790 for i = 0 to 7:colHeight(i) = 5:next
+1800 invTotal = 5*8
+1810 leftEdge = 8:rightEdge = 320-8-7*24
+1820 xInvaders = 160-7*12:yInvaders = 26:xiInvaders = 8
+1830 drawInvaders(xInvaders,yInvaders)
+1840 calculateSpeed()
+1850 endproc
 ÿÿÿÿ
 

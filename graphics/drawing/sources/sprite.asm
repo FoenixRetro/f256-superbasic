@@ -28,12 +28,16 @@ GXSpriteHandler: ;; [6:DrawSprite]
 		jsr 	GXOpenBitmap 				; can access sprite information
 		pla
 		jsr 	GXFindSprite 				; get the sprite address
+		php 
 		jsr 	GXCloseBitmap
+		plp
+		bcs		_GXSHExit 					; exit if find failed.
 
-		lda 	GXSizePixels 					; return size
+		lda 	GXSizePixels 				; return size
 		ldx 	#GXSpriteAcquire & $FF
 		ldy 	#GXSpriteAcquire >> 8
 		jsr 	GXDrawGraphicElement
+_GXSHExit:		
 		rts
 
 GXSpriteAcquire:

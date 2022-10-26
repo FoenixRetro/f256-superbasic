@@ -339,6 +339,7 @@ _RGIDoCommandLoop:
 		lda 	#8*2
 		jsr 	GXGraphicDraw
 		ply
+		bcs 	_RGIRange
 		jmp 	_RGICommandLoop
 		; ------------------------------------------------------------------
 		;

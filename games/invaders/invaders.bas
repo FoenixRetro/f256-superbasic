@@ -4,6 +4,9 @@
 cls:bitmap on:sprites on:bitmap clear 0
 defineVariables()
 resetlevel():resetPlayer()
+image 6 colour $FF,$0 to 0,0
+text chr$(80) colour $FF,$40 to 32,0
+
 repeat
 	if event(moveInvadersEvent,invaderSpeed) then moveInvaders()
 	if event(movePlayerEvent,3) then movePlayer()
@@ -54,6 +57,7 @@ endproc
 '
 proc calculateSpeed()
 	invaderSpeed = 4+invTotal*2
+	invaderSpeed = 0
 endproc
 '
 '		Set up variables

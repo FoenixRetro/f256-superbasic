@@ -15,6 +15,7 @@
 ; ************************************************************************************************
 ;
 ;					Get address, size and LUT of sprite A (assume already opened)
+;					Returns CS if bad sprite, CC if okay.
 ;
 ; ************************************************************************************************
 
@@ -23,6 +24,10 @@ GXFindSprite:
 
 		lda 	GXSpritePage 				; access the base page of the sprite
 		sta 	GXEditSlot
+		;
+		lda 	GXMappingAddress+256,x 		; check a valid sprite
+		ora 	GXMappingAddress,x
+		beq 	_GXFSFail
 		;
 		lda 	GXMappingAddress+256,x 		; MSB
 		sta 	GXSpriteOffset+1
@@ -52,7 +57,11 @@ GXFindSprite:
 		asl 	GXSpriteOffset
 		rol 	GXSpriteOffset+1
 
+		clc
 		rts
+_GXFSFail:
+		sec
+		rts		
 	;		
 
 _GXFXSSTTable:

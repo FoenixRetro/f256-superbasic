@@ -18,8 +18,7 @@
 ;
 ; ************************************************************************************************
 
-GXDrawGraphicElement:	
-	
+GXDrawGraphicElement:		
 		sta 	gxSize 						; save size 
 		dec 	a
 		sta 	gxMask 						; and mask

@@ -67,6 +67,7 @@ GXSelectImage: ;; [8:SPRIMG]
 		jsr 	GXOpenBitmap
 		pla		
 		jsr 	GXFindSprite
+		bcs 	_GXSICloseFail 				; no image
 
 		ldy 	#1
 		lda 	GSCurrentSprite
@@ -111,6 +112,8 @@ _GXSIHide:
 		clc
 		rts
 
+_GXSICloseFail:
+		jsr 	GXCloseBitmap
 _GXSIFail:
 		sec
 		rts
