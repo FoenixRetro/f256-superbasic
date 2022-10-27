@@ -23,15 +23,6 @@ GXDrawGraphicElement:
 		dec 	a
 		sta 	gxMask 						; and mask
 
-		stz 	gxVFlip 					; set the flip bytes
-		stz 	gxHFlip
-		bit 	gxUseMode
-		bpl 	_GXNotVertical
-		sta 	gxVFlip
-_GXNotVertical:		
-		bvc 	_GXNotHorizontal
-		sta 	gxHFlip
-_GXNotHorizontal:
 		lda 	gxBitmapsOn 				; check BMP on 
 		beq 	_GXSLFail
 
@@ -53,7 +44,13 @@ _GXNotHorizontal:
 		stz 	gxzTemp1					; start first line
 _GXGELoop:
 		lda 	gxzTemp1 					; current line number to read.
-		eor 	gxVFlip
+		bit 	gxUseMode 					; check for flip.
+		bpl		_GXNoVFlip
+		lda 	gxMask
+		sec
+		sbc 	gxzTemp1
+_GXNoVFlip:		
+
 		tax 								; get the Xth line.
 		jsr 	_GXCallAcquire 				; get that data.
 		lda 	gxScale 					; do scale identical copies of that line.
@@ -111,7 +108,12 @@ _GXROLLoop1:
 		sta 	gxzTemp2+1
 _GXROLLoop2:
 		lda 	gxzTemp2 					; get current pixel
-		eor 	gxHFlip
+		bit 	gxMode 						; check H Flip
+		bvc 	_GXNoHFlip 		
+		lda 	gxMask
+		sec
+		sbc 	gxzTemp2
+_GXNoHFlip:
 		tax 								; read from the pixel buffer
 		lda 	gxPixelBuffer,x
 		bne 	_GXDraw 					; draw if non zero
@@ -148,11 +150,7 @@ gxMask:
 gxAcquireVector:
 		.fill 	2				
 gxScale:
-		.fill 	1		
-gxVFlip:
-		.fill 	1		
-gxHFlip:
-		.fill 	1		
+		.fill 	1			
 gxUseMode:
 		.fill 	1		
 		.send storage

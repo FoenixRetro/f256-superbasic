@@ -4,8 +4,8 @@
 cls:bitmap on:sprites on:bitmap clear 0
 defineVariables()
 resetlevel():resetPlayer()
-image 6 colour $FF,$0 to 0,0
-text chr$(80) colour $FF,$40 to 32,0
+image 6 colour $FF,$80 to 0,0
+text chr$(80) dim 3 colour $FF,$80 to 32,0
 
 repeat
 	if event(moveInvadersEvent,invaderSpeed) then moveInvaders()
