@@ -97,10 +97,13 @@ _FAExponentsEqual:
 _FADifferentSigns:
 		jsr 	SubTopTwoStack 				; subtract mantissa B from A
 		lda 	NSMantissa3,x 				; is the result negative ?
-		bpl 	_FAExit 					; if no, we are done.
-
+		bpl 	_FACheckZero 				; if no, check for -0
 		jsr 	NSMNegate 					; netate result
 		jsr 	NSMNegateMantissa 			; negate (2'c) the mantissa
+_FACheckZero:		
+		jsr 	NSMIsZero	 				; check for -0
+		bne 	_FAExit
+		stz 	NSStatus,x
 		bra 	_FAExit
 
 _FAReturn1:

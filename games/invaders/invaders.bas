@@ -4,9 +4,6 @@
 cls:bitmap on:sprites on:bitmap clear 0
 defineVariables()
 resetlevel():resetPlayer()
-image 6 colour $FF,$80 to 0,0
-text chr$(80) dim 3 colour $FF,$80 to 32,0
-
 repeat
 	if event(moveInvadersEvent,invaderSpeed) then moveInvaders()
 	if event(movePlayerEvent,3) then movePlayer()
@@ -53,13 +50,6 @@ proc drawInvaders(xPos,yPos)
 	next
 endproc	
 '
-'		Calculate invader movement rate
-'
-proc calculateSpeed()
-	invaderSpeed = 4+invTotal*2
-	invaderSpeed = 0
-endproc
-'
 '		Set up variables
 '
 proc defineVariables()
@@ -80,8 +70,18 @@ proc resetlevel()
 	local i
 	for i = 0 to 7:colHeight(i) = 5:next
 	invTotal = 5*8
-	leftEdge = 8:rightEdge = 320-8-7*24
 	xInvaders = 160-7*12:yInvaders = 26:xiInvaders = 8
 	drawInvaders(xInvaders,yInvaders)
-	calculateSpeed()
+	invaderSpeed = 4+invTotal*2
+	recalculateEdge()
+endproc
+'
+'		Recalculate left/right edge
+'
+proc recalculateEdge()
+	local i
+	leftEdge = 8
+	i = 0:while colHeight(i) = 0:i = i + 1:leftEdge = leftEdge-24:wend
+	rightEdge = 320-8-7*24
+	i = 7:while colHeight(i) = 0:i = i - 1:rightEdge = rightEdge+24:wend
 endproc

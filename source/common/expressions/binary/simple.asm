@@ -70,6 +70,10 @@ AddCode:
 		sta 	NSStatus,x
 		jsr 	NSMNegateMantissa 			; negate the mantissa and exit
 _AddExit:
+		jsr 	NSMIsZero 					; check for -0
+		bne 	_AddNonZero
+		stz 	NSStatus,x
+_AddNonZero:		
 		rts
 
 SubInteger: 	;; [-]
