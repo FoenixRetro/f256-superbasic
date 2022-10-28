@@ -6,84 +6,147 @@
 1050 resetlevel():resetPlayer()
 1060 repeat
 1070 if event(moveInvadersEvent,invaderSpeed) then moveInvaders()
-1080 if event(movePlayerEvent,3) then movePlayer()
-1090 until false
-1100 end:
-1110 '
-1120 ' "Move the player"
-1130 '
-1140 proc movePlayer()
-1150 xPlayer = min(304,max(16,xPlayer+joyx(0)<<2))
-1160 sprite 63 image 6 to xPlayer,220
-1170 endproc
-1180 '
-1190 ' "Move invaders across/down"
+1080 if event(movePlayerEvent,3) then movePlayer():if yBullet >= 0 then moveBullet()
+1090 if event(moveMissileEvent,2) then moveMissile()
+1100 until false
+1110 end:
+1120 '
+1130 ' "Move the player"
+1140 '
+1150 proc movePlayer()
+1160 xPlayer = min(304,max(16,xPlayer+joyx(0)<<2))
+1170 sprite 63 image 6 to xPlayer,220
+1180 if joyb(0) & yBullet < 0 then xBullet = xPlayer:yBullet = 200
+1190 endproc
 1200 '
-1210 proc moveInvaders()
-1220 xInvaders = xInvaders + xiInvaders
-1230 if xInvaders < leftEdge
-1240 xInvaders = leftEdge
-1250 yInvaders = yInvaders + abs(xiInvaders)
-1260 xiInvaders = -xiInvaders
-1270 endif
-1280 if xInvaders > rightEdge
-1290 xInvaders = rightEdge
-1300 yInvaders = yInvaders + abs(xiInvaders)
-1310 xiInvaders = -xiInvaders
+1210 ' "Move the player bullet"
+1220 '
+1230 proc moveBullet()
+1240 local xo
+1250 yBullet = yBullet - 10
+1260 if yBullet < 0
+1270 sprite 62 off
+1280 else
+1290 sprite 62 image 11 to xBullet,yBullet
+1300 xo = xBullet - xInvaders + 8
+1310 if xo >= 0 & xo < 8*24 & xo % 24 < 16 then checkHit(xo \ 24)
 1320 endif
-1330 drawInvaders(xInvaders,yInvaders)
-1340 endproc
-1350 '
-1360 ' "Draw invaders sprites at correct position"
-1370 '
-1380 proc drawInvaders(xPos,yPos)
-1390 local x,y,s
-1400 altGraphic = 1 - altGraphic
-1410 for x = 0 to 7
-1420 s = x * 5
-1430 if colHeight(x) > 0
-1440 for y = 0 to colHeight(x)-1
-1450 sprite s image graphic(y)+altGraphic to xPos+x*24,yPos+y*24
-1460 s = s + 1
-1470 next
-1480 endif
-1490 next
-1500 endproc
-1510 '
-1520 ' "Set up variables"
-1530 '
-1540 proc defineVariables()
-1550 local i
-1560 dim colheight(7),graphic(4)
-1570 for i = 0 to 4:graphic(i) = i % 3 * 2:next:altGraphic = 0
-1580 endproc
-1590 '
-1600 ' "Reset the player"
-1610 '
-1620 proc resetPlayer()
-1630 xPlayer = 160
-1640 endproc
-1650 '
-1660 ' "Set up new level"
-1670 '
-1680 proc resetlevel()
-1690 local i
-1700 for i = 0 to 7:colHeight(i) = 5:next
-1710 invTotal = 5*8
-1720 xInvaders = 160-7*12:yInvaders = 26:xiInvaders = 8
-1730 drawInvaders(xInvaders,yInvaders)
-1740 invaderSpeed = 4+invTotal*2
-1750 recalculateEdge()
-1760 endproc
-1770 '
-1780 ' "Recalculate left/right edge"
-1790 '
-1800 proc recalculateEdge()
-1810 local i
-1820 leftEdge = 8
-1830 i = 0:while colHeight(i) = 0:i = i + 1:leftEdge = leftEdge-24:wend
-1840 rightEdge = 320-8-7*24
-1850 i = 7:while colHeight(i) = 0:i = i - 1:rightEdge = rightEdge+24:wend
-1860 endproc
+1330 endproc
+1340 '
+1350 ' "Move current missile"
+1360 '
+1370 proc moveMissile()
+1380 local r
+1390 currentMissile = currentMissile + 1:if currentMissile > missileCount then currentMissile = 1
+1400 if yMissile(currentMissile) < 0
+1410 r = random(8)
+1420 if colHeight(r) > 0
+1430 xMissile(currentMissile) = xInvaders + 24 * r
+1440 yMissile(currentMissile) = yInvaders + 24 * colHeight(r) - 24
+1450 endif
+1460 else
+1470 yMissile(currentMissile) = yMissile(currentMissile) + 8
+1480 if yMissile(currentMissile) > 230
+1490 sprite currentMissile+50 off
+1500 yMissile(currentMissile) = -1
+1510 else
+1520 sprite currentMissile+50 image 9 to xMissile(currentMissile),yMissile(currentMissile)
+1530 endif
+1540 endif
+1550 endproc
+1560 '
+1570 ' "Check if column hit"
+1580 '
+1590 proc checkHit(col)
+1600 yo = abs(yInvaders + (colHeight(col)-1)*24 - yBullet)
+1610 if yo < 12 & colHeight(col) <> 0
+1620 sprite col*5+colHeight(col)-1 off
+1630 sprite 61 image 7 to col*24+xInvaders,(colHeight(col)-1)*24+yInvaders
+1640 yBullet = -1:sprite 62 off
+1650 colHeight(col) = colHeight(col)-1
+1660 invTotal = invTotal - 1
+1670 if invTotal > 0 & colHeight(col) = 0 then recalculateEdge()
+1680 recalculateSpeed()
+1690 endif
+1700 endproc
+1710 '
+1720 ' "Move invaders across/down"
+1730 '
+1740 proc moveInvaders()
+1750 xInvaders = xInvaders + xiInvaders
+1760 if xInvaders < leftEdge
+1770 xInvaders = leftEdge
+1780 yInvaders = yInvaders + abs(xiInvaders)
+1790 xiInvaders = -xiInvaders
+1800 endif
+1810 if xInvaders > rightEdge
+1820 xInvaders = rightEdge
+1830 yInvaders = yInvaders + abs(xiInvaders)
+1840 xiInvaders = -xiInvaders
+1850 endif
+1860 drawInvaders(xInvaders,yInvaders)
+1870 endproc
+1880 '
+1890 ' "Draw invaders sprites at correct position"
+1900 '
+1910 proc drawInvaders(xPos,yPos)
+1920 local x,y,s
+1930 altGraphic = 1 - altGraphic
+1940 for x = 0 to 7
+1950 s = x * 5
+1960 if colHeight(x) > 0
+1970 for y = 0 to colHeight(x)-1
+1980 sprite s image graphic(y)+altGraphic to xPos+x*24,yPos+y*24
+1990 s = s + 1
+2000 next
+2010 sprite 61 off
+2020 endif
+2030 next
+2040 endproc
+2050 '
+2060 ' "Set up variables"
+2070 '
+2080 proc defineVariables()
+2090 local i:missileCount = 4
+2100 dim colheight(7),graphic(4),xMissile(missileCount),yMissile(missileCount)
+2110 for i = 0 to 4:graphic(i) = i % 3 * 2:next:altGraphic = 0
+2120 endproc
+2130 '
+2140 ' "Reset the player"
+2150 '
+2160 proc resetPlayer()
+2170 xPlayer = 160:xBullet = 0:yBullet = -1
+2180 movePlayerEvent = 0
+2190 endproc
+2200 '
+2210 ' "Set up new level"
+2220 '
+2230 proc resetlevel()
+2240 local i
+2250 for i = 0 to 7:colHeight(i) = 5:next
+2260 for i = 1 to missileCount:yMissile(i) = -1:next
+2270 invTotal = 5*8
+2280 xInvaders = 160-7*12:yInvaders = 26:xiInvaders = 8
+2290 drawInvaders(xInvaders,yInvaders)
+2300 invaderSpeed = 4+invTotal*2
+2310 moveInvadersEvent = 0:currentMissile = 0
+2320 recalculateEdge():recalculateSpeed()
+2330 endproc
+2340 '
+2350 ' "Recalaulate speed"
+2360 '
+2370 proc recalculateSpeed()
+2380 invaderSpeed = 2+invTotal*3\2
+2390 endproc
+2400 '
+2410 ' "Recalculate left/right edge"
+2420 '
+2430 proc recalculateEdge()
+2440 local i
+2450 leftEdge = 8
+2460 i = 0:while colHeight(i) = 0:i = i + 1:leftEdge = leftEdge-24:wend
+2470 rightEdge = 320-8-7*24
+2480 i = 7:while colHeight(i) = 0:i = i - 1:rightEdge = rightEdge+24:wend
+2490 endproc
 ÿÿÿÿ
 
