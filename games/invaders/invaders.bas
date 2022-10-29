@@ -2,14 +2,23 @@
 '		Simplified Space Invaders Game
 '
 cls:bitmap on:sprites on:bitmap clear 0
-defineVariables()
-resetlevel():resetPlayer()
+skillLevel = 0:score = 0:lives = 3
+defineVariables():text "SCORE<1>" dim 1 colour $FF to 136,1
+resetlevel():resetPlayer():displayScore()
 repeat
 	if event(moveInvadersEvent,invaderSpeed) then moveInvaders()
 	if event(movePlayerEvent,3) then movePlayer():if yBullet >= 0 then moveBullet()
 	if event(moveMissileEvent,2) then moveMissile()
-until false
-end:
+until lives = 0
+end
+'
+'		Display the score
+'
+proc displayScore()
+	local a$:a$ = right$("00000"+str$(score),6)
+	text a$ dim 1 colour $FF,4 to 144,10
+	text "LIVES "+str$(lives) colour $1C,4 to 10,230
+endproc
 '
 '		Move the player
 '
@@ -17,6 +26,19 @@ proc movePlayer()
 	xPlayer = min(304,max(16,xPlayer+joyx(0)<<2))
 	sprite 63 image 6 to xPlayer,220
 	if joyb(0) & yBullet < 0 then xBullet = xPlayer:yBullet = 200
+endproc
+'
+'		Flash player for 2 seconds
+'
+proc flashPlayer()
+	local tEnd:tEnd = timer()+70*2
+	repeat
+		if timer() & 8
+			sprite 63 image 6
+		else
+			sprite 63 off 
+		endif
+	until timer() > tEnd
 endproc
 '
 '		Move the player bullet
@@ -40,13 +62,18 @@ proc moveMissile()
 	currentMissile = currentMissile + 1:if currentMissile > missileCount then currentMissile = 1 
 	if yMissile(currentMissile) < 0 
 		r = random(8)
-		if colHeight(r) > 0 
+		if colHeight(r) > 0 & (random()& 3) = 0
 			xMissile(currentMissile) = xInvaders + 24 * r 
 			yMissile(currentMissile) = yInvaders + 24 * colHeight(r) - 24
 		endif 
 	else
 		yMissile(currentMissile) = yMissile(currentMissile) + 8
-		if yMissile(currentMissile) > 230 
+		if yMissile(currentMissile) > 220 
+			if abs(xMissile(currentMissile)-xPlayer) < 12
+				lives = lives - 1:displayScore()
+				flashPlayer()
+				if lives > 0 then resetLevel()
+			endif
 			sprite currentMissile+50 off
 			yMissile(currentMissile) = -1
 		else
@@ -63,9 +90,14 @@ proc checkHit(col)
 		sprite col*5+colHeight(col)-1 off
 		sprite 61 image 7 to col*24+xInvaders,(colHeight(col)-1)*24+yInvaders
 		yBullet = -1:sprite 62 off 
+		score = score+(6-colHeight(col))*10:displayScore()
 		colHeight(col) = colHeight(col)-1
 		invTotal = invTotal - 1 
 		if invTotal > 0 & colHeight(col) = 0 then recalculateEdge()
+		if invTotal = 0
+			skillLevel = (skillLevel+1) % 10
+			resetlevel()
+		endif
 		recalculateSpeed()
 	endif
 endproc
@@ -124,9 +156,9 @@ endproc
 proc resetlevel()
 	local i
 	for i = 0 to 7:colHeight(i) = 5:next
-	for i = 1 to missileCount:yMissile(i) = -1:next
+	for i = 1 to missileCount:yMissile(i) = -1:sprite i+50 off:next
 	invTotal = 5*8
-	xInvaders = 160-7*12:yInvaders = 26:xiInvaders = 8
+	xInvaders = 160-7*12:yInvaders = 26+skillLevel*8:xiInvaders = 8
 	drawInvaders(xInvaders,yInvaders)
 	invaderSpeed = 4+invTotal*2
 	moveInvadersEvent = 0:currentMissile = 0
