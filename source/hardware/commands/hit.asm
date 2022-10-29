@@ -31,16 +31,11 @@ UnaryHit: ;; [hit(]
 
 		ldy 	#zTemp1 					; sprite address in zTemp1
 		jsr 	_UHCalculateSpriteAddress
-		pha 								; save half width on the stack.
+		sta 	zTemp2+1 					; save half width 1 in zTemp2+1
 		dex
 		ldy 	#zTemp0 					; sprite address in zTemp0		
 		jsr 	_UHCalculateSpriteAddress
-
-		sta 	zTemp2 						; sum of half-widths in zTemp2
-		pla
-		clc
-		adc 	zTemp2
-		sta 	zTemp2
+		sta 	zTemp2 						; half width 0 in zTemp2
 
 
 		jsr 	NSMSetZero 					; return zero.
