@@ -67,16 +67,17 @@ KeywordSet0:
 	.text	3,$db,"OFF"            ; $be OFF
 	.text	2,$9d,"ON"             ; $bf ON
 	.text	7,$20,"OUTLINE"        ; $c0 OUTLINE
-	.text	4,$3f,"PLOT"           ; $c1 PLOT
-	.text	5,$8d,"PRINT"          ; $c2 PRINT
-	.text	4,$1c,"READ"           ; $c3 READ
-	.text	4,$2e,"RECT"           ; $c4 RECT
-	.text	3,$e4,"REM"            ; $c5 REM
-	.text	6,$e0,"RETURN"         ; $c6 RETURN
-	.text	5,$7b,"SOLID"          ; $c7 SOLID
-	.text	6,$d7,"SPRITE"         ; $c8 SPRITE
-	.text	4,$45,"TEXT"           ; $c9 TEXT
-	.text	2,$a3,"TO"             ; $ca TO
+	.text	7,$0f,"PALETTE"        ; $c1 PALETTE
+	.text	4,$3f,"PLOT"           ; $c2 PLOT
+	.text	5,$8d,"PRINT"          ; $c3 PRINT
+	.text	4,$1c,"READ"           ; $c4 READ
+	.text	4,$2e,"RECT"           ; $c5 RECT
+	.text	3,$e4,"REM"            ; $c6 REM
+	.text	6,$e0,"RETURN"         ; $c7 RETURN
+	.text	5,$7b,"SOLID"          ; $c8 SOLID
+	.text	6,$d7,"SPRITE"         ; $c9 SPRITE
+	.text	4,$45,"TEXT"           ; $ca TEXT
+	.text	2,$a3,"TO"             ; $cb TO
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF

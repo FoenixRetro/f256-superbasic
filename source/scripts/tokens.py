@@ -46,7 +46,7 @@ class TokenSource(object):
 				call 		read 		local 		line 		sprite 		rect
 				text 		circle 		here 		color 		colour 		by
 				solid 		outline 	gfx			clear 		image 		from
-				plot 		on 			off
+				plot 		on 			off 		palette
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop				

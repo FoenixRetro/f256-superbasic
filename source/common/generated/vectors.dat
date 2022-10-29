@@ -77,7 +77,7 @@ VectorSet0:
 	.word	UnaryEvent                       ; $87 EVENT(
 	.word	UnaryFalse                       ; $88 FALSE
 	.word	FracUnary                        ; $89 FRAC(
-	.word	SyntaxError                      ; $8a HIT(
+	.word	UnaryHit                         ; $8a HIT(
 	.word	IntUnary                         ; $8b INT(
 	.word	IsValUnary                       ; $8c ISVAL(
 	.word	UnaryJoyB                        ; $8d JOYB(
@@ -132,16 +132,17 @@ VectorSet0:
 	.word	SyntaxError                      ; $be OFF
 	.word	SyntaxError                      ; $bf ON
 	.word	SyntaxError                      ; $c0 OUTLINE
-	.word	PlotCommand                      ; $c1 PLOT
-	.word	Command_Print                    ; $c2 PRINT
-	.word	Command_Read                     ; $c3 READ
-	.word	RectangleCommand                 ; $c4 RECT
-	.word	RemCommand                       ; $c5 REM
-	.word	Command_RETURN                   ; $c6 RETURN
-	.word	SyntaxError                      ; $c7 SOLID
-	.word	SpriteCommand                    ; $c8 SPRITE
-	.word	TextCommand                      ; $c9 TEXT
-	.word	Unused2                          ; $ca TO
+	.word	SyntaxError                      ; $c1 PALETTE
+	.word	PlotCommand                      ; $c2 PLOT
+	.word	Command_Print                    ; $c3 PRINT
+	.word	Command_Read                     ; $c4 READ
+	.word	RectangleCommand                 ; $c5 RECT
+	.word	RemCommand                       ; $c6 REM
+	.word	Command_RETURN                   ; $c7 RETURN
+	.word	SyntaxError                      ; $c8 SOLID
+	.word	SpriteCommand                    ; $c9 SPRITE
+	.word	TextCommand                      ; $ca TEXT
+	.word	Unused2                          ; $cb TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

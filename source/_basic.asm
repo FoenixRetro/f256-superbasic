@@ -36,6 +36,7 @@
 	.include	"./hardware/commands/gfx.asm"
 	.include	"./common/commands/gosub.asm"
 	.include	"./common/commands/goto.asm"
+	.include	"./hardware/commands/hit.asm"
 	.include	"./common/commands/if.asm"
 	.include	"./hardware/commands/joy.asm"
 	.include	"./common/commands/let.asm"

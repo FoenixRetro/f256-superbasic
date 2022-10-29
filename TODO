@@ -1,5 +1,6 @@
 Progress:
 	Collision functions -> gfx library and command
+	Palette command
 	
 Later:
 	Disable interrupts enable at end of line command ?
