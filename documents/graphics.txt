@@ -28,7 +28,6 @@ Returns CS error , CC okay
 *	6 DRAWS sprite ID xxxxxx (4+5 only support modes 0/1), 2nd byte eor with mode bits.
 *	7 SPRUSE X = sprite# select sprite
 *	8 SPRIMG X = set selected sprite image to X, Y = 0, hide, Y = 1
-	9 HIT 	 Returns 0 if no collision between sprites X & Y, otherwise smallest overlap value.
 *	16 MOVE 			
 *	17 LINE 	
 *	18 RECT

@@ -19,7 +19,7 @@
 ; ************************************************************************************************
 
 GXGraphicDraw:
-		cmp 	#$10*2 						; instructions 00-0F don't use 
+		cmp 	#$10*2 						; instructions 00-0F don't use coordinates
 		bcs 	_GDCoordinate
 		;
 		;		Non coordinate functions

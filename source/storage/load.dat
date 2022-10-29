@@ -1,8 +1,8 @@
 10 sprites on:cls
-20 x = 80:sprite 0 image 0 to x,64
-30 sprite 1 image 1 to 100,64
+20 x = 80
+30 sprite 34 image 1 to 100,64
 40 while x < 120
-50 	x = x + 1:sprite 0 image 0 to x,64
-55 	print x,abs(x-100),hit(0,1)
+50 	x = x + 1:sprite 1 image 0 to x,64
+55 	print x,abs(x-100),hit(x,64,100,64)
 60 wend
-ÿÿÿÿ
+Ã¿Ã¿Ã¿Ã¿
