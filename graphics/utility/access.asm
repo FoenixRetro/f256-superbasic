@@ -26,7 +26,7 @@ GXOpenBitmap:
 		lda 	#GXMappingLUT*16+$80+GXMappingLUT
 		sta 	0
 
-		lda 	GXEditSlot 				; Save the original LUT slot value
+		lda 	GXEditSlot 					; Save the original LUT slot value
 		sta 	gxOriginalLUTValue
 		cli
 		rts

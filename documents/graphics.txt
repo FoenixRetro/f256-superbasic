@@ -13,8 +13,6 @@ Graphics Command passed in AXY.
 
 cccccccx xxxxxxxx yyyyyyyy
 
-cccccccc
-
 Returns CS error , CC okay
 
 *	0 INIT
@@ -28,6 +26,7 @@ Returns CS error , CC okay
 *	6 DRAWS sprite ID xxxxxx (4+5 only support modes 0/1), 2nd byte eor with mode bits.
 *	7 SPRUSE X = sprite# select sprite
 *	8 SPRIMG X = set selected sprite image to X, Y = 0, hide, Y = 1
+	9 HIT    Check collision state X,Y. Returns $FF for miss,or max |c1-c0| << 2
 *	16 MOVE 			
 *	17 LINE 	
 *	18 RECT
@@ -57,3 +56,18 @@ Returns CS error , CC okay
 		OFF 			- sets off.
 		IMAGE 			- set sprite image sets on
 		TEXT "xxx" command		
+
+Sprite State
+------------
+
+2 x 64 byte records because we can't read Sprite Memory ....
+Initialised by INIT and SPRITECTL (where zeroes sprite memory) - LowByte set to $80, HighByte set to $00
+
+LowByte 	hxxxxxxx 	
+		xxxxxxx = x pos >> 2 (range 0..79) used for collision testing (set by SPRMOVE)
+		h 		= 1 if sprite is invisible (e.g. set by off, cleared by SPRIMG)
+
+HighByte 	ssyyyyyy
+		yyyyyy 	= y Pos >> 2 (range 0..59) used for collision testing (set by SPRMOVE)
+		ss 		= size bits (00=8,01=16,10=24,11=32) (set by SPRIMG)
+

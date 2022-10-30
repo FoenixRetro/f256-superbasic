@@ -14,7 +14,7 @@
 
 ; ************************************************************************************************
 ;
-;					hit(x0,y0,x1,y1) returns the larger of |x0-x1| and |y0-y1|
+;					hit(s1,s2) returns pixel overlap or 0 if no collision
 ;
 ; ************************************************************************************************
 
@@ -36,6 +36,7 @@ UnaryHit: ;; [hit(]
 		tax										
 		lda 	#9*2 						; command 9
 		jsr 	GXGraphicDraw 				; calculate result
+		inc 	a 							; so 255 (fail) -> 0, otherwise 1,2,3,4 pixels etc.
 		ply 								; restore XY
 		plx
 		jsr 	NSMSetByte 					; return the hit result

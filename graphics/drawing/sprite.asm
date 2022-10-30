@@ -14,7 +14,7 @@
 
 ; ************************************************************************************************
 ;
-;									Select and show/hide sprite
+;									Select sprite
 ;
 ; ************************************************************************************************
 
@@ -46,7 +46,7 @@ _GXSFail:
 
 ; ************************************************************************************************
 ;
-;									Select sprite image
+;							Select sprite image enable/disable control
 ;
 ; ************************************************************************************************
 
@@ -94,7 +94,7 @@ GXSelectImage: ;; [8:SPRIMG]
 		asl 	a 							; x 4
 		asl 	a 							; x 8
 		asl 	a 							; x 16
-		ora 	GXSpriteLUT 						; Or with LUT
+		ora 	GXSpriteLUT 				; Or with LUT
 		asl 	a 							; 1 shift
 		ora 	#1 							; enable sprite.
 		sta 	(gxzTemp0) 					; and write back
