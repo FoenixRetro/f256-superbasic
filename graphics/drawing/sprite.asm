@@ -193,6 +193,7 @@ GXMoveSprite: ;; [25:SPRMOVE]
 		and 	#$80
 		ora 	gxX0
 		sta 	GXSpriteLow,x
+		
 		lda 	GXSpriteHigh,x
 		and 	#$C0
 		ora 	gxY0

@@ -14,7 +14,7 @@ GRVectorTable:
 	.word	GXSpriteHandler          ; $06 DrawSprite
 	.word	GXSelect                 ; $07 SPRUSE
 	.word	GXSelectImage            ; $08 SPRIMG
-	.word	GRUndefined              ; $09
+	.word	GXCollide                ; $09 COLLIDE
 	.word	GRUndefined              ; $0a
 	.word	GRUndefined              ; $0b
 	.word	GRUndefined              ; $0c

@@ -20,5 +20,6 @@ graphicsIntegrated = 1
 	.include	"./drawing/sprite.asm"
 	.include	"./utility/access.asm"
 	.include	"./utility/calculate.asm"
+	.include	"./utility/collide.asm"
 	.include	"./utility/find.asm"
 	.include	"./utility/sort.asm"
