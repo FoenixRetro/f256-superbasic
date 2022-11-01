@@ -30,6 +30,7 @@ _GXIClear:
 		stz 	gxCurrentX,x
 		dex
 		bpl 	_GXIClear	
+		jsr 	GXClearSpriteStore
 		rts
 
 ; ************************************************************************************************
@@ -119,6 +120,7 @@ _CSClear:
 		bne 	_CSClear	
 		;
 		stz 	GSCurrentSprite+1 			; no sprite selected.
+		jsr 	GXClearSpriteStore
 		clc
 		rts
 
@@ -138,6 +140,22 @@ _GXShift:
 		dec		a
 		bne 	_GXShift
 		rts		
+
+; ************************************************************************************************
+;
+;							Reset the sprite location store
+;
+; ************************************************************************************************
+
+GXClearSpriteStore:
+		ldx 	#63 						; erase 64 sprite store elements
+_GXCSSLoop:
+		stz 	GXSpriteHigh,x
+		lda 	#$80 						; set the 'hidden' bit.
+		sta 	GXSpriteLow,x		
+		dex
+		bpl 	_GXCSSLoop
+		rts
 
 		.send code
 

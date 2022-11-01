@@ -3,6 +3,6 @@
 30 sprite 34 image 1 to 100,64
 40 while x < 120
 50 	x = x + 1:sprite 1 image 0 to x,64
-55 	print x,abs(x-100),hit(x,64,100,64)
+55 	print x,abs(x-100)
 60 wend
 ÿÿÿÿ

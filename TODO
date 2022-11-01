@@ -1,5 +1,8 @@
 Progress:
-	Collision functions -> gfx library and command
+	- Setting image sets size bits / visibility
+	- Setting position sets location bits
+	- Hit test functionality
+
 	Palette command
 	
 Later:

@@ -149,6 +149,17 @@ GSCurrentSprite:
 ;		
 GXSpriteOffsetBase:
 		.fill 	2	
+;
+;		Sprite location store
+;
+;		Low <Hidden bit> <X Position >> 2>
+; 		High <Size (00=8,01=16,10=24,11=32)> <Y Position >> 2>
+;
+GXSpriteLow:
+		.fill 	64
+GXSpriteHigh:		
+		.fill 	64
+
 
 		.send storage
 
