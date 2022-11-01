@@ -43,6 +43,7 @@
 	.include	"./common/commands/list.asm"
 	.include	"./common/commands/local.asm"
 	.include	"./common/commands/new.asm"
+	.include	"./hardware/commands/palette.asm"
 	.include	"./common/commands/print.asm"
 	.include	"./common/commands/procedure.asm"
 	.include	"./common/commands/read.asm"

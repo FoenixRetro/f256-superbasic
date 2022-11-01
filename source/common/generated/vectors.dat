@@ -132,7 +132,7 @@ VectorSet0:
 	.word	SyntaxError                      ; $be OFF
 	.word	SyntaxError                      ; $bf ON
 	.word	SyntaxError                      ; $c0 OUTLINE
-	.word	SyntaxError                      ; $c1 PALETTE
+	.word	PaletteCommand                   ; $c1 PALETTE
 	.word	PlotCommand                      ; $c2 PLOT
 	.word	Command_Print                    ; $c3 PRINT
 	.word	Command_Read                     ; $c4 READ
