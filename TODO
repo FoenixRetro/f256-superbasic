@@ -1,5 +1,5 @@
 Progress:
-	Palette command
+	Palette c,r,g,b
 	
 Later:
 	Disable interrupts enable at end of line command ?
