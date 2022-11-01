@@ -119,7 +119,7 @@ _CSClear:
 		dex
 		bne 	_CSClear	
 		;
-		stz 	GSCurrentSprite+1 			; no sprite selected.
+		stz 	GSCurrentSpriteAddr+1 		; no sprite selected.
 		jsr 	GXClearSpriteStore
 		clc
 		rts

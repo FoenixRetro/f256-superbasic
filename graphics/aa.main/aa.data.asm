@@ -140,9 +140,11 @@ gxOriginalMMUSetting:
 gsOffset:
 		.fill 	1
 ;
-;		Address of current selected sprite in I/O (MSB=0 => None)
+;		ID and Address of current selected sprite in I/O (MSB=0 => None)
 ;		
-GSCurrentSprite:
+GSCurrentSpriteID:
+		.fill 	1
+GSCurrentSpriteAddr:
 		.fill 	2
 ;
 ;		Base address for sprite area
