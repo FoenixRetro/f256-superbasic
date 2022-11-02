@@ -1,0 +1,6 @@
+1000 cls:sprites on
+1010 for i = 0 to 9
+1020 sprite i image i to i*32+32,323
+1030 next
+ÿÿÿÿ
+

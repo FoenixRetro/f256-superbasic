@@ -1,8 +1,10 @@
-10 sprites on:cls:bitmap on:bitmap clear 1
-20 x = 80:palette 1,255,128,0
-30 sprite 34 image 3 to 100,50
-40 while x < 135
-50 	x = x + 1:sprite 1 image 3 to x,64
-55 	print x,abs(x-100),hit(1,34)
-60 wend
-Ã¿Ã¿Ã¿Ã¿
+10 code = alloc(32)
+15 for pass = 0 to 1
+18 assemble code,pass+2
+20 lda #127
+30 .loop:pha:jsr $FFD2:pla
+40 dec:cmp #32
+50 bne loop:rts
+60 next
+70 call code
+ÿÿÿÿ
