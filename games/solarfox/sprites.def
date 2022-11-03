@@ -6,5 +6,8 @@ graphics/enemy.png
 graphics/enemy.png 90
 graphics/enemy.png 180
 graphics/enemy.png 270
+graphics/collect1.png
+graphics/collect2.png
 graphics/life.png
-graphics/collect.png
+graphics/missile.png
+graphics/missile.png 90

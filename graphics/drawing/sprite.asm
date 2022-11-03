@@ -158,10 +158,14 @@ GXMoveSprite: ;; [25:SPRMOVE]
 		lda 	GSCurrentSpriteAddr
 		sta 	gxzTemp0
 		;
-		lda 	#64 						; calculate 32-SpriteSize/2 (actually (64-SpriteSize)/2)
-		sec
-		sbc 	GXSizePixels
-		lsr 	a
+		ldx 	GSCurrentSpriteID 			; get the size from the upper two bits
+		lda 	GXSpriteHigh,x
+		rol 	a	 						; into bits 0,1.
+		rol 	a	
+		rol 	a	
+		and 	#3
+		tax
+		lda 	_GXMSOffset,x 				; get 32-SpriteSize/2
 		pha
 		;
 		clc
@@ -205,6 +209,11 @@ _GXSIFail:
 		sec
 		rts
 
+_GXMSOffset:
+		.byte 	32-8/2
+		.byte 	32-16/2
+		.byte 	32-24/2
+		.byte 	32-32/2
 		.send code
 
 ; ************************************************************************************************

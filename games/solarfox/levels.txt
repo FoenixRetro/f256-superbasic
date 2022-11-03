@@ -1,0 +1,104 @@
+Rack 1:
+..xx
+..xx
+.xx.
+.xx.
+.xx.
+
+Rack 2:
+...X
+..XX
+.XXX
+...X
+...X
+
+Rack3
+...X
+..XX
+..XX
+.XX.
+XXX.
+
+Rack 4 (Only XXXX reflected v)
+...X
+...X
+..XX
+.XXX
+XXXX
+
+
+Rack 5 (Lower is ...X x 4)
+XXXX
+.XXX
+..XX
+..XX
+..XX
+
+Rack: (Challenge ?)
+XXXX
+X...
+X...
+XXXX
+....
+
+Rack 6:
+XXX.
+X.X.
+XXX.
+..XX
+..X.
+
+Rack 8:
+...X
+..XX
+.X.X
+.X.X
+XXXX
+
+Rack 10:
+XX..
+XX..
+.XX.
+..XX
+...X.
+
+Challenge: (Right is X...)
+XXXXX
+X...X
+X...X
+XXX.X
+..X.X
+
+Rack 12: (doubles)
+..XX
+..XX
+..XX
+XXXX
+XXXX
+
+Rack 14:
+...X
+..XX
+.XXX
+XXXX
+..XX
+
+Rack 16:
+XXX.
+X.X.
+XXX.
+XXXX
+X.X.
+
+Challenge:
+.XXX
+.X..
+.X..
+.XXX
+XXXX
+
+....
+....
+....
+....
+....

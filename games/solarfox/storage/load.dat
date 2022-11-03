@@ -1,6 +1,65 @@
-1000 cls:sprites on
-1010 for i = 0 to 9
-1020 sprite i image i to i*32+32,323
-1030 next
+1000 cls:sprites on:bitmap on:bitmap clear 0
+1010 initialise()
+1020 newLevel()
+1030 repeat
+1040 if event(moveEnemies,4)
+1050 updateEnemies()
+1060 n = random(mcount):if remain(n) = 0 then launch(n)
+1070 endif
+1080 if event(moveMissiles,6) then moveMissiles()
+1090 until False
+1100 end
+1110 proc initialise()
+1120 xSize = 14:ySize = 11:mCount = 8
+1130 xOrg = 160-xSize*8:yOrg = 140-ySize*8
+1140 dim x(mCount-1),y(mCount-1),xi(mCount-1),yi(mCount-1),remain(mCount-1)
+1150 endproc
+1160 proc launch(n)
+1170 if random() & 1:horizontalLaunch(n):else:verticalLaunch(n):endif
+1180 endproc
+1190 proc verticalLaunch(n)
+1200 x(n) = xOrg-16:y(n) = yOrg+((yFire+8) & $F0):xi(n) = 4:yi(n) = 0
+1210 remain(n) = abs((xSize*16+16) / xi(n))
+1220 if random() & 1 then x(n) = x(n) + remain(n)*xi(n):xi(n) = -xi(n)
+1230 sprite n+0 image 11 to x(n),y(n)
+1240 endproc
+1250 proc horizontalLaunch(n)
+1260 y(n) = yOrg-16:x(n) = xOrg+((xFire+8) & $F0):yi(n) = 4:xi(n) = 0
+1270 remain(n) = abs((ySize*16+16) / yi(n))
+1280 if random() & 1 then y(n) = y(n) + remain(n)*yi(n):yi(n) = -yi(n)
+1290 sprite n+0 image 12 to x(n),y(n)
+1300 endproc
+1310 proc moveMissiles()
+1320 local i
+1330 for i = 0 to mCount-1
+1340 if remain(i) > 0
+1350 x(i) = x(i)+xi(i):y(i) = y(i)+yi(i)
+1360 remain(i) = remain(i)-1
+1370 if remain(i) > 0:sprite i+0 to x(i),y(i):else:sprite i+0 off:endif
+1380 endif
+1390 next
+1400 endproc
+1410 proc newLevel()
+1420 bitmap clear 0
+1430 local i
+1440 for i = 0 to mCount-1:remain(i) = 0:next
+1450 drawBackground():updateEnemies()
+1460 endproc
+1470 proc drawBackground()
+1480 local x,y:line colour $25
+1490 for x = 0 to xSize-1:line xOrg+x*16,yOrg-8 by 0,ySize*16:next
+1500 for y = 0 to ySize-1:line xOrg-8,yOrg+y*16 by xSize*16,0:next
+1510 rect colour $E0 outline xOrg-24,yOrg-24 by xSize*16+32,ySize*16+32
+1520 rect colour $FF outline xOrg-25,yOrg-25 by xSize*16+34,ySize*16+34
+1530 endproc
+1540 proc updateEnemies()
+1550 local t:t = timer()
+1560 xFire = abs((t % (xSize << 5))-(xSize << 4))
+1570 sprite 10 image 5 to xOrg+xFire,yOrg-16
+1580 sprite 11 image 7 to xOrg+xFire,yOrg+ySize<<4
+1590 yFire = abs((t % (ySize << 5))-(ySize << 4))
+1600 sprite 12 image 4 to xOrg-16,yOrg+yFire
+1610 sprite 13 image 6 to xOrg+xSize<<4,yOrg+yFire
+1620 endproc
 ÿÿÿÿ
 

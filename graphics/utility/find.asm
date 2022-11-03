@@ -35,7 +35,6 @@ GXFindSprite:
 		lda 	GXMappingAddress,x 			; LSB
 		pha 								; save twice
 		pha
-
 		and 	#3 							; get sprite size
 		sta 	GXSizeBits 					; save raw (0-3)
 		tax

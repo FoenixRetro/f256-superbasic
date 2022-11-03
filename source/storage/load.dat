@@ -1,10 +1,12 @@
-10 code = alloc(32)
-15 for pass = 0 to 1
-18 assemble code,pass+2
-20 lda #127
-30 .loop:pha:jsr $FFD2:pla
-40 dec:cmp #32
-50 bne loop:rts
-60 next
-70 call code
+10 sprites on:cls:bitmap on:bitmap clear 1
+20 for i = 0 to 3
+30 x = i * 48 + 32:y = 100
+40 sprite i image i to x,y
+50 line colour $FF from x-20,y-20 to x+20,y+20
+60 line colour $FF from x-20,y+20 to x+20,y-20
+61 y = 140
+62 image i to x,y
+68 line colour $FF from x-20,y-20 to x+20,y+20
+69 line colour $FF from x-20,y+20 to x+20,y-20
+70 next
 ÿÿÿÿ
