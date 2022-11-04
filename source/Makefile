@@ -101,7 +101,7 @@ prelim:
 	python $(SCRIPTDIR)makebuild.py
 	python $(SCRIPTDIR)tokens.py
 	python $(SCRIPTDIR)constants.py
-	python $(SCRIPTDIR)timestamp.py
+	#python $(SCRIPTDIR)timestamp.py
 #
 #		Run various tests.
 #

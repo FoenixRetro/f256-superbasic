@@ -1,5 +1,6 @@
 Progress:
-	palette c,b,g,r
+	shift graphics to 32
+	tiles.
 	
 Later:
 	Disable interrupts enable at end of line command ?

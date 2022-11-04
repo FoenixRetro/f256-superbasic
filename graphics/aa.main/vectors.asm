@@ -12,9 +12,9 @@ GRVectorTable:
 	.word	GXSetColourMode          ; $04 Colour
 	.word	GXFontHandler            ; $05 DrawFont
 	.word	GXSpriteHandler          ; $06 DrawSprite
-	.word	GXSelect                 ; $07 SPRUSE
-	.word	GXSelectImage            ; $08 SPRIMG
-	.word	GXCollide                ; $09 COLLIDE
+	.word	GXSelect                 ; $07 SpriteUse
+	.word	GXSelectImage            ; $08 SpriteImage
+	.word	GXCollide                ; $09 SpriteCollide
 	.word	GRUndefined              ; $0a
 	.word	GRUndefined              ; $0b
 	.word	GRUndefined              ; $0c
@@ -30,4 +30,4 @@ GRVectorTable:
 	.word	GRUndefined              ; $16
 	.word	GRUndefined              ; $17
 	.word	GXPlotPoint              ; $18 Plot
-	.word	GXMoveSprite             ; $19 SPRMOVE
+	.word	GXMoveSprite             ; $19 SpriteMove

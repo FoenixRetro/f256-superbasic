@@ -20,10 +20,10 @@
 ; ************************************************************************************************
 
 RectangleCommand: 	;; [RECT]
-		lda 	#18*2 						; frame rectangle
+		lda 	#GCMD_FrameRect				; frame rectangle
 		bra 	ShapeDrawCmd
 CircleCommand: ;; [CIRCLE]
-		lda 	#20*2 						; framed circle
+		lda 	#GCMD_FrameCircle 				; framed circle
 ShapeDrawCmd:		
 		jsr 	RunGraphicsCommand
 		;
@@ -43,13 +43,13 @@ SpriteCommand: ;; [SPRITE]
 		ldx 	#0 				
 		jsr 	Evaluate8BitInteger 		; get image number.
 		phy
-		lda 	#7*2 						; use that image.
+		lda 	#GCMD_SpriteUse 			; use that image.
 		ldx 	NSMantissa0
 		cpx 	#64 						; 0-63 only
 		bcs 	_SCRange
 		ldy 	#255
 		jsr 	GXGraphicDraw
-		lda 	#25*2
+		lda 	#GCMD_SpriteMove
 		ply
 		jsr 	RunGraphicsCommand
 		bra 	ExecuteGraphicCommand
@@ -67,14 +67,14 @@ ImageCommand: ;; [IMAGE]
 		jsr 	Evaluate8BitInteger 		; get image number.
 		jsr 	RunGraphicsCommand
 ImageRunDraw:
-		ora 	#16*2 						; move cursor
+		ora 	#GCMD_Move					; move cursor
 		jsr 	GXGraphicDraw		
 		lda 	gxDrawScale
 		asl 	a
 		asl 	a
 		asl 	a
 		tay
-		lda 	#6*2 						; image drawing
+		lda 	#GCMD_DrawSprite 			; image drawing
 		ldx 	NSMantissa0
 		jsr 	GXGraphicDraw		
 		rts
@@ -90,7 +90,7 @@ TextCommand: ;; [Text]
 		jsr 	EvaluateString 				; get text
 		jsr 	RunGraphicsCommand
 TextRunDraw:
-		ora 	#16*2 						; move cursor
+		ora 	#GCMD_Move 					; move cursor
 		jsr 	GXGraphicDraw		
 		ldy 	#0
 _IRDLoop:
@@ -108,7 +108,7 @@ _IRDLoop:
 		asl 	a
 		asl 	a
 		tay
-		lda 	#5*2 						; char drawing
+		lda 	#GCMD_DrawFont 				; char drawing
 		plx 								; char to draw
 		jsr 	GXGraphicDraw		
 		ply 								; restore string pos
@@ -124,7 +124,7 @@ _IRDExit:
 ; ************************************************************************************************
 
 PlotCommand: ;; [PLOT]
-		lda 	#24*2 						; command ID to use
+		lda 	#GCMD_Plot 					; command ID to use
 		jsr 	RunGraphicsCommand
 		bra 	ExecuteGraphicCommand
 
@@ -135,7 +135,7 @@ PlotCommand: ;; [PLOT]
 ; ************************************************************************************************
 
 LineCommand: ;; [LINE]
-		lda 	#17*2 						; command ID to use
+		lda 	#GCMD_Line 						; command ID to use
 		jsr 	RunGraphicsCommand
 
 ; ************************************************************************************************
@@ -199,7 +199,7 @@ _RGICommandLoop:
 		cmp 	#KWD_COLOR
 		beq 	_RGI_Colour
 		ldx 	gxCommandID
-		cpx 	#25*2 						; if not sprite
+		cpx 	#GCMD_SpriteMove 			; if not sprite
 		bne 	_RGI_Move 					; move
 		jmp		_RGI_SpriteInstructions 	
 		; ------------------------------------------------------------------
@@ -214,7 +214,7 @@ _RGI_Move2:
 		jsr 	GCCopyPairToStore 			; save
 		phy
 		jsr 	GCLoadAXY 					; load in
-		ora 	#16*2 						; move there	
+		ora 	#GCMD_Move 					; move there	
 		jsr 	GXGraphicDraw
 		ply
 		bra 	_RGICommandLoop 			; and go round
@@ -305,7 +305,7 @@ _RGI_Colour:
 		jsr 	Evaluate8BitInteger		
 _RGICDefaultMode:		
 		phy
-		lda 	#4*2 						; set colour.
+		lda 	#GCMD_Colour 				; set colour.
 		ldx 	NSMantissa0+1
 		ldy 	NSMantissa0+2
 		jsr 	GXGraphicDraw
@@ -336,7 +336,7 @@ _RGISpriteOff:
 		ldy 	#1
 		ldx 	#0
 _RGIDoCommandLoop:		
-		lda 	#8*2
+		lda 	#GCMD_SpriteImage
 		jsr 	GXGraphicDraw
 		ply
 		bcs 	_RGIRange

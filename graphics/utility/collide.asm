@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-GXCollide: 	;; [9:COLLIDE]
+GXCollide: 	;; [9:SpriteCollide]
 		lda 	gxzTemp0 					; check if sprite numbers are legal.
 		tax 				
 		ora 	gxzTemp0+1

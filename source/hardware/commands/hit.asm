@@ -34,7 +34,7 @@ UnaryHit: ;; [hit(]
 		ldy 	NSMantissa0+1,x 			; get the sprite numbers into X/Y
 		lda 	NSMantissa0,x
 		tax										
-		lda 	#9*2 						; command 9
+		lda 	#GCMD_SpriteCollide 		; command check collision.
 		jsr 	GXGraphicDraw 				; calculate result
 		inc 	a 							; so 255 (fail) -> 0, otherwise 1,2,3,4 pixels etc.
 		ply 								; restore XY

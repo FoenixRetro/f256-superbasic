@@ -19,7 +19,7 @@
 ; ************************************************************************************************
 
 GXGraphicDraw:
-		cmp 	#$10*2 						; instructions 00-0F don't use coordinates
+		cmp 	#GCMD_Move					; low instructions don't use coordinates
 		bcs 	_GDCoordinate
 		;
 		;		Non coordinate functions
@@ -54,7 +54,7 @@ _GDCopy1:
 		pla 								; get command back
 		and 	#$FE 						; lose LSB, chuck the stray X bit
 		pha 								; push back.
-		cmp 	#25*2 						; move sprite does not clip.
+		cmp 	#GCMD_SpriteMove 			; move sprite does not clip.
 		beq 	_GDCopyToWorkArea
 		;
 		;		See if coordinate is in range, if so, reject it as error.

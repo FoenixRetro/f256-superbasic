@@ -4,6 +4,7 @@
 
 graphicsIntegrated = 1
 
+	.include "aa.main/graphics.inc"
 	.include	"./aa.main/aa.data.asm"
 	.include	"./aa.main/main.asm"
 	.include	"./aa.main/vectors.asm"

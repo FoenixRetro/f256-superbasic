@@ -31,16 +31,16 @@ BitmapCtrl: ;; [bitmap]
 		jsr 	Evaluate8BitInteger 		; get the colour
 		phy
 		tax
-		lda 	#3*2						; clear to that colour
+		lda 	#GCMD_Clear					; clear to that colour
 		jsr 	GXGraphicDraw
 		ply
 		rts
 BitmapSwitch:
 		phy
 		ldy 	#0 							; gfx 1,on/off,0
-		lda 	#1*2
+		lda 	#GCMD_BitmapCtl
 		jsr 	GXGraphicDraw
-		lda 	#4*2 						; set colour to $FF
+		lda 	#GCMD_Colour				; set colour to $FF
 		ldy 	#0
 		ldx 	#$FF
 		jsr 	GXGraphicDraw
@@ -49,7 +49,7 @@ BitmapSwitch:
 		stz 	gxXPos+1
 		stz 	gxYPos
 		stz 	gxDrawScale
-		lda 	#16*2 						; home cursor
+		lda 	#GCMD_Move 						; home cursor
 		ldx 	#0
 		ldy 	#0
 		jsr 	GXGraphicDraw
@@ -75,7 +75,7 @@ SpritesCtrl: ;; [sprites]
 SpriteSwitch:
 		phy
 		ldy 	#0 							; gfx 2,on/off,0
-		lda 	#2*2
+		lda 	#GCMD_SpriteCtl
 		jsr 	GXGraphicDraw
 		ply
 		rts
