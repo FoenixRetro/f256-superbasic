@@ -20,7 +20,6 @@
 
 MemoryNew:
 		.cresetCodePointer 					; point to start of program memory
-		.cresync	 						; resync
 		lda 	#0 							; write zero there erasing the program.
 		.cset0	
 		rts
