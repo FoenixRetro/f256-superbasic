@@ -1,14 +1,27 @@
+'
+'	Solarfox in SuperBasic
+'
 cls:sprites on:bitmap on:bitmap clear 0
 initialise()
-newLevel(1)
+newLevel(level)
 repeat
-	if event(moveEnemies,4) 
-		updateEnemies()
-		n = random(mcount):if remain(n) = 0 then launch(n)		
+	repeat
+		if event(moveEnemies,4) 
+			updateEnemies()
+			n = random(mcount):if remain(n) = 0 then launch(n)		
+		endif
+		if event(moveMissiles,6) then moveMissiles()
+		if event(movePlayer,3) then movePlayer()
+	until collectZeroCount = 0 | playerHit 
+	if playerHit
+		lives = lives-1:updateLives():resetmissiles()
+		playerHit = False:flashplayer()
+	else
+		level = level+1:newLevel(level)
+		score = score + 1000*level:updateScore()
 	endif
-	if event(moveMissiles,6) then moveMissiles()
-	if event(movePlayer,3) then movePlayer()
-until False
+until lives = 0
+bitmap clear 0:sprites off
 end
 '
 '	Set up a new game
@@ -18,6 +31,7 @@ proc initialise()
 	xOrg = 160-xSize*8:yOrg = 140-ySize*8
 	dim x(mCount-1),y(mCount-1),xi(mCount-1),yi(mCount-1),remain(mCount-1)	
 	dim collect(xSize-1,ySize-1)
+	score = 0:lives = 3:level = 1
 endproc
 '
 '	Move the player
@@ -27,9 +41,19 @@ proc movePlayer()
 	x = joyx(0):y = joyy(0)
 	if x <> 0 & (yPlayer & 15) = 0 then xiPlayer = x * 4:yiPlayer = 0:iPlayer = 1-x
 	if y <> 0 & (xPlayer & 15) = 0 then yiPlayer = y * 4:xiPlayer = 0:iPlayer = 2-y
+	if (xPlayer | yPlayer & 15) = 0 then checkCollect(xPlayer >> 4,yPlayer >> 4)
 	xPlayer = min((xSize-1) << 4,max(0,xPlayer + xiPlayer))
 	yPlayer = min((ySize-1) << 4,max(0,yPlayer + yiPlayer))
 	sprite 50 image iPlayer to xOrg+xPlayer,yOrg+yPlayer
+endproc
+'
+'	Flash the player
+'
+proc flashplayer()
+	local t:t = timer() + 140
+	while timer() < t 
+		if timer() & 16:sprite 50 image iPlayer:else sprite 50 off:endif
+	wend
 endproc
 '
 '	Fire a new missile from slot 'n'
@@ -63,7 +87,7 @@ proc moveMissiles()
 	for i = 0 to mCount-1
 		if remain(i) > 0
 			x(i) = x(i)+xi(i):y(i) = y(i)+yi(i)
-			if hit(i,50) then print hit(i,50);" ";
+			if hit(i,50) > 0 then if hit(i,50) < 10 then playerHit = True
 			remain(i) = remain(i)-1
 			if remain(i) > 0:sprite i to x(i),y(i):else:sprite i off:endif
 		endif
@@ -77,10 +101,38 @@ proc newLevel(n)
 	bitmap clear 0
 	drawBackground():resetmissiles():updateEnemies()
 	xPlayer = xSize\2*16:yPlayer = ySize\2*16:iPlayer = 0:xiPlayer = 0:yiPlayer = 0
-	sprite 50 image iPlayer to xOrg+xPlayer,yOrg+yPlayer
+	sprite 50 image iPlayer to xOrg+xPlayer,yOrg+yPlayer:playerHit = False 
 	for x = 0 to xSize-1:for y = 0 to ySize-1:collect(x,y) = 0:next:next
 	collectZeroCount = 0
-	setqcollect(0,0,1):setqcollect(3,2,1):setqcollect(1,1,2):setqcollect(2,2,0)
+	setqcollect(5,5,1)
+endproc
+'
+'	Check collection
+'
+proc checkCollect(x,y)
+	if collect(x,y) <> 0
+		local n:n = collect(x,y)-1:collect(x,y) = n 
+		renderCollect(x,y,n)
+		if n = 0 then collectZeroCount = collectZeroCount - 1
+		score = score + 25:updateScore()
+	endif
+endproc
+'
+'	Update score
+'
+proc updateScore()
+	text right$("00000"+str$(score),6) dim 1 colour $1F,4 to 80-24,12
+endproc
+'
+'	Update lives display
+'
+proc updateLives()
+	rect solid colour 0 from 240,6 to 300,16
+	if lives > 0
+		for i = 1 to lives
+			image 10 to 240+i*12,8
+		next 
+	endif 
 endproc
 '
 '	Set the collection in all 4 quadrant
@@ -126,6 +178,7 @@ proc drawBackground()
 	for y = 0 to ySize-1:line xOrg-8,yOrg+y*16 by xSize*16,0:next
 	rect colour $E0 outline xOrg-24,yOrg-24 by xSize*16+32,ySize*16+32
 	rect colour $FF outline xOrg-25,yOrg-25 by xSize*16+34,ySize*16+34
+	updateScore():text "1 Up" colour $E0 to 64,2:updateLives()
 endproc
 '
 '	Use the timer to set the positions of the shooting enemies
