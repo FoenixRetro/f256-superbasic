@@ -1,7 +1,13 @@
-5 sprites on:bitmap on:bitmap clear 0
-10 for i = 0 to 20
-20 image 3 to i*10,i*10
-25 image 3 colour 0,1 to i*10,i*10
-30 next 
-
-ÿÿÿÿ
+100 ?1=0
+110 sound($D600)
+120 end
+130 proc sound(c)
+140 ?c = $8E
+145 ?c = $0F
+150 ?c = $BF
+160 ?c = $DF
+170 ?c = $00
+180 ?c = $E5
+185 ?c = $E5
+190 ?c = $04
+200 endprocÿÿÿÿ

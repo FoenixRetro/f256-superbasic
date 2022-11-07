@@ -19,7 +19,7 @@ BINDIR = ..$(S)..$(S)bin$(S)
 EMULATOR = $(BINDIR)jr256$(APPSTEM)
 TTYPORT = /dev/ttyUSB0
 LANGUAGE = en
-SOURCE = fox.bas
+SOURCE = fox.bas levels.bas
 
 START = $(EMULATOR) $(BINDIR)basic.rom@8000 storage$(S)load.dat@3000 graphics.bin@30000
 # 3000 is hardcoded in backload.asm

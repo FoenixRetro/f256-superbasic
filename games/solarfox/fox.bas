@@ -29,9 +29,9 @@ end
 proc initialise()
 	xSize = 14:ySize = 11:mCount = 8
 	xOrg = 160-xSize*8:yOrg = 140-ySize*8
-	dim x(mCount-1),y(mCount-1),xi(mCount-1),yi(mCount-1),remain(mCount-1)	
+	dim x(7),y(7),xi(7),yi(7),remain(7)	
 	dim collect(xSize-1,ySize-1)
-	score = 0:lives = 3:level = 1
+	score = 0:lives = 3:level = 0
 endproc
 '
 '	Move the player
@@ -97,14 +97,17 @@ endproc
 '	Start a new level
 '
 proc newLevel(n)
-	local x,y
+	local x,y,c$
 	bitmap clear 0
 	drawBackground():resetmissiles():updateEnemies()
 	xPlayer = xSize\2*16:yPlayer = ySize\2*16:iPlayer = 0:xiPlayer = 0:yiPlayer = 0
 	sprite 50 image iPlayer to xOrg+xPlayer,yOrg+yPlayer:playerHit = False 
 	for x = 0 to xSize-1:for y = 0 to ySize-1:collect(x,y) = 0:next:next
 	collectZeroCount = 0
-	setqcollect(5,5,1)
+	getLevelData(level % 6):p = 1:if level >= 6 then p = 2
+	for x = 0 to 6:for y = 0 to 4
+		c$ = mid$(level$,x+y*8+1,1):if c$ = "X" then setqcollect(x,y,p)
+	next:next:mCount = min(3+level\3,7)
 endproc
 '
 '	Check collection
@@ -167,7 +170,7 @@ endproc
 '
 proc resetmissiles()
 	local i
-	for i = 0 to mCount-1:remain(i) = 0:sprite i off:next
+	for i = 0 to 7:remain(i) = 0:sprite i off:next
 endproc
 '
 '	Draw the screen background
@@ -192,5 +195,4 @@ proc updateEnemies()
 	sprite 12 image 4 to xOrg-16,yOrg+yFire
 	sprite 13 image 6 to xOrg+xSize<<4,yOrg+yFire
 endproc	
-
 
