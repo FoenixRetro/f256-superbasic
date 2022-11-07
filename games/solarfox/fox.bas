@@ -1,6 +1,6 @@
 cls:sprites on:bitmap on:bitmap clear 0
 initialise()
-newLevel()
+newLevel(1)
 repeat
 	if event(moveEnemies,4) 
 		updateEnemies()
@@ -10,13 +10,18 @@ repeat
 	if event(movePlayer,3) then movePlayer()
 until False
 end
-
+'
+'	Set up a new game
+'
 proc initialise()
 	xSize = 14:ySize = 11:mCount = 8
 	xOrg = 160-xSize*8:yOrg = 140-ySize*8
 	dim x(mCount-1),y(mCount-1),xi(mCount-1),yi(mCount-1),remain(mCount-1)	
+	dim collect(xSize-1,ySize-1)
 endproc
-
+'
+'	Move the player
+'
 proc movePlayer()
 	local x,y
 	x = joyx(0):y = joyy(0)
@@ -26,45 +31,95 @@ proc movePlayer()
 	yPlayer = min((ySize-1) << 4,max(0,yPlayer + yiPlayer))
 	sprite 50 image iPlayer to xOrg+xPlayer,yOrg+yPlayer
 endproc
-
+'
+'	Fire a new missile from slot 'n'
+'
 proc launch(n)
 	if random() & 1:horizontalLaunch(n):else:verticalLaunch(n):endif
 endproc
-
+'
+'	Launch a missile from top or bottom
+'
 proc verticalLaunch(n)
 	x(n) = xOrg-16:y(n) = yOrg+((yFire+8) & $F0):xi(n) = 4:yi(n) = 0	
 	remain(n) = abs((xSize*16+16) / xi(n))
 	if random() & 1 then x(n) = x(n) + remain(n)*xi(n):xi(n) = -xi(n)
 	sprite n image 11 to x(n),y(n)
 endproc
-
+'
+'	Launch a missile from left or right
+'
 proc horizontalLaunch(n)
 	y(n) = yOrg-16:x(n) = xOrg+((xFire+8) & $F0):yi(n) = 4:xi(n) = 0	
 	remain(n) = abs((ySize*16+16) / yi(n))
 	if random() & 1 then y(n) = y(n) + remain(n)*yi(n):yi(n) = -yi(n)
 	sprite n image 12 to x(n),y(n)
 endproc
-
+'
+'	Move all missiles
+'
 proc moveMissiles()
 	local i
 	for i = 0 to mCount-1
 		if remain(i) > 0
 			x(i) = x(i)+xi(i):y(i) = y(i)+yi(i)
+			if hit(i,50) then print hit(i,50);" ";
 			remain(i) = remain(i)-1
 			if remain(i) > 0:sprite i to x(i),y(i):else:sprite i off:endif
 		endif
 	next
 endproc
-
-proc newLevel()
+'
+'	Start a new level
+'
+proc newLevel(n)
+	local x,y
 	bitmap clear 0
-	local i
-	for i = 0 to mCount-1:remain(i) = 0:next
-	drawBackground():updateEnemies()
+	drawBackground():resetmissiles():updateEnemies()
 	xPlayer = xSize\2*16:yPlayer = ySize\2*16:iPlayer = 0:xiPlayer = 0:yiPlayer = 0
 	sprite 50 image iPlayer to xOrg+xPlayer,yOrg+yPlayer
+	for x = 0 to xSize-1:for y = 0 to ySize-1:collect(x,y) = 0:next:next
+	collectZeroCount = 0
+	setqcollect(0,0,1):setqcollect(3,2,1):setqcollect(1,1,2):setqcollect(2,2,0)
 endproc
-
+'
+'	Set the collection in all 4 quadrant
+'
+proc setqcollect(x,y,n)
+	setcollect(x,y,n):setcollect(xSize-1-x,y,n):setcollect(x,ySize-1-y,n):setcollect(xSize-1-x,ySize-1-y,n)	
+endproc
+'
+'	Set the collect for one cell (non-erase, creation *only*)
+'
+proc setcollect(x,y,n)
+	if collect(x,y) = 0
+		collectZeroCount = collectZeroCount + 1
+		collect(x,y) = n
+		renderCollect(x,y,n)
+	endif	
+endproc
+'
+'	Render a collection item 0,1,2. 0 Erases. These are drawn on the background not sprites.
+'
+proc renderCollect(x,y,n)
+	if n > 0
+		image 7+n dim 1 to x*16+xOrg-4+1,y*16+yOrg-4+1
+	else
+		local xc,yc:xc = x * 16+xOrg:yc = y * 16 + yOrg
+		rect solid colour $0 from xc-6,yc-6 to xc+6,yc+6
+		line colour $25 from xc-6,yc to xc+6,yc from xc,yc-6 to xc,yc+6
+	endif
+endproc
+'
+'	Reset all Missiles
+'
+proc resetmissiles()
+	local i
+	for i = 0 to mCount-1:remain(i) = 0:sprite i off:next
+endproc
+'
+'	Draw the screen background
+'
 proc drawBackground()
 	local x,y:line colour $25
 	for x = 0 to xSize-1:line xOrg+x*16,yOrg-8 by 0,ySize*16:next
@@ -72,7 +127,9 @@ proc drawBackground()
 	rect colour $E0 outline xOrg-24,yOrg-24 by xSize*16+32,ySize*16+32
 	rect colour $FF outline xOrg-25,yOrg-25 by xSize*16+34,ySize*16+34
 endproc
-
+'
+'	Use the timer to set the positions of the shooting enemies
+'
 proc updateEnemies()
 	local t:t = timer()
 	xFire = abs((t % (xSize << 5))-(xSize << 4))

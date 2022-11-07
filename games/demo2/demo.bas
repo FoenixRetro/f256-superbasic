@@ -1,11 +1,13 @@
 '
 '		Demo
 '
-cls:bitmap on:sprites on:bitmap clear $6D:spriteCount = 16
+cls:bitmap on:sprites on:bitmap clear $6D:spriteCount = 20
+palette $6D,$40,$40,$40:palette $FC,255,128,0
+text "65C02 Foenix F256" dim 2 colour $FC to 24,10
 dim x(spriteCount),y(spriteCount),xv(spriteCount),yv(spriteCount)
 g = 2:line colour $E0 from 0,235 to 319,235
-i = 20:while i <= 300:line i,15 to i,235:i = i + 20:wend
-i = 15:while i < 235:line 20,i to 300,i:i = i + 20:wend
+i = 20:while i <= 300:line i,35 to i,235:i = i + 20:wend
+i = 35:while i < 235:line 20,i to 300,i:i = i + 20:wend
 for i = 1 to spriteCount
 	x(i) = random(300)+10:y(i) = 10+random(200)
 	xv(i) = random(20)-10:yv(i) = 0

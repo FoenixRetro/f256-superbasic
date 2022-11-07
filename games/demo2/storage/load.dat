@@ -1,24 +1,26 @@
 1000 '
 1010 ' "Demo"
 1020 '
-1030 cls:bitmap on:sprites on:bitmap clear $6D:spriteCount = 16
-1040 dim x(spriteCount),y(spriteCount),xv(spriteCount),yv(spriteCount)
-1050 g = 2:line colour $E0 from 0,235 to 319,235
-1060 i = 20:while i <= 300:line i,15 to i,235:i = i + 20:wend
-1070 i = 15:while i < 235:line 20,i to 300,i:i = i + 20:wend
-1080 for i = 1 to spriteCount
-1090 x(i) = random(300)+10:y(i) = 10+random(200)
-1100 xv(i) = random(20)-10:yv(i) = 0
-1110 next
-1120 repeat
-1130 for i = 1 to spriteCount
-1140 if y(i) >= 0:sprite i image 0 to x(i),y(i):else:sprite 1 off:endif
-1150 yv(i) = yv(i)+g
-1160 x(i) = x(i)+xv(i):y(i) = y(i)+yv(i)
-1170 if y(i) > 220 then y(i) = y(i)-yv(i):yv(i) = -abs(yv(i)*7/8)
-1180 if x(i) < 4 | x(i) > 316 then xv(i) = -xv(i):x(i) = x(i)+xv(i)
-1190 if yv(i) = 0 then yv(i) = random(8)+12
-1200 next
-1210 until false
+1030 cls:bitmap on:sprites on:bitmap clear $6D:spriteCount = 20
+1040 palette $6D,$40,$40,$40:palette $FC,255,128,0
+1050 text "65C02 Foenix F256" dim 2 colour $FC to 24,10
+1060 dim x(spriteCount),y(spriteCount),xv(spriteCount),yv(spriteCount)
+1070 g = 2:line colour $E0 from 0,235 to 319,235
+1080 i = 20:while i <= 300:line i,35 to i,235:i = i + 20:wend
+1090 i = 35:while i < 235:line 20,i to 300,i:i = i + 20:wend
+1100 for i = 1 to spriteCount
+1110 x(i) = random(300)+10:y(i) = 10+random(200)
+1120 xv(i) = random(20)-10:yv(i) = 0
+1130 next
+1140 repeat
+1150 for i = 1 to spriteCount
+1160 if y(i) >= 0:sprite i image 0 to x(i),y(i):else:sprite 1 off:endif
+1170 yv(i) = yv(i)+g
+1180 x(i) = x(i)+xv(i):y(i) = y(i)+yv(i)
+1190 if y(i) > 220 then y(i) = y(i)-yv(i):yv(i) = -abs(yv(i)*7/8)
+1200 if x(i) < 4 | x(i) > 316 then xv(i) = -xv(i):x(i) = x(i)+xv(i)
+1210 if yv(i) = 0 then yv(i) = random(8)+12
+1220 next
+1230 until false
 ÿÿÿÿ
 

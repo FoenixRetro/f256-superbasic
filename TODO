@@ -1,6 +1,10 @@
 Progress:
+	Finish Solar Fox.
 	shift graphics to 32
-	tiles.
+	sound check it works / write a driver
+	tiles ?
+	DMA ?
+	Not initialised flag on variables. ?
 	
 Later:
 	Disable interrupts enable at end of line command ?
