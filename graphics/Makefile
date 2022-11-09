@@ -16,4 +16,5 @@ include ../documents/common.make
 endif
 
 integrated:
+	python scripts$(S)makebuild.py 2
 	python scripts$(S)makebuild.py 1

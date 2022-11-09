@@ -37,7 +37,7 @@ class SpriteImage(object):
 		assert self.spriteSize <= 32
 		self.xOffset = int(self.spriteSize/2 - self.image.size[0] / 2) 							# offset in graphic to make square centred sprite
 		self.yOffset = int(self.spriteSize/2 - self.image.size[1] / 2)
-		print(self.spriteSize,self.xOffset,self.yOffset,self.image.size)
+		#print(self.spriteSize,self.xOffset,self.yOffset,self.image.size)
 	#
 	#		Get name of sprite
 	#
