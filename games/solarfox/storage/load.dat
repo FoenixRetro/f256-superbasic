@@ -1,7 +1,7 @@
 1000 '
 1010 ' "Solarfox in SuperBasic"
 1020 '
-1030 cls:sprites on:bitmap on:bitmap clear 0
+1030 title("Solar Fox"):cls:sprites on:bitmap on:bitmap clear 0
 1040 initialise()
 1050 newLevel(level)
 1060 repeat
@@ -208,5 +208,28 @@
 3070 if n = 5 then level$ = ".....X. ....XX. .XXX.X. X....X. XXXXXX."
 3080 if n = 6 then level$ = "XX..... .XX.... ..XX... ....XX. .....XX
 3090 endproc
+3100 '
+3110 ' "Simple title screen"
+3120 '
+3130 proc title(name$)
+3140 bitmap on:bitmap clear 0:cls
+3150 centre(210,1,$1F,"Press FIRE to Start")
+3160 centre(120,1,$FC,"A Foenix F256 Demo Game in BASIC")
+3170 centre(130,1,$F0,"Written by Paul Robson 2020")
+3180 n = 0
+3190 while joyb(0) = 0
+3200 drawTitleAt(n$,n):n = (n + 1) & 7
+3210 wend
+3220 while joyb(0) <> 0:wend
+3230 bitmap off
+3240 endproc
+3250 '
+3260 proc centre(y,size,c,msg$)
+3270 text msg$ dim size colour c to 160-len(msg$)*size*4,y
+3280 endproc
+3290 '
+3300 proc drawTitleAt(n$,offset)
+3310 text name$ colour random() & $FF dim 3 to 160-len(name$)*12+offset,32+offset
+3320 endproc
 ÿÿÿÿ
 

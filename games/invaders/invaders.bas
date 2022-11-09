@@ -1,7 +1,7 @@
 '
 '		Simplified Space Invaders Game
 '
-cls:bitmap on:sprites on:bitmap clear 0
+title("Invaders"):cls:bitmap on:sprites on:bitmap clear 0
 skillLevel = 0:score = 0:lives = 3
 defineVariables():text "SCORE<1>" dim 1 colour $FF to 136,1
 resetlevel():resetPlayer():displayScore()

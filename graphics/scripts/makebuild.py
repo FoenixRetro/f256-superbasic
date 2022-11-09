@@ -34,7 +34,7 @@ if sys.argv[1] == "1":
 	h.write("\ngraphicsIntegrated=1\n\n");
 	for f in includeFiles+sourceFiles:
 		 for s in open(f).readlines():
-		 	h.write("{0}\n".format(s.strip()))
+		 	h.write("{0}\n".format(s.rstrip()))
 	h.close()
 else:
 	#

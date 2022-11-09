@@ -1,7 +1,7 @@
 '
 '	Solarfox in SuperBasic
 '
-cls:sprites on:bitmap on:bitmap clear 0
+title("Solar Fox"):cls:sprites on:bitmap on:bitmap clear 0
 initialise()
 newLevel(level)
 repeat

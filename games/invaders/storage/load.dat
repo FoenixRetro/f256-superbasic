@@ -1,7 +1,7 @@
 1000 '
 1010 ' "Simplified Space Invaders Game"
 1020 '
-1030 cls:bitmap on:sprites on:bitmap clear 0
+1030 title("Invaders"):cls:bitmap on:sprites on:bitmap clear 0
 1040 skillLevel = 0:score = 0:lives = 3
 1050 defineVariables():text "SCORE<1>" dim 1 colour $FF to 136,1
 1060 resetlevel():resetPlayer():displayScore()
@@ -180,5 +180,28 @@
 2790 rightEdge = 320-8-7*24
 2800 i = 7:while colHeight(i) = 0:i = i - 1:rightEdge = rightEdge+24:wend
 2810 endproc
+2820 '
+2830 ' "Simple title screen"
+2840 '
+2850 proc title(name$)
+2860 bitmap on:bitmap clear 0:cls
+2870 centre(210,1,$1F,"Press FIRE to Start")
+2880 centre(120,1,$FC,"A Foenix F256 Demo Game in BASIC")
+2890 centre(130,1,$F0,"Written by Paul Robson 2020")
+2900 n = 0
+2910 while joyb(0) = 0
+2920 drawTitleAt(n$,n):n = (n + 1) & 7
+2930 wend
+2940 while joyb(0) <> 0:wend
+2950 bitmap off
+2960 endproc
+2970 '
+2980 proc centre(y,size,c,msg$)
+2990 text msg$ dim size colour c to 160-len(msg$)*size*4,y
+3000 endproc
+3010 '
+3020 proc drawTitleAt(n$,offset)
+3030 text name$ colour random() & $FF dim 3 to 160-len(name$)*12+offset,32+offset
+3040 endproc
 ÿÿÿÿ
 

@@ -1,6 +1,7 @@
 Progress:
+	cascading string parameter
 	shift graphics to 32
-	sound check it works / write a driver
+	sound write a driver
 	tiles ?
 	DMA ?
 	Not initialised flag on variables. ?
