@@ -55,8 +55,8 @@ LocaliseNextTerm:
 _LNTPushNumLoop:
 		lda		(zTemp0),y
 		jsr 	StackPushByte
-		lda 	#0
-		sta 	(zTemp0),y
+;		lda 	#0
+;		sta 	(zTemp0),y
 		iny
 		cpy 	#5			
 		bne 	_LNTPushNumLoop
@@ -96,8 +96,8 @@ _LNTStringOut:
 		tya									; output length
 		jsr 	StackPushByte
 		;
-		lda 	#0 							; clear original string.
-		sta 	(zTemp1)
+;		lda 	#0 							; clear original string.
+;		sta 	(zTemp1)
 		;
 		lda 	NSMantissa0,x 				; output address of the string record *not* the string itself
 		jsr 	StackPushByte
@@ -184,5 +184,7 @@ _LPVStringCopied:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		11/11/22 		Localising a string does not reset it to "" - fix issue 14.
+;						Localisation does not clear a string or integer.
 ;
 ; ************************************************************************************************

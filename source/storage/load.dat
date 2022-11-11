@@ -1,9 +1,9 @@
-	100 ?1=0
-	110 sound($D600,15)
-	115 sound($D610,12)
-	120 end
-	130 proc sound(c,m)
-	140 ?c = $8F
-	150 ?c = m
-	160 ?c = $90
-	200 endprocÿÿÿÿ
+100 name$ = "Hello"
+110 printme(name$)
+115 print "[";name$;"]"
+120 end
+130 proc printme(name$)
+135 print "[";name$;"]"
+136 name$ = "Goodbye"
+137 print "[";name$;"]"
+140 endprocÿÿÿÿ
