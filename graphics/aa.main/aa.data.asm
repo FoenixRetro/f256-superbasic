@@ -18,10 +18,6 @@ GXMappingPage = 3
 ;
 GXMappingAddress = ($2000 * GXMappingPage)
 ;
-;		LUT to use for mapping
-;
-GXMappingLUT = 0
-;
 ;		LUT Edit slot
 ;
 GXEditSlot = 8 + GXMappingPage
@@ -128,12 +124,10 @@ gxEORValue:
 gxANDValue:
 		.fill 	1
 ;
-;		Original LUT and MMU settings
+;		Original LUT setting
 ;		
 gxOriginalLUTValue:
 		.fill 	1
-gxOriginalMMUSetting:
-		.fill 	1		
 ;
 ;		Offset in calculation.
 ;
