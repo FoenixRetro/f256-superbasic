@@ -11,8 +11,8 @@ for i = 0 to spriteCount-1
 next 
 currentSprite = 0
 repeat
-	demo(24)
-	for d = 17 to 21
+	demo(40)
+	for d = 33 to 37
 		demo(d)
 	next
 until false
@@ -21,7 +21,7 @@ until false
 '
 proc demo(op)
 	bitmap clear 0
-	gfx 16,160,120
+	gfx 32,160,120
 	t1 = timer() + 70*3
 	while timer() < t1
 		gfx 4,random(256),0

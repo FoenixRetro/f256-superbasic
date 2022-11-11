@@ -1,47 +1,47 @@
-1000 '
-1010 ' "Demo"
-1020 '
-1030 cls:bitmap on:sprites on:bitmap clear 0:spriteCount = 8
-1040 dim x(spriteCount),y(spriteCount),xi(spriteCount),yi(spriteCount),img(spriteCount)
-1050 for i = 0 to spriteCount-1
-1060 x(i) = 16+random(320)
-1070 y(i) = 16+random(240)
-1080 xi(i) = random(5)+2:yi(i) = 0:img(i) = 1
-1090 if i % 2 = 0 then yi(i) = xi(i):xi(i) = 0:img(i) = 3
-1100 next
-1110 currentSprite = 0
-1120 repeat
-1130 demo(24)
-1140 for d = 17 to 21
-1150 demo(d)
-1160 next
-1170 until false
-1180 '
-1190 ' "Do demo using op n."
-1200 '
-1210 proc demo(op)
-1220 bitmap clear 0
-1230 gfx 16,160,120
-1240 t1 = timer() + 70*3
-1250 while timer() < t1
-1260 gfx 4,random(256),0
-1270 gfx op,random(320),random(240)
-1280 if event(nextSprite,3)
-1290 for i = 0 to spriteCount-1
-1300 moveSprite(i)
-1310 next
-1320 endif
-1330 wend
-1340 endproc
-1350 proc moveSprite(n)
-1360 x(n) = x(n)+xi(n)
-1370 y(n) = y(n)+yi(n)
-1380 if x(n) < 10 | y(n) < 10 | x(n) > 310 | y(n) > 230
-1390 xi(n) = -xi(n):yi(n) = -yi(n)
-1400 img(i) = img(i) ^ 1
-1410 else
-1420 sprite n image img(n) to x(n),y(n)
-1430 endif
-1440 endproc
+1 '
+2 ' "Demo"
+3 '
+4 cls:bitmap on:sprites on:bitmap clear 0:spriteCount = 8
+5 dim x(spriteCount),y(spriteCount),xi(spriteCount),yi(spriteCount),img(spriteCount)
+6 for i = 0 to spriteCount-1
+7 x(i) = 16+random(320)
+8 y(i) = 16+random(240)
+9 xi(i) = random(5)+2:yi(i) = 0:img(i) = 1
+10 if i % 2 = 0 then yi(i) = xi(i):xi(i) = 0:img(i) = 3
+11 next
+12 currentSprite = 0
+13 repeat
+14 demo(40)
+15 for d = 33 to 37
+16 demo(d)
+17 next
+18 until false
+19 '
+20 ' "Do demo using op n."
+21 '
+22 proc demo(op)
+23 bitmap clear 0
+24 gfx 32,160,120
+25 t1 = timer() + 70*3
+26 while timer() < t1
+27 gfx 4,random(256),0
+28 gfx op,random(320),random(240)
+29 if event(nextSprite,3)
+30 for i = 0 to spriteCount-1
+31 moveSprite(i)
+32 next
+33 endif
+34 wend
+35 endproc
+36 proc moveSprite(n)
+37 x(n) = x(n)+xi(n)
+38 y(n) = y(n)+yi(n)
+39 if x(n) < 10 | y(n) < 10 | x(n) > 310 | y(n) > 230
+40 xi(n) = -xi(n):yi(n) = -yi(n)
+41 img(i) = img(i) ^ 1
+42 else
+43 sprite n image img(n) to x(n),y(n)
+44 endif
+45 endproc
 ÿÿÿÿ
 
