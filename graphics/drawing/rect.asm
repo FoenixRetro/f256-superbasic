@@ -18,10 +18,10 @@
 ;
 ; ************************************************************************************************
 
-GXFillRectangle: ;; [19:FillRect]
+GXFillRectangle: ;; [35:FillRect]
 		sec
 		bra 	GXRectangle
-GXFrameRectangle: ;; [18:FrameRect]
+GXFrameRectangle: ;; [34:FrameRect]
 		clc
 GXRectangle:	
 		lda 	gxBitmapsOn

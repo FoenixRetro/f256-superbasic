@@ -1,5 +1,4 @@
 Progress:
-	shift graphics to 32
 	sound write a driver
 	tiles ?
 	DMA ?

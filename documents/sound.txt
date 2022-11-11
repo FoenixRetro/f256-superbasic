@@ -1,2 +1,32 @@
-Simplified sound library
-------------------------
+Sound interface
+---------------
+
+Channel (0-3)
+Frequency (12 bit)
+Time (8 bit)
+Slide (12 bit)
+Volume (4 bit)
+
+State:
+
+<Each Channel>
+
+Current pitch: 12 bits
+Current time left : 8 bits , max 25 seconds.
+Current pitch adjust : 12 bits masked/added.
+
+Queue (8 elements, Queue of 32 x 8 entries.)
+
+Channel 	(1) 	Channel # 0-3, -ve = empty slot.
+Frequency 	(2)
+Volume 		(1)
+Length  	(1)
+Slide 		(2)
+
+Each time t = 0 if not empty dequeue next note for this channel, queue is in order, entries are removed
+
+Sound <Channel>,<Pitch>,[<Volume>],[<Slide>]
+Playing(Channel)
+Sound Off
+
+Called every 1/10 second max.

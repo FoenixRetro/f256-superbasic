@@ -27,14 +27,14 @@ Returns CS error , CC okay
 *	7 SPRUSE X = sprite# select sprite
 *	8 SPRIMG X = set selected sprite image to X, Y = 0, hide, Y = 1
 	9 HIT    Check collision state X,Y. Returns $FF for miss,or max |c1-c0| << 2
-*	16 MOVE 			
-*	17 LINE 	
-*	18 RECT
-*	19 Fill RECT
-*	20 CIRCLE
-*	21 Fill CIRCLE
-*	24 PLOT point
-*	25 SPRMOVE to x,y (fix up sprite positioning)
+*	32 MOVE 			
+*	33 LINE 	
+*	34 RECT
+*	35 Fill RECT
+*	36 CIRCLE
+*	37 Fill CIRCLE
+*	40 PLOT point
+*	41 SPRMOVE to x,y (fix up sprite positioning)
 
 	LINE
 	SPRITE n

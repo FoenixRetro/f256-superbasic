@@ -146,7 +146,7 @@ _GXSIHide:
 ;
 ; ************************************************************************************************		
 
-GXMoveSprite: ;; [25:SpriteMove]
+GXMoveSprite: ;; [41:SpriteMove]
 		lda 	gxSpritesOn
 		beq 	_GXSIFail
 
