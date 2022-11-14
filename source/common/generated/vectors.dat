@@ -113,7 +113,7 @@ VectorSet0:
 	.word	CallCommand                      ; $ab CALL
 	.word	SyntaxError                      ; $ac CIRCLE
 	.word	ClearCommand                     ; $ad CLEAR
-	.word	SyntaxError                      ; $ae CLS
+	.word	ClearScreen                      ; $ae CLS
 	.word	SyntaxError                      ; $af COLOR
 	.word	SyntaxError                      ; $b0 COLOUR
 	.word	Command_Data                     ; $b1 DATA
