@@ -34,7 +34,7 @@ AssembleGroup1:
 		; ----------------------------------------------------------------------------------------
 
 AssembleGroup2:
-		lda 	$00 						
+		lda 	#$00 						
 AsmGroup12:
 		sta 	IsGroup1 					; save the 'group 1' flag
 
@@ -186,5 +186,7 @@ GetParameter:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		14/11/2022		Issue#17: The LDA #0 at AssembleGroup2 was LDA $00 - so it worked until
+;						I started tinkering with the LUT.
 ;
 ; ************************************************************************************************

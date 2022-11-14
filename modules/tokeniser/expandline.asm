@@ -2,7 +2,7 @@
 ; ************************************************************************************************
 ;
 ;		Name:		expandline.asm
-;		Purpose:	Expand line at codePtr to tokenBuffer
+;		Purpose:	Expand line at code-Ptr to tokenBuffer
 ;		Created:	4th October 2022
 ;		Reviewed:
 ;		Author:		Paul Robson (paul@robsons.org.uk)
@@ -22,10 +22,10 @@ ListConvertLine:
 		stz 	tbOffset
 		stz 	tokenBuffer
 		ldy 	#2 							; convert line number to string
-		lda 	(codePtr),y		
+		.cget		
 		tax
 		dey
-		lda 	(codePtr),y
+		.cget
 		jsr 	ConvertInt16
 		sta 	zTemp0 						; copy number into buffer
 		stx 	zTemp0+1
