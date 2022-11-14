@@ -88,7 +88,6 @@ _ParamExtract:
 _ParamExit:				
 		jsr 	CheckRightBracket 			; check )
 		rts 								; and continue from here
-		.send code
 
 ; ************************************************************************************************
 ;
@@ -103,6 +102,8 @@ Command_ENDPROC:	;; [endproc]
 		jsr 	STKLoadCodePosition 		; restore code position
 		jsr 	StackClose
 		rts
+
+		.send code
 
 ; ************************************************************************************************
 ;

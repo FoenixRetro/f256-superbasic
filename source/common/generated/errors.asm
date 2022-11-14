@@ -1,6 +1,7 @@
 ;
 ;	This is automatically generated.
 ;
+.section code
 SyntaxError:
 	.error_syntax
 RangeError:
@@ -35,3 +36,4 @@ ErrorText:
 	.text	"Array already defined",0
 	.text	"Array size",0
 	.text	"Bad array index",0
+.send code

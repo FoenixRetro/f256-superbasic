@@ -24,9 +24,7 @@ Start:	ldx 	#$FF 						; stack reset
 		ldx 	#(Prompt >> 8) 				; prompt
 		lda 	#(Prompt & $FF)
 		jsr 	PrintStringXA
-		;
-		; jsr 	RunDemos
-		;
+
 		jsr 	NewCommand 					; erase current program
 		jsr 	BackloadProgram
 
@@ -40,8 +38,6 @@ Prompt:	.text 	13,13,"*** F256 Junior SuperBASIC ***",13,13
 		.text 	"Written by Paul Robson 2022.",13,13
 		.include "../generated/timestamp.asm"
 		.byte 	13,13,0
-
-		.include "../../../modules/build/_graphics.module"
 
 		.send code
 

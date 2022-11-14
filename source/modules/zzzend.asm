@@ -1,34 +1,18 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		int.asm
-;		Purpose:	Integer part of fractional number
-;		Created:	29th September 2022
-;		Reviewed: 	
-;		Author : 	Paul Robson (paul@robsons.org.uk)
+;		Name:		zzzend.asm
+;		Purpose:	Module positioning code
+;		Created:	14th November 2022
+;		Reviewed: 	No
+;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
 
 		.section code
-
-; ************************************************************************************************
-;
-; 								Integer part of number
-;
-; ************************************************************************************************
-
-IntUnary: ;; [int(]	
-		plx 								; restore stack pos
-		jsr 	EvaluateNumber 				; get a float or int
-		jsr 	CheckRightBracket
-		lda 	NSStatus,x
-		and 	#NSTFloat 					; check it is a float
-		beq 	_IUExit
-		jsr 	FloatIntegerPart
-_IUExit:		
-		rts
-
+		.include "../../modules/_build/_graphics.module"
+		.include "../../modules/_build/_tokeniser.module"
 		.send code
 
 ; ************************************************************************************************

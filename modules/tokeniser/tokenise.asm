@@ -12,8 +12,6 @@
 
 		.section code
 
-		.include "../generated/kwdtext.dat"
-		
 ; ************************************************************************************************
 ;
 ;								Tokenise ASCIIZ line in lineBuffer

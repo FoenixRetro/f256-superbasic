@@ -1,216 +1,182 @@
-1 dim x4_0(3,6)
-2 dim q6_1(4,5)
-3 dim C(5,2)
-4 dim d1n1_3(3)
-5 dim y2_4(6,6)
-6 dim F(6,3)
-7 dim d0i1_6(4)
-8 dim H(2)
-9 rem "Seed 72105"
-10 let q6_1(4,3) = -95883988
-11 let x4_0(0,5) = -100414887
-12 let x4_0(2,1) = -221023347
-13 y2_4(4,6) = 119168493
-14 let d0i1_6(2) = -211910390
-15 x4_0(0,1) = 439261467
-16 d1n1_3(0) = 340963737
-17 d1n1_3(2) = 430948789
-18 x4_0(2,3) = 403540049
-19 let C(5,0) = -363345697
-20 let d1n1_3(2) = 388872929
-21 q6_1(1,2) = -233281630
-22 F(1,0) = -376503242
-23 let q6_1(1,2) = -253661662
-24 x4_0(3,0) = 424048487
-25 H(0) = -411505208
-26 H(2) = 394823958
-27 F(6,3) = -302381812
-28 x4_0(0,0) = -375938555
-29 let x4_0(3,3) = 267278352
-30 q6_1(3,1) = 124551018
-31 let x4_0(2,2) = -380194119
-32 x4_0(3,1) = -93409641
-33 F(0,0) = -103580331
-34 H(2) = -135017382
-35 let H(2) = 52770434
-36 let d1n1_3(1) = -383641085
-37 let F(2,0) = -138459708
-38 d1n1_3(1) = 330320676
-39 let d1n1_3(2) = 214097292
-40 let q6_1(2,3) = -114136647
-41 let H(0) = 177337666
-42 let x4_0(2,0) = -421094518
-43 x4_0(1,2) = -28605283
-44 let d1n1_3(1) = -302528028
-45 let y2_4(0,1) = 174097272
-46 let d1n1_3(1) = 310033384
-47 let q6_1(1,4) = -108283620
-48 d1n1_3(3) = 425324924
-49 let x4_0(0,4) = 305452419
-50 assert x4_0(0,0) = -375938555
-51 assert x4_0(0,1) = 439261467
-52 assert x4_0(0,2) = 0
-53 assert x4_0(0,3) = 0
-54 assert x4_0(0,4) = 305452419
-55 assert x4_0(0,5) = -100414887
-56 assert x4_0(0,6) = 0
-57 assert x4_0(1,0) = 0
-58 assert x4_0(1,1) = 0
-59 assert x4_0(1,2) = -28605283
-60 assert x4_0(1,3) = 0
-61 assert x4_0(1,4) = 0
-62 assert x4_0(1,5) = 0
-63 assert x4_0(1,6) = 0
-64 assert x4_0(2,0) = -421094518
-65 assert x4_0(2,1) = -221023347
-66 assert x4_0(2,2) = -380194119
-67 assert x4_0(2,3) = 403540049
-68 assert x4_0(2,4) = 0
-69 assert x4_0(2,5) = 0
-70 assert x4_0(2,6) = 0
-71 assert x4_0(3,0) = 424048487
-72 assert x4_0(3,1) = -93409641
-73 assert x4_0(3,2) = 0
-74 assert x4_0(3,3) = 267278352
-75 assert x4_0(3,4) = 0
-76 assert x4_0(3,5) = 0
-77 assert x4_0(3,6) = 0
-78 assert q6_1(0,0) = 0
-79 assert q6_1(0,1) = 0
-80 assert q6_1(0,2) = 0
-81 assert q6_1(0,3) = 0
-82 assert q6_1(0,4) = 0
-83 assert q6_1(0,5) = 0
-84 assert q6_1(1,0) = 0
-85 assert q6_1(1,1) = 0
-86 assert q6_1(1,2) = -253661662
-87 assert q6_1(1,3) = 0
-88 assert q6_1(1,4) = -108283620
-89 assert q6_1(1,5) = 0
-90 assert q6_1(2,0) = 0
-91 assert q6_1(2,1) = 0
-92 assert q6_1(2,2) = 0
-93 assert q6_1(2,3) = -114136647
-94 assert q6_1(2,4) = 0
-95 assert q6_1(2,5) = 0
-96 assert q6_1(3,0) = 0
-97 assert q6_1(3,1) = 124551018
-98 assert q6_1(3,2) = 0
-99 assert q6_1(3,3) = 0
-100 assert q6_1(3,4) = 0
-101 assert q6_1(3,5) = 0
-102 assert q6_1(4,0) = 0
-103 assert q6_1(4,1) = 0
-104 assert q6_1(4,2) = 0
-105 assert q6_1(4,3) = -95883988
-106 assert q6_1(4,4) = 0
-107 assert q6_1(4,5) = 0
-108 assert C(0,0) = 0
-109 assert C(0,1) = 0
-110 assert C(0,2) = 0
-111 assert C(1,0) = 0
-112 assert C(1,1) = 0
-113 assert C(1,2) = 0
-114 assert C(2,0) = 0
-115 assert C(2,1) = 0
-116 assert C(2,2) = 0
-117 assert C(3,0) = 0
-118 assert C(3,1) = 0
-119 assert C(3,2) = 0
-120 assert C(4,0) = 0
-121 assert C(4,1) = 0
-122 assert C(4,2) = 0
-123 assert C(5,0) = -363345697
-124 assert C(5,1) = 0
-125 assert C(5,2) = 0
-126 assert d1n1_3(0) = 340963737
-127 assert d1n1_3(1) = 310033384
-128 assert d1n1_3(2) = 214097292
-129 assert d1n1_3(3) = 425324924
-130 assert y2_4(0,0) = 0
-131 assert y2_4(0,1) = 174097272
-132 assert y2_4(0,2) = 0
-133 assert y2_4(0,3) = 0
-134 assert y2_4(0,4) = 0
-135 assert y2_4(0,5) = 0
-136 assert y2_4(0,6) = 0
-137 assert y2_4(1,0) = 0
-138 assert y2_4(1,1) = 0
-139 assert y2_4(1,2) = 0
-140 assert y2_4(1,3) = 0
-141 assert y2_4(1,4) = 0
-142 assert y2_4(1,5) = 0
-143 assert y2_4(1,6) = 0
-144 assert y2_4(2,0) = 0
-145 assert y2_4(2,1) = 0
-146 assert y2_4(2,2) = 0
-147 assert y2_4(2,3) = 0
-148 assert y2_4(2,4) = 0
-149 assert y2_4(2,5) = 0
-150 assert y2_4(2,6) = 0
-151 assert y2_4(3,0) = 0
-152 assert y2_4(3,1) = 0
-153 assert y2_4(3,2) = 0
-154 assert y2_4(3,3) = 0
-155 assert y2_4(3,4) = 0
-156 assert y2_4(3,5) = 0
-157 assert y2_4(3,6) = 0
-158 assert y2_4(4,0) = 0
-159 assert y2_4(4,1) = 0
-160 assert y2_4(4,2) = 0
-161 assert y2_4(4,3) = 0
-162 assert y2_4(4,4) = 0
-163 assert y2_4(4,5) = 0
-164 assert y2_4(4,6) = 119168493
-165 assert y2_4(5,0) = 0
-166 assert y2_4(5,1) = 0
-167 assert y2_4(5,2) = 0
-168 assert y2_4(5,3) = 0
-169 assert y2_4(5,4) = 0
-170 assert y2_4(5,5) = 0
-171 assert y2_4(5,6) = 0
-172 assert y2_4(6,0) = 0
-173 assert y2_4(6,1) = 0
-174 assert y2_4(6,2) = 0
-175 assert y2_4(6,3) = 0
-176 assert y2_4(6,4) = 0
-177 assert y2_4(6,5) = 0
-178 assert y2_4(6,6) = 0
-179 assert F(0,0) = -103580331
-180 assert F(0,1) = 0
-181 assert F(0,2) = 0
-182 assert F(0,3) = 0
-183 assert F(1,0) = -376503242
-184 assert F(1,1) = 0
-185 assert F(1,2) = 0
-186 assert F(1,3) = 0
-187 assert F(2,0) = -138459708
-188 assert F(2,1) = 0
-189 assert F(2,2) = 0
-190 assert F(2,3) = 0
-191 assert F(3,0) = 0
-192 assert F(3,1) = 0
-193 assert F(3,2) = 0
-194 assert F(3,3) = 0
-195 assert F(4,0) = 0
-196 assert F(4,1) = 0
-197 assert F(4,2) = 0
-198 assert F(4,3) = 0
-199 assert F(5,0) = 0
-200 assert F(5,1) = 0
-201 assert F(5,2) = 0
-202 assert F(5,3) = 0
-203 assert F(6,0) = 0
-204 assert F(6,1) = 0
-205 assert F(6,2) = 0
-206 assert F(6,3) = -302381812
-207 assert d0i1_6(0) = 0
-208 assert d0i1_6(1) = 0
-209 assert d0i1_6(2) = -211910390
-210 assert d0i1_6(3) = 0
-211 assert d0i1_6(4) = 0
-212 assert H(0) = 177337666
-213 assert H(1) = 0
-214 assert H(2) = 52770434
-215 call $ffff
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
+10 rem "This file is automatically generated"
+20 assemble $6000,1
+30 .start
+100 bcc start
+110 bcs start
+120 beq start
+130 bit #$89
+140 bit $05
+150 bit $0d0e
+160 bit $34, x
+170 bit $3c3c, x
+180 bmi start
+190 bne start
+200 bpl start
+210 bra start
+220 brk
+230 bvc start
+240 bvs start
+250 adc #$09
+260 adc $05
+270 adc $0d0e
+280 adc $15, x
+290 adc $1919, y
+300 adc $1d1e, x
+310 adc ($01,x)
+320 adc ($11), y
+330 adc ($12)
+340 and #$09
+350 and $05
+360 and $0d0e
+370 and $15, x
+380 and $1919, y
+390 and $1d1e, x
+400 and ($01,x)
+410 and ($11), y
+420 and ($12)
+430 asl
+440 asl $05
+450 asl $0d0e
+460 asl $15, x
+470 asl $1d1e, x
+480 clc
+490 cld
+500 cli
+510 clv
+520 cmp #$09
+530 cmp $05
+540 cmp $0d0e
+550 cmp $15, x
+560 cmp $1919, y
+570 cmp $1d1e, x
+580 cmp ($01,x)
+590 cmp ($11), y
+600 cmp ($12)
+610 cpx #$09
+620 cpx $05
+630 cpx $0d0e
+640 cpy #$09
+650 cpy $05
+660 cpy $0d0e
+670 dec
+680 dec $05
+690 dec $0d0e
+700 dec $15, x
+710 dec $1d1e, x
+720 dex
+730 dey
+740 eor #$09
+750 eor $05
+760 eor $0d0e
+770 eor $15, x
+780 eor $1919, y
+790 eor $1d1e, x
+800 eor ($01,x)
+810 eor ($11), y
+820 eor ($12)
+830 inc
+840 inc $05
+850 inc $0d0e
+860 inc $15, x
+870 inc $1d1e, x
+880 inx
+890 iny
+900 jmp $0d0e
+910 jmp ($6c6c)
+920 jmp ($7c7c,x)
+930 jsr $0d0e
+940 lda #$09
+950 lda $05
+960 lda $0d0e
+970 lda $15, x
+980 lda $1919, y
+990 lda $1d1e, x
+1000 lda ($01,x)
+1010 lda ($11), y
+1020 lda ($12)
+1030 ldx #$09
+1040 ldx $05
+1050 ldx $0d0e
+1060 ldx $1919, y
+1070 ldx $96, y
+1080 ldy #$09
+1090 ldy $05
+1100 ldy $0d0e
+1110 ldy $15, x
+1120 ldy $1d1e, x
+1130 lsr
+1140 lsr $05
+1150 lsr $0d0e
+1160 lsr $15, x
+1170 lsr $1d1e, x
+1180 nop
+1190 ora #$09
+1200 ora $05
+1210 ora $0d0e
+1220 ora $15, x
+1230 ora $1919, y
+1240 ora $1d1e, x
+1250 ora ($01,x)
+1260 ora ($11), y
+1270 ora ($12)
+1280 pha
+1290 php
+1300 phx
+1310 phy
+1320 pla
+1330 plp
+1340 plx
+1350 ply
+1360 rol
+1370 rol $05
+1380 rol $0d0e
+1390 rol $15, x
+1400 rol $1d1e, x
+1410 ror
+1420 ror $05
+1430 ror $0d0e
+1440 ror $15, x
+1450 ror $1d1e, x
+1460 rti
+1470 rts
+1480 sbc #$09
+1490 sbc $05
+1500 sbc $0d0e
+1510 sbc $15, x
+1520 sbc $1919, y
+1530 sbc $1d1e, x
+1540 sbc ($01,x)
+1550 sbc ($11), y
+1560 sbc ($12)
+1570 sec
+1580 sed
+1590 sei
+1600 sta $05
+1610 sta $0d0e
+1620 sta $15, x
+1630 sta $1919, y
+1640 sta $1d1e, x
+1650 sta ($01,x)
+1660 sta ($11), y
+1670 sta ($12)
+1680 stx $05
+1690 stx $0d0e
+1700 stx $96, y
+1710 sty $05
+1720 sty $0d0e
+1730 sty $15, x
+1740 stz $04
+1750 stz $0c0c
+1760 stz $34, x
+1770 stz $3c3c, x
+1780 tax
+1790 tay
+1800 trb $04
+1810 trb $0c0c
+1820 tsb $04
+1830 tsb $0c0c
+1840 tsx
+1850 txa
+1860 txs
+1870 tya
+10000 call $FFFF����
