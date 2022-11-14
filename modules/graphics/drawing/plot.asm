@@ -1,9 +1,9 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		00start.asm
-;		Purpose:	Start up code.
-;		Created:	18th September 2022
+;		Name:		plot.asm
+;		Purpose:	Plot point
+;		Created:	11th October 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
@@ -12,36 +12,22 @@
 
 		.section code
 
-Start:	ldx 	#$FF 						; stack reset
-		txs	
-		jsr 	EXTInitialise 				; hardware initialise
+; ************************************************************************************************
+;
+;									Draw Point
+;
+; ************************************************************************************************
 
-		lda 	#0 							; graphics system initialise.
-		txa
-		tay
-		jsr 	GXGraphicDraw
-
-		ldx 	#(Prompt >> 8) 				; prompt
-		lda 	#(Prompt & $FF)
-		jsr 	PrintStringXA
-		;
-		; jsr 	RunDemos
-		;
-		jsr 	NewCommand 					; erase current program
-		jsr 	BackloadProgram
-
-		.if 	AUTORUN==1 					; run straight off
-		jmp 	CommandRun
-		.else
-		jmp 	WarmStart
-		.endif
-
-Prompt:	.text 	13,13,"*** F256 Junior SuperBASIC ***",13,13
-		.text 	"Written by Paul Robson 2022.",13,13
-		.include "../generated/timestamp.asm"
-		.byte 	13,13,0
-
-		.include "../../../modules/build/_graphics.module"
+GXPlotPoint: ;; [40:Plot]
+		jsr 	GXOpenBitmap 				; start drawing
+		jsr 	GXPositionCalc 				; setup gxzScreen, gsOffset and the position.
+		ldy 	gsOffset
+		lda 	(gxzScreen),y 					; set pixel on the right
+		.plotpixel
+		sta 	(gxzScreen),y
+		jsr 	GXCloseBitmap 				; stop drawing and exit
+		clc
+		rts
 
 		.send code
 

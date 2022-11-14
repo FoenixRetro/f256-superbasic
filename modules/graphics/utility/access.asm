@@ -1,8 +1,8 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		grtest.asm
-;		Purpose:	Graphics test code.
+;		Name:		access.asm
+;		Purpose:	Lock/Unlock bitmap access
 ;		Created:	6th October 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
@@ -11,52 +11,32 @@
 ; ************************************************************************************************
 
 		.section code
-RunDemos:	
 
+; ************************************************************************************************
+;
+;							Set up ready to access the bitmap
+;
+; ************************************************************************************************
 
-plot:	.macro
-		lda 	#((\1)*2)+(((\2) >> 8) & 1)		
-		ldx 	#((\2) & $FF)
-		ldy 	#(\3)
-		jsr 	GXGraphicDraw
-		.endm
-		
-loop:	
-		.plot 	0,1,0
-		.plot 	1,1,0
-		.plot 	2,$03,0
-		.plot 	3,$FF,0
-		.plot 	24,130,30
-		.plot 	4,'Q',1*8
-		.plot 	4,'X',1*8
-		.plot 	5,0,1*8
-		.plot 	5,1,1*8
-		.plot 	5,2,1*8
-		.plot 	16,10,10
-		.plot 	20,100,100
-
-		.plot 	6,3,1
-		.plot 	7,2,0
-		.plot   25,200,200
-
-		.plot 	6,4,1
-		.plot 	7,1,0
-		.plot   25,100,200
-
-		.plot 	6,5,1
-		.plot 	7,0,0
-		.plot   25,50,200
+GXOpenBitmap:
+		sei 								; no interrupts here
+		lda 	GXEditSlot 					; Save the original LUT slot value
+		sta 	gxOriginalLUTValue
+		cli
 		rts
 
-demo:	jsr 	Random32Bit 
-		inc 	gxEORValue
-		lda 	#24*2
-		ldx 	RandomSeed+0
-		ldy 	RandomSeed+1
-		jsr 	GXGraphicDraw
+; ************************************************************************************************
+;
+;							Tidy up after accessing the bitmap
+;
+; ************************************************************************************************
 
-		bra 	demo
-
+GXCloseBitmap:
+		sei
+		lda 	gxOriginalLUTValue 			; restore LUT slot value
+		sta 	GXEditSlot
+		cli
+		rts
 
 		.send code
 
