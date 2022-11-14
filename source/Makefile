@@ -48,10 +48,11 @@ testbasic:prelim
 #
 go : basic 
 	python scripts$(S)checkload.py
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address F000
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)lockout.rom --address F000
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)graphics.bin --address 30000
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 3000
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary basic.rom --address 8000
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address F000
 #
 #		Create sprites
 #
@@ -70,6 +71,7 @@ fnxmgr:
 monitor:
 	make -B -C $(KRN_REPO)
 	$(CCOPY) $(KRN_REPO)$(S)monitor.rom $(BINDIR)
+	$(CCOPY) $(KRN_REPO)$(S)lockout.rom $(BINDIR)
 
 emu:
 	make -B -C $(EMU_REPO)
