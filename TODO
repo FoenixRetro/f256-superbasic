@@ -1,4 +1,5 @@
 Progress:
+	Running solarfox then demo can cause a crash ???	
 	check tokeniser for modularity.
 	complete the console driver & keyboard input.
 	sound write a driver
