@@ -74,15 +74,15 @@ VectorSet0:
 	.word	AllocUnary                       ; $84 ALLOC(
 	.word	AscUnary                         ; $85 ASC(
 	.word	ChrUnary                         ; $86 CHR$(
-	.word	UnaryEvent                       ; $87 EVENT(
+	.word	SyntaxError                      ; $87 EVENT(
 	.word	UnaryFalse                       ; $88 FALSE
 	.word	FracUnary                        ; $89 FRAC(
-	.word	UnaryHit                         ; $8a HIT(
+	.word	SyntaxError                      ; $8a HIT(
 	.word	IntUnary                         ; $8b INT(
 	.word	IsValUnary                       ; $8c ISVAL(
-	.word	UnaryJoyB                        ; $8d JOYB(
-	.word	UnaryJoyX                        ; $8e JOYX(
-	.word	UnaryJoyY                        ; $8f JOYY(
+	.word	SyntaxError                      ; $8d JOYB(
+	.word	SyntaxError                      ; $8e JOYX(
+	.word	SyntaxError                      ; $8f JOYY(
 	.word	Unary_Left                       ; $90 LEFT$(
 	.word	LenUnary                         ; $91 LEN(
 	.word	Unary_Max                        ; $92 MAX(
@@ -95,7 +95,7 @@ VectorSet0:
 	.word	SgnUnary                         ; $99 SGN(
 	.word	SpcUnary                         ; $9a SPC(
 	.word	Unary_Str                        ; $9b STR$(
-	.word	UnaryTimer                       ; $9c TIMER(
+	.word	SyntaxError                      ; $9c TIMER(
 	.word	UnaryTrue                        ; $9d TRUE
 	.word	ValUnary                         ; $9e VAL(
 	.word	ForCommand                       ; $9f FOR
@@ -111,9 +111,9 @@ VectorSet0:
 	.word	Command_WEND                     ; $a9 WEND
 	.word	SyntaxError                      ; $aa BY
 	.word	CallCommand                      ; $ab CALL
-	.word	CircleCommand                    ; $ac CIRCLE
+	.word	SyntaxError                      ; $ac CIRCLE
 	.word	ClearCommand                     ; $ad CLEAR
-	.word	ClearScreen                      ; $ae CLS
+	.word	SyntaxError                      ; $ae CLS
 	.word	SyntaxError                      ; $af COLOR
 	.word	SyntaxError                      ; $b0 COLOUR
 	.word	Command_Data                     ; $b1 DATA
@@ -121,27 +121,27 @@ VectorSet0:
 	.word	Unused3                          ; $b3 DOWNTO
 	.word	ElseCode                         ; $b4 ELSE
 	.word	SyntaxError                      ; $b5 FROM
-	.word	GfxCommand                       ; $b6 GFX
+	.word	SyntaxError                      ; $b6 GFX
 	.word	Command_GOSUB                    ; $b7 GOSUB
 	.word	GotoCommand                      ; $b8 GOTO
 	.word	SyntaxError                      ; $b9 HERE
-	.word	ImageCommand                     ; $ba IMAGE
+	.word	SyntaxError                      ; $ba IMAGE
 	.word	LetCommand                       ; $bb LET
-	.word	LineCommand                      ; $bc LINE
+	.word	SyntaxError                      ; $bc LINE
 	.word	Command_LOCAL                    ; $bd LOCAL
 	.word	SyntaxError                      ; $be OFF
 	.word	SyntaxError                      ; $bf ON
 	.word	SyntaxError                      ; $c0 OUTLINE
-	.word	PaletteCommand                   ; $c1 PALETTE
-	.word	PlotCommand                      ; $c2 PLOT
+	.word	SyntaxError                      ; $c1 PALETTE
+	.word	SyntaxError                      ; $c2 PLOT
 	.word	Command_Print                    ; $c3 PRINT
 	.word	Command_Read                     ; $c4 READ
-	.word	RectangleCommand                 ; $c5 RECT
+	.word	SyntaxError                      ; $c5 RECT
 	.word	RemCommand                       ; $c6 REM
 	.word	Command_RETURN                   ; $c7 RETURN
 	.word	SyntaxError                      ; $c8 SOLID
-	.word	SpriteCommand                    ; $c9 SPRITE
-	.word	TextCommand                      ; $ca TEXT
+	.word	SyntaxError                      ; $c9 SPRITE
+	.word	SyntaxError                      ; $ca TEXT
 	.word	Unused2                          ; $cb TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
@@ -149,13 +149,13 @@ VectorSet1:
 	.word	SyntaxError                      ; $82 !2:SH2
 	.word	AssembleCommand                  ; $83 ASSEMBLE
 	.word	AssertCommand                    ; $84 ASSERT
-	.word	BitmapCtrl                       ; $85 BITMAP
+	.word	SyntaxError                      ; $85 BITMAP
 	.word	EndCommand                       ; $86 END
 	.word	Command_List                     ; $87 LIST
 	.word	NewCommand                       ; $88 NEW
 	.word	Command_Restore                  ; $89 RESTORE
 	.word	CommandRUN                       ; $8a RUN
-	.word	SpritesCtrl                      ; $8b SPRITES
+	.word	SyntaxError                      ; $8b SPRITES
 	.word	StopCommand                      ; $8c STOP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF

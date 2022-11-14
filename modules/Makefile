@@ -18,5 +18,8 @@ endif
 all:
 	make -C graphics
 	python _scripts$(S)makebuild.py graphics >_build$(S)_graphics.module
+
 	$(CCOPY) ..$(S)source$(S)common$(S)generated$(S)kwdtext.dat tokeniser$(S)__kwdtext.asm
 	python _scripts$(S)makebuild.py tokeniser >_build$(S)_tokeniser.module
+
+	python _scripts$(S)makebuild.py hardware >_build$(S)_hardware.module	
