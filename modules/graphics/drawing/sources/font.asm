@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-GXFontHandler: ;; [5:DrawFont]
+GXFontHandler: ;; <5:DrawFont>
 		lda 	gxzTemp0+1 					; eor with mode
 		eor 	gxMode
 		sta 	gxUseMode

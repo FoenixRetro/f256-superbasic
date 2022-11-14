@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-GXInitialise: ;; [0:Initialise]
+GXInitialise: ;; <0:Initialise>
 		stz 	1
 		lda 	#1
 		sta 	$D000
@@ -39,7 +39,7 @@ _GXIClear:
 ;
 ; ************************************************************************************************
 
-GXControlBitmap: ;; [1:BitmapCtl]
+GXControlBitmap: ;; <1:BitmapCtl>
 		stz 	1
 		
 		lda 	gxzTemp0 					; get control bits
@@ -87,7 +87,7 @@ _CBHaveHeight
 ;
 ; ************************************************************************************************
 
-GXControlSprite: ;; [2:SpriteCtl]
+GXControlSprite: ;; <2:SpriteCtl>
 		stz 	1
 		lda 	gxzTemp0 					; get control bits
 		and 	#1 							; set sprites flag

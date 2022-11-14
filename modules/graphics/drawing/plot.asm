@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-GXPlotPoint: ;; [40:Plot]
+GXPlotPoint: ;; <40:Plot>
 		jsr 	GXOpenBitmap 				; start drawing
 		jsr 	GXPositionCalc 				; setup gxzScreen, gsOffset and the position.
 		ldy 	gsOffset

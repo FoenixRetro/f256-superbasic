@@ -18,10 +18,10 @@
 ;
 ; ************************************************************************************************
 
-GXFillCircle: ;; [37:FillCircle]
+GXFillCircle: ;; <37:FillCircle>
 		lda 	#255
 		bra 	GXCircle
-GXFrameCircle: ;; [36:FrameCircle]
+GXFrameCircle: ;; <36:FrameCircle>
 		lda 	#0
 GXCircle:		
 		sta 	gxIsFillMode					; save Fill flag 

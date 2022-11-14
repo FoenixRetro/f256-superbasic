@@ -340,7 +340,7 @@ _GDExecuteA:
 		tax
 		jmp 	(GRVectorTable,x)
 
-GXMove: ;; [32:Move]
+GXMove: ;; <32:Move>
 		clc
 		rts
 
@@ -390,10 +390,10 @@ GRUndefined:
 ;
 ; ************************************************************************************************
 
-GXFillCircle: ;; [37:FillCircle]
+GXFillCircle: ;; <37:FillCircle>
 		lda 	#255
 		bra 	GXCircle
-GXFrameCircle: ;; [36:FrameCircle]
+GXFrameCircle: ;; <36:FrameCircle>
 		lda 	#0
 GXCircle:
 		sta 	gxIsFillMode					; save Fill flag
@@ -679,7 +679,7 @@ ScreenSize240 = 320 * 240
 ;
 ; ************************************************************************************************
 
-GXClearBitmap: ;; [3:Clear]
+GXClearBitmap: ;; <3:Clear>
 		lda 	gxBitmapsOn 				; check BMP running.
 		beq 	_GXCBFail
 		jsr 	GXOpenBitmap 				; start access
@@ -762,7 +762,7 @@ _GXCB1:
 ;
 ; ************************************************************************************************
 
-GXInitialise: ;; [0:Initialise]
+GXInitialise: ;; <0:Initialise>
 		stz 	1
 		lda 	#1
 		sta 	$D000
@@ -783,7 +783,7 @@ _GXIClear:
 ;
 ; ************************************************************************************************
 
-GXControlBitmap: ;; [1:BitmapCtl]
+GXControlBitmap: ;; <1:BitmapCtl>
 		stz 	1
 
 		lda 	gxzTemp0 					; get control bits
@@ -831,7 +831,7 @@ _CBHaveHeight
 ;
 ; ************************************************************************************************
 
-GXControlSprite: ;; [2:SpriteCtl]
+GXControlSprite: ;; <2:SpriteCtl>
 		stz 	1
 		lda 	gxzTemp0 					; get control bits
 		and 	#1 							; set sprites flag
@@ -933,7 +933,7 @@ _GXCSSLoop:
 ;
 ; ************************************************************************************************
 
-GXLine: ;; [33:Line]
+GXLine: ;; <33:Line>
 		lda 	GXBitmapsOn
 		beq 	_GXLFail
 		jsr 	GXOpenBitmap
@@ -1202,7 +1202,7 @@ GXAddSelect:
 ;
 ; ************************************************************************************************
 
-GXSetColourMode: ;; [4:Colour]
+GXSetColourMode: ;; <4:Colour>
 		ldx 	gxzTemp0
 		stx 	gxColour 								; set colour
 		lda 	gxzTemp0+1 								;
@@ -1273,7 +1273,7 @@ _GXSDCNoFlip:
 ;
 ; ************************************************************************************************
 
-GXPlotPoint: ;; [40:Plot]
+GXPlotPoint: ;; <40:Plot>
 		jsr 	GXOpenBitmap 				; start drawing
 		jsr 	GXPositionCalc 				; setup gxzScreen, gsOffset and the position.
 		ldy 	gsOffset
@@ -1316,10 +1316,10 @@ GXPlotPoint: ;; [40:Plot]
 ;
 ; ************************************************************************************************
 
-GXFillRectangle: ;; [35:FillRect]
+GXFillRectangle: ;; <35:FillRect>
 		sec
 		bra 	GXRectangle
-GXFrameRectangle: ;; [34:FrameRect]
+GXFrameRectangle: ;; <34:FrameRect>
 		clc
 GXRectangle:
 		lda 	gxBitmapsOn
@@ -1659,7 +1659,7 @@ gxUseMode:
 ;
 ; ************************************************************************************************
 
-GXFontHandler: ;; [5:DrawFont]
+GXFontHandler: ;; <5:DrawFont>
 		lda 	gxzTemp0+1 					; eor with mode
 		eor 	gxMode
 		sta 	gxUseMode
@@ -1739,7 +1739,7 @@ _GXNoPixel:
 ;
 ; ************************************************************************************************
 
-GXSpriteHandler: ;; [6:DrawSprite]
+GXSpriteHandler: ;; <6:DrawSprite>
 		lda 	gxzTemp0+1 					; eor with mode
 		eor 	gxMode
 		sta 	gxUseMode
@@ -1849,7 +1849,7 @@ _GXSACopyLoop:
 ;
 ; ************************************************************************************************
 
-GXSelect: ;; [7:SpriteUse]
+GXSelect: ;; <7:SpriteUse>
 		lda 	gxSpritesOn
 		beq 	_GXSFail
 
@@ -1882,7 +1882,7 @@ _GXSFail:
 ;
 ; ************************************************************************************************
 
-GXSelectImage: ;; [8:SpriteImage]
+GXSelectImage: ;; <8:SpriteImage>
 		lda 	gxSpritesOn
 		beq 	_GXSIFail
 
@@ -1977,7 +1977,7 @@ _GXSIHide:
 ;
 ; ************************************************************************************************
 
-GXMoveSprite: ;; [41:SpriteMove]
+GXMoveSprite: ;; <41:SpriteMove>
 		lda 	gxSpritesOn
 		beq 	_GXSIFail
 
@@ -2245,7 +2245,7 @@ _GXMPDExit:
 ;
 ; ************************************************************************************************
 
-GXCollide: 	;; [9:SpriteCollide]
+GXCollide: 	;; <9:SpriteCollide>
 		lda 	gxzTemp0 					; check if sprite numbers are legal.
 		tax
 		ora 	gxzTemp0+1

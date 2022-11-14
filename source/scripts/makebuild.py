@@ -34,6 +34,9 @@ for root,dirs,files in os.walk("."): 														# scan for directories
 includeFiles.sort(key = lambda k:sortKey(k))
 sourceFiles.sort(key = lambda k:sortKey(k))
 
+for s in sys.argv[1:]:
+	sourceFiles.append("../modules/_build/{0}.module".format(s))
+
 #
 #		Create the composite file to build the whole thing.
 #

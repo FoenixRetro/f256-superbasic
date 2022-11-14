@@ -298,7 +298,7 @@ class TokenCollection(object):
 			if f1.strip() != "" and not f1.startswith(";"):
 				f = f1.split('"')[1]
 				for s in open(f).readlines():
-					if s.find(";;") > 0:
+					if s.find(";;") > 0 and s.find("[") > 0:
 						m = re.match("^(.*?)\\:\\s*\\;\\;\\s*\\[(.*?)\\]",s)
 						assert m is not None,"Bad line "+m
 						word = m.group(2).strip().upper()

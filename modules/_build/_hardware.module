@@ -925,6 +925,312 @@ TimerToStackX:
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
+;		Name:		charout.asm
+;		Purpose:	Output character
+;		Created:	14th November 2022
+;		Reviewed: 	No
+;		Author:		Paul Robson (paul@robsons.org.uk)
+;
+; ************************************************************************************************
+; ************************************************************************************************
+
+		.section code
+
+; ************************************************************************************************
+;
+;									Output Character A
+;
+;		control+'a'  ($01)  begin
+;		control+'b'  ($02)  left
+;		control+'e'  ($05)  end
+;		control+'f'  ($06)  right
+;		control+'h'  ($08)  backspace
+;		control+'i'  ($09)  tab
+;		control+'l'  ($0C)  ff
+;		control+'m'  ($0D)  cr
+;		control+'n'  ($0E)  down
+;		control+'p'  ($10)  up
+;					  $8x 	set background
+;					  $9x 	set foreground
+;
+; ************************************************************************************************
+
+EXTPrintCharacter:
+		pha
+		phx
+		phy
+
+		ldx 	1
+		phx
+
+		ldy 	EXTColumn 					; Y = Row, e.g. points to character.
+
+		ora 	#$00 						; check $80-$FF
+		bmi 	_EXPCColour
+		cmp 	#$20 						; check $00-$1F
+		bcc 	_EXPCControl
+		;
+		;		Handle character.
+		;
+		ldx 	#2 							; select char memory
+		stx 	1
+		sta 	(EXTAddress),y
+		inc 	1 							; select colour memory
+		lda 	EXTTextColour
+		sta 	(EXTAddress),y
+		;
+		;		Move right one.
+		;
+_EXPCRight:
+		iny 								; advance horizontal position
+		sty 	EXTColumn
+		cpy 	EXTScreenWidth 				; reached RHS ?
+		bcc 	_EXPCExit 					; no, then exit.
+		;
+		;		Carriage return.
+		;
+_EXPCCRLF:
+		stz 	EXTColumn 					; back to column 0
+		inc 	EXTRow  					; bump row
+		lda 	EXTRow 						; check if reached the bottom ?
+		cmp 	EXTScreenHeight 			; if so, then scroll.
+		beq 	_EXPCScroll
+		;
+		clc 								; add width to address.
+		lda 	EXTAddress
+		adc 	EXTScreenWidth
+		sta 	EXTAddress
+		bcc 	_EXPCExit
+		inc 	EXTAddress+1
+		bra 	_EXPCExit
+		;
+		;		Scroll screen up, blank line.
+		;
+_EXPCScroll:
+		dec 	EXTRow 						; the height-1 th line.
+		jsr 	EXTScreenScroll 			; scroll the screen
+		bra 	_EXPCExit
+		;
+		;		Set FGR/BGR colour
+		;
+_EXPCColour:
+		;
+		;		Handle control characters.
+		;
+_EXPCControl:
+		cmp 	#$11 						; only handle 00-10.
+		bcs 	_EXPCExit
+		asl 	a 							; double into X
+		tax
+		jmp 	(_EXPCActionTable,x) 		; and execute code.
+		;
+		;		Exit
+		;
+_EXPCExit:
+		jsr 	EXTSetHardwareCursor 		; place the physical cursor.
+		pla
+		sta 	1
+		ply
+		plx
+		pla
+		rts
+
+_EXPCClearScreen:
+		jsr		EXTClearScreenCode
+		bra 	_EXPCExit
+
+_EXPCActionTable:
+		.word 	_EXPCExit 					; 00 Nothing
+		.word 	_EXPCExit 					; 01
+		.word 	_EXPCExit 					; 02
+		.word 	_EXPCExit 					; 03 Nothing
+		.word 	_EXPCExit 					; 04 Nothing
+		.word 	_EXPCExit 					; 05
+		.word 	_EXPCExit 					; 06
+		.word 	_EXPCExit 					; 07 Nothing
+		.word 	_EXPCExit 					; 08
+		.word 	_EXPCExit 					; 09
+		.word 	_EXPCExit 					; 0A Nothing
+		.word 	_EXPCExit 					; 0B Nothing
+		.word 	_EXPCClearScreen			; 0C CLS
+		.word 	_EXPCCRLF 					; 0D CR/LF
+		.word 	_EXPCExit 					; 0E
+		.word 	_EXPCExit 					; 0F Nothing
+		.word 	_EXPCExit 					; 10
+
+EXTScreenScroll:
+		rts
+
+		.send code
+
+; ************************************************************************************************
+;
+;									Changes and Updates
+;
+; ************************************************************************************************
+;
+;		Date			Notes
+;		==== 			=====
+;
+; ************************************************************************************************
+; ************************************************************************************************
+; ************************************************************************************************
+;
+;		Name:		cls.asm
+;		Purpose:	Clear Screen
+;		Created:	14th November 2022
+;		Reviewed: 	No
+;		Author:		Paul Robson (paul@robsons.org.uk)
+;
+; ************************************************************************************************
+; ************************************************************************************************
+
+		.section code
+
+; ************************************************************************************************
+;
+;									Clear the display
+;
+; ************************************************************************************************
+
+EXTClearScreenCode:
+		;
+		lda 	#2 							; select text page
+		sta 	1
+		lda		#32 						; fill with space
+		jsr 	_EXTCSFill
+		inc 	1 							; select colour page
+		lda 	EXTTextColour
+		jsr 	_EXTCSFill
+		bra 	EXTHomeCursor
+		;
+		;		Fill all text memory C000-D2FF with A - page set by caller
+		;
+_EXTCSFill:
+		tax
+		lda 	#EXTMemory & $FF
+		sta 	EXTAddress
+		lda 	#EXTMemory >> 8
+		sta 	EXTAddress+1
+_EXTCSFill1:
+		ldy 	#0
+		txa
+_EXTCSFill2:
+		sta 	(EXTAddress),y
+		iny
+		bne 	_EXTCSFill2
+		inc 	EXTAddress+1
+		lda 	EXTAddress+1
+		cmp 	#$D2
+		bne 	_EXTCSFill1
+		txa
+_EXTCSFill3:
+		sta 	(EXTAddress),y
+		iny
+		cpy 	#$C0
+		bne 	_EXTCSFill3
+		rts
+
+; ************************************************************************************************
+;
+;									Home the cursor
+;
+; ************************************************************************************************
+
+EXTHomeCursor:
+		stz 	EXTRow 						; reset row & column
+		stz 	EXTColumn
+		lda 	#EXTMemory & $FF 			; set address
+		sta 	EXTAddress
+		lda 	#EXTMemory >> 8
+		sta 	EXTAddress+1
+
+; ************************************************************************************************
+;
+;									Position the cursor
+;
+; ************************************************************************************************
+
+EXTSetHardwareCursor:
+		stz 	1 							; I/O Page zero
+		lda 	#1+4 						; enable cursor
+		sta 	$D010
+		lda 	#$B1
+		sta 	$D012
+		lda 	EXTColumn
+		sta 	$D014 						; set cursor position
+		stz 	$D015
+		lda 	EXTRow
+		sta 	$D016
+		stz 	$D017
+		rts
+
+		.send code
+
+; ************************************************************************************************
+;
+;									Changes and Updates
+;
+; ************************************************************************************************
+;
+;		Date			Notes
+;		==== 			=====
+;
+; ************************************************************************************************
+; ************************************************************************************************
+; ************************************************************************************************
+;
+;		Name:		data.asm
+;		Purpose:	Console Data
+;		Created:	14th November 2022
+;		Reviewed: 	No
+;		Author:		Paul Robson (paul@robsons.org.uk)
+;
+; ************************************************************************************************
+; ************************************************************************************************
+
+		.section storage
+
+EXTMemory = $C000
+EXTTextPage = $02
+EXTColourPage = $03
+
+EXTDummySpace = 1 							; fake-space for CR character.
+EXTCBlack = 0
+
+EXTRow: 									; current row
+		.fill 	1
+EXTColumn: 									; current column
+		.fill 	1
+EXTTextColour: 								; current colour
+		.fill 	1
+EXTScreenWidth:	 							; screen size
+		.fill 	1
+EXTScreenHeight:
+		.fill 	1
+
+		.send storage
+
+		.section zeropage
+
+EXTAddress: 								; current address on screen of start of line.
+		.fill 	2
+
+		.send zeropage
+
+; ************************************************************************************************
+;
+;									Changes and Updates
+;
+; ************************************************************************************************
+;
+;		Date			Notes
+;		==== 			=====
+;
+; ************************************************************************************************
+; ************************************************************************************************
+; ************************************************************************************************
+;
 ;		Name:		extern.asm
 ;		Purpose:	External functions
 ;		Created:	29th September 2022
@@ -949,37 +1255,16 @@ EXTInitialise:
 		stz 	$D009
 		lda 	#1+8						; Timer On at 70Hz counting up.
 		sta 	$D658
-		rts
+		;
+		lda 	#$F2
+		sta 	EXTTextColour
+		;
+		lda 	#80 						; set screen dimensions.
+		sta 	EXTScreenWidth
+		lda 	#60
+		sta 	EXTScreenHeight
 
-; ************************************************************************************************
-;
-;										Clear Screen
-;
-; ************************************************************************************************
-
-EXTClearScreen:
-		jmp 	$FFEA
-
-; ************************************************************************************************
-;
-;								Print Character in A to display
-;
-;	Handles:
-;			8 		Backspace, if not far left
-;			9 		Tab spacing
-;			13 		CR/LF with scrolling if required
-;			32..127	Corresponding ASCII out.
-;
-; ************************************************************************************************
-
-EXTPrintCharacter:
-		pha
-		phx
-		phy
-		jsr 	$FFD2
-		ply
-		plx
-		pla
+		stz 	1
 		rts
 
 ; ************************************************************************************************
@@ -1017,7 +1302,8 @@ EXTInputLine:
 		ldx 	#0 							; position in line <- start of line
 _ILLoop:
 		phx 								; read character in
-		jsr 	$FFCF
+		jsr 	EXTInputSingleCharacter
+		jsr 	EXTPrintCharacter
 		plx
 		cmp 	#8 							; backspace, CBM doesn't need this.
 		beq 	_ILBackspace
@@ -1038,7 +1324,6 @@ _ILBackspace:
 		bra 	_ILLoop
 
 _ILExit:
-		jsr 	EXTPrintCharacter
 		stz 	lineBuffer,x 				; make ASCIIZ and exit with address in XA
 		rts
 

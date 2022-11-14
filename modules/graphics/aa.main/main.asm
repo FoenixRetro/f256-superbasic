@@ -92,7 +92,7 @@ _GDExecuteA:
 		tax
 		jmp 	(GRVectorTable,x)
 
-GXMove: ;; [32:Move]
+GXMove: ;; <32:Move>
 		clc
 		rts
 

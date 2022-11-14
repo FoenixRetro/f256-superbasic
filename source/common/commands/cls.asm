@@ -14,7 +14,8 @@
 
 ClearScreen: ;; [cls]
 		phy
-		jsr 	EXTClearScreen
+		lda 	#12
+		jsr 	EXTPrintCharacter
 		ply
 		rts
 		

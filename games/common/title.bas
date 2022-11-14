@@ -5,7 +5,7 @@ proc title(name$)
 bitmap on:bitmap clear 0:cls
 centre(210,1,$1F,"Press FIRE to Start")
 centre(120,1,$FC,"A Foenix F256 Demo Game in BASIC")
-centre(130,1,$F0,"Written by Paul Robson 2020")
+centre(130,1,$F0,"Written by Paul Robson 2022")
 n = 0
 while joyb(0) = 0
 	drawTitleAt(n$,n):n = (n + 1) & 7

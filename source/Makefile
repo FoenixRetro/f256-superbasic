@@ -27,6 +27,8 @@ EMU_REPO= ..$(S)..$(S)junior-emulator
 UTL_REPO= ..$(S)..$(S)junior-utilities
 KRN_REPO= ..$(S)..$(S)junior-tinykernel
 
+MODULES= _hardware _graphics _tokeniser
+
 START = $(EMULATOR) $(APPNAME)@8000 storage$(S)load.dat@3000 $(BINDIR)graphics.bin@30000
 # 3000 is hardcoded in backload.asm
 
@@ -98,7 +100,7 @@ prelim:
 	make -C ../modules
 	python $(SCRIPTDIR)errors.py $(LANGUAGE)
 	python $(SCRIPTDIR)opcodes.py >common$(S)generated$(S)asmcore.asm
-	python $(SCRIPTDIR)makebuild.py
+	python $(SCRIPTDIR)makebuild.py $(MODULES)
 	python $(SCRIPTDIR)tokens.py
 	python $(SCRIPTDIR)constants.py
 	python $(SCRIPTDIR)timestamp.py

@@ -32,7 +32,7 @@ highCode = 0
 for f in sourceFiles:
 	for s in open(f).readlines():
 		if s.find(";;") > 0:
-			m = re.match("^(.*?)\\:\\s*\\;\\;\\s*\\[(\\d+)\\:(.*?)\\]",s)
+			m = re.match("^(.*?)\\:\\s*\\;\\;\\s*\\<(\\d+)\\:(.*?)\\>",s)
 			assert m is not None,s+" bad"
 			n = int(m.group(2))
 			assert n not in codes,"Duplicate "+s

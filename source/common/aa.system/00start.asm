@@ -17,7 +17,7 @@ Start:	ldx 	#$FF 						; stack reset
 		jsr 	EXTInitialise 				; hardware initialise
 
 		lda 	#0 							; graphics system initialise.
-		txa
+		tax
 		tay
 		jsr 	GXGraphicDraw
 
@@ -34,7 +34,7 @@ Start:	ldx 	#$FF 						; stack reset
 		jmp 	WarmStart
 		.endif
 
-Prompt:	.text 	13,13,"*** F256 Junior SuperBASIC ***",13,13
+Prompt:	.text 	12,"*** F256 Junior SuperBASIC ***",13,13
 		.text 	"Written by Paul Robson 2022.",13,13
 		.include "../generated/timestamp.asm"
 		.byte 	13,13,0

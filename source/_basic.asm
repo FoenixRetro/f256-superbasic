@@ -105,4 +105,6 @@
 	.include	"./common/stack/setup.asm"
 	.include	"./common/strings/concrete.asm"
 	.include	"./common/strings/stringalloc.asm"
-	.include	"./modules/zzzend.asm"
+	.include	"../modules/_build/_hardware.module"
+	.include	"../modules/_build/_graphics.module"
+	.include	"../modules/_build/_tokeniser.module"

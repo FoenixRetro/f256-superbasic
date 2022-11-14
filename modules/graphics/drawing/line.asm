@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-GXLine: ;; [33:Line]
+GXLine: ;; <33:Line>
 		lda 	GXBitmapsOn
 		beq 	_GXLFail
 		jsr 	GXOpenBitmap

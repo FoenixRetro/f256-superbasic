@@ -1,8 +1,6 @@
 Progress:
-	Assembler:
-		asl lsr rol ror don't work without a parameter.
 	check tokeniser for modularity.
-	screen editor
+	complete the console driver & keyboard input.
 	sound write a driver
 	tiles ?
 	DMA ?

@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-GXSelect: ;; [7:SpriteUse]
+GXSelect: ;; <7:SpriteUse>
 		lda 	gxSpritesOn
 		beq 	_GXSFail
 
@@ -51,7 +51,7 @@ _GXSFail:
 ;
 ; ************************************************************************************************
 
-GXSelectImage: ;; [8:SpriteImage]
+GXSelectImage: ;; <8:SpriteImage>
 		lda 	gxSpritesOn
 		beq 	_GXSIFail
 
@@ -146,7 +146,7 @@ _GXSIHide:
 ;
 ; ************************************************************************************************		
 
-GXMoveSprite: ;; [41:SpriteMove]
+GXMoveSprite: ;; <41:SpriteMove>
 		lda 	gxSpritesOn
 		beq 	_GXSIFail
 

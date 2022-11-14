@@ -1,207 +1,207 @@
-1000 '
-1010 ' "Simplified Space Invaders Game"
-1020 '
-1030 title("Invaders"):cls:bitmap on:sprites on:bitmap clear 0
-1040 skillLevel = 0:score = 0:lives = 3
-1050 defineVariables():text "SCORE<1>" dim 1 colour $FF to 136,1
-1060 resetlevel():resetPlayer():displayScore()
-1070 repeat
-1080 if event(moveInvadersEvent,invaderSpeed) then moveInvaders()
-1090 if event(movePlayerEvent,3) then movePlayer():if yBullet >= 0 then moveBullet()
-1100 if event(moveMissileEvent,2) then moveMissile()
-1110 until lives = 0
-1120 end
-1130 '
-1140 ' "Display the score"
-1150 '
-1160 proc displayScore()
-1170 local a$:a$ = right$("00000"+str$(score),6)
-1180 text a$ dim 1 colour $FF,4 to 144,10
-1190 text "LIVES "+str$(lives) colour $1C,4 to 10,230
-1200 endproc
-1210 '
-1220 ' "Move the player"
-1230 '
-1240 proc movePlayer()
-1250 xPlayer = min(304,max(16,xPlayer+joyx(0)<<2))
-1260 sprite 63 image 6 to xPlayer,220
-1270 if joyb(0) & yBullet < 0 then xBullet = xPlayer:yBullet = 200
-1280 endproc
-1290 '
-1300 ' "Flash player for 2 seconds"
-1310 '
-1320 proc flashPlayer()
-1330 local tEnd:tEnd = timer()+70*2
-1340 repeat
-1350 if timer() & 8
-1360 sprite 63 image 6
-1370 else
-1380 sprite 63 off
-1390 endif
-1400 until timer() > tEnd
-1410 endproc
-1420 '
-1430 ' "Move the player bullet"
-1440 '
-1450 proc moveBullet()
-1460 local xo
-1470 yBullet = yBullet - 10
-1480 if yBullet < 0
-1490 sprite 62 off
-1500 else
-1510 sprite 62 image 11 to xBullet,yBullet
-1520 xo = xBullet - xInvaders + 8
-1530 if xo >= 0 & xo < 8*24 & xo % 24 < 16 then checkHit(xo \ 24)
-1540 endif
-1550 endproc
-1560 '
-1570 ' "Move current missile"
-1580 '
-1590 proc moveMissile()
-1600 local r
-1610 currentMissile = currentMissile + 1:if currentMissile > missileCount then currentMissile = 1
-1620 if yMissile(currentMissile) < 0
-1630 r = random(8)
-1640 if colHeight(r) > 0 & (random()& 3) = 0
-1650 xMissile(currentMissile) = xInvaders + 24 * r
-1660 yMissile(currentMissile) = yInvaders + 24 * colHeight(r) - 24
-1670 endif
-1680 else
-1690 yMissile(currentMissile) = yMissile(currentMissile) + 8
-1700 if yMissile(currentMissile) > 220
-1710 if abs(xMissile(currentMissile)-xPlayer) < 12
-1720 lives = lives - 1:displayScore()
-1730 flashPlayer()
-1740 if lives > 0 then resetLevel()
-1750 endif
-1760 sprite currentMissile+50 off
-1770 yMissile(currentMissile) = -1
-1780 else
-1790 sprite currentMissile+50 image 9 to xMissile(currentMissile),yMissile(currentMissile)
-1800 endif
-1810 endif
-1820 endproc
-1830 '
-1840 ' "Check if column hit"
-1850 '
-1860 proc checkHit(col)
-1870 yo = abs(yInvaders + (colHeight(col)-1)*24 - yBullet)
-1880 if yo < 12 & colHeight(col) <> 0
-1890 sprite col*5+colHeight(col)-1 off
-1900 sprite 61 image 7 to col*24+xInvaders,(colHeight(col)-1)*24+yInvaders
-1910 yBullet = -1:sprite 62 off
-1920 score = score+(6-colHeight(col))*10:displayScore()
-1930 colHeight(col) = colHeight(col)-1
-1940 invTotal = invTotal - 1
-1950 if invTotal > 0 & colHeight(col) = 0 then recalculateEdge()
-1960 if invTotal = 0
-1970 skillLevel = (skillLevel+1) % 10
-1980 resetlevel()
-1990 endif
-2000 recalculateSpeed()
-2010 endif
-2020 endproc
-2030 '
-2040 ' "Move invaders across/down"
-2050 '
-2060 proc moveInvaders()
-2070 xInvaders = xInvaders + xiInvaders
-2080 if xInvaders < leftEdge
-2090 xInvaders = leftEdge
-2100 yInvaders = yInvaders + abs(xiInvaders)
-2110 xiInvaders = -xiInvaders
-2120 endif
-2130 if xInvaders > rightEdge
-2140 xInvaders = rightEdge
-2150 yInvaders = yInvaders + abs(xiInvaders)
-2160 xiInvaders = -xiInvaders
-2170 endif
-2180 drawInvaders(xInvaders,yInvaders)
-2190 endproc
-2200 '
-2210 ' "Draw invaders sprites at correct position"
-2220 '
-2230 proc drawInvaders(xPos,yPos)
-2240 local x,y,s
-2250 altGraphic = 1 - altGraphic
-2260 for x = 0 to 7
-2270 s = x * 5
-2280 if colHeight(x) > 0
-2290 for y = 0 to colHeight(x)-1
-2300 sprite s image graphic(y)+altGraphic to xPos+x*24,yPos+y*24
-2310 s = s + 1
-2320 next
-2330 sprite 61 off
-2340 endif
-2350 next
-2360 endproc
-2370 '
-2380 ' "Set up variables"
-2390 '
-2400 proc defineVariables()
-2410 local i:missileCount = 4
-2420 dim colheight(7),graphic(4),xMissile(missileCount),yMissile(missileCount)
-2430 for i = 0 to 4:graphic(i) = i % 3 * 2:next:altGraphic = 0
-2440 endproc
-2450 '
-2460 ' "Reset the player"
-2470 '
-2480 proc resetPlayer()
-2490 xPlayer = 160:xBullet = 0:yBullet = -1
-2500 movePlayerEvent = 0
-2510 endproc
-2520 '
-2530 ' "Set up new level"
-2540 '
-2550 proc resetlevel()
-2560 local i
-2570 for i = 0 to 7:colHeight(i) = 5:next
-2580 for i = 1 to missileCount:yMissile(i) = -1:sprite i+50 off:next
-2590 invTotal = 5*8
-2600 xInvaders = 160-7*12:yInvaders = 26+skillLevel*8:xiInvaders = 8
-2610 drawInvaders(xInvaders,yInvaders)
-2620 invaderSpeed = 4+invTotal*2
-2630 moveInvadersEvent = 0:currentMissile = 0
-2640 recalculateEdge():recalculateSpeed()
-2650 endproc
-2660 '
-2670 ' "Recalaulate speed"
-2680 '
-2690 proc recalculateSpeed()
-2700 invaderSpeed = 2+invTotal*3\2
-2710 endproc
-2720 '
-2730 ' "Recalculate left/right edge"
-2740 '
-2750 proc recalculateEdge()
-2760 local i
-2770 leftEdge = 8
-2780 i = 0:while colHeight(i) = 0:i = i + 1:leftEdge = leftEdge-24:wend
-2790 rightEdge = 320-8-7*24
-2800 i = 7:while colHeight(i) = 0:i = i - 1:rightEdge = rightEdge+24:wend
-2810 endproc
-2820 '
-2830 ' "Simple title screen"
-2840 '
-2850 proc title(name$)
-2860 bitmap on:bitmap clear 0:cls
-2870 centre(210,1,$1F,"Press FIRE to Start")
-2880 centre(120,1,$FC,"A Foenix F256 Demo Game in BASIC")
-2890 centre(130,1,$F0,"Written by Paul Robson 2020")
-2900 n = 0
-2910 while joyb(0) = 0
-2920 drawTitleAt(n$,n):n = (n + 1) & 7
-2930 wend
-2940 while joyb(0) <> 0:wend
-2950 bitmap off
-2960 endproc
-2970 '
-2980 proc centre(y,size,c,msg$)
-2990 text msg$ dim size colour c to 160-len(msg$)*size*4,y
-3000 endproc
-3010 '
-3020 proc drawTitleAt(n$,offset)
-3030 text name$ colour random() & $FF dim 3 to 160-len(name$)*12+offset,32+offset
-3040 endproc
+1 '
+2 ' "Simplified Space Invaders Game"
+3 '
+4 title("Invaders"):cls:bitmap on:sprites on:bitmap clear 0
+5 skillLevel = 0:score = 0:lives = 3
+6 defineVariables():text "SCORE<1>" dim 1 colour $FF to 136,1
+7 resetlevel():resetPlayer():displayScore()
+8 repeat
+9 if event(moveInvadersEvent,invaderSpeed) then moveInvaders()
+10 if event(movePlayerEvent,3) then movePlayer():if yBullet >= 0 then moveBullet()
+11 if event(moveMissileEvent,2) then moveMissile()
+12 until lives = 0
+13 end
+14 '
+15 ' "Display the score"
+16 '
+17 proc displayScore()
+18 local a$:a$ = right$("00000"+str$(score),6)
+19 text a$ dim 1 colour $FF,4 to 144,10
+20 text "LIVES "+str$(lives) colour $1C,4 to 10,230
+21 endproc
+22 '
+23 ' "Move the player"
+24 '
+25 proc movePlayer()
+26 xPlayer = min(304,max(16,xPlayer+joyx(0)<<2))
+27 sprite 63 image 6 to xPlayer,220
+28 if joyb(0) & yBullet < 0 then xBullet = xPlayer:yBullet = 200
+29 endproc
+30 '
+31 ' "Flash player for 2 seconds"
+32 '
+33 proc flashPlayer()
+34 local tEnd:tEnd = timer()+70*2
+35 repeat
+36 if timer() & 8
+37 sprite 63 image 6
+38 else
+39 sprite 63 off
+40 endif
+41 until timer() > tEnd
+42 endproc
+43 '
+44 ' "Move the player bullet"
+45 '
+46 proc moveBullet()
+47 local xo
+48 yBullet = yBullet - 10
+49 if yBullet < 0
+50 sprite 62 off
+51 else
+52 sprite 62 image 11 to xBullet,yBullet
+53 xo = xBullet - xInvaders + 8
+54 if xo >= 0 & xo < 8*24 & xo % 24 < 16 then checkHit(xo \ 24)
+55 endif
+56 endproc
+57 '
+58 ' "Move current missile"
+59 '
+60 proc moveMissile()
+61 local r
+62 currentMissile = currentMissile + 1:if currentMissile > missileCount then currentMissile = 1
+63 if yMissile(currentMissile) < 0
+64 r = random(8)
+65 if colHeight(r) > 0 & (random()& 3) = 0
+66 xMissile(currentMissile) = xInvaders + 24 * r
+67 yMissile(currentMissile) = yInvaders + 24 * colHeight(r) - 24
+68 endif
+69 else
+70 yMissile(currentMissile) = yMissile(currentMissile) + 8
+71 if yMissile(currentMissile) > 220
+72 if abs(xMissile(currentMissile)-xPlayer) < 12
+73 lives = lives - 1:displayScore()
+74 flashPlayer()
+75 if lives > 0 then resetLevel()
+76 endif
+77 sprite currentMissile+50 off
+78 yMissile(currentMissile) = -1
+79 else
+80 sprite currentMissile+50 image 9 to xMissile(currentMissile),yMissile(currentMissile)
+81 endif
+82 endif
+83 endproc
+84 '
+85 ' "Check if column hit"
+86 '
+87 proc checkHit(col)
+88 yo = abs(yInvaders + (colHeight(col)-1)*24 - yBullet)
+89 if yo < 12 & colHeight(col) <> 0
+90 sprite col*5+colHeight(col)-1 off
+91 sprite 61 image 7 to col*24+xInvaders,(colHeight(col)-1)*24+yInvaders
+92 yBullet = -1:sprite 62 off
+93 score = score+(6-colHeight(col))*10:displayScore()
+94 colHeight(col) = colHeight(col)-1
+95 invTotal = invTotal - 1
+96 if invTotal > 0 & colHeight(col) = 0 then recalculateEdge()
+97 if invTotal = 0
+98 skillLevel = (skillLevel+1) % 10
+99 resetlevel()
+100 endif
+101 recalculateSpeed()
+102 endif
+103 endproc
+104 '
+105 ' "Move invaders across/down"
+106 '
+107 proc moveInvaders()
+108 xInvaders = xInvaders + xiInvaders
+109 if xInvaders < leftEdge
+110 xInvaders = leftEdge
+111 yInvaders = yInvaders + abs(xiInvaders)
+112 xiInvaders = -xiInvaders
+113 endif
+114 if xInvaders > rightEdge
+115 xInvaders = rightEdge
+116 yInvaders = yInvaders + abs(xiInvaders)
+117 xiInvaders = -xiInvaders
+118 endif
+119 drawInvaders(xInvaders,yInvaders)
+120 endproc
+121 '
+122 ' "Draw invaders sprites at correct position"
+123 '
+124 proc drawInvaders(xPos,yPos)
+125 local x,y,s
+126 altGraphic = 1 - altGraphic
+127 for x = 0 to 7
+128 s = x * 5
+129 if colHeight(x) > 0
+130 for y = 0 to colHeight(x)-1
+131 sprite s image graphic(y)+altGraphic to xPos+x*24,yPos+y*24
+132 s = s + 1
+133 next
+134 sprite 61 off
+135 endif
+136 next
+137 endproc
+138 '
+139 ' "Set up variables"
+140 '
+141 proc defineVariables()
+142 local i:missileCount = 4
+143 dim colheight(7),graphic(4),xMissile(missileCount),yMissile(missileCount)
+144 for i = 0 to 4:graphic(i) = i % 3 * 2:next:altGraphic = 0
+145 endproc
+146 '
+147 ' "Reset the player"
+148 '
+149 proc resetPlayer()
+150 xPlayer = 160:xBullet = 0:yBullet = -1
+151 movePlayerEvent = 0
+152 endproc
+153 '
+154 ' "Set up new level"
+155 '
+156 proc resetlevel()
+157 local i
+158 for i = 0 to 7:colHeight(i) = 5:next
+159 for i = 1 to missileCount:yMissile(i) = -1:sprite i+50 off:next
+160 invTotal = 5*8
+161 xInvaders = 160-7*12:yInvaders = 26+skillLevel*8:xiInvaders = 8
+162 drawInvaders(xInvaders,yInvaders)
+163 invaderSpeed = 4+invTotal*2
+164 moveInvadersEvent = 0:currentMissile = 0
+165 recalculateEdge():recalculateSpeed()
+166 endproc
+167 '
+168 ' "Recalaulate speed"
+169 '
+170 proc recalculateSpeed()
+171 invaderSpeed = 2+invTotal*3\2
+172 endproc
+173 '
+174 ' "Recalculate left/right edge"
+175 '
+176 proc recalculateEdge()
+177 local i
+178 leftEdge = 8
+179 i = 0:while colHeight(i) = 0:i = i + 1:leftEdge = leftEdge-24:wend
+180 rightEdge = 320-8-7*24
+181 i = 7:while colHeight(i) = 0:i = i - 1:rightEdge = rightEdge+24:wend
+182 endproc
+183 '
+184 ' "Simple title screen"
+185 '
+186 proc title(name$)
+187 bitmap on:bitmap clear 0:cls
+188 centre(210,1,$1F,"Press FIRE to Start")
+189 centre(120,1,$FC,"A Foenix F256 Demo Game in BASIC")
+190 centre(130,1,$F0,"Written by Paul Robson 2022")
+191 n = 0
+192 while joyb(0) = 0
+193 drawTitleAt(n$,n):n = (n + 1) & 7
+194 wend
+195 while joyb(0) <> 0:wend
+196 bitmap off
+197 endproc
+198 '
+199 proc centre(y,size,c,msg$)
+200 text msg$ dim size colour c to 160-len(msg$)*size*4,y
+201 endproc
+202 '
+203 proc drawTitleAt(n$,offset)
+204 text name$ colour random() & $FF dim 3 to 160-len(name$)*12+offset,32+offset
+205 endproc
 ÿÿÿÿ
 

@@ -25,38 +25,17 @@ EXTInitialise:
 		stz 	$D009
 		lda 	#1+8						; Timer On at 70Hz counting up.
 		sta 	$D658
-		rts
+		;
+		lda 	#$F2 	
+		sta 	EXTTextColour
+		;
+		lda 	#80 						; set screen dimensions.
+		sta 	EXTScreenWidth
+		lda 	#60
+		sta 	EXTScreenHeight
 
-; ************************************************************************************************
-;
-;										Clear Screen
-;
-; ************************************************************************************************
-				
-EXTClearScreen:
-		jmp 	$FFEA
-						
-; ************************************************************************************************
-;
-;								Print Character in A to display
-;
-;	Handles:
-;			8 		Backspace, if not far left
-;			9 		Tab spacing
-;			13 		CR/LF with scrolling if required
-;			32..127	Corresponding ASCII out.	
-;
-; ************************************************************************************************
-
-EXTPrintCharacter:
-		pha
-		phx
-		phy
-		jsr 	$FFD2
-		ply
-		plx
-		pla
-		rts
+		stz 	1
+		rts				
 
 ; ************************************************************************************************
 ;
@@ -93,7 +72,8 @@ EXTInputLine:
 		ldx 	#0 							; position in line <- start of line
 _ILLoop:		
 		phx 								; read character in
-		jsr 	$FFCF
+		jsr 	EXTInputSingleCharacter
+		jsr 	EXTPrintCharacter
 		plx
 		cmp 	#8 							; backspace, CBM doesn't need this.
 		beq 	_ILBackspace
@@ -114,7 +94,6 @@ _ILBackspace:
 		bra 	_ILLoop
 
 _ILExit:
-		jsr 	EXTPrintCharacter 	
 		stz 	lineBuffer,x 				; make ASCIIZ and exit with address in XA
 		rts
 
