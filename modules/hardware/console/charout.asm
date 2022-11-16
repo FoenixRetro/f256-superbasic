@@ -55,9 +55,6 @@ EXTPrintCharacter:
 		lda 	EXTTextColour
 		sta 	(EXTAddress),y
 		;
-		;		Move right one.
-		;
-_EXPCRight:
 		iny 								; advance horizontal position
 		sty 	EXTColumn		
 		cpy 	EXTScreenWidth 				; reached RHS ?
@@ -66,8 +63,8 @@ _EXPCRight:
 		;		Carriage return.
 		;
 _EXPCCRLF:		
+		inc 	EXTRow  					; bump row 		
 		stz 	EXTColumn 					; back to column 0
-		inc 	EXTRow  					; bump row 
 		lda 	EXTRow 						; check if reached the bottom ?
 		cmp 	EXTScreenHeight 			; if so, then scroll.
 		beq 	_EXPCScroll
@@ -79,6 +76,15 @@ _EXPCCRLF:
 		bcc 	_EXPCExit
 		inc 	EXTAddress+1
 		bra 	_EXPCExit
+		;
+		;		Move left / beginning of line.
+		;
+_EXPCLeft:
+		dec 	EXTColumn
+		bpl 	_EXPCExit
+_EXPCBegin:
+		stz 	EXTColumn
+		bra 	_EXPCExit		
 		;
 		;		Scroll screen up, blank line.
 		;
@@ -100,6 +106,32 @@ _EXPCControl:
 		tax
 		jmp 	(_EXPCActionTable,x) 		; and execute code.
 		;
+		;		Up
+		;
+_EXPCUp:
+		lda 	EXTRow 						; already at top ?
+		beq 	_EXPCExit		
+		dec 	EXTRow 						; up one in position/address
+		sec
+		lda 	EXTAddress
+		sbc 	EXTScreenWidth
+		sta 	EXTAddress
+		bcs 	_EXPCExit
+		dec 	EXTAddress+1
+		bra 	_EXPCExit
+		;
+		;		Right/End of line
+		;
+_EXPCRight:
+		iny 	
+		sty 	EXTColumn
+		cpy 	EXTScreenWidth		
+		bne 	_EXPCExit
+_EXPCEnd:
+		lda 	EXTScreenWidth
+		dec 	a
+		sta 	EXTColumn		
+		;
 		;		Exit
 		;
 _EXPCExit:		
@@ -110,29 +142,73 @@ _EXPCExit:
 		plx
 		pla
 		rts
-
+		;
+		;		Clear
+		;
 _EXPCClearScreen:
 		jsr		EXTClearScreenCode	
 		bra 	_EXPCExit
-
+		;
+		;		Down
+		;
+_EXPCDown:		
+		lda 	EXTScreenHeight 			; at the bottom
+		dec 	a
+		cmp 	EXTRow
+		beq 	_EXPCExit
+		inc 	EXTRow 						; down one in position/address
+		clc
+		lda 	EXTAddress
+		adc 	EXTScreenWidth
+		sta 	EXTAddress
+		bcc 	_EXPCExit
+		inc 	EXTAddress+1
+		bra 	_EXPCExit
+		;
+		;		Tab
+		;
+_EXPCTab:
+		lda 	EXTColumn 					; next tab stop
+		and 	#$F8
+		clc 	
+		adc 	#8
+		sta 	EXTColumn
+		cmp 	EXTScreenWidth 				; too far, stick end of line.
+		bcc 	_EXPCExit
+		bra 	_EXPCEnd
+		;
+		;		Backspace
+		;	
+_EXPCBackSpace:
+		dey
+		bmi 	_EXPCExit
+		dec 	EXTColumn
+		lda 	#2
+		sta 	1
+		lda 	#32
+		sta 	(EXTAddress),y
+		bra 	_EXPCExit
+		;
+		;		Vector table for CTRL+A to CTRL+P
+		;			
 _EXPCActionTable:
-		.word 	_EXPCExit 					; 00 Nothing
-		.word 	_EXPCExit 					; 01
-		.word 	_EXPCExit 					; 02
-		.word 	_EXPCExit 					; 03 Nothing
-		.word 	_EXPCExit 					; 04 Nothing
-		.word 	_EXPCExit 					; 05
-		.word 	_EXPCExit 					; 06
-		.word 	_EXPCExit 					; 07 Nothing
-		.word 	_EXPCExit 					; 08
-		.word 	_EXPCExit 					; 09
-		.word 	_EXPCExit 					; 0A Nothing
-		.word 	_EXPCExit 					; 0B Nothing
-		.word 	_EXPCClearScreen			; 0C CLS
-		.word 	_EXPCCRLF 					; 0D CR/LF
-		.word 	_EXPCExit 					; 0E
-		.word 	_EXPCExit 					; 0F Nothing
-		.word 	_EXPCExit 					; 10
+		.word 	_EXPCExit 					; 00 
+		.word 	_EXPCBegin 					; 01 A Start of Line
+		.word 	_EXPCLeft 					; 02 B Left
+		.word 	_EXPCExit 					; 03 <Break>
+		.word 	_EXPCExit 					; 04 
+		.word 	_EXPCEnd 					; 05 E End of Line
+		.word 	_EXPCRight 					; 06 F Right
+		.word 	_EXPCExit 					; 07 
+		.word 	_EXPCBackspace 				; 08 H Backspace
+		.word 	_EXPCTab 					; 09 I Tab
+		.word 	_EXPCExit 					; 0A 
+		.word 	_EXPCExit 					; 0B 
+		.word 	_EXPCClearScreen			; 0C L CLS
+		.word 	_EXPCCRLF 					; 0D M CR/LF
+		.word 	_EXPCDown 					; 0E N Down
+		.word 	_EXPCExit 					; 0F 
+		.word 	_EXPCUp 					; 10 P Up
 
 EXTScreenScroll:
 		lda 	#2 							; select text page

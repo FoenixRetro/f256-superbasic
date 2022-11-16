@@ -69,32 +69,9 @@ _EISCWait:
 ; ************************************************************************************************
 
 EXTInputLine:
-		ldx 	#0 							; position in line <- start of line
-_ILLoop:		
-		phx 								; read character in
-		jsr 	EXTInputSingleCharacter
-		jsr 	EXTPrintCharacter
-		plx
-		cmp 	#8 							; backspace, CBM doesn't need this.
-		beq 	_ILBackspace
-		cmp 	#13							; exit ?
-		beq 	_ILExit
-		cmp 	#32 						; ignore other control
-		bcc 	_ILLoop
-		cpx 	#MaxLineSize 				; already full buffer
-		beq 	_ILLoop
-		sta 	lineBuffer,x 				; save it
-		inx
-		bra 	_ILLoop
-
-_ILBackspace:
-		cpx 	#0  						; can't backspace, start of line.
-		beq 	_ILLoop		
-		dex 								; back one.
-		bra 	_ILLoop
-
-_ILExit:
-		stz 	lineBuffer,x 				; make ASCIIZ and exit with address in XA
+		jsr 	ExtInputSingleCharacter
+		jsr 	ExtPrintCharacter
+		bra 	EXTInputLine
 		rts
 
 ; ************************************************************************************************
