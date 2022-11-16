@@ -1,7 +1,9 @@
 Progress:
-	Running solarfox then demo can cause a crash ??? - lockout.rom fixes it ?
 	check tokeniser for modularity.
 	complete the console driver & keyboard input.
+		- add in remaining control characters
+		- line input code
+		
 	sound write a driver
 	tiles ?
 	DMA ?

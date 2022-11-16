@@ -135,6 +135,13 @@ _EXPCActionTable:
 		.word 	_EXPCExit 					; 10
 
 EXTScreenScroll:
+		lda 	#2 							; select text page
+		sta 	1
+		lda		#32 						; fill with space
+		jsr 	EXTScrollFill
+		inc 	1 							; select colour page
+		lda 	EXTTextColour
+		jsr 	EXTScrollFill
 		rts
 
 		.send code
