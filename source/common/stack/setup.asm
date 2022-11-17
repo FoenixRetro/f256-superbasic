@@ -4,7 +4,7 @@
 ;		Name:		setup.asm
 ;		Purpose:	Reset the BASIC stack
 ;		Created:	1st October 2022
-;		Reviewed: 	23rd August 2022
+;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************

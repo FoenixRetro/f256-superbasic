@@ -3,7 +3,7 @@
 ;
 ;		Name:		aswrite.asm
 ;		Purpose:	Write to memory / display maybe
-;		Created:	7th August 2022
+;		Created:	4th October 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;

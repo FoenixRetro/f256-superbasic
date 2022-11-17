@@ -3,7 +3,7 @@
 ;
 ;		Name : 		concat.asm
 ;		Author :	Paul Robson (paul@robsons.org.uk)
-;		Date : 		30th September 2022
+;		Created : 	30th September 2022
 ;		Reviewed :
 ;		Purpose :	String Concatenation
 ;

@@ -4,7 +4,7 @@
 ;		Name:		cls.asm
 ;		Purpose:	Clear Screen
 ;		Created:	13th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -14,7 +14,7 @@
 
 ClearScreen: ;; [cls]
 		phy
-		lda 	#12
+		lda 	#12 						; char code 12 clears the screen.
 		jsr 	EXTPrintCharacter
 		ply
 		rts

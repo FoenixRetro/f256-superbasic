@@ -3,7 +3,7 @@
 ;
 ;		Name : 		compare.asm
 ;		Author :	Paul Robson (paul@robsons.org.uk)
-;		Date : 		22nd September 2022
+;		Created : 	22nd September 2022
 ;		Reviewed :
 ;		Purpose :	Comparison code
 ;

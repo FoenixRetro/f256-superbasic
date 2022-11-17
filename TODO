@@ -4,6 +4,9 @@ Progress:
 	DMA ?
 	Not initialised flag on variables. ?
 	
+Ongoing:
+	Code reading.
+		
 Later:
 	Disable interrupts enable at end of line command ?
 	Changing Kerning ?

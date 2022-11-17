@@ -53,924 +53,6 @@ CLIData = CONWhite
 ;		==== 			=====
 ;
 ; ************************************************************************************************
-
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		gcommand.asm
-;		Purpose:	GFX Drawing Commands
-;		Created:	12th October 2022
-;		Reviewed: 	No
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
-
-		.section code
-
-; ************************************************************************************************
-;
-;									 Rectangles and Circles
-;
-; ************************************************************************************************
-
-RectangleCommand: 	;; [RECT]
-		lda 	#GCMD_FrameRect				; frame rectangle
-		bra 	ShapeDrawCmd
-CircleCommand: ;; [CIRCLE]
-		lda 	#GCMD_FrameCircle 				; framed circle
-ShapeDrawCmd:
-		jsr 	RunGraphicsCommand
-		;
-		;		Handle drawing command ()
-		;
-ShapeDraw:
-		ora 	gxFillSolid  				; adjust AXY for solid fill.
-		jmp 	ExecuteGraphicCommand	 	; and complete
-
-; ************************************************************************************************
-;
-;									 	Sprite
-;
-; ************************************************************************************************
-
-SpriteCommand: ;; [SPRITE]
-		ldx 	#0
-		jsr 	Evaluate8BitInteger 		; get image number.
-		phy
-		lda 	#GCMD_SpriteUse 			; use that image.
-		ldx 	NSMantissa0
-		cpx 	#64 						; 0-63 only
-		bcs 	_SCRange
-		ldy 	#255
-		jsr 	GXGraphicDraw
-		lda 	#GCMD_SpriteMove
-		ply
-		jsr 	RunGraphicsCommand
-		bra 	ExecuteGraphicCommand
-_SCRange:
-		jmp 	RangeError
-
-; ************************************************************************************************
-;
-;									 	Image
-;
-; ************************************************************************************************
-
-ImageCommand: ;; [IMAGE]
-		ldx 	#0
-		jsr 	Evaluate8BitInteger 		; get image number.
-		jsr 	RunGraphicsCommand
-ImageRunDraw:
-		ora 	#GCMD_Move					; move cursor
-		jsr 	GXGraphicDraw
-		lda 	gxDrawScale
-		asl 	a
-		asl 	a
-		asl 	a
-		tay
-		lda 	#GCMD_DrawSprite 			; image drawing
-		ldx 	NSMantissa0
-		jsr 	GXGraphicDraw
-		rts
-
-; ************************************************************************************************
-;
-;									 	Text
-;
-; ************************************************************************************************
-
-TextCommand: ;; [Text]
-		ldx 	#0
-		jsr 	EvaluateString 				; get text
-		jsr 	RunGraphicsCommand
-TextRunDraw:
-		ora 	#GCMD_Move 					; move cursor
-		jsr 	GXGraphicDraw
-		ldy 	#0
-_IRDLoop:
-		lda 	NSMantissa1 				; access character
-		sta 	zTemp0+1
-		lda 	NSMantissa0
-		sta 	zTemp0
-		lda 	(zTemp0),y
-		beq 	_IRDExit
-
-		phy									; save string pos
-		pha 								; save char
-		lda 	gxDrawScale 				; get scale
-		asl 	a
-		asl 	a
-		asl 	a
-		tay
-		lda 	#GCMD_DrawFont 				; char drawing
-		plx 								; char to draw
-		jsr 	GXGraphicDraw
-		ply 								; restore string pos
-		iny
-		bcc 	_IRDLoop 					; go back if no error.
-_IRDExit:
-		rts
-
-; ************************************************************************************************
-;
-;									 	  Plot Point
-;
-; ************************************************************************************************
-
-PlotCommand: ;; [PLOT]
-		lda 	#GCMD_Plot 					; command ID to use
-		jsr 	RunGraphicsCommand
-		bra 	ExecuteGraphicCommand
-
-; ************************************************************************************************
-;
-;									 		Line
-;
-; ************************************************************************************************
-
-LineCommand: ;; [LINE]
-		lda 	#GCMD_Line 						; command ID to use
-		jsr 	RunGraphicsCommand
-
-; ************************************************************************************************
-;
-;					Standard graphic command handler ; AX = X,Y = Y
-;
-; ************************************************************************************************
-
-ExecuteGraphicCommand:
-		ora 	gxCommandID 				; make a full command
-		jsr 	GXGraphicDraw 				; draw it and exit
-		bcs 	_EGCError
-		rts
-_EGCError:
-		jmp 	SyntaxError
-
-; ************************************************************************************************
-;
-;								  Run a graphics command sequence
-;
-; ************************************************************************************************
-
-RunGraphicsCommand:
-		sta 	gxCommandID					; save TODO graphics command.
-		pla 								; pop handler address
-		plx
-		inc 	a
-		bne 	_RGINoCarry
-		inx
-_RGINoCarry:
-		sta 	GXHandler
-		stx 	GXHandler+1
-		; ------------------------------------------------------------------
-		;
-		;		Now start processing commands
-		;
-		; ------------------------------------------------------------------
-_RGICommandLoop:
-		.cget 								; next token
-		iny
-		cmp 	#KWD_TO						; is it TO x,y
-		beq 	_RGI_To
-		cmp 	#KWD_HERE 					; do it here.
-		beq 	_RGI_Here
-		cmp 	#KWC_EOL 					; EOL or : , exit
-		beq 	_RGI_Exit
-		cmp 	#KWD_COLON
-		beq 	_RGI_Exit
-		cmp 	#KWD_OUTLINE 				; solid or outline
-		beq 	_RGI_Frame
-		cmp 	#KWD_SOLID
-		beq 	_RGI_Solid
-		cmp 	#KWD_BY 					; by offset
-		beq 	_RGI_By
-		cmp 	#KWD_FROM 					; from
-		beq 	_RGI_Move2
-		cmp 	#KWD_DIM 					; dim (set scale)
-		beq 	_RGI_Dim
-		cmp 	#KWD_COLOUR 				; colour or Color
-		beq 	_RGI_Colour
-		cmp 	#KWD_COLOR
-		beq 	_RGI_Colour
-		ldx 	gxCommandID
-		cpx 	#GCMD_SpriteMove 			; if not sprite
-		bne 	_RGI_Move 					; move
-		jmp		_RGI_SpriteInstructions
-		; ------------------------------------------------------------------
-		;
-		;		Just move.
-		;
-		; ------------------------------------------------------------------
-_RGI_Move:
-		dey 								; unpick get.
-_RGI_Move2:
-		jsr 	GCGetCoordinatePair 		; move to here
-		jsr 	GCCopyPairToStore 			; save
-		phy
-		jsr 	GCLoadAXY 					; load in
-		ora 	#GCMD_Move 					; move there
-		jsr 	GXGraphicDraw
-		ply
-		bra 	_RGICommandLoop 			; and go round
-
-_RGI_Exit:
-		dey 								; unpick : / EOL
-		rts
-		; ------------------------------------------------------------------
-		;
-		;		Set Solid/Fill
-		;
-		; ------------------------------------------------------------------
-_RGI_Solid:
-		lda 	#2
-		sta 	gxFillSolid
-		bra 	_RGICommandLoop
-_RGI_Frame:
-		stz 	gxFillSolid
-		bra 	_RGICommandLoop
-		; ------------------------------------------------------------------
-		;
-		;		Draw, or whatever, at a coordinate pair
-		;
-		; ------------------------------------------------------------------
-_RGI_To:
-		jsr 	GCGetCoordinatePair 		; get coordinate pair into slot #1,#2
-		jsr 	GCCopyPairToStore
-		; ------------------------------------------------------------------
-		;
-		;		Draw, or whatever here.
-		;
-		; ------------------------------------------------------------------
-_RGI_Here:
-		phy
-		jsr 	GCLoadAXY 					; load it into AXY
-		jsr 	_RGICallHandler 			; go do whatever it is.
-		ply
-		bra 	_RGICommandLoop 			; and go round
-		; ------------------------------------------------------------------
-		;
-		;		By Offset
-		;
-		; ------------------------------------------------------------------
-_RGI_By:
-		jsr 	GCSignedCoordinatePair 		; get coordinate pair into slot #1,#2
-		clc
-		lda 	NSMantissa0+1 				; copy it into space.
-		adc 	gxxPos
-		sta 	gxXPos
-		lda 	NSMantissa1+1
-		adc 	gxxPos+1
-		sta 	gxXPos+1
-		lda 	NSMantissa0+2
-		clc
-		adc 	gxYPos
-		sta 	gxYPos
-		bra 	_RGI_Here
-		; ------------------------------------------------------------------
-		;
-		;		DIM Set Dimension (scale for drawn sprites/images)
-		;
-		; ------------------------------------------------------------------
-_RGI_Dim:
-		ldx	 	#1
-		jsr 	Evaluate8BitInteger
-		lda 	NSMantissa0+1
-		cmp 	#0
-		beq 	_RGIRange
-		cmp 	#8+1
-		bcs		_RGIRange
-		dec 	a
-		sta 	gxDrawScale
-		jmp 	_RGICommandLoop
-		; ------------------------------------------------------------------
-		;
-		; 		Handle Colour/Color
-		;
-		; ------------------------------------------------------------------
-_RGI_Colour:
-		ldx 	#1 							; colour
-		jsr 	Evaluate8BitInteger
-		ldx 	#2 							; default zero for 2nd parameter
-		jsr 	NSMSetZero
-		.cget
-		cmp 	#KWD_COMMA 					; check , => mode.
-		bne 	_RGICDefaultMode
-		iny
-		jsr 	Evaluate8BitInteger
-_RGICDefaultMode:
-		phy
-		lda 	#GCMD_Colour 				; set colour.
-		ldx 	NSMantissa0+1
-		ldy 	NSMantissa0+2
-		jsr 	GXGraphicDraw
-		ply
-		jmp 	_RGICommandLoop 			; and go round
-
-_RGIRange:
-		jmp 	RangeError
-_RGICallHandler:
-		jmp 	(GXHandler)
-		;
-		;		Additional sprite instructions
-		;
-_RGI_SpriteInstructions:
-		cmp 	#KWD_OFF
-		beq 	_RGISpriteOff
-		cmp 	#KWD_IMAGE
-		beq 	_RGISetImage
-		jmp 	_RGI_Move
-
-		; ------------------------------------------------------------------
-		;
-		;		Set sprite off
-		;
-		; ------------------------------------------------------------------
-_RGISpriteOff:
-		phy
-		ldy 	#1
-		ldx 	#0
-_RGIDoCommandLoop:
-		lda 	#GCMD_SpriteImage
-		jsr 	GXGraphicDraw
-		ply
-		bcs 	_RGIRange
-		jmp 	_RGICommandLoop
-		; ------------------------------------------------------------------
-		;
-		;		Set Image
-		;
-		; ------------------------------------------------------------------
-_RGISetImage:
-		ldx 	#1
-		jsr 	Evaluate8BitInteger
-		phy
-		tax
-		ldy 	#0
-		bra 	_RGIDoCommandLoop
-
-; ************************************************************************************************
-;
-;						Get coordinate pair to Mantissa 1/2
-;
-; ************************************************************************************************
-
-GCGetCoordinatePair:
-		ldx 	#1
-		jsr 	Evaluate16BitInteger
-		jsr 	CheckComma
-		inx
-		jsr 	Evaluate16BitInteger
-		rts
-
-GCSignedCoordinatePair:
-		ldx 	#1
-		jsr 	Evaluate16BitIntegerSigned
-		jsr 	CheckComma
-		inx
-		jsr 	Evaluate16BitIntegerSigned
-		rts
-
-_GCCPRange:
-		jmp 	RangeError
-
-; ************************************************************************************************
-;
-;							Copy current position to AXY
-;
-; ************************************************************************************************
-
-GCLoadAXY:
-		lda 	gxXPos+1
-		ldx 	gxXPos
-		ldy 	gxYPos
-		rts
-
-; ************************************************************************************************
-;
-;								Copy mantissa data to store
-;
-; ************************************************************************************************
-
-GCCopyPairToStore:
-		lda 	NSMantissa0+1 				; copy it into space.
-		sta 	gxXPos
-		lda 	NSMantissa1+1
-		sta 	gxXPos+1
-		lda 	NSMantissa0+2
-		sta 	gxYPos
-		rts
-		.send code
-
-		.section storage
-
-gxCommandID: 								; current command
-		.fill 	1
-gxFillSolid: 								; 0 for frame, 2 for solid.
-		.fill 	1
-gxXPos: 									; x position
-		.fill 	2
-gxYPos: 									; y position
-		.fill 	1
-gxHandler: 									; handler address
-		.fill 	2
-gxDrawScale: 								; default scale 0-7
-		.fill 	1
-		.send storage
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
-
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		gcontrol.asm
-;		Purpose:	GFX Control Commands
-;		Created:	12th October 2022
-;		Reviewed: 	No
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
-
-		.section code
-
-; ************************************************************************************************
-;
-;									 Bitmap on/off/clear
-;
-; ************************************************************************************************
-
-BitmapCtrl: ;; [bitmap]
-		.cget 								; next keyword
-		iny
-		ldx 	#1
-		cmp 	#KWD_ON
-		beq 	BitmapSwitch
-		dex
-		cmp 	#KWD_OFF
-		beq 	BitmapSwitch
-		jsr 	Evaluate8BitInteger 		; get the colour
-		phy
-		tax
-		lda 	#GCMD_Clear					; clear to that colour
-		jsr 	GXGraphicDraw
-		ply
-		rts
-BitmapSwitch:
-		phy
-		ldy 	#0 							; gfx 1,on/off,0
-		lda 	#GCMD_BitmapCtl
-		jsr 	GXGraphicDraw
-		lda 	#GCMD_Colour				; set colour to $FF
-		ldy 	#0
-		ldx 	#$FF
-		jsr 	GXGraphicDraw
-		stz 	gxFillSolid
-		stz 	gxXPos
-		stz 	gxXPos+1
-		stz 	gxYPos
-		stz 	gxDrawScale
-		lda 	#GCMD_Move 						; home cursor
-		ldx 	#0
-		ldy 	#0
-		jsr 	GXGraphicDraw
-		ply
-		rts
-
-; ************************************************************************************************
-;
-;									 Sprites On/Off
-;
-; ************************************************************************************************
-
-SpritesCtrl: ;; [sprites]
-		.cget 								; next keyword
-		iny
-		ldx 	#1
-		cmp 	#KWD_ON
-		beq 	SpriteSwitch
-		dex
-		cmp 	#KWD_OFF
-		beq 	SpriteSwitch
-		jmp 	SyntaxError
-SpriteSwitch:
-		phy
-		ldy 	#0 							; gfx 2,on/off,0
-		lda 	#GCMD_SpriteCtl
-		jsr 	GXGraphicDraw
-		ply
-		rts
-
-		.send code
-
-		.section storage
-
-		.send storage
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		gfx.asm
-;		Purpose:	Simple GFX command
-;		Created:	12th October 2022
-;		Reviewed: 	No
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
-
-		.section code
-
-GfxCommand: ;; [gfx]
-		ldx 	#0
-		jsr 	Evaluate8BitInteger 		; command
-		jsr 	CheckComma
-		inx
-		jsr 	Evaluate16BitInteger 		; X
-		jsr 	CheckComma
-		inx
-		jsr 	Evaluate8BitInteger 		; Y
-		;
-		lda 	NSMantissa1+1  				; shift bit 0 of X into CS, should now be zero
-		lsr 	a
-		bne 	_GfxError
-		rol 	NSMantissa0 				; rotate into command
-		bcs 	_GfxError 					; bit 7 should have been zero
-		;
-		phy 								; save pos
-		lda 	NSMantissa0 				; do the command
-		ldx 	NSMantissa0+1
-		ldy 	NSMantissa0+2
-		jsr 	GXGraphicDraw
-		bcs 	_GfxError
-		ply 								; restore pos and exit.
-		rts
-_GfxError:
-		jmp 	RangeError
-
-		.send code
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		hit.asm
-;		Purpose:	Check Sprite Collision
-;		Created:	29th October 2022
-;		Reviewed: 	No
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
-
-		.section code
-
-; ************************************************************************************************
-;
-;					hit(s1,s2) returns pixel overlap or 0 if no collision
-;
-; ************************************************************************************************
-
-UnaryHit: ;; [hit(]
-		plx
-		;
-		lda 	#zTemp0
-		jsr 	Evaluate8BitInteger 		; get sprite number 0
-		jsr 	CheckComma
-		inx
-		jsr 	Evaluate8BitInteger 		; get sprite number 1
-		jsr		CheckRightBracket
-		dex 								; fix back up again.
-
-		phx 								; save X/Y
-		phy
-		ldy 	NSMantissa0+1,x 			; get the sprite numbers into X/Y
-		lda 	NSMantissa0,x
-		tax
-		lda 	#GCMD_SpriteCollide 		; command check collision.
-		jsr 	GXGraphicDraw 				; calculate result
-		inc 	a 							; so 255 (fail) -> 0, otherwise 1,2,3,4 pixels etc.
-		ply 								; restore XY
-		plx
-		jsr 	NSMSetByte 					; return the hit result
-		rts
-
-		.send code
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		palette.asm
-;		Purpose:	Change Palette command
-;		Created:	1st November 2022
-;		Reviewed: 	No
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
-
-		.section code
-
-PaletteCommand: ;; [palette]
-		ldx 	#0
-		jsr 	Evaluate8BitInteger 		; colour
-		jsr 	CheckComma
-		inx
-		jsr 	Evaluate16BitInteger 		; r
-		jsr 	CheckComma
-		inx
-		jsr 	Evaluate8BitInteger 		; g
-		jsr 	CheckComma
-		inx
-		jsr 	Evaluate8BitInteger 		; b
-
-		lda 	NSMantissa0 				; get colour #
-		sta 	zTemp0
-		lda 	#$D0 >> 2 					; MSB = D0/4
-		sta 	zTemp0+1
-
-		asl 	zTemp0 						; zTemp = $D000+Colour x 4
-		rol	 	zTemp0+1
-		asl 	zTemp0
-		rol	 	zTemp0+1
-
-		lda 	#1 							; I/O Page 2
-		sta 	1
-
-		phy
-		lda 	NSMantissa0+3 				; fix to r,g,b
-		sta 	(zTemp0)
-		ldy 	#1
-		lda 	NSMantissa0+2
-		sta 	(zTemp0),y
-		lda 	NSMantissa0+1
-		iny
-		sta 	(zTemp0),y
-		ply
-		rts
-
-		.send code
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		event.asm
-;		Purpose:	Event trigger function.
-;		Created:	13th October 2022
-;		Reviewed: 	No
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
-
-		.section code
-
-; ************************************************************************************************
-;
-;				event(tracker,rate) when tracker >= 0 returns true every rate ticks
-;
-; ************************************************************************************************
-
-UnaryEvent: ;; [event(]
-		plx
-		;
-		jsr 	TimerToStackX 				; timer in +0
-		inx  								; put reference into +1
-		jsr 	EvaluateTerm
-		lda 	NSStatus,x 					; check if is integer reference
-		cmp 	#NSTInteger+NSBIsReference
-		bne 	_UEType
-		;
-		inx 								; put the step in +2
-		jsr 	CheckComma
-		jsr 	Evaluate16BitInteger
-		jsr 	CheckRightBracket
-		;
-		dex
-		dex
-		;
-		lda 	NSMantissa0+1,x 			; copy reference to zTemp0
-		sta 	zTemp0
-		lda 	NSMantissa1+1,x
-		sta 	zTemp0+1
-		;
-		phy
-		;
-		ldy 	#3 							; check bit 7 of last bit, the packed sign bit
-		lda 	(zTemp0),y
-		bmi 	_UEFalse 					; exit if signed.
-		;
-		ldy 	#0 							; has it timed out (24 bit)
-		lda 	NSMantissa0,x
-		cmp 	(zTemp0),y
-		iny
-		lda 	NSMantissa1,x
-		sbc		(zTemp0),y
-		iny
-		lda 	NSMantissa2,x
-		sbc		(zTemp0),y
-		bcc 	_UEFalse 					; no, return FALSE.
-		;
-		clc
-		ldy 	#0 							; work out new value as timer() + step
-		lda 	NSMantissa0,x
-		adc 	NSMantissa0+2,x
-		sta 	(zTemp0),y
-		iny
-		lda 	NSMantissa1,x
-		adc 	NSMantissa1+2,x
-		sta 	(zTemp0),y
-		iny
-		lda 	NSMantissa2,x
-		adc 	NSMantissa2+2,x
-		sta 	(zTemp0),y
-		;
-		ply
-		jmp 	ReturnTrue
-
-_UEFalse:
-		ply 								; restore Y
-		jmp 	ReturnFalse 				; and return False
-
-
-_UEType:
-		jmp 	TypeError
-
-		.send code
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		joy.asm
-;		Purpose:	Joystick/Joypad interface
-;		Created:	13th October 2022
-;		Reviewed: 	No
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
-
-		.section code
-
-; ************************************************************************************************
-;
-;							Simplified joystick/joypad functions
-;
-; ************************************************************************************************
-
-UnaryJoyX: ;; [joyx(]
-		clc
-		bra 	JoyMain
-UnaryJoyY: ;; [joyy(]
-		sec
-JoyMain:
-		plx 								; get pos
-		php 								; save carry (set for Y)
-		jsr 	Evaluate8BitInteger 		; ignore the parameter
-		jsr 	CheckRightBracket
-		;
-		jsr 	EXTReadController 			; read the controller.
-		plp
-		bcc 	_JMNoShift 					; if Y then shift bits 3,2 -> 1,0
-		lsr 	a
-		lsr 	a
-_JMNoShift:
-		lsr 	a 							; if bit 0 set then right/down e.g. +1
-		bcs 	_JMIsRight
-		lsr 	a 							; if bit 1 set then left/up e.g. -1
-		bcs 	_JMIsLeft
-		jsr 	NSMSetZero 					; zero result
-		rts
-_JMIsLeft:
-		jmp 	ReturnTrue
-_JMIsRight:
-		lda 	#1
-		jsr 	NSMSetByte
-		rts
-
-UnaryJoyB: ;; [joyb(]
-		plx 								; get pos
-		jsr 	Evaluate8BitInteger 		; ignore the parameter
-		jsr 	CheckRightBracket
-		jsr 	EXTReadController 			; read the controller.
-		lsr 	a
-		lsr 	a
-		lsr 	a
-		lsr 	a
-		and 	#1
-		jsr 	NSMSetByte
-		rts
-
-		.send code
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		timer.asm
-;		Purpose:	Read 70Hz Timer
-;		Created:	13th October 2022
-;		Reviewed: 	No
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
-
-		.section code
-
-UnaryTimer: ;; [timer(]
-		plx
-		jsr 	CheckRightBracket
-TimerToStackX:
-		jsr 	NSMSetZero 					; zero result
-		stz 	1 							; access I/O
-		lda 	$D659 						; copy timer in
-		sta 	NSMantissa0,x
-		lda 	$D65A
-		sta 	NSMantissa1,x
-		lda 	$D65B
-		sta 	NSMantissa2,x
-		rts
-
-		.send code
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
@@ -1341,169 +423,6 @@ EXTSetHardwareCursor:
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		data.asm
-;		Purpose:	Console Data
-;		Created:	14th November 2022
-;		Reviewed: 	No
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
-
-		.section storage
-
-EXTMemory = $C000
-EXTTextPage = $02
-EXTColourPage = $03
-
-EXTDummySpace = 1 							; fake-space for CR character.
-EXTCBlack = 0
-
-EXTRow: 									; current row
-		.fill 	1
-EXTColumn: 									; current column
-		.fill 	1
-EXTTextColour: 								; current colour
-		.fill 	1
-EXTScreenWidth:	 							; screen size
-		.fill 	1
-EXTScreenHeight:
-		.fill 	1
-
-		.send storage
-
-		.section zeropage
-
-EXTAddress: 								; current address on screen of start of line.
-		.fill 	2
-
-		.send zeropage
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		extern.asm
-;		Purpose:	External functions
-;		Created:	29th September 2022
-;		Reviewed:
-;		Author : 	Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
-
-		.section code
-
-; ************************************************************************************************
-;
-;									Any required initialisation
-;
-; ************************************************************************************************
-
-EXTInitialise:
-		stz 	1 							; Access I/O
-		stz 	$D004 						; Disable border
-		stz 	$D008
-		stz 	$D009
-		lda 	#1+8						; Timer On at 70Hz counting up.
-		sta 	$D658
-		;
-		lda 	#CONForeground * 16 + CONBackground
-		sta 	EXTTextColour
-		;
-		lda 	#80 						; set screen dimensions.
-		sta 	EXTScreenWidth
-		lda 	#60
-		sta 	EXTScreenHeight
-
-		stz 	1
-		rts
-
-; ************************************************************************************************
-;
-;											Get Character
-;
-;	Returns:
-;			8 		Backspace, if not far left
-;			9 		Tab spacing (Ctrl+I)
-;			13 		CR/LF with scrolling if required
-;			32..127	Corresponding ASCII character
-;
-; ************************************************************************************************
-
-EXTInputSingleCharacter:
-		phx
-		phy
-_EISCWait:
-		jsr 	$FFE4
-		cmp 	#0
-		beq 	_EISCWait
-		ply
-		plx
-		rts
-
-; ************************************************************************************************
-;
-;				Break Check. Checks Ctrl+C, Escape or whatever. Returns Z if pressed
-;
-; ************************************************************************************************
-
-EXTBreakCheck:
-		jmp		$FFE1
-
-; ************************************************************************************************
-;
-;						Read Game Controller A -> A (Fire/Up/Down/Left/Right)
-;
-; ************************************************************************************************
-
-ifpressed .macro
-		lda 	#((\1) >> 3)
-		jsr 	$FFE7
-		and 	#($01 << ((\1) & 7))
-		beq 	_NoSet1
-		txa
-		ora 	#\2
-		tax
-_NoSet1:
-		.endm
-
-EXTReadController:
-		phx
-		ldx 	#0
-		.ifpressed $2D,1 				; X right
-		.ifpressed $2C,2 				; Z left
-		.ifpressed $32,4 				; M down
-		.ifpressed $25,8 				; K up
-		.ifpressed $26,16 				; L fire#1
-		txa
-		plx
-		rts
-
-		.send code
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
-; ************************************************************************************************
-; ************************************************************************************************
-;
 ;		Name:		input.asm
 ;		Purpose:	Input one line, screen scrape
 ;		Created:	17th November 2022
@@ -1721,6 +640,169 @@ _EXSFFill1:
 		pla
 		sta 	zTemp0
 
+		rts
+
+		.send code
+
+; ************************************************************************************************
+;
+;									Changes and Updates
+;
+; ************************************************************************************************
+;
+;		Date			Notes
+;		==== 			=====
+;
+; ************************************************************************************************
+; ************************************************************************************************
+; ************************************************************************************************
+;
+;		Name:		data.asm
+;		Purpose:	Console Data
+;		Created:	14th November 2022
+;		Reviewed: 	No
+;		Author:		Paul Robson (paul@robsons.org.uk)
+;
+; ************************************************************************************************
+; ************************************************************************************************
+
+		.section storage
+
+EXTMemory = $C000
+EXTTextPage = $02
+EXTColourPage = $03
+
+EXTDummySpace = 1 							; fake-space for CR character.
+EXTCBlack = 0
+
+EXTRow: 									; current row
+		.fill 	1
+EXTColumn: 									; current column
+		.fill 	1
+EXTTextColour: 								; current colour
+		.fill 	1
+EXTScreenWidth:	 							; screen size
+		.fill 	1
+EXTScreenHeight:
+		.fill 	1
+
+		.send storage
+
+		.section zeropage
+
+EXTAddress: 								; current address on screen of start of line.
+		.fill 	2
+
+		.send zeropage
+
+; ************************************************************************************************
+;
+;									Changes and Updates
+;
+; ************************************************************************************************
+;
+;		Date			Notes
+;		==== 			=====
+;
+; ************************************************************************************************
+; ************************************************************************************************
+; ************************************************************************************************
+;
+;		Name:		extern.asm
+;		Purpose:	External functions
+;		Created:	29th September 2022
+;		Reviewed:
+;		Author : 	Paul Robson (paul@robsons.org.uk)
+;
+; ************************************************************************************************
+; ************************************************************************************************
+
+		.section code
+
+; ************************************************************************************************
+;
+;									Any required initialisation
+;
+; ************************************************************************************************
+
+EXTInitialise:
+		stz 	1 							; Access I/O
+		stz 	$D004 						; Disable border
+		stz 	$D008
+		stz 	$D009
+		lda 	#1+8						; Timer On at 70Hz counting up.
+		sta 	$D658
+		;
+		lda 	#CONForeground * 16 + CONBackground
+		sta 	EXTTextColour
+		;
+		lda 	#80 						; set screen dimensions.
+		sta 	EXTScreenWidth
+		lda 	#60
+		sta 	EXTScreenHeight
+
+		stz 	1
+		rts
+
+; ************************************************************************************************
+;
+;											Get Character
+;
+;	Returns:
+;			8 		Backspace, if not far left
+;			9 		Tab spacing (Ctrl+I)
+;			13 		CR/LF with scrolling if required
+;			32..127	Corresponding ASCII character
+;
+; ************************************************************************************************
+
+EXTInputSingleCharacter:
+		phx
+		phy
+_EISCWait:
+		jsr 	$FFE4
+		cmp 	#0
+		beq 	_EISCWait
+		ply
+		plx
+		rts
+
+; ************************************************************************************************
+;
+;				Break Check. Checks Ctrl+C, Escape or whatever. Returns Z if pressed
+;
+; ************************************************************************************************
+
+EXTBreakCheck:
+		jmp		$FFE1
+
+; ************************************************************************************************
+;
+;						Read Game Controller A -> A (Fire/Up/Down/Left/Right)
+;
+; ************************************************************************************************
+
+ifpressed .macro
+		lda 	#((\1) >> 3)
+		jsr 	$FFE7
+		and 	#($01 << ((\1) & 7))
+		beq 	_NoSet1
+		txa
+		ora 	#\2
+		tax
+_NoSet1:
+		.endm
+
+EXTReadController:
+		phx
+		ldx 	#0
+		.ifpressed $2D,1 				; X right
+		.ifpressed $2C,2 				; Z left
+		.ifpressed $32,4 				; M down
+		.ifpressed $25,8 				; K up
+		.ifpressed $26,16 				; L fire#1
+		txa
+		plx
 		rts
 
 		.send code

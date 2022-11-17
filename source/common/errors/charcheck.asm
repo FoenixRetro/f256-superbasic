@@ -3,7 +3,7 @@
 ;
 ;		Name : 		charcheck.asm
 ;		Author :	Paul Robson (paul@robsons.org.uk)
-;		Date : 		21st September 2022
+;		Created : 	21st September 2022
 ;		Reviewed :	
 ;		Purpose :	Check next character type functions.
 ;

@@ -4,7 +4,7 @@
 ;		Name:		assert.asm
 ;		Purpose:	Assert command
 ;		Created:	22nd September 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -13,11 +13,11 @@
 		.section code
 
 AssertCommand: ;; [assert]
-		ldx 	#0
+		ldx 	#0 							; bottom of stack
 		jsr 	EvaluateInteger 			; the assert test
 		jsr 	NSMIsZero 					; exit if result is non zero.
-		bne 	_ACExit
-		.error_assert
+		bne 	_ACExit 
+		.error_assert 						; otherwise assert an error.
 _ACExit:
 		rts		
 		
