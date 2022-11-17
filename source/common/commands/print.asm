@@ -3,7 +3,7 @@
 ;
 ;		Name:		print.asm
 ;		Purpose:	Print (to Screen)
-;		Created:	30th September
+;		Created:	30th September 2022
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
@@ -51,7 +51,7 @@ _CPLoop:
 		;
 		ldx 	NSMantissa1 				; string, print the text.
 		lda 	NSMantissa0
-		jsr 	PrintStringXA
+		jsr 	CPPrintStringXA
 		bra 	Command_Print 				; loop round clearing carry so NL if end		
 		;
 		;		Print number
@@ -61,7 +61,7 @@ _CPNumber:
 		jsr 	ConvertNumberToString 		; convert to string
 		ldx 	#DecimalBuffer >> 8
 		lda 	#DecimalBuffer & $FF
-		jsr 	PrintStringXA
+		jsr 	CPPrintStringXA
 		bra 	Command_Print 				; loop round clearing carry so NL if end		
 		;
 		;		New line
@@ -75,7 +75,7 @@ _CPNewLine:
 _CPTab:	
 		lda 	#9 							; print TAB
 _CPPrintChar:
-		jsr 	EXTPrintCharacter
+		jsr 	CPPrintVector
 
 _CPContinueWithSameLine:		
 		sec 								; loop round with carry set, which
@@ -87,9 +87,39 @@ _CPExit:
 		plp 								; get last action flag
 		bcs 	_CPExit2  					; carry set, last was semicolon or comma
 		lda 	#13 						; print new line
-		jsr 	EXTPrintCharacter			
+		jsr 	CPPrintVector			
 _CPExit2:		
 		rts
+
+; ************************************************************************************************
+;
+;								Vectorable Print String
+;
+; ************************************************************************************************
+
+CPPrintStringXA:
+		phy
+		stx 	zTemp0+1
+		sta 	zTemp0
+		ldy 	#0
+_PSXALoop:
+		lda 	(zTemp0),y
+		beq 	_PSXAExit
+		jsr 	CPPrintVector
+		iny
+		bra 	_PSXALoop
+_PSXAExit:
+		ply
+		rts		
+
+; ************************************************************************************************
+;
+;								Vectorable Print Character
+;
+; ************************************************************************************************
+
+CPPrintVector:
+		jmp 	EXTPrintCharacter
 
 		.send code
 
