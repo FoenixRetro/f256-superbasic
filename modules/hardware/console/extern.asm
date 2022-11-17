@@ -26,7 +26,7 @@ EXTInitialise:
 		lda 	#1+8						; Timer On at 70Hz counting up.
 		sta 	$D658
 		;
-		lda 	#$76 	
+		lda 	#CONForeground * 16 + CONBackground	
 		sta 	EXTTextColour
 		;
 		lda 	#80 						; set screen dimensions.

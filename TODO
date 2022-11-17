@@ -1,8 +1,5 @@
 Progress:
-	check tokeniser for modularity.
-	colour printing
-	colour listings
-
+	pass the indent into the ListConvertLine function rather than calling the external function ScanGetCurrentLineSetup
 	sound write a driver
 	tiles ?
 	DMA ?
@@ -11,3 +8,4 @@ Progress:
 Later:
 	Disable interrupts enable at end of line command ?
 	Changing Kerning ?
+

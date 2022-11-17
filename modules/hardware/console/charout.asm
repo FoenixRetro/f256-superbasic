@@ -96,8 +96,12 @@ _EXPCScroll:
 		;		Set FGR/BGR colour
 		;
 _EXPCColour:
+		cmp 	#$A0						; 80-9F set foreground/background
+		bcs 	_EXPCExit
+		jsr 	_EXPCHandleColour 
+		bra 	_EXPCExit
 		;
-		;		Handle control characters.
+		;		Handle control characters 00-1F 80-FF
 		;
 _EXPCControl:
 		cmp 	#$11 						; only handle 00-10.
@@ -209,6 +213,31 @@ _EXPCActionTable:
 		.word 	_EXPCDown 					; 0E N Down
 		.word 	_EXPCExit 					; 0F 
 		.word 	_EXPCUp 					; 10 P Up
+;
+;		Handle colour change (80-9F)
+;
+_EXPCHandleColour
+		cmp 	#$90 						; 8x foreground 9x background
+		bcs 	_EXPCBackground
+		;
+		asl 	a 							; shift it 4 bits to the right.
+		asl 	a
+		asl 	a
+		asl 	a
+		ldx 	#$0F 						; Mask in X
+_EXPCUpdate:
+		pha 								; save new colour
+		txa 								; get mask
+		and 	EXTTextColour 				; mask out old.
+		sta 	EXTTextColour
+		pla 								; or in new colour
+		ora 	EXTTextColour
+		sta 	EXTTextColour
+		rts
+_EXPCBackground:
+		and 	#$0F 						; get the colour
+		ldx 	#$F0 						; mask
+		bra 	_EXPCUpdate		
 
 EXTScreenScroll:
 		lda 	#2 							; select text page

@@ -12,6 +12,11 @@
 
 		.section code
 
+setcolour .macro
+		lda 	#\1+$80
+		jsr 	LCLWrite
+		.endm
+
 ; ************************************************************************************************
 ;
 ;							Convert one line back to text.
@@ -29,6 +34,7 @@ ListConvertLine:
 		jsr 	ConvertInt16
 		sta 	zTemp0 						; copy number into buffer
 		stx 	zTemp0+1
+		.setcolour CLINumber
 		ldy 	#0
 _LCCopyNumber:
 		lda 	(zTemp0),y
@@ -66,6 +72,7 @@ _LCPadOut:
 		;	-------------------------------------------------------------------
 
 _LCMainLoop:
+		.setcolour CLIPunctuation
 		.cget 								; get next character
 		cmp 	#KWC_EOL 					; end of line ?
 		beq 	_LCExit
@@ -157,6 +164,7 @@ _LCIdentifiers:
 		sta 	zTemp0
 		iny
 		phy 								; save position
+		.setcolour CLIIdentifier
 		ldy 	#7 							; output the identifier.
 _LCOutIdentifier:
 		iny
@@ -206,6 +214,7 @@ _LCFoundText:
 		phy 								; save List position
 		lda 	(zTemp0)					; count to print
 		tax
+		.setcolour CLIToken
 		ldy 	#2
 _LCCopyToken:								; copy token out.
 		lda 	(zTemp0),y
@@ -235,6 +244,7 @@ _LCData:
 		cmp 	#$FE
 		beq 	_LCHaveOpener
 		ldx 	#'"'
+		.setcolour CLIData	
 _LCHaveOpener:
 		txa 								; output prefix (# or ")
 		jsr 	LCLWrite
@@ -271,6 +281,10 @@ LCLWrite:
 		sta 	tokenBuffer,x
 		stz 	tokenBuffer+1,x
 		inc 	tbOffset
+		ora 	#0 							; don't update if colour data
+		bmi 	_LCLNoColour		
+		sta 	LCLastCharacter
+_LCLNoColour:		
 		plx
 		rts
 
@@ -301,8 +315,7 @@ _LCDLSExit:
 ; ************************************************************************************************
 
 LCCheckSpaceRequired:
-		ldx 	tbOffset		
-		lda 	tokenBuffer-1,x 			; previous character
+		lda 	LCLastCharacter 			; check last character
 		cmp 	#'$' 						; $ # and ) require that token space.
 		beq 	_LCCSRSpace
 		cmp 	#')'

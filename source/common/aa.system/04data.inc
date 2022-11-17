@@ -150,6 +150,8 @@ ModeMask: 									; modes allowed
 		.fill 	1		
 listIndent:	 								; list indent level. 
 		.fill 	1				
+lcLastCharacter: 							; last character output.
+		.fill 	1		
 ;
 ;		New tokenised line - these three *must* be contiguous as they are used as a single entity
 ;		

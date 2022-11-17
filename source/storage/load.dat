@@ -1,23 +1,65 @@
-1 rem "Seed 26156"
-2 q3_49$ = "VJARGILKQRPKFP"
-3 F$ = "GGMBJCOFTHYSNRQE"
-4 let l4f1d1_48$ = "CRRYUONM"
-5 o4w2p1_64$ = "SVYPKZUKNVZBOSYBBMZME"
-6 let h9_20$ = "JKSYUEQPZC"
-7 let J$ = "CYKBMMMEGNKA"
-8 let f8_11$ = "IDYDLYPBIIZHLM"
-9 let n3g6_41$ = "XGZBZHQFISTRITI"
-10 let f6_22$ = "KDNLKC"
-11 d1x7k6_2$ = "FUFDW"
-12 let l4f1d1_48$ = "OFVSPFU"
-13 let l4f1d1_48$ = "CLHMLNQCAIAJLITIIQCVW"
-14 let n3g6_41$ = "RIZGDZJVNKJOWAZBCOV"
-15 w9m6v4_23$ = "XTQYQIGYWYUNIPPZC"
-16 let j8_62$ = "GTPHHKZPOB"
-17 d2_65$ = "KGKKHGTPTHLL"
-18 let v7x7_53$ = "XBP"
-19 let z8u5_39$ = "JCPLCXIJRHKNAF"
-20 let n8l8_25$ = "ZGMAALCGDXDXEWX"
-21 let w7_34$ = "VSRWTSNX"
-22 K$ = "KKOD"
+100 for i = 0 to 15
+110 print chr$(128+i);" Colour ";i
+120 next
+900 list ,1310
+1000 '
+1010 ' "Simple PNG Game. Testing the BASICs :)"
+1020 '
+1030 cls:bitmap on:sprites on
+1040 drawScreen()
+1050 score = 0:refreshScore(score)
+1060 ballx = 160:bally = 120:ballyi = random(2)*8-4:ballxi = 4:baty = 140
+1070 rate = 2
+1080 repeat
+1090 if event(ballEvent,rate) then moveBall()
+1100 if event(batEvent,rate) then moveBat()
+1110 until ballx < 10
+1120 end
+1130 '
+1140 ' "Move the ball"
+1150 '
+1160 proc moveBall()
+1170 sprite 0 image 0 to ballx,bally
+1180 ballx = ballx + ballxi
+1190 bally = bally + ballyi
+1200 if ballx > 312:ballxi = -ballxi:endif
+1210 if bally > 232 | bally < 32 then ballyi = -ballyi
+1220 if ballx < 32 & ballx >= 26 & abs(baty-bally) < 16 then bounce()
+1230 endproc
+1240 '
+1250 ' "Move the bat"
+1260 '
+1270 proc moveBat()
+1280 sprite 1 image 1 to 32,baty
+1290 baty = baty + joyy(0) * 4
+1300 if baty < 40 then baty = 40
+1310 if baty >= 210 then baty = 210
+1320 endproc
+1330 '
+1340 ' "Bounce the ball off the bat"
+1350 '
+1360 proc bounce()
+1370 ballyi = abs(baty-bally) \ 4 + 1
+1380 if baty > bally then ballyi = -ballyi
+1390 ballxi = abs(ballxi)
+1400 score = score+1:refreshScore(score)
+1410 endproc
+1420 '
+1430 ' "Refresh the score"
+1440 '
+1450 proc refreshScore(n)
+1460 local s$:s$ = right$("00"+str$(n),3)
+1470 text s$ dim 2 colour $FC,4 to 10,3 : ' "Sets mode bit 2, which draws the background forcing overwrite $FC is yellow."
+1480 endproc
+1490 '
+1500 ' "Draw frame"
+1510 '
+1520 proc drawScreen()
+1530 bitmap clear 0
+1540 rect solid colour $F0 0,20 to 319,24
+1550 rect 0,236 to 319,239
+1560 rect 316,20 to 319,239
+1570 endproc
+Ã¿Ã¿Ã¿Ã¿
+
 ÿÿÿÿ

@@ -21,6 +21,10 @@
 ; ************************************************************************************************
 
 EXTInputLine:
+		pha
+		phx
+		phy
+
 		lda 	1 							; save I/O page
 		pha
 _EILLoop:		
@@ -93,6 +97,10 @@ _EILEndTrim:
 		jsr 	ExtPrintCharacter
 		pla 								; reset I/O page
 		sta 	1
+
+		ply
+		plx
+		pla
 		rts
 ;
 ;		Backspace from current position, put A on the end

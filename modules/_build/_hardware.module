@@ -7,6 +7,55 @@ hardwareIntegrated=1
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
+;		Name:		colours.inc
+;		Purpose:	Console colour scheme
+;		Created:	17th November 2022
+;		Reviewed:
+;		Author : 	Paul Robson (paul@robsons.org.uk)
+;
+; ************************************************************************************************
+; ************************************************************************************************
+
+CONBlack = 0
+CONWhite = 1
+CONRed = 2
+CONCyan = 3
+CONPurple = 4
+CONGreen = 5
+CONBlue = 6
+CONYellow = 7
+CONOrange = 8
+CONBrown = 9
+CONYellowGreen = 10
+CONRosa = 11
+CONBlueGreen = 12
+CONLightBlue = 13
+CONPink = 14
+CONLightGreen = 15
+
+CONForeground = CONYellow
+CONBackground = CONBlue
+
+CLINumber = CONBlueGreen
+CLIToken = CONCyan
+CLIConstant = CONLightBlue
+CLIIdentifier = CONYellowGreen
+CLIPunctuation = CONYellow
+CLIData = CONWhite
+
+; ************************************************************************************************
+;
+;									Changes and Updates
+;
+; ************************************************************************************************
+;
+;		Date			Notes
+;		==== 			=====
+;
+; ************************************************************************************************
+; ************************************************************************************************
+; ************************************************************************************************
+;
 ;		Name:		event.asm
 ;		Purpose:	Event trigger function.
 ;		Created:	13th October 2022
@@ -1020,8 +1069,12 @@ _EXPCScroll:
 		;		Set FGR/BGR colour
 		;
 _EXPCColour:
+		cmp 	#$A0						; 80-9F set foreground/background
+		bcs 	_EXPCExit
+		jsr 	_EXPCHandleColour
+		bra 	_EXPCExit
 		;
-		;		Handle control characters.
+		;		Handle control characters 00-1F 80-FF
 		;
 _EXPCControl:
 		cmp 	#$11 						; only handle 00-10.
@@ -1133,6 +1186,31 @@ _EXPCActionTable:
 		.word 	_EXPCDown 					; 0E N Down
 		.word 	_EXPCExit 					; 0F
 		.word 	_EXPCUp 					; 10 P Up
+;
+;		Handle colour change (80-9F)
+;
+_EXPCHandleColour
+		cmp 	#$90 						; 8x foreground 9x background
+		bcs 	_EXPCBackground
+		;
+		asl 	a 							; shift it 4 bits to the right.
+		asl 	a
+		asl 	a
+		asl 	a
+		ldx 	#$0F 						; Mask in X
+_EXPCUpdate:
+		pha 								; save new colour
+		txa 								; get mask
+		and 	EXTTextColour 				; mask out old.
+		sta 	EXTTextColour
+		pla 								; or in new colour
+		ora 	EXTTextColour
+		sta 	EXTTextColour
+		rts
+_EXPCBackground:
+		and 	#$0F 						; get the colour
+		ldx 	#$F0 						; mask
+		bra 	_EXPCUpdate
 
 EXTScreenScroll:
 		lda 	#2 							; select text page
@@ -1339,7 +1417,7 @@ EXTInitialise:
 		lda 	#1+8						; Timer On at 70Hz counting up.
 		sta 	$D658
 		;
-		lda 	#$76
+		lda 	#CONForeground * 16 + CONBackground
 		sta 	EXTTextColour
 		;
 		lda 	#80 						; set screen dimensions.
@@ -1446,6 +1524,10 @@ EXTReadController:
 ; ************************************************************************************************
 
 EXTInputLine:
+		pha
+		phx
+		phy
+
 		lda 	1 							; save I/O page
 		pha
 _EILLoop:
@@ -1518,6 +1600,10 @@ _EILEndTrim:
 		jsr 	ExtPrintCharacter
 		pla 								; reset I/O page
 		sta 	1
+
+		ply
+		plx
+		pla
 		rts
 ;
 ;		Backspace from current position, put A on the end
