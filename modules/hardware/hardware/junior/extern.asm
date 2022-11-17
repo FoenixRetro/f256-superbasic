@@ -62,20 +62,6 @@ _EISCWait:
 
 ; ************************************************************************************************
 ;
-;									Input line into lineBuffer
-;
-;		This can use ExtInputSingleCharacter *or* $FFCF, the screen editor or similar.
-;
-; ************************************************************************************************
-
-EXTInputLine:
-		jsr 	ExtInputSingleCharacter
-		jsr 	ExtPrintCharacter
-		bra 	EXTInputLine
-		rts
-
-; ************************************************************************************************
-;
 ;				Break Check. Checks Ctrl+C, Escape or whatever. Returns Z if pressed
 ;
 ; ************************************************************************************************

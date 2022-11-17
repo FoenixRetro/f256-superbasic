@@ -1,10 +1,9 @@
 Progress:
 	check tokeniser for modularity.
-	complete the console driver & keyboard input.
+	complete keyboard input.
 		- add in remaining control characters
-				Backspace
-				Insert
-		- line input code scraping (optional start position for INPUT)
+				Backspace (08)
+				Insert (20-7E)
 
 	sound write a driver
 	tiles ?
