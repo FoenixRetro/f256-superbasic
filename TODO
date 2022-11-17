@@ -1,9 +1,7 @@
 Progress:
 	check tokeniser for modularity.
-	complete keyboard input.
-		- add in remaining control characters
-				Backspace (08)
-				Insert (20-7E)
+	colour printing
+	colour listings
 
 	sound write a driver
 	tiles ?
