@@ -25,7 +25,7 @@ Start:	ldx 	#$FF 						; stack reset
 		lda 	#(Prompt & $FF)
 		jsr 	PrintStringXA
 
-		jsr 	NewCommand 					; erase current program
+		jsr 	NewProgram 					; erase current program
 		jsr 	BackloadProgram
 
 		.if 	AUTORUN==1 					; run straight off

@@ -9,11 +9,11 @@ Volume (4 bit)
 
 State:
 
-<Command>|<Channel> 	<Y><X>
-0x 						Initialise
-1x 						Queue sound
-2x 						Sound playing (=>A)
-3F 						All channels off.
+<A>[Command|<Channel] 					<Y><X>
+0F 			Initialise
+1x 			Queue sound 				Address of pitch [word] volume [byte] length [byte] slide [word]
+2x 			Sound playing (=>A)
+3F 			All channels off.
 
 <Each Channel>
 

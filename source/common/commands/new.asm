@@ -13,10 +13,14 @@
 		.section code
 
 NewCommand: ;; [new]
+		jsr 	NewProgram
+		jmp 	WarmStart
+
+NewProgram:
 		jsr 	MemoryNew
 		stz 	VariableSpace 				; erase all variables.
 		jsr 	ClearCommand 				; clear everything.
-		jmp 	WarmStart
+		rts		
 
 		.send code
 
