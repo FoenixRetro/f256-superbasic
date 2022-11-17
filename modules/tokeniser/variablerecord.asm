@@ -21,7 +21,7 @@
 ;
 ; ************************************************************************************************
 
-CheckCreateVariableRecord:
+TOKCheckCreateVariableRecord:
 		.set16 	zTemp0,VariableSpace 		; initialise pointer
 		;
 		;		Search the variable table to see if it already exists
@@ -104,9 +104,9 @@ _CCVFound:
 		sec
 		sbc 	#(VariableSpace >> 8) 		; offset from the start
 		ora 	#$40 						; make it a writeable token
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 		lda 	zTemp0 						; write out LSB
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 		rts
 
 		.send code

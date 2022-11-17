@@ -191,11 +191,12 @@ setcolour .macro
 
 ; ************************************************************************************************
 ;
-;							Convert one line back to text.
+;							Convert one line back to text. Indent is A
 ;
 ; ************************************************************************************************
 
 ListConvertLine:
+		pha 								; save indent on the stack
 		stz 	tbOffset
 		stz 	tokenBuffer
 		ldy 	#2 							; convert line number to string
@@ -203,7 +204,7 @@ ListConvertLine:
 		tax
 		dey
 		.cget
-		jsr 	ConvertInt16
+		jsr 	LCLConvertInt16
 		sta 	zTemp0 						; copy number into buffer
 		stx 	zTemp0+1
 		.setcolour CLINumber
@@ -215,7 +216,7 @@ _LCCopyNumber:
 		lda 	(zTemp0),y
 		bne 	_LCCopyNumber
 
-		jsr 	ScanGetCurrentLineStep 		; adjustment to indent
+		pla 								; adjustment to indent
 		pha 								; save on stack
 		bpl 	_LCNoAdjust 				; don't adjust indent if +ve, do after.
 		clc 								; add to list indent and make 0 if goes -ve.
@@ -315,7 +316,7 @@ _LCNoAdd2:
 _LCPunctuation:
 		cmp 	#':' 						; check if :
 		bne 	_LCPContinue
-		jsr 	LCDeleteLastSpace
+		jsr 	LCLDeleteLastSpace
 _LCPContinue:
 		iny 								; consume character
 		jsr 	LCLWrite 					; write it out.
@@ -368,7 +369,7 @@ _LCTokens:
 _LCUseShift:								; skip over token if using $81/$82 shifts
 		iny
 _LCNoShift:
-		jsr 	LCCheckSpaceRequired 		; do we need a space ?
+		jsr 	LCLCheckSpaceRequired 		; do we need a space ?
 		.cget 								; get the token again
 		tax 								; into X
 _LCFindText:
@@ -466,7 +467,7 @@ _LCLNoColour:
 ;
 ; ************************************************************************************************
 
-LCDeleteLastSpace:
+LCLDeleteLastSpace:
 		pha
 		phx
 		ldx 	tbOffset
@@ -486,7 +487,7 @@ _LCDLSExit:
 ;
 ; ************************************************************************************************
 
-LCCheckSpaceRequired:
+LCLCheckSpaceRequired:
 		lda 	LCLastCharacter 			; check last character
 		cmp 	#'$' 						; $ # and ) require that token space.
 		beq 	_LCCSRSpace
@@ -566,7 +567,7 @@ _LCLUCOut:
 ;
 ; ************************************************************************************************
 
-TokeniseSearchTable:
+TOKSearchTable:
 		sty 	zTemp0+1 					; (zTemp0),y points to current token.
 		sta 	zTemp0
 		ldy 	#0
@@ -672,7 +673,7 @@ TokeniseLine:
 		;
 		;		Make the line buffer UpperCase outside quoted strings
 		;
-		jsr 	FixLineBufferCase 			; fix line case
+		jsr 	LCLFixLineBufferCase 		; fix line case
 		;
 		;		Erase the tokenised line to empty
 		;
@@ -697,7 +698,7 @@ _TKFindFirst:
 		bcc 	_TKNoLineNumber
 		cmp 	#'9'+1
 		bcs 	_TKNoLineNumber
-		jsr 	TokeniseExtractLineNumber
+		jsr 	TOKExtractLineNumber
 _TKNoLineNumber:
 		;----------------------------------------------------------------------------------------
 		;
@@ -750,15 +751,15 @@ _TKStandardPunctuation:
 		ora 	zTemp0
 		ora 	#$10						; now in the range 16-31
 _TKNoShift:
-		jsr 	TokeniseWriteByte 			; write the punctuation character
+		jsr 	TOKWriteByte 				; write the punctuation character
 		inx 								; consume the character
 		bra 	_TKTokeniseLoop 			; and loop round again.
 
 _TKString: 									; tokenise a string "Hello world"
-		jsr 	TokeniseString
+		jsr 	TOKTokenString
 		bra 	_TKTokeniseLoop
 _TKHexConstant: 							; tokenise hex constant #A277
-		jsr 	TokeniseHexConstant
+		jsr 	TOKHexConstant
 		bra 	_TKTokeniseLoop
 
 		;----------------------------------------------------------------------------------------
@@ -781,7 +782,7 @@ _TKCheckDouble:
 		adc 	lineBuffer+1,x 				; add < = > codes - < code
 		sec
 		sbc 	#'<'
-		jsr 	TokeniseWriteByte 			; this is in the range 0-7
+		jsr 	TOKWriteByte 				; this is in the range 0-7
 		inx 								; consume both
 		inx
 		bra 	_TKTokeniseLoop
@@ -793,7 +794,7 @@ _TKCheckDouble:
 		;----------------------------------------------------------------------------------------
 
 _TKExit:lda 	#KWC_EOL 					; write end of line byte
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 		rts
 
 		;----------------------------------------------------------------------------------------
@@ -840,7 +841,7 @@ _TKNoTypeCharacter:
 		sta 	identTypeByte
 _TKNoArray:
 		stx 	identTypeEnd 				; save end marker, e.g. continue from here.
-		jsr 	TokeniseCalculateHash 		; calculate the has for those tokens
+		jsr 	TOKCalculateHash 			; calculate the has for those tokens
 
 		;----------------------------------------------------------------------------------------
 		;
@@ -851,7 +852,7 @@ _TKNoArray:
 checktokens .macro
 		ldy 	#(\1) >> 8
 		lda 	#(\1) & $FF
-		jsr 	TokeniseSearchTable
+		jsr 	TOKSearchTable
 		.endm
 
 		.checktokens KeywordSet0			; check the three token tables for the keyword.
@@ -870,7 +871,7 @@ checktokens .macro
 		;
 		;----------------------------------------------------------------------------------------
 
-		jsr 	CheckCreateVariableRecord 	; failed all, it's a variable, create record if does not exist.
+		jsr 	TOKCheckCreateVariableRecord ; failed all, it's a variable, create record if does not exist.
 		ldx 	identTypeEnd 				; X points to following byte
 		jmp 	_TKTokeniseLoop 			; and go round again.
 
@@ -884,10 +885,10 @@ _TKFoundToken:
 		pha 								; save token
 		txa 								; shift in X, is there one ?
 		beq 	_TKNoTShift
-		jsr 	TokeniseWriteByte 			; if so, write it out
+		jsr 	TOKWriteByte 				; if so, write it out
 _TKNoTShift:
 		pla 								; restore and write token
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 		ldx 	identTypeEnd 				; X points to following byte
 		jmp 	_TKTokeniseLoop 			; and go round again.
 
@@ -897,9 +898,9 @@ _TKNoTShift:
 ;
 ; ************************************************************************************************
 
-TokeniseString:
+TOKTokenString:
 		lda 	#KWC_STRING 				; string token.
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 		inx									; start of quoted string.
 		phx 								; push start of string on top
 		dex
@@ -912,7 +913,7 @@ _TSFindEnd:
 _TSEndOfString:
 		ply  								; so now Y is first character, X is character after end.
 		pha 								; save terminating character
-		jsr 	TOWriteBlockXY 				; write X to Y as a data block
+		jsr 	TOKWriteBlockXY 			; write X to Y as a data block
 		pla 								; terminating character
 		beq 	_TSNotQuote					; if it wasn't EOS skip it
 		inx
@@ -921,24 +922,24 @@ _TSNotQuote:
 ;
 ;		Write Y to X with a trailing NULL.
 ;
-TOWriteBlockXY:
+TOKWriteBlockXY:
 		stx 	zTemp0 						; write end character
 		tya
 		eor 	#$FF
 		sec
 		adc 	zTemp0
 		inc 	a 							; one extra for NULL
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 _TOBlockLoop:
 		cpy 	zTemp0
 		beq 	_TOBlockExit
 		lda 	lineBuffer,y
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 		iny
 		bra 	_TOBlockLoop
 _TOBlockExit:
 		lda 	#0
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 		rts
 
 ; ************************************************************************************************
@@ -947,9 +948,9 @@ _TOBlockExit:
 ;
 ; ************************************************************************************************
 
-TokeniseHexConstant:
+TOKHexConstant:
 		lda 	#KWC_HEXCONST 				; hex constant token.
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 		inx									; start of quoted string.
 		phx 								; push start of constant on top
 		dex
@@ -966,7 +967,7 @@ _THFindLoop:
 		bcc 	_THFindLoop
 _THFoundEnd:
 		ply 								; restore start
-		jsr 	TOWriteBlockXY 				; output the block
+		jsr 	TOKWriteBlockXY 			; output the block
 		rts
 
 		.send code
@@ -1001,7 +1002,7 @@ _THFoundEnd:
 ;
 ; ************************************************************************************************
 
-TokeniseCalculateHash:
+TOKCalculateHash:
 		phx
 		ldx 	identStart 					; needs to be same as in tokens.py - simple sum
 		lda 	#0
@@ -1021,7 +1022,7 @@ _TCHLoop:
 ;
 ; ************************************************************************************************
 
-FixLineBufferCase:
+LCLFixLineBufferCase:
 		ldx 	#0
 _FLBCLoop:
 		lda 	lineBuffer,x 				; get next character
@@ -1057,13 +1058,13 @@ _FLBCExit:
 ;
 ; ************************************************************************************************
 
-TokeniseExtractLineNumber:
+TOKExtractLineNumber:
 		lda 	tokenLineNumber+1 			; push current value on stack
 		pha
 		lda 	tokenLineNumber
 		pha
-		jsr 	_TELNTimes2 				; line # x 4
-		jsr 	_TELNTimes2 				; line # x 2
+		jsr 	_LCLNTimes2 				; line # x 4
+		jsr 	_LCLNTimes2 				; line # x 2
 		;
 		clc 								; add stacked value
 		pla
@@ -1072,7 +1073,7 @@ TokeniseExtractLineNumber:
 		pla
 		adc 	tokenLineNumber+1
 		sta 	tokenLineNumber+1 			; line # x 5
-		jsr 	_TELNTimes2 				; line # x 10
+		jsr 	_LCLNTimes2 				; line # x 10
 		;
 		lda 	lineBuffer,x 				; get and consume character
 		inx
@@ -1087,10 +1088,10 @@ _TLENNoCarry:
 		cmp 	#'0'
 		bcc 	_TLENExit
 		cmp 	#'9'+1
-		bcc 	TokeniseExtractLineNumber
+		bcc 	TOKExtractLineNumber
 _TLENExit:
 		rts
-_TELNTimes2:
+_LCLNTimes2:
 		asl 	tokenLineNumber
 		rol 	tokenLineNumber+1
 		rts
@@ -1101,7 +1102,7 @@ _TELNTimes2:
 ;
 ; ************************************************************************************************
 
-TokeniseWriteByte:
+TOKWriteByte:
 		phx
 		ldx 	tokenOffset 				; next slot to write to
 		sta 	tokenOffset,x 				; write byte out
@@ -1144,7 +1145,7 @@ TokeniseWriteByte:
 ;
 ; ************************************************************************************************
 
-CheckCreateVariableRecord:
+TOKCheckCreateVariableRecord:
 		.set16 	zTemp0,VariableSpace 		; initialise pointer
 		;
 		;		Search the variable table to see if it already exists
@@ -1227,9 +1228,9 @@ _CCVFound:
 		sec
 		sbc 	#(VariableSpace >> 8) 		; offset from the start
 		ora 	#$40 						; make it a writeable token
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 		lda 	zTemp0 						; write out LSB
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 		rts
 
 		.send code

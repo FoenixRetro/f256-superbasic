@@ -68,6 +68,7 @@ _CLLoop:
 		beq 	_CLDoThisOne
 		bcs 	_CLNext
 _CLDoThisOne:		
+		jsr 	ScanGetCurrentLineStep 		; get indent adjust.
 		jsr 	ListConvertLine 			; convert line into token Buffer
 		ldx 	#(tokenBuffer >> 8) 		; print that line
 		lda 	#(tokenBuffer & $FF) 	

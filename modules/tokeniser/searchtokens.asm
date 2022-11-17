@@ -19,7 +19,7 @@
 ;
 ; ************************************************************************************************
 
-TokeniseSearchTable:
+TOKSearchTable:
 		sty 	zTemp0+1 					; (zTemp0),y points to current token.
 		sta 	zTemp0
 		ldy 	#0

@@ -1,6 +1,5 @@
 Progress:
-	pass the indent into the ListConvertLine function rather than calling the external function ScanGetCurrentLineSetup
-	sound write a driver
+	sound write the driver
 	tiles ?
 	DMA ?
 	Not initialised flag on variables. ?

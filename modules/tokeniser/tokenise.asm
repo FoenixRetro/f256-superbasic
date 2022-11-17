@@ -22,7 +22,7 @@ TokeniseLine:
 		;
 		;		Make the line buffer UpperCase outside quoted strings
 		;
-		jsr 	FixLineBufferCase 			; fix line case
+		jsr 	LCLFixLineBufferCase 		; fix line case
 		;
 		;		Erase the tokenised line to empty
 		;
@@ -47,7 +47,7 @@ _TKFindFirst:
 		bcc 	_TKNoLineNumber
 		cmp 	#'9'+1
 		bcs 	_TKNoLineNumber
-		jsr 	TokeniseExtractLineNumber
+		jsr 	TOKExtractLineNumber
 _TKNoLineNumber:		
 		;----------------------------------------------------------------------------------------
 		;
@@ -100,15 +100,15 @@ _TKStandardPunctuation:
 		ora 	zTemp0 
 		ora 	#$10						; now in the range 16-31
 _TKNoShift:		
-		jsr 	TokeniseWriteByte 			; write the punctuation character
+		jsr 	TOKWriteByte 				; write the punctuation character
 		inx 								; consume the character
 		bra 	_TKTokeniseLoop 			; and loop round again.
 
 _TKString: 									; tokenise a string "Hello world"
-		jsr 	TokeniseString
+		jsr 	TOKTokenString
 		bra 	_TKTokeniseLoop
 _TKHexConstant: 							; tokenise hex constant #A277
-		jsr 	TokeniseHexConstant
+		jsr 	TOKHexConstant
 		bra 	_TKTokeniseLoop
 
 		;----------------------------------------------------------------------------------------
@@ -131,7 +131,7 @@ _TKCheckDouble:
 		adc 	lineBuffer+1,x 				; add < = > codes - < code
 		sec
 		sbc 	#'<' 
-		jsr 	TokeniseWriteByte 			; this is in the range 0-7
+		jsr 	TOKWriteByte 				; this is in the range 0-7
 		inx 								; consume both
 		inx
 		bra 	_TKTokeniseLoop
@@ -143,7 +143,7 @@ _TKCheckDouble:
 		;----------------------------------------------------------------------------------------
 
 _TKExit:lda 	#KWC_EOL 					; write end of line byte
-		jsr 	TokeniseWriteByte		
+		jsr 	TOKWriteByte		
 		rts	
 
 		;----------------------------------------------------------------------------------------
@@ -190,7 +190,7 @@ _TKNoTypeCharacter:
 		sta 	identTypeByte
 _TKNoArray:		
 		stx 	identTypeEnd 				; save end marker, e.g. continue from here.
-		jsr 	TokeniseCalculateHash 		; calculate the has for those tokens
+		jsr 	TOKCalculateHash 			; calculate the has for those tokens
 
 		;----------------------------------------------------------------------------------------
 		;
@@ -201,7 +201,7 @@ _TKNoArray:
 checktokens .macro
 		ldy 	#(\1) >> 8
 		lda 	#(\1) & $FF
-		jsr 	TokeniseSearchTable
+		jsr 	TOKSearchTable
 		.endm
 
 		.checktokens KeywordSet0			; check the three token tables for the keyword.
@@ -220,7 +220,7 @@ checktokens .macro
 		;
 		;----------------------------------------------------------------------------------------
 
-		jsr 	CheckCreateVariableRecord 	; failed all, it's a variable, create record if does not exist.
+		jsr 	TOKCheckCreateVariableRecord ; failed all, it's a variable, create record if does not exist.
 		ldx 	identTypeEnd 				; X points to following byte
 		jmp 	_TKTokeniseLoop 			; and go round again.
 
@@ -234,10 +234,10 @@ _TKFoundToken:
 		pha 								; save token
 		txa 								; shift in X, is there one ?
 		beq 	_TKNoTShift
-		jsr 	TokeniseWriteByte 			; if so, write it out
+		jsr 	TOKWriteByte 				; if so, write it out
 _TKNoTShift:
 		pla 								; restore and write token
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 		ldx 	identTypeEnd 				; X points to following byte
 		jmp 	_TKTokeniseLoop 			; and go round again.
 
@@ -247,9 +247,9 @@ _TKNoTShift:
 ;
 ; ************************************************************************************************
 
-TokeniseString:
+TOKTokenString:
 		lda 	#KWC_STRING 				; string token.
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 		inx									; start of quoted string.
 		phx 								; push start of string on top
 		dex
@@ -262,7 +262,7 @@ _TSFindEnd:
 _TSEndOfString:
 		ply  								; so now Y is first character, X is character after end.		
 		pha 								; save terminating character
-		jsr 	TOWriteBlockXY 				; write X to Y as a data block
+		jsr 	TOKWriteBlockXY 			; write X to Y as a data block
 		pla 								; terminating character
 		beq 	_TSNotQuote					; if it wasn't EOS skip it
 		inx
@@ -271,24 +271,24 @@ _TSNotQuote:
 ;
 ;		Write Y to X with a trailing NULL.
 ;
-TOWriteBlockXY:
+TOKWriteBlockXY:
 		stx 	zTemp0 						; write end character
 		tya
 		eor 	#$FF
 		sec
 		adc 	zTemp0
 		inc 	a 							; one extra for NULL
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 _TOBlockLoop:
 		cpy 	zTemp0
 		beq 	_TOBlockExit
 		lda 	lineBuffer,y
-		jsr 	TokeniseWriteByte				
+		jsr 	TOKWriteByte				
 		iny
 		bra 	_TOBlockLoop
 _TOBlockExit:
 		lda 	#0
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 		rts
 
 ; ************************************************************************************************
@@ -297,9 +297,9 @@ _TOBlockExit:
 ;
 ; ************************************************************************************************
 
-TokeniseHexConstant:
+TOKHexConstant:
 		lda 	#KWC_HEXCONST 				; hex constant token.
-		jsr 	TokeniseWriteByte
+		jsr 	TOKWriteByte
 		inx									; start of quoted string.
 		phx 								; push start of constant on top
 		dex
@@ -316,7 +316,7 @@ _THFindLoop:
 		bcc 	_THFindLoop
 _THFoundEnd:
 		ply 								; restore start
-		jsr 	TOWriteBlockXY 				; output the block
+		jsr 	TOKWriteBlockXY 			; output the block
 		rts
 
 		.send code

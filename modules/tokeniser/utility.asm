@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-TokeniseCalculateHash:
+TOKCalculateHash:
 		phx
 		ldx 	identStart 					; needs to be same as in tokens.py - simple sum
 		lda 	#0
@@ -38,7 +38,7 @@ _TCHLoop:
 ;
 ; ************************************************************************************************
 
-FixLineBufferCase:
+LCLFixLineBufferCase:
 		ldx 	#0
 _FLBCLoop:
 		lda 	lineBuffer,x 				; get next character
@@ -74,13 +74,13 @@ _FLBCExit:
 ;
 ; ************************************************************************************************
 
-TokeniseExtractLineNumber:
+TOKExtractLineNumber:
 		lda 	tokenLineNumber+1 			; push current value on stack
 		pha
 		lda 	tokenLineNumber
 		pha
-		jsr 	_TELNTimes2 				; line # x 4
-		jsr 	_TELNTimes2 				; line # x 2
+		jsr 	_LCLNTimes2 				; line # x 4
+		jsr 	_LCLNTimes2 				; line # x 2
 		;
 		clc 								; add stacked value
 		pla 
@@ -89,7 +89,7 @@ TokeniseExtractLineNumber:
 		pla 
 		adc 	tokenLineNumber+1
 		sta 	tokenLineNumber+1 			; line # x 5
-		jsr 	_TELNTimes2 				; line # x 10
+		jsr 	_LCLNTimes2 				; line # x 10
 		;
 		lda 	lineBuffer,x 				; get and consume character
 		inx
@@ -104,10 +104,10 @@ _TLENNoCarry:
 		cmp 	#'0'
 		bcc 	_TLENExit
 		cmp 	#'9'+1
-		bcc 	TokeniseExtractLineNumber
+		bcc 	TOKExtractLineNumber
 _TLENExit:
 		rts
-_TELNTimes2:		
+_LCLNTimes2:		
 		asl 	tokenLineNumber
 		rol 	tokenLineNumber+1
 		rts
@@ -118,7 +118,7 @@ _TELNTimes2:
 ;
 ; ************************************************************************************************
 
-TokeniseWriteByte:	
+TOKWriteByte:	
 		phx
 		ldx 	tokenOffset 				; next slot to write to
 		sta 	tokenOffset,x 				; write byte out

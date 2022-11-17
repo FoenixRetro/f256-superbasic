@@ -19,11 +19,12 @@ setcolour .macro
 
 ; ************************************************************************************************
 ;
-;							Convert one line back to text.
+;							Convert one line back to text. Indent is A
 ;
 ; ************************************************************************************************
 
 ListConvertLine:
+		pha 								; save indent on the stack
 		stz 	tbOffset
 		stz 	tokenBuffer
 		ldy 	#2 							; convert line number to string
@@ -31,7 +32,7 @@ ListConvertLine:
 		tax
 		dey
 		.cget
-		jsr 	ConvertInt16
+		jsr 	LCLConvertInt16
 		sta 	zTemp0 						; copy number into buffer
 		stx 	zTemp0+1
 		.setcolour CLINumber
@@ -43,7 +44,7 @@ _LCCopyNumber:
 		lda 	(zTemp0),y
 		bne 	_LCCopyNumber
 
-		jsr 	ScanGetCurrentLineStep 		; adjustment to indent
+		pla 								; adjustment to indent
 		pha 								; save on stack
 		bpl 	_LCNoAdjust 				; don't adjust indent if +ve, do after.
 		clc 								; add to list indent and make 0 if goes -ve.
@@ -143,7 +144,7 @@ _LCNoAdd2:
 _LCPunctuation:
 		cmp 	#':' 						; check if :
 		bne 	_LCPContinue
-		jsr 	LCDeleteLastSpace
+		jsr 	LCLDeleteLastSpace
 _LCPContinue:		
 		iny 								; consume character
 		jsr 	LCLWrite 					; write it out.
@@ -196,7 +197,7 @@ _LCTokens:
 _LCUseShift:								; skip over token if using $81/$82 shifts
 		iny
 _LCNoShift:
-		jsr 	LCCheckSpaceRequired 		; do we need a space ?
+		jsr 	LCLCheckSpaceRequired 		; do we need a space ?
 		.cget 								; get the token again
 		tax 								; into X
 _LCFindText:		
@@ -294,7 +295,7 @@ _LCLNoColour:
 ;
 ; ************************************************************************************************
 
-LCDeleteLastSpace:
+LCLDeleteLastSpace:
 		pha
 		phx
 		ldx 	tbOffset
@@ -314,7 +315,7 @@ _LCDLSExit:
 ;
 ; ************************************************************************************************
 
-LCCheckSpaceRequired:
+LCLCheckSpaceRequired:
 		lda 	LCLastCharacter 			; check last character
 		cmp 	#'$' 						; $ # and ) require that token space.
 		beq 	_LCCSRSpace
