@@ -16,7 +16,7 @@ NewCommand: ;; [new]
 		jsr 	MemoryNew
 		stz 	VariableSpace 				; erase all variables.
 		jsr 	ClearCommand 				; clear everything.
-		rts
+		jmp 	WarmStart
 
 		.send code
 
