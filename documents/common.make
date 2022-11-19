@@ -41,3 +41,11 @@ ROOTDIR = ..$(S)
 #		Current assembler
 # 
 ASM = 64tass
+#
+#		Load Addresses
+#
+LMONITOR = E000
+LLOCKOUT = F000
+LBASIC = 8000
+LSOURCE = 3000
+LSPRITES = 30000

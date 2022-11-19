@@ -21,8 +21,8 @@ TTYPORT = /dev/ttyUSB0
 LANGUAGE = en
 SOURCE = invaders.bas  ..$(S)common$(S)title.bas
 
-START = $(EMULATOR) $(BINDIR)basic.rom@8000 storage$(S)load.dat@3000 graphics.bin@30000
-# 3000 is hardcoded in backload.asm
+START = $(EMULATOR) $(BINDIR)basic.rom@b storage$(S)load.dat@$(LSOURCE) graphics.bin@$(LSPRITES)
+# $(LSOURCE) is hardcoded in backload.asm
 
 #
 #		Extract Graphics, perhaps
@@ -54,8 +54,8 @@ run: sprites program
 #
 go: sprites program 
 	$(CCOPY) $(BINDIR)foenixmgr.ini .	
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)lockout.rom --address F000
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary graphics.bin --address 30000
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 3000
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)basic.rom --address 8000
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address F000
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)lockout.rom --address $(LLOCKOUT)
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary graphics.bin --address $(LSPRITES)
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address $(LSOURCE)
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)basic.rom --address $(LBASIC)
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address $(LMONITOR)

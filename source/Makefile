@@ -29,7 +29,7 @@ KRN_REPO= ..$(S)..$(S)junior-tinykernel
 
 MODULES= _hardware _graphics _tokeniser
 
-START = $(EMULATOR) $(APPNAME)@8000 storage$(S)load.dat@3000 $(BINDIR)graphics.bin@30000
+START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@3000 $(BINDIR)graphics.bin@30000
 # 3000 is hardcoded in backload.asm
 
 all :  basic
@@ -48,11 +48,11 @@ testbasic:prelim
 #
 go : basic 
 	python scripts$(S)checkload.py
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)lockout.rom --address F000
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)graphics.bin --address 30000
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 3000
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary basic.rom --address 8000
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address F000
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)lockout.rom --address $(LLOCKOUT)
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)graphics.bin --address $(LSPRITES)
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address $(LSOURCE)
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary basic.rom --address $(LBASIC)
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address $(LMONITOR)
 #
 #		Create sprites
 #

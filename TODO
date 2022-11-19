@@ -12,3 +12,4 @@ Later:
 	Disable interrupts enable at end of line command ?
 	Changing Kerning ?
 
+Remove the address constants from Makefiles.

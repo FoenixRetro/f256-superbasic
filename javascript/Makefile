@@ -52,3 +52,4 @@ build1:
 
 server:
 	python -m http.server 8000
+	
