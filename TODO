@@ -3,6 +3,7 @@ Progress:
 	tiles ?
 	DMA ?
 	Not initialised flag on variables. ?
+	Redo the LUT (8-15)
 	
 Ongoing:
 	Code reading.
