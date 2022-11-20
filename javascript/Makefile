@@ -34,7 +34,7 @@ SOURCES = emulator/framework/main.cpp emulator/framework/gfx.cpp emulator/framew
 DEFINES = -D EMSCRIPTEN -D LINUX -D NO_DEBUGGER -DINCLUDE_OS_SUPPORT 
 EMFLAGS = -I. -I emulator/framework -I emulator//cpu -I emulator/include -I emulator -O2 -s USE_SDL=2 -s WASM=1 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]'
 COMPILE = 	emcc $(SOURCES) $(DEFINES) $(CADDRESSES) $(EMFLAGS) -o f256.html
-LOADERS = python makeloader.py
+LOADERS = python makeloader.py $(CADDRESSES)
 
 all: build 
 
@@ -42,7 +42,7 @@ build: build1
 	make -C ../source basic  
 	$(CCOPY) utility$(S)dummy* loading
 	make -C ../source basic
-	$(CCOPY) ../source/basic.rom loading/basic.8000
+	$(CCOPY) ../source/basic.rom loading/basic.basic
 	$(LOADERS)
 	$(COMPILE)
 
