@@ -11,7 +11,3 @@ Ongoing:
 Later:
 	Disable interrupts enable at end of line command ?
 	Changing Kerning ?
-
-
-Move BASIC address back to 38000
-MakeLoader needs to understand it for BASIC.

@@ -33,6 +33,6 @@ Each time t = 0 if not empty dequeue next note for this channel, queue is in ord
 
 Sound <Channel>,<Pitch>,[<Volume>],[<Slide>]
 Playing(Channel)
-Sound Off
+Sound Off (at run ?)
 
 Called every 1/10 second max.
