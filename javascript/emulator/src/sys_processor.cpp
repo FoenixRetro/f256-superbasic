@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "sys_processor.h"
 #include "sys_debug_system.h"
 #include "hardware.h"
@@ -116,7 +117,7 @@ void CPUSaveArguments(int argc,char *argv[]) {
 // *******************************************************************************************************************************
 
 void CPUCopyROM(int address,int size,const BYTE8 *data) {
-	for (int i = 0;i < size;i++) memory[address+i] = data[i];					
+	for (int i = 0;i < size;i++) ramMemory[address+i] = data[i];					
 }
 
 // *******************************************************************************************************************************
@@ -129,23 +130,20 @@ void CPUCopyROM(int address,int size,const BYTE8 *data) {
 static void CPULoadChunk(FILE *f,BYTE8* memory,WORD16 address,int count);
 
 void CPUReset(void) {
-	for (int i = 0x10000;i < MEMSIZE;i++) {
-		ramMemory[i] = rand();
-	}
 	mapping = ramMemory+0x08; 														// Default mapping (through LUT0)
 	writeProtect = 0;
 	for (int i = 0;i < 8;i++) { 													// Map to first pages.
 		mapping[i] = i;
 		ramMemory[i+8] = mapping[i];
 	}
-	mapping[7] = ramMemory[7] = 0x7F;
+	mapping[7] = ramMemory[7] = FLASH_MONITOR;
 
 	for (int i = 0;i < 8*256;i++) {
 		IOWriteMemory(1,i+0xC000,character_rom[i]);
 	}
 
 	isPageCMemory = ((ramMemory[1] & 4) != 0);										// Set PageC RAM flag.
-	CPUCopyROM(0xFF000,0x1000,monitor_rom); 										// Load the tiny kernal by default.
+	CPUCopyROM((FLASH_MONITOR << 13),sizeof(monitor_rom),monitor_rom); 				// Load the tiny kernal by default.
 	HWReset();																		// Reset Hardware
 
 	#ifdef EMSCRIPTEN  																// Loading in stuff alternative for emScripten
@@ -154,12 +152,20 @@ void CPUReset(void) {
 
 	for (int i = 1;i < argumentCount;i++) {
 		char szBuffer[128];
-		int loadAddress,startAddress;
+		int loadAddress;
 		strcpy(szBuffer,argumentList[i]);											// Get buffer
 		char *p = strchr(szBuffer,'@');
 		if (p == NULL) exit(fprintf(stderr,"Bad argument %s\n",argumentList[i]));
 		*p++ = '\0';
-		if (sscanf(p,"%x",&loadAddress) != 1) exit(fprintf(stderr,"Bad argument %s\n",argumentList[i]));
+		loadAddress = -1;
+		if (p[1] == '\0') {
+			if (toupper(p[0]) == 'B') loadAddress = FLASH_BASIC << 13;
+			if (toupper(p[0]) == 'M') loadAddress = FLASH_MONITOR << 13;
+		}
+		if (loadAddress < 0) {
+			if (sscanf(p,"%x",&loadAddress) != 1) exit(fprintf(stderr,"Bad argument %s\n",argumentList[i]));
+		}
+		printf("Loading '%s' to $%04x ..",szBuffer,loadAddress);
 		FILE *f = fopen(szBuffer,"rb");
 		if (f == NULL) exit(fprintf(stderr,"No file %s\n",argumentList[i]));
 		while (!feof(f)) {
@@ -168,7 +174,7 @@ void CPUReset(void) {
 			}
 		}
 		fclose(f);
-		printf("Loaded '%s' to $%04x..$%04x\n",szBuffer,startAddress,loadAddress-1);
+		printf("Okay\n");
 	}
 
 	inFastMode = 0;																	// Fast mode flag reset
@@ -185,7 +191,6 @@ void CPUInterruptMaskable(void) {
 // *******************************************************************************************************************************
 
 BYTE8 CPUExecuteInstruction(void) {
-	xprintf("%d\n",mapping[7]);
 	if (pc == 0xFFFF) {
 		CPUExit();
 		return FRAME_RATE;
