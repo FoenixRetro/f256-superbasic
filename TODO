@@ -11,6 +11,3 @@ Ongoing:
 Later:
 	Disable interrupts enable at end of line command ?
 	Changing Kerning ?
-
-Fix the paging so it actually makes sense on the emulator.
-Make newmonitor.asm load 0 properly then 3 properly
