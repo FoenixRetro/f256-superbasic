@@ -46,7 +46,7 @@ testbasic:prelim
 #
 #		Run on real hardware
 #
-go : basic 
+go : 
 	python scripts$(S)checkload.py
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)lockout.rom --address $(LLOCKOUT)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)graphics.bin --address $(LSPRITES)
@@ -94,7 +94,7 @@ basic : prelim
 	64tass -D AUTORUN=0 $(ASMOPTS) _basic.asm -o $(APPNAME)
 	$(CCOPY) $(APPNAME) $(BINDIR)
 
-autorun:testbasic
+autorun:
 	python scripts$(S)checkload.py
 	$(START)
 	
