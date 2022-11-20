@@ -2,6 +2,9 @@
 20 snd = $D600
 30 print "Running"
 40 sound(0,0)
+42 sound(1,0)
+44 sound(2,0)
+46 sound(3,0)
 50 end
 100 proc sound(channel,pitch)
 110	?snd = (pitch & $0F) | $80 | (channel << 5)
