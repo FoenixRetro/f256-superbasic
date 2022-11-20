@@ -35,7 +35,6 @@ Start:	ldx 	#$FF 						; stack reset
 		.endif
 
 Prompt:	.text 	12,"*** F256 Junior SuperBASIC ***",13,13
-		.text 	"Written by Paul Robson 2022.",13,13
 		.include "../generated/timestamp.asm"
 		.byte 	13,13,0
 

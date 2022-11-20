@@ -33,8 +33,8 @@ CONBackground = CONBlue
 CLINumber = CONBlueGreen
 CLIToken = CONCyan
 CLIConstant = CONLightBlue
-CLIIdentifier = CONYellowGreen
-CLIPunctuation = CONYellow
+CLIIdentifier = CONYellow
+CLIPunctuation = CONYellowGreen
 CLIData = CONWhite
 
 ; ************************************************************************************************
