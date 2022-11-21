@@ -53,8 +53,7 @@ _SNDSilenceLoop:
 		jsr 	SNDSilenceChannel
 		pla
 		dec 	a
-		cmp 	#$2F
-		bne 	_SNDSilenceLoop
+		bpl 	_SNDSilenceLoop
 _SNDExit:
 		rts
 

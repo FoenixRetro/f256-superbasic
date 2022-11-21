@@ -19,7 +19,17 @@
 		.section code
 
 SoundCommand: ;; [sound]
+		.cget
+		cmp 	#KWD_OFF 					; SOUND OFF ?
+		bne 	_SNDMain
+		iny 								; skip OFF
+		lda 	#$3F 						; call command $3F (silence)
+		phy
+		jsr 	SNDCommand
+		ply
+		rts
 
+_SNDMain:
 		ldx 	#0
 		jsr 	Evaluate8BitInteger 		; channel
 		cmp 	#4 							; must be 0-3
@@ -49,7 +59,7 @@ SoundCommand: ;; [sound]
 		cmp 	#KWD_COMMA
 		bne 	_SNDPlay
 		iny
-		jsr 	Evaluate16BitInteger 		; Slide
+		jsr 	Evaluate16BitIntegerSigned 	; Slide
 		lda 	NSMantissa0,x 				; Slide (2 bytes + 4)
 		sta 	SoundCommandBlock+4 		
 		lda 	NSMantissa1,x

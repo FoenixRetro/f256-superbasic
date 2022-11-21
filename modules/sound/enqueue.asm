@@ -19,12 +19,11 @@
 ; ************************************************************************************************
 
 SNDQueueRequest:
-		.debug
 		stx 	zTemp0						; save queue address
 		sty 	zTemp0+1 
 		;
 		ldx 	SNDLength 					; queue is full, can't take any more.
-		cpx 	SNDQueueSize
+		cpx 	#SNDQueueSize
 		beq 	_SNDQRExit
 		;
 		and 	#3	 						; channel # and push on stack
@@ -43,8 +42,9 @@ SNDQueueRequest:
 _SNDQCopy:
 		lda 	(zTemp0),y
 		inx
+		iny
 		sta 	SNDQueue,x		
-		cpy 	#7
+		cpy 	#6
 		bne 	_SNDQCopy
 		;
 		inc 	SNDLength 					; bump queue length.
