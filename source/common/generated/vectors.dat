@@ -141,7 +141,7 @@ VectorSet0:
 	.word	RemCommand                       ; $c7 REM
 	.word	Command_RETURN                   ; $c8 RETURN
 	.word	SyntaxError                      ; $c9 SOLID
-	.word	SyntaxError                      ; $ca SOUND
+	.word	SoundCommand                     ; $ca SOUND
 	.word	SpriteCommand                    ; $cb SPRITE
 	.word	TextCommand                      ; $cc TEXT
 	.word	Unused2                          ; $cd TO

@@ -107,6 +107,7 @@
 	.include	"./common/module.interface/hardware/event.asm"
 	.include	"./common/module.interface/hardware/joy.asm"
 	.include	"./common/module.interface/hardware/timer.asm"
+	.include	"./common/module.interface/sound/sound.asm"
 	.include	"./common/stack/bytes.asm"
 	.include	"./common/stack/frames.asm"
 	.include	"./common/stack/location.asm"

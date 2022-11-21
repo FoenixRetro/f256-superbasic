@@ -1,16 +1,17 @@
 10 ?1 = 0
 20 snd = $D600
 30 print "Running"
-40 sound(0,250)
-42 sound(1,500)
-44 sound(2,1000)
-46 sound(3,16*5)
-48 sound(0,0):sound(1,0):sound(2,0):sound(3,0)
+40 sound(0,1000)
+42 sound(1,50)
+44 sound(2,0)
+46 sound(3,0)
 50 end
 100 proc sound(channel,pitch)
 110	?snd = (pitch & $0F) | $80 | (channel << 5)
-120 ?snd = pitch >> 4 | (channel << 5)
+120 ?snd = pitch >> 4
 130 ?snd = $90 | (channel << 5)
 140 if pitch = 0 then ?snd = $9F|(channel << 5)
 150 endproc
 Ã¿Ã¿Ã¿Ã¿
+
+80/10/90ÿÿÿÿ
