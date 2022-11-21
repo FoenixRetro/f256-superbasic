@@ -1,5 +1,11 @@
 Progress:
 	sound write the driver
+	- queuing sound command
+	- dummy sync (empty sound has new command ?)
+	- check silence dequeues
+	- sync (sound goes to in use ....)
+	- clock to update it in RUN (?)
+
 	tiles ?
 	DMA ?
 	Not initialised flag on variables. ?
