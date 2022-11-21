@@ -1,7 +1,8 @@
 Progress:
 	
-	sound write the driver
-	- clock to update it in RUN  + sync where required. (?) Keyboard get command needs it too.
+	sound 
+	- sync where required. 
+	- Keyboard get command needs it too.
 
 	tiles ?
 	DMA ?

@@ -34,7 +34,7 @@ SNDCheckChannel:
 		txa 								; put in A
 		jsr 	SNDFindNextNoteForA 		; is there a note for A in the queue ?
 		pla 								; channel # in A
-		bcc 	_SNDCCExit
+		bcc 	_SNDCCExit  				; nothing in the queue for this channel, exit.
 		;
 		tay 								; Y is the channel #
 		;

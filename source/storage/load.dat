@@ -1,4 +1,5 @@
 100 sound 1,1000,10
 110 sound 1,1023,255,-4
+120 repeat:until false
 Ã¿Ã¿Ã¿Ã¿
 ÿÿÿÿ

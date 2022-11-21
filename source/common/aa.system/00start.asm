@@ -32,6 +32,8 @@ Start:	ldx 	#$FF 						; stack reset
 		jsr 	SNDCommand
 		.endif
 
+		.tickinitialise 					; initialise tick handler
+		
 		jsr 	NewProgram 					; erase current program
 		jsr 	BackloadProgram
 
