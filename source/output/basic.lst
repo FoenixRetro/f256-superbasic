@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=1 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Mon Nov 21 11:22:21 2022
+; Mon Nov 21 12:13:42 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -398,7 +398,7 @@
 .8010	a8		tay				tay
 .8011	20 9d aa	jsr $aa9d			jsr 	GXGraphicDraw
 .8014	a9 0f		lda #$0f			lda 	#$0F 						; initialise sound system
-.8016	20 80 b8	jsr $b880			jsr 	SNDCommand
+.8016	20 2b b9	jsr $b92b			jsr 	SNDCommand
 .8019	20 53 88	jsr $8853			jsr 	NewProgram 					; erase current program
 .801c	20 e3 82	jsr $82e3			jsr 	BackloadProgram
 .801f	4c f2 89	jmp $89f2			jmp 	CommandRun
@@ -408,9 +408,9 @@
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->8043	42 75 69 6c 74 20 4d 6f			.text "Built Monday 21-Nov-2022. Build 3420."
+>8043	42 75 69 6c 74 20 4d 6f			.text "Built Monday 21-Nov-2022. Build 3432."
 >804b	6e 64 61 79 20 32 31 2d 4e 6f 76 2d 32 30 32 32
->805b	2e 20 42 75 69 6c 64 20 33 34 32 30 2e
+>805b	2e 20 42 75 69 6c 64 20 33 34 33 32 2e
 
 ;******  Return to file: ./common/aa.system/00start.asm
 
@@ -5485,9 +5485,9 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->a121	42 75 69 6c 74 20 4d 6f			.text "Built Monday 21-Nov-2022. Build 3420."
+>a121	42 75 69 6c 74 20 4d 6f			.text "Built Monday 21-Nov-2022. Build 3432."
 >a129	6e 64 61 79 20 32 31 2d 4e 6f 76 2d 32 30 32 32
->a139	2e 20 42 75 69 6c 64 20 33 34 32 30 2e
+>a139	2e 20 42 75 69 6c 64 20 33 34 33 32 2e
 
 ;******  Return to file: _basic.asm
 
@@ -6242,7 +6242,7 @@
 .a5ea	c8		iny				iny 								; skip OFF
 .a5eb	a9 3f		lda #$3f			lda 	#$3F 						; call command $3F (silence)
 .a5ed	5a		phy				phy
-.a5ee	20 80 b8	jsr $b880			jsr 	SNDCommand
+.a5ee	20 2b b9	jsr $b92b			jsr 	SNDCommand
 .a5f1	7a		ply				ply
 .a5f2	60		rts				rts
 .a5f3					_SNDMain:
@@ -6281,7 +6281,7 @@
 .a641	09 10		ora #$10			ora 	#$10 						; 1x = Queue sound
 .a643	a2 37		ldx #$37			ldx 	#(SoundCommandBlock & $FF)
 .a645	a0 06		ldy #$06			ldy 	#(SoundCommandBlock >> 8)
-.a647	20 80 b8	jsr $b880			jsr 	SNDCommand
+.a647	20 2b b9	jsr $b92b			jsr 	SNDCommand
 .a64a	7a		ply				ply
 .a64b	60		rts				rts
 .a64c					_SndError:
@@ -7045,49 +7045,49 @@
 =80					GCMD_Plot = 40*2
 =82					GCMD_SpriteMove = 41*2
 =42					GRFirstFreeCode = 42
-.b8ae					GRVectorTable:
->b8ae	98 ac					.word	GXInitialise             ; $00 Initialise
->b8b0	b2 ac					.word	GXControlBitmap          ; $01 BitmapCtl
->b8b2	fa ac					.word	GXControlSprite          ; $02 SpriteCtl
->b8b4	4a ac					.word	GXClearBitmap            ; $03 Clear
->b8b6	89 ae					.word	GXSetColourMode          ; $04 Colour
->b8b8	51 b0					.word	GXFontHandler            ; $05 DrawFont
->b8ba	99 b0					.word	GXSpriteHandler          ; $06 DrawSprite
->b8bc	05 b1					.word	GXSelect                 ; $07 SpriteUse
->b8be	2e b1					.word	GXSelectImage            ; $08 SpriteImage
->b8c0	b5 b2					.word	GXCollide                ; $09 SpriteCollide
->b8c2	fc aa					.word	GRUndefined              ; $0a
->b8c4	fc aa					.word	GRUndefined              ; $0b
->b8c6	fc aa					.word	GRUndefined              ; $0c
->b8c8	fc aa					.word	GRUndefined              ; $0d
->b8ca	fc aa					.word	GRUndefined              ; $0e
->b8cc	fc aa					.word	GRUndefined              ; $0f
->b8ce	fc aa					.word	GRUndefined              ; $10
->b8d0	fc aa					.word	GRUndefined              ; $11
->b8d2	fc aa					.word	GRUndefined              ; $12
->b8d4	fc aa					.word	GRUndefined              ; $13
->b8d6	fc aa					.word	GRUndefined              ; $14
->b8d8	fc aa					.word	GRUndefined              ; $15
->b8da	fc aa					.word	GRUndefined              ; $16
->b8dc	fc aa					.word	GRUndefined              ; $17
->b8de	fc aa					.word	GRUndefined              ; $18
->b8e0	fc aa					.word	GRUndefined              ; $19
->b8e2	fc aa					.word	GRUndefined              ; $1a
->b8e4	fc aa					.word	GRUndefined              ; $1b
->b8e6	fc aa					.word	GRUndefined              ; $1c
->b8e8	fc aa					.word	GRUndefined              ; $1d
->b8ea	fc aa					.word	GRUndefined              ; $1e
->b8ec	fc aa					.word	GRUndefined              ; $1f
->b8ee	fa aa					.word	GXMove                   ; $20 Move
->b8f0	57 ad					.word	GXLine                   ; $21 Line
->b8f2	d2 ae					.word	GXFrameRectangle         ; $22 FrameRect
->b8f4	cf ae					.word	GXFillRectangle          ; $23 FillRect
->b8f6	01 ab					.word	GXFrameCircle            ; $24 FrameCircle
->b8f8	fd aa					.word	GXFillCircle             ; $25 FillCircle
->b8fa	fc aa					.word	GRUndefined              ; $26
->b8fc	fc aa					.word	GRUndefined              ; $27
->b8fe	b7 ae					.word	GXPlotPoint              ; $28 Plot
->b900	c4 b1					.word	GXMoveSprite             ; $29 SpriteMove
+.b959					GRVectorTable:
+>b959	98 ac					.word	GXInitialise             ; $00 Initialise
+>b95b	b2 ac					.word	GXControlBitmap          ; $01 BitmapCtl
+>b95d	fa ac					.word	GXControlSprite          ; $02 SpriteCtl
+>b95f	4a ac					.word	GXClearBitmap            ; $03 Clear
+>b961	89 ae					.word	GXSetColourMode          ; $04 Colour
+>b963	51 b0					.word	GXFontHandler            ; $05 DrawFont
+>b965	99 b0					.word	GXSpriteHandler          ; $06 DrawSprite
+>b967	05 b1					.word	GXSelect                 ; $07 SpriteUse
+>b969	2e b1					.word	GXSelectImage            ; $08 SpriteImage
+>b96b	b5 b2					.word	GXCollide                ; $09 SpriteCollide
+>b96d	fc aa					.word	GRUndefined              ; $0a
+>b96f	fc aa					.word	GRUndefined              ; $0b
+>b971	fc aa					.word	GRUndefined              ; $0c
+>b973	fc aa					.word	GRUndefined              ; $0d
+>b975	fc aa					.word	GRUndefined              ; $0e
+>b977	fc aa					.word	GRUndefined              ; $0f
+>b979	fc aa					.word	GRUndefined              ; $10
+>b97b	fc aa					.word	GRUndefined              ; $11
+>b97d	fc aa					.word	GRUndefined              ; $12
+>b97f	fc aa					.word	GRUndefined              ; $13
+>b981	fc aa					.word	GRUndefined              ; $14
+>b983	fc aa					.word	GRUndefined              ; $15
+>b985	fc aa					.word	GRUndefined              ; $16
+>b987	fc aa					.word	GRUndefined              ; $17
+>b989	fc aa					.word	GRUndefined              ; $18
+>b98b	fc aa					.word	GRUndefined              ; $19
+>b98d	fc aa					.word	GRUndefined              ; $1a
+>b98f	fc aa					.word	GRUndefined              ; $1b
+>b991	fc aa					.word	GRUndefined              ; $1c
+>b993	fc aa					.word	GRUndefined              ; $1d
+>b995	fc aa					.word	GRUndefined              ; $1e
+>b997	fc aa					.word	GRUndefined              ; $1f
+>b999	fa aa					.word	GXMove                   ; $20 Move
+>b99b	57 ad					.word	GXLine                   ; $21 Line
+>b99d	d2 ae					.word	GXFrameRectangle         ; $22 FrameRect
+>b99f	cf ae					.word	GXFillRectangle          ; $23 FillRect
+>b9a1	01 ab					.word	GXFrameCircle            ; $24 FrameCircle
+>b9a3	fd aa					.word	GXFillCircle             ; $25 FillCircle
+>b9a5	fc aa					.word	GRUndefined              ; $26
+>b9a7	fc aa					.word	GRUndefined              ; $27
+>b9a9	b7 ae					.word	GXPlotPoint              ; $28 Plot
+>b9ab	c4 b1					.word	GXMoveSprite             ; $29 SpriteMove
 =3					GXMappingPage = 3
 =24576					GXMappingAddress = ($2000 * GXMappingPage)
 =11					GXEditSlot = 8 + GXMappingPage
@@ -7200,7 +7200,7 @@
 .aaf2	c9 54		cmp #$54			cmp 	#GRFirstFreeCode*2 			; bad ?
 .aaf4	b0 ee		bcs $aae4			bcs 	_GDError2
 .aaf6	aa		tax				tax
-.aaf7	7c ae b8	jmp ($b8ae,x)			jmp 	(GRVectorTable,x)
+.aaf7	7c 59 b9	jmp ($b959,x)			jmp 	(GRVectorTable,x)
 .aafa					GXMove:
 .aafa	18		clc				clc
 .aafb	60		rts				rts
@@ -8445,180 +8445,180 @@
 ;******  Processing file: ../modules/_build/_tokeniser.module
 
 =1					tokeniserIntegrated=1
-.b902					KeywordSet0:
->b902	00 65					.text	0,$65,""               ; $80 !0:EOF
->b904	00 58					.text	0,$58,""               ; $81 !1:SH1
->b906	00 5a					.text	0,$5a,""               ; $82 !2:SH2
->b908	04 fe 41 42 53 28			.text	4,$fe,"ABS("           ; $83 ABS(
->b90e	06 93 41 4c 4c 4f 43 28			.text	6,$93,"ALLOC("         ; $84 ALLOC(
->b916	04 ff 41 53 43 28			.text	4,$ff,"ASC("           ; $85 ASC(
->b91c	05 29 43 48 52 24 28			.text	5,$29,"CHR$("          ; $86 CHR$(
->b923	06 aa 45 56 45 4e 54 28			.text	6,$aa,"EVENT("         ; $87 EVENT(
->b92b	05 6b 46 41 4c 53 45			.text	5,$6b,"FALSE"          ; $88 FALSE
->b932	05 44 46 52 41 43 28			.text	5,$44,"FRAC("          ; $89 FRAC(
->b939	04 0d 48 49 54 28			.text	4,$0d,"HIT("           ; $8a HIT(
->b93f	04 13 49 4e 54 28			.text	4,$13,"INT("           ; $8b INT(
->b945	06 a7 49 53 56 41 4c 28			.text	6,$a7,"ISVAL("         ; $8c ISVAL(
->b94d	05 5c 4a 4f 59 42 28			.text	5,$5c,"JOYB("          ; $8d JOYB(
->b954	05 72 4a 4f 59 58 28			.text	5,$72,"JOYX("          ; $8e JOYX(
->b95b	05 73 4a 4f 59 59 28			.text	5,$73,"JOYY("          ; $8f JOYY(
->b962	06 77 4c 45 46 54 24 28			.text	6,$77,"LEFT$("         ; $90 LEFT$(
->b96a	04 07 4c 45 4e 28			.text	4,$07,"LEN("           ; $91 LEN(
->b970	04 0e 4d 41 58 28			.text	4,$0e,"MAX("           ; $92 MAX(
->b976	05 26 4d 49 44 24 28			.text	5,$26,"MID$("          ; $93 MID$(
->b97d	04 0c 4d 49 4e 28			.text	4,$0c,"MIN("           ; $94 MIN(
->b983	04 19 4e 4f 54 28			.text	4,$19,"NOT("           ; $95 NOT(
->b989	08 3c 50 4c 41 59 49 4e			.text	8,$3c,"PLAYING("       ; $96 PLAYING(
->b991	47 28
->b993	07 e9 52 41 4e 44 4f 4d			.text	7,$e9,"RANDOM("        ; $97 RANDOM(
->b99b	28
->b99c	07 ca 52 49 47 48 54 24			.text	7,$ca,"RIGHT$("        ; $98 RIGHT$(
->b9a4	28
->b9a5	04 0c 52 4e 44 28			.text	4,$0c,"RND("           ; $99 RND(
->b9ab	04 10 53 47 4e 28			.text	4,$10,"SGN("           ; $9a SGN(
->b9b1	04 0e 53 50 43 28			.text	4,$0e,"SPC("           ; $9b SPC(
->b9b7	05 45 53 54 52 24 28			.text	5,$45,"STR$("          ; $9c STR$(
->b9be	06 a9 54 49 4d 45 52 28			.text	6,$a9,"TIMER("         ; $9d TIMER(
->b9c6	04 40 54 52 55 45			.text	4,$40,"TRUE"           ; $9e TRUE
->b9cc	04 0b 56 41 4c 28			.text	4,$0b,"VAL("           ; $9f VAL(
->b9d2	03 e7 46 4f 52				.text	3,$e7,"FOR"            ; $a0 FOR
->b9d7	02 8f 49 46				.text	2,$8f,"IF"             ; $a1 IF
->b9db	04 34 50 52 4f 43			.text	4,$34,"PROC"           ; $a2 PROC
->b9e1	06 c1 52 45 50 45 41 54			.text	6,$c1,"REPEAT"         ; $a3 REPEAT
->b9e9	05 79 57 48 49 4c 45			.text	5,$79,"WHILE"          ; $a4 WHILE
->b9f0	05 66 45 4e 44 49 46			.text	5,$66,"ENDIF"          ; $a5 ENDIF
->b9f7	07 0b 45 4e 44 50 52 4f			.text	7,$0b,"ENDPROC"        ; $a6 ENDPROC
->b9ff	43
->ba00	04 3f 4e 45 58 54			.text	4,$3f,"NEXT"           ; $a7 NEXT
->ba06	04 2f 54 48 45 4e			.text	4,$2f,"THEN"           ; $a8 THEN
->ba0c	05 8c 55 4e 54 49 4c			.text	5,$8c,"UNTIL"          ; $a9 UNTIL
->ba13	04 2e 57 45 4e 44			.text	4,$2e,"WEND"           ; $aa WEND
->ba19	02 9b 42 59				.text	2,$9b,"BY"             ; $ab BY
->ba1d	04 1c 43 41 4c 4c			.text	4,$1c,"CALL"           ; $ac CALL
->ba23	06 b2 43 49 52 43 4c 45			.text	6,$b2,"CIRCLE"         ; $ad CIRCLE
->ba2b	05 67 43 4c 45 41 52			.text	5,$67,"CLEAR"          ; $ae CLEAR
->ba32	03 e2 43 4c 53				.text	3,$e2,"CLS"            ; $af CLS
->ba37	05 7f 43 4f 4c 4f 52			.text	5,$7f,"COLOR"          ; $b0 COLOR
->ba3e	06 d4 43 4f 4c 4f 55 52			.text	6,$d4,"COLOUR"         ; $b1 COLOUR
->ba46	04 1a 44 41 54 41			.text	4,$1a,"DATA"           ; $b2 DATA
->ba4c	03 da 44 49 4d				.text	3,$da,"DIM"            ; $b3 DIM
->ba51	06 db 44 4f 57 4e 54 4f			.text	6,$db,"DOWNTO"         ; $b4 DOWNTO
->ba59	04 29 45 4c 53 45			.text	4,$29,"ELSE"           ; $b5 ELSE
->ba5f	04 34 46 52 4f 4d			.text	4,$34,"FROM"           ; $b6 FROM
->ba65	03 e5 47 46 58				.text	3,$e5,"GFX"            ; $b7 GFX
->ba6a	05 80 47 4f 53 55 42			.text	5,$80,"GOSUB"          ; $b8 GOSUB
->ba71	04 39 47 4f 54 4f			.text	4,$39,"GOTO"           ; $b9 GOTO
->ba77	04 24 48 45 52 45			.text	4,$24,"HERE"           ; $ba HERE
->ba7d	05 63 49 4d 41 47 45			.text	5,$63,"IMAGE"          ; $bb IMAGE
->ba84	03 e5 4c 45 54				.text	3,$e5,"LET"            ; $bc LET
->ba89	04 28 4c 49 4e 45			.text	4,$28,"LINE"           ; $bd LINE
->ba8f	05 6b 4c 4f 43 41 4c			.text	5,$6b,"LOCAL"          ; $be LOCAL
->ba96	03 db 4f 46 46				.text	3,$db,"OFF"            ; $bf OFF
->ba9b	02 9d 4f 4e				.text	2,$9d,"ON"             ; $c0 ON
->ba9f	07 20 4f 55 54 4c 49 4e			.text	7,$20,"OUTLINE"        ; $c1 OUTLINE
->baa7	45
->baa8	07 0f 50 41 4c 45 54 54			.text	7,$0f,"PALETTE"        ; $c2 PALETTE
->bab0	45
->bab1	04 3f 50 4c 4f 54			.text	4,$3f,"PLOT"           ; $c3 PLOT
->bab7	05 8d 50 52 49 4e 54			.text	5,$8d,"PRINT"          ; $c4 PRINT
->babe	04 1c 52 45 41 44			.text	4,$1c,"READ"           ; $c5 READ
->bac4	04 2e 52 45 43 54			.text	4,$2e,"RECT"           ; $c6 RECT
->baca	03 e4 52 45 4d				.text	3,$e4,"REM"            ; $c7 REM
->bacf	06 e0 52 45 54 55 52 4e			.text	6,$e0,"RETURN"         ; $c8 RETURN
->bad7	05 7b 53 4f 4c 49 44			.text	5,$7b,"SOLID"          ; $c9 SOLID
->bade	05 89 53 4f 55 4e 44			.text	5,$89,"SOUND"          ; $ca SOUND
->bae5	06 d7 53 50 52 49 54 45			.text	6,$d7,"SPRITE"         ; $cb SPRITE
->baed	04 45 54 45 58 54			.text	4,$45,"TEXT"           ; $cc TEXT
->baf3	02 a3 54 4f				.text	2,$a3,"TO"             ; $cd TO
->baf7	ff					.text	$FF
-.baf8					KeywordSet1:
->baf8	00 65					.text	0,$65,""               ; $80 !0:EOF
->bafa	00 58					.text	0,$58,""               ; $81 !1:SH1
->bafc	00 5a					.text	0,$5a,""               ; $82 !2:SH2
->bafe	08 4c 41 53 53 45 4d 42			.text	8,$4c,"ASSEMBLE"       ; $83 ASSEMBLE
->bb06	4c 45
->bb08	06 d2 41 53 53 45 52 54			.text	6,$d2,"ASSERT"         ; $84 ASSERT
->bb10	06 bd 42 49 54 4d 41 50			.text	6,$bd,"BITMAP"         ; $85 BITMAP
->bb18	03 d7 45 4e 44				.text	3,$d7,"END"            ; $86 END
->bb1d	04 3c 4c 49 53 54			.text	4,$3c,"LIST"           ; $87 LIST
->bb23	03 ea 4e 45 57				.text	3,$ea,"NEW"            ; $88 NEW
->bb28	07 24 52 45 53 54 4f 52			.text	7,$24,"RESTORE"        ; $89 RESTORE
->bb30	45
->bb31	03 f5 52 55 4e				.text	3,$f5,"RUN"            ; $8a RUN
->bb36	07 2a 53 50 52 49 54 45			.text	7,$2a,"SPRITES"        ; $8b SPRITES
->bb3e	53
->bb3f	04 46 53 54 4f 50			.text	4,$46,"STOP"           ; $8c STOP
->bb45	ff					.text	$FF
-.bb46					KeywordSet2:
->bb46	00 65					.text	0,$65,""               ; $80 !0:EOF
->bb48	00 58					.text	0,$58,""               ; $81 !1:SH1
->bb4a	00 5a					.text	0,$5a,""               ; $82 !2:SH2
->bb4c	03 c8 41 44 43				.text	3,$c8,"ADC"            ; $83 ADC
->bb51	03 d3 41 4e 44				.text	3,$d3,"AND"            ; $84 AND
->bb56	03 e0 41 53 4c				.text	3,$e0,"ASL"            ; $85 ASL
->bb5b	03 c8 42 43 43				.text	3,$c8,"BCC"            ; $86 BCC
->bb60	03 d8 42 43 53				.text	3,$d8,"BCS"            ; $87 BCS
->bb65	03 d8 42 45 51				.text	3,$d8,"BEQ"            ; $88 BEQ
->bb6a	03 df 42 49 54				.text	3,$df,"BIT"            ; $89 BIT
->bb6f	03 d8 42 4d 49				.text	3,$d8,"BMI"            ; $8a BMI
->bb74	03 d5 42 4e 45				.text	3,$d5,"BNE"            ; $8b BNE
->bb79	03 de 42 50 4c				.text	3,$de,"BPL"            ; $8c BPL
->bb7e	03 d5 42 52 41				.text	3,$d5,"BRA"            ; $8d BRA
->bb83	03 df 42 52 4b				.text	3,$df,"BRK"            ; $8e BRK
->bb88	03 db 42 56 43				.text	3,$db,"BVC"            ; $8f BVC
->bb8d	03 eb 42 56 53				.text	3,$eb,"BVS"            ; $90 BVS
->bb92	03 d2 43 4c 43				.text	3,$d2,"CLC"            ; $91 CLC
->bb97	03 d3 43 4c 44				.text	3,$d3,"CLD"            ; $92 CLD
->bb9c	03 d8 43 4c 49				.text	3,$d8,"CLI"            ; $93 CLI
->bba1	03 e5 43 4c 56				.text	3,$e5,"CLV"            ; $94 CLV
->bba6	03 e0 43 4d 50				.text	3,$e0,"CMP"            ; $95 CMP
->bbab	03 eb 43 50 58				.text	3,$eb,"CPX"            ; $96 CPX
->bbb0	03 ec 43 50 59				.text	3,$ec,"CPY"            ; $97 CPY
->bbb5	03 cc 44 45 43				.text	3,$cc,"DEC"            ; $98 DEC
->bbba	03 e1 44 45 58				.text	3,$e1,"DEX"            ; $99 DEX
->bbbf	03 e2 44 45 59				.text	3,$e2,"DEY"            ; $9a DEY
->bbc4	03 e6 45 4f 52				.text	3,$e6,"EOR"            ; $9b EOR
->bbc9	03 da 49 4e 43				.text	3,$da,"INC"            ; $9c INC
->bbce	03 ef 49 4e 58				.text	3,$ef,"INX"            ; $9d INX
->bbd3	03 f0 49 4e 59				.text	3,$f0,"INY"            ; $9e INY
->bbd8	03 e7 4a 4d 50				.text	3,$e7,"JMP"            ; $9f JMP
->bbdd	03 ef 4a 53 52				.text	3,$ef,"JSR"            ; $a0 JSR
->bbe2	03 d1 4c 44 41				.text	3,$d1,"LDA"            ; $a1 LDA
->bbe7	03 e8 4c 44 58				.text	3,$e8,"LDX"            ; $a2 LDX
->bbec	03 e9 4c 44 59				.text	3,$e9,"LDY"            ; $a3 LDY
->bbf1	03 f1 4c 53 52				.text	3,$f1,"LSR"            ; $a4 LSR
->bbf6	03 ed 4e 4f 50				.text	3,$ed,"NOP"            ; $a5 NOP
->bbfb	03 e2 4f 52 41				.text	3,$e2,"ORA"            ; $a6 ORA
->bc00	03 d9 50 48 41				.text	3,$d9,"PHA"            ; $a7 PHA
->bc05	03 e8 50 48 50				.text	3,$e8,"PHP"            ; $a8 PHP
->bc0a	03 f0 50 48 58				.text	3,$f0,"PHX"            ; $a9 PHX
->bc0f	03 f1 50 48 59				.text	3,$f1,"PHY"            ; $aa PHY
->bc14	03 dd 50 4c 41				.text	3,$dd,"PLA"            ; $ab PLA
->bc19	03 ec 50 4c 50				.text	3,$ec,"PLP"            ; $ac PLP
->bc1e	03 f4 50 4c 58				.text	3,$f4,"PLX"            ; $ad PLX
->bc23	03 f5 50 4c 59				.text	3,$f5,"PLY"            ; $ae PLY
->bc28	03 ed 52 4f 4c				.text	3,$ed,"ROL"            ; $af ROL
->bc2d	03 f3 52 4f 52				.text	3,$f3,"ROR"            ; $b0 ROR
->bc32	03 ef 52 54 49				.text	3,$ef,"RTI"            ; $b1 RTI
->bc37	03 f9 52 54 53				.text	3,$f9,"RTS"            ; $b2 RTS
->bc3c	03 d8 53 42 43				.text	3,$d8,"SBC"            ; $b3 SBC
->bc41	03 db 53 45 43				.text	3,$db,"SEC"            ; $b4 SEC
->bc46	03 dc 53 45 44				.text	3,$dc,"SED"            ; $b5 SED
->bc4b	03 e1 53 45 49				.text	3,$e1,"SEI"            ; $b6 SEI
->bc50	03 e8 53 54 41				.text	3,$e8,"STA"            ; $b7 STA
->bc55	03 f7 53 54 50				.text	3,$f7,"STP"            ; $b8 STP
->bc5a	03 ff 53 54 58				.text	3,$ff,"STX"            ; $b9 STX
->bc5f	03 00 53 54 59				.text	3,$00,"STY"            ; $ba STY
->bc64	03 01 53 54 5a				.text	3,$01,"STZ"            ; $bb STZ
->bc69	03 ed 54 41 58				.text	3,$ed,"TAX"            ; $bc TAX
->bc6e	03 ee 54 41 59				.text	3,$ee,"TAY"            ; $bd TAY
->bc73	03 e8 54 52 42				.text	3,$e8,"TRB"            ; $be TRB
->bc78	03 e9 54 53 42				.text	3,$e9,"TSB"            ; $bf TSB
->bc7d	03 ff 54 53 58				.text	3,$ff,"TSX"            ; $c0 TSX
->bc82	03 ed 54 58 41				.text	3,$ed,"TXA"            ; $c1 TXA
->bc87	03 ff 54 58 53				.text	3,$ff,"TXS"            ; $c2 TXS
->bc8c	03 ee 54 59 41				.text	3,$ee,"TYA"            ; $c3 TYA
->bc91	ff					.text	$FF
+.b9ad					KeywordSet0:
+>b9ad	00 65					.text	0,$65,""               ; $80 !0:EOF
+>b9af	00 58					.text	0,$58,""               ; $81 !1:SH1
+>b9b1	00 5a					.text	0,$5a,""               ; $82 !2:SH2
+>b9b3	04 fe 41 42 53 28			.text	4,$fe,"ABS("           ; $83 ABS(
+>b9b9	06 93 41 4c 4c 4f 43 28			.text	6,$93,"ALLOC("         ; $84 ALLOC(
+>b9c1	04 ff 41 53 43 28			.text	4,$ff,"ASC("           ; $85 ASC(
+>b9c7	05 29 43 48 52 24 28			.text	5,$29,"CHR$("          ; $86 CHR$(
+>b9ce	06 aa 45 56 45 4e 54 28			.text	6,$aa,"EVENT("         ; $87 EVENT(
+>b9d6	05 6b 46 41 4c 53 45			.text	5,$6b,"FALSE"          ; $88 FALSE
+>b9dd	05 44 46 52 41 43 28			.text	5,$44,"FRAC("          ; $89 FRAC(
+>b9e4	04 0d 48 49 54 28			.text	4,$0d,"HIT("           ; $8a HIT(
+>b9ea	04 13 49 4e 54 28			.text	4,$13,"INT("           ; $8b INT(
+>b9f0	06 a7 49 53 56 41 4c 28			.text	6,$a7,"ISVAL("         ; $8c ISVAL(
+>b9f8	05 5c 4a 4f 59 42 28			.text	5,$5c,"JOYB("          ; $8d JOYB(
+>b9ff	05 72 4a 4f 59 58 28			.text	5,$72,"JOYX("          ; $8e JOYX(
+>ba06	05 73 4a 4f 59 59 28			.text	5,$73,"JOYY("          ; $8f JOYY(
+>ba0d	06 77 4c 45 46 54 24 28			.text	6,$77,"LEFT$("         ; $90 LEFT$(
+>ba15	04 07 4c 45 4e 28			.text	4,$07,"LEN("           ; $91 LEN(
+>ba1b	04 0e 4d 41 58 28			.text	4,$0e,"MAX("           ; $92 MAX(
+>ba21	05 26 4d 49 44 24 28			.text	5,$26,"MID$("          ; $93 MID$(
+>ba28	04 0c 4d 49 4e 28			.text	4,$0c,"MIN("           ; $94 MIN(
+>ba2e	04 19 4e 4f 54 28			.text	4,$19,"NOT("           ; $95 NOT(
+>ba34	08 3c 50 4c 41 59 49 4e			.text	8,$3c,"PLAYING("       ; $96 PLAYING(
+>ba3c	47 28
+>ba3e	07 e9 52 41 4e 44 4f 4d			.text	7,$e9,"RANDOM("        ; $97 RANDOM(
+>ba46	28
+>ba47	07 ca 52 49 47 48 54 24			.text	7,$ca,"RIGHT$("        ; $98 RIGHT$(
+>ba4f	28
+>ba50	04 0c 52 4e 44 28			.text	4,$0c,"RND("           ; $99 RND(
+>ba56	04 10 53 47 4e 28			.text	4,$10,"SGN("           ; $9a SGN(
+>ba5c	04 0e 53 50 43 28			.text	4,$0e,"SPC("           ; $9b SPC(
+>ba62	05 45 53 54 52 24 28			.text	5,$45,"STR$("          ; $9c STR$(
+>ba69	06 a9 54 49 4d 45 52 28			.text	6,$a9,"TIMER("         ; $9d TIMER(
+>ba71	04 40 54 52 55 45			.text	4,$40,"TRUE"           ; $9e TRUE
+>ba77	04 0b 56 41 4c 28			.text	4,$0b,"VAL("           ; $9f VAL(
+>ba7d	03 e7 46 4f 52				.text	3,$e7,"FOR"            ; $a0 FOR
+>ba82	02 8f 49 46				.text	2,$8f,"IF"             ; $a1 IF
+>ba86	04 34 50 52 4f 43			.text	4,$34,"PROC"           ; $a2 PROC
+>ba8c	06 c1 52 45 50 45 41 54			.text	6,$c1,"REPEAT"         ; $a3 REPEAT
+>ba94	05 79 57 48 49 4c 45			.text	5,$79,"WHILE"          ; $a4 WHILE
+>ba9b	05 66 45 4e 44 49 46			.text	5,$66,"ENDIF"          ; $a5 ENDIF
+>baa2	07 0b 45 4e 44 50 52 4f			.text	7,$0b,"ENDPROC"        ; $a6 ENDPROC
+>baaa	43
+>baab	04 3f 4e 45 58 54			.text	4,$3f,"NEXT"           ; $a7 NEXT
+>bab1	04 2f 54 48 45 4e			.text	4,$2f,"THEN"           ; $a8 THEN
+>bab7	05 8c 55 4e 54 49 4c			.text	5,$8c,"UNTIL"          ; $a9 UNTIL
+>babe	04 2e 57 45 4e 44			.text	4,$2e,"WEND"           ; $aa WEND
+>bac4	02 9b 42 59				.text	2,$9b,"BY"             ; $ab BY
+>bac8	04 1c 43 41 4c 4c			.text	4,$1c,"CALL"           ; $ac CALL
+>bace	06 b2 43 49 52 43 4c 45			.text	6,$b2,"CIRCLE"         ; $ad CIRCLE
+>bad6	05 67 43 4c 45 41 52			.text	5,$67,"CLEAR"          ; $ae CLEAR
+>badd	03 e2 43 4c 53				.text	3,$e2,"CLS"            ; $af CLS
+>bae2	05 7f 43 4f 4c 4f 52			.text	5,$7f,"COLOR"          ; $b0 COLOR
+>bae9	06 d4 43 4f 4c 4f 55 52			.text	6,$d4,"COLOUR"         ; $b1 COLOUR
+>baf1	04 1a 44 41 54 41			.text	4,$1a,"DATA"           ; $b2 DATA
+>baf7	03 da 44 49 4d				.text	3,$da,"DIM"            ; $b3 DIM
+>bafc	06 db 44 4f 57 4e 54 4f			.text	6,$db,"DOWNTO"         ; $b4 DOWNTO
+>bb04	04 29 45 4c 53 45			.text	4,$29,"ELSE"           ; $b5 ELSE
+>bb0a	04 34 46 52 4f 4d			.text	4,$34,"FROM"           ; $b6 FROM
+>bb10	03 e5 47 46 58				.text	3,$e5,"GFX"            ; $b7 GFX
+>bb15	05 80 47 4f 53 55 42			.text	5,$80,"GOSUB"          ; $b8 GOSUB
+>bb1c	04 39 47 4f 54 4f			.text	4,$39,"GOTO"           ; $b9 GOTO
+>bb22	04 24 48 45 52 45			.text	4,$24,"HERE"           ; $ba HERE
+>bb28	05 63 49 4d 41 47 45			.text	5,$63,"IMAGE"          ; $bb IMAGE
+>bb2f	03 e5 4c 45 54				.text	3,$e5,"LET"            ; $bc LET
+>bb34	04 28 4c 49 4e 45			.text	4,$28,"LINE"           ; $bd LINE
+>bb3a	05 6b 4c 4f 43 41 4c			.text	5,$6b,"LOCAL"          ; $be LOCAL
+>bb41	03 db 4f 46 46				.text	3,$db,"OFF"            ; $bf OFF
+>bb46	02 9d 4f 4e				.text	2,$9d,"ON"             ; $c0 ON
+>bb4a	07 20 4f 55 54 4c 49 4e			.text	7,$20,"OUTLINE"        ; $c1 OUTLINE
+>bb52	45
+>bb53	07 0f 50 41 4c 45 54 54			.text	7,$0f,"PALETTE"        ; $c2 PALETTE
+>bb5b	45
+>bb5c	04 3f 50 4c 4f 54			.text	4,$3f,"PLOT"           ; $c3 PLOT
+>bb62	05 8d 50 52 49 4e 54			.text	5,$8d,"PRINT"          ; $c4 PRINT
+>bb69	04 1c 52 45 41 44			.text	4,$1c,"READ"           ; $c5 READ
+>bb6f	04 2e 52 45 43 54			.text	4,$2e,"RECT"           ; $c6 RECT
+>bb75	03 e4 52 45 4d				.text	3,$e4,"REM"            ; $c7 REM
+>bb7a	06 e0 52 45 54 55 52 4e			.text	6,$e0,"RETURN"         ; $c8 RETURN
+>bb82	05 7b 53 4f 4c 49 44			.text	5,$7b,"SOLID"          ; $c9 SOLID
+>bb89	05 89 53 4f 55 4e 44			.text	5,$89,"SOUND"          ; $ca SOUND
+>bb90	06 d7 53 50 52 49 54 45			.text	6,$d7,"SPRITE"         ; $cb SPRITE
+>bb98	04 45 54 45 58 54			.text	4,$45,"TEXT"           ; $cc TEXT
+>bb9e	02 a3 54 4f				.text	2,$a3,"TO"             ; $cd TO
+>bba2	ff					.text	$FF
+.bba3					KeywordSet1:
+>bba3	00 65					.text	0,$65,""               ; $80 !0:EOF
+>bba5	00 58					.text	0,$58,""               ; $81 !1:SH1
+>bba7	00 5a					.text	0,$5a,""               ; $82 !2:SH2
+>bba9	08 4c 41 53 53 45 4d 42			.text	8,$4c,"ASSEMBLE"       ; $83 ASSEMBLE
+>bbb1	4c 45
+>bbb3	06 d2 41 53 53 45 52 54			.text	6,$d2,"ASSERT"         ; $84 ASSERT
+>bbbb	06 bd 42 49 54 4d 41 50			.text	6,$bd,"BITMAP"         ; $85 BITMAP
+>bbc3	03 d7 45 4e 44				.text	3,$d7,"END"            ; $86 END
+>bbc8	04 3c 4c 49 53 54			.text	4,$3c,"LIST"           ; $87 LIST
+>bbce	03 ea 4e 45 57				.text	3,$ea,"NEW"            ; $88 NEW
+>bbd3	07 24 52 45 53 54 4f 52			.text	7,$24,"RESTORE"        ; $89 RESTORE
+>bbdb	45
+>bbdc	03 f5 52 55 4e				.text	3,$f5,"RUN"            ; $8a RUN
+>bbe1	07 2a 53 50 52 49 54 45			.text	7,$2a,"SPRITES"        ; $8b SPRITES
+>bbe9	53
+>bbea	04 46 53 54 4f 50			.text	4,$46,"STOP"           ; $8c STOP
+>bbf0	ff					.text	$FF
+.bbf1					KeywordSet2:
+>bbf1	00 65					.text	0,$65,""               ; $80 !0:EOF
+>bbf3	00 58					.text	0,$58,""               ; $81 !1:SH1
+>bbf5	00 5a					.text	0,$5a,""               ; $82 !2:SH2
+>bbf7	03 c8 41 44 43				.text	3,$c8,"ADC"            ; $83 ADC
+>bbfc	03 d3 41 4e 44				.text	3,$d3,"AND"            ; $84 AND
+>bc01	03 e0 41 53 4c				.text	3,$e0,"ASL"            ; $85 ASL
+>bc06	03 c8 42 43 43				.text	3,$c8,"BCC"            ; $86 BCC
+>bc0b	03 d8 42 43 53				.text	3,$d8,"BCS"            ; $87 BCS
+>bc10	03 d8 42 45 51				.text	3,$d8,"BEQ"            ; $88 BEQ
+>bc15	03 df 42 49 54				.text	3,$df,"BIT"            ; $89 BIT
+>bc1a	03 d8 42 4d 49				.text	3,$d8,"BMI"            ; $8a BMI
+>bc1f	03 d5 42 4e 45				.text	3,$d5,"BNE"            ; $8b BNE
+>bc24	03 de 42 50 4c				.text	3,$de,"BPL"            ; $8c BPL
+>bc29	03 d5 42 52 41				.text	3,$d5,"BRA"            ; $8d BRA
+>bc2e	03 df 42 52 4b				.text	3,$df,"BRK"            ; $8e BRK
+>bc33	03 db 42 56 43				.text	3,$db,"BVC"            ; $8f BVC
+>bc38	03 eb 42 56 53				.text	3,$eb,"BVS"            ; $90 BVS
+>bc3d	03 d2 43 4c 43				.text	3,$d2,"CLC"            ; $91 CLC
+>bc42	03 d3 43 4c 44				.text	3,$d3,"CLD"            ; $92 CLD
+>bc47	03 d8 43 4c 49				.text	3,$d8,"CLI"            ; $93 CLI
+>bc4c	03 e5 43 4c 56				.text	3,$e5,"CLV"            ; $94 CLV
+>bc51	03 e0 43 4d 50				.text	3,$e0,"CMP"            ; $95 CMP
+>bc56	03 eb 43 50 58				.text	3,$eb,"CPX"            ; $96 CPX
+>bc5b	03 ec 43 50 59				.text	3,$ec,"CPY"            ; $97 CPY
+>bc60	03 cc 44 45 43				.text	3,$cc,"DEC"            ; $98 DEC
+>bc65	03 e1 44 45 58				.text	3,$e1,"DEX"            ; $99 DEX
+>bc6a	03 e2 44 45 59				.text	3,$e2,"DEY"            ; $9a DEY
+>bc6f	03 e6 45 4f 52				.text	3,$e6,"EOR"            ; $9b EOR
+>bc74	03 da 49 4e 43				.text	3,$da,"INC"            ; $9c INC
+>bc79	03 ef 49 4e 58				.text	3,$ef,"INX"            ; $9d INX
+>bc7e	03 f0 49 4e 59				.text	3,$f0,"INY"            ; $9e INY
+>bc83	03 e7 4a 4d 50				.text	3,$e7,"JMP"            ; $9f JMP
+>bc88	03 ef 4a 53 52				.text	3,$ef,"JSR"            ; $a0 JSR
+>bc8d	03 d1 4c 44 41				.text	3,$d1,"LDA"            ; $a1 LDA
+>bc92	03 e8 4c 44 58				.text	3,$e8,"LDX"            ; $a2 LDX
+>bc97	03 e9 4c 44 59				.text	3,$e9,"LDY"            ; $a3 LDY
+>bc9c	03 f1 4c 53 52				.text	3,$f1,"LSR"            ; $a4 LSR
+>bca1	03 ed 4e 4f 50				.text	3,$ed,"NOP"            ; $a5 NOP
+>bca6	03 e2 4f 52 41				.text	3,$e2,"ORA"            ; $a6 ORA
+>bcab	03 d9 50 48 41				.text	3,$d9,"PHA"            ; $a7 PHA
+>bcb0	03 e8 50 48 50				.text	3,$e8,"PHP"            ; $a8 PHP
+>bcb5	03 f0 50 48 58				.text	3,$f0,"PHX"            ; $a9 PHX
+>bcba	03 f1 50 48 59				.text	3,$f1,"PHY"            ; $aa PHY
+>bcbf	03 dd 50 4c 41				.text	3,$dd,"PLA"            ; $ab PLA
+>bcc4	03 ec 50 4c 50				.text	3,$ec,"PLP"            ; $ac PLP
+>bcc9	03 f4 50 4c 58				.text	3,$f4,"PLX"            ; $ad PLX
+>bcce	03 f5 50 4c 59				.text	3,$f5,"PLY"            ; $ae PLY
+>bcd3	03 ed 52 4f 4c				.text	3,$ed,"ROL"            ; $af ROL
+>bcd8	03 f3 52 4f 52				.text	3,$f3,"ROR"            ; $b0 ROR
+>bcdd	03 ef 52 54 49				.text	3,$ef,"RTI"            ; $b1 RTI
+>bce2	03 f9 52 54 53				.text	3,$f9,"RTS"            ; $b2 RTS
+>bce7	03 d8 53 42 43				.text	3,$d8,"SBC"            ; $b3 SBC
+>bcec	03 db 53 45 43				.text	3,$db,"SEC"            ; $b4 SEC
+>bcf1	03 dc 53 45 44				.text	3,$dc,"SED"            ; $b5 SED
+>bcf6	03 e1 53 45 49				.text	3,$e1,"SEI"            ; $b6 SEI
+>bcfb	03 e8 53 54 41				.text	3,$e8,"STA"            ; $b7 STA
+>bd00	03 f7 53 54 50				.text	3,$f7,"STP"            ; $b8 STP
+>bd05	03 ff 53 54 58				.text	3,$ff,"STX"            ; $b9 STX
+>bd0a	03 00 53 54 59				.text	3,$00,"STY"            ; $ba STY
+>bd0f	03 01 53 54 5a				.text	3,$01,"STZ"            ; $bb STZ
+>bd14	03 ed 54 41 58				.text	3,$ed,"TAX"            ; $bc TAX
+>bd19	03 ee 54 41 59				.text	3,$ee,"TAY"            ; $bd TAY
+>bd1e	03 e8 54 52 42				.text	3,$e8,"TRB"            ; $be TRB
+>bd23	03 e9 54 53 42				.text	3,$e9,"TSB"            ; $bf TSB
+>bd28	03 ff 54 53 58				.text	3,$ff,"TSX"            ; $c0 TSX
+>bd2d	03 ed 54 58 41				.text	3,$ed,"TXA"            ; $c1 TXA
+>bd32	03 ff 54 58 53				.text	3,$ff,"TXS"            ; $c2 TXS
+>bd37	03 ee 54 59 41				.text	3,$ee,"TYA"            ; $c3 TYA
+>bd3c	ff					.text	$FF
 .b39d					ListConvertLine:
 .b39d	48		pha				pha 								; save indent on the stack
 .b39e	9c 9d 04	stz $049d			stz 	tbOffset
@@ -8739,19 +8739,19 @@
 .b467	80 82		bra $b3eb			bra 	_LCMainLoop
 .b469					_LCTokens:
 .b469	aa		tax				tax 								; token in X
-.b46a	a9 46		lda #$46			lda 	#((KeywordSet2) & $FF)
+.b46a	a9 f1		lda #$f1			lda 	#((KeywordSet2) & $FF)
 .b46c	85 36		sta $36				sta 	0+zTemp0
 .b46e	a9 bb		lda #$bb			lda 	#((KeywordSet2) >> 8)
 .b470	85 37		sta $37				sta 	1+zTemp0
 .b472	e0 82		cpx #$82			cpx 	#$82
 .b474	f0 16		beq $b48c			beq 	_LCUseShift
-.b476	a9 f8		lda #$f8			lda 	#((KeywordSet1) & $FF)
+.b476	a9 a3		lda #$a3			lda 	#((KeywordSet1) & $FF)
 .b478	85 36		sta $36				sta 	0+zTemp0
-.b47a	a9 ba		lda #$ba			lda 	#((KeywordSet1) >> 8)
+.b47a	a9 bb		lda #$bb			lda 	#((KeywordSet1) >> 8)
 .b47c	85 37		sta $37				sta 	1+zTemp0
 .b47e	e0 81		cpx #$81			cpx 	#$81
 .b480	f0 0a		beq $b48c			beq 	_LCUseShift
-.b482	a9 02		lda #$02			lda 	#((KeywordSet0) & $FF)
+.b482	a9 ad		lda #$ad			lda 	#((KeywordSet0) & $FF)
 .b484	85 36		sta $36				sta 	0+zTemp0
 .b486	a9 b9		lda #$b9			lda 	#((KeywordSet0) >> 8)
 .b488	85 37		sta $37				sta 	1+zTemp0
@@ -9069,17 +9069,17 @@
 .b691	8e 82 04	stx $0482			stx 	identTypeEnd 				; save end marker, e.g. continue from here.
 .b694	20 2e b7	jsr $b72e			jsr 	TOKCalculateHash 			; calculate the has for those tokens
 .b697	a0 b9		ldy #$b9			ldy 	#(KeywordSet0) >> 8
-.b699	a9 02		lda #$02			lda 	#(KeywordSet0) & $FF
+.b699	a9 ad		lda #$ad			lda 	#(KeywordSet0) & $FF
 .b69b	20 62 b5	jsr $b562			jsr 	TOKSearchTable
 .b69e	a2 00		ldx #$00			ldx 	#0
 .b6a0	b0 1f		bcs $b6c1			bcs 	_TKFoundToken
-.b6a2	a0 ba		ldy #$ba			ldy 	#(KeywordSet1) >> 8
-.b6a4	a9 f8		lda #$f8			lda 	#(KeywordSet1) & $FF
+.b6a2	a0 bb		ldy #$bb			ldy 	#(KeywordSet1) >> 8
+.b6a4	a9 a3		lda #$a3			lda 	#(KeywordSet1) & $FF
 .b6a6	20 62 b5	jsr $b562			jsr 	TOKSearchTable
 .b6a9	a2 81		ldx #$81			ldx 	#$81
 .b6ab	b0 14		bcs $b6c1			bcs 	_TKFoundToken
 .b6ad	a0 bb		ldy #$bb			ldy 	#(KeywordSet2) >> 8
-.b6af	a9 46		lda #$46			lda 	#(KeywordSet2) & $FF
+.b6af	a9 f1		lda #$f1			lda 	#(KeywordSet2) & $FF
 .b6b1	20 62 b5	jsr $b562			jsr 	TOKSearchTable
 .b6b4	a2 82		ldx #$82			ldx 	#$82
 .b6b6	b0 09		bcs $b6c1			bcs 	_TKFoundToken
@@ -9317,96 +9317,194 @@
 
 =1					soundIntegrated=1
 .b83a					SNDCheckChannel:
-.b83a	60		rts				rts
-.b83b					SNDQueueRequest:
-.b83b	86 36		stx $36				stx 	zTemp0						; save queue address
-.b83d	84 37		sty $37				sty 	zTemp0+1
-.b83f	ae fa 06	ldx $06fa			ldx 	SNDLength 					; queue is full, can't take any more.
-.b842	e0 20		cpx #$20			cpx 	#SNDQueueSize
-.b844	f0 21		beq $b867			beq 	_SNDQRExit
-.b846	29 03		and #$03			and 	#3	 						; channel # and push on stack
-.b848	48		pha				pha
-.b849	8a		txa				txa  								; get offset in queue buffer/
-.b84a	0a		asl a				asl 	a
-.b84b	0a		asl a				asl 	a
-.b84c	0a		asl a				asl 	a
-.b84d	aa		tax				tax
-.b84e	68		pla				pla 								; get back and push again
-.b84f	48		pha				pha
-.b850	9d fb 06	sta $06fb,x			sta 	SNDQueue+0,x 				; save the channel #
-.b853	a0 00		ldy #$00			ldy 	#0 							; copy the rest in.
-.b855					_SNDQCopy:
-.b855	b1 36		lda ($36),y			lda 	(zTemp0),y
-.b857	e8		inx				inx
-.b858	c8		iny				iny
-.b859	9d fb 06	sta $06fb,x			sta 	SNDQueue,x
-.b85c	c0 06		cpy #$06			cpy 	#6
-.b85e	d0 f5		bne $b855			bne 	_SNDQCopy
-.b860	ee fa 06	inc $06fa			inc 	SNDLength 					; bump queue length.
-.b863	68		pla				pla 								; get channel # back
-.b864	20 3a b8	jsr $b83a			jsr 	SNDCheckChannel 			; check if channel needs refreshing.
-.b867					_SNDQRExit:
-.b867	60		rts				rts
-.b868					SNDSilenceChannel:
-.b868	aa		tax				tax 								; zero time left.
-.b869	9e 03 08	stz $0803,x			stz 	SNDTimeLeft,x
-.b86c	0a		asl a				asl 	a 							; shift into position
-.b86d	0a		asl a				asl 	a
-.b86e	0a		asl a				asl 	a
-.b86f	0a		asl a				asl 	a
-.b870	0a		asl a				asl 	a
-.b871	09 9f		ora #$9f			ora 	#$9F 						; write register attenuation $F
-.b873	20 77 b8	jsr $b877			jsr 	SNDWritePorts
-.b876	60		rts				rts
-.b877					SNDWritePorts:
-.b877	64 01		stz $01				stz 	1
-.b879	8d 00 d6	sta $d600			sta 	$D600
-.b87c	8d 10 d6	sta $d610			sta 	$D610
-.b87f	60		rts				rts
-.b880					SNDCommand:
-.b880	c9 0f		cmp #$0f			cmp 	#$0F 						; $0F is initialise
-.b882	f0 1c		beq $b8a0			beq 	_SNDInitialise
-.b884	90 27		bcc $b8ad			bcc 	_SNDExit
-.b886	c9 3f		cmp #$3f			cmp 	#$3F 						; $3F is silence all
-.b888	f0 16		beq $b8a0			beq 	_SNDSilence
-.b88a	b0 21		bcs $b8ad			bcs 	_SNDExit
-.b88c	c9 20		cmp #$20			cmp 	#$20 						; $2x is check playing => A
-.b88e	b0 09		bcs $b899			bcs 	_SNDQueryPlay
-.b890	c9 14		cmp #$14			cmp 	#$14 						; $10-$13 is queue sound
-.b892	b0 19		bcs $b8ad			bcs 	_SNDExit
-.b894	20 3b b8	jsr $b83b			jsr 	SNDQueueRequest
-.b897	80 14		bra $b8ad			bra 	_SNDExit
-.b899					_SNDQueryPlay:
-.b899	29 03		and #$03			and 	#3 							; get channel #
-.b89b	bd 03 08	lda $0803,x			lda 	SNDTimeLeft,x 				; read time left, if zero then silent
-.b89e	80 0d		bra $b8ad			bra 	_SNDExit
-.b8a0					_SNDInitialise:
-.b8a0					_SNDSilence:
-.b8a0	9c fa 06	stz $06fa			stz 	SNDLength 					; empty the queue.
-.b8a3	a9 03		lda #$03			lda 	#$3 						; silence channel 0-3.
-.b8a5					_SNDSilenceLoop:
-.b8a5	48		pha				pha
-.b8a6	20 68 b8	jsr $b868			jsr 	SNDSilenceChannel
-.b8a9	68		pla				pla
-.b8aa	3a		dec a				dec 	a
-.b8ab	10 f8		bpl $b8a5			bpl 	_SNDSilenceLoop
-.b8ad					_SNDExit:
-.b8ad	60		rts				rts
-=32					SNDQueueSize = 32 							; number of queue entries
-.06fa					SNDLength:
+.b83a	aa		tax				tax
+.b83b	bd 08 08	lda $0808,x			lda 	SNDTimeLeft,x 				; currently playing a note
+.b83e	d0 38		bne $b878			bne 	_SNDCCExit
+.b840	da		phx				phx 								; save current channel
+.b841	8a		txa				txa 								; put in A
+.b842	20 be b8	jsr $b8be			jsr 	SNDFindNextNoteForA 		; is there a note for A in the queue ?
+.b845	68		pla				pla 								; channel # in A
+.b846	90 30		bcc $b878			bcc 	_SNDCCExit
+.b848	a8		tay				tay 								; Y is the channel #
+.b849	bd fd 06	lda $06fd,x			lda 	SNDQueue+1,x 				; copy data into the slot.
+.b84c	99 fc 07	sta $07fc,y			sta 	SNDPitchLow,y
+.b84f	bd fe 06	lda $06fe,x			lda 	SNDQueue+2,x
+.b852	99 00 08	sta $0800,y			sta 	SNDPitchHigh,y
+.b855	bd ff 06	lda $06ff,x			lda 	SNDQueue+3,x
+.b858	99 04 08	sta $0804,y			sta 	SNDVolume,y
+.b85b	bd 00 07	lda $0700,x			lda 	SNDQueue+4,x
+.b85e	99 08 08	sta $0808,y			sta 	SNDTimeLeft,y
+.b861	bd 01 07	lda $0701,x			lda 	SNDQueue+5,x
+.b864	99 0c 08	sta $080c,y			sta 	SNDAdjustLow,y
+.b867	bd 02 07	lda $0702,x			lda 	SNDQueue+6,x
+.b86a	99 10 08	sta $0810,y			sta 	SNDAdjustHigh,y
+.b86d	5a		phy				phy 								; save channel #
+.b86e	20 d8 b8	jsr $b8d8			jsr 	SNDDeleteXFromQueue 		; delete record at X from queue
+.b871	ce fb 06	dec $06fb			dec 	SNDLength 					; reduce the queue length.
+.b874	68		pla				pla
+.b875	20 79 b8	jsr $b879			jsr 	SNDUpdateNote 				; update channel A
+.b878					_SNDCCExit:
+.b878	60		rts				rts
+.b879					SNDUpdateNote:
+.b879	aa		tax				tax 								; so we can access records
+.b87a	0a		asl a				asl 	a 							; convert it to a channel bit pair in 5,6
+.b87b	0a		asl a				asl 	a
+.b87c	0a		asl a				asl 	a
+.b87d	0a		asl a				asl 	a
+.b87e	0a		asl a				asl 	a
+.b87f	8d fa 06	sta $06fa			sta 	SNDChannelBits
+.b882	bd 08 08	lda $0808,x			lda 	SNDTimeLeft,x 				; are we silent
+.b885	f0 2e		beq $b8b5			beq 	_SNDUNIsSilent
+.b887	ad fa 06	lda $06fa			lda 	SNDChannelBits 				; push channel bits on stack
+.b88a	48		pha				pha
+.b88b	bd fc 07	lda $07fc,x			lda 	SNDPitchLow,x 				; get 4 lowest bits of pitch.
+.b88e	29 0f		and #$0f			and 	#$0F
+.b890	0d fa 06	ora $06fa			ora 	SNDChannelBits 				; set channel bits
+.b893	09 80		ora #$80			ora 	#$80 						; write to pitch register
+.b895	20 22 b9	jsr $b922			jsr 	SNDWritePorts
+.b898	bd 00 08	lda $0800,x			lda 	SNDPitchHigh,x 				; pitch high => channel temp.
+.b89b	8d fa 06	sta $06fa			sta 	SNDChannelBits
+.b89e	bd fc 07	lda $07fc,x			lda 	SNDPitchLow,x
+.b8a1	4e fa 06	lsr $06fa			lsr 	SNDChannelBits 				; shift 2 LSBs into MSB of A
+.b8a4	6a		ror a				ror 	a
+.b8a5	4e fa 06	lsr $06fa			lsr 	SNDChannelBits
+.b8a8	6a		ror a				ror 	a
+.b8a9	4a		lsr a				lsr 	a 							; put in bits 0-5
+.b8aa	4a		lsr a				lsr 	a
+.b8ab	20 22 b9	jsr $b922			jsr 	SNDWritePorts 				; write as rest of pitch register
+.b8ae	68		pla				pla
+.b8af	09 90		ora #$90			ora 	#$90 						; set to write minimum attentuation.
+.b8b1	20 22 b9	jsr $b922			jsr 	SNDWritePorts
+.b8b4	60		rts				rts
+.b8b5					_SNDUNIsSilent:
+.b8b5	ad fa 06	lda $06fa			lda 	SNDChannelBits 				; channel bits
+.b8b8	09 9f		ora #$9f			ora 	#$9F 						; maximum attenuation
+.b8ba	20 22 b9	jsr $b922			jsr 	SNDWritePorts 				; write to the ports
+.b8bd	60		rts				rts
+.b8be					SNDFindNextNoteForA:
+.b8be	ac fb 06	ldy $06fb			ldy 	SNDLength 					; queue size into Y
+.b8c1	f0 13		beq $b8d6			beq 	_SNDFNNFail 				; queue empty.
+.b8c3	a2 00		ldx #$00			ldx 	#0
+.b8c5					_SNDFNNSearch:
+.b8c5	dd fc 06	cmp $06fc,x			cmp 	SNDQueue,x 					; does it match the channel
+.b8c8	38		sec				sec
+.b8c9	f0 0c		beq $b8d7			beq 	_SNDFNNExit 				; if so exit with CS.
+.b8cb	e8		inx				inx 								; next queue slot.
+.b8cc	e8		inx				inx
+.b8cd	e8		inx				inx
+.b8ce	e8		inx				inx
+.b8cf	e8		inx				inx
+.b8d0	e8		inx				inx
+.b8d1	e8		inx				inx
+.b8d2	e8		inx				inx
+.b8d3	88		dey				dey 								; done the whole queue
+.b8d4	d0 ef		bne $b8c5			bne 	_SNDFNNSearch 				; no, go back.
+.b8d6					_SNDFNNFail:
+.b8d6	18		clc				clc
+.b8d7					_SNDFNNexit:
+.b8d7	60		rts				rts
+.b8d8					SNDDeleteXFromQueue:
+.b8d8	e0 f8		cpx #$f8			cpx 	#SNDQueueSize*8-8 			; reached the end.
+.b8da	f0 09		beq $b8e5			beq 	_SNDDXExit
+.b8dc	bd 04 07	lda $0704,x			lda 	SNDQueue+8,x
+.b8df	9d fc 06	sta $06fc,x			sta 	SNDQueue,x
+.b8e2	e8		inx				inx
+.b8e3	80 f3		bra $b8d8			bra 	SNDDeleteXFromQueue
+.b8e5					_SNDDXExit:
+.b8e5	60		rts				rts
+.06fa					SNDChannelBits:
 >06fa							.fill 	1
-.06fb					SNDQueue:
->06fb							.fill 	SNDQueueSize * 8
-.07fb					SNDPitchLow:
->07fb							.fill 	4
-.07ff					SNDPitchHigh:
->07ff							.fill 	4
-.0803					SNDTimeLeft:
->0803							.fill 	4
-.0807					SNDAdjustLow:
->0807							.fill 	4
-.080b					SNDAdjustHigh:
->080b							.fill 	4
+.b8e6					SNDQueueRequest:
+.b8e6	86 36		stx $36				stx 	zTemp0						; save queue address
+.b8e8	84 37		sty $37				sty 	zTemp0+1
+.b8ea	ae fb 06	ldx $06fb			ldx 	SNDLength 					; queue is full, can't take any more.
+.b8ed	e0 20		cpx #$20			cpx 	#SNDQueueSize
+.b8ef	f0 21		beq $b912			beq 	_SNDQRExit
+.b8f1	29 03		and #$03			and 	#3	 						; channel # and push on stack
+.b8f3	48		pha				pha
+.b8f4	8a		txa				txa  								; get offset in queue buffer/
+.b8f5	0a		asl a				asl 	a
+.b8f6	0a		asl a				asl 	a
+.b8f7	0a		asl a				asl 	a
+.b8f8	aa		tax				tax
+.b8f9	68		pla				pla 								; get back and push again
+.b8fa	48		pha				pha
+.b8fb	9d fc 06	sta $06fc,x			sta 	SNDQueue+0,x 				; save the channel #
+.b8fe	a0 00		ldy #$00			ldy 	#0 							; copy the rest in.
+.b900					_SNDQCopy:
+.b900	b1 36		lda ($36),y			lda 	(zTemp0),y
+.b902	e8		inx				inx
+.b903	c8		iny				iny
+.b904	9d fc 06	sta $06fc,x			sta 	SNDQueue,x
+.b907	c0 06		cpy #$06			cpy 	#6
+.b909	d0 f5		bne $b900			bne 	_SNDQCopy
+.b90b	ee fb 06	inc $06fb			inc 	SNDLength 					; bump queue length.
+.b90e	68		pla				pla 								; get channel # back
+.b90f	20 3a b8	jsr $b83a			jsr 	SNDCheckChannel 			; check if channel needs refreshing.
+.b912					_SNDQRExit:
+.b912	60		rts				rts
+.b913					SNDSilenceChannel:
+.b913	aa		tax				tax 								; zero time left.
+.b914	9e 08 08	stz $0808,x			stz 	SNDTimeLeft,x
+.b917	0a		asl a				asl 	a 							; shift into position
+.b918	0a		asl a				asl 	a
+.b919	0a		asl a				asl 	a
+.b91a	0a		asl a				asl 	a
+.b91b	0a		asl a				asl 	a
+.b91c	09 9f		ora #$9f			ora 	#$9F 						; write register attenuation $F
+.b91e	20 22 b9	jsr $b922			jsr 	SNDWritePorts
+.b921	60		rts				rts
+.b922					SNDWritePorts:
+.b922	64 01		stz $01				stz 	1
+.b924	8d 00 d6	sta $d600			sta 	$D600
+.b927	8d 10 d6	sta $d610			sta 	$D610
+.b92a	60		rts				rts
+.b92b					SNDCommand:
+.b92b	c9 0f		cmp #$0f			cmp 	#$0F 						; $0F is initialise
+.b92d	f0 1c		beq $b94b			beq 	_SNDInitialise
+.b92f	90 27		bcc $b958			bcc 	_SNDExit
+.b931	c9 3f		cmp #$3f			cmp 	#$3F 						; $3F is silence all
+.b933	f0 16		beq $b94b			beq 	_SNDSilence
+.b935	b0 21		bcs $b958			bcs 	_SNDExit
+.b937	c9 20		cmp #$20			cmp 	#$20 						; $2x is check playing => A
+.b939	b0 09		bcs $b944			bcs 	_SNDQueryPlay
+.b93b	c9 14		cmp #$14			cmp 	#$14 						; $10-$13 is queue sound
+.b93d	b0 19		bcs $b958			bcs 	_SNDExit
+.b93f	20 e6 b8	jsr $b8e6			jsr 	SNDQueueRequest
+.b942	80 14		bra $b958			bra 	_SNDExit
+.b944					_SNDQueryPlay:
+.b944	29 03		and #$03			and 	#3 							; get channel #
+.b946	bd 08 08	lda $0808,x			lda 	SNDTimeLeft,x 				; read time left, if zero then silent
+.b949	80 0d		bra $b958			bra 	_SNDExit
+.b94b					_SNDInitialise:
+.b94b					_SNDSilence:
+.b94b	9c fb 06	stz $06fb			stz 	SNDLength 					; empty the queue.
+.b94e	a9 03		lda #$03			lda 	#$3 						; silence channel 0-3.
+.b950					_SNDSilenceLoop:
+.b950	48		pha				pha
+.b951	20 13 b9	jsr $b913			jsr 	SNDSilenceChannel
+.b954	68		pla				pla
+.b955	3a		dec a				dec 	a
+.b956	10 f8		bpl $b950			bpl 	_SNDSilenceLoop
+.b958					_SNDExit:
+.b958	60		rts				rts
+=32					SNDQueueSize = 32 							; number of queue entries
+.06fb					SNDLength:
+>06fb							.fill 	1
+.06fc					SNDQueue:
+>06fc							.fill 	SNDQueueSize * 8
+.07fc					SNDPitchLow:
+>07fc							.fill 	4
+.0800					SNDPitchHigh:
+>0800							.fill 	4
+.0804					SNDVolume:
+>0804							.fill 	4
+.0808					SNDTimeLeft:
+>0808							.fill 	4
+.080c					SNDAdjustLow:
+>080c							.fill 	4
+.0810					SNDAdjustHigh:
+>0810							.fill 	4
 
 ;******  Return to file: _basic.asm
 

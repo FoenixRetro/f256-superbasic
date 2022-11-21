@@ -83,6 +83,9 @@ SNDPitchLow: 								; current pitch
 SNDPitchHigh:
 		.fill 	4
 
+SNDVolume: 									; volume 0-15.
+		.fill 	4
+
 SNDTimeLeft: 								; time remaining, zero = no sound/get next
 		.fill 	4
 

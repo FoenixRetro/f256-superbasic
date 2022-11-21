@@ -1,7 +1,6 @@
 Progress:
 	
 	sound write the driver
-	- sync (sound goes to in use ....)
 	- clock to update it in RUN  + sync where required. (?) Keyboard get command needs it too.
 
 	tiles ?
