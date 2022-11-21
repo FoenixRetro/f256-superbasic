@@ -16,14 +16,21 @@ Start:	ldx 	#$FF 						; stack reset
 		txs	
 		jsr 	EXTInitialise 				; hardware initialise
 
+		ldx 	#(Prompt >> 8) 				; prompt
+		lda 	#(Prompt & $FF)
+		jsr 	PrintStringXA
+
+		.if 	graphicsIntegrated==1
 		lda 	#0 							; graphics system initialise.
 		tax
 		tay
 		jsr 	GXGraphicDraw
+		.endif
 
-		ldx 	#(Prompt >> 8) 				; prompt
-		lda 	#(Prompt & $FF)
-		jsr 	PrintStringXA
+		.if 	soundIntegrated==1
+		lda 	#$0F 						; initialise sound system
+		jsr 	SNDCommand
+		.endif
 
 		jsr 	NewProgram 					; erase current program
 		jsr 	BackloadProgram

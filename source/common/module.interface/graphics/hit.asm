@@ -19,6 +19,7 @@
 ; ************************************************************************************************
 
 UnaryHit: ;; [hit(]
+		.if 	graphicsIntegrated==1
 		plx
 		;
 		lda 	#zTemp0 
@@ -41,6 +42,9 @@ UnaryHit: ;; [hit(]
 		plx
 		jsr 	NSMSetByte 					; return the hit result
 		rts
+		.else
+		jmp 	SyntaxError
+		.endif
 
 		.send code
 

@@ -10,6 +10,7 @@ Volume (4 bit)
 State:
 
 <A>[Command|<Channel] 					<Y><X>
+
 0F 			Initialise
 1x 			Queue sound 				Address of pitch [word] volume [byte] length [byte] slide [word]
 2x 			Sound playing (=>A)

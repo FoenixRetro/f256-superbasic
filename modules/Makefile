@@ -23,3 +23,5 @@ all:
 	python _scripts$(S)makebuild.py tokeniser >_build$(S)_tokeniser.module
 
 	python _scripts$(S)makebuild.py hardware >_build$(S)_hardware.module	
+
+	python _scripts$(S)makebuild.py sound >_build$(S)_sound.module		

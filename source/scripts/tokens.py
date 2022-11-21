@@ -295,7 +295,7 @@ class TokenCollection(object):
 		codeFiles = h.readlines()
 		h.close()
 		for f1 in codeFiles:
-			if f1.strip() != "" and not f1.startswith(";"):
+			if f1.strip() != "" and not f1.startswith(";") and f1.find("include") >= 0:
 				f = f1.split('"')[1]
 				for s in open(f).readlines():
 					if s.find(";;") > 0 and s.find("[") > 0:

@@ -27,7 +27,7 @@ EMU_REPO= ..$(S)..$(S)junior-emulator
 UTL_REPO= ..$(S)..$(S)junior-utilities
 KRN_REPO= ..$(S)..$(S)junior-tinykernel
 
-MODULES= _hardware _graphics _tokeniser
+MODULES= +hardware +graphics +tokeniser +sound
 
 START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@3000 $(BINDIR)graphics.bin@30000
 # 3000 is hardcoded in backload.asm

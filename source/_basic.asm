@@ -116,3 +116,4 @@
 	.include	"../modules/_build/_hardware.module"
 	.include	"../modules/_build/_graphics.module"
 	.include	"../modules/_build/_tokeniser.module"
+	.include	"../modules/_build/_sound.module"

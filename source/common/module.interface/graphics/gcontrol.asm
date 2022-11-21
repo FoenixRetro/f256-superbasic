@@ -20,6 +20,7 @@
 ; ************************************************************************************************
 
 BitmapCtrl: ;; [bitmap]
+		.if 	graphicsIntegrated==1
 		.cget 								; next keyword
 		iny
 		ldx 	#1
@@ -55,6 +56,9 @@ BitmapSwitch:
 		jsr 	GXGraphicDraw
 		ply
 		rts
+		.else
+		jmp 	SyntaxError
+		.endif
 
 ; ************************************************************************************************
 ;
@@ -63,6 +67,7 @@ BitmapSwitch:
 ; ************************************************************************************************
 
 SpritesCtrl: ;; [sprites]
+		.if 	graphicsIntegrated==1
 		.cget 								; next keyword
 		iny
 		ldx 	#1
@@ -79,6 +84,9 @@ SpriteSwitch:
 		jsr 	GXGraphicDraw
 		ply
 		rts
+		.else
+		jmp 	SyntaxError
+		.endif
 
 		.send code
 

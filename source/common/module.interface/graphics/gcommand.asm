@@ -20,9 +20,13 @@
 ; ************************************************************************************************
 
 RectangleCommand: 	;; [RECT]
+		.if 	graphicsIntegrated==1
 		lda 	#GCMD_FrameRect				; frame rectangle
 		bra 	ShapeDrawCmd
+		.endif
+
 CircleCommand: ;; [CIRCLE]
+		.if 	graphicsIntegrated==1
 		lda 	#GCMD_FrameCircle 				; framed circle
 ShapeDrawCmd:		
 		jsr 	RunGraphicsCommand
@@ -32,6 +36,7 @@ ShapeDrawCmd:
 ShapeDraw:
 		ora 	gxFillSolid  				; adjust AXY for solid fill.
 		jmp 	ExecuteGraphicCommand	 	; and complete
+		.endif
 
 ; ************************************************************************************************
 ;
@@ -40,6 +45,7 @@ ShapeDraw:
 ; ************************************************************************************************
 
 SpriteCommand: ;; [SPRITE]
+		.if 	graphicsIntegrated==1
 		ldx 	#0 				
 		jsr 	Evaluate8BitInteger 		; get image number.
 		phy
@@ -55,6 +61,7 @@ SpriteCommand: ;; [SPRITE]
 		bra 	ExecuteGraphicCommand
 _SCRange:
 		jmp 	RangeError
+		.endif
 
 ; ************************************************************************************************
 ;
@@ -63,6 +70,7 @@ _SCRange:
 ; ************************************************************************************************
 
 ImageCommand: ;; [IMAGE]
+		.if 	graphicsIntegrated==1
 		ldx 	#0 				
 		jsr 	Evaluate8BitInteger 		; get image number.
 		jsr 	RunGraphicsCommand
@@ -78,6 +86,7 @@ ImageRunDraw:
 		ldx 	NSMantissa0
 		jsr 	GXGraphicDraw		
 		rts
+		.endif
 
 ; ************************************************************************************************
 ;
@@ -86,6 +95,7 @@ ImageRunDraw:
 ; ************************************************************************************************
 
 TextCommand: ;; [Text]
+		.if 	graphicsIntegrated==1
 		ldx 	#0 				
 		jsr 	EvaluateString 				; get text
 		jsr 	RunGraphicsCommand
@@ -116,6 +126,7 @@ _IRDLoop:
 		bcc 	_IRDLoop 					; go back if no error.
 _IRDExit:		
 		rts
+		.endif
 
 ; ************************************************************************************************
 ;
@@ -124,10 +135,11 @@ _IRDExit:
 ; ************************************************************************************************
 
 PlotCommand: ;; [PLOT]
+		.if 	graphicsIntegrated==1
 		lda 	#GCMD_Plot 					; command ID to use
 		jsr 	RunGraphicsCommand
 		bra 	ExecuteGraphicCommand
-
+		.endif
 ; ************************************************************************************************
 ;
 ;									 		Line
@@ -135,14 +147,19 @@ PlotCommand: ;; [PLOT]
 ; ************************************************************************************************
 
 LineCommand: ;; [LINE]
+		.if 	graphicsIntegrated==1
 		lda 	#GCMD_Line 						; command ID to use
 		jsr 	RunGraphicsCommand
+		.endif
+
 
 ; ************************************************************************************************
 ;
 ;					Standard graphic command handler ; AX = X,Y = Y
 ;
 ; ************************************************************************************************
+
+		.if 	graphicsIntegrated==1
 
 ExecuteGraphicCommand:
 		ora 	gxCommandID 				; make a full command
@@ -405,6 +422,7 @@ GCCopyPairToStore:
 		lda 	NSMantissa0+2
 		sta 	gxYPos
 		rts
+		.endif
 		.send code
 
 		.section storage
