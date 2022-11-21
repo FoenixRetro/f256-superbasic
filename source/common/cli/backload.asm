@@ -19,10 +19,13 @@
 ; ************************************************************************************************
 
 BackloadProgram:
+		.set16 	BackLoadPointer,SOURCE_ADDRESS
+_BPLoop:		
 		ldx 	#$FF
 		.if AUTORUN==1
 		stx 	$FFFA 						; fast mode (autorun only)
 		.endif
+
 		jsr 	BLReadByte
 		bmi 	_BPExit
 _BPCopy:
@@ -40,7 +43,6 @@ _BPNotTab:
 _BPEndLine:		
 		jsr 	TokeniseLine 				; tokenise the line.
 
-
 		.if AUTORUN==1 						; if autorun do full insert/delete for testing
 		jsr 	EditProgramCode
 		.else
@@ -48,7 +50,7 @@ _BPEndLine:
 		jsr 	MemoryInsertLine 			; append to current program
 		.endif
 
-		bra 	BackloadProgram
+		bra 	_BPLoop
 _BPExit:
 		.if AUTORUN==1
 		stz 	$FFFA 						; clear fast mode (autorun only)
@@ -64,15 +66,23 @@ _BPExit:
 ; ************************************************************************************************
 
 BLReadByte:
-_BLLoad:
-		lda 	SOURCE_ADDRESS
-		inc 	_BLLoad+1
+		lda 	BackLoadPointer
+		sta 	zTemp0 	
+		lda 	BackLoadPointer+1
+		sta 	zTemp0+1
+		lda 	(zTemp0)
+		inc 	BackLoadPointer
 		bne 	_BLNoCarry
-		inc 	_BLLoad+2
+		inc 	BackLoadPointer+1
 _BLNoCarry:
 		cmp 	#0
 		rts
 		.send code
+
+		.section storage
+BackLoadPointer:
+		.fill 	2
+		.send storage
 
 ; ************************************************************************************************
 ;
