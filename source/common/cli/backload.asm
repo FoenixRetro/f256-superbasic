@@ -64,10 +64,8 @@ _BPExit:
 ; ************************************************************************************************
 
 BLReadByte:
-;		lda 	$FFFA
-;		rts
 _BLLoad:
-		lda 	$3000 						; hardcoded in the makefile.
+		lda 	SOURCE_ADDRESS
 		inc 	_BLLoad+1
 		bne 	_BLNoCarry
 		inc 	_BLLoad+2

@@ -1,13 +1,18 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
-; 64tass -D AUTORUN=1 -q -b -Wall -c -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Mon Nov 21 07:13:54 2022
+; 64tass -D AUTORUN=1 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
+; Mon Nov 21 07:24:27 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
 ;******  Command line definitions
 
 =1					AUTORUN=1
+=$e000					 MONITOR_ADDRESS=$E000
+=$f000					 LOCKOUT_ADDRESS=$F000
+=$38000					 BASIC_ADDRESS=$38000
+=$3000					 SOURCE_ADDRESS=$3000
+=$30000					 SPRITE_ADDRESS=$30000
 
 ;******  Processing input file: _basic.asm
 
@@ -403,9 +408,9 @@
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->8043	42 75 69 6c 74 20 4d 6f			.text "Built Monday 21-Nov-2022. Build 3392."
+>8043	42 75 69 6c 74 20 4d 6f			.text "Built Monday 21-Nov-2022. Build 3398."
 >804b	6e 64 61 79 20 32 31 2d 4e 6f 76 2d 32 30 32 32
->805b	2e 20 42 75 69 6c 64 20 33 33 39 32 2e
+>805b	2e 20 42 75 69 6c 64 20 33 33 39 38 2e
 
 ;******  Return to file: ./common/aa.system/00start.asm
 
@@ -834,7 +839,7 @@
 .8311	60		rts				rts
 .8312					BLReadByte:
 .8312					_BLLoad:
-.8312	ad 00 30	lda $3000			lda 	$3000 						; hardcoded in the makefile.
+.8312	ad 00 30	lda $3000			lda 	SOURCE_ADDRESS
 .8315	ee 13 83	inc $8313			inc 	_BLLoad+1
 .8318	d0 03		bne $831d			bne 	_BLNoCarry
 .831a	ee 14 83	inc $8314			inc 	_BLLoad+2
@@ -5470,9 +5475,9 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->a10f	42 75 69 6c 74 20 4d 6f			.text "Built Monday 21-Nov-2022. Build 3392."
+>a10f	42 75 69 6c 74 20 4d 6f			.text "Built Monday 21-Nov-2022. Build 3398."
 >a117	6e 64 61 79 20 32 31 2d 4e 6f 76 2d 32 30 32 32
->a127	2e 20 42 75 69 6c 64 20 33 33 39 32 2e
+>a127	2e 20 42 75 69 6c 64 20 33 33 39 38 2e
 
 ;******  Return to file: _basic.asm
 

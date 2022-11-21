@@ -29,8 +29,7 @@ KRN_REPO= ..$(S)..$(S)junior-tinykernel
 
 MODULES= +hardware +graphics +tokeniser +sound
 
-START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@3000 $(BINDIR)graphics.bin@30000
-# 3000 is hardcoded in backload.asm
+START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@$(LSOURCE) $(BINDIR)graphics.bin@$(LSPRITES)
 
 all :  basic
 #
@@ -41,7 +40,7 @@ run : basic
 	$(START)
 
 testbasic:prelim
-	64tass -D AUTORUN=1 $(ASMOPTS) _basic.asm -o $(APPNAME)
+	64tass -D AUTORUN=1 $(AADDRESSES) $(ASMOPTS) _basic.asm -o $(APPNAME)
 	$(CCOPY) $(APPNAME) $(BINDIR)
 #
 #		Run on real hardware
@@ -91,7 +90,7 @@ vars:
 #		Builds with/without autorun
 #	
 basic : prelim
-	64tass -D AUTORUN=0 $(ASMOPTS) _basic.asm -o $(APPNAME)
+	64tass -D AUTORUN=0 $(AADDRESSES) $(ASMOPTS) _basic.asm -o $(APPNAME)
 	$(CCOPY) $(APPNAME) $(BINDIR)
 
 autorun:
@@ -132,6 +131,6 @@ assembler:
 
 lineedit:
 	python $(SCRIPTDIR)linetest.py
-	64tass -D AUTORUN=1 $(ASMOPTS) _basic.asm -o $(APPNAME)
+	64tass -D AUTORUN=1 $(AADDRESSES) $(ASMOPTS) _basic.asm -o $(APPNAME)
 	$(START)
 	python $(SCRIPTDIR)linecheck.py
