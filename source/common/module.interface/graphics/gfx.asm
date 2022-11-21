@@ -13,7 +13,6 @@
 		.section code
 
 GfxCommand: ;; [gfx]
-		.if 	graphicsIntegrated==1
 		ldx 	#0
 		jsr 	Evaluate8BitInteger 		; command
 		jsr 	CheckComma
@@ -39,9 +38,6 @@ GfxCommand: ;; [gfx]
 		rts
 _GfxError:
 		jmp 	RangeError		
-		.else
-		jmp 	SyntaxError
-		.endif
 
 		.send code
 

@@ -4,7 +4,7 @@ Progress:
 	- dummy sync (empty sound has new command ?)
 	- check silence dequeues
 	- sync (sound goes to in use ....)
-	- clock to update it in RUN (?)
+	- clock to update it in RUN (?) Keyboard get command needs it too.
 
 	tiles ?
 	DMA ?

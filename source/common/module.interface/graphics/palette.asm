@@ -13,7 +13,6 @@
 		.section code
 
 PaletteCommand: ;; [palette]
-		.if 	graphicsIntegrated==1
 		ldx 	#0
 		jsr 	Evaluate8BitInteger 		; colour
 		jsr 	CheckComma
@@ -50,9 +49,6 @@ PaletteCommand: ;; [palette]
 		sta 	(zTemp0),y
 		ply
 		rts
-		.else
-		jmp 	SyntaxError
-		.endif
 
 		.send code
 
