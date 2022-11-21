@@ -19,7 +19,7 @@ State:
 <Each Channel>
 
 Current pitch: 12 bits
-Current time left : 8 bits , max 25 seconds.
+Current time left : 8 bits , max 10 seconds approx. One tick is 3/70 second.
 Current pitch adjust : 12 bits masked/added.
 
 Queue (8 elements, Queue of 32 x 8 entries.)

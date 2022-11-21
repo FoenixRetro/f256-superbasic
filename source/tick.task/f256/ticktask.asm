@@ -21,8 +21,11 @@
 		.send 		code
 
 TickHandler:
-;		lda 	#33
-;		jsr 	EXTPrintCharacter	
+		phy 								; need to preserve Y
+		.if 	soundIntegrated==1 			; if F256 sound module
+		jsr 	SNDUpdate 					; update sound
+		.endif
+		ply
 		rts
 
 		.section 	storage

@@ -52,7 +52,8 @@ EXTInitialise:
 EXTInputSingleCharacter:
 		phx
 		phy
-_EISCWait:		
+_EISCWait:	
+		.tickcheck	
 		jsr 	$FFE4
 		cmp 	#0
 		beq 	_EISCWait

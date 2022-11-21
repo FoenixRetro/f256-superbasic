@@ -760,6 +760,7 @@ EXTInputSingleCharacter:
 		phx
 		phy
 _EISCWait:
+		.tickcheck
 		jsr 	$FFE4
 		cmp 	#0
 		beq 	_EISCWait

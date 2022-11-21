@@ -23,8 +23,8 @@ tickinitialise 	.macro
 
 ; ************************************************************************************************
 ;
-;		Called 1 in every 8 instructions, firing if more than 7 clocks (e.g 0.1 seconds) has
-; 		elapsed.
+;		Called 1 in every 8 instructions, firing if more than 3 clocks (e.g 0.05 seconds approx) 
+; 		has elapsed.
 ;
 ; ************************************************************************************************
 
@@ -34,8 +34,8 @@ tickcheck		.macro
 		lda 	$D659
 		tax 								; saving timer in X
 		sbc 	LastTick
-		cmp 	#7
-		bcc 	_NoFireTick 				; if < 7 clocks don't fire.
+		cmp 	#3
+		bcc 	_NoFireTick 				; if < 3 clocks don't fire.
 		stx 	LastTick 					; update last timer
 		jsr 	TickHandler 				; go do the code.
 _NoFireTick:		
