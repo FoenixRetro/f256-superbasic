@@ -1,11 +1,8 @@
 Progress:
 	
 	sound write the driver
-	- queuing sound command
-	- dummy sync (empty sound has new command ?)
-	- check silence dequeues
 	- sync (sound goes to in use ....)
-	- clock to update it in RUN (?) Keyboard get command needs it too.
+	- clock to update it in RUN  + sync where required. (?) Keyboard get command needs it too.
 
 	tiles ?
 	DMA ?

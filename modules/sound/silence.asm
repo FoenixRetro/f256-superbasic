@@ -19,12 +19,34 @@
 ; ************************************************************************************************
 
 SNDSilenceChannel:
+		tax 								; zero time left.
+		stz 	SNDTimeLeft,x
+		;
+		;		We do not remove queued entries for this channel because cannot currently silence
+		; 		individual channels.
+		;
+		asl 	a 							; shift into position
+		asl 	a
+		asl 	a
+		asl 	a
+		asl 	a
+		ora 	#$9F 						; write register attenuation $F
+		jsr 	SNDWritePorts
 		rts
-		;
-		; 	TODO: Physically silence a channel
-		; 	TODO: Remove any queued entries for this channel.
-		; 	TODO: Zero the time value.
-		;
+
+; ************************************************************************************************
+;
+;									Write byte to left and right SN76489
+;
+; ************************************************************************************************
+
+SNDWritePorts:
+		.debug
+		stz 	1
+		sta 	$D600
+		sta 	$D610
+		rts
+
 		.send code
 
 ; ************************************************************************************************
