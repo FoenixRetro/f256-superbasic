@@ -1,7 +1,6 @@
 Progress:
 	
 	Implement INPUT
-	Fix Jessie bugs.
 	Code reading.
 		
 	tiles ?
@@ -15,17 +14,3 @@ Later:
 	Disable interrupts enable at end of line command ?
 	Changing Kerning ?
 	Added WHO ?
-
-
-I did run into some rather odd behaviors trying to implement the maze of slashes in SuperBASIC:
-- I don't think rnd(1) ever returned a value >= 0.5
-- the expression (rnd(1)>0.2) returns (IIRC) 0 if false, and -1 if true, but if I use that result in an expression, BASIC seemed to think that the result type was FLOAT.
-- Assigning the comparison result to a variable didn't work right, but I could assign rnd(1) to a variable.  When I did so, it became a large integer rather than a float.
-My final working code was:
-10 a=rnd(1)
-20 a=a&1
-30 print chr$(45+47*a);
-40 goto 10
-
-10 print chr$(45-(rnd(1)>0.5)*47);
-20 goto 10

@@ -1,6 +1,4 @@
-10 sound 1,200,10
-15 repeat
-20 print playing(1)
-25 until false
+10 print chr$(45-(rnd(1)>0.5)*47);
+20 goto 10
 Ã¿Ã¿Ã¿Ã¿
 ÿÿÿÿ
