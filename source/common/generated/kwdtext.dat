@@ -96,7 +96,6 @@ KeywordSet1:
 	.text	3,$f5,"RUN"            ; $8a RUN
 	.text	7,$2a,"SPRITES"        ; $8b SPRITES
 	.text	4,$46,"STOP"           ; $8c STOP
-	.text	3,$ee,"WHO"            ; $8d WHO
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF
