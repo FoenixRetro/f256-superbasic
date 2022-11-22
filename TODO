@@ -1,11 +1,11 @@
 Progress:
 	
 	sound 
-		Document SOUND SOUND OFF
-		Write PLAYING()
 		Fix emulator to use Arrow keys.
 		Implement INPUT
 		Fix Jessie bugs.
+
+	Code reading.
 		
 	tiles ?
 	DMA ?

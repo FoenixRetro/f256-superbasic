@@ -19,6 +19,8 @@
 ; ************************************************************************************************
 
 SNDCommand:
+		phx
+		phy
 		cmp 	#$0F 						; $0F is initialise
 		beq 	_SNDInitialise
 		bcc 	_SNDExit
@@ -36,6 +38,7 @@ SNDCommand:
 ;
 _SNDQueryPlay:
 		and 	#3 							; get channel #
+		tax
 		lda 	SNDTimeLeft,x 				; read time left, if zero then silent
 		bra 	_SNDExit
 ;
@@ -55,6 +58,8 @@ _SNDSilenceLoop:
 		dec 	a
 		bpl 	_SNDSilenceLoop
 _SNDExit:
+		ply
+		plx
 		rts
 
 		.send code

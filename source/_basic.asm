@@ -109,6 +109,7 @@
 	.include	"./memory/memory.flat/insert.asm"
 	.include	"./memory/memory.flat/memory.asm"
 	.include	"./memory/memory.flat/search.asm"
+	.include	"./module.interface/sound/playing.asm"
 	.include	"./module.interface/sound/sound.asm"
 	.include	"./common/stack/bytes.asm"
 	.include	"./common/stack/frames.asm"

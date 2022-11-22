@@ -89,7 +89,7 @@ VectorSet0:
 	.word	Unary_Mid                        ; $93 MID$(
 	.word	Unary_Min                        ; $94 MIN(
 	.word	Unary_Not                        ; $95 NOT(
-	.word	SyntaxError                      ; $96 PLAYING(
+	.word	UnaryPlaying                     ; $96 PLAYING(
 	.word	Unary_Random                     ; $97 RANDOM(
 	.word	Unary_Right                      ; $98 RIGHT$(
 	.word	Unary_Rnd                        ; $99 RND(
