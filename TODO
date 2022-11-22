@@ -1,10 +1,8 @@
 Progress:
 	
-	sound 
-		Fix emulator to use Arrow keys.
-		Implement INPUT
-		Fix Jessie bugs.
-
+	Fix emulator to use Arrow keys.
+	Implement INPUT
+	Fix Jessie bugs.
 	Code reading.
 		
 	tiles ?
