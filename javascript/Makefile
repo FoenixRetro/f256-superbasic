@@ -28,7 +28,7 @@ UTL_REPO= ..$(S)..$(S)junior-utilities
 KRN_REPO= ..$(S)..$(S)junior-tinykernel
 
 EMSRC = $(EMU_REPO)$(S)emulator
-EMUCODE = $(EMSRC)$(S)src $(EMSRC)$(S)include $(EMSRC)$(S)framework $(EMSRC)$(S)6502 $(EMSRC)$(S)storage $(EMSRC)$(S)roms
+EMUCODE = $(EMSRC)$(S)src $(EMSRC)$(S)include $(EMSRC)$(S)framework $(EMSRC)$(S)6502 $(EMSRC)$(S)roms
 
 SOURCES = emulator/framework/main.cpp emulator/framework/gfx.cpp emulator/framework/debugger.cpp emulator/src/sys_processor.cpp emulator/src/sys_debug_uk101.cpp emulator/src/hardware.cpp
 DEFINES = -D EMSCRIPTEN -D LINUX -D NO_DEBUGGER -DINCLUDE_OS_SUPPORT 
