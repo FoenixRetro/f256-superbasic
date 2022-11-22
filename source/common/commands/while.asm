@@ -1,8 +1,8 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		repeat.asm
-;		Purpose:	Repeat/Until loops
+;		Name:		while.asm
+;		Purpose:	While Wend loop
 ;		Created:	1st October 2022
 ;		Reviewed: 	
 ;		Author:		Paul Robson (paul@robsons.org.uk)

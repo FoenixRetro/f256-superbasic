@@ -127,24 +127,25 @@ VectorSet0:
 	.word	GotoCommand                      ; $b9 GOTO
 	.word	SyntaxError                      ; $ba HERE
 	.word	ImageCommand                     ; $bb IMAGE
-	.word	LetCommand                       ; $bc LET
-	.word	LineCommand                      ; $bd LINE
-	.word	Command_LOCAL                    ; $be LOCAL
-	.word	SyntaxError                      ; $bf OFF
-	.word	SyntaxError                      ; $c0 ON
-	.word	SyntaxError                      ; $c1 OUTLINE
-	.word	PaletteCommand                   ; $c2 PALETTE
-	.word	PlotCommand                      ; $c3 PLOT
-	.word	Command_Print                    ; $c4 PRINT
-	.word	Command_Read                     ; $c5 READ
-	.word	RectangleCommand                 ; $c6 RECT
-	.word	RemCommand                       ; $c7 REM
-	.word	Command_RETURN                   ; $c8 RETURN
-	.word	SyntaxError                      ; $c9 SOLID
-	.word	SoundCommand                     ; $ca SOUND
-	.word	SpriteCommand                    ; $cb SPRITE
-	.word	TextCommand                      ; $cc TEXT
-	.word	Unused2                          ; $cd TO
+	.word	Command_Input                    ; $bc INPUT
+	.word	LetCommand                       ; $bd LET
+	.word	LineCommand                      ; $be LINE
+	.word	Command_LOCAL                    ; $bf LOCAL
+	.word	SyntaxError                      ; $c0 OFF
+	.word	SyntaxError                      ; $c1 ON
+	.word	SyntaxError                      ; $c2 OUTLINE
+	.word	PaletteCommand                   ; $c3 PALETTE
+	.word	PlotCommand                      ; $c4 PLOT
+	.word	Command_Print                    ; $c5 PRINT
+	.word	Command_Read                     ; $c6 READ
+	.word	RectangleCommand                 ; $c7 RECT
+	.word	RemCommand                       ; $c8 REM
+	.word	Command_RETURN                   ; $c9 RETURN
+	.word	SyntaxError                      ; $ca SOLID
+	.word	SoundCommand                     ; $cb SOUND
+	.word	SpriteCommand                    ; $cc SPRITE
+	.word	TextCommand                      ; $cd TEXT
+	.word	Unused2                          ; $ce TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
@@ -159,6 +160,7 @@ VectorSet1:
 	.word	CommandRUN                       ; $8a RUN
 	.word	SpritesCtrl                      ; $8b SPRITES
 	.word	StopCommand                      ; $8c STOP
+	.word	SyntaxError                      ; $8d WHO
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

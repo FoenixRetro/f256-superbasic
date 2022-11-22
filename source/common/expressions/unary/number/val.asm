@@ -41,9 +41,11 @@ _VUBad:
 ValMainCode:		
 		jsr 	EvaluateString 				; get a string
 		jsr 	CheckRightBracket 			; check right bracket present
-
+;
+;		Evaluate value at zTemp0 into X.
+;
+ValEvaluateZTemp0:
 		phy
-
 		lda 	(zTemp0) 					; check not empty string
 		beq 	_VMCFail2 		
 

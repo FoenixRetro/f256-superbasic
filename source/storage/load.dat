@@ -1,4 +1,4 @@
-10 print rnd(1)
-20 goto 10
+10 input "What is your age ?" ; a#
+20 print "A = ";a#
 Ã¿Ã¿Ã¿Ã¿
 ÿÿÿÿ

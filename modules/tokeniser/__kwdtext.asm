@@ -62,24 +62,25 @@ KeywordSet0:
 	.text	4,$39,"GOTO"           ; $b9 GOTO
 	.text	4,$24,"HERE"           ; $ba HERE
 	.text	5,$63,"IMAGE"          ; $bb IMAGE
-	.text	3,$e5,"LET"            ; $bc LET
-	.text	4,$28,"LINE"           ; $bd LINE
-	.text	5,$6b,"LOCAL"          ; $be LOCAL
-	.text	3,$db,"OFF"            ; $bf OFF
-	.text	2,$9d,"ON"             ; $c0 ON
-	.text	7,$20,"OUTLINE"        ; $c1 OUTLINE
-	.text	7,$0f,"PALETTE"        ; $c2 PALETTE
-	.text	4,$3f,"PLOT"           ; $c3 PLOT
-	.text	5,$8d,"PRINT"          ; $c4 PRINT
-	.text	4,$1c,"READ"           ; $c5 READ
-	.text	4,$2e,"RECT"           ; $c6 RECT
-	.text	3,$e4,"REM"            ; $c7 REM
-	.text	6,$e0,"RETURN"         ; $c8 RETURN
-	.text	5,$7b,"SOLID"          ; $c9 SOLID
-	.text	5,$89,"SOUND"          ; $ca SOUND
-	.text	6,$d7,"SPRITE"         ; $cb SPRITE
-	.text	4,$45,"TEXT"           ; $cc TEXT
-	.text	2,$a3,"TO"             ; $cd TO
+	.text	5,$90,"INPUT"          ; $bc INPUT
+	.text	3,$e5,"LET"            ; $bd LET
+	.text	4,$28,"LINE"           ; $be LINE
+	.text	5,$6b,"LOCAL"          ; $bf LOCAL
+	.text	3,$db,"OFF"            ; $c0 OFF
+	.text	2,$9d,"ON"             ; $c1 ON
+	.text	7,$20,"OUTLINE"        ; $c2 OUTLINE
+	.text	7,$0f,"PALETTE"        ; $c3 PALETTE
+	.text	4,$3f,"PLOT"           ; $c4 PLOT
+	.text	5,$8d,"PRINT"          ; $c5 PRINT
+	.text	4,$1c,"READ"           ; $c6 READ
+	.text	4,$2e,"RECT"           ; $c7 RECT
+	.text	3,$e4,"REM"            ; $c8 REM
+	.text	6,$e0,"RETURN"         ; $c9 RETURN
+	.text	5,$7b,"SOLID"          ; $ca SOLID
+	.text	5,$89,"SOUND"          ; $cb SOUND
+	.text	6,$d7,"SPRITE"         ; $cc SPRITE
+	.text	4,$45,"TEXT"           ; $cd TEXT
+	.text	2,$a3,"TO"             ; $ce TO
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF
@@ -95,6 +96,7 @@ KeywordSet1:
 	.text	3,$f5,"RUN"            ; $8a RUN
 	.text	7,$2a,"SPRITES"        ; $8b SPRITES
 	.text	4,$46,"STOP"           ; $8c STOP
+	.text	3,$ee,"WHO"            ; $8d WHO
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF

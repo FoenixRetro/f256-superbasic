@@ -46,10 +46,10 @@ class TokenSource(object):
 				call 		read 		local 		line 		sprite 		rect
 				text 		circle 		here 		color 		colour 		by
 				solid 		outline 	gfx			clear 		image 		from
-				plot 		on 			off 		palette 	sound
+				plot 		on 			off 		palette 	sound 		input
 
 			{1}							// Set 1
-				end 		new 		list 		run 		stop				
+				end 		new 		list 		run 		stop			
 				restore 	assert 		assemble 	bitmap		sprites
 
 			{2}							// Set 2 (Assembler Mnemonics)
