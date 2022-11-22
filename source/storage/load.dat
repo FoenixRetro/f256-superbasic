@@ -1,4 +1,5 @@
-90 sound 1,323,254,-783
-100 sound 1,1000,10
+10 repeat
+15 print rnd(1)
+20 until false
 Ã¿Ã¿Ã¿Ã¿
 ÿÿÿÿ

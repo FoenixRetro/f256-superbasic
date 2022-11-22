@@ -68,7 +68,7 @@ _URDontSeed:
 _URCopySeed:
 		jsr 	URCopyToMantissa 			; copy into mantissa
 
-		lda 	#-31 						; force into 0-1 range
+		lda 	#-30 						; force into 0-1 range
 		sta 	NSExponent
 		lda 	#NSTFloat
 		sta 	NSStatus 					; positive.
@@ -123,5 +123,6 @@ _Random2:
 ;
 ;		Date			Notes
 ;		==== 			=====
+; 		22/11/22 		RND(n) was only generating 0..0.5
 ;
 ; ************************************************************************************************
