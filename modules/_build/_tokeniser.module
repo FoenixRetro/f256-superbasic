@@ -96,13 +96,14 @@ KeywordSet1:
 	.text	6,$d2,"ASSERT"         ; $84 ASSERT
 	.text	6,$bd,"BITMAP"         ; $85 BITMAP
 	.text	3,$d7,"END"            ; $86 END
-	.text	4,$3c,"LIST"           ; $87 LIST
-	.text	3,$ea,"NEW"            ; $88 NEW
-	.text	7,$24,"RESTORE"        ; $89 RESTORE
-	.text	3,$f5,"RUN"            ; $8a RUN
-	.text	7,$2a,"SPRITES"        ; $8b SPRITES
-	.text	4,$46,"STOP"           ; $8c STOP
-	.text	3,$ee,"WHO"            ; $8d WHO
+	.text	2,$96,"GO"             ; $87 GO
+	.text	4,$3c,"LIST"           ; $88 LIST
+	.text	4,$20,"LOAD"           ; $89 LOAD
+	.text	3,$ea,"NEW"            ; $8a NEW
+	.text	7,$24,"RESTORE"        ; $8b RESTORE
+	.text	3,$f5,"RUN"            ; $8c RUN
+	.text	7,$2a,"SPRITES"        ; $8d SPRITES
+	.text	4,$46,"STOP"           ; $8e STOP
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF

@@ -154,12 +154,14 @@ VectorSet1:
 	.word	AssertCommand                    ; $84 ASSERT
 	.word	BitmapCtrl                       ; $85 BITMAP
 	.word	EndCommand                       ; $86 END
-	.word	Command_List                     ; $87 LIST
-	.word	NewCommand                       ; $88 NEW
-	.word	Command_Restore                  ; $89 RESTORE
-	.word	CommandRUN                       ; $8a RUN
-	.word	SpritesCtrl                      ; $8b SPRITES
-	.word	StopCommand                      ; $8c STOP
+	.word	GoCommand                        ; $87 GO
+	.word	Command_List                     ; $88 LIST
+	.word	LoadCommand                      ; $89 LOAD
+	.word	NewCommand                       ; $8a NEW
+	.word	Command_Restore                  ; $8b RESTORE
+	.word	CommandRUN                       ; $8c RUN
+	.word	SpritesCtrl                      ; $8d SPRITES
+	.word	StopCommand                      ; $8e STOP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
