@@ -36,9 +36,9 @@ Start:	ldx 	#$FF 						; stack reset
 											; (mandatory)
 		
 		jsr 	NewProgram 					; erase current program
-		jsr 	BackloadProgram
 
 		.if 	AUTORUN==1 					; run straight off
+		jsr 	BackloadProgram
 		jmp 	CommandRun
 		.else
 		jmp 	WarmStart
