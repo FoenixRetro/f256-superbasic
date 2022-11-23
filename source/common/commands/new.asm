@@ -4,7 +4,7 @@
 ;		Name:		new.asm
 ;		Purpose:	NEW command
 ;		Created:	18th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	23rd November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -13,8 +13,14 @@
 		.section code
 
 NewCommand: ;; [new]
-		jsr 	NewProgram
-		jmp 	WarmStart
+		jsr 	NewProgram 					; does the actual NEW.
+		jmp 	WarmStart 					; and warm starts straight away.
+
+; ************************************************************************************************
+;
+;				Subroutine so that we can actually do NEW without warmstarting
+;
+; ************************************************************************************************
 
 NewProgram:
 		jsr 	MemoryNew

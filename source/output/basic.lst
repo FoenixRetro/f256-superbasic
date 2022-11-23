@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Wed Nov 23 09:29:06 2022
+; Wed Nov 23 12:57:24 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -418,9 +418,9 @@
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->8043	42 75 69 6c 74 20 57 65			.text "Built Wednesday 23-Nov-2022. Build 3574."
+>8043	42 75 69 6c 74 20 57 65			.text "Built Wednesday 23-Nov-2022. Build 3577."
 >804b	64 6e 65 73 64 61 79 20 32 33 2d 4e 6f 76 2d 32
->805b	30 32 32 2e 20 42 75 69 6c 64 20 33 35 37 34 2e
+>805b	30 32 32 2e 20 42 75 69 6c 64 20 33 35 37 37 2e
 
 ;******  Return to file: ./common/aa.system/00start.asm
 
@@ -1001,10 +1001,10 @@
 .83f3	a9 10		lda #$10			lda 	#((VariableSpace) >> 8)
 .83f5	85 37		sta $37				sta 	1+zTemp0
 .83f7					_ClearZeroLoop:
-.83f7	b2 36		lda ($36)			lda 	(zTemp0) 					; end of variables
+.83f7	b2 36		lda ($36)			lda 	(zTemp0) 					; end of variables if offset is zero.
 .83f9	f0 24		beq $841f			beq 	_ClearZeroEnd
 .83fb	a0 03		ldy #$03			ldy 	#3 							; erase the variables
-.83fd	a9 00		lda #$00			lda 	#0
+.83fd	a9 00		lda #$00			lda 	#0 							; set all the data to zero.
 .83ff					_ClearOneVariable:
 .83ff	91 36		sta ($36),y			sta 	(zTemp0),y
 .8401	c8		iny				iny
@@ -1014,11 +1014,11 @@
 .8408	b1 36		lda ($36),y			lda 	(zTemp0),y
 .840a	c9 18		cmp #$18			cmp 	#NSTProcedure
 .840c	d0 04		bne $8412			bne 	_ClearNotProcedure
-.840e	a9 04		lda #$04			lda 	#NSTInteger+NSBIsArray 		; set it back to an integer array
-.8410	91 36		sta ($36),y			sta 	(zTemp0),y
+.840e	a9 04		lda #$04			lda 	#NSTInteger+NSBIsArray 		; if so set it back to an integer array
+.8410	91 36		sta ($36),y			sta 	(zTemp0),y 					; will be fixed on the pre-run scan.
 .8412					_ClearNotProcedure:
 .8412	18		clc				clc 								; go to the next variable
-.8413	b2 36		lda ($36)			lda 	(zTemp0)
+.8413	b2 36		lda ($36)			lda 	(zTemp0) 					; offset to next, add to zTemp0
 .8415	65 36		adc $36				adc 	zTemp0
 .8417	85 36		sta $36				sta 	zTemp0
 .8419	90 dc		bcc $83f7			bcc 	_ClearZeroLoop
@@ -1839,8 +1839,8 @@
 ;******  Processing file: ./common/commands/new.asm
 
 .8940					NewCommand:
-.8940	20 46 89	jsr $8946			jsr 	NewProgram
-.8943	4c 56 83	jmp $8356			jmp 	WarmStart
+.8940	20 46 89	jsr $8946			jsr 	NewProgram 					; does the actual NEW.
+.8943	4c 56 83	jmp $8356			jmp 	WarmStart 					; and warm starts straight away.
 .8946					NewProgram:
 .8946	20 44 a6	jsr $a644			jsr 	MemoryNew
 .8949	9c 00 10	stz $1000			stz 	VariableSpace 				; erase all variables.
@@ -5592,9 +5592,9 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->a1c1	42 75 69 6c 74 20 57 65			.text "Built Wednesday 23-Nov-2022. Build 3574."
+>a1c1	42 75 69 6c 74 20 57 65			.text "Built Wednesday 23-Nov-2022. Build 3577."
 >a1c9	64 6e 65 73 64 61 79 20 32 33 2d 4e 6f 76 2d 32
->a1d9	30 32 32 2e 20 42 75 69 6c 64 20 33 35 37 34 2e
+>a1d9	30 32 32 2e 20 42 75 69 6c 64 20 33 35 37 37 2e
 
 ;******  Return to file: _basic.asm
 
@@ -9105,7 +9105,7 @@
 .b6a0					TokeniseLine:
 .b6a0	20 28 b8	jsr $b828			jsr 	LCLFixLineBufferCase 		; fix line case
 .b6a3	a9 03		lda #$03			lda 	#3 							; reset the token buffer to empty
-.b6a5	8d a9 04	sta $04a9			sta 	tokenOffset
+.b6a5	8d a9 04	sta $04a9			sta 	tokenOffset 				; (3 bytes for line number & offset)
 .b6a8	9c aa 04	stz $04aa			stz 	tokenLineNumber
 .b6ab	9c ab 04	stz $04ab			stz 	tokenLineNumber+1
 .b6ae	a2 ff		ldx #$ff			ldx 	#$FF
@@ -9129,7 +9129,7 @@
 .b6cd	f0 f6		beq $b6c5			beq 	_TKTokeniseLoop 			; keep looping if space found.
 .b6cf	ca		dex				dex 								; undo last get, A contains character, X is position.
 .b6d0	c9 5f		cmp #$5f			cmp 	#'_'						; _ A-Z is identifier *or* token
-.b6d2	f0 61		beq $b735			beq 	_TKTokeniseIdentifier
+.b6d2	f0 61		beq $b735			beq 	_TKTokeniseIdentifier 		; (already case converted outside string constants)
 .b6d4	c9 41		cmp #$41			cmp 	#'A'
 .b6d6	90 04		bcc $b6dc			bcc 	_TKTokenisePunctuation
 .b6d8	c9 5b		cmp #$5b			cmp 	#'Z'+1
@@ -9137,17 +9137,17 @@
 .b6dc					_TKTokenisePunctuation:
 .b6dc	c9 22		cmp #$22			cmp 	#'"'						; quoted string ?
 .b6de	f0 27		beq $b707			beq 	_TKString
-.b6e0	c9 24		cmp #$24			cmp 	#'$'						; hexadecimal constant (# only appears at end of identifiers)
+.b6e0	c9 24		cmp #$24			cmp 	#'$'						; hexadecimal constant ($ only appears at end of identifiers)
 .b6e2	f0 28		beq $b70c			beq 	_TKHexConstant
-.b6e4	c9 3c		cmp #$3c			cmp 	#'<' 						; check for < > handlers.
+.b6e4	c9 3c		cmp #$3c			cmp 	#'<' 						; check for < > handlers - these are for <> <= >= >> <<
 .b6e6	f0 29		beq $b711			beq 	_TKCheckDouble
 .b6e8	c9 3e		cmp #$3e			cmp 	#'>'
 .b6ea	f0 25		beq $b711			beq 	_TKCheckDouble
 .b6ec					_TKStandardPunctuation:
-.b6ec	bd a9 05	lda $05a9,x			lda 	lineBuffer,x 				; get it back.
+.b6ec	bd a9 05	lda $05a9,x			lda 	lineBuffer,x 				; get the punctuation token back.
 .b6ef	c9 40		cmp #$40			cmp 	#64 						; are we >= 64
 .b6f1	90 0e		bcc $b701			bcc 	_TKNoShift
-.b6f3	48		pha				pha 								; save
+.b6f3	48		pha				pha 								; save. we are about to convert this punctuation token from
 .b6f4	29 07		and #$07			and 	#7 							; lower 3 bits in zTemp0
 .b6f6	85 36		sta $36				sta 	zTemp0
 .b6f8	68		pla				pla
@@ -9169,7 +9169,7 @@
 .b711					_TKCheckDouble:
 .b711	bd aa 05	lda $05aa,x			lda 	lineBuffer+1,x 				; get next character
 .b714	c9 3c		cmp #$3c			cmp 	#'<'						; if not < = > which are ASCII consecutive go back
-.b716	90 d4		bcc $b6ec			bcc 	_TKStandardPunctuation
+.b716	90 d4		bcc $b6ec			bcc 	_TKStandardPunctuation 		; and do the normal punctuation handler.
 .b718	c9 3f		cmp #$3f			cmp 	#'>'+1
 .b71a	b0 d0		bcs $b6ec			bcs 	_TKStandardPunctuation
 .b71c	bd a9 05	lda $05a9,x			lda 	lineBuffer,x 				; this is < (60) or > (62)
@@ -9189,7 +9189,7 @@
 .b735	8e 80 04	stx $0480			stx 	identStart 					; save start
 .b738	9c 84 04	stz $0484			stz 	identTypeByte 				; zero the type byte
 .b73b					_TKCheckLoop:
-.b73b	e8		inx				inx 								; look at next, we know first is identifier.
+.b73b	e8		inx				inx 								; look at next, we know first is identifier already.
 .b73c	bd a9 05	lda $05a9,x			lda  	lineBuffer,x
 .b73f	c9 5f		cmp #$5f			cmp 	#"_" 						; legal char _ 0-9 A-Z
 .b741	f0 f8		beq $b73b			beq 	_TKCheckLoop
@@ -9211,13 +9211,13 @@
 .b760	d0 07		bne $b769			bne 	_TKNoTypeCharacter
 .b762					_TKHasTypeCharacter:
 .b762	8c 84 04	sty $0484			sty 	identTypeByte 				; has # or $, save the type
-.b765	e8		inx				inx 								; read next
+.b765	e8		inx				inx 								; consume the type character
 .b766	bd a9 05	lda $05a9,x			lda 	lineBuffer,x
 .b769					_TKNoTypeCharacter:
 .b769	c9 28		cmp #$28			cmp 	#"("						; is it open parenthesis (e.g. array)
 .b76b	d0 09		bne $b776			bne 	_TKNoArray
 .b76d	e8		inx				inx 								; skip the (
-.b76e	ad 84 04	lda $0484			lda 	identTypeByte 				; set bit 2 (e.g. array)
+.b76e	ad 84 04	lda $0484			lda 	identTypeByte 				; set bit 2 (e.g. array) in type byte
 .b771	09 04		ora #$04			ora 	#$04
 .b773	8d 84 04	sta $0484			sta 	identTypeByte
 .b776					_TKNoArray:
@@ -9256,12 +9256,12 @@
 .b7b9	20 97 b8	jsr $b897			jsr 	TOKWriteByte
 .b7bc	e8		inx				inx									; start of quoted string.
 .b7bd	da		phx				phx 								; push start of string on top
-.b7be	ca		dex				dex
+.b7be	ca		dex				dex 								; because we pre-increment
 .b7bf					_TSFindEnd:
 .b7bf	e8		inx				inx
 .b7c0	bd a9 05	lda $05a9,x			lda 	lineBuffer,x 				; next character
-.b7c3	f0 04		beq $b7c9			beq 	_TSEndOfString
-.b7c5	c9 22		cmp #$22			cmp 	#'"'
+.b7c3	f0 04		beq $b7c9			beq 	_TSEndOfString 				; no matching quote, we don't mind.
+.b7c5	c9 22		cmp #$22			cmp 	#'"' 						; go back if quote not found
 .b7c7	d0 f6		bne $b7bf			bne 	_TSFindEnd
 .b7c9					_TSEndOfString:
 .b7c9	7a		ply				ply  								; so now Y is first character, X is character after end.
@@ -9273,22 +9273,22 @@
 .b7d2					_TSNotQuote:
 .b7d2	60		rts				rts
 .b7d3					TOKWriteBlockXY:
-.b7d3	86 36		stx $36				stx 	zTemp0 						; write end character
-.b7d5	98		tya				tya
+.b7d3	86 36		stx $36				stx 	zTemp0 						; save end character
+.b7d5	98		tya				tya 								; use 2's complement to work out the byte size
 .b7d6	49 ff		eor #$ff			eor 	#$FF
 .b7d8	38		sec				sec
 .b7d9	65 36		adc $36				adc 	zTemp0
 .b7db	1a		inc a				inc 	a 							; one extra for NULL
 .b7dc	20 97 b8	jsr $b897			jsr 	TOKWriteByte
 .b7df					_TOBlockLoop:
-.b7df	c4 36		cpy $36				cpy 	zTemp0
+.b7df	c4 36		cpy $36				cpy 	zTemp0 						; exit if reached the end
 .b7e1	f0 09		beq $b7ec			beq 	_TOBlockExit
-.b7e3	b9 a9 05	lda $05a9,y			lda 	lineBuffer,y
+.b7e3	b9 a9 05	lda $05a9,y			lda 	lineBuffer,y 				; write byte out.
 .b7e6	20 97 b8	jsr $b897			jsr 	TOKWriteByte
 .b7e9	c8		iny				iny
 .b7ea	80 f3		bra $b7df			bra 	_TOBlockLoop
 .b7ec					_TOBlockExit:
-.b7ec	a9 00		lda #$00			lda 	#0
+.b7ec	a9 00		lda #$00			lda 	#0 							; add NULL.
 .b7ee	20 97 b8	jsr $b897			jsr 	TOKWriteByte
 .b7f1	60		rts				rts
 .b7f2					TOKHexConstant:
@@ -9298,8 +9298,8 @@
 .b7f8	da		phx				phx 								; push start of constant on top
 .b7f9	ca		dex				dex
 .b7fa					_THFindLoop:
-.b7fa	e8		inx				inx
-.b7fb	bd a9 05	lda $05a9,x			lda 	lineBuffer,x
+.b7fa	e8		inx				inx 	 							; this is stored in a block, so find out how long
+.b7fb	bd a9 05	lda $05a9,x			lda 	lineBuffer,x 				; the hex constant is.
 .b7fe	c9 30		cmp #$30			cmp 	#"0"
 .b800	90 0c		bcc $b80e			bcc 	_THFoundEnd
 .b802	c9 3a		cmp #$3a			cmp 	#"9"+1

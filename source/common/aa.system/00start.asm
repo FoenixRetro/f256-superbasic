@@ -4,7 +4,7 @@
 ;		Name:		00start.asm
 ;		Purpose:	Start up code.
 ;		Created:	18th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	23rd November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -16,23 +16,24 @@ Start:	ldx 	#$FF 						; stack reset
 		txs	
 		jsr 	EXTInitialise 				; hardware initialise
 
-		ldx 	#(Prompt >> 8) 				; prompt
+		ldx 	#(Prompt >> 8) 				; prompt display
 		lda 	#(Prompt & $FF)
 		jsr 	PrintStringXA
 
-		.if 	graphicsIntegrated==1
+		.if 	graphicsIntegrated==1 		; if installed
 		lda 	#0 							; graphics system initialise.
 		tax
 		tay
 		jsr 	GXGraphicDraw
 		.endif
 
-		.if 	soundIntegrated==1
+		.if 	soundIntegrated==1 			; if installed
 		lda 	#$0F 						; initialise sound system
 		jsr 	SNDCommand
 		.endif
 
 		.tickinitialise 					; initialise tick handler
+											; (mandatory)
 		
 		jsr 	NewProgram 					; erase current program
 		jsr 	BackloadProgram

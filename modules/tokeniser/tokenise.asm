@@ -4,7 +4,7 @@
 ;		Name:		tokenise.asm
 ;		Purpose:	Tokenise Line
 ;		Created:	18th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	23rd November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -27,7 +27,7 @@ TokeniseLine:
 		;		Erase the tokenised line to empty
 		;
 		lda 	#3 							; reset the token buffer to empty
-		sta 	tokenOffset
+		sta 	tokenOffset 				; (3 bytes for line number & offset)
 		stz 	tokenLineNumber
 		stz 	tokenLineNumber+1
 		;
@@ -42,6 +42,7 @@ _TKFindFirst:
 		bcc 	_TKFindFirst
 		;
 		;		If it is 0-9 extract a 2 byte integer into the token line number
+		;		(because the input line is an editing one)
 		;
 		cmp 	#'0'
 		bcc 	_TKNoLineNumber
@@ -64,7 +65,7 @@ _TKTokeniseLoop:
 		dex 								; undo last get, A contains character, X is position.
 		;
 		cmp 	#'_'						; _ A-Z is identifier *or* token
-		beq 	_TKTokeniseIdentifier
+		beq 	_TKTokeniseIdentifier 		; (already case converted outside string constants)
 		cmp 	#'A'
 		bcc 	_TKTokenisePunctuation 
 		cmp 	#'Z'+1
@@ -72,25 +73,28 @@ _TKTokeniseLoop:
 
 		;----------------------------------------------------------------------------------------
 		;
-		;		So we now have a punctuation character. Special cases are those >= 64 and < or > followed by = > or <
-		;		and quoted strings. For 64 conversion see the punctuation.ods
+		;		So we now have a punctuation character. Special cases are those >= 64 and < or > 
+		;		followed by = > or < and quoted strings. 
+		;
+		; 		For 64 conversion see the punctuation.ods
 		;
 		;----------------------------------------------------------------------------------------
 
 _TKTokenisePunctuation:
 		cmp 	#'"'						; quoted string ?
 		beq 	_TKString
-		cmp 	#'$'						; hexadecimal constant (# only appears at end of identifiers)
+		cmp 	#'$'						; hexadecimal constant ($ only appears at end of identifiers)
 		beq 	_TKHexConstant
-		cmp 	#'<' 						; check for < > handlers.
+		cmp 	#'<' 						; check for < > handlers - these are for <> <= >= >> <<
 		beq 	_TKCheckDouble
 		cmp 	#'>'
 		beq 	_TKCheckDouble
 _TKStandardPunctuation:
-		lda 	lineBuffer,x 				; get it back.
+		lda 	lineBuffer,x 				; get the punctuation token back.
 		cmp 	#64 						; are we >= 64
 		bcc 	_TKNoShift
-		pha 								; save 
+		pha 								; save. we are about to convert this punctuation token from
+											; 64-127 to 16-31 (see punctuation.ods)
 		and 	#7 							; lower 3 bits in zTemp0
 		sta 	zTemp0
 		pla
@@ -103,7 +107,9 @@ _TKNoShift:
 		jsr 	TOKWriteByte 				; write the punctuation character
 		inx 								; consume the character
 		bra 	_TKTokeniseLoop 			; and loop round again.
-
+		;
+		;		String tokeniser.
+		;
 _TKString: 									; tokenise a string "Hello world"
 		jsr 	TOKTokenString
 		bra 	_TKTokeniseLoop
@@ -121,7 +127,7 @@ _TKHexConstant: 							; tokenise hex constant #A277
 _TKCheckDouble:
 		lda 	lineBuffer+1,x 				; get next character
 		cmp 	#'<'						; if not < = > which are ASCII consecutive go back
-		bcc 	_TKStandardPunctuation
+		bcc 	_TKStandardPunctuation 		; and do the normal punctuation handler.
 		cmp 	#'>'+1
 		bcs 	_TKStandardPunctuation
 		;
@@ -156,7 +162,7 @@ _TKTokeniseIdentifier:
 		stx 	identStart 					; save start
 		stz 	identTypeByte 				; zero the type byte
 _TKCheckLoop:
-		inx 								; look at next, we know first is identifier.
+		inx 								; look at next, we know first is identifier already.
 		lda  	lineBuffer,x
 		cmp 	#"_" 						; legal char _ 0-9 A-Z
 		beq 	_TKCheckLoop
@@ -169,6 +175,9 @@ _TKCheckLoop:
 		cmp 	#"Z"+1
 		bcc 	_TKCheckLoop
 _TKEndIdentifier:
+		;
+		;		Look for # or $ type
+		;
 		stx 	identTypeStart 				; save start of type text (if any !)
 		;
 		ldy 	#$08 						; this is the identifier type byte for #
@@ -179,13 +188,16 @@ _TKEndIdentifier:
 		bne 	_TKNoTypeCharacter
 _TKHasTypeCharacter:
 		sty 	identTypeByte 				; has # or $, save the type
-		inx 								; read next
+		inx 								; consume the type character		
 		lda 	lineBuffer,x
+		;
+		;		Look for array
+		;
 _TKNoTypeCharacter:
 		cmp 	#"("						; is it open parenthesis (e.g. array)
 		bne 	_TKNoArray
 		inx 								; skip the (
-		lda 	identTypeByte 				; set bit 2 (e.g. array)
+		lda 	identTypeByte 				; set bit 2 (e.g. array) in type byte
 		ora 	#$04
 		sta 	identTypeByte
 _TKNoArray:		
@@ -194,11 +206,12 @@ _TKNoArray:
 
 		;----------------------------------------------------------------------------------------
 		;
-		;			Search the token tables.
+		;			Search the token tables, to see if this is actually a keyword.
+		;			*all* keywords are identifier-compliant.
 		;
 		;----------------------------------------------------------------------------------------
 
-checktokens .macro
+checktokens .macro 			
 		ldy 	#(\1) >> 8
 		lda 	#(\1) & $FF
 		jsr 	TOKSearchTable
@@ -226,7 +239,7 @@ checktokens .macro
 
 		;----------------------------------------------------------------------------------------
 		;
-		;				Found a token, X contains the shift (or 0), A the token
+		;			Found a token, X contains the shift ($8x or 0), A the token
 		;
 		;----------------------------------------------------------------------------------------
 
@@ -252,13 +265,14 @@ TOKTokenString:
 		jsr 	TOKWriteByte
 		inx									; start of quoted string.
 		phx 								; push start of string on top
-		dex
+		dex 								; because we pre-increment
 _TSFindEnd:							
 		inx
 		lda 	lineBuffer,x 				; next character
-		beq 	_TSEndOfString
-		cmp 	#'"'
+		beq 	_TSEndOfString 				; no matching quote, we don't mind.
+		cmp 	#'"' 						; go back if quote not found
 		bne 	_TSFindEnd
+		;
 _TSEndOfString:
 		ply  								; so now Y is first character, X is character after end.		
 		pha 								; save terminating character
@@ -268,26 +282,30 @@ _TSEndOfString:
 		inx
 _TSNotQuote:		
 		rts		
+
+; ************************************************************************************************
 ;
-;		Write Y to X with a trailing NULL.
+;				Write Y to X with a trailing NULL - used for any block data.
 ;
+; ************************************************************************************************
+
 TOKWriteBlockXY:
-		stx 	zTemp0 						; write end character
-		tya
+		stx 	zTemp0 						; save end character
+		tya 								; use 2's complement to work out the byte size
 		eor 	#$FF
 		sec
 		adc 	zTemp0
 		inc 	a 							; one extra for NULL
 		jsr 	TOKWriteByte
 _TOBlockLoop:
-		cpy 	zTemp0
+		cpy 	zTemp0 						; exit if reached the end
 		beq 	_TOBlockExit
-		lda 	lineBuffer,y
+		lda 	lineBuffer,y 				; write byte out.
 		jsr 	TOKWriteByte				
 		iny
 		bra 	_TOBlockLoop
 _TOBlockExit:
-		lda 	#0
+		lda 	#0 							; add NULL.
 		jsr 	TOKWriteByte
 		rts
 
@@ -304,8 +322,8 @@ TOKHexConstant:
 		phx 								; push start of constant on top
 		dex
 _THFindLoop:							
-		inx 	
-		lda 	lineBuffer,x
+		inx 	 							; this is stored in a block, so find out how long
+		lda 	lineBuffer,x 				; the hex constant is.
 		cmp 	#"0"
 		bcc 	_THFoundEnd
 		cmp 	#"9"+1

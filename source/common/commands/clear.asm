@@ -4,7 +4,7 @@
 ;		Name:		clear.asm
 ;		Purpose:	CLEAR command
 ;		Created:	18th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	23rd November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -16,13 +16,13 @@ ClearCommand: ;; [clear]
 		;
 		;		Scan through all the variables resetting them to zero.
 		;
-		.set16 	zTemp0,VariableSpace
+		.set16 	zTemp0,VariableSpace 		; zTemp0 points to the variable list
 _ClearZeroLoop:		
-		lda 	(zTemp0) 					; end of variables
+		lda 	(zTemp0) 					; end of variables if offset is zero.
 		beq 	_ClearZeroEnd
 
 		ldy 	#3 							; erase the variables
-		lda 	#0
+		lda 	#0 							; set all the data to zero.
 _ClearOneVariable:	
 		sta 	(zTemp0),y
 		iny
@@ -33,21 +33,21 @@ _ClearOneVariable:
 		lda 	(zTemp0),y
 		cmp 	#NSTProcedure
 		bne 	_ClearNotProcedure
-		lda 	#NSTInteger+NSBIsArray 		; set it back to an integer array
-		sta 	(zTemp0),y
+		lda 	#NSTInteger+NSBIsArray 		; if so set it back to an integer array
+		sta 	(zTemp0),y 					; will be fixed on the pre-run scan.
 _ClearNotProcedure:
 
 		clc 								; go to the next variable
-		lda 	(zTemp0)
+		lda 	(zTemp0) 					; offset to next, add to zTemp0
 		adc 	zTemp0
 		sta 	zTemp0
 		bcc 	_ClearZeroLoop
 		inc 	zTemp0+1
 		bra 	_ClearZeroLoop
-
 _ClearZeroEnd:
 		;
-		;		Reset the low memory allocation pointer
+		;		Reset the low memory allocation pointer, which is the byte after
+		;		the identifiers. 
 		;
 		clc
 		lda 	zTemp0
@@ -65,7 +65,7 @@ _ClearZeroEnd:
 		;
 		jsr 	StringSystemInitialise		
 		;
-		;		Scan the program code for Procedures (possibly convert intarrys back above ?)
+		;		Scan the program code for Procedures which will reconvert any intarray procedures back.
 		;
 		jsr 	ProcedureScan
 		;
