@@ -20,7 +20,7 @@ LoadCommand: ;; [load]
 GoCommand: ;; [go]
 		jsr 	NewProgram
 		jsr 	BackLoadProgram
-		jmp 	CommandRun
+		jmp 	CommandRun	
 
 		.send code
 

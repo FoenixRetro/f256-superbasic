@@ -4,7 +4,7 @@
 ;		Name:		utility.asm
 ;		Purpose:	Tokeniser Utilities
 ;		Created:	19th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	23rd November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -20,8 +20,8 @@
 
 TOKCalculateHash:
 		phx
-		ldx 	identStart 					; needs to be same as in tokens.py - simple sum
-		lda 	#0
+		ldx 	identStart 					; needs to be same as in tokens.py - simple sum at present.
+		lda 	#0 					
 _TCHLoop:
 		clc
 		adc 	lineBuffer,x
@@ -40,6 +40,9 @@ _TCHLoop:
 
 LCLFixLineBufferCase:
 		ldx 	#0
+		;
+		;		Loop (out of quotes)
+		;
 _FLBCLoop:
 		lda 	lineBuffer,x 				; get next character
 		beq 	_FLBCExit 					; end of string.
@@ -54,6 +57,8 @@ _FLBCLoop:
 		sbc 	#32		
 		sta	 	lineBuffer-1,x 				; write back
 		bra 	_FLBCLoop
+		;
+		;		Loop (in quotes)
 		;
 _FLBCInQuotes:
 		inx 								; advance
@@ -70,7 +75,7 @@ _FLBCExit:
 ; ************************************************************************************************
 ;
 ;		  Extract line number from lineBuffer,x - we know there's at least *one* digit
-;		  (this code is seperate so that the tokenising code could be in its own page)
+;		 				Does not zero the initial value (in tokenLineNumber)
 ;
 ; ************************************************************************************************
 
@@ -79,8 +84,8 @@ TOKExtractLineNumber:
 		pha
 		lda 	tokenLineNumber
 		pha
-		jsr 	_LCLNTimes2 				; line # x 4
 		jsr 	_LCLNTimes2 				; line # x 2
+		jsr 	_LCLNTimes2 				; line # x 4
 		;
 		clc 								; add stacked value
 		pla 
@@ -107,8 +112,9 @@ _TLENNoCarry:
 		bcc 	TOKExtractLineNumber
 _TLENExit:
 		rts
+
 _LCLNTimes2:		
-		asl 	tokenLineNumber
+		asl 	tokenLineNumber 			; doubles tokenLineNumber.
 		rol 	tokenLineNumber+1
 		rts
 

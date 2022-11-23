@@ -4,7 +4,7 @@
 ;		Name:		03access.inc
 ;		Purpose:	Macros used for accessing program code space
 ;		Created:	18th September 2022
-;		Reviewed: 	No.
+;		Reviewed: 	23rd November 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -16,23 +16,23 @@
 ;
 ; ************************************************************************************************
 
-cget 	.macro
+cget 	.macro 								; get character
 		lda 	(codePtr),y
-		.endm
+		.endm 
 
-cget0 	.macro
+cget0 	.macro 								; get 1st character e.g. offset to next line
 		lda 	(codePtr)
 		.endm
 
-cset 	.macro
+cset 	.macro 								; update character
 		sta 	(codePtr),y
 		.endm
 
-cset0 	.macro
+cset0 	.macro 								; update offset
 		sta 	(codePtr)
 		.endm
 
-ccmp 	.macro
+ccmp 	.macro 								; compare against
 		cmp 	(codePtr),y
 		.endm
 
@@ -53,20 +53,26 @@ cresync .macro
 
 cnextline .macro
 		clc
-		lda 	(codePtr)					; get offset 
+		lda 	(codePtr)					; get offset and add
 		adc 	codePtr
 		sta 	codePtr
 		bcc 	_CREExit
-		inc 	codePtr+1
+		inc 	codePtr+1 					; carry
 _CREExit:
 		.endm
 
+; ************************************************************************************************
+;
+;									Advance past a data block
+;
+; ************************************************************************************************
+
 cskipdatablock .macro
-		iny
-		tya
-		sec
+		iny 								; point to offset
+		tya 								; A = offset position
+		sec 								; add size +1 hence SEC
 		adc 	(codePtr),y
-		tay
+		tay 								; make current position.
 		.endm	
 
 ; ************************************************************************************************
@@ -82,6 +88,13 @@ csetcodepointer 	.macro
 		sta 	codePtr+1
 		.cresync
 		.endm
+
+; ************************************************************************************************
+;
+;			Reset the code pointer back to the start, may need page switches to make
+;			it current as well.
+;
+; ************************************************************************************************
 
 cresetcodepointer 	.macro
 		.csetcodepointer BasicStart

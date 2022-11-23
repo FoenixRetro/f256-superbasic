@@ -557,7 +557,7 @@ _LCLUCOut:
 ;		Name:		searchtokens.asm
 ;		Purpose:	Seach token table for a specific identifier
 ;		Created:	19th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	23rd November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -573,32 +573,38 @@ _LCLUCOut:
 ; ************************************************************************************************
 
 TOKSearchTable:
-		sty 	zTemp0+1 					; (zTemp0),y points to current token.
+		sty 	zTemp0+1 					; (zTemp0),y points to current token being tested.
 		sta 	zTemp0
 		ldy 	#0
-		lda 	#$80 						; token #
+		lda 	#$80 						; token # so we know which one we are looking at
 		sta 	zTemp1
 		;
 		;		Token search loop
 		;
 _TSTLoop:
 		lda 	(zTemp0),y 					; length, 0 (skip) -ve (end)
-		bmi 	_TSTFail 					; -ve = end of table
-		beq 	_TSTNext 					; zero, check next it's a dummy
+		bmi 	_TSTFail 					; -ve = end of table, so fail.
+		beq 	_TSTNext 					; zero, check next as it's a dummy (e.g. EOL, SHIFT)
+		;
+		; 		Hash match ?
 		;
 		iny 								; get the hash
 		lda 	(zTemp0),y
 		dey
-		cmp 	identHash 					; check they match, if not go to next
-		bne 	_TSTNext
-
-		lda 	identTypeEnd 				; length of identifier
-		sec
-		sbc 	identStart
-		cmp 	(zTemp0),y 					; no match, then return.
+		cmp 	identHash 					; check they match with the identifier hash, if not go to next
 		bne 	_TSTNext
 		;
-		phy 								; save Y , we might fail
+		;		Length match
+		;
+		lda 	identTypeEnd 				; get length of identifier from end-start
+		sec
+		sbc 	identStart
+		cmp 	(zTemp0),y 					; compare against the length in the table, no match, then return.
+		bne 	_TSTNext
+		;
+		;		Hash and length match, now compare actual text
+		;
+		phy 								; save Y , we might fail to match.
 		iny 								; point to text
 		iny
 		ldx 	identStart 					; offset in line buffer in X
@@ -614,6 +620,9 @@ _TSTCompareName:
 		lda 	zTemp1 						; get token #
 		sec 								; return with CS = passed.
 		rts
+		;
+		;		Go onto next token, optionally restoring Y
+		;
 _TSTNextPullY:
 		ply 								; restore current, fall through.
 		;
@@ -628,6 +637,9 @@ _TSTNext:
 		inc 	a 							; +2
 		tay
 		bpl 	_TSTLoop 					; if Y < $80 loop back
+		;
+		;		The index into the token table is > 128, we now adjust this so
+		;		this value is always < 128, allowing us to use fast index lookups.
 		;
 		tya 								; add Y to zTemp0 and reset Y
 		ldy 	#0   						; so we can use Y to search fast
@@ -1011,7 +1023,7 @@ _THFoundEnd:
 ;		Name:		utility.asm
 ;		Purpose:	Tokeniser Utilities
 ;		Created:	19th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	23rd November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -1027,7 +1039,7 @@ _THFoundEnd:
 
 TOKCalculateHash:
 		phx
-		ldx 	identStart 					; needs to be same as in tokens.py - simple sum
+		ldx 	identStart 					; needs to be same as in tokens.py - simple sum at present.
 		lda 	#0
 _TCHLoop:
 		clc
@@ -1047,6 +1059,9 @@ _TCHLoop:
 
 LCLFixLineBufferCase:
 		ldx 	#0
+		;
+		;		Loop (out of quotes)
+		;
 _FLBCLoop:
 		lda 	lineBuffer,x 				; get next character
 		beq 	_FLBCExit 					; end of string.
@@ -1061,6 +1076,8 @@ _FLBCLoop:
 		sbc 	#32
 		sta	 	lineBuffer-1,x 				; write back
 		bra 	_FLBCLoop
+		;
+		;		Loop (in quotes)
 		;
 _FLBCInQuotes:
 		inx 								; advance
@@ -1077,7 +1094,7 @@ _FLBCExit:
 ; ************************************************************************************************
 ;
 ;		  Extract line number from lineBuffer,x - we know there's at least *one* digit
-;		  (this code is seperate so that the tokenising code could be in its own page)
+;		 				Does not zero the initial value (in tokenLineNumber)
 ;
 ; ************************************************************************************************
 
@@ -1086,8 +1103,8 @@ TOKExtractLineNumber:
 		pha
 		lda 	tokenLineNumber
 		pha
-		jsr 	_LCLNTimes2 				; line # x 4
 		jsr 	_LCLNTimes2 				; line # x 2
+		jsr 	_LCLNTimes2 				; line # x 4
 		;
 		clc 								; add stacked value
 		pla
@@ -1114,8 +1131,9 @@ _TLENNoCarry:
 		bcc 	TOKExtractLineNumber
 _TLENExit:
 		rts
+
 _LCLNTimes2:
-		asl 	tokenLineNumber
+		asl 	tokenLineNumber 			; doubles tokenLineNumber.
 		rol 	tokenLineNumber+1
 		rts
 

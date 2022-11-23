@@ -1,7 +1,8 @@
 Progress:
 
 	Code reading.
-		
+	Does sound preserve I/O ?
+	
 	tiles ?
 	DMA ?
 	Not initialised flag on variables. ?
