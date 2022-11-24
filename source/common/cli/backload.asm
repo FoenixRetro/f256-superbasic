@@ -19,6 +19,9 @@
 ; ************************************************************************************************
 
 BackloadProgram:
+		ldx 	#_BLLoad >> 8
+		lda 	#_BLLoad & $FF
+		jsr 	PrintStringXA
 		.set16 	BackLoadPointer,SOURCE_ADDRESS
 _BPLoop:		
 		ldx 	#$FF
@@ -61,6 +64,8 @@ _BPExit:
 		.endif
 		jsr 	ClearCommand 				; clear variables etc.
 		rts
+_BLLoad:
+		.text 	"Loading from Memory",13,0
 
 ; ************************************************************************************************
 ;
