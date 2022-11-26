@@ -1,4 +1,4 @@
-1 list ,25
+1 list moveplayer()
 2 ' "Solarfox in SuperBasic"
 3 '
 4 title("Solar Fox"):cls:sprites on:bitmap on:bitmap clear 0

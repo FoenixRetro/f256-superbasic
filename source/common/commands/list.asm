@@ -20,6 +20,12 @@
 
 Command_List:	;; [list]
 		stz 	listIndent 					; reset indent.
+		;
+		.cget 								; followed by an identifier ?
+		and 	#$C0 						
+		cmp 	#$40 
+		beq 	_CLListProcedure
+		;
 		stz		NSMantissa0+4				; set the lower (slot 4) to 0 and upper (slot 7) to $FFFF
 		stz 	NSMantissa1+4 				
 		lda 	#$FF
@@ -68,6 +74,58 @@ _CLLoop:
 		beq 	_CLDoThisOne
 		bcs 	_CLNext
 _CLDoThisOne:		
+		jsr 	CLListOneLine
+_CLNext:		
+		.cnextline
+		bra 	_CLLoop
+_CLExit:
+		jmp 	WarmStart
+;
+;		List from procedure.
+;
+_CLListProcedure:
+		.cget 								; get the reference
+		sta 	zTemp1
+		iny
+		.cget
+		sta 	zTemp1+1
+		;
+		.cresetcodepointer 					; search for it.
+_CLLPSearch:
+		.cget0 								; get offset
+		cmp 	#0 							; if zero, end
+		beq 	_CLExit		
+		ldy 	#3 							; check if PROC something
+		.cget
+		cmp 	#KWD_PROC
+		bne 	_CLLPNext
+		iny 								; check if PROC this.
+		.cget
+		cmp 	zTemp1 						; does it match ?
+		bne 	_CLLPNext
+		iny
+		.cget
+		cmp 	zTemp1+1
+		beq 	_CLLPFound
+_CLLPNext:
+		.cnextline
+		bra 	_CLLPSearch
+		;
+_CLLPFound:
+		.cget0 								; reached end
+		beq 	_CLExit
+		ldy 	#3 							; get first keyword
+		.cget
+		pha
+		jsr 	CLListOneLine 				; list line and go forward
+		.cnextline
+		pla 								; reached ENDPROC ?
+		cmp 	#KWD_ENDPROC
+		bne 	_CLLPFound
+		jmp 	WarmStart
+
+
+CLListOneLine:
 		jsr 	ScanGetCurrentLineStep 		; get indent adjust.
 		jsr 	ListConvertLine 			; convert line into token Buffer
 		ldx 	#(tokenBuffer >> 8) 		; print that line
@@ -75,11 +133,7 @@ _CLDoThisOne:
 		jsr 	PrintStringXA
 		lda 	#13 						; new line
 		jsr 	EXTPrintCharacter
-_CLNext:		
-		.cnextline
-		bra 	_CLLoop
-_CLExit:
-		jmp 	WarmStart
+		rts
 
 ; ************************************************************************************************
 ;
