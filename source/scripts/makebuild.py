@@ -64,6 +64,12 @@ for f in sourceFiles:
 	h.write('\t.include\t"{0}"\n'.format(f.replace(os.sep,"/")))
 h.write("\n\n")
 
+
+h.write(".section code\n")
+#h.write("\t* = $A000\n")
+#h.write("\t.offs $2000\n")
+h.write(".send code\n")
+
 for f in moduleFiles:
 	if f.startswith("!"):
 		h.write('\t{0}\n'.format(f[1:]))
