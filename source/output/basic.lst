@@ -1,13 +1,13 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
-; 64tass -D AUTORUN=1 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Sat Nov 26 16:26:51 2022
+; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
+; Sat Nov 26 16:28:20 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
 ;******  Command line definitions
 
-=1					AUTORUN=1
+=0					AUTORUN=0
 =$e000					 MONITOR_ADDRESS=$E000
 =$f000					 LOCKOUT_ADDRESS=$F000
 =$38000					 BASIC_ADDRESS=$38000
@@ -412,8 +412,8 @@
 .8014	a9 0f		lda #$0f			lda 	#$0F 						; initialise sound system
 .8016	20 a5 b8	jsr $b8a5			jsr 	SNDCommand
 .8019	20 2e 89	jsr $892e			jsr 	NewProgram 					; erase current program
-.801c	20 d2 82	jsr $82d2			jsr 	BackloadProgram
-.801f	4c 6a 8a	jmp $8a6a			jmp 	CommandRun
+.801c	4c 6a 83	jmp $836a			jmp 	WarmStart					; make same size.
+.801f	4c 6a 83	jmp $836a			jmp 	WarmStart
 >8022	0c 2a 2a 2a 20 46 32 35		Prompt:	.text 	12,"*** F256 Junior SuperBASIC ***",13,13
 >802a	36 20 4a 75 6e 69 6f 72 20 53 75 70 65 72 42 41
 >803a	53 49 43 20 2a 2a 2a 0d 0d
@@ -854,8 +854,8 @@
 .8307	b0 ea		bcs $82f3			bcs 	_BPCopy 					; until a control character, should be 13 received.
 .8309					_BPEndLine:
 .8309	20 24 b5	jsr $b524			jsr 	TokeniseLine 				; tokenise the line.
-.830c	ea		nop				nop
-.830d	20 45 83	jsr $8345			jsr 	EditProgramCode
+.830c	38		sec				sec 								; append not insert
+.830d	20 0f a4	jsr $a40f			jsr 	MemoryInsertLine 			; append to current program
 .8310	80 d6		bra $82e8			bra 	_BPLoop
 .8312					_BPExit:
 .8312	9c fa ff	stz $fffa			stz 	$FFFA
