@@ -4,7 +4,7 @@
 ;		Name:		val.asm
 ;		Purpose:	String to Integer/Float#
 ;		Created:	29th September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -15,6 +15,9 @@
 ; ************************************************************************************************
 ;
 ; 								Val(String) and IsVal(String)
+;
+;		These have common code. Traditionally VAL() fails if given a bad value. ISVAL() allows 
+;		people to check in advance.
 ;
 ; ************************************************************************************************
 
@@ -35,15 +38,22 @@ IsValUnary: ;; [isval(]
 _VUBad:
 		jmp 	ReturnFalse
 
+; ************************************************************************************************
 ;
-;		Main val code - tries to convert, returns CS if fails, CC if good.
+;				Main val code - tries to convert, returns CS if fails, CC if good.
 ;
+; ************************************************************************************************
+
 ValMainCode:		
 		jsr 	EvaluateString 				; get a string
 		jsr 	CheckRightBracket 			; check right bracket present
+
+; ************************************************************************************************
 ;
-;		Evaluate value at zTemp0 into X.
+;								Evaluate value at zTemp0 into X.
 ;
+; ************************************************************************************************
+
 ValEvaluateZTemp0:
 		phy
 		lda 	(zTemp0) 					; check not empty string
@@ -51,14 +61,17 @@ ValEvaluateZTemp0:
 
 		ldy 	#$FF 						; start position		
 		pha 								; save first character
-		cmp 	#"-"		 				; is it -
+		cmp 	#"-"		 				; is it - ?
 		bne 	_VMCStart
 		iny 								; skip over -
+		;
+		;		Evaluation loop
+		;
 _VMCStart:		
 		sec 								; initialise first time round.
 _VMCNext:
 		iny 								; pre-increment
-		lda 	(zTemp0),y 					; next character
+		lda 	(zTemp0),y 					; next character = EOS ?
 		beq 	_VMCSuccess 				; successful.
 
 		jsr 	EncodeNumber 				; send it to the number-builder
@@ -75,11 +88,11 @@ _VMCFail2:
 
 _VMCSuccess:
 		lda 	#0 							; construct final
-		jsr 	EncodeNumber
-		pla
+		jsr 	EncodeNumber 				; by sending a duff value.
+		pla 								; if it was -ve
 		cmp 	#"-"
 		bne 	_VMCNotNegative
-		jsr		NSMNegate
+		jsr		NSMNegate 					; negate it.
 _VMCNotNegative:		
 		ply
 		clc

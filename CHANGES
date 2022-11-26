@@ -11,6 +11,8 @@ Release 5 (26/11/22):
 	BUG: Sound module does not preserve setting of the I/O Control register at address 1 when updating PSG register.
 	CHG: Colourising of constants in listing
 	CHG: Colour set to a default value when typing in commands at keyboard.
-	CHG: Variable space full when adding an identifier (Variablerecord.asm)
-		
+	BUG: Variable space close to full when adding an identifier causes an error
+	
+Release 6 (26/11/22):
+
 

@@ -4,7 +4,7 @@
 ;		Name:		sgn.asm
 ;		Purpose:	Sign value
 ;		Created:	29th September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -31,7 +31,7 @@ SgnUnary: ;; [sgn(]
 		jsr 	NSMSetByte
 		pla
 		and		#$80 						; copy the sign byte out
-		sta 	NSStatus,x
+		sta 	NSStatus,x  				; so it will be -1 or 1
 		rts
 
 _SGZero:jsr 	NSMSetZero

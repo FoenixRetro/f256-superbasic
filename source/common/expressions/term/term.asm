@@ -4,7 +4,7 @@
 ;		Name:		term.asm
 ;		Purpose:	Evaluate a term
 ;		Created:	20th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -38,7 +38,7 @@ EvaluateTerm:
 
 		; ----------------------------------------------------------------------------------------
 		;
-		;		A number 0-9 found
+		;		A number 0-9 found - use the number FSM to convert it to an actual number.
 		;
 		; ----------------------------------------------------------------------------------------
 
@@ -53,14 +53,16 @@ _ETNumber:
 		; ----------------------------------------------------------------------------------------
 		;
 		;		Token found - check it's a unary function (non punctuation) like LEFT$
+		; 		or could be the marker for a string or a hex constant.
 		;
 		; ----------------------------------------------------------------------------------------
 
 _ETCheckUnary:		
-		cmp 	#KWC_STRING 				; string token
+		cmp 	#KWC_STRING 				; string token 
 		beq 	_ETString
 		cmp 	#KWC_HEXCONST 				; hex constant.
 		beq 	_ETHexConstant
+		;
 		cmp 	#KWC_FIRST_UNARY 			; check it actually is a unary function
 		bcc 	_ETSyntaxError
 		cmp 	#KWC_LAST_UNARY+1

@@ -4,7 +4,7 @@
 ;		Name:		not.asm
 ;		Purpose:	Not function
 ;		Created:	29th September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -29,8 +29,6 @@ Unary_Not: ;; [not(]
 
 _NotZero: 									; return -1
 		jmp 	ReturnTrue
-_UNBad:
-		jmp 	ArgumentError
 
 		.send 	code
 		

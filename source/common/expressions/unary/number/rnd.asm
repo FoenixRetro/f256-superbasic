@@ -4,7 +4,7 @@
 ;		Name:		rnd.asm
 ;		Purpose:	Random number generator
 ;		Created:	29th September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -24,11 +24,13 @@ Unary_Random: ;; [random(]
 		jsr 	URCopyToMantissa  			; put in mantissa
 		.cget 								; ) follows
 		cmp 	#KWD_RPAREN
-		beq 	_URNoModulus
+		beq 	_URNoModulus 				; then we return a random 30 bit number.
+		;
 		inx
 		jsr 	Evaluate16BitInteger 		; put modulus value in +1
 		dex
-		jsr 	IntegerModulusNoCheck 		; calculate modulus
+		jsr 	IntegerModulusNoCheck 		; calculate modulus, so now 0 .. n-1
+		;
 _URNoModulus:		
 		stz 	NSStatus,x 					; make it an integer positive
 		stz 	NSExponent,x
@@ -37,7 +39,7 @@ _URNoModulus:
 
 ; ************************************************************************************************
 ;
-;										rnd function
+;										rnd() function
 ;
 ; ************************************************************************************************
 
@@ -47,6 +49,7 @@ Unary_Rnd: ;; [rnd(]
 		jsr 	CheckRightBracket 			; closing bracket
 		jsr 	NSMIsZero 					; if zero, then don't generate a new number
 		beq 	_URCopySeed
+
 		lda 	NSStatus,x 					; if -ve, then seed using parameter
 		bpl 	_URDontSeed
 
@@ -64,14 +67,14 @@ Unary_Rnd: ;; [rnd(]
 		sta 	RandomSeed+3
 		jsr 	Random32Bit
 _URDontSeed:
-		jsr 	Random32Bit 				; generate a number.
+		jsr 	Random32Bit 				; generate a number
 _URCopySeed:
 		jsr 	URCopyToMantissa 			; copy into mantissa
 
 		lda 	#-30 						; force into 0-1 range
 		sta 	NSExponent,x
-		lda 	#NSTFloat
-		sta 	NSStatus,x 					; positive.
+		lda 	#NSTFloat 						
+		sta 	NSStatus,x 					; positive float
 		rts
 
 URCopyToMantissa:
