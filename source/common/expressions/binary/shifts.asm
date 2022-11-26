@@ -4,7 +4,7 @@
 ;		Name:		shifts.asm
 ;		Purpose:	Handle binary shift operations
 ;		Created:	21st September 2022
-;		Reviewed: 	No
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -20,7 +20,7 @@
 
 
 ShiftLeft: ;; [<<]
-		sec
+		sec 								; common code, carry determines which way.
 		bra 	ShiftMain
 ShiftRight: ;; [>>]		
 		clc
@@ -38,7 +38,7 @@ ShiftMain:
 _SMLoop:
 		dec 	NSMantissa0+1,x 			; predecrement, could do << 0
 		bmi 	_SMExit 					; exit if done.
-		plp 								; restore direcition setting
+		plp 								; restore direction setting
 		php		
 		bcc 	_SMRight
 		jsr 	NSMShiftLeft 				; shift left if CS

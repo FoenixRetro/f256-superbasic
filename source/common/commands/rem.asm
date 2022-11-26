@@ -4,7 +4,7 @@
 ;		Name:		rem.asm
 ;		Purpose:	Comment command (also can use ')
 ;		Created:	22nd September 2022
-;		Reviewed: 	No
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************

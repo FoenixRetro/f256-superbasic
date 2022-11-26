@@ -4,7 +4,7 @@
 ;		Name:		mult8x8.asm
 ;		Purpose:	8 x 8 bit multiply
 ;		Created:	2nd October 2022
-;		Reviewed: 	No
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;					Original by Damian Yerrick
 ;

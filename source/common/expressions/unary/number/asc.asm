@@ -4,7 +4,7 @@
 ;		Name:		asc.asm
 ;		Purpose:	ASCII value of string
 ;		Created:	29th September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -21,8 +21,8 @@
 AscUnary: ;; [asc(]	
 		plx 								; restore stack pos
 		jsr 	EvaluateString 				; get a string
-		lda 	(zTemp0)					; get/return firs character
-		jsr 	NSMSetByte
+		lda 	(zTemp0)					; get/return first character
+		jsr 	NSMSetByte 					; ASC("") will return zero.
 		jsr 	CheckRightBracket
 		rts
 

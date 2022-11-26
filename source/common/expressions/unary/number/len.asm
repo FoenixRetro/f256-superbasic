@@ -4,7 +4,7 @@
 ;		Name:		len.asm
 ;		Purpose:	Length of string
 ;		Created:	29th September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -24,14 +24,14 @@ LenUnary: ;; [len(]
 		phy
 		ldy 	#0 							; find length
 _LenFind:
-		lda 	(zTemp0),y
+		lda 	(zTemp0),y 					; look for trailing NULL.
 		beq 	_LenExit
 		iny
 		bne 	_LenFind
-		jmp 	RangeError 					; string > 255
+		jmp 	RangeError 					; string > 255 - no trailing NULL.
 
 _LenExit:
-		tya		
+		tya		 							; return length
 		jsr 	NSMSetByte
 		ply
 		jsr 	CheckRightBracket

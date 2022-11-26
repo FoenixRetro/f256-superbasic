@@ -4,7 +4,7 @@
 ;		Name:		scompare.asm
 ;		Purpose:	Compare strings
 ;		Created:	23rd September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************

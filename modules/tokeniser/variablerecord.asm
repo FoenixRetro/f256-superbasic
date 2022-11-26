@@ -4,7 +4,7 @@
 ;		Name:		variablerecord.asm
 ;		Purpose:	Handle a possibly new variable identifier
 ;		Created:	19th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	26th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -31,11 +31,10 @@ _CCVSearch:
 		beq 	_CCVFail
 		ldy 	#1 							; read the hash 
 		lda 	(zTemp0),y 					; does it match ?
-		cmp 	identHash 					
+		cmp 	identHash 	  				; if not, try the next.				
 		bne 	_CCVNext
 		;
-		;		Compare the identifier to the variable record. We don't match
-		; 		types because these could be reset in the procedure code.
+		;		Compare the identifier to the variable record. 
 		;
 		ldy 	#8 							; name in variable record
 		ldx 	identStart
@@ -51,8 +50,10 @@ _CCVCompare:
 		cpx 	identTypeEnd 				; matched whole thing ?
 		beq 	_CCVFound 					; yes, we were successful
 		;
-_CCVNext:
-		clc
+		;		Next Record
+		;
+_CCVNext: 
+		clc 								; go to next record.
 		lda 	(zTemp0) 					; add offset to pointer
 		adc 	zTemp0
 		sta 	zTemp0
@@ -63,6 +64,8 @@ _CCVNext:
 		;		Could not find the identifier. zTemp0 points to the free space in the
 		;		variable storage, conveniently.
 		;
+		;		So we create a new record.
+		;
 _CCVFail:
 		ldy 	#1 							; create the new record. Offset 1 is hash
 		lda 	identHash
@@ -72,7 +75,7 @@ _CCVFail:
 		sta 	(zTemp0),y
 		iny
 _CCVData:
-		lda 	#0 							; erase data 3-7
+		lda 	#0 							; erase data 3-7 (the 5 value bytes)
 		sta 	(zTemp0),y
 		iny
 		cpy 	#8
@@ -102,8 +105,8 @@ _CCVCopyName:
 _CCVFound:
 		lda 	zTemp0+1 					; write out MSB
 		sec
-		sbc 	#(VariableSpace >> 8) 		; offset from the start
-		ora 	#$40 						; make it a writeable token
+		sbc 	#(VariableSpace >> 8) 		; offset from the start of the variable token
+		ora 	#$40 						; make it a writeable token $4000-$7FFF
 		jsr 	TOKWriteByte
 		lda 	zTemp0 						; write out LSB
 		jsr 	TOKWriteByte

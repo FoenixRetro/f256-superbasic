@@ -1,0 +1,7 @@
+Changes summary:
+
+	NEW: First alpha release.
+
+Release 5 (26/11/22):
+	
+	BUG: String concatenation can now be up to 253 characters, previously maxed out at 127.

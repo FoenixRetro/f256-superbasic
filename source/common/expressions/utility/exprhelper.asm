@@ -4,7 +4,7 @@
 ;		Name:		exprhelper.asm
 ;		Purpose:	Expression support routines
 ;		Created:	22nd September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -51,7 +51,7 @@ EvaluateString:
 		beq 	HelperTypeError
 CopyAddressToTemp0:		
 		lda 	NSMantissa0,x 				; copy address -> zTemp0
-		sta 	zTemp0
+		sta 	zTemp0 						; (so we can do something with it)
 		lda 	NSMantissa1,x
 		sta 	zTemp0+1
 		rts
@@ -82,11 +82,11 @@ HelperValueError:
 
 ; ************************************************************************************************
 ;
-;									Evaluate a 16 bit value
+;									Evaluate a 16 bit value (unsigned)
 ;
 ; ************************************************************************************************
 
-Evaluate16BitInteger:
+	Evaluate16BitInteger:
 		jsr	 	EvaluateUnsignedInteger		; get integer
 		lda 	NSMantissa3,x	 			; bytes 2 & 3 must be zero
 		ora 	NSMantissa2,x
@@ -106,7 +106,7 @@ Evaluate16BitIntegerSigned:
 		bne 	HelperValueError
 		lda 	NSStatus,x 					; signed ?
 		bpl 	_EISNotSigned
-		jsr 	NSMNegateMantissa
+		jsr 	NSMNegateMantissa 			; makes it an actual 2's complement value.
 _EISNotSigned:		
 		rts
 

@@ -2,9 +2,9 @@
 ; ************************************************************************************************
 ;
 ;		Name:		call.asm
-;		Purpose:	END command
+;		Purpose:	CALL command (runs machine code)
 ;		Created:	22nd September 2022
-;		Reviewed: 	No
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -13,15 +13,15 @@
 		.section code
 
 CallCommand: ;; [call]
-		ldx 	#0
+		ldx 	#0 							; get the routine address to level 0
 		jsr 	Evaluate16BitInteger
 		;
 _CCClear		
 		inx  								; clear 1,2 and 3 (for A X Y)	
-		jsr 	NSMSetZero
+		jsr 	NSMSetZero 					; these are optional sequentially.
 		cpx 	#4
 		bne 	_CCClear
-		ldx 	#0 							; and keep trying
+		ldx 	#0 							; and keep trying while there are more values.
 _CCCParam:
 		.cget 								; comma follows ?
 		cmp 	#KWD_COMMA
@@ -31,6 +31,7 @@ _CCCParam:
 		jsr 	Evaluate8BitInteger 		; get A/X/Y
 		cpx 	#3
 		bcc 	_CCCParam 					; done all 3 ?
+		;
 _CCCRun6502:				
 		phy 								; save position
 		lda 	NSMantissa1 				; put address in zTemp0
@@ -38,7 +39,7 @@ _CCCRun6502:
 		lda 	NSMantissa0
 		sta 	zTemp0
 		;
-		lda 	NSMantissa0+1 				; get registers
+		lda 	NSMantissa0+1 				; get registers into A X Y
 		ldx 	NSMantissa0+2
 		ldy 	NSMantissa0+3
 		jsr 	_CCCZTemp0 					; call zTemp0

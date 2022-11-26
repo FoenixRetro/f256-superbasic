@@ -4,7 +4,7 @@
 ;		Name : 		compare.asm
 ;		Author :	Paul Robson (paul@robsons.org.uk)
 ;		Created : 	22nd September 2022
-;		Reviewed :
+;		Reviewed :	27th November 2022
 ;		Purpose :	Comparison code
 ;
 ; ***************************************************************************************
@@ -28,7 +28,7 @@ compare_not_equals .macro
 
 ; ***************************************************************************************
 ;
-; 								Return True/False
+; 						Return True/False as function or value
 ;
 ; ***************************************************************************************
 
@@ -124,9 +124,9 @@ CompareBaseCode:
 		jsr 	DereferenceTopTwo 			; make both values if references.
 		;
 		lda 	NSStatus,x 					; check if either is a string.
-		ora 	NSStatus+1,x
-		and 	#NSTString 	
-		bne 	_CBCString
+		ora 	NSStatus+1,x 	
+		and 	#NSTString 	 
+		bne 	_CBCString 					; if so do string code, which will check if both.
 		;
 		lda 	NSExponent,x 				; check both are integers
 		ora 	NSExponent+1,x  		
@@ -138,7 +138,7 @@ CompareBaseCode:
 		;
 		;		do the integer comparison.
 		;
-		jsr 	CompareFixMinusZero
+		jsr 	CompareFixMinusZero 		; fix up -0 just in cases.
 		inx
 		jsr 	CompareFixMinusZero
 		dex

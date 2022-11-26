@@ -4,7 +4,7 @@
 ;		Name:		expandline.asm
 ;		Purpose:	Expand line at code-Ptr to tokenBuffer
 ;		Created:	4th October 2022
-;		Reviewed:
+;		Reviewed:	26th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -14,7 +14,7 @@
 
 setcolour .macro
 		lda 	#\1+$80
-		jsr 	LCLWrite
+		jsr 	LCLWriteColour
 		.endm
 
 ; ************************************************************************************************
@@ -27,12 +27,16 @@ ListConvertLine:
 		pha 								; save indent on the stack
 		stz 	tbOffset
 		stz 	tokenBuffer
+		stz 	currentListColour
+		;
+		;		Do the line number
+		;
 		ldy 	#2 							; convert line number to string
 		.cget		
 		tax
 		dey
 		.cget
-		jsr 	LCLConvertInt16
+		jsr 	LCLConvertInt16 			
 		sta 	zTemp0 						; copy number into buffer
 		stx 	zTemp0+1
 		.setcolour CLINumber
@@ -43,7 +47,9 @@ _LCCopyNumber:
 		iny		
 		lda 	(zTemp0),y
 		bne 	_LCCopyNumber
-
+		;
+		;		Pad out for indentation.
+		;
 		pla 								; adjustment to indent
 		pha 								; save on stack
 		bpl 	_LCNoAdjust 				; don't adjust indent if +ve, do after.
@@ -60,7 +66,7 @@ _LCNoAdjust:
 		sta 	zTemp0
 
 _LCPadOut:
-		lda 	#' '						; pad out to 6 characters
+		lda 	#' '						; pad out to 6+indent characters
 		jsr 	LCLWrite
 		lda 	tbOffset
 		cmp 	zTemp0
@@ -73,7 +79,7 @@ _LCPadOut:
 		;	-------------------------------------------------------------------
 
 _LCMainLoop:
-		.setcolour CLIPunctuation
+		.setcolour CLIPunctuation 			; default listing colour
 		.cget 								; get next character
 		cmp 	#KWC_EOL 					; end of line ?
 		beq 	_LCExit
@@ -144,7 +150,7 @@ _LCNoAdd2:
 _LCPunctuation:
 		cmp 	#':' 						; check if :
 		bne 	_LCPContinue
-		jsr 	LCLDeleteLastSpace
+		jsr 	LCLDeleteLastSpace 			; if so delete any preceding spaces
 _LCPContinue:		
 		iny 								; consume character
 		jsr 	LCLWrite 					; write it out.
@@ -165,11 +171,11 @@ _LCIdentifiers:
 		sta 	zTemp0
 		iny
 		phy 								; save position
-		.setcolour CLIIdentifier
-		ldy 	#7 							; output the identifier.
+		.setcolour CLIIdentifier 			; set list colour
+		ldy 	#7 							; output the identifier at +8
 _LCOutIdentifier:
 		iny
-		lda 	(zTemp0),y				
+		lda 	(zTemp0),y					; bit 7 set = end.
 		and 	#$7F
 		jsr 	LCLLowerCase
 		jsr 	LCLWrite
@@ -263,12 +269,24 @@ _LCNoPrint:
 		dex
 		bne 	_LCOutData
 		pla 								; closing " required ?
-		cmp 	#$FF 						
+		cmp 	#$FF 						; not required for hex constant.
 		bne 	_LCNoQuote
 		lda 	#'"'
 		jsr 	LCLWrite
 _LCNoQuote:		
 		jmp 	_LCMainLoop
+
+; ************************************************************************************************
+;
+;					Output write colour ($80-$8F) only if it has changed
+;
+; ************************************************************************************************
+
+LCLWriteColour:
+		cmp 	currentListColour 			; has the colour changed
+		sta 	currentListColour 			; (update it anyway)
+		bne 	LCLWrite 					; if different, output it
+		rts
 
 ; ************************************************************************************************
 ;
@@ -278,11 +296,11 @@ _LCNoQuote:
 
 LCLWrite:
 		phx
-		ldx 	tbOffset
+		ldx 	tbOffset 					; write out make ASCIIZ
 		sta 	tokenBuffer,x
 		stz 	tokenBuffer+1,x
-		inc 	tbOffset
-		ora 	#0 							; don't update if colour data
+		inc 	tbOffset 					; bump the position
+		ora 	#0 							; don't update last character if colour data
 		bmi 	_LCLNoColour		
 		sta 	LCLastCharacter
 _LCLNoColour:		
@@ -372,5 +390,7 @@ _LCLUCOut:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		26/11/22 		Added LCLWriteColour to minimise colour changes, e.g. not one for each
+;						punctuation character etc.
 ;
 ; ************************************************************************************************

@@ -4,7 +4,7 @@
 ;		Name:		number.asm
 ;		Purpose:	State machine inputting numbers
 ;		Created:	20th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	26th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -18,9 +18,9 @@
 ;
 ; ************************************************************************************************
 
-NSMNegate:									; negate int or float.
-		lda 	NSStatus,x
-		eor 	#NSBIsNegative
+NSMNegate:							
+		lda 	NSStatus,x 					; everything is sign/magnitude usually so just
+		eor 	#NSBIsNegative  			; toggle the negative flag
 		sta 	NSStatus,x
 		rts
 
@@ -31,7 +31,7 @@ NSMNegate:									; negate int or float.
 ; ************************************************************************************************
 
 NSMNegateMantissa:								
-		sec
+		sec 								; when we want an actual 32 bit 2's complement value.
 		lda 	#0
 		sbc 	NSMantissa0,x
 		sta 	NSMantissa0,x
@@ -69,14 +69,14 @@ NSMShiftUpTwo:
 		
 ; ************************************************************************************************
 ;
-;							  Set mantissa to a 1 byte integer
+;							  Set mantissa to a 1 byte integer, various
 ;
 ; ************************************************************************************************
 
-NSMSetZeroMantissaOnly:
+NSMSetZeroMantissaOnly: 					; clear *only* the mantissa
 		lda 	#0
 		bra 	NSMSetMantissa
-NSMSetZero:
+NSMSetZero: 								; set the whole lot to zero, exponent, type, mantissa
 		lda 	#0
 NSMSetByte:
 		stz 	NSExponent,x 				; zero exponent, as integer.

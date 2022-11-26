@@ -4,7 +4,7 @@
 ;		Name : 		concat.asm
 ;		Author :	Paul Robson (paul@robsons.org.uk)
 ;		Created : 	30th September 2022
-;		Reviewed :
+;		Reviewed :	27th November 2022
 ;		Purpose :	String Concatenation
 ;
 ; ***************************************************************************************
@@ -33,7 +33,7 @@ StringConcat:
 		jsr 	_SCSetupZ0 					; setup for first
 		jsr 	_SCLengthZ0 				; length for first
 
-		lda 	zTemp1 						; allocate memory
+		lda 	zTemp1 						; allocate memory using total.
 		jsr 	StringTempAllocate 		
 
 		jsr 	_SCCopy 					; copy first out, using zTemp0 from above
@@ -42,15 +42,19 @@ StringConcat:
 		jsr 	_SCCopy
 		dex
 		rts
-
-_SCSetupZ0: 								; set up zTemp0 to point to string
+;
+; 	set up zTemp0 to point to string
+;
+_SCSetupZ0: 								
 		lda 	NSMantissa0,x
 		sta 	zTemp0
 		lda 	NSMantissa1,x
 		sta 	zTemp0+1
 		rts
-
-_SCLengthZ0: 								; length of current string add to total in zTemp1
+;
+; 	length of current string add to total in zTemp1
+;
+_SCLengthZ0: 								
 		phy
 		ldy 	#0
 _SCLenLoop:
@@ -58,13 +62,17 @@ _SCLenLoop:
 		beq 	_SCLExit
 		iny
 		inc 	zTemp1
-		bpl		_SCLenLoop
+		lda	 	zTemp1 						; check string too long.
+		cmp 	#253
+		bne		_SCLenLoop 
 		.error_string						
 _SCLExit:
 		ply
 		rts
-
-_SCCopy:									; copy string out.
+;
+; 	copy string out.
+;
+_SCCopy:									
 		phy
 		ldy 	#0
 _SCCopyLoop:
@@ -76,7 +84,6 @@ _SCCopyLoop:
 _SCCExit:
 		ply
 		rts
-
 
 _SCType:
 		jmp 	TypeError
@@ -91,5 +98,7 @@ _SCType:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		26/11/22 		Concatenations were limited to 127 bytes ; the inc zTemp1 in
+;						_SCLengthZ0 was followed by bpl <continue> error.
 ;
 ; ***************************************************************************************

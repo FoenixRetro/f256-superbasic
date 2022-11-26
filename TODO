@@ -1,9 +1,12 @@
 Progress:
 
-	Code reading.
+	Code reading (ongoing)
+	Modularising starting.
 	Does sound preserve I/O ?
-	Fix End / Delete (?)
-	
+	Fix End / Delete / Backspace 
+	Variable space full when adding an identifier (Variablerecord.asm)
+	Colour change for identifier (
+
 	tiles ?
 	DMA ?
 	Not initialised flag on variables. ?

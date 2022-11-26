@@ -1,10 +1,10 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		simple.asm
-;		Purpose:	Simple binary operations
+;		Name:		handlers.inc
+;		Purpose:	Dispatchers for binary operations
 ;		Created:	21st September 2022
-;		Reviewed: 	No
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
