@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Sat Nov 26 11:21:14 2022
+; Sat Nov 26 11:37:25 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -968,14 +968,14 @@
 ;******  Processing file: ./common/commands/call.asm
 
 .83ca					CallCommand:
-.83ca	a2 00		ldx #$00			ldx 	#0
+.83ca	a2 00		ldx #$00			ldx 	#0 							; get the routine address to level 0
 .83cc	20 33 9e	jsr $9e33			jsr 	Evaluate16BitInteger
 .83cf					_CCClear
 .83cf	e8		inx				inx  								; clear 1,2 and 3 (for A X Y)
-.83d0	20 d2 9e	jsr $9ed2			jsr 	NSMSetZero
+.83d0	20 d2 9e	jsr $9ed2			jsr 	NSMSetZero 					; these are optional sequentially.
 .83d3	e0 04		cpx #$04			cpx 	#4
 .83d5	d0 f8		bne $83cf			bne 	_CCClear
-.83d7	a2 00		ldx #$00			ldx 	#0 							; and keep trying
+.83d7	a2 00		ldx #$00			ldx 	#0 							; and keep trying while there are more values.
 .83d9					_CCCParam:
 .83d9	b1 30		lda ($30),y			lda 	(codePtr),y
 .83db	c9 2c		cmp #$2c			cmp 	#KWD_COMMA
@@ -991,7 +991,7 @@
 .83ec	85 37		sta $37				sta 	zTemp0+1
 .83ee	ad 08 04	lda $0408			lda 	NSMantissa0
 .83f1	85 36		sta $36				sta 	zTemp0
-.83f3	ad 09 04	lda $0409			lda 	NSMantissa0+1 				; get registers
+.83f3	ad 09 04	lda $0409			lda 	NSMantissa0+1 				; get registers into A X Y
 .83f6	ae 0a 04	ldx $040a			ldx 	NSMantissa0+2
 .83f9	ac 0b 04	ldy $040b			ldy 	NSMantissa0+3
 .83fc	20 01 84	jsr $8401			jsr 	_CCCZTemp0 					; call zTemp0
@@ -2738,7 +2738,7 @@
 .8ec6	bd 00 04	lda $0400,x			lda 	NSStatus,x 					; check if either is a string.
 .8ec9	1d 01 04	ora $0401,x			ora 	NSStatus+1,x
 .8ecc	29 10		and #$10			and 	#NSTString
-.8ece	d0 40		bne $8f10			bne 	_CBCString
+.8ece	d0 40		bne $8f10			bne 	_CBCString 					; if so do string code, which will check if both.
 .8ed0	bd 28 04	lda $0428,x			lda 	NSExponent,x 				; check both are integers
 .8ed3	1d 29 04	ora $0429,x			ora 	NSExponent+1,x
 .8ed6	d0 3b		bne $8f13			bne 	_CBCFloat
@@ -2746,7 +2746,7 @@
 .8edb	1d 01 04	ora $0401,x			ora 	NSStatus+1,x
 .8ede	29 08		and #$08			and 	#NSTFloat
 .8ee0	d0 31		bne $8f13			bne 	_CBCFloat
-.8ee2	20 16 8f	jsr $8f16			jsr 	CompareFixMinusZero
+.8ee2	20 16 8f	jsr $8f16			jsr 	CompareFixMinusZero 		; fix up -0 just in cases.
 .8ee5	e8		inx				inx
 .8ee6	20 16 8f	jsr $8f16			jsr 	CompareFixMinusZero
 .8ee9	ca		dex				dex
@@ -4579,8 +4579,8 @@
 .9aae					AscUnary:
 .9aae	fa		plx				plx 								; restore stack pos
 .9aaf	20 06 9e	jsr $9e06			jsr 	EvaluateString 				; get a string
-.9ab2	b2 36		lda ($36)			lda 	(zTemp0)					; get/return firs character
-.9ab4	20 d4 9e	jsr $9ed4			jsr 	NSMSetByte
+.9ab2	b2 36		lda ($36)			lda 	(zTemp0)					; get/return first character
+.9ab4	20 d4 9e	jsr $9ed4			jsr 	NSMSetByte 					; ASC("") will return zero.
 .9ab7	20 f2 8d	jsr $8df2			jsr 	CheckRightBracket
 .9aba	60		rts				rts
 
@@ -4629,13 +4629,13 @@
 .9ae7	5a		phy				phy
 .9ae8	a0 00		ldy #$00			ldy 	#0 							; find length
 .9aea					_LenFind:
-.9aea	b1 36		lda ($36),y			lda 	(zTemp0),y
+.9aea	b1 36		lda ($36),y			lda 	(zTemp0),y 					; look for trailing NULL.
 .9aec	f0 06		beq $9af4			beq 	_LenExit
 .9aee	c8		iny				iny
 .9aef	d0 f9		bne $9aea			bne 	_LenFind
-.9af1	4c 61 a0	jmp $a061			jmp 	RangeError 					; string > 255
+.9af1	4c 61 a0	jmp $a061			jmp 	RangeError 					; string > 255 - no trailing NULL.
 .9af4					_LenExit:
-.9af4	98		tya				tya
+.9af4	98		tya				tya		 							; return length
 .9af5	20 d4 9e	jsr $9ed4			jsr 	NSMSetByte
 .9af8	7a		ply				ply
 .9af9	20 f2 8d	jsr $8df2			jsr 	CheckRightBracket
