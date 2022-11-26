@@ -30,6 +30,8 @@ UTL_REPO= ..$(S)..$(S)junior-utilities
 KRN_REPO= ..$(S)..$(S)junior-tinykernel
 
 MODULES= +hardware +graphics +tokeniser +sound
+RELEASEDIR = ..$(S)release
+RELEASE = "`cat $(SCRIPTDIR)$(S)buildcount.txt`"
 
 START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@$(LSOURCE) $(BINDIR)graphics.bin@$(LSPRITES)
 
@@ -106,7 +108,14 @@ prelim:
 	python $(SCRIPTDIR)makebuild.py $(MODULES)
 	python $(SCRIPTDIR)tokens.py
 	python $(SCRIPTDIR)constants.py
+
+release:
 	python $(SCRIPTDIR)timestamp.py
+	mkdir -p $(RELEASEDIR)$(S)$(RELEASE)	
+	make -C .
+	$(CCOPY) basic.rom $(RELEASEDIR)$(S)$(RELEASE)$(S)basic_$(RELEASE).rom	
+	make -C . testbasic
+	$(CCOPY) basic.rom $(RELEASEDIR)$(S)$(RELEASE)$(S)basic_autoload_$(RELEASE).rom	
 #
 #		Run various tests.
 #

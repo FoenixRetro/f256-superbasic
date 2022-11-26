@@ -40,7 +40,8 @@ Start:	ldx 	#$FF 						; stack reset
 		.if 	AUTORUN==1 					; run straight off
 		jsr 	BackloadProgram
 		jmp 	CommandRun
-		.else
+		.else		
+		jmp 	WarmStart					; make same size.
 		jmp 	WarmStart
 		.endif
 

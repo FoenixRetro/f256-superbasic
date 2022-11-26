@@ -25,9 +25,6 @@ BackloadProgram:
 		.set16 	BackLoadPointer,SOURCE_ADDRESS
 _BPLoop:		
 		ldx 	#$FF
-		.if AUTORUN==1
-		stx 	$FFFA 						; fast mode (autorun on emulator only)
-		.endif
 
 		jsr 	BLReadByte 					; read a byte
 		cmp 	#0
@@ -49,6 +46,7 @@ _BPEndLine:
 		jsr 	TokeniseLine 				; tokenise the line.
 
 		.if AUTORUN==1 						; if autorun do full insert/delete for testing
+		nop
 		jsr 	EditProgramCode
 		.else
 		sec 								; append not insert
@@ -59,9 +57,6 @@ _BPEndLine:
 		;		Exit backloading
 		;
 _BPExit:
-		.if AUTORUN==1
-		stz 	$FFFA 						; clear fast mode (autorun only)
-		.endif
 		jsr 	ClearCommand 				; clear variables etc.
 		rts
 _BLLoad:
