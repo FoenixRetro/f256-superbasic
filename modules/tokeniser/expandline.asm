@@ -263,6 +263,21 @@ _LCData:
 		beq 	_LCHaveOpener
 		ldx 	#'"'
 		.setcolour CLIData	
+		;
+		;		Check for comment on line by itself.
+		;
+		cpy 	#4 							; must be 2nd thing on line
+		bne 	_LCHaveOpener
+		dey 								; what precedes it ?
+		.cget
+		iny
+		cmp 	#KWD_QUOTE 					; if quote
+		bne 	_LCHaveOpener
+		lda 	#9 							; tab
+		jsr 	LCLWrite 				
+		lda 	#$90+CLIBComment
+		jsr 	LCLWrite
+		.setcolour CLIFComment
 _LCHaveOpener:
 		txa 								; output prefix (# or ")
 		jsr 	LCLWrite
@@ -284,6 +299,10 @@ _LCNoPrint:
 		bne 	_LCNoQuote
 		lda 	#'"'
 		jsr 	LCLWrite
+		lda 	EXTTextColour
+		and 	#$0F
+		ora 	#$90
+		jsr 	LCLWrite		
 _LCNoQuote:		
 		jmp 	_LCMainLoop
 
@@ -404,5 +423,6 @@ _LCLUCOut:
 ;		26/11/22 		Added LCLWriteColour to minimise colour changes, e.g. not one for each
 ;						punctuation character etc.
 ;		26/11/22 		Tweaked coloring of constants (test for 0-9 and . in punctuation)
+;		26/11/22 		Highlighting SOL comments
 ;
 ; ************************************************************************************************

@@ -32,6 +32,9 @@ CONBackground = CONBlue
 
 CLICommandLine = CONGreen
 
+CLIFComment = CONBlack
+CLIBComment = CONYellow
+
 CLINumber = CONBrown
 CLIToken = CONCyan
 CLIConstant = CONLightBlue
