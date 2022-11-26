@@ -122,6 +122,7 @@
 
 
 .section code
+StartModuleCode:
 .send code
 	.include	"../modules/_build/_hardware.module"
 	.include	"../modules/_build/_graphics.module"

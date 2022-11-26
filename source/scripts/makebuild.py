@@ -66,6 +66,7 @@ h.write("\n\n")
 
 
 h.write(".section code\n")
+h.write("StartModuleCode:\n")
 #h.write("\t* = $A000\n")
 #h.write("\t.offs $2000\n")
 h.write(".send code\n")
