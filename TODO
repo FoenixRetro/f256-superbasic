@@ -1,15 +1,9 @@
 Progress:
 
-	Code reading (ongoing)
-
 	CHG: Modularising starting.
 	CHG: Fix End / Delete / Backspace 
 	CHG: Variable space full when adding an identifier (Variablerecord.asm)
 	CHG: Colour change for identifier ( and digits and decimal point.
-	CHG: Move stack into zero page okayed by Jessie.
-
-	BUG: Does sound preserve I/O ?
-	BUG: Can assign a floating value directly to an integer variable. a = 2.3 fails a = int(2.3) is okay
 
 	tiles ?
 	DMA ?

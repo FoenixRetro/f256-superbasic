@@ -19,8 +19,9 @@
 ; ************************************************************************************************
 
 SNDCommand:
-		phx
+		phx 								; save XY
 		phy
+		
 		cmp 	#$0F 						; $0F is initialise
 		beq 	_SNDInitialise
 		bcc 	_SNDExit

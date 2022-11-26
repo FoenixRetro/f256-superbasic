@@ -5,3 +5,8 @@ Changes summary:
 Release 5 (26/11/22):
 	
 	BUG: String concatenation can now be up to 253 characters, previously maxed out at 127.
+	BUG: Can assign a floating value directly to an integer variable. a = 2.3 fails a = int(2.3) is okay
+		 (actually not a bug technically, as it previously auto-truncated. Decided this shouldn't be allowed by default)
+	CHG: Move stack into zero page okayed by Jessie O. Freed up 1/2k and also should provide slight speed boost.
+	BUG: Sound module does not preserve setting of the I/O Control register at address 1 when updating PSG register.
+

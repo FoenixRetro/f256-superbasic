@@ -41,9 +41,13 @@ SNDSilenceChannel:
 ; ************************************************************************************************
 
 SNDWritePorts:
-		stz 	1
-		sta 	$D600
+		phx 								; save X
+		ldx 	1 							; save I/O status
+		stz 	1 							; access I/O page 0
+		sta 	$D600 						; write to both 
 		sta 	$D610
+		stx 	1 							; restore I/O 
+		plx 								; restore X
 		rts
 
 		.send code

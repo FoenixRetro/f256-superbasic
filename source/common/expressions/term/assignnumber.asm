@@ -37,9 +37,11 @@ AssignNumber:
 		;
 		lda		NSExponent+1,x 				; is it a float
 		beq		_ANNotFloat
-		inx
-		jsr 	FloatIntegerPart 			; make it an integer
-		dex
+;		inx
+;		jsr 	FloatIntegerPart 			; make it an integer
+;		dex
+		jmp 	RangeError
+
 _ANNotFloat:		
 		lda 	NSStatus,x 					; check if byte/word reference.
 		and 	#3
@@ -104,5 +106,7 @@ _ANCopy4PackSign:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		26/11/22 		Changed so you cannot assign a float directly to an integer, causes a
+;						Range Error. Previously it auto truncated.
 ;
 ; ************************************************************************************************

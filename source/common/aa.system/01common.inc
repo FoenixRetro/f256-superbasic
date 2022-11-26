@@ -24,11 +24,11 @@ ZeroPageMandatory = $30
 ;
 ; 		Variables that would be nice to be in zero page, but it's not required
 ;
-ZeroPagePreference = $400
+ZeroPagePreference = $50
 ;
 ;		Variables that can go anywhere
 ;
-MemoryStorage = $480
+MemoryStorage = $400
 ;
 ;		Where program memory starts and stops
 ;
@@ -86,5 +86,6 @@ MaxLineSize = 80
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		26/11/22 		Stack moved into Zero Page for speed/space, okayed by Jessie O.
 ;
 ; ************************************************************************************************
