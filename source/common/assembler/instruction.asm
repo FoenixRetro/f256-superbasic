@@ -138,8 +138,8 @@ _AMXCOFail:
 ;		Table of non-standards. Base Opcode, Final Opcode, Address mode.
 ;
 ExtraOpcode:
-		.byte $40,$6c,AM_INDABS 	; jmp
-		.byte $40,$7C,AM_INDABSX 	; jmp 
+		.byte $40,$6c,AM_INDABS 	; jump
+		.byte $40,$7C,AM_INDABSX 	; jump 
 		.byte $a2,$BE,AM_ABSY 		; ldx
 		.byte $a2,$B6,AM_ZEROY 		; ldx
 		.byte $82,$96,AM_ZEROY 		; stx 

@@ -145,3 +145,6 @@ lineedit:
 	64tass -D AUTORUN=1 $(AADDRESSES) $(ASMOPTS) _basic.asm -o $(APPNAME)
 	$(START)
 	python $(SCRIPTDIR)linecheck.py
+
+paging:
+	python $(SCRIPTDIR)checkpaging.py

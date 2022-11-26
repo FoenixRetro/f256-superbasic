@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Sat Nov 26 18:22:22 2022
+; Sat Nov 26 20:46:26 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -673,8 +673,8 @@
 .81e2	18		clc				clc
 .81e3	60		rts				rts
 .81e4					ExtraOpcode:
->81e4	40 6c 01					.byte $40,$6c,AM_INDABS 	; jmp
->81e7	40 7c 02					.byte $40,$7C,AM_INDABSX 	; jmp
+>81e4	40 6c 01					.byte $40,$6c,AM_INDABS 	; jump
+>81e7	40 7c 02					.byte $40,$7C,AM_INDABSX 	; jump
 >81ea	a2 be 78					.byte $a2,$BE,AM_ABSY 		; ldx
 >81ed	a2 b6 80					.byte $a2,$B6,AM_ZEROY 		; ldx
 >81f0	82 96 80					.byte $82,$96,AM_ZEROY 		; stx
