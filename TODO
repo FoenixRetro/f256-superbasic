@@ -1,5 +1,8 @@
 Progress:
 
+	Call to 	ErrorHandler (called when out of memory - test on return not in tokeniser)
+				LCLConvertInt16 (needs replacing)
+
 	CHG: Modularising starting.
 	CHG: Fix End / Delete / Backspace 
 	
@@ -14,3 +17,4 @@ Later:
 	Disable interrupts enable at end of line command ?
 	Changing Kerning ?
 	Added WHO ?
+
