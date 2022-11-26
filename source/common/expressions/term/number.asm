@@ -4,7 +4,7 @@
 ;		Name:		number.asm
 ;		Purpose:	State machine inputting numbers
 ;		Created:	20th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -23,15 +23,22 @@ ESTA_Decimal = 3 							; fractional part.
 ;
 ;		A simple state machine.
 ;
+;		State 1 is taking in integers up to 255 - this is very quick.
+; 		State 2 is taking in integers up to 4 bytes
+; 		State 3 is taking in numbers after the decimal place.
+;
+;		Do we need a state between 1 & 2 ?
+;
 ; ************************************************************************************************
 
-EncodeNumberStart:
+EncodeNumberStart: 							; come here to reset the FSM.
 		sec
 		bra 	EncodeNumberContinue+1
-EncodeNumberContinue:
+
+EncodeNumberContinue: 						; come here to continue it.
 		clc
 EncodeNumber:		
-		php 								; save reset.
+		php 								; save reset flag.
 		cmp 	#"." 						; only accept 0-9 and .
 		beq 	_ENIsOkay
 		cmp 	#"0"
@@ -40,7 +47,7 @@ EncodeNumber:
 		bcc 	_ENIsOkay
 _ENBadNumber:		
 		plp 								; throw saved reset
-		lda 	EncodeState 				; decimal mode, construct final number
+		lda 	EncodeState 				; if in decimal mode, construct final number
 		cmp 	#ESTA_Decimal
 		beq 	_ENConstructFinal		
 _ENFail:
@@ -58,11 +65,14 @@ _ENIsOkay:
 		; --------------------------------------------------------------------
 
 _ENStartEncode:
-		cmp 	#'.'						; first is DP
+		cmp 	#'.'						; first is decimal place, go straight to that.
 		beq 	_ENFirstDP
-		and 	#15 						; put digit in mantissa
-		jsr 	NSMSetByte
+		and 	#15 						; put digit in mantissa, initially a single digit constant
+		jsr 	NSMSetByte 					; in single byte mode.
 		lda 	#ESTA_Low
+		;
+		;		Come here to successfully change state.
+		;
 _ENExitChange:
 		sta 	EncodeState 				; save new state		
 		sec
@@ -78,7 +88,7 @@ _ENFirstDP:
 		;
 		; --------------------------------------------------------------------
 _ENNoRestart:		
-		pha 								; save on stack.
+		pha 								; save digit or DP on stack.
 		lda 	EncodeState 				; get current state
 		cmp 	#ESTA_Low
 		beq  	_ESTALowState	
@@ -137,7 +147,7 @@ _ESTAHighState:
 		; --------------------------------------------------------------------
 
 _ESTASwitchFloat:
-		stz 	DecimalCount
+		stz 	DecimalCount 				; reset the count of digits - we divide by 10^n at the end.
 		inx 								; zero the decimal additive.
 		jsr 	NSMSetZero
 		dex
@@ -154,11 +164,14 @@ _ESTADecimalState:
 		pla 								; digit.
 		cmp 	#"." 						; fail on 2nd decimal point.
 		beq 	_ENFail
+		;
 		inx 								; put digit into fractional part of X+1
 		jsr 	ESTAShiftDigitIntoMantissa
 		dex
+		;
 		inc 	DecimalCount 				; bump the count of decimals
-		lda 	DecimalCount
+		;
+		lda 	DecimalCount 				; too many decimal digits.
 		cmp 	#11
 		beq 	_ESTADSFail
 		sec
@@ -182,7 +195,7 @@ _ENConstructFinal:
 		tay 
 		;
 		lda 	DecimalScalarTable-5,y 		; copy decimal scalar to X+2
-		sta 	NSMantissa0+2,x
+		sta 	NSMantissa0+2,x  			; this is 10^-n
 		lda 	DecimalScalarTable-5+1,y
 		sta 	NSMantissa1+2,x
 		lda 	DecimalScalarTable-5+2,y

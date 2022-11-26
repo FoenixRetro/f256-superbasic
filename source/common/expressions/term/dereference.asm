@@ -4,7 +4,7 @@
 ;		Name:		term.asm
 ;		Purpose:	Evaluate a term
 ;		Created:	20th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -36,8 +36,8 @@ DereferenceTopTwo:
 
 Dereference:
 		lda 	NSStatus,x 					; get the status byte
-		and 	#NSBIsReference 			; shift sign bit to carry, reference to bit 7
-		beq 	_DRFExit 					; not a reference
+		and 	#NSBIsReference 			; is it a reference
+		beq 	_DRFExit 					; not a reference, so exit.
 		;
 		phy
 		; ------------------------------------------------------------------------
@@ -67,13 +67,15 @@ Dereference:
 		cmp 	#NSTFloat 					; if float, do full dereference.		
 		beq 	_DRFFull 
 		;
+		;		Dereference integer
+		;
 		lda 	NSStatus,x 					; must be integer - how many bytes ?
 		and 	#3
 		beq 	_DRFFull 					; the whole word
 
 		; ------------------------------------------------------------------------
 		;
-		;		Doing 1 or 2 bytes
+		;		Doing 1 or 2 bytes - these come from ! and ? operators.
 		;
 		; ------------------------------------------------------------------------
 
@@ -90,7 +92,7 @@ _DRFClear23:
 
 		lda 	NSStatus,x 					; make it a value of that type.
 		and 	#NSBTypeMask
-		sta 	NSStatus,x 					
+		sta 	NSStatus,x 					; and fall through.
 
 		; ------------------------------------------------------------------------
 		;
@@ -119,6 +121,7 @@ _DRFExit:
 
 _DRFNullString: 							; a null string.
 		.byte 	0		
+
 		; ------------------------------------------------------------------------
 		;
 		;		Doing 4 (Integer, word) or 5 bytes (Float)
@@ -136,11 +139,13 @@ _DRFFull:
 		sta 	NSMantissa3,x
 		;
 		stz 	NSExponent,x 				; clear exponent.
+		
 		; ------------------------------------------------------------------------
 		;
 		;		Do we read a 5th byte for Floats ?
 		;
 		; ------------------------------------------------------------------------
+
 		lda		NSStatus,x 					; see if type is integer
 		and 	#NSBTypeMask  				; type information only
 		sta 	NSStatus,x 					; update it back.
@@ -149,6 +154,7 @@ _DRFFull:
 		lda 	(zTemp0),y
 		sta 	NSExponent,x
 _DRFNoExponent:
+
 		; ------------------------------------------------------------------------
 		;
 		;		Extract the sign bit from Mantissa3:7 to Status:7

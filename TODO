@@ -2,8 +2,6 @@ Progress:
 
 	CHG: Modularising starting.
 	CHG: Fix End / Delete / Backspace 
-	CHG: Variable space full when adding an identifier (Variablerecord.asm)
-	CHG: Colour change for identifier ( and digits and decimal point.
 
 	tiles ?
 	DMA ?

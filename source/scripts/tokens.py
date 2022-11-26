@@ -51,7 +51,7 @@ class TokenSource(object):
 			{1}							// Set 1
 				end 		new 		list 		run 		stop			
 				restore 	assert 		assemble 	bitmap		sprites
-				load 		go
+				load 		go 			who
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	

@@ -50,6 +50,7 @@
 	.include	"./common/commands/utilities/procscan.asm"
 	.include	"./common/commands/utilities/scanforward.asm"
 	.include	"./common/commands/while.asm"
+	.include	"./common/commands/who.asm"
 	.include	"./common/errors/charcheck.asm"
 	.include	"./common/errors/errors.asm"
 	.include	"./common/expressions/binary/compare.asm"

@@ -66,7 +66,7 @@ endproc
 '
 proc verticalLaunch(n)
 	x(n) = xOrg-16:y(n) = yOrg+((yFire+8) & $F0):xi(n) = 4:yi(n) = 0	
-	remain(n) = abs((xSize*16+16) / xi(n))
+	remain(n) = abs((xSize*16+16) \ xi(n))
 	if random() & 1 then x(n) = x(n) + remain(n)*xi(n):xi(n) = -xi(n)
 	sprite n image 11 to x(n),y(n)
 endproc
@@ -75,7 +75,7 @@ endproc
 '
 proc horizontalLaunch(n)
 	y(n) = yOrg-16:x(n) = xOrg+((xFire+8) & $F0):yi(n) = 4:xi(n) = 0	
-	remain(n) = abs((ySize*16+16) / yi(n))
+	remain(n) = abs((ySize*16+16) \ yi(n))
 	if random() & 1 then y(n) = y(n) + remain(n)*yi(n):yi(n) = -yi(n)
 	sprite n image 12 to x(n),y(n)
 endproc

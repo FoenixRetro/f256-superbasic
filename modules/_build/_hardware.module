@@ -36,7 +36,9 @@ CONLightGreen = 15
 CONForeground = CONYellow
 CONBackground = CONBlue
 
-CLINumber = CONBlueGreen
+CLICommandLine = CONGreen
+
+CLINumber = CONBrown
 CLIToken = CONCyan
 CLIConstant = CONLightBlue
 CLIIdentifier = CONYellow

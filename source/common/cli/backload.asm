@@ -23,6 +23,8 @@ BackloadProgram:
 		lda 	#_BLLoad & $FF
 		jsr 	PrintStringXA
 		.set16 	BackLoadPointer,SOURCE_ADDRESS
+		lda 	#$FF
+		sta 	$FFFA
 _BPLoop:		
 		ldx 	#$FF
 
@@ -57,6 +59,7 @@ _BPEndLine:
 		;		Exit backloading
 		;
 _BPExit:
+		stz 	$FFFA
 		jsr 	ClearCommand 				; clear variables etc.
 		rts
 _BLLoad:
@@ -96,5 +99,6 @@ BackLoadPointer:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		26/11/22  		Reinserted speed up emulator hack (write to $FFFA)
 ;
 ; ************************************************************************************************

@@ -162,6 +162,7 @@ VectorSet1:
 	.word	CommandRUN                       ; $8c RUN
 	.word	SpritesCtrl                      ; $8d SPRITES
 	.word	StopCommand                      ; $8e STOP
+	.word	WhoCommand                       ; $8f WHO
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

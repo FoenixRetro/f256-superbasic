@@ -104,6 +104,7 @@ KeywordSet1:
 	.text	3,$f5,"RUN"            ; $8c RUN
 	.text	7,$2a,"SPRITES"        ; $8d SPRITES
 	.text	4,$46,"STOP"           ; $8e STOP
+	.text	3,$ee,"WHO"            ; $8f WHO
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF
@@ -329,6 +330,17 @@ _LCPunctuation:
 		bne 	_LCPContinue
 		jsr 	LCLDeleteLastSpace 			; if so delete any preceding spaces
 _LCPContinue:
+		cmp 	#'.'
+		beq 	_LCPIsConstant
+		cmp 	#'0'
+		bcc 	_LCPNotConstant
+		cmp 	#'9'+1
+		bcs 	_LCPNotConstant
+_LCPIsConstant:
+		pha
+		.setcolour CLIConstant
+		pla
+_LCPNotConstant:
 		iny 								; consume character
 		jsr 	LCLWrite 					; write it out.
 		bra 	_LCMainLoop 				; go round again.
@@ -359,7 +371,7 @@ _LCOutIdentifier:
 		lda 	(zTemp0),y				 	; ends when bit 7 set.
 		bpl 	_LCOutIdentifier
 		ply 								; restore position
-		bra 	_LCMainLoop
+		jmp 	_LCMainLoop
 
 		;	-------------------------------------------------------------------
 		;
@@ -569,6 +581,7 @@ _LCLUCOut:
 ;		==== 			=====
 ;		26/11/22 		Added LCLWriteColour to minimise colour changes, e.g. not one for each
 ;						punctuation character etc.
+;		26/11/22 		Tweaked coloring of constants (test for 0-9 and . in punctuation)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
@@ -1252,6 +1265,10 @@ _CCVNext:
 		;		So we create a new record.
 		;
 _CCVFail:
+		lda 	zTemp0+1 					; are we out of space
+		cmp 	#(EndVariableSpace-512) >> 8
+		bcs 	_CCVMemory
+		;
 		ldy 	#1 							; create the new record. Offset 1 is hash
 		lda 	identHash
 		sta 	(zTemp0),y
@@ -1297,6 +1314,9 @@ _CCVFound:
 		jsr 	TOKWriteByte
 		rts
 
+_CCVMemory:
+		.error_memory
+
 		.send code
 
 ; ************************************************************************************************
@@ -1307,5 +1327,7 @@ _CCVFound:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		26/11/22 		Check at _LCVFail that there is sufficient memory in practice for this
+;						program.
 ;
 ; ************************************************************************************************

@@ -21,6 +21,9 @@
 WarmStart:
 		ldx 	#$FF
 		txs
+		lda 	#CLICommandLine+$80 		; set console colour
+		jsr 	EXTPrintCharacter
+
 		jsr 	EXTInputLine 				; get line to lineBuffer
 		jsr 	TokeniseLine 				; tokenise the line
 		;
@@ -57,5 +60,6 @@ _WSEditCode:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		26/11/22 		Added code to set console colour when typing in commands.
 ;
 ; ***************************************************************************************

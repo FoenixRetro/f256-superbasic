@@ -1,43 +1,34 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		colours.inc
-;		Purpose:	Console colour scheme
-;		Created:	17th November 2022
-;		Reviewed: 	
-;		Author : 	Paul Robson (paul@robsons.org.uk)
+;		Name:		who.asm
+;		Purpose:	WHO command
+;		Created:	26th November 2022
+;		Reviewed: 	No
+;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
 
-CONBlack = 0
-CONWhite = 1
-CONRed = 2
-CONCyan = 3
-CONPurple = 4
-CONGreen = 5
-CONBlue = 6
-CONYellow = 7
-CONOrange = 8
-CONBrown = 9
-CONYellowGreen = 10
-CONRosa = 11
-CONBlueGreen = 12
-CONLightBlue = 13
-CONPink = 14
-CONLightGreen = 15
+		.section code
 
-CONForeground = CONYellow
-CONBackground = CONBlue
+WhoCommand: ;; [who]
+		ldx 	#(_WHOMessage >> 8)
+		lda 	#(_WHOMessage & $FF)
+		jsr 	PrintStringXA
+		rts
 
-CLICommandLine = CONGreen
+_WHOMessage:
+		.byte 	$81
+		.text 	"Brought to you by :",13,13
+		.text 	9,"Stefany Allaire",13
+		.text 	9,"Jessie Oberreuter",13
+		.text 	9,"Paul Robson",13
+		.text 	9,"Peter Weingartner",13
+		.byte 	0
 
-CLINumber = CONBrown
-CLIToken = CONCyan
-CLIConstant = CONLightBlue
-CLIIdentifier = CONYellow
-CLIPunctuation = CONYellowGreen
-CLIData = CONWhite
+		
+		.send code
 
 ; ************************************************************************************************
 ;

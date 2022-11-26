@@ -152,6 +152,17 @@ _LCPunctuation:
 		bne 	_LCPContinue
 		jsr 	LCLDeleteLastSpace 			; if so delete any preceding spaces
 _LCPContinue:		
+		cmp 	#'.'
+		beq 	_LCPIsConstant
+		cmp 	#'0'
+		bcc 	_LCPNotConstant
+		cmp 	#'9'+1
+		bcs 	_LCPNotConstant
+_LCPIsConstant:
+		pha
+		.setcolour CLIConstant
+		pla
+_LCPNotConstant:		
 		iny 								; consume character
 		jsr 	LCLWrite 					; write it out.
 		bra 	_LCMainLoop 				; go round again.
@@ -182,7 +193,7 @@ _LCOutIdentifier:
 		lda 	(zTemp0),y				 	; ends when bit 7 set.	
 		bpl 	_LCOutIdentifier
 		ply 								; restore position
-		bra 	_LCMainLoop
+		jmp 	_LCMainLoop
 
 		;	-------------------------------------------------------------------
 		;
@@ -392,5 +403,6 @@ _LCLUCOut:
 ;		==== 			=====
 ;		26/11/22 		Added LCLWriteColour to minimise colour changes, e.g. not one for each
 ;						punctuation character etc.
+;		26/11/22 		Tweaked coloring of constants (test for 0-9 and . in punctuation)
 ;
 ; ************************************************************************************************
