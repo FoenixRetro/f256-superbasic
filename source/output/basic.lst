@@ -1,13 +1,13 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
-; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Sun Nov 27 20:19:05 2022
+; 64tass -D AUTORUN=1 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
+; Sun Nov 27 20:35:24 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
 ;******  Command line definitions
 
-=0					AUTORUN=0
+=1					AUTORUN=1
 =$e000					 MONITOR_ADDRESS=$E000
 =$f000					 LOCKOUT_ADDRESS=$F000
 =$38000					 BASIC_ADDRESS=$38000
@@ -439,8 +439,8 @@
 .8031	a9 0f		lda #$0f			lda 	#$0F 						; initialise sound system
 .8033	20 18 80	jsr $8018			jsr 	SNDCommand
 .8036	20 6f 89	jsr $896f			jsr 	NewProgram 					; erase current program
-.8039	4c 46 83	jmp $8346			jmp 	WarmStart					; make same size.
-.803c	4c 46 83	jmp $8346			jmp 	WarmStart
+.8039	20 ae 82	jsr $82ae			jsr 	BackloadProgram
+.803c	4c ab 8a	jmp $8aab			jmp 	CommandRun
 
 ;******  Return to file: _basic.asm
 
@@ -868,8 +868,8 @@
 .82e3	b0 ea		bcs $82cf			bcs 	_BPCopy 					; until a control character, should be 13 received.
 .82e5					_BPEndLine:
 .82e5	20 21 80	jsr $8021			jsr 	TKTokeniseLine 				; tokenise the line.
-.82e8	38		sec				sec 								; append not insert
-.82e9	20 59 a4	jsr $a459			jsr 	MemoryInsertLine 			; append to current program
+.82e8	ea		nop				nop
+.82e9	20 21 83	jsr $8321			jsr 	EditProgramCode
 .82ec	80 d6		bra $82c4			bra 	_BPLoop
 .82ee					_BPExit:
 .82ee	9c fa ff	stz $fffa			stz 	$FFFA
@@ -3488,7 +3488,7 @@
 .92f9	64 70		stz $70				stz 	NSMantissa3
 .92fb	64 50		stz $50				stz 	NSStatus 					; positive integer
 .92fd	a2 00		ldx #$00			ldx 	#0 							; stack level
-.92ff	a9 0a		lda #$0a			lda 	#10 						; base
+.92ff	a9 0a		lda #$0a			lda 	#10 						; base 10 decimal.
 .9301	80 00		bra $9303			bra 	ConvertInt32
 .9303					ConvertInt32:
 .9303	5a		phy				phy
@@ -3505,12 +3505,12 @@
 .9315	a9 00		lda #$00			lda 	#0 							; make ASCIIZ
 .9317	99 7b 05	sta $057b,y			sta 	NumberBuffer,y
 .931a	7a		ply				ply
-.931b	a2 05		ldx #$05			ldx 	#NumberBuffer >> 8
+.931b	a2 05		ldx #$05			ldx 	#NumberBuffer >> 8 			; return address in XA
 .931d	a9 7b		lda #$7b			lda 	#NumberBuffer & $FF
 .931f	60		rts				rts
 .9320					_CI32DivideConvert:
 .9320	e8		inx				inx 								; write to next slot up
-.9321	20 93 9d	jsr $9d93			jsr 	NSMSetByte
+.9321	20 93 9d	jsr $9d93			jsr 	NSMSetByte 		 			; write the base out.
 .9324	ca		dex				dex
 .9325	20 4e 90	jsr $904e			jsr 	Int32Divide 				; divide
 .9328	b5 58		lda $58,x			lda 	NSMantissa0,x 				; save remainder
@@ -3522,7 +3522,7 @@
 .9335	20 20 93	jsr $9320			jsr 	_CI32DivideConvert 			; and recusrively call.
 .9338					_CI32NoRecurse:
 .9338	68		pla				pla 								; remainder
-.9339	c9 0a		cmp #$0a			cmp 	#10 						; convert to ASCII
+.9339	c9 0a		cmp #$0a			cmp 	#10 						; convert to ASCII, allowing for hexadecimal.
 .933b	90 02		bcc $933f			bcc 	_CI32NotHex
 .933d	69 26		adc #$26			adc 	#6+32
 .933f					_CI32NotHex:
@@ -4616,12 +4616,12 @@
 .9964	5a		phy				phy
 .9965	8a		txa				txa 								; copy X into Y
 .9966	a8		tay				tay
-.9967	b9 60 00	lda $0060,y			lda		NSMantissa1,y 				; get size
+.9967	b9 60 00	lda $0060,y			lda		NSMantissa1,y 				; get size into XA
 .996a	aa		tax				tax
 .996b	b9 58 00	lda $0058,y			lda 	NSMantissa0,y
 .996e	20 7b 99	jsr $997b			jsr 	AllocateXABytes 			; allocate memory
 .9971	99 58 00	sta $0058,y			sta 	NSMantissa0,y 				; write address out.
-.9974	8a		txa				txa
+.9974	8a		txa				txa 	 							; typing is 16 bit integer.
 .9975	99 60 00	sta $0060,y			sta 	NSMantissa1,y
 .9978	7a		ply				ply
 .9979	fa		plx				plx
@@ -4699,7 +4699,7 @@
 .99e0	b5 50		lda $50,x			lda 	NSStatus,x
 .99e2	29 08		and #$08			and 	#NSTFloat 					; check it is a float
 .99e4	f0 04		beq $99ea			beq 	_IUZero
-.99e6	20 99 94	jsr $9499			jsr 	FloatFractionalPart
+.99e6	20 99 94	jsr $9499			jsr 	FloatFractionalPart 		; if so, get the fractional part.
 .99e9	60		rts				rts
 .99ea					_IUZero:
 .99ea	20 91 9d	jsr $9d91			jsr 	NSMSetZero
@@ -4717,7 +4717,7 @@
 .99f5	b5 50		lda $50,x			lda 	NSStatus,x
 .99f7	29 08		and #$08			and 	#NSTFloat 					; check it is a float
 .99f9	f0 03		beq $99fe			beq 	_IUExit
-.99fb	20 f1 94	jsr $94f1			jsr 	FloatIntegerPart
+.99fb	20 f1 94	jsr $94f1			jsr 	FloatIntegerPart 			; if it is get the integer part.
 .99fe					_IUExit:
 .99fe	60		rts				rts
 
@@ -5032,7 +5032,7 @@
 .9bad	20 c6 9b	jsr $9bc6			jsr 	ConvertNumberToString 		; do the conversion.
 .9bb0	a9 21		lda #$21			lda		#33 						; create buffer
 .9bb2	20 c3 a6	jsr $a6c3			jsr 	StringTempAllocate 			; allocate memory
-.9bb5	da		phx				phx
+.9bb5	da		phx				phx  								; copy the converted string into the buffer.
 .9bb6	a2 00		ldx #$00			ldx 	#0
 .9bb8					_USCopy:
 .9bb8	bd 9d 05	lda $059d,x			lda 	DecimalBuffer,x
@@ -5055,7 +5055,7 @@
 .9bda					_CNTSNotNegative:
 .9bda	b5 78		lda $78,x			lda 	NSExponent,x 				; check if decimal
 .9bdc	f0 12		beq $9bf0			beq 	_CNTSNotFloat
-.9bde	e8		inx				inx 								; round up
+.9bde	e8		inx				inx 								; round up so we don't get too many 6.999999
 .9bdf	a9 01		lda #$01			lda 	#1
 .9be1	20 93 9d	jsr $9d93			jsr 	NSMSetByte
 .9be4	ca		dex				dex
@@ -5065,7 +5065,7 @@
 .9beb	95 51		sta $51,x			sta 	NSStatus+1,x
 .9bed	20 d3 93	jsr $93d3			jsr 	FloatAdd
 .9bf0					_CNTSNotFloat:
-.9bf0	20 1d 9c	jsr $9c1d			jsr 	MakePlusTwoString
+.9bf0	20 1d 9c	jsr $9c1d			jsr 	MakePlusTwoString 			; do the integer part.
 .9bf3	20 99 94	jsr $9499			jsr 	FloatFractionalPart 		; get the fractional part
 .9bf6	20 4a 95	jsr $954a			jsr 	NSNormalise					; normalise , exit if zero
 .9bf9	f0 20		beq $9c1b			beq 	_CNTSExit
@@ -5081,7 +5081,7 @@
 .9c0d	95 50		sta $50,x			sta 	NSStatus,x
 .9c0f	ca		dex				dex
 .9c10	20 18 95	jsr $9518			jsr 	FloatMultiply
-.9c13	20 1d 9c	jsr $9c1d			jsr 	MakePlusTwoString
+.9c13	20 1d 9c	jsr $9c1d			jsr 	MakePlusTwoString 			; put the integer e.g. next digit out.
 .9c16	20 99 94	jsr $9499			jsr 	FloatFractionalPart 		; get the fractional part
 .9c19	80 e5		bra $9c00			bra 	_CNTSDecimal 				; keep going.
 .9c1b					_CNTSExit:
@@ -5095,7 +5095,7 @@
 .9c23	20 f1 94	jsr $94f1			jsr 	FloatIntegerPart 			; make it an integer
 .9c26	a9 0a		lda #$0a			lda 	#10 						; convert it in base 10
 .9c28	20 03 93	jsr $9303			jsr 	ConvertInt32
-.9c2b	a2 00		ldx #$00			ldx	 	#0
+.9c2b	a2 00		ldx #$00			ldx	 	#0 							; write that to the decimal buffer.
 .9c2d					_MPTSCopy:
 .9c2d	bd 7b 05	lda $057b,x			lda 	NumberBuffer,x
 .9c30	20 3b 9c	jsr $9c3b			jsr 	WriteDecimalBuffer
@@ -5156,7 +5156,7 @@
 .9c82	b5 5a		lda $5a,x			lda 	NSMantissa0+2,x 			; if copy count is zero
 .9c84	f0 23		beq $9ca9			beq 	_SSMNull 					; return empty string.
 .9c86	18		clc				clc 								; add the offset +1 to the address and
-.9c87	b5 58		lda $58,x			lda	 	NSMantissa0,x 				; put in zTemp
+.9c87	b5 58		lda $58,x			lda	 	NSMantissa0,x 				; put in zTemp, this is the start of the substring to copy.
 .9c89	75 59		adc $59,x			adc 	NSMantissa0+1,x
 .9c8b	85 36		sta $36				sta 	zTemp0
 .9c8d	b5 60		lda $60,x			lda	 	NSMantissa1,x
@@ -6748,7 +6748,7 @@
 .a6b0	a9 ff		lda #$ff			lda 	#$FF 						; only initialise once (set to $FF, bit used to test it)
 .a6b2	8d 10 04	sta $0410			sta 	StringInitialised
 .a6b5	ad 0e 04	lda $040e			lda 	StringMemory 				; allocate 256 bytes for one concreted string
-.a6b8	8d 11 04	sta $0411			sta 	StringTempPointer
+.a6b8	8d 11 04	sta $0411			sta 	StringTempPointer 			; so temporary string space is allocated below that.
 .a6bb	ad 0f 04	lda $040f			lda 	StringMemory+1
 .a6be	3a		dec a				dec 	a
 .a6bf	8d 12 04	sta $0412			sta 	StringTempPointer+1
@@ -6773,7 +6773,7 @@
 .a6e3	8d 12 04	sta $0412			sta 	StringTempPointer+1
 .a6e6	85 3d		sta $3d				sta 	zsTemp+1
 .a6e8	95 60		sta $60,x			sta 	NSMantissa1,x
-.a6ea	74 68		stz $68,x			stz 	NSMantissa2,x 				; set the typing data
+.a6ea	74 68		stz $68,x			stz 	NSMantissa2,x 				; set the typing data and the upper address bytes.
 .a6ec	74 70		stz $70,x			stz 	NSMantissa3,x
 .a6ee	a9 10		lda #$10			lda 	#NSTString
 .a6f0	95 50		sta $50,x			sta 	NSStatus,x
@@ -6785,12 +6785,12 @@
 .a6f9	4c 84 8e	jmp $8e84		jmp	ErrorHandler
 .a6fc					StringTempWrite:
 .a6fc	48		pha				pha
-.a6fd	92 3c		sta ($3c)			sta 	(zsTemp)
-.a6ff	e6 3c		inc $3c				inc 	zsTemp
+.a6fd	92 3c		sta ($3c)			sta 	(zsTemp) 					; write byte
+.a6ff	e6 3c		inc $3c				inc 	zsTemp 						; bump pointer
 .a701	d0 02		bne $a705			bne 	_STWNoCarry
 .a703	e6 3d		inc $3d				inc 	zsTemp+1
 .a705					_STWNoCarry:
-.a705	a9 00		lda #$00			lda 	#0
+.a705	a9 00		lda #$00			lda 	#0 							; make ASCIIZ
 .a707	92 3c		sta ($3c)			sta 	(zsTemp)
 .a709	68		pla				pla
 .a70a	60		rts				rts
