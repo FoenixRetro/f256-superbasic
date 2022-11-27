@@ -25,7 +25,7 @@ WarmStart:
 		jsr 	EXTPrintCharacter
 
 		jsr 	EXTInputLine 				; get line to lineBuffer
-		jsr 	TokeniseLine 				; tokenise the line
+		jsr 	TKTokeniseLine 				; tokenise the line
 		;
 		;		Decide whether editing or running
 		;

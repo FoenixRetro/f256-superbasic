@@ -53,6 +53,8 @@ for a in addresses:
 		if target < splitPoint:
 			print("\tAt ${0:04x} call to ${1:04x} [{2}]".format(a,target,label))
 			backCount += 1
+		if label in linkRoutines:
+			print("\t{0} is called by export function at ${1:04x}".format(label,a))
 print()
 
 print("Routines called in Paged Code")

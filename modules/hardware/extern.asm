@@ -50,10 +50,11 @@ EXTInitialise:
 ; ************************************************************************************************
 
 EXTInputSingleCharacter:
+PagedInputSingleCharacter:
 		phx
 		phy
 _EISCWait:	
-		.tickcheck	
+		jsr 	PagedSNDUpdate
 		jsr 	$FFE4
 		cmp 	#0
 		beq 	_EISCWait

@@ -19,6 +19,7 @@
 ; ************************************************************************************************
 
 SNDUpdate:
+PagedSNDUpdate:
 		lda 	SNDTimeLeft+0 				; look at time remaining
 		beq 	_SNDUNot0 					; not playing
 		ldx 	#0 							; so we know which channel to update

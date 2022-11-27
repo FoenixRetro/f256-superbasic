@@ -45,7 +45,7 @@ _BPNotTab:
 		cmp 	#' ' 						; < ' ' = EOL
 		bcs 	_BPCopy 					; until a control character, should be 13 received.
 _BPEndLine:		
-		jsr 	TokeniseLine 				; tokenise the line.
+		jsr 	TKTokeniseLine 				; tokenise the line.
 
 		.if AUTORUN==1 						; if autorun do full insert/delete for testing
 		nop

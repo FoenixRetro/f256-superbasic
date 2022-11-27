@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-TokeniseLine:
+TKTokeniseLine:
 		;
 		;		Make the line buffer UpperCase outside quoted strings
 		;

@@ -18,8 +18,6 @@
 ;
 ; ************************************************************************************************
 
-		.send 		code
-
 TickHandler:
 		phy 								; need to preserve Y
 		.if 	soundIntegrated==1 			; if F256 sound module
@@ -28,6 +26,8 @@ TickHandler:
 		ply
 		rts
 
+		.send 		code
+		
 		.section 	storage
 LastTick:
 		.fill 		1

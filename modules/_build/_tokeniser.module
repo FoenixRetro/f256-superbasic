@@ -216,7 +216,7 @@ ListConvertLine:
 		dey
 		.cget
 		jsr 	LCLWriteNumberXA
-		;
+				;
 		;		Pad out for indentation.
 		;
 		pla 								; adjustment to indent
@@ -648,6 +648,8 @@ _LCLWNTable:
 ;						punctuation character etc.
 ;		26/11/22 		Tweaked coloring of constants (test for 0-9 and . in punctuation)
 ;		26/11/22 		Highlighting SOL comments
+;		27/11/22 		Added LCLWriteNumberXA to decouple module from the main body of code
+;						(was using ConvertInt16)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
@@ -785,7 +787,7 @@ _TSTFail:
 ;
 ; ************************************************************************************************
 
-TokeniseLine:
+TKTokeniseLine:
 		;
 		;		Make the line buffer UpperCase outside quoted strings
 		;

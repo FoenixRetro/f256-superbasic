@@ -28,7 +28,7 @@ EXTInputLine:
 		lda 	1 							; save I/O page
 		pha
 _EILLoop:		
-		jsr 	ExtInputSingleCharacter
+		jsr 	PagedInputSingleCharacter
 		cmp 	#13 						; scrape line if exit.		
 		beq 	_EILExit
 		cmp 	#8 							; handle backspace
@@ -46,7 +46,7 @@ _EILLoop:
 		jsr 	EXTILInsert 				; insert in colour screen
 		pla 								; get character back.
 _EILPrintLoop:		
-		jsr 	ExtPrintCharacter
+		jsr 	PagedPrintCharacter
 		bra 	_EILLoop
 		rts
 		;
@@ -56,7 +56,7 @@ _EILBackspace:
 		lda 	EXTColumn					; can we backspace ?
 		beq 	_EILLoop
 		lda 	#2 							; move cursor left
-		jsr 	EXTPrintCharacter
+		jsr 	PagedPrintCharacter
 		;
 		lda 	#2 							; text block
 		sta 	1
@@ -94,7 +94,7 @@ _EILEndTrim:
 		lda 	#0 							; trim here.
 		sta 	lineBuffer,y		
 		lda 	#13 						; echo the RETURN
-		jsr 	ExtPrintCharacter
+		jsr 	PagedPrintCharacter
 		pla 								; reset I/O page
 		sta 	1
 
