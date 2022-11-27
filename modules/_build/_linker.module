@@ -1,3 +1,4 @@
+PagingEnabled = 0
 	.if hardwareIntegrated == 1
 EXTPrintCharacter:
 	jmp	Export_EXTPrintCharacter

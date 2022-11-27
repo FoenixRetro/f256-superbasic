@@ -4,6 +4,7 @@
 
 GRFirstFreeCode = 42
 
+	.section code
 GRVectorTable:
 	.word	GXInitialise             ; $00 Initialise
 	.word	GXControlBitmap          ; $01 BitmapCtl
@@ -47,3 +48,4 @@ GRVectorTable:
 	.word	GRUndefined              ; $27
 	.word	GXPlotPoint              ; $28 Plot
 	.word	GXMoveSprite             ; $29 SpriteMove
+	.send code

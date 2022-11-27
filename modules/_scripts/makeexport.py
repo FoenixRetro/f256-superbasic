@@ -11,17 +11,28 @@
 
 import os,sys,re
 
+paging = False
+
 exports = {}
 exports["hardware"] = 	[ "EXTPrintCharacter","EXTInitialise","EXTInputSingleCharacter","EXTBreakCheck","EXTReadController","EXTInputLine" ]
 exports["graphics"] = 	[ "GXGraphicDraw" ]
 exports["sound"] = 		[ "SNDCommand","SNDUpdate"]
 exports["tokeniser"] = 	[ "TKListConvertLine","TKTokeniseLine" ]
 
+print("PagingEnabled = {0}".format(1 if paging else 0))
+
 for module in exports.keys():
 	print("\t.if {0}Integrated == 1".format(module))
 	for routine in exports[module]:
 		print("{0}:".format(routine))
-		print("\tjmp\tExport_{0}".format(routine))
+		if paging:
+			print("\tinc 8+5")
+			print("\tjsr\tExport_{0}".format(routine))
+			print("\tdec 8+5")
+			print("\trts")
+		else:
+			print("\tjmp\tExport_{0}".format(routine))
+
 	print("\t.endif")
 
 

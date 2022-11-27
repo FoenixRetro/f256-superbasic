@@ -1,8 +1,6 @@
 Progress:
 
-	CHG: Modularising starting.
-	CHG: Fix End / Delete / Backspace 
-	
+	CHG: Add Jessie's editor suggestions.
 	tiles ?
 	DMA ?
 	Not initialised flag on variables. ?
@@ -16,7 +14,8 @@ Later:
 	Added WHO ?
 
 BTW, a few other editor refinements you might consider:
-- I have END/^E move the cursor to one beyond the last non-space character on the line (rather than to the last column on the screen).  Basically, move to the next possible insert point,
+
+- I have END/^E move the cursor to one beyond the last non-space character on the line (rather than to the last column on the screen).  
 - I have DEL/^D delete the character under the cursor (pulling the rest of the line back to fill in)
-- I have ^K delete all characters to the right of the cursor.  This is especially helpful to make room for a new command (like LIST) after editing a line in the middle of a previous listing.  Otherwise, you need to find or make a clear line for the next command.
+- I have ^K delete all characters to the right of the cursor.  
 

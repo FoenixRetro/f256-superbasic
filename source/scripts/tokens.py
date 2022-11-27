@@ -312,8 +312,10 @@ if __name__ == "__main__":
 	t = TokenCollection()
 	h1 = open("common/generated/kwdtext.dat","w")
 	h1.write(note)
+	h1.write("\t.section code\n")
 	for i in range(0,3):
 		t.dumpGroupText(i,h1)
+	h1.write("\t.send code\n")
 	h1.close()
 
 	h2 = open("common/generated/kwdconst.inc","w")

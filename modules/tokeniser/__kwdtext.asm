@@ -1,6 +1,7 @@
 ;
 ;	This is automatically generated.
 ;
+	.section code
 KeywordSet0:
 	.text	0,$65,""               ; $80 !0:EOF
 	.text	0,$58,""               ; $81 !1:SH1
@@ -170,3 +171,4 @@ KeywordSet2:
 	.text	3,$ff,"TXS"            ; $c2 TXS
 	.text	3,$ee,"TYA"            ; $c3 TYA
 	.text	$FF
+	.send code

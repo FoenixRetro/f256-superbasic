@@ -18,4 +18,7 @@ Release 6 (26/11/22):
 	CHG: Comments at the start of the line are highlighted in reverse.
 	CHG: Can now list procedure by name e.g. list moveplayer()
 	CHG: Changes to modules to allow for safe paging (see expandline.asm)
-	
+	CHG: Added code to page modules in and out of the upper 8k of the (now 24k on request) ROM.
+		 ROM is still run in 16k as debug base.
+
+Release 7 (27/11/22):		 
