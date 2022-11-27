@@ -28,6 +28,7 @@ ListConvertLine:
 		stz 	tbOffset
 		stz 	tokenBuffer
 		stz 	currentListColour
+		.setcolour CLILineNumber
 		;
 		;		Do the line number
 		;
@@ -36,18 +37,8 @@ ListConvertLine:
 		tax
 		dey
 		.cget
-		jsr 	LCLConvertInt16 			
-		sta 	zTemp0 						; copy number into buffer
-		stx 	zTemp0+1
-		.setcolour CLINumber
-		ldy 	#0
-_LCCopyNumber:
-		lda 	(zTemp0),y
-		jsr 	LCLWrite
-		iny		
-		lda 	(zTemp0),y
-		bne 	_LCCopyNumber
-		;
+		jsr 	LCLWriteNumberXA
+				;
 		;		Pad out for indentation.
 		;
 		pla 								; adjustment to indent
@@ -62,7 +53,7 @@ _LCNoAdjust:
 		clc		 							; work out actual indent.
 		lda 	listIndent
 		asl 	a
-		adc 	#6
+		adc 	#7
 		sta 	zTemp0
 
 _LCPadOut:
@@ -386,6 +377,7 @@ _LCCSRSpace: 								; output the space
 
 _LCCSRExit:
 		rts		
+
 ; ************************************************************************************************
 ;
 ;										Convert to L/C or U/C
@@ -410,6 +402,60 @@ LCLUpperCase:
 _LCLUCOut:
 		rts
 
+; ************************************************************************************************
+;
+;										Write out XA as string
+;
+; ************************************************************************************************
+
+LCLWriteNumberXA:
+		stz 	zTemp0+1 					; index into digit table.
+_LCLWNLoop1:
+		stz 	zTemp0 						; subtraction count.
+_LCLWNLoop2:		
+		pha 								; save initial LSB
+		sec
+		ldy 	zTemp0+1 					; position in table.
+		sbc 	_LCLWNTable,y
+		pha
+		txa
+		sbc 	_LCLWNTable+1,y
+		bcc 	_LCLWNUnderflow
+		;
+		inc 	zTemp0  					; subtracted one without borrow.
+		tax 								; update X
+		pla 								; restore A
+		ply 								; throw original
+		bra 	_LCLWNLoop2 				; try again.
+_LCLWNUnderflow:
+		ldy 	zTemp0 						; count of subtractions.
+		bne 	_LCLWNOut
+		lda 	tbOffset 					; suppress leading zeroes		
+		dec 	a
+		beq 	_LCLWNNext
+_LCLWNOut:
+		tya
+		jsr 	_LCLWNOutDigit 		
+_LCLWNNext:
+		ply 							 	; restore original value.
+		pla		
+		ldy 	zTemp0+1  					; bump the index
+		iny
+		iny
+		sty 	zTemp0+1
+		cpy 	#8 							; done all 4
+		bne 	_LCLWNLoop1
+_LCLWNOutDigit:
+		ora 	#'0'
+		jsr 	LCLWrite		
+		rts
+
+_LCLWNTable:
+		.word 	10000
+		.word 	1000
+		.word 	100
+		.word 	10		
+
 		.send code
 		
 ; ************************************************************************************************
@@ -424,5 +470,7 @@ _LCLUCOut:
 ;						punctuation character etc.
 ;		26/11/22 		Tweaked coloring of constants (test for 0-9 and . in punctuation)
 ;		26/11/22 		Highlighting SOL comments
+;		27/11/22 		Added LCLWriteNumberXA to decouple module from the main body of code
+;						(was using ConvertInt16)
 ;
 ; ************************************************************************************************

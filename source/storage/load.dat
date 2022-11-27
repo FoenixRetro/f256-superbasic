@@ -1,8 +1,8 @@
-1 list moveplayer()
-2 ' "Solarfox in SuperBasic"
-3 '
-4 title("Solar Fox"):cls:sprites on:bitmap on:bitmap clear 0
-5 initialise()
+1 list 
+23 ' "Solarfox in SuperBasic"
+345 '
+4567 title("Solar Fox"):cls:sprites on:bitmap on:bitmap clear 0
+12345 initialise()
 6 newLevel(level)
 7 repeat
 8 repeat

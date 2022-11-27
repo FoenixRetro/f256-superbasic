@@ -60,7 +60,7 @@ _EHAtMsg:
 		.cget
 		tax
 		pla
-		jsr 	LCLConvertInt16 				; convert XA to string
+		jsr 	ConvertInt16 				; convert XA to string
 		jsr 	PrintStringXA 				; and print it.
 
 _EHCREnd:

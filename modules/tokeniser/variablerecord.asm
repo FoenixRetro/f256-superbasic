@@ -67,10 +67,6 @@ _CCVNext:
 		;		So we create a new record.
 		;
 _CCVFail:
-		lda 	zTemp0+1 					; are we out of space
-		cmp 	#(EndVariableSpace-512) >> 8
-		bcs 	_CCVMemory
-		;
 		ldy 	#1 							; create the new record. Offset 1 is hash
 		lda 	identHash
 		sta 	(zTemp0),y
@@ -116,9 +112,6 @@ _CCVFound:
 		jsr 	TOKWriteByte
 		rts
 
-_CCVMemory:
-		.error_memory
-
 		.send code
 
 ; ************************************************************************************************
@@ -129,7 +122,5 @@ _CCVMemory:
 ;
 ;		Date			Notes
 ;		==== 			=====
-;		26/11/22 		Check at _LCVFail that there is sufficient memory in practice for this
-;						program.
 ;
 ; ************************************************************************************************

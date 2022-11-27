@@ -35,7 +35,7 @@ CLICommandLine = CONGreen
 CLIFComment = CONBlack
 CLIBComment = CONYellow
 
-CLINumber = CONBrown
+CLILineNumber = CONBrown	
 CLIToken = CONCyan
 CLIConstant = CONLightBlue
 CLIIdentifier = CONYellow

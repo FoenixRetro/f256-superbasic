@@ -18,7 +18,7 @@
 ;
 ; ***************************************************************************************
 
-LCLConvertInt16:
+ConvertInt16:
 		sta 	NSMantissa0 				; set up as 32 bit conversion
 		stx 	NSMantissa1
 		stz 	NSMantissa2

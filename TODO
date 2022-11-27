@@ -1,9 +1,6 @@
 Progress:
 
-	Script to scan modules for JMP / JSR before it.
-
-	Call to 	ErrorHandler (called when out of memory - test on return not in tokeniser)
-				LCLConvertInt16 (needs replacing)
+	Check : called any external routine from within paging (Like EXTPrintCharacter)
 
 	CHG: Modularising starting.
 	CHG: Fix End / Delete / Backspace 
@@ -20,53 +17,8 @@ Later:
 	Changing Kerning ?
 	Added WHO ?
 
-; ------------------------------
-5701 ; Func: INT2STR
-5702 ; Desc: Integer to String
-5705 ; ------------------------------
-5710 INT2STR
-5720     LDY #0
-5725     STY MSICTR
-5730 ITSNEXT
-5735     LDX #0
-5740 ITSSLP
-5750     LDA MSIINT
-5755     SEC 
-5760     SBC ITSTABLE,Y
-5770     STA MSIINT
-5775     LDA MSIINT+1
-5780     INY 
-5785     SBC ITSTABLE,Y
-5790     BCC ITSADD
-5795     STA MSIINT+1
-5800     INX 
-5805     DEY 
-5810     CLC 
-5815     BCC ITSSLP
-5820 ITSADD
-5825     DEY 
-5830     LDA MSIINT
-5840     ADC ITSTABLE,Y
-5845     STA MSIINT
-5850     TXA 
-5855     ORA #$30
-5860     LDX MSICTR
-5865     STA MSISTR,X
-5870     INC MSICTR
-5875     INY 
-5880     INY 
-5885     CPY #8
-5890     BCC ITSNEXT
-5895     LDA MSIINT
-5900     ORA #$30
-5910     LDX MSICTR
-5915     STA MSISTR,X
-5920     INX 
-5930     LDA #EOL
-5940     STA MSISTR,X
-5950     RTS 
-5960 ITSTABLE
-5965     .WORD 10000
-5970     .WORD 1000
-5975     .WORD 100
-5980     .WORD 10
+BTW, a few other editor refinements you might consider:
+- I have END/^E move the cursor to one beyond the last non-space character on the line (rather than to the last column on the screen).  Basically, move to the next possible insert point,
+- I have DEL/^D delete the character under the cursor (pulling the rest of the line back to fill in)
+- I have ^K delete all characters to the right of the cursor.  This is especially helpful to make room for a new command (like LIST) after editing a line in the middle of a previous listing.  Otherwise, you need to find or make a clear line for the next command.
+

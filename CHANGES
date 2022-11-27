@@ -17,5 +17,5 @@ Release 6 (26/11/22):
 
 	CHG: Comments at the start of the line are highlighted in reverse.
 	CHG: Can now list procedure by name e.g. list moveplayer()
-
+	CHG: Changes to listing module to allow for safe paging (see expandline.asm)
 	
