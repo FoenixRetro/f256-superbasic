@@ -4,7 +4,7 @@
 ;		Name:		utility.asm
 ;		Purpose:	Floating point utilities
 ;		Created:	23rd September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -20,7 +20,7 @@
 
 FloatPrepare:
 		jsr 	DereferenceTopTwo 			; dereference the top two values
-		lda 	NSStatus,x 					; check ints/floats
+		lda 	NSStatus,x 					; check ints/floats, either will do.
 		ora 	NSStatus+1,x
 		and 	#NSBIsString
 		bne 	_FDType
@@ -47,7 +47,8 @@ NSNormalise:
 		lda 	#0 							; set Z flag
 		rts
 		;
-		;		Normalise by byte
+		;		Normalise by byte if the MSB is zero we can normalise it
+		;		(providing bit 7 of 2nd byte is not set)
 		;
 _NSNormaliseOptimise:						
 		lda 	NSMantissa3,x 				; upper byte zero ?

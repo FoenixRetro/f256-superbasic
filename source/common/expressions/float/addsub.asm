@@ -4,7 +4,7 @@
 ;		Name:		addsub.asm
 ;		Purpose:	Add/Subtract S[X+1] to S[X]
 ;		Created:	23rd September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -108,8 +108,8 @@ _FACheckZero:
 		stz 	NSStatus,x
 		bra 	_FAExit
 
-_FAReturn1:
-		lda 	NSMantissa0+1,x
+_FAReturn1:									; copy slot X+1 into slot X
+		lda 	NSMantissa0+1,x 			; called when S(X) is zero.
 		sta 	NSMantissa0,x
 		lda 	NSMantissa1+1,x
 		sta 	NSMantissa1,x

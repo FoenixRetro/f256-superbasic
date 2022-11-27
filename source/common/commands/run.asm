@@ -4,7 +4,7 @@
 ;		Name:		run.asm
 ;		Purpose:	Run Program
 ;		Created:	22nd September 2022
-;		Reviewed: 	No
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -39,7 +39,7 @@ CommandRUN:	;; [run]
 		; ----------------------------------------------------------------------------------------
 		
 RUNNewLine:		
-		.cget0 								; is there any program to run ?
+		.cget0 								; is there any more program to run ?
 		beq 	CRNoProgram         		; no then END.
 		ldx 	#$FF 						; reset stack
 		txs
@@ -58,15 +58,17 @@ RUNCodePointerLine:
 _CRIncMainLoop:
 		asl 	breakCheck 					; clears 1 time in 8
 		bne 	_CRNoBreakCheck
+		dec	 	breakCheck 					; set it back to $FF
 		jsr 	EXTBreakCheck 				; break check
 		beq 	_CRBreak
-		.tickcheck TickHandler
+		.tickcheck TickHandler  			; if time elapsed call the tick handler.
 _CRNoBreakCheck:		
-		iny		
+		; 									
+		iny									; next token
 _CRMainLoop:
 		stz 	stringInitialised 			; clear the temporary string initialised flag.
 		.cget 				 				; get next command to execute.
-		bpl 	_CRNotKeyword
+		bpl 	_CRNotKeyword				; not a token.
 		cmp 	#KWC_LAST_UNARY+1 			; if after unary, legitimate command
 		bcs 	_CRIsKeyword
 		cmp 	#KWC_FIRST_UNARY 			; if unary, syntax error.
@@ -183,5 +185,7 @@ Unused4:	;; [then]
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		27/11/22 		Break check was not being reset, checked every time. Added dec
+;						instruction making it $FF => 8 more fails.
 ;
 ; ************************************************************************************************

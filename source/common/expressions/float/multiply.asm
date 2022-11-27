@@ -4,7 +4,7 @@
 ;		Name:		multiply.asm
 ;		Purpose:	Multiply Stack[x] by Stack[x+1] floating point
 ;		Created:	23rd September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -14,7 +14,7 @@
 
 ; ************************************************************************************************
 ;
-;									Floating point division
+;									Floating point multiplication
 ;
 ; ************************************************************************************************
 
@@ -24,7 +24,7 @@ FloatingPointMultiply:
 FloatMultiply:	
 		pha
 		jsr 	NSNormalise		 			; normalise S[X] and exit if zero
-		beq 	_FDExit 					; return zero if zero (e.g. zero/something)
+		beq 	_FDExit 					; return zero if zero (e.g. zero*something)
 		inx 
 		jsr 	NSNormalise		 			; normalise S[x+1] and error if zero.
 		dex

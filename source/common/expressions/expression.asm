@@ -4,13 +4,19 @@
 ;		Name:		expression.asm
 ;		Purpose:	Evaluate an expression
 ;		Created:	21st September 2022
-;		Reviewed: 	No
+;		Reviewed: 	27th November 2922
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
 
 		.section code
+
+; ************************************************************************************************
+;
+;						Punctuation operator -> Precedence level table
+;
+; ************************************************************************************************
 
 		.include "../generated/precedence.dat"
 

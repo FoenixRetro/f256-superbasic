@@ -4,7 +4,7 @@
 ;		Name:		errors.asm
 ;		Purpose:	Handle errors
 ;		Created:	29th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -24,7 +24,7 @@ ErrorHandler:
 		ldx 	#0
 		.set16 	zTemp0,ErrorText
 _EHFind:		
-		dey 								; found the error text ?
+		dey 								; keep looking through text
 		beq 	_EHFound
 _EHFindZero:
 		lda 	(zTemp0) 					; find the next error
@@ -41,7 +41,7 @@ _EHFound:
 		ldx 	zTemp0+1
 		jsr 	PrintStringXA
 	
-		ldy 	#1 							; if line number zero don't print i
+		ldy 	#1 							; if line number zero don't print it
 		.cget
 		bne 	_EHAtMsg
 		iny

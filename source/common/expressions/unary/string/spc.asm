@@ -4,7 +4,7 @@
 ;		Name:		spc.asm
 ;		Purpose:	Return many spaces.
 ;		Created:	29th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -27,7 +27,7 @@ SpcUnary: ;; [spc(]
 		jsr 	StringTempAllocate
 		ply 								; to do count in Y
 _SpcLoop:
-		cpy 	#0
+		cpy 	#0 							; copy Y spaces in.
 		beq 	_SpcExit		
 		lda 	#32
 		jsr 	StringTempWrite

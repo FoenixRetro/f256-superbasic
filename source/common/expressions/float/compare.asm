@@ -4,7 +4,7 @@
 ;		Name:		compare.asm
 ;		Purpose:	X[S] to X[S+1]
 ;		Created:	23rd September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -24,7 +24,7 @@ CompareFloat:
 		;		At this point the mantissae are equal. If we were comparing integers
 		; 		then this should be zero - if float we ignore the lowest 13 bits, which gives
 		;		an approximation for equality of 1 part in 2^19
-		; 		This is about 1 part in 500,000
+		; 		This is about 1 part in 500,000 - so it is "almost equal".
 		;			
 		lda 	NSMantissa1,x 			 	; so we ignore this - by changing bits checked
 		and 	#$F8
