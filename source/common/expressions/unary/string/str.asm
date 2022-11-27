@@ -4,7 +4,7 @@
 ;		Name:		str.asm
 ;		Purpose:	Convert number to string
 ;		Created:	29th September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -28,13 +28,13 @@ Unary_Str: ;; [str$(]
 		lda		#33 						; create buffer
 		jsr 	StringTempAllocate 			; allocate memory
 
-		phx 
+		phx  								; copy the converted string into the buffer.
 		ldx 	#0
 _USCopy:
 		lda 	DecimalBuffer,x
 		jsr 	StringTempWrite
 		inx
-		lda 	DecimalBuffer,x
+		lda 	DecimalBuffer,x 			
 		bne 	_USCopy
 		plx		
 		rts
@@ -60,7 +60,7 @@ _CNTSNotNegative:
 		lda 	NSExponent,x 				; check if decimal
 		beq 	_CNTSNotFloat
 
-		inx 								; round up
+		inx 								; round up so we don't get too many 6.999999
 		lda 	#1
 		jsr 	NSMSetByte		
 		dex
@@ -71,7 +71,7 @@ _CNTSNotNegative:
 		jsr 	FloatAdd
 _CNTSNotFloat:
 
-		jsr 	MakePlusTwoString
+		jsr 	MakePlusTwoString 			; do the integer part.
 		jsr 	FloatFractionalPart 		; get the fractional part
 		jsr 	NSNormalise					; normalise , exit if zero
 		beq 	_CNTSExit
@@ -87,7 +87,7 @@ _CNTSDecimal:
 		sta 	NSStatus,x
 		dex
 		jsr 	FloatMultiply
-		jsr 	MakePlusTwoString
+		jsr 	MakePlusTwoString 			; put the integer e.g. next digit out.
 		jsr 	FloatFractionalPart 		; get the fractional part
 		bra 	_CNTSDecimal 				; keep going.
 
@@ -109,7 +109,7 @@ MakePlusTwoString:
 		jsr 	FloatIntegerPart 			; make it an integer
 		lda 	#10 						; convert it in base 10
 		jsr 	ConvertInt32 
-		ldx	 	#0
+		ldx	 	#0 							; write that to the decimal buffer.
 _MPTSCopy:
 		lda 	NumberBuffer,x
 		jsr 	WriteDecimalBuffer

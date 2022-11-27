@@ -4,7 +4,7 @@
 ;		Name:		int.asm
 ;		Purpose:	Integer part of fractional number
 ;		Created:	29th September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -25,7 +25,7 @@ IntUnary: ;; [int(]
 		lda 	NSStatus,x
 		and 	#NSTFloat 					; check it is a float
 		beq 	_IUExit
-		jsr 	FloatIntegerPart
+		jsr 	FloatIntegerPart 			; if it is get the integer part.
 _IUExit:		
 		rts
 

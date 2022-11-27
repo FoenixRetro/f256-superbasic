@@ -4,7 +4,7 @@
 ;		Name:		alloc.asm
 ;		Purpose:	Memory allocation.
 ;		Created:	29th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -30,14 +30,14 @@ AllocUnary: ;; [alloc(]
 		txa 								; copy X into Y
 		tay
 
-		lda		NSMantissa1,y 				; get size
+		lda		NSMantissa1,y 				; get size into XA
 		tax
 		lda 	NSMantissa0,y
 
 		jsr 	AllocateXABytes 			; allocate memory
 
 		sta 	NSMantissa0,y 				; write address out.
-		txa
+		txa 	 							; typing is 16 bit integer.
 		sta 	NSMantissa1,y
 
 		ply
@@ -46,7 +46,7 @@ AllocUnary: ;; [alloc(]
 
 ; ************************************************************************************************
 ;
-;								Allocate XA bytes of memory
+;				Allocate XA bytes of memory - this is from the storage after the identifiers
 ;
 ; ************************************************************************************************
 

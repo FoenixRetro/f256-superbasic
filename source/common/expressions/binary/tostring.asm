@@ -4,7 +4,7 @@
 ;		Name : 		tostring.asm
 ;		Author :	Paul Robson (paul@robsons.org.uk)
 ;		Created : 	29th September 2022
-;		Reviewed :
+;		Reviewed :	27th November 2022
 ;		Purpose :	Convert Integer to String
 ;
 ; ***************************************************************************************
@@ -25,7 +25,7 @@ ConvertInt16:
 		stz 	NSMantissa3		
 		stz 	NSStatus 					; positive integer
 		ldx 	#0 							; stack level
-		lda 	#10 						; base
+		lda 	#10 						; base 10 decimal.
 		bra 	ConvertInt32
 
 ; ***************************************************************************************
@@ -49,13 +49,13 @@ _CI32NotNeg:
 		lda 	#0 							; make ASCIIZ
 		sta 	NumberBuffer,y
 		ply
-		ldx 	#NumberBuffer >> 8
+		ldx 	#NumberBuffer >> 8 			; return address in XA
 		lda 	#NumberBuffer & $FF
 		rts
 
 _CI32DivideConvert:
 		inx 								; write to next slot up
-		jsr 	NSMSetByte 		
+		jsr 	NSMSetByte 		 			; write the base out.
 		dex
 		jsr 	Int32Divide 				; divide
 		;
@@ -71,7 +71,7 @@ _CI32DivideConvert:
 		jsr 	_CI32DivideConvert 			; and recusrively call.
 _CI32NoRecurse:
 		pla 								; remainder
-		cmp 	#10 						; convert to ASCII
+		cmp 	#10 						; convert to ASCII, allowing for hexadecimal.
 		bcc 	_CI32NotHex
 		adc 	#6+32
 _CI32NotHex:

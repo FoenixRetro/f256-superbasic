@@ -4,7 +4,7 @@
 ;		Name:		substring.asm
 ;		Purpose:	Left$/Mid$/Right$ - put here as Left/Right are same code.
 ;		Created:	29th September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -81,7 +81,7 @@ SubStringMain:
 		beq 	_SSMNull 					; return empty string.
 		;
 		clc 								; add the offset +1 to the address and
-		lda	 	NSMantissa0,x 				; put in zTemp
+		lda	 	NSMantissa0,x 				; put in zTemp, this is the start of the substring to copy.
 		adc 	NSMantissa0+1,x 
 		sta 	zTemp0
 		lda	 	NSMantissa1,x

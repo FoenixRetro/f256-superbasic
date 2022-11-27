@@ -4,7 +4,7 @@
 ;		Name:		frac.asm
 ;		Purpose:	Fractional part of fractional number
 ;		Created:	29th September 2022
-;		Reviewed: 	
+;		Reviewed: 	27th November 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -25,7 +25,7 @@ FracUnary: ;; [frac(]
 		lda 	NSStatus,x
 		and 	#NSTFloat 					; check it is a float
 		beq 	_IUZero
-		jsr 	FloatFractionalPart
+		jsr 	FloatFractionalPart 		; if so, get the fractional part.
 		rts
 _IUZero:		
 		jsr 	NSMSetZero
