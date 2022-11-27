@@ -19,10 +19,6 @@ Start:	ldx 	#$FF 						; stack reset
 		txs	
 		jsr 	EXTInitialise 				; hardware initialise
 
-		ldx 	#(Prompt >> 8) 				; prompt display
-		lda 	#(Prompt & $FF)
-		jsr 	PrintStringXA
-
 		.if 	graphicsIntegrated==1 		; if installed
 		lda 	#0 							; graphics system initialise.
 		tax
@@ -48,10 +44,6 @@ Start:	ldx 	#$FF 						; stack reset
 		jmp 	WarmStart
 		.endif
 
-Prompt:	.text 	12,"*** F256 Junior SuperBASIC ***",13,13
-		.include "../generated/timestamp.asm"
-		.byte 	13,13,0
-
 		.send code
 
 ; ************************************************************************************************
@@ -62,5 +54,6 @@ Prompt:	.text 	12,"*** F256 Junior SuperBASIC ***",13,13
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		27/11/22 		Removed prompt - now doesn't clear screen and drops to line 6.
 ;
 ; ************************************************************************************************

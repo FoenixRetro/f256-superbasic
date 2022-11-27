@@ -18,7 +18,7 @@ endif
 #	System 0 = F256
 SYSTEM = 0 						
 BINDIR = $(ROOTDIR)bin$(S)
-ASMOPTS = -b -Wall -c -D HARDWARE="$(SYSTEM)" -L output$(S)basic.lst -l output$(S)basic.lbl -Wall 
+ASMOPTS = -q -b -Wall -c -D HARDWARE="$(SYSTEM)" -L output$(S)basic.lst -l output$(S)basic.lbl -Wall 
 APPNAME = basic.rom
 SCRIPTDIR = scripts$(S)
 EMULATOR = $(BINDIR)jr256$(APPSTEM)

@@ -22,3 +22,7 @@ Release 6 (26/11/22):
 		 ROM is still run in 16k as debug base.
 
 Release 7 (27/11/22):		 
+
+	CHG: Adopted Jessie's suggestions for Ctrl+D (delete here) Ctrl+K (clear to EOL) and Ctrl+E (End of current line text)
+	CHG: No longer cleared on boot, allowing info messages to be seen.
+	

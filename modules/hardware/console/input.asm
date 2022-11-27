@@ -31,7 +31,9 @@ _EILLoop:
 		jsr 	PagedInputSingleCharacter
 		cmp 	#13 						; scrape line if exit.		
 		beq 	_EILExit
-		cmp 	#8 							; handle backspace
+		cmp 	#4 							; Ctrl+D delete at cursor
+		beq 	_EILDelete
+		cmp 	#8 							; Ctrl+H backspace
 		beq 	_EILBackspace
 		cmp 	#' '						; < space, print it
 		bcc 	_EILPrintLoop
@@ -57,6 +59,7 @@ _EILBackspace:
 		beq 	_EILLoop
 		lda 	#2 							; move cursor left
 		jsr 	PagedPrintCharacter
+_EILDelete		
 		;
 		lda 	#2 							; text block
 		sta 	1
@@ -149,5 +152,6 @@ _EXTIExit:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		27/11/22 		Added Ctrl+D Delete at character
 ;
 ; ************************************************************************************************

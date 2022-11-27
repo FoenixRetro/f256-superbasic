@@ -26,13 +26,23 @@ Export_EXTInitialise:
 		lda 	#1+8						; Timer On at 70Hz counting up.
 		sta 	$D658
 		;
-		lda 	#CONForeground * 16 + CONBackground	
+		lda 	#3 							; get current text colour
+		sta 	1
+		lda 	$C000
 		sta 	EXTTextColour
 		;
 		lda 	#80 						; set screen dimensions.
 		sta 	EXTScreenWidth
 		lda 	#60
 		sta 	EXTScreenHeight
+
+		jsr 	EXTHomeCursor 				; home cursor 
+_EXMoveDown: 								; move down past prompt.
+		lda 	#13
+		jsr 	PAGEDPrintCharacter
+		lda 	EXTRow
+		cmp 	#6
+		bne 	_EXMoveDown
 
 		stz 	1
 		rts				
@@ -110,5 +120,6 @@ Export_EXTReadController:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		27/11/22 		Rather than clearing screen, it now goes to line 6 after initialising.
 ;
 ; ************************************************************************************************

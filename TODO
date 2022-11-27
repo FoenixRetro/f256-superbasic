@@ -1,6 +1,5 @@
 Progress:
 
-	CHG: Add Jessie's editor suggestions.
 	tiles ?
 	DMA ?
 	Not initialised flag on variables. ?
@@ -13,9 +12,4 @@ Later:
 	Changing Kerning ?
 	Added WHO ?
 
-BTW, a few other editor refinements you might consider:
-
-- I have END/^E move the cursor to one beyond the last non-space character on the line (rather than to the last column on the screen).  
-- I have DEL/^D delete the character under the cursor (pulling the rest of the line back to fill in)
-- I have ^K delete all characters to the right of the cursor.  
 

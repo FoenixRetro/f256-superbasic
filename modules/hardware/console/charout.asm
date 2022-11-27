@@ -132,10 +132,9 @@ _EXPCRight:
 		sty 	EXTColumn
 		cpy 	EXTScreenWidth		
 		bne 	_EXPCExit
-_EXPCEnd:
-		lda 	EXTScreenWidth
-		dec 	a
-		sta 	EXTColumn		
+		dey
+_EXPCSetColumnY: 							; set column to Y
+		sty 	EXTColumn		
 		;
 		;		Exit
 		;
@@ -194,6 +193,35 @@ _EXPCBackSpace:
 		sta 	(EXTAddress),y
 		bra 	_EXPCExit
 		;
+		;		End of line
+		;
+_EXPCEnd:
+		lda 	#2 							; access text screen
+		sta 	1
+		ldy 	EXTScreenWidth 				; point to last character
+		dey
+_EXPCEndSearch:		
+		dey 								; if past start, move to col 0.
+		bmi 	_EXPCFound
+		lda 	(EXTAddress),y 				; keep going back till non space found
+		cmp 	#' '
+		beq 	_EXPCEndSearch
+_EXPCFound: 								
+		iny 								; move to following cell.
+		bra 	_EXPCSetColumnY		
+		;
+		;		Clear to end of line
+		;
+_EXPCClearEOL:
+		lda 	#2 							; access character RAM
+		sta 	1
+		lda 	#' ' 						; write space
+		sta 	(EXTAddress),y
+		iny 
+		cpy 	EXTScreenWidth 				; until RHS of screen.
+		bcc 	_EXPCClearEOL
+		bra 	_EXPCExit					
+		;
 		;		Vector table for CTRL+A to CTRL+P
 		;			
 _EXPCActionTable:
@@ -208,7 +236,7 @@ _EXPCActionTable:
 		.word 	_EXPCBackspace 				; 08 H Backspace
 		.word 	_EXPCTab 					; 09 I Tab
 		.word 	_EXPCExit 					; 0A 
-		.word 	_EXPCExit 					; 0B 
+		.word 	_EXPCClearEOL 				; 0B K Clear to EOL
 		.word 	_EXPCClearScreen			; 0C L CLS
 		.word 	_EXPCCRLF 					; 0D M CR/LF
 		.word 	_EXPCDown 					; 0E N Down
@@ -260,5 +288,7 @@ EXTScreenScroll:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		27/11/22 		Changed End so to end of text line, e.g. after last non space
+;						Added Ctrl+K delete to EOL suggested by Jessie O.
 ;
 ; ************************************************************************************************
