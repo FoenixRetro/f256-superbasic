@@ -54,7 +54,7 @@ PagedInputSingleCharacter:
 		phx
 		phy
 _EISCWait:	
-		jsr 	PagedSNDUpdate
+		.tickcheck PagedSNDUpdate
 		jsr 	$FFE4
 		cmp 	#0
 		beq 	_EISCWait

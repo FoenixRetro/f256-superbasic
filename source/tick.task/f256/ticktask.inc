@@ -37,7 +37,7 @@ tickcheck		.macro
 		cmp 	#3
 		bcc 	_NoFireTick 				; if < 3 clocks don't fire.
 		stx 	LastTick 					; update last timer
-		jsr 	TickHandler 				; go do the code.
+		jsr 	\1 							; go do the code.
 _NoFireTick:		
 		.endm
 

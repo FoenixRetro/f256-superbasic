@@ -60,7 +60,7 @@ _CRIncMainLoop:
 		bne 	_CRNoBreakCheck
 		jsr 	EXTBreakCheck 				; break check
 		beq 	_CRBreak
-		.tickcheck
+		.tickcheck TickHandler
 _CRNoBreakCheck:		
 		iny		
 _CRMainLoop:
