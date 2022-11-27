@@ -751,7 +751,7 @@ EXTAddress: 								; current address on screen of start of line.
 ;		Name:		extern.asm
 ;		Purpose:	External functions
 ;		Created:	29th September 2022
-;		Reviewed:
+;		Reviewed: 	27th November 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -766,15 +766,15 @@ EXTAddress: 								; current address on screen of start of line.
 ; ************************************************************************************************
 
 Export_EXTInitialise:
-		stz 	1 							; Access I/O
+		stz 	1 							; Access I/O page 0
 		stz 	$D004 						; Disable border
 		stz 	$D008
 		stz 	$D009
 		lda 	#1+8						; Timer On at 70Hz counting up.
 		sta 	$D658
 		;
-		lda 	#3 							; get current text colour
-		sta 	1
+		lda 	#3 							; get current text colour from whatever the kernel
+		sta 	1 							; has set it to, looking at top left character
 		lda 	$C000
 		sta 	EXTTextColour
 		;
@@ -784,7 +784,7 @@ Export_EXTInitialise:
 		sta 	EXTScreenHeight
 
 		jsr 	EXTHomeCursor 				; home cursor
-_EXMoveDown: 								; move down past prompt.
+_EXMoveDown: 								; move down past prompt to 6th line.
 		lda 	#13
 		jsr 	PAGEDPrintCharacter
 		lda 	EXTRow
@@ -811,9 +811,9 @@ PagedInputSingleCharacter:
 		phx
 		phy
 _EISCWait:
-		.tickcheck PagedSNDUpdate
-		jsr 	$FFE4
-		cmp 	#0
+		.tickcheck PagedSNDUpdate 			; sound processing carries on.
+		jsr 	$FFE4 						; get a key
+		cmp 	#0 							; loop back if none pressed.
 		beq 	_EISCWait
 		ply
 		plx

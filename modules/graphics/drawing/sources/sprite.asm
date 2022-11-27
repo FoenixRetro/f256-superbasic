@@ -19,6 +19,9 @@
 ; ************************************************************************************************
 
 GXSpriteHandler: ;; <6:DrawSprite>
+		lda 	gxSpritesOn 				; sprites on ?
+		beq 	_GXSHExit
+		;
 		lda 	gxzTemp0+1 					; eor with mode
 		eor 	gxMode
 		sta 	gxUseMode
@@ -106,5 +109,6 @@ _GXSACopyLoop:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		27/11/22 		Do nothing if sprites off.
 ;
 ; ************************************************************************************************
