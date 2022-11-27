@@ -1,5 +1,4 @@
 Progress:
-
 	tiles ?
 	DMA ?
 	Not initialised flag on variables. ?
@@ -11,5 +10,4 @@ Later:
 	Disable interrupts enable at end of line command ?
 	Changing Kerning ?
 	Added WHO ?
-
 
