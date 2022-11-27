@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-SNDUpdate:
+Export_SNDUpdate:
 PagedSNDUpdate:
 		lda 	SNDTimeLeft+0 				; look at time remaining
 		beq 	_SNDUNot0 					; not playing

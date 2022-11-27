@@ -12,6 +12,9 @@
 
 		.section code
 
+Boot:	jmp 	Start
+		.include "../../../modules/_build/_linker.module"
+
 Start:	ldx 	#$FF 						; stack reset
 		txs	
 		jsr 	EXTInitialise 				; hardware initialise

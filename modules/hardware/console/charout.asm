@@ -31,7 +31,7 @@
 ;
 ; ************************************************************************************************
 	
-EXTPrintCharacter:
+Export_EXTPrintCharacter:
 PAGEDPrintCharacter:
 		pha
 		phx

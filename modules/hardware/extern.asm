@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-EXTInitialise:
+Export_EXTInitialise:
 		stz 	1 							; Access I/O
 		stz 	$D004 						; Disable border
 		stz 	$D008
@@ -49,7 +49,7 @@ EXTInitialise:
 ;
 ; ************************************************************************************************
 
-EXTInputSingleCharacter:
+Export_EXTInputSingleCharacter:
 PagedInputSingleCharacter:
 		phx
 		phy
@@ -68,7 +68,7 @@ _EISCWait:
 ;
 ; ************************************************************************************************
 
-EXTBreakCheck:
+Export_EXTBreakCheck:
 		jmp		$FFE1
 
 ; ************************************************************************************************
@@ -88,7 +88,7 @@ ifpressed .macro
 _NoSet1:		
 		.endm
 
-EXTReadController:
+Export_EXTReadController:
 		phx
 		ldx 	#0
 		.ifpressed $2D,1 				; X right

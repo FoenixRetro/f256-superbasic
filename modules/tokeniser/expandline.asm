@@ -23,7 +23,7 @@ setcolour .macro
 ;
 ; ************************************************************************************************
 
-ListConvertLine:
+Export_TKListConvertLine:
 		pha 								; save indent on the stack
 		stz 	tbOffset
 		stz 	tokenBuffer

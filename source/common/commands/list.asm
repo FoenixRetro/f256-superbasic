@@ -127,7 +127,7 @@ _CLLPFound:
 
 CLListOneLine:
 		jsr 	ScanGetCurrentLineStep 		; get indent adjust.
-		jsr 	ListConvertLine 			; convert line into token Buffer
+		jsr 	TKListConvertLine 			; convert line into token Buffer
 		ldx 	#(tokenBuffer >> 8) 		; print that line
 		lda 	#(tokenBuffer & $FF) 	
 		jsr 	PrintStringXA

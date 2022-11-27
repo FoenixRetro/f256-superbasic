@@ -1,0 +1,30 @@
+	.if hardwareIntegrated == 1
+EXTPrintCharacter:
+	jmp	Export_EXTPrintCharacter
+EXTInitialise:
+	jmp	Export_EXTInitialise
+EXTInputSingleCharacter:
+	jmp	Export_EXTInputSingleCharacter
+EXTBreakCheck:
+	jmp	Export_EXTBreakCheck
+EXTReadController:
+	jmp	Export_EXTReadController
+EXTInputLine:
+	jmp	Export_EXTInputLine
+	.endif
+	.if graphicsIntegrated == 1
+GXGraphicDraw:
+	jmp	Export_GXGraphicDraw
+	.endif
+	.if soundIntegrated == 1
+SNDCommand:
+	jmp	Export_SNDCommand
+SNDUpdate:
+	jmp	Export_SNDUpdate
+	.endif
+	.if tokeniserIntegrated == 1
+TKListConvertLine:
+	jmp	Export_TKListConvertLine
+TKTokeniseLine:
+	jmp	Export_TKTokeniseLine
+	.endif

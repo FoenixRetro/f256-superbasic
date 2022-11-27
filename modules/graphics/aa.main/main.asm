@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-GXGraphicDraw:
+Export_GXGraphicDraw:
 		cmp 	#GCMD_Move					; low instructions don't use coordinates
 		bcs 	_GDCoordinate
 		;

@@ -1,7 +1,5 @@
 Progress:
 
-	Check : called any external routine from within paging (Like EXTPrintCharacter)
-
 	CHG: Modularising starting.
 	CHG: Fix End / Delete / Backspace 
 	
