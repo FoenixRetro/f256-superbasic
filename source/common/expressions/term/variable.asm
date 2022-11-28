@@ -147,7 +147,6 @@ _VHNoMultiply:
 		;
 		; 		Add the 1st index, gives us an offset (by number) in the array memory
 		;
-
 		clc
 		lda 	zTemp0
 		adc 	NSMantissa0+1,x

@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Mon Nov 28 15:57:54 2022
+; Mon Nov 28 18:26:00 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -1468,11 +1468,11 @@
 ;******  Processing file: ./common/commands/inputprint.asm
 
 .8671					Command_Input:
-.8671	a9 ff		lda #$ff			lda 	#$FF
+.8671	a9 ff		lda #$ff			lda 	#$FF 						; set input flag
 .8673	8d 28 04	sta $0428			sta 	IsInputFlag
 .8676	80 03		bra $867b			bra 	Command_IP_Main
 .8678					Command_Print:
-.8678	9c 28 04	stz $0428			stz 	IsInputFlag
+.8678	9c 28 04	stz $0428			stz 	IsInputFlag 				; clear input flag
 .867b					Command_IP_Main:
 .867b	18		clc				clc 								; carry being clear means last print wasn't comma/semicolon
 .867c					_CPLoop:
@@ -1495,13 +1495,13 @@
 .8698	20 86 93	jsr $9386			jsr 	EvaluateExpressionAt0 		; evaluate expression at 0.
 .869b	b5 50		lda $50,x			lda 	NSStatus,x 					; read the status
 .869d	29 20		and #$20			and 	#NSBIsReference 			; is it a reference
-.869f	f0 0d		beq $86ae			beq 	_CPIsValue
+.869f	f0 0d		beq $86ae			beq 	_CPIsValue 					; no, display it.
 .86a1	ad 28 04	lda $0428			lda 	IsInputFlag 				; if print, dereference and print.
-.86a4	f0 05		beq $86ab			beq 	_CPIsPrint
+.86a4	f0 05		beq $86ab			beq 	_CPIsPrint 					; otherwise display.
 .86a6	20 e0 86	jsr $86e0			jsr 	CIInputValue 				; input a value to the reference
 .86a9	80 20		bra $86cb			bra 	_CPNewLine
 .86ab					_CPIsPrint:
-.86ab	20 4b 96	jsr $964b			jsr 	Dereference
+.86ab	20 4b 96	jsr $964b			jsr 	Dereference 				; dereference if required.
 .86ae					_CPIsValue:
 .86ae	b5 50		lda $50,x			lda 	NSStatus,x 					; is it a number
 .86b0	29 10		and #$10			and 	#NSBIsString
@@ -1512,10 +1512,10 @@
 .86bb	80 be		bra $867b			bra 	Command_IP_Main 			; loop round clearing carry so NL if end
 .86bd					_CPNumber:
 .86bd	a9 05		lda #$05			lda 	#5 							; maximum decimals
-.86bf	20 c6 9b	jsr $9bc6			jsr 	ConvertNumberToString 		; convert to string
+.86bf	20 c6 9b	jsr $9bc6			jsr 	ConvertNumberToString 		; convert to string (in unary str$() function)
 .86c2	a2 05		ldx #$05			ldx 	#DecimalBuffer >> 8
 .86c4	a9 9d		lda #$9d			lda 	#DecimalBuffer & $FF
-.86c6	20 43 87	jsr $8743			jsr 	CPPrintStringXA
+.86c6	20 43 87	jsr $8743			jsr 	CPPrintStringXA 			; print it.
 .86c9	80 b0		bra $867b			bra 	Command_IP_Main				; loop round clearing carry so NL if end
 .86cb					_CPNewLine:
 .86cb	a9 0d		lda #$0d			lda 	#13
@@ -3985,7 +3985,7 @@
 .959c	f0 24		beq $95c2			beq 	_ANFloat
 .959e	b5 79		lda $79,x			lda		NSExponent+1,x 				; is it a float
 .95a0	f0 03		beq $95a5			beq		_ANNotFloat
-.95a2	4c 14 9f	jmp $9f14			jmp 	RangeError
+.95a2	4c 14 9f	jmp $9f14			jmp 	RangeError					; if it is, report an error.
 .95a5					_ANNotFloat:
 .95a5	b5 50		lda $50,x			lda 	NSStatus,x 					; check if byte/word reference.
 .95a7	29 03		and #$03			and 	#3
@@ -4493,7 +4493,7 @@
 .98a5	85 36		sta $36				sta 	zTemp0
 .98a7	c8		iny				iny
 .98a8	18		clc				clc									; copy variable address+3 to mantissa
-.98a9	69 03		adc #$03			adc 	#3
+.98a9	69 03		adc #$03			adc 	#3 							; this is the address of the data.
 .98ab	95 58		sta $58,x			sta 	NSMantissa0,x
 .98ad	a5 37		lda $37				lda 	zTemp0+1
 .98af	69 00		adc #$00			adc 	#0
