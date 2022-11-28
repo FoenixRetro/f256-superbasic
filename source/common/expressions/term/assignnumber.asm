@@ -4,7 +4,7 @@
 ;		Name:		assignnumber.asm
 ;		Purpose:	Assign a numeric value
 ;		Created:	30th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	28th September 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -38,9 +38,9 @@ AssignNumber:
 		lda		NSExponent+1,x 				; is it a float
 		beq		_ANNotFloat
 ;		inx
-;		jsr 	FloatIntegerPart 			; make it an integer
+;		jsr 	FloatIntegerPart 			; make it an integer (disabled)
 ;		dex
-		jmp 	RangeError
+		jmp 	RangeError					; if it is, report an error.
 
 _ANNotFloat:		
 		lda 	NSStatus,x 					; check if byte/word reference.

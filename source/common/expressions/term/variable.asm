@@ -4,7 +4,7 @@
 ;		Name:		variable.asm
 ;		Purpose:	Variable handler
 ;		Created:	30th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	28th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -29,7 +29,7 @@ VariableHandler:
 		iny
 		;
 		clc									; copy variable address+3 to mantissa
-		adc 	#3
+		adc 	#3 							; this is the address of the data.
 		sta 	NSMantissa0,x
 		lda 	zTemp0+1
 		adc 	#0
@@ -51,9 +51,13 @@ VariableHandler:
 		and 	#NSBIsArray
 		bne 	_VHArray
 		rts
-		;
-		;		Accessing an array.
-		;
+
+; ************************************************************************************************
+;
+;									Accessing an array.
+;
+; ************************************************************************************************
+
 _VHArray:
 		;
 		inx
@@ -76,7 +80,7 @@ _VHNoSecondIndex:
 		; -----------------------------------------------------------------------------------------------------
 		;
 		;		So at this point S[X] refers to the array record S[X+1] the 1st index, and S[X+2] the second
-		;		Status[X+2] is $FF if there was only one array index, $00 if there was two.
+		;		Status[X+2] is $FF if there was only one array index, $00 if there were two.
 		;		
 		; -----------------------------------------------------------------------------------------------------
 		;

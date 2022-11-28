@@ -4,7 +4,7 @@
 ;		Name:		inputprint.asm 
 ;		Purpose:	Print (to Screen) / Input (from keyboard)
 ;		Created:	30th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	28th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -16,15 +16,19 @@
 ;
 ;									INPUT/PRINT statement
 ;
+;		These operate identically *except* when a variable is found, when it is INPUT or PRINT
+; 		respectively. All I/O goes through two vectors.
+;
 ; ************************************************************************************************
 
 Command_Input:  ;; [input]
-		lda 	#$FF
+		lda 	#$FF 						; set input flag
 		sta 	IsInputFlag
 		bra 	Command_IP_Main
 
 Command_Print:	;; [print]
-		stz 	IsInputFlag
+		stz 	IsInputFlag 				; clear input flag
+		;
 Command_IP_Main:		
 		clc 								; carry being clear means last print wasn't comma/semicolon
 		;
@@ -53,15 +57,15 @@ _CPLoop:
 		jsr 	EvaluateExpressionAt0 		; evaluate expression at 0.
 		lda 	NSStatus,x 					; read the status
 		and 	#NSBIsReference 			; is it a reference
-		beq 	_CPIsValue
+		beq 	_CPIsValue 					; no, display it.
 		;
 		lda 	IsInputFlag 				; if print, dereference and print.
-		beq 	_CPIsPrint
+		beq 	_CPIsPrint 					; otherwise display.
 		jsr 	CIInputValue 				; input a value to the reference
 		bra 	_CPNewLine
 
 _CPIsPrint:
-		jsr 	Dereference
+		jsr 	Dereference 				; dereference if required.
 _CPIsValue:
 		lda 	NSStatus,x 					; is it a number
 		and 	#NSBIsString
@@ -76,10 +80,10 @@ _CPIsValue:
 		;
 _CPNumber:
 		lda 	#5 							; maximum decimals
-		jsr 	ConvertNumberToString 		; convert to string
+		jsr 	ConvertNumberToString 		; convert to string (in unary str$() function)
 		ldx 	#DecimalBuffer >> 8
 		lda 	#DecimalBuffer & $FF
-		jsr 	CPPrintStringXA
+		jsr 	CPPrintStringXA 			; print it.
 		bra 	Command_IP_Main				; loop round clearing carry so NL if end		
 		;
 		;		New line

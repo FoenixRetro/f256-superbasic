@@ -4,7 +4,7 @@
 ;		Name:		assignstring.asm
 ;		Purpose:	Assign a string value
 ;		Created:	30th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	28th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************

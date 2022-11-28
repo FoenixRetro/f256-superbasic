@@ -4,7 +4,7 @@
 ;		Name:		let.asm
 ;		Purpose:	Assignment command
 ;		Created:	30th September 2022
-;		Reviewed: 	No
+;		Reviewed: 	28th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -21,8 +21,8 @@ LetCommand: ;; [let]
 		;		Handle let @value which is integer indirection.
 		;
 		iny 								; skip equal
-		jsr 	EvaluateTerm 				; get a number
-		jsr 	Dereference 				; dereference it 
+		jsr 	EvaluateTerm 				; get a number (the address of the reference)
+		jsr 	Dereference 				; dereference it to a value
 		lda 	NSStatus,x 					; check integer
 		eor 	#NSBIsReference	 			; toggle reference
 		sta 	NSStatus,x
@@ -34,7 +34,7 @@ _LCStandard:
 		lda 	PrecedenceLevel+"*"			; precedence > this
 		jsr 	EvaluateExpressionAtPrecedence
 		;
-		lda 	NSStatus,x 					; is it a reference to an array
+		lda 	NSStatus,x 					; is it a reference to an array marked as procedure ?
 		cmp		#NSTProcedure+NSBIsReference
 		beq 	_LetGoProc 					; it's a procedure call.
 		;

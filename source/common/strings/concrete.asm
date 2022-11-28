@@ -4,7 +4,7 @@
 ;		Name:		concrete.asm
 ;		Purpose:	Concrete string
 ;		Created:	30th September 2022
-;		Reviewed: 	No.
+;		Reviewed: 	28th November 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -19,6 +19,7 @@
 ; ************************************************************************************************
 
 StringConcrete:
+		.debug
 		phy 								; save position on stack
 		jsr 	CheckIdentifierStringSpace 	; check memory allocation.
 		;
@@ -34,7 +35,7 @@ _SALength:
 		iny
 		lda 	(zTemp1),y
 		bne 	_SALength
-		cpy 	#253 						; string too long
+		cpy 	#253 						; string too long - cannot concrete.
 		bcs 	_SALengthError
 
 		tya 				 				; length of the new string

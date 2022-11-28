@@ -4,13 +4,14 @@
 ;		Name:		goto.asm
 ;		Purpose:	GOTO command - for compatibility *ONLY*. Do not use in new stuff !
 ;		Created:	1st October 2022
-;		Reviewed: 	No
+;		Reviewed: 	28th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
+
 ; ************************************************************************************************
 ;
-;		Warning - disinfect your hands after editing this code.
+;					Warning - disinfect your hands after editing this code.
 ;
 ; ************************************************************************************************
 

@@ -4,7 +4,7 @@
 ;		Name:		fractional.asm
 ;		Purpose:	Extract fractional part 
 ;		Created:	29th September 2022
-;		Reviewed: 	
+;		Reviewed: 	28th November 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -21,7 +21,7 @@
 FloatFractionalPart:
 		phy
 
-		lda 	NSStatus,x 					; take absolute value
+		lda 	NSStatus,x 					; take absolute value 
 		and 	#$7F
 		sta 	NSStatus,x
 		jsr 	NSNormalise
