@@ -19,7 +19,6 @@
 ; ************************************************************************************************
 
 StringConcrete:
-		.debug
 		phy 								; save position on stack
 		jsr 	CheckIdentifierStringSpace 	; check memory allocation.
 		;

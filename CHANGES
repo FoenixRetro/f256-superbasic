@@ -26,3 +26,5 @@ Release 7 (27/11/22):
 	CHG: Adopted Jessie's suggestions for Ctrl+D (delete here) Ctrl+K (clear to EOL) and Ctrl+E (End of current line text)
 	CHG: No longer cleared on boot, allowing info messages to be seen.
 	BUG: Break check done every time, rather than 1 in 8 instructions.
+	BUG: Pushing a byte on the BASIC stack would break if there was a borrow in the stack pointer. (bytes.asm) - not actually
+		 detected in the wild but can't see how byte push could work as is.

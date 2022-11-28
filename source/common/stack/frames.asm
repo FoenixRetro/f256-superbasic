@@ -4,7 +4,7 @@
 ;		Name:		frames.asm
 ;		Purpose:	Open/Close Frames on the BASIC stack
 ;		Created:	1st October 2022
-;		Reviewed: 	
+;		Reviewed: 	28th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -29,6 +29,7 @@ StackOpen:
 		adc 	basicStack 	 				; basicStack
 		sta 	basicStack
 		bcs 	_SONoBorrow
+		.debug
 		dec 	basicStack+1
 		lda 	basicStack+1 				; have we reached stack overflow
 		cmp 	#BasicStackBase >> 8
@@ -60,7 +61,7 @@ _SCExit:
 
 ; ************************************************************************************************
 ;
-;								Check in Frame A, if not report Error X
+;						Pop all Locals, Check in Frame A, if not report Error X
 ;
 ; ************************************************************************************************
 
@@ -68,13 +69,13 @@ StackCheckFrame:
 		pha
 _StackRemoveLocals:		
 		lda 	(basicStack) 				; check for local, keep popping them
-		cmp 	#STK_LOCALS+1
-		bcs 	_SCNoLocal
-		jsr 	LocalPopValue
-		bra 	_StackRemoveLocals
+		cmp 	#STK_LOCALS+1 				; is the frame a local ? S or N are 1/0
+		bcs 	_SCNoLocal 					
+		jsr 	LocalPopValue 				; restore the local value
+		bra 	_StackRemoveLocals 			; gr round again
 
 _SCNoLocal:		
-		pla
+		pla 								; get the frame check.
 		eor 	(basicStack) 				; xor with toS marker
 		and 	#$F0 						; check type bits
 		bne 	_SCFError 					; different, we have structures mixed up
