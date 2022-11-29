@@ -66,6 +66,9 @@ sprites:
 #
 tools: emu monitor fnxmgr
 
+shim:
+	64tass -q -b shim.asm -o shim.bin
+	
 fnxmgr:	
 	make -B -C $(UTL_REPO)
 	$(CCOPY) $(UTL_REPO)$(S)fnxmgr.zip $(BINDIR)
