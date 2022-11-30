@@ -67,7 +67,7 @@ sprites:
 tools: emu monitor fnxmgr
 
 shim:
-	64tass -q -b shim.asm -o shim.bin
+	64tass -q -b _shim.asm -o shim.bin
 	
 fnxmgr:	
 	make -B -C $(UTL_REPO)
