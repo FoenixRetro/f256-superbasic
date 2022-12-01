@@ -4,7 +4,7 @@
 ;		Name:		read.asm
 ;		Purpose:	Read from Data statement
 ;		Created:	4th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	1st December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -26,16 +26,16 @@ Command_Read:	;; [read]
 		jsr 	EvaluateTerm
 		lda 	NSStatus,x
 		and 	#NSBIsReference				; get status byte on stack, identifies int, float, string.
-		beq 	_CRSyntax 					; check reference (bit 0)
+		beq 	_CRSyntax 					; check reference (bit 0) fail if not a reference.
 		;
 		;		Now find something to be DATA
 		;
 		jsr 	SwapDataCodePtrs 			; swap code and data
 
 		lda 	inDataStatement 			; if in a data statement, we don't need to search
-		bne 	_CRContinueData
+		bne 	_CRContinueData  			; forward for the next one.
 
-		.cget0 								; end of program
+		.cget0 								; check end of program
 		beq 	_CRNoData
 		;
 		;		Look for Data.
@@ -63,12 +63,13 @@ _CRContinueData:
 		dex
 		jsr		AssignVariable 				; do the assignment
 		;
-		stz 	inDataStatement 			; clear in data
+		stz 	inDataStatement 			; clear in data flag
 		.cget 								; followed by a comma ?
-		cmp 	#KWD_COMMA 					; if not, end of data statement
+		cmp 	#KWD_COMMA 					; if not, end of data statement and exit
 		bne 	_CRSwapBack
 		iny 								; consume comma
 		inc 	inDataStatement 			; set in data statement currently.
+		;
 _CRSwapBack:		
 		jsr 	SwapDataCodePtrs			; swap them back.		
 		.cget 								; followed by a comma

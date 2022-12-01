@@ -4,7 +4,7 @@
 ;		Name:		list.asm
 ;		Purpose:	LIST statement
 ;		Created:	4th October 2022
-;		Reviewed:
+;		Reviewed:	1st December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -22,15 +22,20 @@ Command_List:	;; [list]
 		stz 	listIndent 					; reset indent.
 		;
 		.cget 								; followed by an identifier ?
-		and 	#$C0 						
-		cmp 	#$40 
+		and 	#$C0 				 		; if so, we are list procedure() which is a seperate block		
+		cmp 	#$40  						; of code.
 		beq 	_CLListProcedure
 		;
 		stz		NSMantissa0+4				; set the lower (slot 4) to 0 and upper (slot 7) to $FFFF
-		stz 	NSMantissa1+4 				
+		stz 	NSMantissa1+4 				; these are the default top and bottom.
 		lda 	#$FF
 		sta 	NSMantissa0+7
 		sta 	NSMantissa1+7
+		;
+		;		Now decode the various combinations of list [something],[something]
+		;
+		;
+		;		First value.
 		;
 		.cget 								; is first a comma, if so goto 2nd 
 		cmp 	#KWD_COMMA 			
@@ -48,19 +53,23 @@ Command_List:	;; [list]
 		lda 	NSMantissa1+4
 		sta 	NSMantissa1+7
 		bra 	_CLStart
-
+		;
+		;		Second value.
+		;
 _CLSecond:
 		iny 								; consume comma		
 		jsr 	CLIsDigit 					; digit found
 		bcs 	_CLStart 					; if not, continue listing
 		ldx 	#7 							; load 2nd range into slot 7
 		jsr 	Evaluate16BitInteger
-
+		;
+		;		Loop through the whole program 
+		;
 _CLStart
 		.cresetcodepointer
 		;
 _CLLoop:
-		jsr 	EXTBreakCheck 				; break check
+		jsr 	EXTBreakCheck 				; break check here, as we want the option of breaking out of long lists.
 		beq 	_CLExit
 
 		.cget0 								; any more ?
@@ -74,21 +83,27 @@ _CLLoop:
 		beq 	_CLDoThisOne
 		bcs 	_CLNext
 _CLDoThisOne:		
-		jsr 	CLListOneLine
+		jsr 	CLListOneLine 				; routine to list the current line.
 _CLNext:		
 		.cnextline
 		bra 	_CLLoop
 _CLExit:
 		jmp 	WarmStart
+
+; ************************************************************************************************
 ;
-;		List from procedure.
+;									List from procedure.
 ;
+; ************************************************************************************************
+
 _CLListProcedure:
-		.cget 								; get the reference
+		.cget 								; get the reference - look for this (4000-7FFF) in the code.
 		sta 	zTemp1
 		iny
 		.cget
 		sta 	zTemp1+1
+		;
+		;		Look for the procedure first.
 		;
 		.cresetcodepointer 					; search for it.
 _CLLPSearch:
@@ -111,6 +126,8 @@ _CLLPNext:
 		.cnextline
 		bra 	_CLLPSearch
 		;
+		;		Procedure found, list until end of program or ENDPROC.
+		;
 _CLLPFound:
 		.cget0 								; reached end
 		beq 	_CLExit
@@ -124,6 +141,11 @@ _CLLPFound:
 		bne 	_CLLPFound
 		jmp 	WarmStart
 
+; ************************************************************************************************
+;
+;								List the current line
+;
+; ************************************************************************************************
 
 CLListOneLine:
 		jsr 	ScanGetCurrentLineStep 		; get indent adjust.

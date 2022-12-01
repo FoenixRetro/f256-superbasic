@@ -4,7 +4,7 @@
 ;		Name : 		warmstart.asm
 ;		Author :	Paul Robson (paul@robsons.org.uk)
 ;		Created : 	5th October 2022
-;		Reviewed :	No
+;		Reviewed :	1st December 2022
 ;		Purpose :	Main console I/O loop
 ;
 ; ***************************************************************************************
@@ -21,7 +21,7 @@
 WarmStart:
 		ldx 	#$FF
 		txs
-		lda 	#CLICommandLine+$80 		; set console colour
+		lda 	#CLICommandLine+$80 		; set console colour whatever the current colour is.
 		jsr 	EXTPrintCharacter
 
 		jsr 	EXTInputLine 				; get line to lineBuffer
@@ -29,13 +29,13 @@ WarmStart:
 		;
 		;		Decide whether editing or running
 		;
-		lda 	TokenLineNumber 			; line number ?
+		lda 	TokenLineNumber 			; line number <> 0
 		ora 	TokenLineNumber+1
 		bne 	_WSEditCode 				; if so,edit code.
 		;
 		;		Run code in token buffer
 		;		
-		stz 	TokenOffset 				; zero offset, meaning it only runs one line.
+		stz 	TokenOffset 				; zero the "offset", meaning it only runs one line.
 		.csetCodePointer TokenOffset		; set up the code pointer.
 		lda 	TokenBuffer 				; nothing to run
 		cmp 	#KWC_EOL
@@ -46,8 +46,8 @@ WarmStart:
 		;		Editing code in token buffer.
 		;
 _WSEditCode:
-		jsr 	EditProgramCode
-		jsr 	ClearCommand
+		jsr 	EditProgramCode 			; edit the program code 
+		jsr 	ClearCommand 				; clear all variables etc.
 		bra 	WarmStart
 
 		.send code

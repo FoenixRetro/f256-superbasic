@@ -4,7 +4,7 @@
 ;		Name:		restore.asm
 ;		Purpose:	Reset data pointer
 ;		Created:	4th October 2022
-;		Reviewed: 
+;		Reviewed: 	1st December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -23,7 +23,7 @@ Command_Restore:	;; [restore]
 		.cresetcodepointer 					; back to the start
 		jsr 	SwapDataCodePtrs 			; put them back
 		lda 	#3 							; start at offset 3, e.g. first instruction of first line.
-		sta 	dataPointer+4
+		sta 	dataPointer+4   			; (read checks not EOF)
 		stz 	inDataStatement 			; not in data statement
 		rts
 

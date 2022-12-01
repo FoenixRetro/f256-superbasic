@@ -4,7 +4,7 @@
 ;		Name:		who.asm
 ;		Purpose:	WHO command
 ;		Created:	26th November 2022
-;		Reviewed: 	No
+;		Reviewed: 	1st December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -17,7 +17,9 @@ WhoCommand: ;; [who]
 		lda 	#(_WHOMessage & $FF)
 		jsr 	PrintStringXA
 		rts
-
+;
+;		List - should we include econtreasd, emwhite etc ? Stefany's call I think.
+;
 _WHOMessage:
 		.byte 	$81
 		.text 	"Brought to you by :",13,13

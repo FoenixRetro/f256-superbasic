@@ -4,7 +4,7 @@
 ;		Name : 		editor.asm
 ;		Author :	Paul Robson (paul@robsons.org.uk)
 ;		Created : 	5th October 2022
-;		Reviewed :	No
+;		Reviewed :	1st December 2022
 ;		Purpose :	Process token buffer for editor
 ;
 ; ***************************************************************************************
@@ -20,23 +20,23 @@
 
 EditProgramCode:
 		;
-		;		Delete first
+		;		Delete the line first
 		;
-		lda 	TokenLineNumber 			; find the line.
+		lda 	TokenLineNumber 			; try to find the line.
 		ldx 	TokenLineNumber+1
 		jsr 	MemorySearch
-		bcc 	_EPCNoDelete 				; reached the end don't delete
-		bne 	_EPCNoDelete 				; found slot but didn't match, no delete
+		bcc 	_EPCNoDelete 				; reached the end : don't delete
+		bne 	_EPCNoDelete 				; found slot but didn't match : no delete
 		jsr 	MemoryDeleteLine 			; delete the line
 _EPCNoDelete:		
 		;
 		;		Insert the line.
 		;
-		lda 	TokenBuffer 				; buffer empty
+		lda 	TokenBuffer 				; buffer empty - we just want to delete a line.
 		cmp 	#KWC_EOL
 		beq 	_EPCNoInsert
 
-		lda 	TokenLineNumber 			; find the line - it cannot exist.
+		lda 	TokenLineNumber 			; find the line - it cannot exist as we've just deleted it.
 		ldx 	TokenLineNumber+1 			; so this can't fail, it returns some point in the code.
 		jsr 	MemorySearch
 		clc 								; insert at this point.

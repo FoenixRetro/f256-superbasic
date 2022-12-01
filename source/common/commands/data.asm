@@ -4,7 +4,7 @@
 ;		Name:		data.asm
 ;		Purpose:	Data statement
 ;		Created:	4th October 2022
-;		Reviewed:
+;		Reviewed:	1st December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -19,7 +19,7 @@
 ; ************************************************************************************************
 
 Command_Data:	;; [data]
-		lda 	#KWD_COLON 					; advance to colon/EOL
+		lda 	#KWD_COLON 					; advance to colon/EOL, e.g. ignore anything till then.
 		ldx 	#KWC_EOL 	
 		jsr 	ScanForward
 		rts
