@@ -28,3 +28,7 @@ Release 7 (27/11/22):
 	BUG: Break check done every time, rather than 1 in 8 instructions.
 	BUG: Pushing a byte on the BASIC stack would break if there was a borrow in the stack pointer. (bytes.asm) - not actually
 		 detected in the wild but can't see how byte push could work as is.
+	BUG: Timer check not preserving I/O Register @ $0001
+
+Release 8 (01/12/22):
+			

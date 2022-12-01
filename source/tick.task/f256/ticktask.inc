@@ -29,6 +29,8 @@ tickinitialise 	.macro
 ; ************************************************************************************************
 
 tickcheck		.macro
+		lda 	1 							; save I/O 0
+		pha
 		stz 	1 							; access I/O Page 0
 		sec 								; calculate timer - LastTick
 		lda 	$D659
@@ -39,6 +41,8 @@ tickcheck		.macro
 		stx 	LastTick 					; update last timer
 		jsr 	\1 							; go do the code.
 _NoFireTick:		
+		pla 								; restore I/O 0
+		sta 	1
 		.endm
 
 		.endif

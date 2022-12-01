@@ -1,235 +1,27 @@
-1 '
-2 ' "Solarfox in SuperBasic"
-3 '
-4 title("Solar Fox"):cls:sprites on:bitmap on:bitmap clear 0
-5 initialise()
-6 newLevel(level)
-7 repeat
-8 repeat
-9 if event(moveEnemies,4)
-10 updateEnemies()
-11 n = random(mcount):if remain(n) = 0 then launch(n)
-12 endif
-13 if event(moveMissiles,6) then moveMissiles()
-14 if event(movePlayer,3) then movePlayer()
-15 until collectZeroCount = 0 | playerHit
-16 if playerHit
-17 lives = lives-1:updateLives():resetmissiles()
-18 playerHit = False:flashplayer()
-19 else
-20 level = level+1:newLevel(level)
-21 score = score + 1000*level:updateScore()
-22 endif
-23 until lives = 0
-24 bitmap clear 0:sprites off
-25 end
-26 '
-27 ' "Set up a new game"
-28 '
-29 proc initialise()
-30 xSize = 14:ySize = 11:mCount = 8
-31 xOrg = 160-xSize*8:yOrg = 140-ySize*8
-32 dim x(7),y(7),xi(7),yi(7),remain(7)
-33 dim collect(xSize-1,ySize-1)
-34 score = 0:lives = 3:level = 0
-35 endproc
-36 '
-37 ' "Move the player"
-38 '
-39 proc movePlayer()
-40 local x,y
-41 x = joyx(0):y = joyy(0)
-42 if x <> 0 & (yPlayer & 15) = 0 then xiPlayer = x * 4:yiPlayer = 0:iPlayer = 1-x
-43 if y <> 0 & (xPlayer & 15) = 0 then yiPlayer = y * 4:xiPlayer = 0:iPlayer = 2-y
-44 if (xPlayer | yPlayer & 15) = 0 then checkCollect(xPlayer >> 4,yPlayer >> 4)
-45 xPlayer = min((xSize-1) << 4,max(0,xPlayer + xiPlayer))
-46 yPlayer = min((ySize-1) << 4,max(0,yPlayer + yiPlayer))
-47 sprite 50 image iPlayer to xOrg+xPlayer,yOrg+yPlayer
-48 endproc
-49 '
-50 ' "Flash the player"
-51 '
-52 proc flashplayer()
-53 local t:t = timer() + 140
-54 while timer() < t
-55 if timer() & 16:sprite 50 image iPlayer:else sprite 50 off:endif
-56 wend
-57 endproc
-58 '
-59 ' "Fire a new missile from slot 'n'"
-60 '
-61 proc launch(n)
-62 if random() & 1:horizontalLaunch(n):else:verticalLaunch(n):endif
-63 endproc
-64 '
-65 ' "Launch a missile from top or bottom"
-66 '
-67 proc verticalLaunch(n)
-68 x(n) = xOrg-16:y(n) = yOrg+((yFire+8) & $F0):xi(n) = 4:yi(n) = 0
-69 remain(n) = abs((xSize*16+16) \ xi(n))
-70 if random() & 1 then x(n) = x(n) + remain(n)*xi(n):xi(n) = -xi(n)
-71 sprite n image 11 to x(n),y(n)
-72 endproc
-73 '
-74 ' "Launch a missile from left or right"
-75 '
-76 proc horizontalLaunch(n)
-77 y(n) = yOrg-16:x(n) = xOrg+((xFire+8) & $F0):yi(n) = 4:xi(n) = 0
-78 remain(n) = abs((ySize*16+16) \ yi(n))
-79 if random() & 1 then y(n) = y(n) + remain(n)*yi(n):yi(n) = -yi(n)
-80 sprite n image 12 to x(n),y(n)
-81 endproc
-82 '
-83 ' "Move all missiles"
-84 '
-85 proc moveMissiles()
-86 local i
-87 for i = 0 to mCount-1
-88 if remain(i) > 0
-89 x(i) = x(i)+xi(i):y(i) = y(i)+yi(i)
-90 if hit(i,50) > 0 then if hit(i,50) < 10 then playerHit = True
-91 remain(i) = remain(i)-1
-92 if remain(i) > 0:sprite i to x(i),y(i):else:sprite i off:endif
-93 endif
-94 next
-95 endproc
-96 '
-97 ' "Start a new level"
-98 '
-99 proc newLevel(n)
-100 local x,y,c$
-101 bitmap clear 0
-102 drawBackground():resetmissiles():updateEnemies()
-103 xPlayer = xSize\2*16:yPlayer = ySize\2*16:iPlayer = 0:xiPlayer = 0:yiPlayer = 0
-104 sprite 50 image iPlayer to xOrg+xPlayer,yOrg+yPlayer:playerHit = False
-105 for x = 0 to xSize-1:for y = 0 to ySize-1:collect(x,y) = 0:next:next
-106 collectZeroCount = 0
-107 getLevelData(level % 6):p = 1:if level >= 6 then p = 2
-108 for x = 0 to 6:for y = 0 to 4
-109 c$ = mid$(level$,x+y*8+1,1):if c$ = "X" then setqcollect(x,y,p)
-110 next:next:mCount = min(3+level\3,7)
-111 endproc
-112 '
-113 ' "Check collection"
-114 '
-115 proc checkCollect(x,y)
-116 if collect(x,y) <> 0
-117 local n:n = collect(x,y)-1:collect(x,y) = n
-118 renderCollect(x,y,n)
-119 if n = 0 then collectZeroCount = collectZeroCount - 1
-120 score = score + 25:updateScore()
-121 endif
-122 endproc
-123 '
-124 ' "Update score"
-125 '
-126 proc updateScore()
-127 text right$("00000"+str$(score),6) dim 1 colour $1F,4 to 80-24,12
-128 endproc
-129 '
-130 ' "Update lives display"
-131 '
-132 proc updateLives()
-133 rect solid colour 0 from 240,6 to 300,16
-134 if lives > 0
-135 for i = 1 to lives
-136 image 10 to 240+i*12,8
-137 next
-138 endif
-139 endproc
-140 '
-141 ' "Set the collection in all 4 quadrant"
-142 '
-143 proc setqcollect(x,y,n)
-144 setcollect(x,y,n):setcollect(xSize-1-x,y,n):setcollect(x,ySize-1-y,n):setcollect(xSize-1-x,ySize-1-y,n)
-145 endproc
-146 '
-147 ' "Set the collect for one cell (non-erase, creation *only*)"
-148 '
-149 proc setcollect(x,y,n)
-150 if collect(x,y) = 0
-151 collectZeroCount = collectZeroCount + 1
-152 collect(x,y) = n
-153 renderCollect(x,y,n)
-154 endif
-155 endproc
-156 '
-157 ' "Render a collection item 0,1,2. 0 Erases. These are drawn on the background not sprites."
-158 '
-159 proc renderCollect(x,y,n)
-160 if n > 0
-161 image 7+n dim 1 to x*16+xOrg-4+1,y*16+yOrg-4+1
-162 else
-163 local xc,yc:xc = x * 16+xOrg:yc = y * 16 + yOrg
-164 rect solid colour $0 from xc-6,yc-6 to xc+6,yc+6
-165 line colour $25 from xc-6,yc to xc+6,yc from xc,yc-6 to xc,yc+6
-166 endif
-167 endproc
-168 '
-169 ' "Reset all Missiles"
-170 '
-171 proc resetmissiles()
-172 local i
-173 for i = 0 to 7:remain(i) = 0:sprite i off:next
-174 endproc
-175 '
-176 ' "Draw the screen background"
-177 '
-178 proc drawBackground()
-179 local x,y:line colour $25
-180 for x = 0 to xSize-1:line xOrg+x*16,yOrg-8 by 0,ySize*16:next
-181 for y = 0 to ySize-1:line xOrg-8,yOrg+y*16 by xSize*16,0:next
-182 rect colour $E0 outline xOrg-24,yOrg-24 by xSize*16+32,ySize*16+32
-183 rect colour $FF outline xOrg-25,yOrg-25 by xSize*16+34,ySize*16+34
-184 updateScore():text "1 Up" colour $E0 to 64,2:updateLives()
-185 endproc
-186 '
-187 ' "Use the timer to set the positions of the shooting enemies"
-188 '
-189 proc updateEnemies()
-190 local t:t = timer()
-191 xFire = abs((t % (xSize << 5))-(xSize << 4))
-192 sprite 10 image 5 to xOrg+xFire,yOrg-16
-193 sprite 11 image 7 to xOrg+xFire,yOrg+ySize<<4
-194 yFire = abs((t % (ySize << 5))-(ySize << 4))
-195 sprite 12 image 4 to xOrg-16,yOrg+yFire
-196 sprite 13 image 6 to xOrg+xSize<<4,yOrg+yFire
-197 endproc
-198 '
-199 ' "Level data"
-200 '
-201 proc getLevelData(n)
-202 level$ = ""
-203 if n = 0 then level$ = "....XXX ...XXX. ..XXX.. ..XXX.. .XXXX.."
-204 if n = 1 then level$ = "....XXX ...XXXX ..XXXXX .XXXXXX XXXXXXX"
-205 if n = 2 then level$ = "XXXXXXX X...... X...... XXXXXXX ......."
-206 if n = 3 then level$ = "XXXXX.. X...X.. X...XXX XXXXX.. ....X.."
-207 if n = 4 then level$ = ".....X. ....XX. ..XX.X. X....X. XXXXXX."
-208 if n = 5 then level$ = ".....X. ....XX. .XXX.X. X....X. XXXXXX."
-209 if n = 6 then level$ = "XX..... .XX.... ..XX... ....XX. .....XX
-210 endproc
-211 '
-212 ' "Simple title screen"
-213 '
-214 proc title(name$)
-215 bitmap on:bitmap clear 0:cls
-216 centre(210,1,$1F,"Press FIRE to Start")
-217 centre(120,1,$FC,"A Foenix F256 Demo Game in BASIC")
-218 centre(130,1,$F0,"Written by Paul Robson 2022")
-219 n = 0
-220 while joyb(0) = 0
-221 drawTitleAt(n$,n):n = (n + 1) & 7
-222 wend
-223 while joyb(0) <> 0:wend
-224 bitmap off
-225 endproc
-226 '
-227 proc centre(y,size,c,msg$)
-228 text msg$ dim size colour c to 160-len(msg$)*size*4,y
-229 endproc
-230 '
-231 proc drawTitleAt(n$,offset)
-232 text name$ colour random() & $FF dim 3 to 160-len(name$)*12+offset,32+offset
-233 endproc
-ÿÿÿÿ
-
+10 cls
+20 bitmap on:bitmap clear 0 
+30 lut=$D000:lm=0
+40 for c=0 TO 29
+50 read r,g,b
+60 lm=lut+(c*4)
+70 ?1=1:?lm=b:?1=1:?(lm+1)=g:?1=1:?(lm+2)=r
+80 print ?1,c,r,g,b
+90 next
+100 rem "draw color palette"
+140 sx=4:sy=4:xi=0:xf=0:yi=0:yf=0:xo=sx*4:yo=sy*3:i=0
+150 FOR b=0 TO 31
+160 FOR c=0 TO 7
+170 xi=(c*sx)+(xo+1)
+180 xf=((c+1)*sx)+xo
+190 yi=(b*sy)+(yo+1)
+200 yf=((b+1)*sy)+yo
+210 rect solid xi,yi color i to (xf-1),(yf-1)
+220 i=i+1
+230 next
+240 next
+10010 DATA 0,0,0,0,0,0,32,32,32,64,64,64,96,96,96,128,128,128
+20020 DATA 160,160,160,200,200,200,98,93,84,133,117,101
+20030 DATA 158,140,121,174,161,137,187,175,164,204,195,177,234,219,201
+20040 DATA 255,243,214,88,49,38,115,61,59,136,80,65,154,98,76
+20050 DATA 173,110,81,213,141,107,251,170,132,255,206,127,0,39,53
+20060 DATA 0,56,80,0,77,94,11,102,127,0,111,137,50,140,167 
