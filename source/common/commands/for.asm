@@ -4,7 +4,7 @@
 ;		Name:		for.asm
 ;		Purpose:	For/Next loop
 ;		Created:	1st October 2022
-;		Reviewed: 	
+;		Reviewed: 	1st December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -27,10 +27,10 @@
 ; ************************************************************************************************
 
 ForCommand: ;; [for]
-		lda 	#STK_FOR+9 					; allocate 18 bytes on the return stack.
+		lda 	#STK_FOR+9 					; allocate 18 bytes on the return stack (see above).
 		jsr 	StackOpen 
 		;
-		;		Get an integer reference to Stack[0]
+		;		Get an integer reference to Stack[0] - this is the loop variable.
 		;
 		ldx 	#0
 		jsr 	EvaluateTerm
@@ -82,7 +82,7 @@ _FCNotDownTo: 								; 0 if DOWNTO 2 if TO
 		;
 		;		Copy the reference where the index goes.
 		;
-		ldy 	#6
+		ldy 	#6 							; this is the address of the loop variable.
 		lda 	NSMantissa0
 		sta 	(basicStack),y
 		lda 	NSMantissa1
@@ -161,6 +161,8 @@ CopyIndexToReference:
 		ldy 	#8 							; where to copy from.
 		bcc 	_CITRNormal		
 		;
+		;		Copy out -ve
+		;
 		sec
 _CITRNegative:								; copy and negate simultaneously.
 		lda 	#0
@@ -176,7 +178,9 @@ _CITRNegative:								; copy and negate simultaneously.
 		sta 	(zTemp0),y
 		ply
 		rts
-
+		;
+		;		Copy out +ve
+		;
 _CITRNormal:
 		lda 	(basicStack),y 				; copy without negation.
 		sta 	(zTemp0),y

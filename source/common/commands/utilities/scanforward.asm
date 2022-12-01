@@ -4,7 +4,7 @@
 ;		Name:		scanforward.asm
 ;		Purpose:	Look for closing structures
 ;		Created:	1st October 2022
-;		Reviewed: 	
+;		Reviewed: 	1st December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -20,10 +20,9 @@
 ; ************************************************************************************************
 
 ScanForward:
-		stz 	zTemp1 						; this is the structure count - goes up with WHILE/FOR
+		stz 	zTemp1 						; zero the structure count - goes up with WHILE/FOR down with WEND/NEXT etc. 
 		stx 	zTemp0+1
-		sta 	zTemp0 						; save XA as the two possible matches.
-		;									; and down with WEND/NEXT
+		sta 	zTemp0 						; save X & A as the two possible matches.
 		;
 		; 		Main Scanning Loop
 		;
@@ -45,7 +44,7 @@ _ScanMatch:									; if so, exit after skipping that token.
 _ScanNotEndEOL:		
 		rts 					
 _ScanGoNext:
-		jsr  	ScanForwardOne 				
+		jsr  	ScanForwardOne 				; allows for shifts and so on.
 		bra 	_ScanLoop
 
 ; ************************************************************************************************
@@ -55,11 +54,13 @@ _ScanGoNext:
 ; ************************************************************************************************
 
 ScanForwardOne:		
-		cmp 	#$40 						; if 00-3F, punctuation characters, loop back
+		cmp 	#$40 						; if 00-3F, punctuation characters, already done.
 		bcc 	_SFWExit
-		cmp 	#KWC_FIRST_UNARY 			; if 40-82, skip one extra.
-		bcc 	_ScanSkipOne
-		cmp 	#$FC 						; FC-FF are data skips
+		;
+		cmp 	#KWC_FIRST_UNARY 			; if 40-82, skip one extra as these are 2 byte
+		bcc 	_ScanSkipOne	 			; offsets into the identifier table or shifts.
+		;
+		cmp 	#$FC 						; FC-FF are data skips (hex consts, strings etc.)
 		bcs 	_ScanSkipData
 		;
 		cmp 	#KWC_FIRST_STRUCTURE 		; structure keyword ?
@@ -87,7 +88,7 @@ _ScanSkipOne:
 		ldy 	#3 							; scan start position.
 		.cget0 								; read the offset
 		bne 	_SFWExit 					; if not zero, more to scan
-		.error_struct 						; couldn't find either token at level zero.
+		.error_struct 						; couldn't find either token at level zero end of program.
 		;
 		;		Skip data structure
 		;
@@ -100,7 +101,8 @@ _SFWExit:
 
 ; ************************************************************************************************
 ;
-;									Get Step of current line
+;							Get Step of current line (e.g. adjust up or down)
+;						     This is used in the LIST code to get the indent.
 ;
 ; ************************************************************************************************
 
@@ -115,7 +117,7 @@ _SGCLSLoop:
 		jsr 	ScanForwardOne
 		bra 	_SGCLSLoop
 _SGCLSExit:
-		lda 	zTemp1
+		lda 	zTemp1 						; return the adjustment
 		rts
 				
 		.send code

@@ -1,13 +1,13 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
-; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Thu Dec  1 13:43:39 2022
+; 64tass -D AUTORUN=1 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
+; Thu Dec  1 15:06:22 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
 ;******  Command line definitions
 
-=0					AUTORUN=0
+=1					AUTORUN=1
 =$e000					 MONITOR_ADDRESS=$E000
 =$f000					 LOCKOUT_ADDRESS=$F000
 =$38000					 BASIC_ADDRESS=$38000
@@ -446,8 +446,8 @@
 .8038	a9 46		lda #$46			lda 	#Prompt & $FF
 .803a	20 53 8f	jsr $8f53			jsr 	PrintStringXA
 .803d	20 ca 89	jsr $89ca			jsr 	NewProgram 					; erase current program
-.8040	4c 78 83	jmp $8378			jmp 	WarmStart					; make same size.
-.8043	4c 78 83	jmp $8378			jmp 	WarmStart
+.8040	20 e0 82	jsr $82e0			jsr 	BackloadProgram
+.8043	4c 0b 8b	jmp $8b0b			jmp 	CommandRun
 >8046	46 32 35 36 20 42 41 53		Prompt:	.text 	"F256 BASIC "
 >804e	49 43 20
 
@@ -887,8 +887,8 @@
 .8315	b0 ea		bcs $8301			bcs 	_BPCopy 					; until a control character, should be 13 received.
 .8317					_BPEndLine:
 .8317	20 21 80	jsr $8021			jsr 	TKTokeniseLine 				; tokenise the line.
-.831a	38		sec				sec 								; append not insert
-.831b	20 e4 a4	jsr $a4e4			jsr 	MemoryInsertLine 			; append to current program
+.831a	ea		nop				nop
+.831b	20 53 83	jsr $8353			jsr 	EditProgramCode
 .831e	80 d6		bra $82f6			bra 	_BPLoop
 .8320					_BPExit:
 .8320	9c fa ff	stz $fffa			stz 	$FFFA
@@ -1278,7 +1278,7 @@
 ;******  Processing file: ./common/commands/for.asm
 
 .855f					ForCommand:
-.855f	a9 d9		lda #$d9			lda 	#STK_FOR+9 					; allocate 18 bytes on the return stack.
+.855f	a9 d9		lda #$d9			lda 	#STK_FOR+9 					; allocate 18 bytes on the return stack (see above).
 .8561	20 ae a6	jsr $a6ae			jsr 	StackOpen
 .8564	a2 00		ldx #$00			ldx 	#0
 .8566	20 48 98	jsr $9848			jsr 	EvaluateTerm
@@ -1309,7 +1309,7 @@
 .8593	3a		dec a				dec 	a 							; 255 if DOWNTO, 1 if TO
 .8594	a0 10		ldy #$10			ldy 	#16
 .8596	91 34		sta ($34),y			sta 	(basicStack),y 				; copy that out to the Basic Stack.
-.8598	a0 06		ldy #$06			ldy 	#6
+.8598	a0 06		ldy #$06			ldy 	#6 							; this is the address of the loop variable.
 .859a	a5 58		lda $58				lda 	NSMantissa0
 .859c	91 34		sta ($34),y			sta 	(basicStack),y
 .859e	a5 60		lda $60				lda 	NSMantissa1
@@ -1487,11 +1487,11 @@
 ;******  Processing file: ./common/commands/if.asm
 
 .86a2					IfCommand:
-.86a2	a2 00		ldx #$00			ldx 	#0 							; If what.
+.86a2	a2 00		ldx #$00			ldx 	#0 							; Get the if test.
 .86a4	20 6a 9d	jsr $9d6a			jsr 	EvaluateNumber
 .86a7	b1 30		lda ($30),y			lda 	(codePtr),y
-.86a9	c9 aa		cmp #$aa			cmp 	#KWD_THEN  					; could be THEN <stuff> or GOTO
-.86ab	d0 0a		bne $86b7			bne 	_IFStructured
+.86a9	c9 aa		cmp #$aa			cmp 	#KWD_THEN  					; could be THEN <stuff>
+.86ab	d0 0a		bne $86b7			bne 	_IFStructured 				; we still support it.
 .86ad	c8		iny				iny 								; consume THEN
 .86ae	20 3e 9e	jsr $9e3e			jsr 	NSMIsZero 					; is it zero
 .86b1	f0 01		beq $86b4			beq 	_IfFail 					; if fail, go to next line
@@ -1503,7 +1503,7 @@
 .86ba	d0 07		bne $86c3			bne 	_IfExit 					; if not, then continue normally.
 .86bc	a9 b8		lda #$b8			lda 	#KWD_ELSE 					; look for else/endif
 .86be	a2 a7		ldx #$a7			ldx 	#KWD_ENDIF
-.86c0	20 d9 8d	jsr $8dd9			jsr 	ScanForward 				; and run from there/
+.86c0	20 d9 8d	jsr $8dd9			jsr 	ScanForward 				; and run from there
 .86c3					_IfExit:
 .86c3	60		rts				rts
 .86c4					ElseCode:
@@ -2622,9 +2622,9 @@
 ;******  Processing file: ./common/commands/utilities/scanforward.asm
 
 .8dd9					ScanForward:
-.8dd9	64 38		stz $38				stz 	zTemp1 						; this is the structure count - goes up with WHILE/FOR
+.8dd9	64 38		stz $38				stz 	zTemp1 						; zero the structure count - goes up with WHILE/FOR down with WEND/NEXT etc.
 .8ddb	86 37		stx $37				stx 	zTemp0+1
-.8ddd	85 36		sta $36				sta 	zTemp0 						; save XA as the two possible matches.
+.8ddd	85 36		sta $36				sta 	zTemp0 						; save X & A as the two possible matches.
 .8ddf					_ScanLoop:
 .8ddf	b1 30		lda ($30),y			lda 	(codePtr),y
 .8de1	c8		iny				iny
@@ -2641,14 +2641,14 @@
 .8df3					_ScanNotEndEOL:
 .8df3	60		rts				rts
 .8df4					_ScanGoNext:
-.8df4	20 f9 8d	jsr $8df9			jsr  	ScanForwardOne
+.8df4	20 f9 8d	jsr $8df9			jsr  	ScanForwardOne 				; allows for shifts and so on.
 .8df7	80 e6		bra $8ddf			bra 	_ScanLoop
 .8df9					ScanForwardOne:
-.8df9	c9 40		cmp #$40			cmp 	#$40 						; if 00-3F, punctuation characters, loop back
+.8df9	c9 40		cmp #$40			cmp 	#$40 						; if 00-3F, punctuation characters, already done.
 .8dfb	90 3e		bcc $8e3b			bcc 	_SFWExit
-.8dfd	c9 83		cmp #$83			cmp 	#KWC_FIRST_UNARY 			; if 40-82, skip one extra.
-.8dff	90 18		bcc $8e19			bcc 	_ScanSkipOne
-.8e01	c9 fc		cmp #$fc			cmp 	#$FC 						; FC-FF are data skips
+.8dfd	c9 83		cmp #$83			cmp 	#KWC_FIRST_UNARY 			; if 40-82, skip one extra as these are 2 byte
+.8dff	90 18		bcc $8e19			bcc 	_ScanSkipOne	 			; offsets into the identifier table or shifts.
+.8e01	c9 fc		cmp #$fc			cmp 	#$FC 						; FC-FF are data skips (hex consts, strings etc.)
 .8e03	b0 2f		bcs $8e34			bcs 	_ScanSkipData
 .8e05	c9 a2		cmp #$a2			cmp 	#KWC_FIRST_STRUCTURE 		; structure keyword ?
 .8e07	90 32		bcc $8e3b			bcc 	_SFWExit 					; if not, ordinary keywords.
@@ -2696,7 +2696,7 @@
 .8e47	20 f9 8d	jsr $8df9			jsr 	ScanForwardOne
 .8e4a	80 f4		bra $8e40			bra 	_SGCLSLoop
 .8e4c					_SGCLSExit:
-.8e4c	a5 38		lda $38				lda 	zTemp1
+.8e4c	a5 38		lda $38				lda 	zTemp1 						; return the adjustment
 .8e4e	60		rts				rts
 
 ;******  Return to file: _basic.asm
@@ -2706,17 +2706,17 @@
 
 .8e4f					Command_WHILE:
 .8e4f	5a		phy				phy 								; save position of the test
-.8e50	a2 00		ldx #$00			ldx 	#0
-.8e52	20 6a 9d	jsr $9d6a			jsr 	EvaluateNumber 				; work out the number
+.8e50	a2 00		ldx #$00			ldx 	#0 							; work out the while test.
+.8e52	20 6a 9d	jsr $9d6a			jsr 	EvaluateNumber
 .8e55	20 3e 9e	jsr $9e3e			jsr 	NSMIsZero 					; check if zero
-.8e58	f0 0e		beq $8e68			beq 	_WHExitLoop 				; if so exit the loop
+.8e58	f0 0e		beq $8e68			beq 	_WHExitLoop 				; if so exit the loop, while has failed.
 .8e5a	98		tya				tya 								; position *after* test.
 .8e5b	7a		ply				ply 								; restore position before test, at WHILE
-.8e5c	88		dey				dey
+.8e5c	88		dey				dey 								; so we execute the WHILE command again.
 .8e5d	48		pha				pha 								; push after test on the stack
 .8e5e	a9 a3		lda #$a3			lda 	#STK_WHILE+3 				; allocate 6 bytes on the return stack.
 .8e60	20 ae a6	jsr $a6ae			jsr 	StackOpen
-.8e63	20 f3 a6	jsr $a6f3			jsr 	STKSaveCodePosition 		; save loop position - where the test value is.
+.8e63	20 f3 a6	jsr $a6f3			jsr 	STKSaveCodePosition 		; save loop position - where the test value expr is.
 .8e66	7a		ply				ply 								; restore the position *after* the test
 .8e67	60		rts				rts
 .8e68					_WHExitLoop:
@@ -2726,10 +2726,10 @@
 .8e6c	20 d9 8d	jsr $8dd9			jsr 	ScanForward
 .8e6f	60		rts				rts
 .8e70					Command_WEND:
-.8e70	a9 a3		lda #$a3			lda 	#STK_WHILE+3 				; check WHILE is TOS
-.8e72	a2 10		ldx #$10			ldx 	#ERRID_WHILE 				; this error
+.8e70	a9 a3		lda #$a3			lda 	#STK_WHILE+3 				; check WHILE is TOS e.g. in a while loop :)
+.8e72	a2 10		ldx #$10			ldx 	#ERRID_WHILE 				; this error if not.
 .8e74	20 db a6	jsr $a6db			jsr 	StackCheckFrame
-.8e77	20 04 a7	jsr $a704			jsr 	STKLoadCodePosition 		; loop back
+.8e77	20 04 a7	jsr $a704			jsr 	STKLoadCodePosition 		; loop back to the WHILE keyword.
 .8e7a	20 cd a6	jsr $a6cd			jsr 	StackClose		 			; erase the frame
 .8e7d	60		rts				rts
 

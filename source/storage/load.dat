@@ -1,12 +1,18 @@
-20 bitmap on:bitmap clear 0 
-30 lut=$D000:lm=0
-40 for c=0 TO 29
-50 read r,g,b
-60 lm=lut+(c*4)
-70 ?1=1:?lm=b:?1=1:?(lm+1)=g:?1=1:?(lm+2)=r
-80 print ?1,c,r,g,b
-90 next
-100 rem "draw color palette"
-140 sx=4:sy=4:xi=0:xf=0:yi=0:yf=0:xo=sx*4:yo=sy*3:i=0
-
+10 a$ = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+20 b$ = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+30 c$ = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+40 print len(a$),a$
+50 print len(b$),b$
+60 print len(c$),c$
+70 pushonstack()
+140 print len(a$),a$
+150 print len(b$),b$
+160 print len(c$),c$
+170 end
+200 proc pushonstack()
+210 local a$,b$,c$:a$ = "":b$ = "":c$ = ""
+240 print len(a$),a$
+250 print len(b$),b$
+260 print len(c$),c$
+270 endproc
 ÿÿÿÿ

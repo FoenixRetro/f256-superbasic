@@ -4,7 +4,7 @@
 ;		Name:		if.asm
 ;		Purpose:	IF command
 ;		Created:	1st October 2022
-;		Reviewed: 	No
+;		Reviewed: 	1st December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -18,12 +18,12 @@
 		.section code
 
 IfCommand: ;; [if]
-		ldx 	#0 							; If what.
+		ldx 	#0 							; Get the if test.
 		jsr 	EvaluateNumber
 		;
 		.cget 								; what follows ?
-		cmp 	#KWD_THEN  					; could be THEN <stuff> or GOTO
-		bne 	_IFStructured
+		cmp 	#KWD_THEN  					; could be THEN <stuff> 
+		bne 	_IFStructured 				; we still support it.
 
 		; ------------------------------------------------------------------------
 		;
@@ -47,15 +47,15 @@ _IfFail:
 _IfStructured:
 		jsr 	NSMIsZero 					; is it zero
 		bne 	_IfExit 					; if not, then continue normally.
-		lda 	#KWD_ELSE 					; look for else/endif
+		lda 	#KWD_ELSE 					; look for else/endif 
 		ldx 	#KWD_ENDIF
-		jsr 	ScanForward 				; and run from there/
-_IfExit:
+		jsr 	ScanForward 				; and run from there
+_IfExit: 
 		rts
 
 ; ************************************************************************************************
 ;
-;										ELSE code
+;					ELSE code - should be found when running a successful IF clause
 ;
 ; ************************************************************************************************
 
