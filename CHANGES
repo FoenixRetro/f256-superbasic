@@ -34,3 +34,7 @@ Release 8 (01/12/22):
 
 	CHG: Displays version on startup so people know what they're running.
 	BUG: READ x typed at console crashes interpreter. Also seems to have fixed structure error on bad read.
+	CHG: Added DOKE POKE DEEK() and PEEK() commands and functions.
+	CHG: Added ZAP PING SHOOT EXPLODE
+
+Release 9 (01/12/22):	

@@ -86,7 +86,7 @@ HelperValueError:
 ;
 ; ************************************************************************************************
 
-	Evaluate16BitInteger:
+Evaluate16BitInteger:
 		jsr	 	EvaluateUnsignedInteger		; get integer
 		lda 	NSMantissa3,x	 			; bytes 2 & 3 must be zero
 		ora 	NSMantissa2,x
