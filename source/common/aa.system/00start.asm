@@ -31,6 +31,10 @@ Start:	ldx 	#$FF 						; stack reset
 		jsr 	SNDCommand
 		.endif
 
+		ldx 	#Prompt >> 8 				; display prompt
+		lda 	#Prompt & $FF
+		jsr 	PrintStringXA
+
 		.tickinitialise 					; initialise tick handler
 											; (mandatory)
 		
@@ -43,6 +47,10 @@ Start:	ldx 	#$FF 						; stack reset
 		jmp 	WarmStart					; make same size.
 		jmp 	WarmStart
 		.endif
+
+Prompt:	.text 	"F256 BASIC "
+		.include "../generated/timestamp.asm"
+		.text 	13,13,0
 
 		.send code
 

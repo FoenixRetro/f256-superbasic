@@ -31,14 +31,18 @@ Command_Read:	;; [read]
 		;		Now find something to be DATA
 		;
 		jsr 	SwapDataCodePtrs 			; swap code and data
+
 		lda 	inDataStatement 			; if in a data statement, we don't need to search
 		bne 	_CRContinueData
+
+		.cget0 								; end of program
+		beq 	_CRNoData
 		;
 		;		Look for Data.
 		;
 _CRKeepSearching:		
 		lda 	#KWD_DATA 					; scan for instruction
-		tax
+		ldx 	#KWC_EOL
 		jsr 	ScanForward
 		cmp 	#KWD_DATA 					; found data ?
 		beq 	_CRHaveData 				; found it
@@ -46,6 +50,7 @@ _CRKeepSearching:
 		ldy 	#3 							; start of line.
 		.cget0 								; check there is one.
 		bne 	_CRKeepSearching
+_CRNoData:		
 		.error_data
 		;
 		; 		Now have codePtr (dataPtr really) pointing at DATA keyword
@@ -86,5 +91,6 @@ _CRSyntax:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		01/12/22 		Doesn't crash if no program and READ x typed at console.
 ;
 ; ************************************************************************************************
