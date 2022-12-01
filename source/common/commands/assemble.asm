@@ -4,7 +4,7 @@
 ;		Name:		assemble.asm
 ;		Purpose:	Assemble command
 ;		Created:	4th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	1st December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -19,8 +19,9 @@ AssembleCommand: ;; [assemble]
 		sta 	AssemblerAddress
 		lda 	NSMantissa1
 		sta 	AssemblerAddress+1
+		;
 		jsr 	CheckComma
-		jsr 	Evaluate8BitInteger 		; options
+		jsr 	Evaluate8BitInteger 		; options 0-3
 		lda 	NSMantissa0
 		sta 	AssemblerControl
 		rts

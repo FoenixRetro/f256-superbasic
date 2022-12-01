@@ -4,7 +4,7 @@
 ;		Name:		procedure.asm
 ;		Purpose:	Procedure call/EndProc
 ;		Created:	2nd October 2022
-;		Reviewed: 	No
+;		Reviewed: 	1st December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -72,7 +72,7 @@ _CPEndParam:
 		;		Now handle any parameters
 		;
 		ldx 	#ParameterStackPos 			; start position of parameters
-		cpx	 	LastParameter 				; check no parameters at the start
+		cpx	 	LastParameter 				; check zero parameters at the start
 		beq 	_ParamExit 					; if so, exit.
 _ParamExtract:
 		dex 								; put a local term on the level before

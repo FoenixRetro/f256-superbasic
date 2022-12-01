@@ -1,13 +1,13 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
-; 64tass -D AUTORUN=1 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Thu Dec  1 15:06:22 2022
+; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
+; Thu Dec  1 16:52:03 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
 ;******  Command line definitions
 
-=1					AUTORUN=1
+=0					AUTORUN=0
 =$e000					 MONITOR_ADDRESS=$E000
 =$f000					 LOCKOUT_ADDRESS=$F000
 =$38000					 BASIC_ADDRESS=$38000
@@ -446,8 +446,8 @@
 .8038	a9 46		lda #$46			lda 	#Prompt & $FF
 .803a	20 53 8f	jsr $8f53			jsr 	PrintStringXA
 .803d	20 ca 89	jsr $89ca			jsr 	NewProgram 					; erase current program
-.8040	20 e0 82	jsr $82e0			jsr 	BackloadProgram
-.8043	4c 0b 8b	jmp $8b0b			jmp 	CommandRun
+.8040	4c 78 83	jmp $8378			jmp 	WarmStart					; make same size.
+.8043	4c 78 83	jmp $8378			jmp 	WarmStart
 >8046	46 32 35 36 20 42 41 53		Prompt:	.text 	"F256 BASIC "
 >804e	49 43 20
 
@@ -887,8 +887,8 @@
 .8315	b0 ea		bcs $8301			bcs 	_BPCopy 					; until a control character, should be 13 received.
 .8317					_BPEndLine:
 .8317	20 21 80	jsr $8021			jsr 	TKTokeniseLine 				; tokenise the line.
-.831a	ea		nop				nop
-.831b	20 53 83	jsr $8353			jsr 	EditProgramCode
+.831a	38		sec				sec 								; append not insert
+.831b	20 e4 a4	jsr $a4e4			jsr 	MemoryInsertLine 			; append to current program
 .831e	80 d6		bra $82f6			bra 	_BPLoop
 .8320					_BPExit:
 .8320	9c fa ff	stz $fffa			stz 	$FFFA
@@ -1870,19 +1870,19 @@
 .8908	b1 30		lda ($30),y			lda 	(codePtr),y
 .890a	c8		iny				iny
 .890b	c9 2c		cmp #$2c			cmp 	#KWD_COMMA
-.890d	f0 f4		beq $8903			beq 	Command_LOCAL
+.890d	f0 f4		beq $8903			beq 	Command_LOCAL 				; if so, localise another variable.
 .890f	88		dey				dey 								; unpick pre-get
 .8910	60		rts				rts
 .8911					LocaliseNextTerm:
 .8911	20 48 98	jsr $9848			jsr 	EvaluateTerm 				; evaluate the term
 .8914	b5 50		lda $50,x			lda 	NSStatus,x
-.8916	29 20		and #$20			and 	#NSBIsReference 			; check it is a reference
+.8916	29 20		and #$20			and 	#NSBIsReference 			; check it is a reference, must be a variable.
 .8918	f0 5c		beq $8976			beq		_LNTError
 .891a	b5 58		lda $58,x			lda 	NSMantissa0,x 				; copy address of variable to zTemp0
 .891c	85 36		sta $36				sta 	zTemp0
 .891e	b5 60		lda $60,x			lda 	NSMantissa1,x
 .8920	85 37		sta $37				sta  	zTemp0+1
-.8922	b5 50		lda $50,x			lda 	NSStatus,x
+.8922	b5 50		lda $50,x			lda 	NSStatus,x 					; figure out what it is.
 .8924	29 10		and #$10			and 	#NSBIsString
 .8926	d0 1e		bne $8946			bne 	_LNTPushString
 .8928	5a		phy				phy
@@ -1909,7 +1909,7 @@
 .894d	b1 36		lda ($36),y			lda 	(zTemp0),y
 .894f	85 39		sta $39				sta 	zTemp1+1
 .8951	a0 00		ldy #$00			ldy 	#0 							; output string
-.8953	c9 00		cmp #$00			cmp 	#0 							; if not assigned strin
+.8953	c9 00		cmp #$00			cmp 	#0 							; if not assigned string
 .8955	f0 0a		beq $8961			beq 	_LNTStringOut
 .8957					_LNTPushStrLoop:
 .8957	b1 38		lda ($38),y			lda 	(zTemp1),y
@@ -1918,7 +1918,7 @@
 .895e	c8		iny				iny
 .895f	80 f6		bra $8957			bra 	_LNTPushStrLoop
 .8961					_LNTStringOut:
-.8961	98		tya				tya									; output length
+.8961	98		tya				tya									; output length (chars written).
 .8962	20 8d a6	jsr $a68d			jsr 	StackPushByte
 .8965	b5 58		lda $58,x			lda 	NSMantissa0,x 				; output address of the string record *not* the string itself
 .8967	20 8d a6	jsr $a68d			jsr 	StackPushByte
@@ -1948,17 +1948,17 @@
 .8995	7a		ply				ply 								; and complete
 .8996	60		rts				rts
 .8997					_LPVString:
-.8997	20 a5 a6	jsr $a6a5			jsr 	StackPopByte 				; address of record => zTemp0
+.8997	20 a5 a6	jsr $a6a5			jsr 	StackPopByte 				; address of record copied to zTemp0
 .899a	85 37		sta $37				sta 	zTemp0+1
 .899c	20 a5 a6	jsr $a6a5			jsr 	StackPopByte
 .899f	85 36		sta $36				sta 	zTemp0
 .89a1	5a		phy				phy
-.89a2	b2 36		lda ($36)			lda 	(zTemp0) 					; address to write string to => zTemp1
+.89a2	b2 36		lda ($36)			lda 	(zTemp0) 					; address to write string to copied to zTemp1
 .89a4	85 38		sta $38				sta 	zTemp1
 .89a6	a0 01		ldy #$01			ldy 	#1
 .89a8	b1 36		lda ($36),y			lda 	(zTemp0),y
 .89aa	85 39		sta $39				sta 	zTemp1+1
-.89ac	20 a5 a6	jsr $a6a5			jsr 	StackPopByte 				; # to get => y
+.89ac	20 a5 a6	jsr $a6a5			jsr 	StackPopByte 				; # chars to get => y
 .89af	a8		tay				tay
 .89b0	a5 39		lda $39				lda 	zTemp1+1 					; if no target (e.g. was "" originally) exit
 .89b2	f0 0e		beq $89c2			beq 	_LPVStringCopied
@@ -2571,7 +2571,7 @@
 .8d8f					_PSLoop:
 .8d8f	b2 30		lda ($30)			lda 	(codePtr)
 .8d91	f0 42		beq $8dd5			beq 	_PSExit
-.8d93	a0 03		ldy #$03			ldy 	#3 							; is it PROC ?
+.8d93	a0 03		ldy #$03			ldy 	#3 							; is it PROC at start of line ?
 .8d95	b1 30		lda ($30),y			lda 	(codePtr),y
 .8d97	c9 a4		cmp #$a4			cmp 	#KWD_PROC
 .8d99	d0 2d		bne $8dc8			bne 	_PSNext
@@ -2588,13 +2588,13 @@
 .8dac	b1 30		lda ($30),y			lda 	(codePtr),y
 .8dae	85 36		sta $36				sta 	zTemp0
 .8db0	c8		iny				iny 								; character after variable call.
-.8db1	98		tya				tya 								; save Y offset at +7
+.8db1	98		tya				tya 								; save Y offset at +7 (exponent slot)
 .8db2	a0 07		ldy #$07			ldy 	#7
 .8db4	91 36		sta ($36),y			sta 	(zTemp0),y
 .8db6	a9 18		lda #$18			lda 	#NSTProcedure 				; mark it as procedure
 .8db8	a0 02		ldy #$02			ldy 	#2
 .8dba	91 36		sta ($36),y			sta 	(zTemp0),y
-.8dbc	a2 00		ldx #$00			ldx 	#0 							; copy code-Ptr in
+.8dbc	a2 00		ldx #$00			ldx 	#0 							; copy code-Ptr into offset 3-6 (mantissa)
 .8dbe					_PSCopy:
 .8dbe	b5 30		lda $30,x			lda 	safePtr,x
 .8dc0	c8		iny				iny

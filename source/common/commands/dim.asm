@@ -4,7 +4,7 @@
 ;		Name:		dim.asm
 ;		Purpose:	DIM command
 ;		Created:	2nd October 2022
-;		Reviewed: 	No
+;		Reviewed: 	1st December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -19,7 +19,7 @@ DimCommand: ;; [dim]
 		.cget 							; is there a variable following ?
 		and 	#$C0
 		cmp 	#$40 	
-		bne 	_DCSyntax
+		bne 	_DCSyntax 				; n o, error.
 		;
 		.cget 							; copy to zaTemp as real address
 		clc 								
@@ -38,6 +38,7 @@ DimCommand: ;; [dim]
 		and 	#NSBTypeMask 			; check it's not a procedure
 		cmp 	#NSTProcedure
 		beq 	_DCSyntax
+		;
 		lda 	(zaTemp),y 				; check it's an array
 		and 	#NSBIsArray
 		beq 	_DCType

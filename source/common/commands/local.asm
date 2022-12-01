@@ -4,9 +4,10 @@
 ;		Name:		local.asm
 ;		Purpose:	LOCAL command
 ;		Created:	5th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	1st December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
+; ************************************************************************************************
 ; ************************************************************************************************
 
 ; ************************************************************************************************
@@ -23,7 +24,7 @@ Command_LOCAL: ;; [local]
 		.cget 								; followed by comma ?
 		iny
 		cmp 	#KWD_COMMA
-		beq 	Command_LOCAL
+		beq 	Command_LOCAL 				; if so, localise another variable.
 		dey 								; unpick pre-get
 		rts
 
@@ -36,7 +37,7 @@ Command_LOCAL: ;; [local]
 LocaliseNextTerm:
 		jsr 	EvaluateTerm 				; evaluate the term
 		lda 	NSStatus,x
-		and 	#NSBIsReference 			; check it is a reference
+		and 	#NSBIsReference 			; check it is a reference, must be a variable.
 		beq		_LNTError
 		;
 		lda 	NSMantissa0,x 				; copy address of variable to zTemp0
@@ -44,11 +45,11 @@ LocaliseNextTerm:
 		lda 	NSMantissa1,x
 		sta  	zTemp0+1
 		;
-		lda 	NSStatus,x
+		lda 	NSStatus,x 					; figure out what it is.
 		and 	#NSBIsString
 		bne 	_LNTPushString
 		;
-		;		Push number
+		;		Push number onto BASIC stack.
 		;
 		phy
 		ldy 	#0 							; push 0 to 4 inclusive, the number values, on the stack, and zero them as you go.
@@ -73,7 +74,7 @@ _LNTPushNumLoop:
 		;
 		;		Push string. Slightly different, as we push the string, then the length, but then we post the
 		;	 	address of the variable record, not the string, as this might be updated with a larger concreted
-		; 		string. It won't be smaller definitely.
+		; 		string. It will fit the saved string in all circumstances.
 		;
 _LNTPushString:
 		phy
@@ -84,7 +85,7 @@ _LNTPushString:
 		lda 	(zTemp0),y
 		sta 	zTemp1+1				
 		ldy 	#0 							; output string
-		cmp 	#0 							; if not assigned strin
+		cmp 	#0 							; if not assigned string
 		beq 	_LNTStringOut
 _LNTPushStrLoop:		
 		lda 	(zTemp1),y
@@ -93,10 +94,10 @@ _LNTPushStrLoop:
 		iny
 		bra 	_LNTPushStrLoop
 _LNTStringOut:
-		tya									; output length
+		tya									; output length (chars written).
 		jsr 	StackPushByte
 		;
-;		lda 	#0 							; clear original string.
+;		lda 	#0 							; clear original string (currently disabled).
 ;		sta 	(zTemp1)
 		;
 		lda 	NSMantissa0,x 				; output address of the string record *not* the string itself
@@ -124,7 +125,7 @@ LocalPopValue:
 		cmp 	#STK_LOCALN 				; if not local-N
 		bne 	_LPVString
 		;
-		;		Restore number
+		;		Restore number off BASIC Stack
 		;
 		jsr 	StackPopByte 				; address
 		sta 	zTemp0+1
@@ -143,20 +144,20 @@ _LPVNumberCopy:
 		;		Restore string
 		;
 _LPVString:
-		jsr 	StackPopByte 				; address of record => zTemp0
+		jsr 	StackPopByte 				; address of record copied to zTemp0
 		sta 	zTemp0+1
 		jsr 	StackPopByte
 		sta 	zTemp0
 		;
 		phy
 		;
-		lda 	(zTemp0) 					; address to write string to => zTemp1
+		lda 	(zTemp0) 					; address to write string to copied to zTemp1
 		sta 	zTemp1
 		ldy 	#1
 		lda 	(zTemp0),y
 		sta 	zTemp1+1
 		;
-		jsr 	StackPopByte 				; # to get => y
+		jsr 	StackPopByte 				; # chars to get => y
 		tay		
 
 		lda 	zTemp1+1 					; if no target (e.g. was "" originally) exit
