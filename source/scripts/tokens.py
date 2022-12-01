@@ -38,7 +38,8 @@ class TokenSource(object):
 				left$( 		mid$( 		right$( 	rnd( 		sgn( 		int( 				
 				spc( 		str$( 		val(  		isval(		true 		false
 				not(		random(	 	timer( 		event( 		joyx(		joyy(
-				joyb( 		min(		max( 		hit( 		playing(
+				joyb( 		min(		max( 		hit( 		playing(	peek(
+				deek(
 
 			{0}							// Set 0
 				cls 		data 		dim 		let 		goto		gosub 		
@@ -47,11 +48,13 @@ class TokenSource(object):
 				text 		circle 		here 		color 		colour 		by
 				solid 		outline 	gfx			clear 		image 		from
 				plot 		on 			off 		palette 	sound 		input
+				poke 		doke
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop			
 				restore 	assert 		assemble 	bitmap		sprites
-				load 		go 			who
+				load 		go 			who 		zap	 		ping
+				shoot 		explode
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	
