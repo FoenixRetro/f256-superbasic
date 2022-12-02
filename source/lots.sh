@@ -1,8 +1,8 @@
 while :
 do
-	make test autorun
-	make astest autorun
-	make sastest autorun
-	make artest autorun
-	make linetest
+	make testbasic test autorun
+	make testbasic astest autorun
+	make testbasic sastest autorun
+	make testbasic artest autorun
+	make testbasic linetest
 done

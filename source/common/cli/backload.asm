@@ -87,6 +87,12 @@ BLReadByte:
 		inc 	BackLoadPointer 			; bump pointer
 		bne 	_BLNoCarry
 		inc 	BackLoadPointer+1
+		bpl 	_BLNoCarry 					; need a new page
+		pha
+		lda 	#$60 						; reset pointer
+		sta 	BackLoadPointer+1
+		inc 	8+3 						; next page from source.
+		pla
 _BLNoCarry:
 		cmp 	#0
 		rts
