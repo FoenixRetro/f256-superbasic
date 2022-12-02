@@ -1,53 +1,6 @@
-\chapter{Keyword Reference}
 
-This describes the keywords in SuperBASIC. Some that are naturally grouped together, such as graphics, have their own section.
-
-\section*{!}
-! is an indirection operator that does a similar job to DEEK and DOKE, e.g. accesses memory. It can be used either in unary fashion (!47 reads the word at location 47) or binary (a!4 reads the word at the value in address a+4). It can also appear on the left-hand side of an assignment statementm when it functions as a DOKE, writing a 16 bit value in low/high order. 
-It reads or writes a 16 bit address in the 6502 memory map.
-\example{}
-\begin{verbatim}
-10 !a = 42  
-20 print !a   
-30 print a!b   
-40 a!b=12
-\end{verbatim}
-
-\section*{' and Rem}
-Comment. ‘ and rem are synonyms.  The rest of the line is ignored. The only difference between the two is when listing, ‘ comments show up in reverse to highlight them. Remarks should be in quotes for syntactic consistency.
-
-\example{Simple comments}
-\begin{verbatim}
-	10 ' "This is a title comment"
-	20 REM 
-	30 REM "Another comment"
-\end{verbatim}
-
-\section*{abs()}
-Returns the absolute value of the parameter
-
-\example{}
-\begin{verbatim}
-	10 print abs(-4)
-\end{verbatim}
-
-\section*{alloc()}
-Allocate the given number of bytes of memory and return the address. Can be used for data structures or program memory for the assembler.
-\example{}
-\begin{verbatim}
-	10 myAssemblerCode = alloc(128)
-\end{verbatim}
-
-\section*{asc()}
-Returns the ASCII value of the first character in the string, or zero if the string is empty.
-\example{}
-\begin{verbatim}
-10 print asc(“*”)
-\end{verbatim}
-
-
-\section*{\# and \$}
-\# and \$ are used to type variables. \# is a floating point value, \$ is a string. The default type is integer. Variables are not stored internally by name but by reference. This means they are quick to access but means they are always in existence from the start of a program if used in it. Integers are 32 bit ; Floats have a 31 bit mantissa and byte exponent.
+\section*{# and $}
+# and $ are used to type variables. # is a floating point value, $ is a string. The default type is integer. Variables are not stored internally by name but by reference. This means they are quick to access but means they are always in existence from the start of a program if used in it. Integers are 32 bit ; Floats have a 31 bit mantissa and byte exponent.
 So variables and arrays are as follows:
 \example{}
 \begin{verbatim}
@@ -66,12 +19,12 @@ So variables and arrays are as follows:
 	130 a?b=12
 \end{verbatim}
 
-\section*{\$}
-Hexadecimal constant prefix. \$2A is the same as the decimal constant 42.
+\section*{$}
+Hexadecimal constant prefix. $2A is the same as the decimal constant 42.
 \example{}
 \begin{verbatim}
-	100 print \$2a
-	110 !\$7ffe = 31702
+	100 print $2a
+	110 !$7ffe = 31702
 \end{verbatim}
 
 \section*{*}
@@ -96,11 +49,11 @@ Subtract
 	100 print 44 – 2
 \end{verbatim}
 
-\section*{\%}
+\section*{%}
 Binary modulus operator. The second value must be non-zero.
 \example{}
 \begin{verbatim}
-	100 print 42 \% 5
+	100 print 42 % 5
 \end{verbatim}
 
 \section*{.}
@@ -110,12 +63,12 @@ Sets the following label to the current assembler address. So the example below 
 	100 .mylabel
 \end{verbatim}
 
-\section*{\/ and \\}
+\section*{/ and \}
 Signed division. An error occurs if the divisor is zero. Backslash is integer division, forwar slash returns a floating point value.
 \example{}
 \begin{verbatim}
-	100 print 22//7
-	110 print 22\\7
+	100 print 22/7
+	110 print 22\7
 \end{verbatim}
 
 \section*{< <= <> = > >=}
@@ -133,18 +86,18 @@ Returns the address of a l-expr, normally this is a variable of some sort, but i
 	100 print @fred, @a(4)
 \end{verbatim}
 
-\section*{\&}
+\section*{&}
 Binary and operator. This is a binary operator not a logical, e.g. it is the binary and not a logical and so it can return values other than true and false
 \example{}
 \begin{verbatim}
-	100 print count \& 7
+	100 print count & 7
 \end{verbatim}
 
-\section*{XOR}
+\section*{^}
 Binary exclusive or operator. This is a binary operator not a logical, e.g. it is the binary and not a logical and so it can return values other than true and false
 \example{}
 \begin{verbatim}
-	100 print a  $0e
+	100 print a ^ $0e
 \end{verbatim}
 
 \section*{|}
@@ -187,17 +140,17 @@ Every good programming language should have assert. It verifies contracts and de
 \end{verbatim}
 
 \section*{bitmap}
-Turns the bitmap on or off, or clears it. Only one bitmap is used, and it is located at \$10000 in F256 Memory Space. Can be postfixed with ON OFF or CLEAR with a colour.
+Turns the bitmap on or off, or clears it. Only one bitmap is used, and it is located at $10000 in F256 Memory Space. Can be postfixed with ON OFF or CLEAR <colour>
 \example{}
 \begin{verbatim}
-	100 bitmap on:bitmap clear \$1c
+	100 bitmap on:bitmap clear $1c
 \end{verbatim}
 
-\section*{chr\$()}
+\section*{chr$()}
 Convert an ASCII integer to a single character string.
 \example{}
 \begin{verbatim}
-	100 print chr\$(42)
+	100 print chr$(42)
 \end{verbatim}
 
 \section*{circle}
@@ -214,26 +167,26 @@ Clears all variables to zero or empty string, and erases all arrays. Done when a
 	100 clear
 \end{verbatim}
 
-\section*{deek() peek()}
+\section*{deek() & peek()}
 Deek and Peek read two or one bytes respectively from the 6502 memory 
 \example{}
 \begin{verbatim}
 	100 print deek(42),peek(1)
 \end{verbatim}
 
-\section*{doke poke}
+\section*{doke & poke}
 Doke and Poke write two or one bytes respectively to 6502 memory
 \example{}
 \begin{verbatim}
-	100 poke 4096,1: doke \$c004,\$a705
+	100 poke 4096,1: doke $c004,$a705
 \end{verbatim}
 
 \section*{dim}
 Dimension number or string arrays with up to two dimensions, with a maximum of 254 elements in each dimension.
 \example{}
 \begin{verbatim}
-	100 dim a\$(10),a_sine#(10)
-	110 dim name\$(10,2)
+	100 dim a$(10),a_sine#(10)
+	110 dim name$(10,2)
 \end{verbatim}
 
 \section*{end}
@@ -328,7 +281,7 @@ Draws a possibly scaled or flipped sprite image on the bitmap, using the standar
 Input uses the same syntax as print, except that where there is a variable a value is entered into that variable, rather than the variable being printed.
 \example{}
 \begin{verbatim}
-	100 input a\$
+	100 input a$
 \end{verbatim}
 
 \section*{int()}
@@ -360,11 +313,11 @@ Returns the directional value of a gamepad in the x and y axes respectively as -
 	100 x = x + joyx(0)
 \end{verbatim}
 
-\section*{left\$()}
+\section*{left$()}
 Returns several characters from a string counting from the left
 \example{}
 \begin{verbatim}
-	100 print left\$("mystring",4)
+	100 print left$("mystring",4)
 \end{verbatim}
 
 \section*{len()}
@@ -375,12 +328,12 @@ Returns the length of the string as an integer
 \end{verbatim}
 
 \section*{let}
-Assignment statement. The LET is optional. You can also use \@a where a is a reference ; so ptr = \@a ; \@ptr = 42 is the same in practice as a = 42.
+Assignment statement. The LET is optional. You can also use @a where a is a reference ; so ptr = @a ; @ptr = 42 is the same in practice as a = 42.
 \example{}
 \begin{verbatim}
 	100 let a = 42
-	110 a\$=”hello”
-	120 a\#=22.7
+	110 a$=”hello”
+	120 a#=22.7
 \end{verbatim}
 
 \section*{line}
@@ -405,7 +358,7 @@ Lists the program.  It is possible to list any part of the program using the lin
 Defines the list of variables (no arrays allowed) as local to the current procedure. The locals are initialised to an empty string or zero depending on their type. 
 \example{}
 \begin{verbatim}
-	100 local test\$,count
+	100 local test$,count
 \end{verbatim}
 
 \section*{max() min()}
@@ -415,12 +368,12 @@ Returns the largest or smallest of the parameters, there can be any number of th
 	100 print max(3,42,5)
 \end{verbatim}
 
-\section*{mid\$()}
-Returns a subsegment of a string, given the start position (first character is 1) and the length, so mid\$(“abcdef”,3,2) returns “cd”. 
+\section*{mid$()}
+Returns a subsegment of a string, given the start position (first character is 1) and the length, so mid$(“abcdef”,3,2) returns “cd”. 
 \example{}
 \begin{verbatim}
-	100 print mid\$(“hello”,2,3)
-	110 print mid\$(“another word”,2,99)
+	100 print mid$(“hello”,2,3)
+	110 print mid$(“another word”,2,99)
 \end{verbatim}
 
 \section*{new}
@@ -471,23 +424,23 @@ Simple procedures. These should be used rather than gosub. Or else.  The empty b
 \begin{verbatim}
 	100 printmessage(“hello”,42)
 	110 end
-	120 proc printmessage(msg\$,n)
-	130 print msg\$+“world  x “+str\$(n)
+	120 proc printmessage(msg$,n)
+	130 print msg$+“world  x “+str$(n)
 	140 endproc
 \end{verbatim}
 
 \section*{rnd() random()}
-Generates random numbers. this has two forms, which is still many fewer than odo. rnd() behaves like microsoft basic, negative numbers set the seed,  0 repeats the last value, and positive numbers return an integer 0 <= n < 1. random(n) returns a number from 0 to n-1
 \example{}
 \begin{verbatim}
-	100 print rnd(1),random(6)
+	100 generates random numbers. this has two forms, which is still many fewer than odo. rnd() behaves like microsoft basic, negative numbers set the seed,  0 repeats the last value, and positive numbers return an integer 0 <= n < 1. random(n) returns a number from 0 to n-1
+	110 print rnd(1),random(6)
 \end{verbatim}
 
 \section*{read / data}
 Reads from DATA statements the types must match. For syntactic consistency, string data must be in quote marks
 \example{}
 \begin{verbatim}
-	100 read a\$,b
+	100 read a$,b
 	110 data “hello world”
 	120 data 59
 \end{verbatim}
@@ -523,11 +476,11 @@ Return from GOSUB call. You can make up your own death threats.
 	100 return
 \end{verbatim}
 
-\section*{right\$()}
+\section*{right$()}
 Returns several characters from a string counting from the right
 \example{}
 \begin{verbatim}
-	100 print right\$("last four characters",4)
+	100 print right$("last four characters",4)
 \end{verbatim}
 
 \section*{run}
@@ -577,11 +530,11 @@ Sound off
 Return a string consisting of a given number of spaces
 \example{}
 \begin{verbatim}
-	100 a\$ = spc(32)
+	100 a$ = spc(32)
 \end{verbatim}
 
 \section*{sprite}
-Manipulate a hardware sprite using the standard modifiers. Also supported are sprite image <n> which turns a sprite on and selects image <n> to be used for it, and sprite off, which turns a sprite off. Sprite data is stored at \$30000 onwards, beginning with a 512 byte index. Sprites cannot be scaled and flipped as the hardware does not permit it. Sprites have their own section.
+Manipulate a hardware sprite using the standard modifiers. Also supported are sprite image <n> which turns a sprite on and selects image <n> to be used for it, and sprite off, which turns a sprite off. Sprite data is stored at $30000 onwards, beginning with a 512 byte index. Sprites cannot be scaled and flipped as the hardware does not permit it. Sprites have their own section.
 \example{}
 \begin{verbatim}
 	100 sprite 4 image 2 to 50,200
@@ -602,10 +555,10 @@ Stops program with an error
 \end{verbatim}
 
 \section*{text}
-Draws a possibly scaled or flipped string from the standard font on the bitmap, using the standard syntax. Flipping is done using bits 7 and 6 of the mode (e.g. \$80 and \$40) in the colour option, 
+Draws a possibly scaled or flipped string from the standard font on the bitmap, using the standard syntax. Flipping is done using bits 7 and 6 of the mode (e.g. $80 and $40) in the colour option, 
 \example{}
 \begin{verbatim}
-	100 text “hello” dim 2 colour 3 to 100,100
+	100 text “hello” dim 2 colour $03 to 100,100
 \end{verbatim}
 
 \section*{timer()}
@@ -621,9 +574,8 @@ Converts a number to a string. There must be some number there e.g. “-42xxx”
 \begin{verbatim}
 	100 print val(“42”)
 	110 print val(“413.22”)
+	120 str$()
 \end{verbatim}
-
-\section*{str\$()}
 Converts a string to a number, in signed decimal form. 
 \example{}
 \begin{verbatim}
@@ -654,4 +606,3 @@ Simple commands that generate a simple sound effect
 \begin{verbatim}
 	100 ping:zap:explode
 \end{verbatim}
-

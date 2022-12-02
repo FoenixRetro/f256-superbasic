@@ -1,7 +1,7 @@
 version=0.6.0
 typesetter=pdflatex
 steps=texpdf
-root=/home/paulr/Projects/superbasic/reference/source/f256jr_ref.tex
+root=/home/paulr/Projects/superbasic/reference/source/f256jr_basic_ref.tex
 
 file=/home/paulr/Projects/superbasic/reference/source/crossdev.tex
 file=/home/paulr/Projects/superbasic/reference/source/introduction.tex
@@ -9,3 +9,6 @@ file=/home/paulr/Projects/superbasic/reference/source/procedures.tex
 file=/home/paulr/Projects/superbasic/reference/source/programs.tex
 file=/home/paulr/Projects/superbasic/reference/source/reference.tex
 file=/home/paulr/Projects/superbasic/reference/source/variables.tex
+file=/home/paulr/Projects/superbasic/reference/source/graphics.tex
+file=/home/paulr/Projects/superbasic/reference/source/sprites.tex
+file=/home/paulr/Projects/superbasic/reference/source/sound.tex
