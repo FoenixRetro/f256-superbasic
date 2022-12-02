@@ -33,7 +33,7 @@ MODULES= +hardware +graphics +tokeniser +sound
 RELEASEDIR = ..$(S)release
 RELEASE = "`cat $(SCRIPTDIR)$(S)buildcount.txt`"
 
-START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@$(LSOURCE) $(BINDIR)graphics.bin@$(LSPRITES)
+START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@$(LSOURCE) $(BINDIR)graphics.bin@$(LSPRITES) boot@8000
 
 all :  basic
 #

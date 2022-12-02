@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Thu Dec  1 16:52:03 2022
+; Fri Dec  2 10:23:00 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -918,17 +918,17 @@
 ;******  Processing file: ./common/cli/editor.asm
 
 .8353					EditProgramCode:
-.8353	ad 2b 04	lda $042b			lda 	TokenLineNumber 			; find the line.
+.8353	ad 2b 04	lda $042b			lda 	TokenLineNumber 			; try to find the line.
 .8356	ae 2c 04	ldx $042c			ldx 	TokenLineNumber+1
 .8359	20 88 a5	jsr $a588			jsr 	MemorySearch
-.835c	90 05		bcc $8363			bcc 	_EPCNoDelete 				; reached the end don't delete
-.835e	d0 03		bne $8363			bne 	_EPCNoDelete 				; found slot but didn't match, no delete
+.835c	90 05		bcc $8363			bcc 	_EPCNoDelete 				; reached the end : don't delete
+.835e	d0 03		bne $8363			bne 	_EPCNoDelete 				; found slot but didn't match : no delete
 .8360	20 ad a4	jsr $a4ad			jsr 	MemoryDeleteLine 			; delete the line
 .8363					_EPCNoDelete:
-.8363	ad 2d 04	lda $042d			lda 	TokenBuffer 				; buffer empty
+.8363	ad 2d 04	lda $042d			lda 	TokenBuffer 				; buffer empty - we just want to delete a line.
 .8366	c9 80		cmp #$80			cmp 	#KWC_EOL
 .8368	f0 0d		beq $8377			beq 	_EPCNoInsert
-.836a	ad 2b 04	lda $042b			lda 	TokenLineNumber 			; find the line - it cannot exist.
+.836a	ad 2b 04	lda $042b			lda 	TokenLineNumber 			; find the line - it cannot exist as we've just deleted it.
 .836d	ae 2c 04	ldx $042c			ldx 	TokenLineNumber+1 			; so this can't fail, it returns some point in the code.
 .8370	20 88 a5	jsr $a588			jsr 	MemorySearch
 .8373	18		clc				clc 								; insert at this point.
@@ -944,14 +944,14 @@
 .8378					WarmStart:
 .8378	a2 ff		ldx #$ff			ldx 	#$FF
 .837a	9a		txs				txs
-.837b	a9 85		lda #$85			lda 	#CLICommandLine+$80 		; set console colour
+.837b	a9 85		lda #$85			lda 	#CLICommandLine+$80 		; set console colour whatever the current colour is.
 .837d	20 03 80	jsr $8003			jsr 	EXTPrintCharacter
 .8380	20 12 80	jsr $8012			jsr 	EXTInputLine 				; get line to lineBuffer
 .8383	20 21 80	jsr $8021			jsr 	TKTokeniseLine 				; tokenise the line
-.8386	ad 2b 04	lda $042b			lda 	TokenLineNumber 			; line number ?
+.8386	ad 2b 04	lda $042b			lda 	TokenLineNumber 			; line number <> 0
 .8389	0d 2c 04	ora $042c			ora 	TokenLineNumber+1
 .838c	d0 17		bne $83a5			bne 	_WSEditCode 				; if so,edit code.
-.838e	9c 2a 04	stz $042a			stz 	TokenOffset 				; zero offset, meaning it only runs one line.
+.838e	9c 2a 04	stz $042a			stz 	TokenOffset 				; zero the "offset", meaning it only runs one line.
 .8391	a9 2a		lda #$2a			lda 	#((TokenOffset) & $FF)
 .8393	85 30		sta $30				sta 	codePtr
 .8395	a9 04		lda #$04			lda 	#((TokenOffset) >> 8)
@@ -962,8 +962,8 @@
 .83a0	20 1d 8b	jsr $8b1d			jsr 	RUNCodePointerLine 			; execute that line.
 .83a3	80 d3		bra $8378			bra 	WarmStart
 .83a5					_WSEditCode:
-.83a5	20 53 83	jsr $8353			jsr 	EditProgramCode
-.83a8	20 0e 84	jsr $840e			jsr 	ClearCommand
+.83a5	20 53 83	jsr $8353			jsr 	EditProgramCode 			; edit the program code
+.83a8	20 0e 84	jsr $840e			jsr 	ClearCommand 				; clear all variables etc.
 .83ab	80 cb		bra $8378			bra 	WarmStart
 
 ;******  Return to file: _basic.asm
@@ -979,7 +979,7 @@
 .83b7	a5 60		lda $60				lda 	NSMantissa1
 .83b9	8d 1f 04	sta $041f			sta 	AssemblerAddress+1
 .83bc	20 e9 8e	jsr $8ee9			jsr 	CheckComma
-.83bf	20 b7 9d	jsr $9db7			jsr 	Evaluate8BitInteger 		; options
+.83bf	20 b7 9d	jsr $9db7			jsr 	Evaluate8BitInteger 		; options 0-3
 .83c2	a5 58		lda $58				lda 	NSMantissa0
 .83c4	8d 20 04	sta $0420			sta 	AssemblerControl
 .83c7	60		rts				rts
@@ -1108,7 +1108,7 @@
 ;******  Processing file: ./common/commands/data.asm
 
 .846e					Command_Data:
-.846e	a9 3a		lda #$3a			lda 	#KWD_COLON 					; advance to colon/EOL
+.846e	a9 3a		lda #$3a			lda 	#KWD_COLON 					; advance to colon/EOL, e.g. ignore anything till then.
 .8470	a2 80		ldx #$80			ldx 	#KWC_EOL
 .8472	20 d9 8d	jsr $8dd9			jsr 	ScanForward
 .8475	60		rts				rts
@@ -1122,7 +1122,7 @@
 .8476	b1 30		lda ($30),y			lda 	(codePtr),y
 .8478	29 c0		and #$c0			and 	#$C0
 .847a	c9 40		cmp #$40			cmp 	#$40
-.847c	d0 7a		bne $84f8			bne 	_DCSyntax
+.847c	d0 7a		bne $84f8			bne 	_DCSyntax 				; n o, error.
 .847e	b1 30		lda ($30),y			lda 	(codePtr),y
 .8480	18		clc				clc
 .8481	69 d0		adc #$d0			adc 	#((VariableSpace >> 8) - $40) & $FF
@@ -1717,11 +1717,11 @@
 .8807					Command_List:
 .8807	9c 26 04	stz $0426			stz 	listIndent 					; reset indent.
 .880a	b1 30		lda ($30),y			lda 	(codePtr),y
-.880c	29 c0		and #$c0			and 	#$C0
-.880e	c9 40		cmp #$40			cmp 	#$40
+.880c	29 c0		and #$c0			and 	#$C0 				 		; if so, we are list procedure() which is a seperate block
+.880e	c9 40		cmp #$40			cmp 	#$40  						; of code.
 .8810	f0 69		beq $887b			beq 	_CLListProcedure
 .8812	64 5c		stz $5c				stz		NSMantissa0+4				; set the lower (slot 4) to 0 and upper (slot 7) to $FFFF
-.8814	64 64		stz $64				stz 	NSMantissa1+4
+.8814	64 64		stz $64				stz 	NSMantissa1+4 				; these are the default top and bottom.
 .8816	a9 ff		lda #$ff			lda 	#$FF
 .8818	85 5f		sta $5f				sta 	NSMantissa0+7
 .881a	85 67		sta $67				sta 	NSMantissa1+7
@@ -1752,7 +1752,7 @@
 .884b	a9 20		lda #$20			lda 	#((BasicStart) >> 8)
 .884d	85 31		sta $31				sta 	codePtr+1
 .884f					_CLLoop:
-.884f	20 0c 80	jsr $800c			jsr 	EXTBreakCheck 				; break check
+.884f	20 0c 80	jsr $800c			jsr 	EXTBreakCheck 				; break check here, as we want the option of breaking out of long lists.
 .8852	f0 24		beq $8878			beq 	_CLExit
 .8854	b2 30		lda ($30)			lda 	(codePtr)
 .8856	f0 20		beq $8878			beq 	_CLExit
@@ -1764,7 +1764,7 @@
 .8864	f0 02		beq $8868			beq 	_CLDoThisOne
 .8866	b0 03		bcs $886b			bcs 	_CLNext
 .8868					_CLDoThisOne:
-.8868	20 d4 88	jsr $88d4			jsr 	CLListOneLine
+.8868	20 d4 88	jsr $88d4			jsr 	CLListOneLine 				; routine to list the current line.
 .886b					_CLNext:
 .886b	18		clc				clc
 .886c	b2 30		lda ($30)			lda 	(codePtr)					; get offset and add
@@ -2032,7 +2032,7 @@
 .8a11	b1 36		lda ($36),y			lda 	(zTemp0),y
 .8a13	a8		tay				tay
 .8a14	a2 02		ldx #$02			ldx 	#ParameterStackPos 			; start position of parameters
-.8a16	ec 16 04	cpx $0416			cpx	 	LastParameter 				; check no parameters at the start
+.8a16	ec 16 04	cpx $0416			cpx	 	LastParameter 				; check zero parameters at the start
 .8a19	f0 13		beq $8a2e			beq 	_ParamExit 					; if so, exit.
 .8a1b					_ParamExtract:
 .8a1b	ca		dex				dex 								; put a local term on the level before
@@ -2065,10 +2065,10 @@
 .8a42	20 48 98	jsr $9848			jsr 	EvaluateTerm
 .8a45	b5 50		lda $50,x			lda 	NSStatus,x
 .8a47	29 20		and #$20			and 	#NSBIsReference				; get status byte on stack, identifies int, float, string.
-.8a49	f0 4f		beq $8a9a			beq 	_CRSyntax 					; check reference (bit 0)
+.8a49	f0 4f		beq $8a9a			beq 	_CRSyntax 					; check reference (bit 0) fail if not a reference.
 .8a4b	20 e3 8a	jsr $8ae3			jsr 	SwapDataCodePtrs 			; swap code and data
 .8a4e	ad 1c 04	lda $041c			lda 	inDataStatement 			; if in a data statement, we don't need to search
-.8a51	d0 25		bne $8a78			bne 	_CRContinueData
+.8a51	d0 25		bne $8a78			bne 	_CRContinueData  			; forward for the next one.
 .8a53	b2 30		lda ($30)			lda 	(codePtr)
 .8a55	f0 1c		beq $8a73			beq 	_CRNoData
 .8a57					_CRKeepSearching:
@@ -2096,9 +2096,9 @@
 .8a7a	20 61 9d	jsr $9d61			jsr 	EvaluateValue 				; evaluate value into slot # 1
 .8a7d	ca		dex				dex
 .8a7e	20 f0 87	jsr $87f0			jsr		AssignVariable 				; do the assignment
-.8a81	9c 1c 04	stz $041c			stz 	inDataStatement 			; clear in data
+.8a81	9c 1c 04	stz $041c			stz 	inDataStatement 			; clear in data flag
 .8a84	b1 30		lda ($30),y			lda 	(codePtr),y
-.8a86	c9 2c		cmp #$2c			cmp 	#KWD_COMMA 					; if not, end of data statement
+.8a86	c9 2c		cmp #$2c			cmp 	#KWD_COMMA 					; if not, end of data statement and exit
 .8a88	d0 04		bne $8a8e			bne 	_CRSwapBack
 .8a8a	c8		iny				iny 								; consume comma
 .8a8b	ee 1c 04	inc $041c			inc 	inDataStatement 			; set in data statement currently.
@@ -2167,7 +2167,7 @@
 .8ad5	85 31		sta $31				sta 	codePtr+1
 .8ad7	20 e3 8a	jsr $8ae3			jsr 	SwapDataCodePtrs 			; put them back
 .8ada	a9 03		lda #$03			lda 	#3 							; start at offset 3, e.g. first instruction of first line.
-.8adc	8d 1b 04	sta $041b			sta 	dataPointer+4
+.8adc	8d 1b 04	sta $041b			sta 	dataPointer+4   			; (read checks not EOF)
 .8adf	9c 1c 04	stz $041c			stz 	inDataStatement 			; not in data statement
 .8ae2	60		rts				rts
 .8ae3					SwapDataCodePtrs:
