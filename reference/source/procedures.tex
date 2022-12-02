@@ -1,0 +1,35 @@
+\chapter{Using Procedures}
+
+This manual is meant to be as complete as possible an introduction to the various hardware features of the \jr. In it, I will attempt to explain each of the major subsystems of the \jr\ and provide simple but practical examples of their use.
+
+\section*{About the Machine}
+
+\subsection*{Ports}
+
+The connectors of the back of the \jr\ from left to right are (see figure:~\ref{fig:rear}):
+
+\begin{description}
+    \item[Audio Line Out] the stereo audio output. These are standard RCA style line level outputs.
+
+    \item[SD Card Slot] for standard SD cards for storage of files and programs.
+
+    \item[DVI Monitor Port] for output to your monitor. This can be connected to the DVI input of a monitor or run through a simple DVI-VGA connector to use with an older VGA input.
+
+    \item[IEC Serial Port] supports the Commodore serial bus. A Commodore disk drive (1541, 1571, 1581, {\it etc.}), a Commodore compatible serial printer, or other device supporting the Commodore serial bus can be connected here.
+\end{description}
+
+
+\example{Print an A to the Screen}
+\begin{verbatim}
+    lda $0001       ; Save the current MMU setting
+    pha
+
+    lda #$02        ; Swap I/O Page 2 into bank 6
+    sta $0001
+
+    lda #'A'        ; Write 'A' to the upper left corner
+    sta $C000
+
+    pla             ; Restore the old MMU setting
+    sta $0001
+\end{verbatim}

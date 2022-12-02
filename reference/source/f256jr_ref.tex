@@ -1,0 +1,50 @@
+\documentclass[oneside]{book}
+\usepackage{datetime2}
+\DTMsetdatestyle{ddmmyyyy}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{colorlinks=true,linkcolor=black}
+\usepackage{amssymb}
+\usepackage{notomath}
+\usepackage[T1]{fontenc}
+\usepackage[letterpaper,inner=1.5in,outer=1.0in,top=0.75in,bottom=0.75in,twoside]{geometry}
+\usepackage{multirow}
+\usepackage{graphbox}
+\usepackage{sectsty}
+\usepackage[Bjornstrup]{fncychap}
+\definecolor{darkblue}{rgb}{0.1, 0.0, 0.6}
+\definecolor{silver}{rgb}{0.85, 0.85, 0.85}
+\ChNumVar{\color{darkblue}\fontsize{76}{80}\usefont{OT1}{pzc}{m}{n}\selectfont}
+\ChTitleVar{\color{darkblue}\raggedleft\Huge\sffamily\bfseries}
+\allsectionsfont{\color{darkblue}\bfseries\sffamily}
+\newcommand{\jr}{F256jr}
+\newcommand{\microsec}{$\mu$s}
+\newcommand{\example}[1]{\subsection*{Example: #1}}
+\begin{document}
+
+\title{Foenix \jr\ BASIC Reference Manual}
+\author{Peter Weingartner}
+\begin{titlepage}
+    \colorbox{silver}{\makebox[\textwidth][r]{
+    \shortstack{
+        \vspace{3cm} \\
+        \color{darkblue}\bfseries\sffamily\Huge Foenix \jr\ BASIC Reference Manual}} \\
+    }
+
+    \vfill
+
+    \hfill\mbox{\color{darkblue}\bfseries\sffamily\Large Paul Robson}
+
+    \hfill\mbox{\color{darkblue}\bfseries\sffamily\large \today}
+\end{titlepage}
+
+\tableofcontents
+
+\input{introduction.tex}
+\input{programs.tex}
+\input{procedures.tex}
+\input{variables.tex}
+\input{crossdev.tex}
+\input{reference.tex}
+
+\end{document}
