@@ -167,7 +167,7 @@ tokenBuffer:
 		.fill 	253
 
 lineBuffer: 								; used for input - ASCII line goes here
-		.fill 	MaxLineSize+1
+		.fill 	253
 
 numberBuffer:								; buffer for numbers (32 bit binary + sign + ASCIIZ)
 		.fill 	34
@@ -187,6 +187,8 @@ decimalBuffer: 								; buffer for number -> string conversion.
 ;		==== 			=====
 ;		1/12/2022 		Changed the recorded values used in the reference byte size which were
 ;						incorrect, no code change.
+;		2/12/2022 		Made line buffer long again, as long lines can be entered via cross 
+;						development which would crash the interpreter.
 ;
 ; ************************************************************************************************
 

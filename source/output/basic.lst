@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$3000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Fri Dec  2 10:23:00 2022
+; Fri Dec  2 16:35:07 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -148,11 +148,11 @@
 .042d					tokenBuffer:
 >042d							.fill 	253
 .052a					lineBuffer:
->052a							.fill 	MaxLineSize+1
-.057b					numberBuffer:
->057b							.fill 	34
-.059d					decimalBuffer:
->059d							.fill 	16
+>052a							.fill 	253
+.0627					numberBuffer:
+>0627							.fill 	34
+.0649					decimalBuffer:
+>0649							.fill 	16
 
 ;******  Return to file: _basic.asm
 
@@ -862,9 +862,9 @@
 .82e2	a9 27		lda #$27			lda 	#_BLLoad & $FF
 .82e4	20 53 8f	jsr $8f53			jsr 	PrintStringXA
 .82e7	a9 00		lda #$00			lda 	#((SOURCE_ADDRESS) & $FF)
-.82e9	8d ad 05	sta $05ad			sta 	0+BackLoadPointer
+.82e9	8d 59 06	sta $0659			sta 	0+BackLoadPointer
 .82ec	a9 30		lda #$30			lda 	#((SOURCE_ADDRESS) >> 8)
-.82ee	8d ae 05	sta $05ae			sta 	1+BackLoadPointer
+.82ee	8d 5a 06	sta $065a			sta 	1+BackLoadPointer
 .82f1	a9 ff		lda #$ff			lda 	#$FF
 .82f3	8d fa ff	sta $fffa			sta 	$FFFA
 .82f6					_BPLoop:
@@ -898,19 +898,19 @@
 >8327	4c 6f 61 64 69 6e 67 20				.text 	"Loading from Memory",13,0
 >832f	66 72 6f 6d 20 4d 65 6d 6f 72 79 0d 00
 .833c					BLReadByte:
-.833c	ad ad 05	lda $05ad			lda 	BackLoadPointer 			; copy pointer to zTemp0
+.833c	ad 59 06	lda $0659			lda 	BackLoadPointer 			; copy pointer to zTemp0
 .833f	85 36		sta $36				sta 	zTemp0
-.8341	ad ae 05	lda $05ae			lda 	BackLoadPointer+1
+.8341	ad 5a 06	lda $065a			lda 	BackLoadPointer+1
 .8344	85 37		sta $37				sta 	zTemp0+1
 .8346	b2 36		lda ($36)			lda 	(zTemp0) 					; read next byte
-.8348	ee ad 05	inc $05ad			inc 	BackLoadPointer 			; bump pointer
+.8348	ee 59 06	inc $0659			inc 	BackLoadPointer 			; bump pointer
 .834b	d0 03		bne $8350			bne 	_BLNoCarry
-.834d	ee ae 05	inc $05ae			inc 	BackLoadPointer+1
+.834d	ee 5a 06	inc $065a			inc 	BackLoadPointer+1
 .8350					_BLNoCarry:
 .8350	c9 00		cmp #$00			cmp 	#0
 .8352	60		rts				rts
-.05ad					BackLoadPointer:
->05ad							.fill 	2
+.0659					BackLoadPointer:
+>0659							.fill 	2
 
 ;******  Return to file: _basic.asm
 
@@ -1565,8 +1565,8 @@
 .8718					_CPNumber:
 .8718	a9 05		lda #$05			lda 	#5 							; maximum decimals
 .871a	20 51 9c	jsr $9c51			jsr 	ConvertNumberToString 		; convert to string (in unary str$() function)
-.871d	a2 05		ldx #$05			ldx 	#DecimalBuffer >> 8
-.871f	a9 9d		lda #$9d			lda 	#DecimalBuffer & $FF
+.871d	a2 06		ldx #$06			ldx 	#DecimalBuffer >> 8
+.871f	a9 49		lda #$49			lda 	#DecimalBuffer & $FF
 .8721	20 9e 87	jsr $879e			jsr 	CPPrintStringXA 			; print it.
 .8724	80 b0		bra $86d6			bra 	Command_IP_Main				; loop round clearing carry so NL if end
 .8726					_CPNewLine:
@@ -2227,10 +2227,10 @@
 .8b31	38		sec				sec 								; calculate timer - LastTick
 .8b32	ad 59 d6	lda $d659			lda 	$D659
 .8b35	aa		tax				tax 								; saving timer in X
-.8b36	ed af 05	sbc $05af			sbc 	LastTick
+.8b36	ed 5b 06	sbc $065b			sbc 	LastTick
 .8b39	c9 03		cmp #$03			cmp 	#3
 .8b3b	90 06		bcc $8b43			bcc 	_NoFireTick 				; if < 3 clocks don't fire.
-.8b3d	8e af 05	stx $05af			stx 	LastTick 					; update last timer
+.8b3d	8e 5b 06	stx $065b			stx 	LastTick 					; update last timer
 .8b40	20 47 9e	jsr $9e47			jsr 	TickHandler 							; go do the code.
 .8b43					_NoFireTick:
 .8b43	68		pla				pla 								; restore I/O 0
@@ -3564,16 +3564,16 @@
 .937e	10 08		bpl $9388			bpl 	_CI32NotNeg
 .9380	48		pha				pha
 .9381	a9 2d		lda #$2d			lda 	#'-'
-.9383	99 7b 05	sta $057b,y			sta 	NumberBuffer,y
+.9383	99 27 06	sta $0627,y			sta 	NumberBuffer,y
 .9386	c8		iny				iny
 .9387	68		pla				pla
 .9388					_CI32NotNeg:
 .9388	20 96 93	jsr $9396			jsr 	_CI32DivideConvert 			; recursive conversion
 .938b	a9 00		lda #$00			lda 	#0 							; make ASCIIZ
-.938d	99 7b 05	sta $057b,y			sta 	NumberBuffer,y
+.938d	99 27 06	sta $0627,y			sta 	NumberBuffer,y
 .9390	7a		ply				ply
-.9391	a2 05		ldx #$05			ldx 	#NumberBuffer >> 8 			; return address in XA
-.9393	a9 7b		lda #$7b			lda 	#NumberBuffer & $FF
+.9391	a2 06		ldx #$06			ldx 	#NumberBuffer >> 8 			; return address in XA
+.9393	a9 27		lda #$27			lda 	#NumberBuffer & $FF
 .9395	60		rts				rts
 .9396					_CI32DivideConvert:
 .9396	e8		inx				inx 								; write to next slot up
@@ -3594,7 +3594,7 @@
 .93b3	69 26		adc #$26			adc 	#6+32
 .93b5					_CI32NotHex:
 .93b5	69 30		adc #$30			adc 	#48
-.93b7	99 7b 05	sta $057b,y			sta 	NumberBuffer,y 				; write out and exit
+.93b7	99 27 06	sta $0627,y			sta 	NumberBuffer,y 				; write out and exit
 .93ba	c8		iny				iny
 .93bb	60		rts				rts
 
@@ -5125,10 +5125,10 @@
 .9c40	da		phx				phx  								; copy the converted string into the buffer.
 .9c41	a2 00		ldx #$00			ldx 	#0
 .9c43					_USCopy:
-.9c43	bd 9d 05	lda $059d,x			lda 	DecimalBuffer,x
+.9c43	bd 49 06	lda $0649,x			lda 	DecimalBuffer,x
 .9c46	20 d7 a7	jsr $a7d7			jsr 	StringTempWrite
 .9c49	e8		inx				inx
-.9c4a	bd 9d 05	lda $059d,x			lda 	DecimalBuffer,x
+.9c4a	bd 49 06	lda $0649,x			lda 	DecimalBuffer,x
 .9c4d	d0 f4		bne $9c43			bne 	_USCopy
 .9c4f	fa		plx				plx
 .9c50	60		rts				rts
@@ -5187,18 +5187,18 @@
 .9cb3	20 79 93	jsr $9379			jsr 	ConvertInt32
 .9cb6	a2 00		ldx #$00			ldx	 	#0 							; write that to the decimal buffer.
 .9cb8					_MPTSCopy:
-.9cb8	bd 7b 05	lda $057b,x			lda 	NumberBuffer,x
+.9cb8	bd 27 06	lda $0627,x			lda 	NumberBuffer,x
 .9cbb	20 c6 9c	jsr $9cc6			jsr 	WriteDecimalBuffer
 .9cbe	e8		inx				inx
-.9cbf	bd 7b 05	lda $057b,x			lda 	NumberBuffer,x
+.9cbf	bd 27 06	lda $0627,x			lda 	NumberBuffer,x
 .9cc2	d0 f4		bne $9cb8			bne 	_MPTSCopy
 .9cc4	fa		plx				plx
 .9cc5	60		rts				rts
 .9cc6					WriteDecimalBuffer:
 .9cc6	da		phx				phx
 .9cc7	ae 15 04	ldx $0415			ldx 	dbOffset
-.9cca	9d 9d 05	sta $059d,x			sta 	DecimalBuffer,x
-.9ccd	9e 9e 05	stz $059e,x			stz 	DecimalBuffer+1,x
+.9cca	9d 49 06	sta $0649,x			sta 	DecimalBuffer,x
+.9ccd	9e 4a 06	stz $064a,x			stz 	DecimalBuffer+1,x
 .9cd0	ee 15 04	inc $0415			inc 	dbOffset
 .9cd3	fa		plx				plx
 .9cd4	60		rts				rts
@@ -5473,8 +5473,8 @@
 .9e48	20 1b 80	jsr $801b			jsr 	SNDUpdate 					; update sound
 .9e4b	7a		ply				ply
 .9e4c	60		rts				rts
-.05af					LastTick:
->05af							.fill 		1
+.065b					LastTick:
+>065b							.fill 		1
 
 ;******  Return to file: _basic.asm
 
@@ -5812,7 +5812,7 @@
 .a13c					ShapeDrawCmd:
 .a13c	20 c6 a1	jsr $a1c6			jsr 	RunGraphicsCommand
 .a13f					ShapeDraw:
-.a13f	0d b1 05	ora $05b1			ora 	gxFillSolid  				; adjust AXY for solid fill.
+.a13f	0d 5d 06	ora $065d			ora 	gxFillSolid  				; adjust AXY for solid fill.
 .a142	4c ba a1	jmp $a1ba			jmp 	ExecuteGraphicCommand	 	; and complete
 .a145					SpriteCommand:
 .a145	a2 00		ldx #$00			ldx 	#0
@@ -5837,7 +5837,7 @@
 .a16b					ImageRunDraw:
 .a16b	09 40		ora #$40			ora 	#GCMD_Move					; move cursor
 .a16d	20 15 80	jsr $8015			jsr 	GXGraphicDraw
-.a170	ad b7 05	lda $05b7			lda 	gxDrawScale
+.a170	ad 63 06	lda $0663			lda 	gxDrawScale
 .a173	0a		asl a				asl 	a
 .a174	0a		asl a				asl 	a
 .a175	0a		asl a				asl 	a
@@ -5863,7 +5863,7 @@
 .a198	f0 13		beq $a1ad			beq 	_IRDExit
 .a19a	5a		phy				phy									; save string pos
 .a19b	48		pha				pha 								; save char
-.a19c	ad b7 05	lda $05b7			lda 	gxDrawScale 				; get scale
+.a19c	ad 63 06	lda $0663			lda 	gxDrawScale 				; get scale
 .a19f	0a		asl a				asl 	a
 .a1a0	0a		asl a				asl 	a
 .a1a1	0a		asl a				asl 	a
@@ -5884,22 +5884,22 @@
 .a1b5	a9 42		lda #$42			lda 	#GCMD_Line 						; command ID to use
 .a1b7	20 c6 a1	jsr $a1c6			jsr 	RunGraphicsCommand
 .a1ba					ExecuteGraphicCommand:
-.a1ba	0d b0 05	ora $05b0			ora 	gxCommandID 				; make a full command
+.a1ba	0d 5c 06	ora $065c			ora 	gxCommandID 				; make a full command
 .a1bd	20 15 80	jsr $8015			jsr 	GXGraphicDraw 				; draw it and exit
 .a1c0	b0 01		bcs $a1c3			bcs 	_EGCError
 .a1c2	60		rts				rts
 .a1c3					_EGCError:
 .a1c3	4c 9a 9f	jmp $9f9a			jmp 	SyntaxError
 .a1c6					RunGraphicsCommand:
-.a1c6	8d b0 05	sta $05b0			sta 	gxCommandID					; save TODO graphics command.
+.a1c6	8d 5c 06	sta $065c			sta 	gxCommandID					; save TODO graphics command.
 .a1c9	68		pla				pla 								; pop handler address
 .a1ca	fa		plx				plx
 .a1cb	1a		inc a				inc 	a
 .a1cc	d0 01		bne $a1cf			bne 	_RGINoCarry
 .a1ce	e8		inx				inx
 .a1cf					_RGINoCarry:
-.a1cf	8d b5 05	sta $05b5			sta 	GXHandler
-.a1d2	8e b6 05	stx $05b6			stx 	GXHandler+1
+.a1cf	8d 61 06	sta $0661			sta 	GXHandler
+.a1d2	8e 62 06	stx $0662			stx 	GXHandler+1
 .a1d5					_RGICommandLoop:
 .a1d5	b1 30		lda ($30),y			lda 	(codePtr),y
 .a1d7	c8		iny				iny
@@ -5925,7 +5925,7 @@
 .a1fe	f0 74		beq $a274			beq 	_RGI_Colour
 .a200	c9 b2		cmp #$b2			cmp 	#KWD_COLOR
 .a202	f0 70		beq $a274			beq 	_RGI_Colour
-.a204	ae b0 05	ldx $05b0			ldx 	gxCommandID
+.a204	ae 5c 06	ldx $065c			ldx 	gxCommandID
 .a207	e0 52		cpx #$52			cpx 	#GCMD_SpriteMove 			; if not sprite
 .a209	d0 03		bne $a20e			bne 	_RGI_Move 					; move
 .a20b	4c 9c a2	jmp $a29c			jmp		_RGI_SpriteInstructions
@@ -5945,10 +5945,10 @@
 .a222	60		rts				rts
 .a223					_RGI_Solid:
 .a223	a9 02		lda #$02			lda 	#2
-.a225	8d b1 05	sta $05b1			sta 	gxFillSolid
+.a225	8d 5d 06	sta $065d			sta 	gxFillSolid
 .a228	80 ab		bra $a1d5			bra 	_RGICommandLoop
 .a22a					_RGI_Frame:
-.a22a	9c b1 05	stz $05b1			stz 	gxFillSolid
+.a22a	9c 5d 06	stz $065d			stz 	gxFillSolid
 .a22d	80 a6		bra $a1d5			bra 	_RGICommandLoop
 .a22f					_RGI_To:
 .a22f	20 c2 a2	jsr $a2c2			jsr 	GCGetCoordinatePair 		; get coordinate pair into slot #1,#2
@@ -5963,15 +5963,15 @@
 .a23f	20 cf a2	jsr $a2cf			jsr 	GCSignedCoordinatePair 		; get coordinate pair into slot #1,#2
 .a242	18		clc				clc
 .a243	a5 59		lda $59				lda 	NSMantissa0+1 				; copy it into space.
-.a245	6d b2 05	adc $05b2			adc 	gxxPos
-.a248	8d b2 05	sta $05b2			sta 	gxXPos
+.a245	6d 5e 06	adc $065e			adc 	gxxPos
+.a248	8d 5e 06	sta $065e			sta 	gxXPos
 .a24b	a5 61		lda $61				lda 	NSMantissa1+1
-.a24d	6d b3 05	adc $05b3			adc 	gxxPos+1
-.a250	8d b3 05	sta $05b3			sta 	gxXPos+1
+.a24d	6d 5f 06	adc $065f			adc 	gxxPos+1
+.a250	8d 5f 06	sta $065f			sta 	gxXPos+1
 .a253	a5 5a		lda $5a				lda 	NSMantissa0+2
 .a255	18		clc				clc
-.a256	6d b4 05	adc $05b4			adc 	gxYPos
-.a259	8d b4 05	sta $05b4			sta 	gxYPos
+.a256	6d 60 06	adc $0660			adc 	gxYPos
+.a259	8d 60 06	sta $0660			sta 	gxYPos
 .a25c	80 d7		bra $a235			bra 	_RGI_Here
 .a25e					_RGI_Dim:
 .a25e	a2 01		ldx #$01			ldx	 	#1
@@ -5982,7 +5982,7 @@
 .a269	c9 09		cmp #$09			cmp 	#8+1
 .a26b	b0 29		bcs $a296			bcs		_RGIRange
 .a26d	3a		dec a				dec 	a
-.a26e	8d b7 05	sta $05b7			sta 	gxDrawScale
+.a26e	8d 63 06	sta $0663			sta 	gxDrawScale
 .a271	4c d5 a1	jmp $a1d5			jmp 	_RGICommandLoop
 .a274					_RGI_Colour:
 .a274	a2 01		ldx #$01			ldx 	#1 							; colour
@@ -6005,7 +6005,7 @@
 .a296					_RGIRange:
 .a296	4c 9f 9f	jmp $9f9f			jmp 	RangeError
 .a299					_RGICallHandler:
-.a299	6c b5 05	jmp ($05b5)			jmp 	(GXHandler)
+.a299	6c 61 06	jmp ($0661)			jmp 	(GXHandler)
 .a29c					_RGI_SpriteInstructions:
 .a29c	c9 c3		cmp #$c3			cmp 	#KWD_OFF
 .a29e	f0 07		beq $a2a7			beq 	_RGISpriteOff
@@ -6046,30 +6046,30 @@
 .a2dc					_GCCPRange:
 .a2dc	4c 9f 9f	jmp $9f9f			jmp 	RangeError
 .a2df					GCLoadAXY:
-.a2df	ad b3 05	lda $05b3			lda 	gxXPos+1
-.a2e2	ae b2 05	ldx $05b2			ldx 	gxXPos
-.a2e5	ac b4 05	ldy $05b4			ldy 	gxYPos
+.a2df	ad 5f 06	lda $065f			lda 	gxXPos+1
+.a2e2	ae 5e 06	ldx $065e			ldx 	gxXPos
+.a2e5	ac 60 06	ldy $0660			ldy 	gxYPos
 .a2e8	60		rts				rts
 .a2e9					GCCopyPairToStore:
 .a2e9	a5 59		lda $59				lda 	NSMantissa0+1 				; copy it into space.
-.a2eb	8d b2 05	sta $05b2			sta 	gxXPos
+.a2eb	8d 5e 06	sta $065e			sta 	gxXPos
 .a2ee	a5 61		lda $61				lda 	NSMantissa1+1
-.a2f0	8d b3 05	sta $05b3			sta 	gxXPos+1
+.a2f0	8d 5f 06	sta $065f			sta 	gxXPos+1
 .a2f3	a5 5a		lda $5a				lda 	NSMantissa0+2
-.a2f5	8d b4 05	sta $05b4			sta 	gxYPos
+.a2f5	8d 60 06	sta $0660			sta 	gxYPos
 .a2f8	60		rts				rts
-.05b0					gxCommandID:
->05b0							.fill 	1
-.05b1					gxFillSolid:
->05b1							.fill 	1
-.05b2					gxXPos:
->05b2							.fill 	2
-.05b4					gxYPos:
->05b4							.fill 	1
-.05b5					gxHandler:
->05b5							.fill 	2
-.05b7					gxDrawScale:
->05b7							.fill 	1
+.065c					gxCommandID:
+>065c							.fill 	1
+.065d					gxFillSolid:
+>065d							.fill 	1
+.065e					gxXPos:
+>065e							.fill 	2
+.0660					gxYPos:
+>0660							.fill 	1
+.0661					gxHandler:
+>0661							.fill 	2
+.0663					gxDrawScale:
+>0663							.fill 	1
 
 ;******  Return to file: _basic.asm
 
@@ -6101,11 +6101,11 @@
 .a31d	a0 00		ldy #$00			ldy 	#0
 .a31f	a2 ff		ldx #$ff			ldx 	#$FF
 .a321	20 15 80	jsr $8015			jsr 	GXGraphicDraw
-.a324	9c b1 05	stz $05b1			stz 	gxFillSolid
-.a327	9c b2 05	stz $05b2			stz 	gxXPos
-.a32a	9c b3 05	stz $05b3			stz 	gxXPos+1
-.a32d	9c b4 05	stz $05b4			stz 	gxYPos
-.a330	9c b7 05	stz $05b7			stz 	gxDrawScale
+.a324	9c 5d 06	stz $065d			stz 	gxFillSolid
+.a327	9c 5e 06	stz $065e			stz 	gxXPos
+.a32a	9c 5f 06	stz $065f			stz 	gxXPos+1
+.a32d	9c 60 06	stz $0660			stz 	gxYPos
+.a330	9c 63 06	stz $0663			stz 	gxDrawScale
 .a333	a9 40		lda #$40			lda 	#GCMD_Move 						; home cursor
 .a335	a2 00		ldx #$00			ldx 	#0
 .a337	a0 00		ldy #$00			ldy 	#0
@@ -6464,19 +6464,19 @@
 .a536	b2 38		lda ($38)			lda 	(zTemp1)
 .a538	d0 0a		bne $a544			bne 	_MDLANoInitialise
 .a53a	a9 00		lda #$00			lda 	#((BasicStart) & $FF)
-.a53c	8d b8 05	sta $05b8			sta 	0+AppendPointer
+.a53c	8d 64 06	sta $0664			sta 	0+AppendPointer
 .a53f	a9 20		lda #$20			lda 	#((BasicStart) >> 8)
-.a541	8d b9 05	sta $05b9			sta 	1+AppendPointer
+.a541	8d 65 06	sta $0665			sta 	1+AppendPointer
 .a544					_MDLANoInitialise:
 .a544	18		clc				clc
-.a545	ad b8 05	lda $05b8			lda 	AppendPointer 				; copy append pointer to zTemp1 adding the offset as you go
+.a545	ad 64 06	lda $0664			lda 	AppendPointer 				; copy append pointer to zTemp1 adding the offset as you go
 .a548	85 38		sta $38				sta 	zTemp1
 .a54a	72 36		adc ($36)			adc 	(zTemp0)
-.a54c	8d b8 05	sta $05b8			sta 	AppendPointer
-.a54f	ad b9 05	lda $05b9			lda 	AppendPointer+1
+.a54c	8d 64 06	sta $0664			sta 	AppendPointer
+.a54f	ad 65 06	lda $0665			lda 	AppendPointer+1
 .a552	85 39		sta $39				sta 	zTemp1+1
 .a554	69 00		adc #$00			adc 	#0
-.a556	8d b9 05	sta $05b9			sta 	AppendPointer+1
+.a556	8d 65 06	sta $0665			sta 	AppendPointer+1
 .a559	a0 00		ldy #$00			ldy 	#0
 .a55b					_MDLACopy:
 .a55b	b1 36		lda ($36),y			lda 	(zTemp0),y 					; copy new line in
@@ -6488,8 +6488,8 @@
 .a565	a9 00		lda #$00			lda 	#0 							; end of program.
 .a567	91 38		sta ($38),y			sta 	(zTemp1),y
 .a569	60		rts				rts
-.05b8					AppendPointer:
->05b8							.fill 	2
+.0664					AppendPointer:
+>0664							.fill 	2
 
 ;******  Return to file: _basic.asm
 
@@ -6592,17 +6592,17 @@
 .a5e7	a0 00		ldy #$00			ldy 	#0 						; slide LSB
 .a5e9	80 00		bra $a5eb			bra 	SoundEffectCommand
 .a5eb					SoundEffectCommand:
-.a5eb	8d ba 05	sta $05ba			sta 	SoundCommandBlock 			; set up the command block in sound.asm
-.a5ee	9c bb 05	stz $05bb			stz 	SoundCommandBlock+1
+.a5eb	8d 66 06	sta $0666			sta 	SoundCommandBlock 			; set up the command block in sound.asm
+.a5ee	9c 67 06	stz $0667			stz 	SoundCommandBlock+1
 .a5f1	a9 0f		lda #$0f			lda 	#15
-.a5f3	8d bc 05	sta $05bc			sta 	SoundCommandBlock+2
-.a5f6	8e bd 05	stx $05bd			stx 	SoundCommandBlock+3
-.a5f9	8c be 05	sty $05be			sty 	SoundCommandBlock+4
-.a5fc	9c bf 05	stz $05bf			stz 	SoundCommandBlock+5
+.a5f3	8d 68 06	sta $0668			sta 	SoundCommandBlock+2
+.a5f6	8e 69 06	stx $0669			stx 	SoundCommandBlock+3
+.a5f9	8c 6a 06	sty $066a			sty 	SoundCommandBlock+4
+.a5fc	9c 6b 06	stz $066b			stz 	SoundCommandBlock+5
 .a5ff	68		pla				pla
 .a600	09 10		ora #$10			ora 	#$10  						; execute command $11
-.a602	a2 ba		ldx #$ba			ldx 	#(SoundCommandBlock & $FF)
-.a604	a0 05		ldy #$05			ldy 	#(SoundCommandBlock >> 8)
+.a602	a2 66		ldx #$66			ldx 	#(SoundCommandBlock & $FF)
+.a604	a0 06		ldy #$06			ldy 	#(SoundCommandBlock >> 8)
 .a606	20 18 80	jsr $8018			jsr 	SNDCommand
 .a609	7a		ply				ply
 .a60a	60		rts				rts
@@ -6654,38 +6654,38 @@
 .a646	b5 60		lda $60,x			lda 	NSMantissa1,x 				; must be 10 bit
 .a648	c9 10		cmp #$10			cmp 	#16
 .a64a	b0 3e		bcs $a68a			bcs 	_SndError
-.a64c	8d bb 05	sta $05bb			sta 	SoundCommandBlock+1 		; Pitch (2 bytes + 0)
+.a64c	8d 67 06	sta $0667			sta 	SoundCommandBlock+1 		; Pitch (2 bytes + 0)
 .a64f	b5 58		lda $58,x			lda 	NSMantissa0,x
-.a651	8d ba 05	sta $05ba			sta 	SoundCommandBlock
+.a651	8d 66 06	sta $0666			sta 	SoundCommandBlock
 .a654	20 e9 8e	jsr $8ee9			jsr 	CheckComma
 .a657	20 b7 9d	jsr $9db7			jsr 	Evaluate8BitInteger 		; Length (1 byte + 3)
-.a65a	8d bd 05	sta $05bd			sta 	SoundCommandBlock+3
+.a65a	8d 69 06	sta $0669			sta 	SoundCommandBlock+3
 .a65d	a9 0f		lda #$0f			lda 	#15
-.a65f	8d bc 05	sta $05bc			sta 	SoundCommandBlock+2 		; Volume (1 byte + 2)
-.a662	9c be 05	stz $05be			stz 	SoundCommandBlock+4 		; default slide (2 bytes +4)
-.a665	9c bf 05	stz $05bf			stz 	SoundCommandBlock+5
+.a65f	8d 68 06	sta $0668			sta 	SoundCommandBlock+2 		; Volume (1 byte + 2)
+.a662	9c 6a 06	stz $066a			stz 	SoundCommandBlock+4 		; default slide (2 bytes +4)
+.a665	9c 6b 06	stz $066b			stz 	SoundCommandBlock+5
 .a668	b1 30		lda ($30),y			lda 	(codePtr),y
 .a66a	c9 2c		cmp #$2c			cmp 	#KWD_COMMA
 .a66c	d0 0e		bne $a67c			bne 	_SNDPlay
 .a66e	c8		iny				iny
 .a66f	20 a6 9d	jsr $9da6			jsr 	Evaluate16BitIntegerSigned 	; Slide
 .a672	b5 58		lda $58,x			lda 	NSMantissa0,x 				; Slide (2 bytes + 4)
-.a674	8d be 05	sta $05be			sta 	SoundCommandBlock+4
+.a674	8d 6a 06	sta $066a			sta 	SoundCommandBlock+4
 .a677	b5 60		lda $60,x			lda 	NSMantissa1,x
-.a679	8d bf 05	sta $05bf			sta 	SoundCommandBlock+5
+.a679	8d 6b 06	sta $066b			sta 	SoundCommandBlock+5
 .a67c					_SNDPlay:
 .a67c	5a		phy				phy
 .a67d	a5 58		lda $58				lda 	NSMantissa0 				; channel.
 .a67f	09 10		ora #$10			ora 	#$10 						; 1x = Queue sound
-.a681	a2 ba		ldx #$ba			ldx 	#(SoundCommandBlock & $FF)
-.a683	a0 05		ldy #$05			ldy 	#(SoundCommandBlock >> 8)
+.a681	a2 66		ldx #$66			ldx 	#(SoundCommandBlock & $FF)
+.a683	a0 06		ldy #$06			ldy 	#(SoundCommandBlock >> 8)
 .a685	20 18 80	jsr $8018			jsr 	SNDCommand
 .a688	7a		ply				ply
 .a689	60		rts				rts
 .a68a					_SndError:
 .a68a	4c 9f 9f	jmp $9f9f			jmp 	RangeError
-.05ba					SoundCommandBlock:
->05ba							.fill 	6
+.0666					SoundCommandBlock:
+>0666							.fill 	6
 
 ;******  Return to file: _basic.asm
 
@@ -6979,7 +6979,7 @@
 .a7e8	5a		phy				phy
 .a7e9	a6 01		ldx $01				ldx 	1
 .a7eb	da		phx				phx
-.a7ec	ac c1 05	ldy $05c1			ldy 	EXTColumn 					; Y = Row, e.g. points to character.
+.a7ec	ac 6d 06	ldy $066d			ldy 	EXTColumn 					; Y = Row, e.g. points to character.
 .a7ef	09 00		ora #$00			ora 	#$00 						; check $80-$FF
 .a7f1	30 48		bmi $a83b			bmi 	_EXPCColour
 .a7f3	c9 20		cmp #$20			cmp 	#$20 						; check $00-$1F
@@ -6988,33 +6988,33 @@
 .a7f9	86 01		stx $01				stx 	1
 .a7fb	91 40		sta ($40),y			sta 	(EXTAddress),y
 .a7fd	e6 01		inc $01				inc 	1 							; select colour memory
-.a7ff	ad c2 05	lda $05c2			lda 	EXTTextColour
+.a7ff	ad 6e 06	lda $066e			lda 	EXTTextColour
 .a802	91 40		sta ($40),y			sta 	(EXTAddress),y
 .a804	c8		iny				iny 								; advance horizontal position
-.a805	8c c1 05	sty $05c1			sty 	EXTColumn
-.a808	cc c3 05	cpy $05c3			cpy 	EXTScreenWidth 				; reached RHS ?
+.a805	8c 6d 06	sty $066d			sty 	EXTColumn
+.a808	cc 6f 06	cpy $066f			cpy 	EXTScreenWidth 				; reached RHS ?
 .a80b	90 63		bcc $a870			bcc 	_EXPCExit 					; no, then exit.
 .a80d					_EXPCCRLF:
-.a80d	ee c0 05	inc $05c0			inc 	EXTRow  					; bump row
-.a810	9c c1 05	stz $05c1			stz 	EXTColumn 					; back to column 0
-.a813	ad c0 05	lda $05c0			lda 	EXTRow 						; check if reached the bottom ?
-.a816	cd c4 05	cmp $05c4			cmp 	EXTScreenHeight 			; if so, then scroll.
+.a80d	ee 6c 06	inc $066c			inc 	EXTRow  					; bump row
+.a810	9c 6d 06	stz $066d			stz 	EXTColumn 					; back to column 0
+.a813	ad 6c 06	lda $066c			lda 	EXTRow 						; check if reached the bottom ?
+.a816	cd 70 06	cmp $0670			cmp 	EXTScreenHeight 			; if so, then scroll.
 .a819	f0 18		beq $a833			beq 	_EXPCScroll
 .a81b	18		clc				clc 								; add width to address.
 .a81c	a5 40		lda $40				lda 	EXTAddress
-.a81e	6d c3 05	adc $05c3			adc 	EXTScreenWidth
+.a81e	6d 6f 06	adc $066f			adc 	EXTScreenWidth
 .a821	85 40		sta $40				sta 	EXTAddress
 .a823	90 4b		bcc $a870			bcc 	_EXPCExit
 .a825	e6 41		inc $41				inc 	EXTAddress+1
 .a827	80 47		bra $a870			bra 	_EXPCExit
 .a829					_EXPCLeft:
-.a829	ce c1 05	dec $05c1			dec 	EXTColumn
+.a829	ce 6d 06	dec $066d			dec 	EXTColumn
 .a82c	10 42		bpl $a870			bpl 	_EXPCExit
 .a82e					_EXPCBegin:
-.a82e	9c c1 05	stz $05c1			stz 	EXTColumn
+.a82e	9c 6d 06	stz $066d			stz 	EXTColumn
 .a831	80 3d		bra $a870			bra 	_EXPCExit
 .a833					_EXPCScroll:
-.a833	ce c0 05	dec $05c0			dec 	EXTRow 						; the height-1 th line.
+.a833	ce 6c 06	dec $066c			dec 	EXTRow 						; the height-1 th line.
 .a836	20 21 a9	jsr $a921			jsr 	EXTScreenScroll 			; scroll the screen
 .a839	80 35		bra $a870			bra 	_EXPCExit
 .a83b					_EXPCColour:
@@ -7029,24 +7029,24 @@
 .a849	aa		tax				tax
 .a84a	7c df a8	jmp ($a8df,x)			jmp 	(_EXPCActionTable,x) 		; and execute code.
 .a84d					_EXPCUp:
-.a84d	ad c0 05	lda $05c0			lda 	EXTRow 						; already at top ?
+.a84d	ad 6c 06	lda $066c			lda 	EXTRow 						; already at top ?
 .a850	f0 1e		beq $a870			beq 	_EXPCExit
-.a852	ce c0 05	dec $05c0			dec 	EXTRow 						; up one in position/address
+.a852	ce 6c 06	dec $066c			dec 	EXTRow 						; up one in position/address
 .a855	38		sec				sec
 .a856	a5 40		lda $40				lda 	EXTAddress
-.a858	ed c3 05	sbc $05c3			sbc 	EXTScreenWidth
+.a858	ed 6f 06	sbc $066f			sbc 	EXTScreenWidth
 .a85b	85 40		sta $40				sta 	EXTAddress
 .a85d	b0 11		bcs $a870			bcs 	_EXPCExit
 .a85f	c6 41		dec $41				dec 	EXTAddress+1
 .a861	80 0d		bra $a870			bra 	_EXPCExit
 .a863					_EXPCRight:
 .a863	c8		iny				iny
-.a864	8c c1 05	sty $05c1			sty 	EXTColumn
-.a867	cc c3 05	cpy $05c3			cpy 	EXTScreenWidth
+.a864	8c 6d 06	sty $066d			sty 	EXTColumn
+.a867	cc 6f 06	cpy $066f			cpy 	EXTScreenWidth
 .a86a	d0 04		bne $a870			bne 	_EXPCExit
 .a86c	88		dey				dey
 .a86d					_EXPCSetColumnY:
-.a86d	8c c1 05	sty $05c1			sty 	EXTColumn
+.a86d	8c 6d 06	sty $066d			sty 	EXTColumn
 .a870					_EXPCExit:
 .a870	20 76 a9	jsr $a976			jsr 	EXTSetHardwareCursor 		; place the physical cursor.
 .a873	68		pla				pla
@@ -7059,31 +7059,31 @@
 .a87a	20 33 a9	jsr $a933			jsr		EXTClearScreenCode
 .a87d	80 f1		bra $a870			bra 	_EXPCExit
 .a87f					_EXPCDown:
-.a87f	ad c4 05	lda $05c4			lda 	EXTScreenHeight 			; at the bottom
+.a87f	ad 70 06	lda $0670			lda 	EXTScreenHeight 			; at the bottom
 .a882	3a		dec a				dec 	a
-.a883	cd c0 05	cmp $05c0			cmp 	EXTRow
+.a883	cd 6c 06	cmp $066c			cmp 	EXTRow
 .a886	f0 e8		beq $a870			beq 	_EXPCExit
-.a888	ee c0 05	inc $05c0			inc 	EXTRow 						; down one in position/address
+.a888	ee 6c 06	inc $066c			inc 	EXTRow 						; down one in position/address
 .a88b	18		clc				clc
 .a88c	a5 40		lda $40				lda 	EXTAddress
-.a88e	6d c3 05	adc $05c3			adc 	EXTScreenWidth
+.a88e	6d 6f 06	adc $066f			adc 	EXTScreenWidth
 .a891	85 40		sta $40				sta 	EXTAddress
 .a893	90 db		bcc $a870			bcc 	_EXPCExit
 .a895	e6 41		inc $41				inc 	EXTAddress+1
 .a897	80 d7		bra $a870			bra 	_EXPCExit
 .a899					_EXPCTab:
-.a899	ad c1 05	lda $05c1			lda 	EXTColumn 					; next tab stop
+.a899	ad 6d 06	lda $066d			lda 	EXTColumn 					; next tab stop
 .a89c	29 f8		and #$f8			and 	#$F8
 .a89e	18		clc				clc
 .a89f	69 08		adc #$08			adc 	#8
-.a8a1	8d c1 05	sta $05c1			sta 	EXTColumn
-.a8a4	cd c3 05	cmp $05c3			cmp 	EXTScreenWidth 				; too far, stick end of line.
+.a8a1	8d 6d 06	sta $066d			sta 	EXTColumn
+.a8a4	cd 6f 06	cmp $066f			cmp 	EXTScreenWidth 				; too far, stick end of line.
 .a8a7	90 c7		bcc $a870			bcc 	_EXPCExit
 .a8a9	80 10		bra $a8bb			bra 	_EXPCEnd
 .a8ab					_EXPCBackSpace:
 .a8ab	88		dey				dey
 .a8ac	30 c2		bmi $a870			bmi 	_EXPCExit
-.a8ae	ce c1 05	dec $05c1			dec 	EXTColumn
+.a8ae	ce 6d 06	dec $066d			dec 	EXTColumn
 .a8b1	a9 02		lda #$02			lda 	#2
 .a8b3	85 01		sta $01				sta 	1
 .a8b5	a9 20		lda #$20			lda 	#32
@@ -7092,7 +7092,7 @@
 .a8bb					_EXPCEnd:
 .a8bb	a9 02		lda #$02			lda 	#2 							; access text screen
 .a8bd	85 01		sta $01				sta 	1
-.a8bf	ac c3 05	ldy $05c3			ldy 	EXTScreenWidth 				; point to last character
+.a8bf	ac 6f 06	ldy $066f			ldy 	EXTScreenWidth 				; point to last character
 .a8c2	88		dey				dey
 .a8c3					_EXPCEndSearch:
 .a8c3	88		dey				dey 								; if past start, move to col 0.
@@ -7109,7 +7109,7 @@
 .a8d3	a9 20		lda #$20			lda 	#' ' 						; write space
 .a8d5	91 40		sta ($40),y			sta 	(EXTAddress),y
 .a8d7	c8		iny				iny
-.a8d8	cc c3 05	cpy $05c3			cpy 	EXTScreenWidth 				; until RHS of screen.
+.a8d8	cc 6f 06	cpy $066f			cpy 	EXTScreenWidth 				; until RHS of screen.
 .a8db	90 f2		bcc $a8cf			bcc 	_EXPCClearEOL
 .a8dd	80 91		bra $a870			bra 	_EXPCExit
 .a8df					_EXPCActionTable:
@@ -7141,11 +7141,11 @@
 .a90b					_EXPCUpdate:
 .a90b	48		pha				pha 								; save new colour
 .a90c	8a		txa				txa 								; get mask
-.a90d	2d c2 05	and $05c2			and 	EXTTextColour 				; mask out old.
-.a910	8d c2 05	sta $05c2			sta 	EXTTextColour
+.a90d	2d 6e 06	and $066e			and 	EXTTextColour 				; mask out old.
+.a910	8d 6e 06	sta $066e			sta 	EXTTextColour
 .a913	68		pla				pla 								; or in new colour
-.a914	0d c2 05	ora $05c2			ora 	EXTTextColour
-.a917	8d c2 05	sta $05c2			sta 	EXTTextColour
+.a914	0d 6e 06	ora $066e			ora 	EXTTextColour
+.a917	8d 6e 06	sta $066e			sta 	EXTTextColour
 .a91a	60		rts				rts
 .a91b					_EXPCBackground:
 .a91b	29 0f		and #$0f			and 	#$0F 						; get the colour
@@ -7157,7 +7157,7 @@
 .a925	a9 20		lda #$20			lda		#32 						; fill with space
 .a927	20 3a aa	jsr $aa3a			jsr 	EXTScrollFill
 .a92a	e6 01		inc $01				inc 	1 							; select colour page
-.a92c	ad c2 05	lda $05c2			lda 	EXTTextColour
+.a92c	ad 6e 06	lda $066e			lda 	EXTTextColour
 .a92f	20 3a aa	jsr $aa3a			jsr 	EXTScrollFill
 .a932	60		rts				rts
 .a933					EXTClearScreenCode:
@@ -7166,7 +7166,7 @@
 .a937	a9 20		lda #$20			lda		#32 						; fill with space
 .a939	20 46 a9	jsr $a946			jsr 	_EXTCSFill
 .a93c	e6 01		inc $01				inc 	1 							; select colour page
-.a93e	ad c2 05	lda $05c2			lda 	EXTTextColour
+.a93e	ad 6e 06	lda $066e			lda 	EXTTextColour
 .a941	20 46 a9	jsr $a946			jsr 	_EXTCSFill
 .a944	80 22		bra $a968			bra 	EXTHomeCursor
 .a946					_EXTCSFill:
@@ -7194,8 +7194,8 @@
 .a965	d0 f9		bne $a960			bne 	_EXTCSFill3
 .a967	60		rts				rts
 .a968					EXTHomeCursor:
-.a968	9c c0 05	stz $05c0			stz 	EXTRow 						; reset row & column
-.a96b	9c c1 05	stz $05c1			stz 	EXTColumn
+.a968	9c 6c 06	stz $066c			stz 	EXTRow 						; reset row & column
+.a96b	9c 6d 06	stz $066d			stz 	EXTColumn
 .a96e	a9 00		lda #$00			lda 	#EXTMemory & $FF 			; set address
 .a970	85 40		sta $40				sta 	EXTAddress
 .a972	a9 c0		lda #$c0			lda 	#EXTMemory >> 8
@@ -7206,10 +7206,10 @@
 .a97a	8d 10 d0	sta $d010			sta 	$D010
 .a97d	a9 b1		lda #$b1			lda 	#$B1
 .a97f	8d 12 d0	sta $d012			sta 	$D012
-.a982	ad c1 05	lda $05c1			lda 	EXTColumn
+.a982	ad 6d 06	lda $066d			lda 	EXTColumn
 .a985	8d 14 d0	sta $d014			sta 	$D014 						; set cursor position
 .a988	9c 15 d0	stz $d015			stz 	$D015
-.a98b	ad c0 05	lda $05c0			lda 	EXTRow
+.a98b	ad 6c 06	lda $066c			lda 	EXTRow
 .a98e	8d 16 d0	sta $d016			sta 	$D016
 .a991	9c 17 d0	stz $d017			stz 	$D017
 .a994	60		rts				rts
@@ -7243,7 +7243,7 @@
 .a9c3	80 d6		bra $a99b			bra 	_EILLoop
 .a9c5	60		rts				rts
 .a9c6					_EILBackspace:
-.a9c6	ad c1 05	lda $05c1			lda 	EXTColumn					; can we backspace ?
+.a9c6	ad 6d 06	lda $066d			lda 	EXTColumn					; can we backspace ?
 .a9c9	f0 d0		beq $a99b			beq 	_EILLoop
 .a9cb	a9 02		lda #$02			lda 	#2 							; move cursor left
 .a9cd	20 e6 a7	jsr $a7e6			jsr 	PagedPrintCharacter
@@ -7253,7 +7253,7 @@
 .a9d4	a9 20		lda #$20			lda 	#' ' 						; backspace text.
 .a9d6	20 13 aa	jsr $aa13			jsr 	EXTILDelete
 .a9d9	e6 01		inc $01				inc 	1 							; colour block
-.a9db	ac c1 05	ldy $05c1			ldy 	EXTColumn 					; get attribute of last character
+.a9db	ac 6d 06	ldy $066d			ldy 	EXTColumn 					; get attribute of last character
 .a9de	88		dey				dey
 .a9df	b1 40		lda ($40),y			lda 	(EXTAddress),y
 .a9e1	20 13 aa	jsr $aa13			jsr 	EXTILDelete 				; backspace attribute
@@ -7266,7 +7266,7 @@
 .a9ec	b1 40		lda ($40),y			lda 	(EXTAddress),y
 .a9ee	99 2a 05	sta $052a,y			sta 	lineBuffer,y
 .a9f1	c8		iny				iny
-.a9f2	cc c3 05	cpy $05c3			cpy 	EXTScreenWidth
+.a9f2	cc 6f 06	cpy $066f			cpy 	EXTScreenWidth
 .a9f5	d0 f5		bne $a9ec			bne 	_EILScrapeLine
 .a9f7					_EILTrimSpaces:
 .a9f7	88		dey				dey
@@ -7288,24 +7288,24 @@
 .aa12	60		rts				rts
 .aa13					EXTILDelete:
 .aa13	48		pha				pha 								; save the new character
-.aa14	ac c1 05	ldy $05c1			ldy 	EXTColumn 					; start copying from here.
+.aa14	ac 6d 06	ldy $066d			ldy 	EXTColumn 					; start copying from here.
 .aa17					_EXTDLoop:
 .aa17	c8		iny				iny 								; copy one byte down.
 .aa18	b1 40		lda ($40),y			lda 	(EXTAddress),y
 .aa1a	88		dey				dey
 .aa1b	91 40		sta ($40),y			sta 	(EXTAddress),y
 .aa1d	c8		iny				iny 								; do till end of line.
-.aa1e	cc c3 05	cpy $05c3			cpy 	EXTScreenWidth
+.aa1e	cc 6f 06	cpy $066f			cpy 	EXTScreenWidth
 .aa21	90 f4		bcc $aa17			bcc 	_EXTDLoop
 .aa23	88		dey				dey 	 							; write in last slot.
 .aa24	68		pla				pla
 .aa25	91 40		sta ($40),y			sta 	(EXTAddress),y
 .aa27	60		rts				rts
 .aa28					EXTILInsert:
-.aa28	ac c3 05	ldy $05c3			ldy 	EXTScreenWidth 				; end position
+.aa28	ac 6f 06	ldy $066f			ldy 	EXTScreenWidth 				; end position
 .aa2b					_EXTILoop:
 .aa2b	88		dey				dey 								; back one
-.aa2c	cc c1 05	cpy $05c1			cpy 	EXTColumn 					; exit if reached insert point.
+.aa2c	cc 6d 06	cpy $066d			cpy 	EXTColumn 					; exit if reached insert point.
 .aa2f	f0 08		beq $aa39			beq 	_EXTIExit
 .aa31	88		dey				dey 								; copy one byte up.
 .aa32	b1 40		lda ($40),y			lda 	(EXTAddress),y
@@ -7328,7 +7328,7 @@
 .aa49	85 37		sta $37				sta 	zTemp0+1
 .aa4b	85 39		sta $39				sta 	zTemp1+1
 .aa4d	64 36		stz $36				stz 	zTemp0
-.aa4f	ad c3 05	lda $05c3			lda 	EXTScreenWidth
+.aa4f	ad 6f 06	lda $066f			lda 	EXTScreenWidth
 .aa52	85 38		sta $38				sta 	zTemp1
 .aa54	a0 00		ldy #$00			ldy 	#0
 .aa56					_EXSFCopy1:
@@ -7341,7 +7341,7 @@
 .aa61	a5 39		lda $39				lda 	zTemp1+1
 .aa63	c9 d3		cmp #$d3			cmp 	#$D3
 .aa65	d0 ef		bne $aa56			bne 	_EXSFCopy1
-.aa67	ac c3 05	ldy $05c3			ldy 	EXTScreenWidth 				; blank the bottom line.
+.aa67	ac 6f 06	ldy $066f			ldy 	EXTScreenWidth 				; blank the bottom line.
 .aa6a	8a		txa				txa
 .aa6b					_EXSFFill1:
 .aa6b	88		dey				dey
@@ -7362,16 +7362,16 @@
 =$03					EXTColourPage = $03
 =1					EXTDummySpace = 1 							; fake-space for CR character.
 =0					EXTCBlack = 0
-.05c0					EXTRow:
->05c0							.fill 	1
-.05c1					EXTColumn:
->05c1							.fill 	1
-.05c2					EXTTextColour:
->05c2							.fill 	1
-.05c3					EXTScreenWidth:
->05c3							.fill 	1
-.05c4					EXTScreenHeight:
->05c4							.fill 	1
+.066c					EXTRow:
+>066c							.fill 	1
+.066d					EXTColumn:
+>066d							.fill 	1
+.066e					EXTTextColour:
+>066e							.fill 	1
+.066f					EXTScreenWidth:
+>066f							.fill 	1
+.0670					EXTScreenHeight:
+>0670							.fill 	1
 .0040					EXTAddress:
 >0040							.fill 	2
 .aa7f					Export_EXTInitialise:
@@ -7384,16 +7384,16 @@
 .aa8f	a9 03		lda #$03			lda 	#3 							; get current text colour from whatever the kernel
 .aa91	85 01		sta $01				sta 	1 							; has set it to, looking at top left character
 .aa93	ad 00 c0	lda $c000			lda 	$C000
-.aa96	8d c2 05	sta $05c2			sta 	EXTTextColour
+.aa96	8d 6e 06	sta $066e			sta 	EXTTextColour
 .aa99	a9 50		lda #$50			lda 	#80 						; set screen dimensions.
-.aa9b	8d c3 05	sta $05c3			sta 	EXTScreenWidth
+.aa9b	8d 6f 06	sta $066f			sta 	EXTScreenWidth
 .aa9e	a9 3c		lda #$3c			lda 	#60
-.aaa0	8d c4 05	sta $05c4			sta 	EXTScreenHeight
+.aaa0	8d 70 06	sta $0670			sta 	EXTScreenHeight
 .aaa3	20 68 a9	jsr $a968			jsr 	EXTHomeCursor 				; home cursor
 .aaa6					_EXMoveDown:
 .aaa6	a9 0d		lda #$0d			lda 	#13
 .aaa8	20 e6 a7	jsr $a7e6			jsr 	PAGEDPrintCharacter
-.aaab	ad c0 05	lda $05c0			lda 	EXTRow
+.aaab	ad 6c 06	lda $066c			lda 	EXTRow
 .aaae	c9 06		cmp #$06			cmp 	#6
 .aab0	d0 f4		bne $aaa6			bne 	_EXMoveDown
 .aab2	64 01		stz $01				stz 	1
@@ -7409,10 +7409,10 @@
 .aabc	38		sec				sec 								; calculate timer - LastTick
 .aabd	ad 59 d6	lda $d659			lda 	$D659
 .aac0	aa		tax				tax 								; saving timer in X
-.aac1	ed af 05	sbc $05af			sbc 	LastTick
+.aac1	ed 5b 06	sbc $065b			sbc 	LastTick
 .aac4	c9 03		cmp #$03			cmp 	#3
 .aac6	90 06		bcc $aace			bcc 	_NoFireTick 				; if < 3 clocks don't fire.
-.aac8	8e af 05	stx $05af			stx 	LastTick 					; update last timer
+.aac8	8e 5b 06	stx $065b			stx 	LastTick 					; update last timer
 .aacb	20 96 be	jsr $be96			jsr 	PagedSNDUpdate 							; go do the code.
 .aace					_NoFireTick:
 .aace	68		pla				pla 								; restore I/O 0
@@ -7547,55 +7547,55 @@
 =$38					gxzTemp1 = zTemp1
 =$3a					gxzTemp2 = zTemp2
 =$3c					gxzScreen = zsTemp
-=$57b					gxPixelBuffer = numberBuffer
-.05c5					gxCurrentX:
->05c5							.fill 	2
-.05c7					gxCurrentY:
->05c7							.fill 	2
-.05c9					gxLastX:
->05c9							.fill 	2
-.05cb					gxLastY:
->05cb							.fill 	2
-.05cd					gxX0:
->05cd							.fill 	2
-.05cf					gxY0:
->05cf							.fill 	2
-.05d1					gxX1:
->05d1							.fill 	2
-.05d3					gxY1:
->05d3							.fill 	2
-.05d5					gxSpritesOn:
->05d5							.fill 	1
-.05d6					gxBitmapsOn:
->05d6							.fill 	1
-.05d7					gxBasePage:
->05d7							.fill 	1
-.05d8					gxSpritePage:
->05d8							.fill 	1
-.05d9					gxHeight:
->05d9							.fill 	1
-.05da					gxMode:
->05da							.fill 	1
-.05db					gxColour:
->05db							.fill 	1
-.05dc					gxEORValue:
->05dc							.fill 	1
-.05dd					gxANDValue:
->05dd							.fill 	1
-.05de					gxOriginalLUTValue:
->05de							.fill 	1
-.05df					gsOffset:
->05df							.fill 	1
-.05e0					GSCurrentSpriteID:
->05e0							.fill 	1
-.05e1					GSCurrentSpriteAddr:
->05e1							.fill 	2
-.05e3					GXSpriteOffsetBase:
->05e3							.fill 	2
-.05e5					GXSpriteLow:
->05e5							.fill 	64
-.0625					GXSpriteHigh:
->0625							.fill 	64
+=$627					gxPixelBuffer = numberBuffer
+.0671					gxCurrentX:
+>0671							.fill 	2
+.0673					gxCurrentY:
+>0673							.fill 	2
+.0675					gxLastX:
+>0675							.fill 	2
+.0677					gxLastY:
+>0677							.fill 	2
+.0679					gxX0:
+>0679							.fill 	2
+.067b					gxY0:
+>067b							.fill 	2
+.067d					gxX1:
+>067d							.fill 	2
+.067f					gxY1:
+>067f							.fill 	2
+.0681					gxSpritesOn:
+>0681							.fill 	1
+.0682					gxBitmapsOn:
+>0682							.fill 	1
+.0683					gxBasePage:
+>0683							.fill 	1
+.0684					gxSpritePage:
+>0684							.fill 	1
+.0685					gxHeight:
+>0685							.fill 	1
+.0686					gxMode:
+>0686							.fill 	1
+.0687					gxColour:
+>0687							.fill 	1
+.0688					gxEORValue:
+>0688							.fill 	1
+.0689					gxANDValue:
+>0689							.fill 	1
+.068a					gxOriginalLUTValue:
+>068a							.fill 	1
+.068b					gsOffset:
+>068b							.fill 	1
+.068c					GSCurrentSpriteID:
+>068c							.fill 	1
+.068d					GSCurrentSpriteAddr:
+>068d							.fill 	2
+.068f					GXSpriteOffsetBase:
+>068f							.fill 	2
+.0691					GXSpriteLow:
+>0691							.fill 	64
+.06d1					GXSpriteHigh:
+>06d1							.fill 	64
 .ab79					Export_GXGraphicDraw:
 .ab79	c9 40		cmp #$40			cmp 	#GCMD_Move					; low instructions don't use coordinates
 .ab7b	b0 06		bcs $ab83			bcs 	_GDCoordinate
@@ -7608,32 +7608,32 @@
 .ab85	5a		phy				phy
 .ab86	a2 03		ldx #$03			ldx 	#3 							; copy currentX to lastX
 .ab88					_GDCopy1:
-.ab88	bd c5 05	lda $05c5,x			lda 	gxCurrentX,x
-.ab8b	9d c9 05	sta $05c9,x			sta 	gxLastX,x
+.ab88	bd 71 06	lda $0671,x			lda 	gxCurrentX,x
+.ab8b	9d 75 06	sta $0675,x			sta 	gxLastX,x
 .ab8e	ca		dex				dex
 .ab8f	10 f7		bpl $ab88			bpl 	_GDCopy1
 .ab91	68		pla				pla 								; update Y
-.ab92	8d c7 05	sta $05c7			sta 	gxCurrentY
-.ab95	9c c8 05	stz $05c8			stz 	gxCurrentY+1
+.ab92	8d 73 06	sta $0673			sta 	gxCurrentY
+.ab95	9c 74 06	stz $0674			stz 	gxCurrentY+1
 .ab98	68		pla				pla
-.ab99	8d c5 05	sta $05c5			sta 	gxCurrentX
+.ab99	8d 71 06	sta $0671			sta 	gxCurrentX
 .ab9c	68		pla				pla 								; get A (command+X.1) back
 .ab9d	48		pha				pha
 .ab9e	29 01		and #$01			and 	#1 							; put LSB as MSB of Current.X
-.aba0	8d c6 05	sta $05c6			sta 	gxCurrentX+1
+.aba0	8d 72 06	sta $0672			sta 	gxCurrentX+1
 .aba3	68		pla				pla 								; get command back
 .aba4	29 fe		and #$fe			and 	#$FE 						; lose LSB, chuck the stray X bit
 .aba6	48		pha				pha 								; push back.
 .aba7	c9 52		cmp #$52			cmp 	#GCMD_SpriteMove 			; move sprite does not clip.
 .aba9	f0 17		beq $abc2			beq 	_GDCopyToWorkArea
-.abab	ad c6 05	lda $05c6			lda 	gxCurrentX+1 				; X < 256 X okay
+.abab	ad 72 06	lda $0672			lda 	gxCurrentX+1 				; X < 256 X okay
 .abae	f0 07		beq $abb7			beq 	_GDCheckY
-.abb0	ad c5 05	lda $05c5			lda 	gxCurrentX 					; otherwise X < 320 = 256 + 64
+.abb0	ad 71 06	lda $0671			lda 	gxCurrentX 					; otherwise X < 320 = 256 + 64
 .abb3	c9 40		cmp #$40			cmp 	#64
 .abb5	b0 08		bcs $abbf			bcs 	_GDError1
 .abb7					_GDCheckY:
-.abb7	ad c7 05	lda $05c7			lda 	gxCurrentY 					; check Y < Height.
-.abba	cd d9 05	cmp $05d9			cmp 	gxHeight
+.abb7	ad 73 06	lda $0673			lda 	gxCurrentY 					; check Y < Height.
+.abba	cd 85 06	cmp $0685			cmp 	gxHeight
 .abbd	90 03		bcc $abc2			bcc 	_GDCopyToWorkArea
 .abbf					_GDError1:
 .abbf	68		pla				pla
@@ -7643,8 +7643,8 @@
 .abc2					_GDCopyToWorkArea:
 .abc2	a2 07		ldx #$07			ldx 	#7 							; copy current and last to gxXY/12 work area
 .abc4					_GDCopy2:
-.abc4	bd c5 05	lda $05c5,x			lda 	gxCurrentX,x
-.abc7	9d cd 05	sta $05cd,x			sta 	gxX0,x
+.abc4	bd 71 06	lda $0671,x			lda 	gxCurrentX,x
+.abc7	9d 79 06	sta $0679,x			sta 	gxX0,x
 .abca	ca		dex				dex
 .abcb	10 f7		bpl $abc4			bpl 	_GDCopy2
 .abcd	68		pla				pla 								; get command
@@ -7664,16 +7664,16 @@
 .abdd					GXFrameCircle:
 .abdd	a9 00		lda #$00			lda 	#0
 .abdf					GXCircle:
-.abdf	8d 68 06	sta $0668			sta 	gxIsFillMode					; save Fill flag
-.abe2	ad d6 05	lda $05d6			lda 	gxBitmapsOn
+.abdf	8d 14 07	sta $0714			sta 	gxIsFillMode					; save Fill flag
+.abe2	ad 82 06	lda $0682			lda 	gxBitmapsOn
 .abe5	f0 26		beq $ac0d			beq 	_GXCFail
 .abe7	20 3d b4	jsr $b43d			jsr 	GXSortXY 					; topleft/bottomright
 .abea	20 15 b3	jsr $b315			jsr 	GXOpenBitmap 				; start drawing
 .abed	20 df ac	jsr $acdf			jsr 	GXCircleSetup 				; set up for drawing
-.abf0	9c 69 06	stz $0669			stz 	gxYChanged
+.abf0	9c 15 07	stz $0715			stz 	gxYChanged
 .abf3					_GXCircleDraw:
-.abf3	ad 66 06	lda $0666			lda 	gXCentre					; while x <= y
-.abf6	cd 67 06	cmp $0667			cmp 	gYCentre
+.abf3	ad 12 07	lda $0712			lda 	gXCentre					; while x <= y
+.abf6	cd 13 07	cmp $0713			cmp 	gYCentre
 .abf9	90 0a		bcc $ac05			bcc 	_GXCircleContinue
 .abfb	d0 03		bne $ac00			bne 	_GXNoLast
 .abfd	20 12 ac	jsr $ac12			jsr 	GXPlot1
@@ -7691,31 +7691,31 @@
 .ac0f					GXPlot2:
 .ac0f	20 12 ac	jsr $ac12			jsr 	GXPlot1 						; plot and swap, fall through does twice
 .ac12					GXPlot1:
-.ac12	ad 67 06	lda $0667			lda 	gYCentre 						; if y = 0, don't do it twice (xor)
+.ac12	ad 13 07	lda $0713			lda 	gYCentre 						; if y = 0, don't do it twice (xor)
 .ac15	f0 03		beq $ac1a			beq 	_GXPlot1Only
 .ac17	20 36 ac	jsr $ac36			jsr 	GXPlot0 						; plot and negate
 .ac1a					_GXPlot1Only:
 .ac1a	20 36 ac	jsr $ac36			jsr 	GXPlot0 						; twice, undoing negation
-.ac1d	ad 66 06	lda $0666			lda 	gXCentre 						; swap X and Y
-.ac20	ae 67 06	ldx $0667			ldx	 	gYCentre
-.ac23	8d 67 06	sta $0667			sta 	gYCentre
-.ac26	8e 66 06	stx $0666			stx 	gXCentre
-.ac29	ad 69 06	lda $0669			lda 	gxYChanged 						; toggle Y Changed flag
+.ac1d	ad 12 07	lda $0712			lda 	gXCentre 						; swap X and Y
+.ac20	ae 13 07	ldx $0713			ldx	 	gYCentre
+.ac23	8d 13 07	sta $0713			sta 	gYCentre
+.ac26	8e 12 07	stx $0712			stx 	gXCentre
+.ac29	ad 15 07	lda $0715			lda 	gxYChanged 						; toggle Y Changed flag
 .ac2c	a9 ff		lda #$ff			lda 	#$FF
-.ac2e	8d 69 06	sta $0669			sta 	gxYChanged
+.ac2e	8d 15 07	sta $0715			sta 	gxYChanged
 .ac31	60		rts				rts
 .ac32	20 36 ac	jsr $ac36			jsr 	GXPlot0 						; do once
 .ac35	60		rts				rts
-.ac36	ad 68 06	lda $0668	GXPlot0:lda 	gxIsFillMode 					; outline mode, always draw as X or Y will change
+.ac36	ad 14 07	lda $0714	GXPlot0:lda 	gxIsFillMode 					; outline mode, always draw as X or Y will change
 .ac39	f0 05		beq $ac40			beq 	_GXPlot0Always
-.ac3b	ad 69 06	lda $0669			lda 	gxYChanged						; fill mode, only draw if changed.
+.ac3b	ad 15 07	lda $0715			lda 	gxYChanged						; fill mode, only draw if changed.
 .ac3e	f0 2d		beq $ac6d			beq 	GXPlot0Exit
 .ac40					_GXPlot0Always:
 .ac40	a2 02		ldx #$02			ldx 	#2 								; copy Y1-A => Y0
-.ac42	ad 67 06	lda $0667			lda 	gYCentre
+.ac42	ad 13 07	lda $0713			lda 	gYCentre
 .ac45	20 6e ac	jsr $ac6e			jsr 	GXSubCopy
 .ac48	a2 00		ldx #$00			ldx 	#0 								; copy X1-A => X0,
-.ac4a	ad 66 06	lda $0666			lda 	gXCentre
+.ac4a	ad 12 07	lda $0712			lda 	gXCentre
 .ac4d	20 6e ac	jsr $ac6e			jsr 	GXSubCopy
 .ac50	48		pha				pha 									; save last offset X
 .ac51	20 25 b3	jsr $b325			jsr 	GXPositionCalc 					; calculate position/offset.
@@ -7724,13 +7724,13 @@
 .ac56	85 36		sta $36				sta 	gxzTemp0
 .ac58	64 37		stz $37				stz 	gxzTemp0+1
 .ac5a	26 37		rol $37				rol 	gxzTemp0+1
-.ac5c	ad 68 06	lda $0668			lda 	gxIsFillMode
+.ac5c	ad 14 07	lda $0714			lda 	gxIsFillMode
 .ac5f	69 80		adc #$80			adc 	#128
 .ac61	20 fe af	jsr $affe			jsr 	GXDrawLineTemp0 				; routine from Rectangle.
 .ac64	38		sec				sec 									; GY = -GY
 .ac65	a9 00		lda #$00			lda 	#0
-.ac67	ed 67 06	sbc $0667			sbc 	gYCentre
-.ac6a	8d 67 06	sta $0667			sta 	gYCentre
+.ac67	ed 13 07	sbc $0713			sbc 	gYCentre
+.ac6a	8d 13 07	sta $0713			sta 	gYCentre
 .ac6d					GXPlot0Exit:
 .ac6d	60		rts				rts
 .ac6e					GXSubCopy:
@@ -7741,32 +7741,32 @@
 .ac76	c6 37		dec $37				dec 	gxzTemp0+1
 .ac78					_GXNoSx:
 .ac78	38		sec				sec
-.ac79	bd d1 05	lda $05d1,x			lda 	gXX1,x
+.ac79	bd 7d 06	lda $067d,x			lda 	gXX1,x
 .ac7c	e5 36		sbc $36				sbc 	gxzTemp0
-.ac7e	9d cd 05	sta $05cd,x			sta 	gXX0,x
-.ac81	bd d2 05	lda $05d2,x			lda 	gXX1+1,x
+.ac7e	9d 79 06	sta $0679,x			sta 	gXX0,x
+.ac81	bd 7e 06	lda $067e,x			lda 	gXX1+1,x
 .ac84	e5 37		sbc $37				sbc 	gxzTemp0+1
-.ac86	9d ce 05	sta $05ce,x			sta 	gXX0+1,x
+.ac86	9d 7a 06	sta $067a,x			sta 	gXX0+1,x
 .ac89	a5 36		lda $36				lda 	gxzTemp0 						; return A
 .ac8b	60		rts				rts
 .ac8c					GXCircleMove:
-.ac8c	9c 69 06	stz $0669			stz 	gxYChanged 					; clear Y changed flag
+.ac8c	9c 15 07	stz $0715			stz 	gxYChanged 					; clear Y changed flag
 .ac8f	a5 39		lda $39				lda 	gxzTemp1+1 					; check sign of D
 .ac91	10 0d		bpl $aca0			bpl 	_GXEMPositive
-.ac93	ee 66 06	inc $0666			inc 	gXCentre 					; X++
-.ac96	ad 66 06	lda $0666			lda 	gXCentre
+.ac93	ee 12 07	inc $0712			inc 	gXCentre 					; X++
+.ac96	ad 12 07	lda $0712			lda 	gXCentre
 .ac99	20 bf ac	jsr $acbf			jsr 	_GXAdd4TimesToD 			; add 4 x A to D
 .ac9c	a9 06		lda #$06			lda 	#6  						; and add 6
 .ac9e	80 15		bra $acb5			bra 	_GXEMAddD
 .aca0					_GXEMPositive:
-.aca0	ee 66 06	inc $0666			inc 	gXCentre					; X++
-.aca3	ce 67 06	dec $0667			dec 	gyCentre 					; Y--
+.aca0	ee 12 07	inc $0712			inc 	gXCentre					; X++
+.aca3	ce 13 07	dec $0713			dec 	gyCentre 					; Y--
 .aca6	38		sec				sec 								; calculate X-Y
-.aca7	ad 66 06	lda $0666			lda 	gXCentre
-.acaa	ed 67 06	sbc $0667			sbc 	gYCentre
+.aca7	ad 12 07	lda $0712			lda 	gXCentre
+.acaa	ed 13 07	sbc $0713			sbc 	gYCentre
 .acad	20 bf ac	jsr $acbf			jsr 	_GXAdd4TimesToD 			; add 4 x A to D
 .acb0	a9 0a		lda #$0a			lda 	#10  						; and add 10
-.acb2	ce 69 06	dec $0669			dec 	gxYChanged
+.acb2	ce 15 07	dec $0715			dec 	gxYChanged
 .acb5					_GXEMAddD:
 .acb5	18		clc				clc
 .acb6	65 38		adc $38				adc 	gxzTemp1
@@ -7796,17 +7796,17 @@
 .acde	60		rts				rts
 .acdf					GXCircleSetup:
 .acdf	38		sec				sec
-.ace0	ad d3 05	lda $05d3			lda 	gxY1
-.ace3	ed cf 05	sbc $05cf			sbc 	gxY0
+.ace0	ad 7f 06	lda $067f			lda 	gxY1
+.ace3	ed 7b 06	sbc $067b			sbc 	gxY0
 .ace6	4a		lsr a				lsr 	a
-.ace7	8d 65 06	sta $0665			sta 	gxRadius
+.ace7	8d 11 07	sta $0711			sta 	gxRadius
 .acea	a2 00		ldx #$00			ldx 	#0
 .acec	20 0e ad	jsr $ad0e			jsr 	_GXCalculateCentre
 .acef	a2 02		ldx #$02			ldx 	#2
 .acf1	20 0e ad	jsr $ad0e			jsr 	_GXCalculateCentre
-.acf4	9c 66 06	stz $0666			stz 	gXCentre
-.acf7	ad 65 06	lda $0665			lda 	gxRadius
-.acfa	8d 67 06	sta $0667			sta 	gYCentre
+.acf4	9c 12 07	stz $0712			stz 	gXCentre
+.acf7	ad 11 07	lda $0711			lda 	gxRadius
+.acfa	8d 13 07	sta $0713			sta 	gYCentre
 .acfd	0a		asl a				asl 	a 							; R x 2
 .acfe	85 36		sta $36				sta 	gxzTemp0
 .ad00	38		sec				sec
@@ -7819,45 +7819,45 @@
 .ad0d	60		rts				rts
 .ad0e					_GXCalculateCentre:
 .ad0e	38		sec				sec
-.ad0f	bd d1 05	lda $05d1,x			lda 	gxX1,x
-.ad12	7d cd 05	adc $05cd,x			adc 	gXX0,x
-.ad15	9d d1 05	sta $05d1,x			sta 	gXX1,x
-.ad18	bd d2 05	lda $05d2,x			lda 	gXX1+1,x
-.ad1b	7d ce 05	adc $05ce,x			adc 	gXX0+1,x
+.ad0f	bd 7d 06	lda $067d,x			lda 	gxX1,x
+.ad12	7d 79 06	adc $0679,x			adc 	gXX0,x
+.ad15	9d 7d 06	sta $067d,x			sta 	gXX1,x
+.ad18	bd 7e 06	lda $067e,x			lda 	gXX1+1,x
+.ad1b	7d 7a 06	adc $067a,x			adc 	gXX0+1,x
 .ad1e	4a		lsr a				lsr 	a
-.ad1f	9d d2 05	sta $05d2,x			sta 	gXX1+1,x
-.ad22	7e d1 05	ror $05d1,x			ror 	gXX1,x
+.ad1f	9d 7e 06	sta $067e,x			sta 	gXX1+1,x
+.ad22	7e 7d 06	ror $067d,x			ror 	gXX1,x
 .ad25	60		rts				rts
-.0665					gxRadius:
->0665							.fill 	1
-.0666					gXCentre:
->0666							.fill 	1
-.0667					gYCentre:
->0667							.fill 	1
-.0668					gxIsFillMode:
->0668							.fill 	1
-.0669					gxYChanged:
->0669							.fill  	1
+.0711					gxRadius:
+>0711							.fill 	1
+.0712					gXCentre:
+>0712							.fill 	1
+.0713					gYCentre:
+>0713							.fill 	1
+.0714					gxIsFillMode:
+>0714							.fill 	1
+.0715					gxYChanged:
+>0715							.fill  	1
 =64000					ScreenSize200 = 320 * 200
 =76800					ScreenSize240 = 320 * 240
 .ad26					GXClearBitmap:
-.ad26	ad d6 05	lda $05d6			lda 	gxBitmapsOn 				; check BMP running.
+.ad26	ad 82 06	lda $0682			lda 	gxBitmapsOn 				; check BMP running.
 .ad29	f0 24		beq $ad4f			beq 	_GXCBFail
 .ad2b	20 15 b3	jsr $b315			jsr 	GXOpenBitmap 				; start access
 .ad2e	a0 07		ldy #$07			ldy 	#ScreenSize200 / 8192 		; X is pages to clear
-.ad30	ad d9 05	lda $05d9			lda 	gxHeight
+.ad30	ad 85 06	lda $0685			lda 	gxHeight
 .ad33	c9 c8		cmp #$c8			cmp 	#200 						; 200 ?
 .ad35	a0 09		ldy #$09			ldy 	#ScreenSize240 / 8192
 .ad37					_GXCalcLastPage:
 .ad37	98		tya				tya 								; add to base page
 .ad38	18		clc				clc
-.ad39	6d d7 05	adc $05d7			adc 	gxBasePage
+.ad39	6d 83 06	adc $0683			adc 	gxBasePage
 .ad3c	85 0b		sta $0b				sta 	GXEditSlot  				; clear from this page back
 .ad3e					_GXClearAll:
 .ad3e	20 51 ad	jsr $ad51			jsr 	_GXClearBlock 				; clear 8k block
 .ad41	c6 0b		dec $0b				dec 	GXEditSlot  				; back to previous
 .ad43	a5 0b		lda $0b				lda 	GXEditSlot
-.ad45	cd d7 05	cmp $05d7			cmp 	gxBasePage 					; until before base page
+.ad45	cd 83 06	cmp $0683			cmp 	gxBasePage 					; until before base page
 .ad48	b0 f4		bcs $ad3e			bcs 	_GXClearAll
 .ad4a	20 1d b3	jsr $b31d			jsr 	GXCloseBitmap	 			; stop access
 .ad4d	18		clc				clc
@@ -7893,11 +7893,11 @@
 .ad76	a9 01		lda #$01			lda 	#1
 .ad78	8d 00 d0	sta $d000			sta 	$D000
 .ad7b	18		clc				clc
-.ad7c	9c d5 05	stz $05d5			stz 	GXSpritesOn
-.ad7f	9c d6 05	stz $05d6			stz 	GXBitmapsOn
+.ad7c	9c 81 06	stz $0681			stz 	GXSpritesOn
+.ad7f	9c 82 06	stz $0682			stz 	GXBitmapsOn
 .ad82	a2 0f		ldx #$0f			ldx 	#15
 .ad84					_GXIClear:
-.ad84	9e c5 05	stz $05c5,x			stz 	gxCurrentX,x
+.ad84	9e 71 06	stz $0671,x			stz 	gxCurrentX,x
 .ad87	ca		dex				dex
 .ad88	10 fa		bpl $ad84			bpl 	_GXIClear
 .ad8a	20 25 ae	jsr $ae25			jsr 	GXClearSpriteStore
@@ -7906,7 +7906,7 @@
 .ad8e	64 01		stz $01				stz 	1
 .ad90	a5 36		lda $36				lda 	gxzTemp0 					; get control bits
 .ad92	29 01		and #$01			and 	#1 							; set bitmap flag
-.ad94	8d d6 05	sta $05d6			sta 	gxBitmapsOn
+.ad94	8d 82 06	sta $0682			sta 	gxBitmapsOn
 .ad97	4a		lsr a				lsr 	a 							; bit 0 into carry.
 .ad98	ad 00 d0	lda $d000			lda 	$D000 						; read Vicky MCR
 .ad9b	09 07		ora #$07			ora 	#7 							; turn graphics, text, textoverlay on.
@@ -7922,7 +7922,7 @@
 .adaf	d0 02		bne $adb3			bne 	_CBNotDefault
 .adb1	a9 08		lda #$08			lda 	#8  						; if zero, use 8 e.g. bitmap at $10000
 .adb3					_CBNotDefault:
-.adb3	8d d7 05	sta $05d7			sta 	gxBasePage
+.adb3	8d 83 06	sta $0683			sta 	gxBasePage
 .adb6	20 17 ae	jsr $ae17			jsr 	GXCalculateBaseAddress 	 	; convert page# to address
 .adb9	a5 37		lda $37				lda 	gxzTemp0+1 					; copy address into Bitmap address registers
 .adbb	8d 03 d1	sta $d103			sta 	$D103
@@ -7935,14 +7935,14 @@
 .adcd	f0 02		beq $add1			beq 	_CBHaveHeight
 .adcf	a2 c8		ldx #$c8			ldx 	#200 						; if bit 0 set 320x200
 .add1					_CBHaveHeight
-.add1	8e d9 05	stx $05d9			stx 	gxHeight
+.add1	8e 85 06	stx $0685			stx 	gxHeight
 .add4	18		clc				clc
 .add5	60		rts				rts
 .add6					GXControlSprite:
 .add6	64 01		stz $01				stz 	1
 .add8	a5 36		lda $36				lda 	gxzTemp0 					; get control bits
 .adda	29 01		and #$01			and 	#1 							; set sprites flag
-.addc	8d d5 05	sta $05d5			sta 	gxSpritesOn
+.addc	8d 81 06	sta $0681			sta 	gxSpritesOn
 .addf	4a		lsr a				lsr 	a 							; bit 0 into carry.
 .ade0	ad 00 d0	lda $d000			lda 	$D000 						; read Vicky MCR
 .ade3	09 07		ora #$07			ora 	#7 							; turn graphics, text, textoverlay on.
@@ -7955,19 +7955,19 @@
 .adf0	d0 02		bne $adf4			bne 	_CSNotDefault
 .adf2	a9 18		lda #$18			lda 	#24  						; if zero, use 24 e.g. sprites at $30000
 .adf4					_CSNotDefault:
-.adf4	8d d8 05	sta $05d8			sta 	gxSpritePage
+.adf4	8d 84 06	sta $0684			sta 	gxSpritePage
 .adf7	20 17 ae	jsr $ae17			jsr 	GXCalculateBaseAddress 	 	; convert page# to address
 .adfa	a5 36		lda $36				lda 	zTemp0
-.adfc	8d e3 05	sta $05e3			sta 	GXSpriteOffsetBase
+.adfc	8d 8f 06	sta $068f			sta 	GXSpriteOffsetBase
 .adff	a5 37		lda $37				lda 	zTemp0+1
-.ae01	8d e4 05	sta $05e4			sta 	GXSpriteOffsetBase+1
+.ae01	8d 90 06	sta $0690			sta 	GXSpriteOffsetBase+1
 .ae04	a2 00		ldx #$00			ldx 	#0 							; disable all sprites, clears all sprite memory.
 .ae06					_CSClear:
 .ae06	9e 00 d9	stz $d900,x			stz 	$D900,x
 .ae09	9e 00 da	stz $da00,x			stz 	$DA00,x
 .ae0c	ca		dex				dex
 .ae0d	d0 f7		bne $ae06			bne 	_CSClear
-.ae0f	9c e2 05	stz $05e2			stz 	GSCurrentSpriteAddr+1 		; no sprite selected.
+.ae0f	9c 8e 06	stz $068e			stz 	GSCurrentSpriteAddr+1 		; no sprite selected.
 .ae12	20 25 ae	jsr $ae25			jsr 	GXClearSpriteStore
 .ae15	18		clc				clc
 .ae16	60		rts				rts
@@ -7984,24 +7984,24 @@
 .ae25					GXClearSpriteStore:
 .ae25	a2 3f		ldx #$3f			ldx 	#63 						; erase 64 sprite store elements
 .ae27					_GXCSSLoop:
-.ae27	9e 25 06	stz $0625,x			stz 	GXSpriteHigh,x
+.ae27	9e d1 06	stz $06d1,x			stz 	GXSpriteHigh,x
 .ae2a	a9 80		lda #$80			lda 	#$80 						; set the 'hidden' bit.
-.ae2c	9d e5 05	sta $05e5,x			sta 	GXSpriteLow,x
+.ae2c	9d 91 06	sta $0691,x			sta 	GXSpriteLow,x
 .ae2f	ca		dex				dex
 .ae30	10 f5		bpl $ae27			bpl 	_GXCSSLoop
 .ae32	60		rts				rts
 .ae33					GXLine:
-.ae33	ad d6 05	lda $05d6			lda 	GXBitmapsOn
+.ae33	ad 82 06	lda $0682			lda 	GXBitmapsOn
 .ae36	f0 28		beq $ae60			beq 	_GXLFail
 .ae38	20 15 b3	jsr $b315			jsr 	GXOpenBitmap
 .ae3b	20 5b b4	jsr $b45b			jsr 	GXSortY						; sort pairs so Y1 >= Y0 e.g. top to bottom.
 .ae3e	20 06 af	jsr $af06			jsr 	GXLineSetup 				; the calculations in the linescanner constructor
 .ae41	20 25 b3	jsr $b325			jsr 	GXPositionCalc 				; calculate position/offset.
 .ae44					_GXDrawLoop:
-.ae44	ac df 05	ldy $05df			ldy 	gsOffset 					; draw the pixel
+.ae44	ac 8b 06	ldy $068b			ldy 	gsOffset 					; draw the pixel
 .ae47	b1 3c		lda ($3c),y			lda 	(gxzScreen),y
-.ae49	2d dd 05	and $05dd			and 	gxANDValue
-.ae4c	4d dc 05	eor $05dc			eor 	gxEORValue
+.ae49	2d 89 06	and $0689			and 	gxANDValue
+.ae4c	4d 88 06	eor $0688			eor 	gxEORValue
 .ae4f	91 3c		sta ($3c),y			sta 	(gxzScreen),y
 .ae51	20 62 ae	jsr $ae62			jsr 	GXLineIsComplete 			; is the line complete ?
 .ae54	f0 05		beq $ae5b			beq 	_GXLExit
@@ -8015,58 +8015,58 @@
 .ae60	38		sec				sec
 .ae61	60		rts				rts
 .ae62					GXLineIsComplete:
-.ae62	ad 6c 06	lda $066c			lda 	GXIsDiffYLarger 			; is dy larger
+.ae62	ad 18 07	lda $0718			lda 	GXIsDiffYLarger 			; is dy larger
 .ae65	d0 0f		bne $ae76			bne 	_GXLICCompareY 				; if so compare Y1/Y0
-.ae67	ad cd 05	lda $05cd			lda 	GXX0 						; compare X, LSB and MSB
-.ae6a	4d d1 05	eor $05d1			eor 	GXX1
+.ae67	ad 79 06	lda $0679			lda 	GXX0 						; compare X, LSB and MSB
+.ae6a	4d 7d 06	eor $067d			eor 	GXX1
 .ae6d	d0 06		bne $ae75			bne 	_GXLICExit
-.ae6f	ad ce 05	lda $05ce			lda 	GXX0+1
-.ae72	4d d2 05	eor $05d2			eor 	GXX1+1
+.ae6f	ad 7a 06	lda $067a			lda 	GXX0+1
+.ae72	4d 7e 06	eor $067e			eor 	GXX1+1
 .ae75					_GXLICExit:
 .ae75	60		rts				rts
 .ae76					_GXLICCompareY:
-.ae76	ad d3 05	lda $05d3			lda 	GXY1
-.ae79	4d cf 05	eor $05cf			eor 	GXY0
+.ae76	ad 7f 06	lda $067f			lda 	GXY1
+.ae79	4d 7b 06	eor $067b			eor 	GXY0
 .ae7c	60		rts				rts
 .ae7d					GXLineAdvance:
 .ae7d	18		clc				clc 								; add adjust to position
-.ae7e	ad 6e 06	lda $066e			lda 	GXPosition
-.ae81	6d 6f 06	adc $066f			adc 	GXAdjust
-.ae84	8d 6e 06	sta $066e			sta 	GXPosition
-.ae87	9c 71 06	stz $0671			stz 	GXAddSelect 				; clear add select flag
+.ae7e	ad 1a 07	lda $071a			lda 	GXPosition
+.ae81	6d 1b 07	adc $071b			adc 	GXAdjust
+.ae84	8d 1a 07	sta $071a			sta 	GXPosition
+.ae87	9c 1d 07	stz $071d			stz 	GXAddSelect 				; clear add select flag
 .ae8a	b0 05		bcs $ae91			bcs 	_GXLAOverflow 				; if carry out, overflowed.
-.ae8c	cd 70 06	cmp $0670			cmp 	GXTotal 					; if exceeded total
+.ae8c	cd 1c 07	cmp $071c			cmp 	GXTotal 					; if exceeded total
 .ae8f	90 0a		bcc $ae9b			bcc 	_GXLANoExtra
 .ae91					_GXLAOverflow:
-.ae91	ce 71 06	dec $0671			dec 	GXAddSelect 				; set addselect to $FF
+.ae91	ce 1d 07	dec $071d			dec 	GXAddSelect 				; set addselect to $FF
 .ae94	38		sec				sec 								; subtract total and write back
-.ae95	ed 70 06	sbc $0670			sbc 	GXTotal
-.ae98	8d 6e 06	sta $066e			sta 	GXPosition
+.ae95	ed 1c 07	sbc $071c			sbc 	GXTotal
+.ae98	8d 1a 07	sta $071a			sta 	GXPosition
 .ae9b					_GXLANoExtra:
-.ae9b	ad 6c 06	lda $066c			lda 	GXIsDiffYLarger
+.ae9b	ad 18 07	lda $0718			lda 	GXIsDiffYLarger
 .ae9e	f0 0d		beq $aead			beq 	_GXDXLarger
 .aea0	20 ff ae	jsr $aeff			jsr 	GXIncrementY
-.aea3	ad 71 06	lda $0671			lda 	GXAddSelect
+.aea3	ad 1d 07	lda $071d			lda 	GXAddSelect
 .aea6	f0 10		beq $aeb8			beq 	_GXLAExit
 .aea8	20 b9 ae	jsr $aeb9			jsr 	GXAdjustX
 .aeab	80 0b		bra $aeb8			bra 	_GXLAExit
 .aead					_GXDXLarger:
 .aead	20 b9 ae	jsr $aeb9			jsr 	GXAdjustX
-.aeb0	ad 71 06	lda $0671			lda 	GXAddSelect
+.aeb0	ad 1d 07	lda $071d			lda 	GXAddSelect
 .aeb3	f0 03		beq $aeb8			beq 	_GXLAExit
 .aeb5	20 ff ae	jsr $aeff			jsr 	GXIncrementY
 .aeb8					_GXLAExit:
 .aeb8	60		rts				rts
 .aeb9					GXAdjustX:
-.aeb9	ad 6d 06	lda $066d			lda 	GXDXNegative
+.aeb9	ad 19 07	lda $0719			lda 	GXDXNegative
 .aebc	10 25		bpl $aee3			bpl 	_GXAXRight
-.aebe	ad cd 05	lda $05cd			lda 	GXX0
+.aebe	ad 79 06	lda $0679			lda 	GXX0
 .aec1	d0 03		bne $aec6			bne 	_GXAXNoBorrow
-.aec3	ce ce 05	dec $05ce			dec 	GXX0+1
+.aec3	ce 7a 06	dec $067a			dec 	GXX0+1
 .aec6					_GXAXNoBorrow:
-.aec6	ce cd 05	dec $05cd			dec 	GXX0
-.aec9	ce df 05	dec $05df			dec 	gsOffset 					; pixel left
-.aecc	ad df 05	lda $05df			lda 	gsOffset
+.aec6	ce 79 06	dec $0679			dec 	GXX0
+.aec9	ce 8b 06	dec $068b			dec 	gsOffset 					; pixel left
+.aecc	ad 8b 06	lda $068b			lda 	gsOffset
 .aecf	c9 ff		cmp #$ff			cmp 	#$FF
 .aed1	d0 0f		bne $aee2			bne 	_GXAYExit 					; underflow
 .aed3	c6 3d		dec $3d				dec 	gxzScreen+1 					; borrow
@@ -8080,11 +8080,11 @@
 .aee2					_GXAYExit:
 .aee2	60		rts				rts
 .aee3					_GXAXRight:
-.aee3	ee cd 05	inc $05cd			inc 	GXX0
+.aee3	ee 79 06	inc $0679			inc 	GXX0
 .aee6	d0 03		bne $aeeb			bne 	_GXAXNoCarry
-.aee8	ee ce 05	inc $05ce			inc 	GXX0+1
+.aee8	ee 7a 06	inc $067a			inc 	GXX0+1
 .aeeb					_GXAXNoCarry:
-.aeeb	ee df 05	inc $05df			inc 	gsOffset 					; pixel right
+.aeeb	ee 8b 06	inc $068b			inc 	gsOffset 					; pixel right
 .aeee	d0 0e		bne $aefe			bne 	_GXAXExit 					; if not overflowed, exit.
 .aef0	e6 3d		inc $3d				inc 	gxzScreen+1 					; next line
 .aef2	a5 3d		lda $3d				lda 	gxzScreen+1
@@ -8096,97 +8096,97 @@
 .aefe					_GXAXExit:
 .aefe	60		rts				rts
 .aeff					GXIncrementY:
-.aeff	ee cf 05	inc $05cf			inc 	GXY0
+.aeff	ee 7b 06	inc $067b			inc 	GXY0
 .af02	20 7b b3	jsr $b37b			jsr 	GXMovePositionDown
 .af05	60		rts				rts
 .af06					GXLineSetup:
-.af06	ad d3 05	lda $05d3			lda 	GXY1
+.af06	ad 7f 06	lda $067f			lda 	GXY1
 .af09	38		sec				sec
-.af0a	ed cf 05	sbc $05cf			sbc 	GXY0
+.af0a	ed 7b 06	sbc $067b			sbc 	GXY0
 .af0d	4a		lsr a				lsr 	a
-.af0e	8d 6b 06	sta $066b			sta 	GXDiffY
-.af11	9c 6d 06	stz $066d			stz 	GXDXNegative 				; clear -ve flag
+.af0e	8d 17 07	sta $0717			sta 	GXDiffY
+.af11	9c 19 07	stz $0719			stz 	GXDXNegative 				; clear -ve flag
 .af14	38		sec				sec
-.af15	ad d1 05	lda $05d1			lda 	GXX1
-.af18	ed cd 05	sbc $05cd			sbc 	GXX0
-.af1b	8d 6a 06	sta $066a			sta 	GXDiffX
-.af1e	ad d2 05	lda $05d2			lda 	GXX1+1 						; calculate MSB
-.af21	ed ce 05	sbc $05ce			sbc 	GXX0+1
+.af15	ad 7d 06	lda $067d			lda 	GXX1
+.af18	ed 79 06	sbc $0679			sbc 	GXX0
+.af1b	8d 16 07	sta $0716			sta 	GXDiffX
+.af1e	ad 7e 06	lda $067e			lda 	GXX1+1 						; calculate MSB
+.af21	ed 7a 06	sbc $067a			sbc 	GXX0+1
 .af24	6a		ror a				ror 	a 							; rotate bit into DiffX halving it
-.af25	6e 6a 06	ror $066a			ror 	GXDiffX
+.af25	6e 16 07	ror $0716			ror 	GXDiffX
 .af28	0a		asl a				asl 	a
 .af29	10 0c		bpl $af37			bpl 	_GDXNotNegative
 .af2b	a9 00		lda #$00			lda 	#0 							; make absolute value of |dx|
 .af2d	38		sec				sec
-.af2e	ed 6a 06	sbc $066a			sbc 	GXDiffX
-.af31	8d 6a 06	sta $066a			sta 	GXDiffX
-.af34	ce 6d 06	dec $066d			dec 	GXDXNegative 				; -ve flag = $FF.
+.af2e	ed 16 07	sbc $0716			sbc 	GXDiffX
+.af31	8d 16 07	sta $0716			sta 	GXDiffX
+.af34	ce 19 07	dec $0719			dec 	GXDXNegative 				; -ve flag = $FF.
 .af37					_GDXNotNegative:
-.af37	9c 6c 06	stz $066c			stz 	GXIsDiffYLarger 			; clear larger flag
-.af3a	ad 6b 06	lda $066b			lda 	GXDiffY 					; set adjust and total.
-.af3d	8d 6f 06	sta $066f			sta 	GXAdjust
-.af40	ad 6a 06	lda $066a			lda 	GXDiffX
-.af43	8d 70 06	sta $0670			sta 	GXTotal
-.af46	ad 6b 06	lda $066b			lda 	GXDiffY 					; if dy > dx
-.af49	cd 6a 06	cmp $066a			cmp 	GXDiffX
+.af37	9c 18 07	stz $0718			stz 	GXIsDiffYLarger 			; clear larger flag
+.af3a	ad 17 07	lda $0717			lda 	GXDiffY 					; set adjust and total.
+.af3d	8d 1b 07	sta $071b			sta 	GXAdjust
+.af40	ad 16 07	lda $0716			lda 	GXDiffX
+.af43	8d 1c 07	sta $071c			sta 	GXTotal
+.af46	ad 17 07	lda $0717			lda 	GXDiffY 					; if dy > dx
+.af49	cd 16 07	cmp $0716			cmp 	GXDiffX
 .af4c	90 0f		bcc $af5d			bcc 	_GDXNotLarger
-.af4e	ce 6c 06	dec $066c			dec 	GXIsDiffYLarger 			; set the dy larger flag
-.af51	ad 6a 06	lda $066a			lda 	GXDiffX 					; set adjust and total other way round
-.af54	8d 6f 06	sta $066f			sta 	GXAdjust
-.af57	ad 6b 06	lda $066b			lda 	GXDiffY
-.af5a	8d 70 06	sta $0670			sta 	GXTotal
+.af4e	ce 18 07	dec $0718			dec 	GXIsDiffYLarger 			; set the dy larger flag
+.af51	ad 16 07	lda $0716			lda 	GXDiffX 					; set adjust and total other way round
+.af54	8d 1b 07	sta $071b			sta 	GXAdjust
+.af57	ad 17 07	lda $0717			lda 	GXDiffY
+.af5a	8d 1c 07	sta $071c			sta 	GXTotal
 .af5d					_GDXNotLarger:
-.af5d	ad 70 06	lda $0670			lda 	GXTotal
+.af5d	ad 1c 07	lda $071c			lda 	GXTotal
 .af60	4a		lsr a				lsr 	a
-.af61	8d 6e 06	sta $066e			sta 	GXPosition
+.af61	8d 1a 07	sta $071a			sta 	GXPosition
 .af64	60		rts				rts
-.066a					GXDiffX:
->066a							.fill 	1
-.066b					GXDiffY:
->066b							.fill 	1
-.066c					GXIsDiffYLarger:
->066c							.fill 	1
-.066d					GXDXNegative:
->066d							.fill 	1
-.066e					GXPosition:
->066e							.fill 	1
-.066f					GXAdjust:
->066f							.fill 	1
-.0670					GXTotal:
->0670							.fill 	1
-.0671					GXAddSelect:
->0671							.fill 	1
+.0716					GXDiffX:
+>0716							.fill 	1
+.0717					GXDiffY:
+>0717							.fill 	1
+.0718					GXIsDiffYLarger:
+>0718							.fill 	1
+.0719					GXDXNegative:
+>0719							.fill 	1
+.071a					GXPosition:
+>071a							.fill 	1
+.071b					GXAdjust:
+>071b							.fill 	1
+.071c					GXTotal:
+>071c							.fill 	1
+.071d					GXAddSelect:
+>071d							.fill 	1
 .af65					GXSetColourMode:
 .af65	a6 36		ldx $36				ldx 	gxzTemp0
-.af67	8e db 05	stx $05db			stx 	gxColour 								; set colour
+.af67	8e 87 06	stx $0687			stx 	gxColour 								; set colour
 .af6a	a5 37		lda $37				lda 	gxzTemp0+1 								;
-.af6c	8d da 05	sta $05da			sta 	gxMode 									; set mode
+.af6c	8d 86 06	sta $0686			sta 	gxMode 									; set mode
 .af6f	29 03		and #$03			and 	#3 										; only interested in bits 0-3
-.af71	9c dd 05	stz $05dd			stz 	gxANDValue 								; initially AND with 0, and EOR with Colour
-.af74	ae db 05	ldx $05db			ldx 	gxColour
-.af77	8e dc 05	stx $05dc			stx 	gxEORValue
+.af71	9c 89 06	stz $0689			stz 	gxANDValue 								; initially AND with 0, and EOR with Colour
+.af74	ae 87 06	ldx $0687			ldx 	gxColour
+.af77	8e 88 06	stx $0688			stx 	gxEORValue
 .af7a	c9 02		cmp #$02			cmp 	#2 										; if mode 2/3 And with colour
 .af7c	90 03		bcc $af81			bcc 	_GXSDCNotAndColour
-.af7e	8e dd 05	stx $05dd			stx 	gxANDValue
+.af7e	8e 89 06	stx $0689			stx 	gxANDValue
 .af81					_GXSDCNotAndColour:
 .af81	d0 03		bne $af86			bne 	_GXSDCNotAnd 							; mode 2, Don't EOR with colour
-.af83	9c dc 05	stz $05dc			stz 	gxEORValue
+.af83	9c 88 06	stz $0688			stz 	gxEORValue
 .af86					_GXSDCNotAnd:
 .af86	4a		lsr a				lsr 	a 										; if bit 0 set, 1's complement AND value
 .af87	90 08		bcc $af91			bcc 	_GXSDCNoFlip
-.af89	ad dd 05	lda $05dd			lda	 	gxANDValue
+.af89	ad 89 06	lda $0689			lda	 	gxANDValue
 .af8c	49 ff		eor #$ff			eor 	#$FF
-.af8e	8d dd 05	sta $05dd			sta 	gxANDValue
+.af8e	8d 89 06	sta $0689			sta 	gxANDValue
 .af91					_GXSDCNoFlip:
 .af91	18		clc				clc
 .af92	60		rts				rts
 .af93					GXPlotPoint:
 .af93	20 15 b3	jsr $b315			jsr 	GXOpenBitmap 				; start drawing
 .af96	20 25 b3	jsr $b325			jsr 	GXPositionCalc 				; setup gxzScreen, gsOffset and the position.
-.af99	ac df 05	ldy $05df			ldy 	gsOffset
+.af99	ac 8b 06	ldy $068b			ldy 	gsOffset
 .af9c	b1 3c		lda ($3c),y			lda 	(gxzScreen),y 					; set pixel on the right
-.af9e	2d dd 05	and $05dd			and 	gxANDValue
-.afa1	4d dc 05	eor $05dc			eor 	gxEORValue
+.af9e	2d 89 06	and $0689			and 	gxANDValue
+.afa1	4d 88 06	eor $0688			eor 	gxEORValue
 .afa4	91 3c		sta ($3c),y			sta 	(gxzScreen),y
 .afa6	20 1d b3	jsr $b31d			jsr 	GXCloseBitmap 				; stop drawing and exit
 .afa9	18		clc				clc
@@ -8197,7 +8197,7 @@
 .afae					GXFrameRectangle:
 .afae	18		clc				clc
 .afaf					GXRectangle:
-.afaf	ad d6 05	lda $05d6			lda 	gxBitmapsOn
+.afaf	ad 82 06	lda $0682			lda 	gxBitmapsOn
 .afb2	f0 35		beq $afe9			beq 	_GXRFail
 .afb4	08		php				php 								; save Fill flag (CS)
 .afb5	20 15 b3	jsr $b315			jsr 	GXOpenBitmap 				; start drawing
@@ -8205,14 +8205,14 @@
 .afbb	20 25 b3	jsr $b325			jsr 	GXPositionCalc 				; setup gxzScreen, gsOffset and the position.
 .afbe	38		sec				sec 								; sec = Draw line
 .afbf	20 eb af	jsr $afeb			jsr 	GXDrawLineX1X0 				; draw a line length X1-X0
-.afc2	ad cf 05	lda $05cf			lda 	gxY0 						; reached end of rectangle ?
-.afc5	cd d3 05	cmp $05d3			cmp 	gxY1
+.afc2	ad 7b 06	lda $067b			lda 	gxY0 						; reached end of rectangle ?
+.afc5	cd 7f 06	cmp $067f			cmp 	gxY1
 .afc8	f0 19		beq $afe3			beq 	_GXRectangleExit
 .afca					_GXRectLoop:
 .afca	20 7b b3	jsr $b37b			jsr 	GXMovePositionDown 			; down one.
-.afcd	ee cf 05	inc $05cf			inc 	gxY0 						; change Y pos
-.afd0	ad cf 05	lda $05cf			lda 	gxY0 						; reached last line
-.afd3	cd d3 05	cmp $05d3			cmp 	gXY1
+.afcd	ee 7b 06	inc $067b			inc 	gxY0 						; change Y pos
+.afd0	ad 7b 06	lda $067b			lda 	gxY0 						; reached last line
+.afd3	cd 7f 06	cmp $067f			cmp 	gXY1
 .afd6	f0 07		beq $afdf			beq 	_GXLastLine
 .afd8	28		plp				plp 								; get flag back
 .afd9	08		php				php
@@ -8232,11 +8232,11 @@
 .afeb					GXDrawLineX1X0:
 .afeb	08		php				php 								; save solid/either-end
 .afec	38		sec				sec
-.afed	ad d1 05	lda $05d1			lda		gXX1
-.aff0	ed cd 05	sbc $05cd			sbc 	gXX0
+.afed	ad 7d 06	lda $067d			lda		gXX1
+.aff0	ed 79 06	sbc $0679			sbc 	gXX0
 .aff3	85 36		sta $36				sta 	gxzTemp0
-.aff5	ad d2 05	lda $05d2			lda 	gXX1+1
-.aff8	ed ce 05	sbc $05ce			sbc 	gXX0+1
+.aff5	ad 7e 06	lda $067e			lda 	gXX1+1
+.aff8	ed 7a 06	sbc $067a			sbc 	gXX0+1
 .affb	85 37		sta $37				sta 	gxzTemp0+1
 .affd	28		plp				plp
 .affe					GXDrawLineTemp0:
@@ -8244,16 +8244,16 @@
 .b000	48		pha				pha
 .b001	a5 3d		lda $3d				lda 	gxzScreen+1
 .b003	48		pha				pha
-.b004	ad df 05	lda $05df			lda 	gsOffset
+.b004	ad 8b 06	lda $068b			lda 	gsOffset
 .b007	48		pha				pha
 .b008	a5 0b		lda $0b				lda 	GXEditSlot
 .b00a	48		pha				pha
-.b00b	ac df 05	ldy $05df			ldy 	gsOffset 					; Y offset
+.b00b	ac 8b 06	ldy $068b			ldy 	gsOffset 					; Y offset
 .b00e	90 1e		bcc $b02e			bcc 	_GXDLTEndPoints 			; if CC draw end points only.
 .b010					_GXDLTLine:
 .b010	b1 3c		lda ($3c),y			lda 	(gxzScreen),y 					; set pixel
-.b012	2d dd 05	and $05dd			and 	gxANDValue
-.b015	4d dc 05	eor $05dc			eor 	gxEORValue
+.b012	2d 89 06	and $0689			and 	gxANDValue
+.b015	4d 88 06	eor $0688			eor 	gxEORValue
 .b018	91 3c		sta ($3c),y			sta 	(gxzScreen),y
 .b01a	a5 36		lda $36				lda 	gxzTemp0 					; decrement counter
 .b01c	d0 04		bne $b022			bne 	_GXDLTNoBorrow
@@ -8268,8 +8268,8 @@
 .b02c	80 e2		bra $b010			bra 	_GXDLTLine
 .b02e					_GXDLTEndPoints:
 .b02e	b1 3c		lda ($3c),y			lda 	(gxzScreen),y 					; set pixel
-.b030	2d dd 05	and $05dd			and 	gxANDValue
-.b033	4d dc 05	eor $05dc			eor 	gxEORValue
+.b030	2d 89 06	and $0689			and 	gxANDValue
+.b033	4d 88 06	eor $0688			eor 	gxEORValue
 .b036	91 3c		sta ($3c),y			sta 	(gxzScreen),y
 .b038	98		tya				tya 								; advance to right side
 .b039	18		clc				clc
@@ -8280,14 +8280,14 @@
 .b041	85 3d		sta $3d				sta 	gxzScreen+1
 .b043	20 5e b0	jsr $b05e			jsr 	GXDLTCheckWrap 			; fix up.
 .b046	b1 3c		lda ($3c),y			lda 	(gxzScreen),y 					; set pixel on the right
-.b048	2d dd 05	and $05dd			and 	gxANDValue
-.b04b	4d dc 05	eor $05dc			eor 	gxEORValue
+.b048	2d 89 06	and $0689			and 	gxANDValue
+.b04b	4d 88 06	eor $0688			eor 	gxEORValue
 .b04e	91 3c		sta ($3c),y			sta 	(gxzScreen),y
 .b050					_GXDLTExit:
 .b050	68		pla				pla
 .b051	85 0b		sta $0b				sta 	GXEditSlot
 .b053	68		pla				pla
-.b054	8d df 05	sta $05df			sta 	gsOffset
+.b054	8d 8b 06	sta $068b			sta 	gsOffset
 .b057	68		pla				pla
 .b058	85 3d		sta $3d				sta 	gxzScreen+1
 .b05a	68		pla				pla
@@ -8303,58 +8303,58 @@
 .b06a					_GXDLTCWExit:
 .b06a	60		rts				rts
 .b06b					GXDrawGraphicElement:
-.b06b	8d 72 06	sta $0672			sta 	gxSize 						; save size
+.b06b	8d 1e 07	sta $071e			sta 	gxSize 						; save size
 .b06e	3a		dec a				dec 	a
-.b06f	8d 73 06	sta $0673			sta 	gxMask 						; and mask
-.b072	ad d6 05	lda $05d6			lda 	gxBitmapsOn 				; check BMP on
+.b06f	8d 1f 07	sta $071f			sta 	gxMask 						; and mask
+.b072	ad 82 06	lda $0682			lda 	gxBitmapsOn 				; check BMP on
 .b075	f0 67		beq $b0de			beq 	_GXSLFail
-.b077	ad cf 05	lda $05cf			lda 	gxY0 						; push Y on stack
+.b077	ad 7b 06	lda $067b			lda 	gxY0 						; push Y on stack
 .b07a	48		pha				pha
-.b07b	8c 75 06	sty $0675			sty 	gxAcquireVector+1 			; and acquisition vector
-.b07e	8e 74 06	stx $0674			stx 	gxAcquireVector
+.b07b	8c 21 07	sty $0721			sty 	gxAcquireVector+1 			; and acquisition vector
+.b07e	8e 20 07	stx $0720			stx 	gxAcquireVector
 .b081	20 15 b3	jsr $b315			jsr 	gxOpenBitmap 				; open the bitmap.
-.b084	ad 77 06	lda $0677			lda 	gxUseMode 					; scale bits
+.b084	ad 23 07	lda $0723			lda 	gxUseMode 					; scale bits
 .b087	4a		lsr a				lsr 	a
 .b088	4a		lsr a				lsr 	a
 .b089	4a		lsr a				lsr 	a
 .b08a	29 07		and #$07			and		#7
 .b08c	1a		inc a				inc 	a
-.b08d	8d 76 06	sta $0676			sta 	gxScale
+.b08d	8d 22 07	sta $0722			sta 	gxScale
 .b090	64 38		stz $38				stz 	gxzTemp1					; start first line
 .b092					_GXGELoop:
 .b092	a5 38		lda $38				lda 	gxzTemp1 					; current line number to read.
-.b094	2c 77 06	bit $0677			bit 	gxUseMode 					; check for flip.
+.b094	2c 23 07	bit $0723			bit 	gxUseMode 					; check for flip.
 .b097	10 06		bpl $b09f			bpl		_GXNoVFlip
-.b099	ad 73 06	lda $0673			lda 	gxMask
+.b099	ad 1f 07	lda $071f			lda 	gxMask
 .b09c	38		sec				sec
 .b09d	e5 38		sbc $38				sbc 	gxzTemp1
 .b09f					_GXNoVFlip:
 .b09f	aa		tax				tax 								; get the Xth line.
 .b0a0	20 e0 b0	jsr $b0e0			jsr 	_GXCallAcquire 				; get that data.
-.b0a3	ad 76 06	lda $0676			lda 	gxScale 					; do scale identical copies of that line.
+.b0a3	ad 22 07	lda $0722			lda 	gxScale 					; do scale identical copies of that line.
 .b0a6	85 39		sta $39				sta 	gxzTemp1+1
 .b0a8					_GXGELoop2:
-.b0a8	ad cf 05	lda $05cf			lda 	gxY0 						; off screen
-.b0ab	cd d9 05	cmp $05d9			cmp 	gxHeight
+.b0a8	ad 7b 06	lda $067b			lda 	gxY0 						; off screen
+.b0ab	cd 85 06	cmp $0685			cmp 	gxHeight
 .b0ae	b0 10		bcs $b0c0			bcs 	_GXDGEExit
 .b0b0	20 e3 b0	jsr $b0e3			jsr 	GXRenderOneLine 			; render line
 .b0b3	c6 39		dec $39				dec 	gxzTemp1+1 					; scale times.
 .b0b5	d0 f1		bne $b0a8			bne 	_GXGELoop2
 .b0b7	e6 38		inc $38				inc 	gxzTemp1 					; done all lines.
 .b0b9	a5 38		lda $38				lda 	gxzTemp1
-.b0bb	cd 72 06	cmp $0672			cmp 	gxSize
+.b0bb	cd 1e 07	cmp $071e			cmp 	gxSize
 .b0be	d0 d2		bne $b092			bne 	_GXGELoop
 .b0c0					_GXDGEExit:
 .b0c0	68		pla				pla 								; restore Y for next time
-.b0c1	8d cf 05	sta $05cf			sta 	gxY0
-.b0c4	ae 76 06	ldx $0676			ldx 	gxScale 					; get scale (1-8)
+.b0c1	8d 7b 06	sta $067b			sta 	gxY0
+.b0c4	ae 22 07	ldx $0722			ldx 	gxScale 					; get scale (1-8)
 .b0c7					_GXShiftLeft:
 .b0c7	18		clc				clc
-.b0c8	ad 72 06	lda $0672			lda 	gxSize
-.b0cb	6d cd 05	adc $05cd			adc 	gxX0
-.b0ce	8d cd 05	sta $05cd			sta 	gxX0
+.b0c8	ad 1e 07	lda $071e			lda 	gxSize
+.b0cb	6d 79 06	adc $0679			adc 	gxX0
+.b0ce	8d 79 06	sta $0679			sta 	gxX0
 .b0d1	90 03		bcc $b0d6			bcc 	_GXSLNoCarry
-.b0d3	ee ce 05	inc $05ce			inc 	gxX0+1
+.b0d3	ee 7a 06	inc $067a			inc 	gxX0+1
 .b0d6					_GXSLNoCarry:
 .b0d6	ca		dex				dex
 .b0d7	d0 ee		bne $b0c7			bne 	_GXShiftLeft
@@ -8365,32 +8365,32 @@
 .b0de	38		sec				sec
 .b0df	60		rts				rts
 .b0e0					_GXCallAcquire:
-.b0e0	6c 74 06	jmp ($0674)			jmp 	(gxAcquireVector)
+.b0e0	6c 20 07	jmp ($0720)			jmp 	(gxAcquireVector)
 .b0e3					GXRenderOneLine:
 .b0e3	20 25 b3	jsr $b325			jsr 	GXPositionCalc 				; calculate position/offset.
-.b0e6	ac df 05	ldy $05df			ldy 	gsOffset 					; Y contains position.
+.b0e6	ac 8b 06	ldy $068b			ldy 	gsOffset 					; Y contains position.
 .b0e9	64 3a		stz $3a				stz 	gxzTemp2 					; do size pixels
 .b0eb					_GXROLLoop1:
-.b0eb	ad 76 06	lda $0676			lda 	gxScale 					; set to do 'scale' times
+.b0eb	ad 22 07	lda $0722			lda 	gxScale 					; set to do 'scale' times
 .b0ee	85 3b		sta $3b				sta 	gxzTemp2+1
 .b0f0					_GXROLLoop2:
 .b0f0	a5 3a		lda $3a				lda 	gxzTemp2 					; get current pixel
-.b0f2	2c da 05	bit $05da			bit 	gxMode 						; check H Flip
+.b0f2	2c 86 06	bit $0686			bit 	gxMode 						; check H Flip
 .b0f5	50 06		bvc $b0fd			bvc 	_GXNoHFlip
-.b0f7	ad 73 06	lda $0673			lda 	gxMask
+.b0f7	ad 1f 07	lda $071f			lda 	gxMask
 .b0fa	38		sec				sec
 .b0fb	e5 3a		sbc $3a				sbc 	gxzTemp2
 .b0fd					_GXNoHFlip:
 .b0fd	aa		tax				tax 								; read from the pixel buffer
-.b0fe	bd 7b 05	lda $057b,x			lda 	gxPixelBuffer,x
+.b0fe	bd 27 06	lda $0627,x			lda 	gxPixelBuffer,x
 .b101	d0 07		bne $b10a			bne 	_GXDraw 					; draw if non zero
-.b103	ad 77 06	lda $0677			lda 	gxUseMode 					; check to see if solid background
+.b103	ad 23 07	lda $0723			lda 	gxUseMode 					; check to see if solid background
 .b106	29 04		and #$04			and 	#4
 .b108	f0 0a		beq $b114			beq 	_GXZeroPixel
 .b10a					_GXDraw:
 .b10a	b1 3c		lda ($3c),y			lda 	(gxzScreen),y
-.b10c	2d dd 05	and $05dd			and 	gxANDValue
-.b10f	5d 7b 05	eor $057b,x			eor 	gxPixelBuffer,x
+.b10c	2d 89 06	and $0689			and 	gxANDValue
+.b10f	5d 27 06	eor $0627,x			eor 	gxPixelBuffer,x
 .b112	91 3c		sta ($3c),y			sta 	(gxzScreen),y
 .b114					_GXZeroPixel:
 .b114	c8		iny				iny 								; advance pointer
@@ -8402,24 +8402,24 @@
 .b11e	d0 d0		bne $b0f0			bne 	_GXROLLoop2
 .b120	e6 3a		inc $3a				inc 	gxzTemp2 					; next pixel.
 .b122	a5 3a		lda $3a				lda 	gxzTemp2
-.b124	cd 72 06	cmp $0672			cmp 	gxSize
+.b124	cd 1e 07	cmp $071e			cmp 	gxSize
 .b127	d0 c2		bne $b0eb			bne 	_GXROLLoop1
-.b129	ee cf 05	inc $05cf			inc 	gxY0
+.b129	ee 7b 06	inc $067b			inc 	gxY0
 .b12c	60		rts				rts
-.0672					gxSize:
->0672							.fill 	1
-.0673					gxMask:
->0673							.fill 	1
-.0674					gxAcquireVector:
->0674							.fill 	2
-.0676					gxScale:
->0676							.fill 	1
-.0677					gxUseMode:
->0677							.fill 	1
+.071e					gxSize:
+>071e							.fill 	1
+.071f					gxMask:
+>071f							.fill 	1
+.0720					gxAcquireVector:
+>0720							.fill 	2
+.0722					gxScale:
+>0722							.fill 	1
+.0723					gxUseMode:
+>0723							.fill 	1
 .b12d					GXFontHandler:
 .b12d	a5 37		lda $37				lda 	gxzTemp0+1 					; eor with mode
-.b12f	4d da 05	eor $05da			eor 	gxMode
-.b132	8d 77 06	sta $0677			sta 	gxUseMode
+.b12f	4d 86 06	eor $0686			eor 	gxMode
+.b132	8d 23 07	sta $0723			sta 	gxUseMode
 .b135	64 37		stz $37				stz 	gxzTemp0+1 					; gxzTemp0 is font #
 .b137	06 36		asl $36				asl	 	gxzTemp0 					; x 2
 .b139	26 37		rol $37				rol	 	gxzTemp0+1
@@ -8445,12 +8445,12 @@
 .b15d	86 01		stx $01				stx 	1 							; put old value back.
 .b15f	a2 00		ldx #$00			ldx 	#0 							; do 8 times
 .b161					_GXExpand:
-.b161	9e 7b 05	stz $057b,x			stz 	gxPixelBuffer,x 			; zero in pixel buffer
+.b161	9e 27 06	stz $0627,x			stz 	gxPixelBuffer,x 			; zero in pixel buffer
 .b164	0a		asl a				asl 	a 							; shift bit 7 into C
 .b165	90 08		bcc $b16f			bcc 	_GXNoPixel
 .b167	48		pha				pha 								; if set, set pixel buffer to current colour.
-.b168	ad db 05	lda $05db			lda 	gxColour
-.b16b	9d 7b 05	sta $057b,x			sta 	gxPixelBuffer,x
+.b168	ad 87 06	lda $0687			lda 	gxColour
+.b16b	9d 27 06	sta $0627,x			sta 	gxPixelBuffer,x
 .b16e	68		pla				pla
 .b16f					_GXNoPixel:
 .b16f	e8		inx				inx 								; do the whole byte.
@@ -8458,11 +8458,11 @@
 .b172	d0 ed		bne $b161			bne 	_GXExpand
 .b174	60		rts				rts
 .b175					GXSpriteHandler:
-.b175	ad d5 05	lda $05d5			lda 	gxSpritesOn 				; sprites on ?
+.b175	ad 81 06	lda $0681			lda 	gxSpritesOn 				; sprites on ?
 .b178	f0 23		beq $b19d			beq 	_GXSHExit
 .b17a	a5 37		lda $37				lda 	gxzTemp0+1 					; eor with mode
-.b17c	4d da 05	eor $05da			eor 	gxMode
-.b17f	8d 77 06	sta $0677			sta 	gxUseMode
+.b17c	4d 86 06	eor $0686			eor 	gxMode
+.b17f	8d 23 07	sta $0723			sta 	gxUseMode
 .b182	a6 36		ldx $36				ldx 	gxzTemp0 					; sprite #
 .b184	da		phx				phx
 .b185	20 15 b3	jsr $b315			jsr 	GXOpenBitmap 				; can access sprite information
@@ -8472,18 +8472,18 @@
 .b18d	20 1d b3	jsr $b31d			jsr 	GXCloseBitmap
 .b190	28		plp				plp
 .b191	b0 0a		bcs $b19d			bcs		_GXSHExit 					; exit if find failed.
-.b193	ad 78 06	lda $0678			lda 	GXSizePixels 				; return size
+.b193	ad 24 07	lda $0724			lda 	GXSizePixels 				; return size
 .b196	a2 9e		ldx #$9e			ldx 	#GXSpriteAcquire & $FF
 .b198	a0 b1		ldy #$b1			ldy 	#GXSpriteAcquire >> 8
 .b19a	20 6b b0	jsr $b06b			jsr 	GXDrawGraphicElement
 .b19d					_GXSHExit:
 .b19d	60		rts				rts
 .b19e					GXSpriteAcquire:
-.b19e	ad d8 05	lda $05d8			lda 	GXSpritePage				; point to base page
+.b19e	ad 84 06	lda $0684			lda 	GXSpritePage				; point to base page
 .b1a1	85 0b		sta $0b				sta 	GXEditSlot
 .b1a3	86 36		stx $36				stx 	zTemp0 						; row number x 1,2,3,4
 .b1a5	a9 00		lda #$00			lda 	#0
-.b1a7	ae 79 06	ldx $0679			ldx 	GXSizeBits
+.b1a7	ae 25 07	ldx $0725			ldx 	GXSizeBits
 .b1aa					_GXTimesRowNumber:
 .b1aa	18		clc				clc
 .b1ab	65 36		adc $36				adc 	zTemp0
@@ -8499,10 +8499,10 @@
 .b1bb	85 36		sta $36				sta 	gxzTemp0
 .b1bd	18		clc				clc 								; add base address.
 .b1be	a5 36		lda $36				lda 	gxzTemp0
-.b1c0	6d 7b 06	adc $067b			adc 	GXSpriteOffset
+.b1c0	6d 27 07	adc $0727			adc 	GXSpriteOffset
 .b1c3	85 36		sta $36				sta 	gxzTemp0
 .b1c5	a5 37		lda $37				lda 	gxzTemp0+1
-.b1c7	6d 7c 06	adc $067c			adc 	GXSpriteOffset+1
+.b1c7	6d 28 07	adc $0728			adc 	GXSpriteOffset+1
 .b1ca					_GXSAFindPage:
 .b1ca	c9 20		cmp #$20			cmp 	#$20 						; on this page
 .b1cc	90 06		bcc $b1d4			bcc 	_GXSAFoundPage
@@ -8515,18 +8515,18 @@
 .b1d8	a0 00		ldy #$00			ldy 	#0
 .b1da					_GXSACopyLoop:
 .b1da	b1 36		lda ($36),y			lda 	(gxzTemp0),y
-.b1dc	99 7b 05	sta $057b,y			sta 	gxPixelBuffer,y
+.b1dc	99 27 06	sta $0627,y			sta 	gxPixelBuffer,y
 .b1df	c8		iny				iny
-.b1e0	cc 78 06	cpy $0678			cpy 	GXSizePixels
+.b1e0	cc 24 07	cpy $0724			cpy 	GXSizePixels
 .b1e3	d0 f5		bne $b1da			bne 	_GXSACopyLoop
 .b1e5	60		rts				rts
 .b1e6					GXSelect:
-.b1e6	ad d5 05	lda $05d5			lda 	gxSpritesOn
+.b1e6	ad 81 06	lda $0681			lda 	gxSpritesOn
 .b1e9	f0 22		beq $b20d			beq 	_GXSFail
 .b1eb	a5 36		lda $36				lda 	gxzTemp0 					; illegal sprite #
 .b1ed	c9 40		cmp #$40			cmp 	#64
 .b1ef	b0 1c		bcs $b20d			bcs 	_GXSFail
-.b1f1	8d e0 05	sta $05e0			sta 	GSCurrentSpriteID
+.b1f1	8d 8c 06	sta $068c			sta 	GSCurrentSpriteID
 .b1f4	a4 37		ldy $37				ldy 	gxzTemp0+1 					; control value.
 .b1f6	a9 00		lda #$00			lda  	#0 							; multiply sprite # x 8 => A
 .b1f8	06 36		asl $36				asl 	gxzTemp0
@@ -8534,19 +8534,19 @@
 .b1fc	06 36		asl $36				asl 	gxzTemp0
 .b1fe	2a		rol a				rol 	a
 .b1ff	69 d9		adc #$d9			adc 	#$D9 						; sprite area
-.b201	8d e2 05	sta $05e2			sta 	GSCurrentSpriteAddr+1 		; address to GSCurrentSprite and gxzTemp
+.b201	8d 8e 06	sta $068e			sta 	GSCurrentSpriteAddr+1 		; address to GSCurrentSprite and gxzTemp
 .b204	85 37		sta $37				sta 	gxzTemp0+1
 .b206	a5 36		lda $36				lda 	gxzTemp0
-.b208	8d e1 05	sta $05e1			sta 	GSCurrentSpriteAddr
+.b208	8d 8d 06	sta $068d			sta 	GSCurrentSpriteAddr
 .b20b	18		clc				clc
 .b20c	60		rts				rts
 .b20d					_GXSFail:
 .b20d	38		sec				sec
 .b20e	60		rts				rts
 .b20f					GXSelectImage:
-.b20f	ad d5 05	lda $05d5			lda 	gxSpritesOn
+.b20f	ad 81 06	lda $0681			lda 	gxSpritesOn
 .b212	f0 74		beq $b288			beq 	_GXSIFail
-.b214	ad e2 05	lda $05e2			lda 	GSCurrentSpriteAddr+1 		; check sprite selected
+.b214	ad 8e 06	lda $068e			lda 	GSCurrentSpriteAddr+1 		; check sprite selected
 .b217	f0 6f		beq $b288			beq 	_GXSIFail 					; (checking the MSB)
 .b219	64 01		stz $01				stz 	1
 .b21b	a5 37		lda $37				lda 	gxzTemp0+1 					; push show/hide on the stack.
@@ -8558,46 +8558,46 @@
 .b226	20 f6 b3	jsr $b3f6			jsr 	GXFindSprite
 .b229	b0 5a		bcs $b285			bcs 	_GXSICloseFail 				; no image
 .b22b	a0 01		ldy #$01			ldy 	#1
-.b22d	ad e1 05	lda $05e1			lda 	GSCurrentSpriteAddr
+.b22d	ad 8d 06	lda $068d			lda 	GSCurrentSpriteAddr
 .b230	85 36		sta $36				sta 	gxzTemp0
-.b232	ad e2 05	lda $05e2			lda 	GSCurrentSpriteAddr+1
+.b232	ad 8e 06	lda $068e			lda 	GSCurrentSpriteAddr+1
 .b235	85 37		sta $37				sta 	gxzTemp0+1
-.b237	ad 7b 06	lda $067b			lda 	GXSpriteOffset
+.b237	ad 27 07	lda $0727			lda 	GXSpriteOffset
 .b23a	91 36		sta ($36),y			sta	 	(gxzTemp0),y
 .b23c	18		clc				clc
-.b23d	ad 7c 06	lda $067c			lda 	GXSpriteOffset+1
-.b240	6d e3 05	adc $05e3			adc 	GXSpriteOffsetBase
+.b23d	ad 28 07	lda $0728			lda 	GXSpriteOffset+1
+.b240	6d 8f 06	adc $068f			adc 	GXSpriteOffsetBase
 .b243	c8		iny				iny
 .b244	91 36		sta ($36),y			sta	 	(gxzTemp0),y
-.b246	ad e4 05	lda $05e4			lda 	GXSpriteOffsetBase+1
+.b246	ad 90 06	lda $0690			lda 	GXSpriteOffsetBase+1
 .b249	69 00		adc #$00			adc 	#0
 .b24b	c8		iny				iny
 .b24c	91 36		sta ($36),y			sta	 	(gxzTemp0),y
-.b24e	ad 79 06	lda $0679			lda 	GXSizeBits 					; get raw size
+.b24e	ad 25 07	lda $0725			lda 	GXSizeBits 					; get raw size
 .b251	49 03		eor #$03			eor 	#3 							; make it right (00=32 etc.)
 .b253	2a		rol a				rol 	a 							; x 2
 .b254	0a		asl a				asl 	a 							; x 4
 .b255	0a		asl a				asl 	a 							; x 8
 .b256	0a		asl a				asl 	a 							; x 16
-.b257	0d 7a 06	ora $067a			ora 	GXSpriteLUT 				; Or with LUT
+.b257	0d 26 07	ora $0726			ora 	GXSpriteLUT 				; Or with LUT
 .b25a	0a		asl a				asl 	a 							; 1 shift
 .b25b	09 01		ora #$01			ora 	#1 							; enable sprite.
 .b25d	92 36		sta ($36)			sta 	(gxzTemp0) 					; and write back
 .b25f	20 1d b3	jsr $b31d			jsr 	GXCloseBitmap
-.b262	ae e0 05	ldx $05e0			ldx 	GSCurrentSpriteID 			; point to sprite entries.
-.b265	bd 25 06	lda $0625,x			lda 	GXSpriteHigh,x 				; clear upper two bits of size
+.b262	ae 8c 06	ldx $068c			ldx 	GSCurrentSpriteID 			; point to sprite entries.
+.b265	bd d1 06	lda $06d1,x			lda 	GXSpriteHigh,x 				; clear upper two bits of size
 .b268	29 3f		and #$3f			and 	#$3F
-.b26a	9d 25 06	sta $0625,x			sta 	GXSpriteHigh,x
-.b26d	ad 79 06	lda $0679			lda 	GXSizeBits 					; get bit size
+.b26a	9d d1 06	sta $06d1,x			sta 	GXSpriteHigh,x
+.b26d	ad 25 07	lda $0725			lda 	GXSizeBits 					; get bit size
 .b270	6a		ror a				ror 	a 							; shift into bits 6/7
 .b271	6a		ror a				ror 	a
 .b272	6a		ror a				ror 	a
 .b273	29 c0		and #$c0			and 	#$C0
-.b275	1d 25 06	ora $0625,x			ora 	GXSpriteHigh,x 				; put in  upper 2 bits of sprite data
-.b278	9d 25 06	sta $0625,x			sta 	GXSpriteHigh,x
-.b27b	bd e5 05	lda $05e5,x			lda 	GXSpriteLow,x 				; clear hidden flag.
+.b275	1d d1 06	ora $06d1,x			ora 	GXSpriteHigh,x 				; put in  upper 2 bits of sprite data
+.b278	9d d1 06	sta $06d1,x			sta 	GXSpriteHigh,x
+.b27b	bd 91 06	lda $0691,x			lda 	GXSpriteLow,x 				; clear hidden flag.
 .b27e	29 7f		and #$7f			and 	#$7F
-.b280	9d e5 05	sta $05e5,x			sta 	GXSpriteLow,x
+.b280	9d 91 06	sta $0691,x			sta 	GXSpriteLow,x
 .b283	18		clc				clc
 .b284	60		rts				rts
 .b285					_GXSICloseFail:
@@ -8606,29 +8606,29 @@
 .b288	38		sec				sec
 .b289	60		rts				rts
 .b28a					_GXSIHide:
-.b28a	ad e1 05	lda $05e1			lda 	GSCurrentSpriteAddr  		; get Sprite h/w address and write there
+.b28a	ad 8d 06	lda $068d			lda 	GSCurrentSpriteAddr  		; get Sprite h/w address and write there
 .b28d	85 36		sta $36				sta 	gxzTemp0
-.b28f	ad e2 05	lda $05e2			lda 	GSCurrentSpriteAddr+1
+.b28f	ad 8e 06	lda $068e			lda 	GSCurrentSpriteAddr+1
 .b292	85 37		sta $37				sta 	gxzTemp0+1
 .b294	a9 00		lda #$00			lda 	#0
 .b296	92 36		sta ($36)			sta 	(gxzTemp0)
-.b298	ae e0 05	ldx $05e0			ldx 	GSCurrentSpriteID 			; get sprite ID
-.b29b	bd e5 05	lda $05e5,x			lda 	GXSpriteLow,x 				; set the hidden bit.
+.b298	ae 8c 06	ldx $068c			ldx 	GSCurrentSpriteID 			; get sprite ID
+.b29b	bd 91 06	lda $0691,x			lda 	GXSpriteLow,x 				; set the hidden bit.
 .b29e	09 80		ora #$80			ora 	#$80
-.b2a0	9d e5 05	sta $05e5,x			sta 	GXSpriteLow,x
+.b2a0	9d 91 06	sta $0691,x			sta 	GXSpriteLow,x
 .b2a3	18		clc				clc
 .b2a4	60		rts				rts
 .b2a5					GXMoveSprite:
-.b2a5	ad d5 05	lda $05d5			lda 	gxSpritesOn
+.b2a5	ad 81 06	lda $0681			lda 	gxSpritesOn
 .b2a8	f0 65		beq $b30f			beq 	_GXSIFail
-.b2aa	ad e2 05	lda $05e2			lda 	GSCurrentSpriteAddr+1 		; check sprite selected
+.b2aa	ad 8e 06	lda $068e			lda 	GSCurrentSpriteAddr+1 		; check sprite selected
 .b2ad	f0 60		beq $b30f			beq 	_GXSIFail
 .b2af	85 37		sta $37				sta 	gxzTemp0+1
 .b2b1	a0 04		ldy #$04			ldy 	#4
-.b2b3	ad e1 05	lda $05e1			lda 	GSCurrentSpriteAddr
+.b2b3	ad 8d 06	lda $068d			lda 	GSCurrentSpriteAddr
 .b2b6	85 36		sta $36				sta 	gxzTemp0
-.b2b8	ae e0 05	ldx $05e0			ldx 	GSCurrentSpriteID 			; get the size from the upper two bits
-.b2bb	bd 25 06	lda $0625,x			lda 	GXSpriteHigh,x
+.b2b8	ae 8c 06	ldx $068c			ldx 	GSCurrentSpriteID 			; get the size from the upper two bits
+.b2bb	bd d1 06	lda $06d1,x			lda 	GXSpriteHigh,x
 .b2be	2a		rol a				rol 	a	 						; into bits 0,1.
 .b2bf	2a		rol a				rol 	a
 .b2c0	2a		rol a				rol 	a
@@ -8637,35 +8637,35 @@
 .b2c4	bd 11 b3	lda $b311,x			lda 	_GXMSOffset,x 				; get 32-SpriteSize/2
 .b2c7	48		pha				pha
 .b2c8	18		clc				clc
-.b2c9	6d cd 05	adc $05cd			adc 	gxX0						; copy position.
+.b2c9	6d 79 06	adc $0679			adc 	gxX0						; copy position.
 .b2cc	91 36		sta ($36),y			sta 	(gxzTemp0),y
 .b2ce	c8		iny				iny
-.b2cf	ad ce 05	lda $05ce			lda 	gxX0+1
+.b2cf	ad 7a 06	lda $067a			lda 	gxX0+1
 .b2d2	69 00		adc #$00			adc 	#0
 .b2d4	91 36		sta ($36),y			sta 	(gxzTemp0),y
 .b2d6	c8		iny				iny
 .b2d7	68		pla				pla
 .b2d8	18		clc				clc
-.b2d9	6d cf 05	adc $05cf			adc 	gxY0
+.b2d9	6d 7b 06	adc $067b			adc 	gxY0
 .b2dc	91 36		sta ($36),y			sta 	(gxzTemp0),y
 .b2de	a9 00		lda #$00			lda 	#0
 .b2e0	69 00		adc #$00			adc 	#0
 .b2e2	c8		iny				iny
 .b2e3	91 36		sta ($36),y			sta 	(gxzTemp0),y
-.b2e5	4e ce 05	lsr $05ce			lsr 	gxX0+1 						; divide X by 4
-.b2e8	6e cd 05	ror $05cd			ror 	gxX0
-.b2eb	4e cd 05	lsr $05cd			lsr 	gxX0
-.b2ee	4e cf 05	lsr $05cf			lsr 	gxY0 						; divide Y by 4
-.b2f1	4e cf 05	lsr $05cf			lsr 	gxY0
-.b2f4	ae e0 05	ldx $05e0			ldx 	GSCurrentSpriteID 			; copy X/4 and Y/4 into the status bytes
-.b2f7	bd e5 05	lda $05e5,x			lda 	GXSpriteLow,x
+.b2e5	4e 7a 06	lsr $067a			lsr 	gxX0+1 						; divide X by 4
+.b2e8	6e 79 06	ror $0679			ror 	gxX0
+.b2eb	4e 79 06	lsr $0679			lsr 	gxX0
+.b2ee	4e 7b 06	lsr $067b			lsr 	gxY0 						; divide Y by 4
+.b2f1	4e 7b 06	lsr $067b			lsr 	gxY0
+.b2f4	ae 8c 06	ldx $068c			ldx 	GSCurrentSpriteID 			; copy X/4 and Y/4 into the status bytes
+.b2f7	bd 91 06	lda $0691,x			lda 	GXSpriteLow,x
 .b2fa	29 80		and #$80			and 	#$80
-.b2fc	0d cd 05	ora $05cd			ora 	gxX0
-.b2ff	9d e5 05	sta $05e5,x			sta 	GXSpriteLow,x
-.b302	bd 25 06	lda $0625,x			lda 	GXSpriteHigh,x
+.b2fc	0d 79 06	ora $0679			ora 	gxX0
+.b2ff	9d 91 06	sta $0691,x			sta 	GXSpriteLow,x
+.b302	bd d1 06	lda $06d1,x			lda 	GXSpriteHigh,x
 .b305	29 c0		and #$c0			and 	#$C0
-.b307	0d cf 05	ora $05cf			ora 	gxY0
-.b30a	9d 25 06	sta $0625,x			sta 	GXSpriteHigh,x
+.b307	0d 7b 06	ora $067b			ora 	gxY0
+.b30a	9d d1 06	sta $06d1,x			sta 	GXSpriteHigh,x
 .b30d	18		clc				clc
 .b30e	60		rts				rts
 .b30f					_GXSIFail:
@@ -8679,19 +8679,19 @@
 .b315					GXOpenBitmap:
 .b315	78		sei				sei 								; no interrupts here
 .b316	a5 0b		lda $0b				lda 	GXEditSlot 					; Save the original LUT slot value
-.b318	8d de 05	sta $05de			sta 	gxOriginalLUTValue
+.b318	8d 8a 06	sta $068a			sta 	gxOriginalLUTValue
 .b31b	58		cli				cli
 .b31c	60		rts				rts
 .b31d					GXCloseBitmap:
 .b31d	78		sei				sei
-.b31e	ad de 05	lda $05de			lda 	gxOriginalLUTValue 			; restore LUT slot value
+.b31e	ad 8a 06	lda $068a			lda 	gxOriginalLUTValue 			; restore LUT slot value
 .b321	85 0b		sta $0b				sta 	GXEditSlot
 .b323	58		cli				cli
 .b324	60		rts				rts
 .b325					GXPositionCalc:
 .b325	a5 36		lda $36				lda 	gxzTemp0 					; save temp memory slot
 .b327	48		pha				pha
-.b328	ad cf 05	lda $05cf			lda 	GXY0 						; gxzScreen = Y0
+.b328	ad 7b 06	lda $067b			lda 	GXY0 						; gxzScreen = Y0
 .b32b	85 3c		sta $3c				sta 	gxzScreen
 .b32d	64 3d		stz $3d				stz 	gxzScreen+1
 .b32f	06 3c		asl $3c				asl 	gxzScreen 						; gxzScreen = Y0 * 4
@@ -8716,10 +8716,10 @@
 .b350	3a		dec a				dec 	a
 .b351	d0 f9		bne $b34c			bne 	_GXPCMultiply32
 .b353	18		clc				clc
-.b354	ad cd 05	lda $05cd			lda 	GXX0 						; add X to this value, put the result in gsOffset, gxzScreen has to be on a page boundary
+.b354	ad 79 06	lda $0679			lda 	GXX0 						; add X to this value, put the result in gsOffset, gxzScreen has to be on a page boundary
 .b357	65 3c		adc $3c				adc 	gxzScreen
-.b359	8d df 05	sta $05df			sta 	gsOffset
-.b35c	ad ce 05	lda $05ce			lda 	GXX0+1
+.b359	8d 8b 06	sta $068b			sta 	gsOffset
+.b35c	ad 7a 06	lda $067a			lda 	GXX0+1
 .b35f	65 3d		adc $3d				adc 	gxzScreen+1
 .b361	c9 20		cmp #$20			cmp 	#$20 						; has it overflowed into the next one ?
 .b363	90 04		bcc $b369			bcc 	_GXPCNoOverflow
@@ -8731,16 +8731,16 @@
 .b36d	64 3c		stz $3c				stz 	gxzScreen
 .b36f	18		clc				clc
 .b370	a5 36		lda $36				lda 	gxzTemp0 					; get the page number
-.b372	6d d7 05	adc $05d7			adc 	gxBasePage 					; by adding the base page
+.b372	6d 83 06	adc $0683			adc 	gxBasePage 					; by adding the base page
 .b375	85 0b		sta $0b				sta 	GXEditSlot 				; and map it into memory.
 .b377	68		pla				pla
 .b378	85 36		sta $36				sta 	gxzTemp0
 .b37a	60		rts				rts
 .b37b					GXMovePositionDown:
 .b37b	18		clc				clc 								; add 320 to offset/temp+1
-.b37c	ad df 05	lda $05df			lda 	gsOffset
+.b37c	ad 8b 06	lda $068b			lda 	gsOffset
 .b37f	69 40		adc #$40			adc 	#64
-.b381	8d df 05	sta $05df			sta 	gsOffset
+.b381	8d 8b 06	sta $068b			sta 	gsOffset
 .b384	a5 3d		lda $3d				lda 	gxzScreen+1
 .b386	69 01		adc #$01			adc 	#1
 .b388	85 3d		sta $3d				sta 	gxzScreen+1
@@ -8760,12 +8760,12 @@
 .b39d	38		sec				sec
 .b39e	d0 53		bne $b3f3			bne 	_GXCollideFail 				; if either >= 64, fail.
 .b3a0	a4 37		ldy $37				ldy 	gxzTemp0+1 					; at this point X is 1st sprite and Y is 2nd sprite.
-.b3a2	b9 e5 05	lda $05e5,y			lda 	GXSpriteLow,y 				; check if either hidden bit is set
-.b3a5	1d e5 05	ora $05e5,x			ora 	GXSpriteLow,x
+.b3a2	b9 91 06	lda $0691,y			lda 	GXSpriteLow,y 				; check if either hidden bit is set
+.b3a5	1d 91 06	ora $0691,x			ora 	GXSpriteLow,x
 .b3a8	30 48		bmi $b3f2			bmi 	_GXOkayFail 				; if either hidden, then they cannot collide.
 .b3aa	18		clc				clc 								; need to calculate sum of sizes.
-.b3ab	b9 25 06	lda $0625,y			lda 	GXSpriteHigh,y
-.b3ae	7d 25 06	adc $0625,x			adc 	GXSpriteHigh,x 				; at this point, CS, Bit 6 and 7 contain that sum.
+.b3ab	b9 d1 06	lda $06d1,y			lda 	GXSpriteHigh,y
+.b3ae	7d d1 06	adc $06d1,x			adc 	GXSpriteHigh,x 				; at this point, CS, Bit 6 and 7 contain that sum.
 .b3b1	29 c0		and #$c0			and 	#$C0 					 	; mask off
 .b3b3	6a		ror a				ror 	a 							; 5/6/7
 .b3b4	4a		lsr a				lsr 	a 							; 4/5/6
@@ -8776,11 +8776,11 @@
 .b3ba	4a		lsr a				lsr 	a 							; adjust because all coordinates are divided by 4 to store.
 .b3bb	4a		lsr a				lsr 	a
 .b3bc	85 38		sta $38				sta 	gxzTemp1 					; so the difference between the centres has to be less than this.
-.b3be	b9 25 06	lda $0625,y			lda 	GXSpriteHigh,y 				; calculate y1-y0
+.b3be	b9 d1 06	lda $06d1,y			lda 	GXSpriteHigh,y 				; calculate y1-y0
 .b3c1	29 3f		and #$3f			and 	#$3F
 .b3c3	85 39		sta $39				sta 	gxzTemp1+1
 .b3c5	38		sec				sec
-.b3c6	bd 25 06	lda $0625,x			lda 	GXSpriteHigh,x
+.b3c6	bd d1 06	lda $06d1,x			lda 	GXSpriteHigh,x
 .b3c9	29 3f		and #$3f			and 	#$3F
 .b3cb	e5 39		sbc $39				sbc 	gxzTemp1+1
 .b3cd	b0 03		bcs $b3d2			bcs 	_GXCAbs1 					; calculate |y1-y0|
@@ -8791,8 +8791,8 @@
 .b3d4	b0 1c		bcs $b3f2			bcs 	_GXOkayFail
 .b3d6	85 39		sta $39				sta 	gxzTemp1+1 					; save |y1-y0|
 .b3d8	38		sec				sec 								; calculate |x1-x0|
-.b3d9	b9 e5 05	lda $05e5,y			lda 	GXSpriteLow,y
-.b3dc	fd e5 05	sbc $05e5,x			sbc 	GXSpriteLow,x
+.b3d9	b9 91 06	lda $0691,y			lda 	GXSpriteLow,y
+.b3dc	fd 91 06	sbc $0691,x			sbc 	GXSpriteLow,x
 .b3df	b0 03		bcs $b3e4			bcs 	_GXCAbs2
 .b3e1	49 ff		eor #$ff			eor 	#$FF
 .b3e3	1a		inc a				inc 	a
@@ -8814,33 +8814,33 @@
 .b3f5	60		rts				rts
 .b3f6					GXFindSprite:
 .b3f6	aa		tax				tax
-.b3f7	ad d8 05	lda $05d8			lda 	GXSpritePage 				; access the base page of the sprite
+.b3f7	ad 84 06	lda $0684			lda 	GXSpritePage 				; access the base page of the sprite
 .b3fa	85 0b		sta $0b				sta 	GXEditSlot
 .b3fc	bd 00 61	lda $6100,x			lda 	GXMappingAddress+256,x 		; check a valid sprite
 .b3ff	1d 00 60	ora $6000,x			ora 	GXMappingAddress,x
 .b402	f0 33		beq $b437			beq 	_GXFSFail
 .b404	bd 00 61	lda $6100,x			lda 	GXMappingAddress+256,x 		; MSB
-.b407	8d 7c 06	sta $067c			sta 	GXSpriteOffset+1
+.b407	8d 28 07	sta $0728			sta 	GXSpriteOffset+1
 .b40a	bd 00 60	lda $6000,x			lda 	GXMappingAddress,x 			; LSB
 .b40d	48		pha				pha 								; save twice
 .b40e	48		pha				pha
 .b40f	29 03		and #$03			and 	#3 							; get sprite size
-.b411	8d 79 06	sta $0679			sta 	GXSizeBits 					; save raw (0-3)
+.b411	8d 25 07	sta $0725			sta 	GXSizeBits 					; save raw (0-3)
 .b414	aa		tax				tax
 .b415	bd 39 b4	lda $b439,x			lda 	_GXFXSSTTable,x 			; read sprite size
-.b418	8d 78 06	sta $0678			sta 	GXSizePixels 					; save (8/16/24/32)
+.b418	8d 24 07	sta $0724			sta 	GXSizePixels 					; save (8/16/24/32)
 .b41b	68		pla				pla 								; get LUT
 .b41c	4a		lsr a				lsr		a
 .b41d	4a		lsr a				lsr		a
 .b41e	29 03		and #$03			and 	#3
-.b420	8d 7a 06	sta $067a			sta 	GXSpriteLUT
+.b420	8d 26 07	sta $0726			sta 	GXSpriteLUT
 .b423	68		pla				pla 								; address, neeeds to be x 4
 .b424	29 f0		and #$f0			and 	#$F0
-.b426	8d 7b 06	sta $067b			sta 	GXSpriteOffset
-.b429	0e 7b 06	asl $067b			asl 	GXSpriteOffset
-.b42c	2e 7c 06	rol $067c			rol 	GXSpriteOffset+1
-.b42f	0e 7b 06	asl $067b			asl 	GXSpriteOffset
-.b432	2e 7c 06	rol $067c			rol 	GXSpriteOffset+1
+.b426	8d 27 07	sta $0727			sta 	GXSpriteOffset
+.b429	0e 27 07	asl $0727			asl 	GXSpriteOffset
+.b42c	2e 28 07	rol $0728			rol 	GXSpriteOffset+1
+.b42f	0e 27 07	asl $0727			asl 	GXSpriteOffset
+.b432	2e 28 07	rol $0728			rol 	GXSpriteOffset+1
 .b435	18		clc				clc
 .b436	60		rts				rts
 .b437					_GXFSFail:
@@ -8848,20 +8848,20 @@
 .b438	60		rts				rts
 .b439					_GXFXSSTTable:
 >b439	08 10 18 20					.byte 	8,16,24,32
-.0678					GXSizePixels:
->0678							.fill 	1
-.0679					GXSizeBits:
->0679							.fill 	1
-.067a					GXSpriteLUT:
->067a							.fill 	1
-.067b					GXSpriteOffset:
->067b							.fill 	2
+.0724					GXSizePixels:
+>0724							.fill 	1
+.0725					GXSizeBits:
+>0725							.fill 	1
+.0726					GXSpriteLUT:
+>0726							.fill 	1
+.0727					GXSpriteOffset:
+>0727							.fill 	2
 .b43d					GXSortXY:
 .b43d	20 5b b4	jsr $b45b			jsr 	GXSortY 					; will be sorted on Y now
-.b440	ad cd 05	lda $05cd			lda 	gxX0 						; compare X0 v X1
-.b443	cd d1 05	cmp $05d1			cmp 	gxX1
-.b446	ad ce 05	lda $05ce			lda 	gXX0+1
-.b449	ed d2 05	sbc $05d2			sbc 	gXX1+1
+.b440	ad 79 06	lda $0679			lda 	gxX0 						; compare X0 v X1
+.b443	cd 7d 06	cmp $067d			cmp 	gxX1
+.b446	ad 7a 06	lda $067a			lda 	gXX0+1
+.b449	ed 7e 06	sbc $067e			sbc 	gXX1+1
 .b44c	90 0c		bcc $b45a			bcc 	_GXSXYExit 					; X0 < X1 exit
 .b44e	a2 00		ldx #$00			ldx 	#0 							; swap them over
 .b450	a0 04		ldy #$04			ldy 	#4
@@ -8872,8 +8872,8 @@
 .b45a					_GXSXYExit:
 .b45a	60		rts				rts
 .b45b					GXSortY:
-.b45b	ad cf 05	lda $05cf			lda 	gxY0 						; if Y0 >= Y1
-.b45e	cd d3 05	cmp $05d3			cmp 	gxY1
+.b45b	ad 7b 06	lda $067b			lda 	gxY0 						; if Y0 >= Y1
+.b45e	cd 7f 06	cmp $067f			cmp 	gxY1
 .b461	90 0b		bcc $b46e			bcc 	_GXSYSorted
 .b463	a2 03		ldx #$03			ldx 	#3 							; swap 3-0
 .b465	a0 07		ldy #$07			ldy 	#7 							; with 4-7
@@ -8885,12 +8885,12 @@
 .b46e					_GXSYSorted:
 .b46e	60		rts				rts
 .b46f					GXSwapXY:
-.b46f	bd cd 05	lda $05cd,x			lda 	gxX0,x
+.b46f	bd 79 06	lda $0679,x			lda 	gxX0,x
 .b472	48		pha				pha
-.b473	b9 cd 05	lda $05cd,y			lda 	gxX0,y
-.b476	9d cd 05	sta $05cd,x			sta 	gxX0,x
+.b473	b9 79 06	lda $0679,y			lda 	gxX0,y
+.b476	9d 79 06	sta $0679,x			sta 	gxX0,x
 .b479	68		pla				pla
-.b47a	99 cd 05	sta $05cd,y			sta 	gxX0,y
+.b47a	99 79 06	sta $0679,y			sta 	gxX0,y
 .b47d	60		rts				rts
 
 ;******  Return to file: _basic.asm
@@ -9308,7 +9308,7 @@
 .b9ce	d0 0f		bne $b9df			bne 	_LCNoQuote
 .b9d0	a9 22		lda #$22			lda 	#'"'
 .b9d2	20 eb b9	jsr $b9eb			jsr 	LCLWrite
-.b9d5	ad c2 05	lda $05c2			lda 	EXTTextColour
+.b9d5	ad 6e 06	lda $066e			lda 	EXTTextColour
 .b9d8	29 0f		and #$0f			and 	#$0F
 .b9da	09 90		ora #$90			ora 	#$90
 .b9dc	20 eb b9	jsr $b9eb			jsr 	LCLWrite
@@ -9856,7 +9856,7 @@
 =1					soundIntegrated=1
 .bd6c					SNDCheckChannel:
 .bd6c	aa		tax				tax
-.bd6d	bd 8b 07	lda $078b,x			lda 	SNDTimeLeft,x 				; currently playing a note
+.bd6d	bd 37 08	lda $0837,x			lda 	SNDTimeLeft,x 				; currently playing a note
 .bd70	d0 38		bne $bdaa			bne 	_SNDCCExit
 .bd72	da		phx				phx 								; save current channel
 .bd73	8a		txa				txa 								; put in A
@@ -9864,21 +9864,21 @@
 .bd77	68		pla				pla 								; channel # in A
 .bd78	90 30		bcc $bdaa			bcc 	_SNDCCExit  				; nothing in the queue for this channel, exit.
 .bd7a	a8		tay				tay 								; Y is the channel #
-.bd7b	bd 80 06	lda $0680,x			lda 	SNDQueue+1,x 				; copy data into the slot.
-.bd7e	99 7f 07	sta $077f,y			sta 	SNDPitchLow,y
-.bd81	bd 81 06	lda $0681,x			lda 	SNDQueue+2,x
-.bd84	99 83 07	sta $0783,y			sta 	SNDPitchHigh,y
-.bd87	bd 82 06	lda $0682,x			lda 	SNDQueue+3,x
-.bd8a	99 87 07	sta $0787,y			sta 	SNDVolume,y
-.bd8d	bd 83 06	lda $0683,x			lda 	SNDQueue+4,x
-.bd90	99 8b 07	sta $078b,y			sta 	SNDTimeLeft,y
-.bd93	bd 84 06	lda $0684,x			lda 	SNDQueue+5,x
-.bd96	99 8f 07	sta $078f,y			sta 	SNDAdjustLow,y
-.bd99	bd 85 06	lda $0685,x			lda 	SNDQueue+6,x
-.bd9c	99 93 07	sta $0793,y			sta 	SNDAdjustHigh,y
+.bd7b	bd 2c 07	lda $072c,x			lda 	SNDQueue+1,x 				; copy data into the slot.
+.bd7e	99 2b 08	sta $082b,y			sta 	SNDPitchLow,y
+.bd81	bd 2d 07	lda $072d,x			lda 	SNDQueue+2,x
+.bd84	99 2f 08	sta $082f,y			sta 	SNDPitchHigh,y
+.bd87	bd 2e 07	lda $072e,x			lda 	SNDQueue+3,x
+.bd8a	99 33 08	sta $0833,y			sta 	SNDVolume,y
+.bd8d	bd 2f 07	lda $072f,x			lda 	SNDQueue+4,x
+.bd90	99 37 08	sta $0837,y			sta 	SNDTimeLeft,y
+.bd93	bd 30 07	lda $0730,x			lda 	SNDQueue+5,x
+.bd96	99 3b 08	sta $083b,y			sta 	SNDAdjustLow,y
+.bd99	bd 31 07	lda $0731,x			lda 	SNDQueue+6,x
+.bd9c	99 3f 08	sta $083f,y			sta 	SNDAdjustHigh,y
 .bd9f	5a		phy				phy 								; save channel #
 .bda0	20 0a be	jsr $be0a			jsr 	SNDDeleteXFromQueue 		; delete record at X from queue
-.bda3	ce 7e 06	dec $067e			dec 	SNDLength 					; reduce the queue length.
+.bda3	ce 2a 07	dec $072a			dec 	SNDLength 					; reduce the queue length.
 .bda6	68		pla				pla
 .bda7	20 ab bd	jsr $bdab			jsr 	SNDUpdateNote 				; update channel A
 .bdaa					_SNDCCExit:
@@ -9890,22 +9890,22 @@
 .bdae	0a		asl a				asl 	a
 .bdaf	0a		asl a				asl 	a
 .bdb0	0a		asl a				asl 	a
-.bdb1	8d 7d 06	sta $067d			sta 	SNDChannelBits
-.bdb4	bd 8b 07	lda $078b,x			lda 	SNDTimeLeft,x 				; are we silent
+.bdb1	8d 29 07	sta $0729			sta 	SNDChannelBits
+.bdb4	bd 37 08	lda $0837,x			lda 	SNDTimeLeft,x 				; are we silent
 .bdb7	f0 2e		beq $bde7			beq 	_SNDUNIsSilent
-.bdb9	ad 7d 06	lda $067d			lda 	SNDChannelBits 				; push channel bits on stack
+.bdb9	ad 29 07	lda $0729			lda 	SNDChannelBits 				; push channel bits on stack
 .bdbc	48		pha				pha
-.bdbd	bd 7f 07	lda $077f,x			lda 	SNDPitchLow,x 				; get 4 lowest bits of pitch.
+.bdbd	bd 2b 08	lda $082b,x			lda 	SNDPitchLow,x 				; get 4 lowest bits of pitch.
 .bdc0	29 0f		and #$0f			and 	#$0F
-.bdc2	0d 7d 06	ora $067d			ora 	SNDChannelBits 				; set channel bits
+.bdc2	0d 29 07	ora $0729			ora 	SNDChannelBits 				; set channel bits
 .bdc5	09 80		ora #$80			ora 	#$80 						; write to pitch register
 .bdc7	20 54 be	jsr $be54			jsr 	SNDWritePorts
-.bdca	bd 83 07	lda $0783,x			lda 	SNDPitchHigh,x 				; pitch high => channel temp.
-.bdcd	8d 7d 06	sta $067d			sta 	SNDChannelBits
-.bdd0	bd 7f 07	lda $077f,x			lda 	SNDPitchLow,x
-.bdd3	4e 7d 06	lsr $067d			lsr 	SNDChannelBits 				; shift 2 LSBs into MSB of A
+.bdca	bd 2f 08	lda $082f,x			lda 	SNDPitchHigh,x 				; pitch high => channel temp.
+.bdcd	8d 29 07	sta $0729			sta 	SNDChannelBits
+.bdd0	bd 2b 08	lda $082b,x			lda 	SNDPitchLow,x
+.bdd3	4e 29 07	lsr $0729			lsr 	SNDChannelBits 				; shift 2 LSBs into MSB of A
 .bdd6	6a		ror a				ror 	a
-.bdd7	4e 7d 06	lsr $067d			lsr 	SNDChannelBits
+.bdd7	4e 29 07	lsr $0729			lsr 	SNDChannelBits
 .bdda	6a		ror a				ror 	a
 .bddb	4a		lsr a				lsr 	a 							; put in bits 0-5
 .bddc	4a		lsr a				lsr 	a
@@ -9915,16 +9915,16 @@
 .bde3	20 54 be	jsr $be54			jsr 	SNDWritePorts
 .bde6	60		rts				rts
 .bde7					_SNDUNIsSilent:
-.bde7	ad 7d 06	lda $067d			lda 	SNDChannelBits 				; channel bits
+.bde7	ad 29 07	lda $0729			lda 	SNDChannelBits 				; channel bits
 .bdea	09 9f		ora #$9f			ora 	#$9F 						; maximum attenuation
 .bdec	20 54 be	jsr $be54			jsr 	SNDWritePorts 				; write to the ports
 .bdef	60		rts				rts
 .bdf0					SNDFindNextNoteForA:
-.bdf0	ac 7e 06	ldy $067e			ldy 	SNDLength 					; queue size into Y
+.bdf0	ac 2a 07	ldy $072a			ldy 	SNDLength 					; queue size into Y
 .bdf3	f0 13		beq $be08			beq 	_SNDFNNFail 				; queue empty.
 .bdf5	a2 00		ldx #$00			ldx 	#0
 .bdf7					_SNDFNNSearch:
-.bdf7	dd 7f 06	cmp $067f,x			cmp 	SNDQueue,x 					; does it match the channel
+.bdf7	dd 2b 07	cmp $072b,x			cmp 	SNDQueue,x 					; does it match the channel
 .bdfa	38		sec				sec
 .bdfb	f0 0c		beq $be09			beq 	_SNDFNNExit 				; if so exit with CS.
 .bdfd	e8		inx				inx 								; next queue slot.
@@ -9944,18 +9944,18 @@
 .be0a					SNDDeleteXFromQueue:
 .be0a	e0 f8		cpx #$f8			cpx 	#SNDQueueSize*8-8 			; reached the end.
 .be0c	f0 09		beq $be17			beq 	_SNDDXExit
-.be0e	bd 87 06	lda $0687,x			lda 	SNDQueue+8,x
-.be11	9d 7f 06	sta $067f,x			sta 	SNDQueue,x
+.be0e	bd 33 07	lda $0733,x			lda 	SNDQueue+8,x
+.be11	9d 2b 07	sta $072b,x			sta 	SNDQueue,x
 .be14	e8		inx				inx
 .be15	80 f3		bra $be0a			bra 	SNDDeleteXFromQueue
 .be17					_SNDDXExit:
 .be17	60		rts				rts
-.067d					SNDChannelBits:
->067d							.fill 	1
+.0729					SNDChannelBits:
+>0729							.fill 	1
 .be18					SNDQueueRequest:
 .be18	86 36		stx $36				stx 	zTemp0						; save queue address
 .be1a	84 37		sty $37				sty 	zTemp0+1
-.be1c	ae 7e 06	ldx $067e			ldx 	SNDLength 					; queue is full, can't take any more.
+.be1c	ae 2a 07	ldx $072a			ldx 	SNDLength 					; queue is full, can't take any more.
 .be1f	e0 20		cpx #$20			cpx 	#SNDQueueSize
 .be21	f0 21		beq $be44			beq 	_SNDQRExit
 .be23	29 03		and #$03			and 	#3	 						; channel # and push on stack
@@ -9967,23 +9967,23 @@
 .be2a	aa		tax				tax
 .be2b	68		pla				pla 								; get back and push again
 .be2c	48		pha				pha
-.be2d	9d 7f 06	sta $067f,x			sta 	SNDQueue+0,x 				; save the channel #
+.be2d	9d 2b 07	sta $072b,x			sta 	SNDQueue+0,x 				; save the channel #
 .be30	a0 00		ldy #$00			ldy 	#0 							; copy the rest in.
 .be32					_SNDQCopy:
 .be32	b1 36		lda ($36),y			lda 	(zTemp0),y
 .be34	e8		inx				inx
 .be35	c8		iny				iny
-.be36	9d 7f 06	sta $067f,x			sta 	SNDQueue,x
+.be36	9d 2b 07	sta $072b,x			sta 	SNDQueue,x
 .be39	c0 06		cpy #$06			cpy 	#6
 .be3b	d0 f5		bne $be32			bne 	_SNDQCopy
-.be3d	ee 7e 06	inc $067e			inc 	SNDLength 					; bump queue length.
+.be3d	ee 2a 07	inc $072a			inc 	SNDLength 					; bump queue length.
 .be40	68		pla				pla 								; get channel # back
 .be41	20 6c bd	jsr $bd6c			jsr 	SNDCheckChannel 			; check if channel needs refreshing.
 .be44					_SNDQRExit:
 .be44	60		rts				rts
 .be45					SNDSilenceChannel:
 .be45	aa		tax				tax 								; zero time left.
-.be46	9e 8b 07	stz $078b,x			stz 	SNDTimeLeft,x
+.be46	9e 37 08	stz $0837,x			stz 	SNDTimeLeft,x
 .be49	0a		asl a				asl 	a 							; shift into position
 .be4a	0a		asl a				asl 	a
 .be4b	0a		asl a				asl 	a
@@ -10019,11 +10019,11 @@
 .be7e					_SNDQueryPlay:
 .be7e	29 03		and #$03			and 	#3 							; get channel #
 .be80	aa		tax				tax
-.be81	bd 8b 07	lda $078b,x			lda 	SNDTimeLeft,x 				; read time left, if zero then silent
+.be81	bd 37 08	lda $0837,x			lda 	SNDTimeLeft,x 				; read time left, if zero then silent
 .be84	80 0d		bra $be93			bra 	_SNDExit
 .be86					_SNDInitialise:
 .be86					_SNDSilence:
-.be86	9c 7e 06	stz $067e			stz 	SNDLength 					; empty the queue.
+.be86	9c 2a 07	stz $072a			stz 	SNDLength 					; empty the queue.
 .be89	a9 03		lda #$03			lda 	#$3 						; silence channel 0-3.
 .be8b					_SNDSilenceLoop:
 .be8b	48		pha				pha
@@ -10036,40 +10036,40 @@
 .be94	fa		plx				plx
 .be95	60		rts				rts
 =32					SNDQueueSize = 32 							; number of queue entries
-.067e					SNDLength:
->067e							.fill 	1
-.067f					SNDQueue:
->067f							.fill 	SNDQueueSize * 8
-.077f					SNDPitchLow:
->077f							.fill 	4
-.0783					SNDPitchHigh:
->0783							.fill 	4
-.0787					SNDVolume:
->0787							.fill 	4
-.078b					SNDTimeLeft:
->078b							.fill 	4
-.078f					SNDAdjustLow:
->078f							.fill 	4
-.0793					SNDAdjustHigh:
->0793							.fill 	4
+.072a					SNDLength:
+>072a							.fill 	1
+.072b					SNDQueue:
+>072b							.fill 	SNDQueueSize * 8
+.082b					SNDPitchLow:
+>082b							.fill 	4
+.082f					SNDPitchHigh:
+>082f							.fill 	4
+.0833					SNDVolume:
+>0833							.fill 	4
+.0837					SNDTimeLeft:
+>0837							.fill 	4
+.083b					SNDAdjustLow:
+>083b							.fill 	4
+.083f					SNDAdjustHigh:
+>083f							.fill 	4
 .be96					Export_SNDUpdate:
 .be96					PagedSNDUpdate:
-.be96	ad 8b 07	lda $078b			lda 	SNDTimeLeft+0 				; look at time remaining
+.be96	ad 37 08	lda $0837			lda 	SNDTimeLeft+0 				; look at time remaining
 .be99	f0 05		beq $bea0			beq 	_SNDUNot0 					; not playing
 .be9b	a2 00		ldx #$00			ldx 	#0 							; so we know which channel to update
 .be9d	20 bf be	jsr $bebf			jsr 	SNDUpdateChannel 			; update it.
 .bea0					_SNDUNot0:
-.bea0	ad 8c 07	lda $078c			lda 	SNDTimeLeft+1
+.bea0	ad 38 08	lda $0838			lda 	SNDTimeLeft+1
 .bea3	f0 05		beq $beaa			beq 	_SNDUNot1
 .bea5	a2 01		ldx #$01			ldx 	#1
 .bea7	20 bf be	jsr $bebf			jsr 	SNDUpdateChannel
 .beaa					_SNDUNot1:
-.beaa	ad 8d 07	lda $078d			lda 	SNDTimeLeft+2
+.beaa	ad 39 08	lda $0839			lda 	SNDTimeLeft+2
 .bead	f0 05		beq $beb4			beq 	_SNDUNot2
 .beaf	a2 02		ldx #$02			ldx 	#2
 .beb1	20 bf be	jsr $bebf			jsr 	SNDUpdateChannel
 .beb4					_SNDUNot2:
-.beb4	ad 8e 07	lda $078e			lda 	SNDTimeLeft+3
+.beb4	ad 3a 08	lda $083a			lda 	SNDTimeLeft+3
 .beb7	f0 05		beq $bebe			beq 	_SNDUNot3
 .beb9	a2 03		ldx #$03			ldx 	#3
 .bebb	20 bf be	jsr $bebf			jsr 	SNDUpdateChannel
@@ -10079,19 +10079,19 @@
 .bebf	c9 ff		cmp #$ff			cmp 	#$FF 						; sound $FF play forever until turned off manually
 .bec1	f0 2c		beq $beef			beq 	_SNDUCExit
 .bec3	3a		dec a				dec 	a 							; decrement and update timer
-.bec4	9d 8b 07	sta $078b,x			sta 	SNDTimeLeft,x
+.bec4	9d 37 08	sta $0837,x			sta 	SNDTimeLeft,x
 .bec7	f0 1d		beq $bee6			beq 	_SNDUCUpdate 				; if zero, silence channel
-.bec9	bd 8f 07	lda $078f,x			lda 	SNDAdjustLow,x 				; adjust ?
-.becc	1d 93 07	ora $0793,x			ora 	SNDAdjustHigh,x
+.bec9	bd 3b 08	lda $083b,x			lda 	SNDAdjustLow,x 				; adjust ?
+.becc	1d 3f 08	ora $083f,x			ora 	SNDAdjustHigh,x
 .becf	f0 1e		beq $beef			beq 	_SNDUCExit 					; if zero carry on at current tone.
 .bed1	18		clc				clc 								; add adjust, forcing into a 10 bit range
-.bed2	bd 7f 07	lda $077f,x			lda 	SNDPitchLow,x
-.bed5	7d 8f 07	adc $078f,x			adc 	SNDAdjustLow,x
-.bed8	9d 7f 07	sta $077f,x			sta 	SNDPitchLow,x
-.bedb	bd 83 07	lda $0783,x			lda 	SNDPitchHigh,x
-.bede	7d 93 07	adc $0793,x			adc 	SNDAdjustHigh,x
+.bed2	bd 2b 08	lda $082b,x			lda 	SNDPitchLow,x
+.bed5	7d 3b 08	adc $083b,x			adc 	SNDAdjustLow,x
+.bed8	9d 2b 08	sta $082b,x			sta 	SNDPitchLow,x
+.bedb	bd 2f 08	lda $082f,x			lda 	SNDPitchHigh,x
+.bede	7d 3f 08	adc $083f,x			adc 	SNDAdjustHigh,x
 .bee1	29 03		and #$03			and 	#3
-.bee3	9d 83 07	sta $0783,x			sta 	SNDPitchHigh,x
+.bee3	9d 2f 08	sta $082f,x			sta 	SNDPitchHigh,x
 .bee6					_SNDUCUpdate:
 .bee6	8a		txa				txa 								; which channel.
 .bee7	48		pha				pha

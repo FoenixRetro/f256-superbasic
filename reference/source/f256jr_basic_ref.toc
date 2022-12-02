@@ -1,0 +1,13 @@
+\contentsline {chapter}{\numberline {1}Introduction}{5}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Writing Programs in SuperBASIC}{7}{chapter.2}%
+\contentsline {chapter}{\numberline {3}Using Procedures}{9}{chapter.3}%
+\contentsline {chapter}{\numberline {4}Variables, arrays and typing}{11}{chapter.4}%
+\contentsline {chapter}{\numberline {5}Graphics}{13}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Introduction}{13}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Graphics Modifiers and Actions}{13}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Some useful examples}{13}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Ranges}{14}{section.5.4}%
+\contentsline {chapter}{\numberline {6}Sprites}{15}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Sound}{17}{chapter.7}%
+\contentsline {chapter}{\numberline {8}Cross Development of BASIC Programs}{19}{chapter.8}%
+\contentsline {chapter}{\numberline {9}Keyword Reference}{21}{chapter.9}%

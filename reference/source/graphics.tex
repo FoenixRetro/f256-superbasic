@@ -1,35 +1,80 @@
 \chapter{Graphics}
 
-This manual is meant to be as complete as possible an introduction to the various hardware features of the \jr. In it, I will attempt to explain each of the major subsystems of the \jr\ and provide simple but practical examples of their use.
+\section{Introduction}
 
-\section*{About the Machine}
+Graphics can be done in one of three way. 
 
-\subsection*{Ports}
+\begin{itemize}
+\item Firstly, they can be done using BASIC commands like LINE, PLOT and TEXT. These are the easiest.
+\item Secondly, they can be done by directly accessing the graphics library via the GFX command. 
+\item Thirdly, you can "hit the hardware" directly using POKE and DOKE or the indirection operators.
+\end{itemize}
+The latter is the most flexible. BASIC simplifies the graphics system to some extent to make it easier to use ; for example, the Junior can have up to three bitmaps, but only one is supported using BASIC commands.
 
-The connectors of the back of the \jr\ from left to right are (see figure:~\ref{fig:rear}):
+\section{Graphics Modifiers and Actions}
+Following drawing commands PLOT, LINE, RECT, CIRCLE, SPRITE, CHAR and IMAGE there are actions and modifiers which either change or cause the command to be done (e.g. draw the line, draw the string etc.). 
+Changes persist, so if you set COLOUR 3 or SOLID it will apply to all subsequent draws until you change it.
+Not all things work or make sense for all commands ; you can’t change the dimensions of a line, or the colour of a hardware sprite.
 
-\begin{description}
-    \item[Audio Line Out] the stereo audio output. These are standard RCA style line level outputs.
+\begin{tabular} {|p{1.0in}|p{4.5in}|}
+\hline
+to 100,100 & Draws the object from the current point to the new point, or at the new point \\
+\hline
+from 10,10 & Sets the current point, but doesn’t draw. So you have RECT 10,10 TO 100,100. Note that PLOT requires TO to do something, which is a little odd but consistent. The FROM is optional, but must be used where a number precedes the coordinates (e.g. you can’t do COLOUR 5 100,200 \\
+\hline
+here & Same as TO but done at the current point \\
+\hline
+by 4,5 & Same as TO but offset from the current point by 4 horizontal, 5 vertical \\
+\hline
+solid & Causes shapes to be filled in\\
+\hline
+outline & Causes shapes to be drawn in outline\\
+\hline
+dim 3 & Sets the size of scalable objects (CHAR, IMAGE) from 1 to 8.\\
+\hline
+colour 4 color 5 & Synonyms due to American mis-spelling, sets the current drawing colour from LUT 0, which is set up as  RRRGGGBB.
+\end{tabular}\hline
 
-    \item[SD Card Slot] for standard SD cards for storage of files and programs.
+\section{Some useful examples}
 
-    \item[DVI Monitor Port] for output to your monitor. This can be connected to the DVI input of a monitor or run through a simple DVI-VGA connector to use with an older VGA input.
+All these examples begin "bitmap on:cls:bitmap clear 3" ; display and clear the bitmap, then fill it with colour 3 - this is 0000 0011 - and the colour by default is RRRG GGBB in binary - so this is Blue
 
-    \item[IEC Serial Port] supports the Commodore serial bus. A Commodore disk drive (1541, 1571, 1581, {\it etc.}), a Commodore compatible serial printer, or other device supporting the Commodore serial bus can be connected here.
-\end{description}
-
-
-\example{Print an A to the Screen}
+\example{Some lines}
 \begin{verbatim}
-    lda $0001       ; Save the current MMU setting
-    pha
-
-    lda #$02        ; Swap I/O Page 2 into bank 6
-    sta $0001
-
-    lda #'A'        ; Write 'A' to the upper left corner
-    sta $C000
-
-    pla             ; Restore the old MMU setting
-    sta $0001
+	100 bitmap on:cls:bitmap clear 3
+	110 line colour \$1E from 10,10 to 100,200 to 200,50 to 10,10 by 0,20	
 \end{verbatim}
+
+Note how you can chain commands  and also the use of the relevant position "by" which means from here.
+
+\example{Some circles}
+\begin{verbatim}
+	100 bitmap on:cls:bitmap clear 3
+	110 circle solid colour \$1E outline 10,10 to 200,200 solid 10,10 to 30,30
+\end{verbatim}
+
+
+Rectangles are the same. Currently we cannot draw ellipses.
+
+\example{Some text}
+\begin{verbatim}
+	100 bitmap on:cls:bitmap clear 3
+	110 text "Hello there" dim 1 colour $FC to 10,10 dim 3 to 10,40	
+\end{verbatim}
+
+Drawing text from the font library in Vicky. These characters can be redefined.
+
+\example{Some pixels}
+\begin{verbatim}
+	100 bitmap on:cls:bitmap clear 3
+	110 repeat
+	120 plot color random(256) to random(320),random(230)
+	130 until false
+\end{verbatim}
+
+Press break to stop this one. Note you have to write "Plot To" here.
+
+\section{Ranges}
+The range of values for draw commands is 0–319 and normally 0–239, though there is a VGA mode which is 320x200 (in which case it would be 0-199).
+
+Colours are values from 0-255 - initially this can be viewed as a binary number RRRG GGBB
