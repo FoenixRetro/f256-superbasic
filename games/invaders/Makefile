@@ -21,7 +21,7 @@ TTYPORT = /dev/ttyUSB0
 LANGUAGE = en
 SOURCE = invaders.bas  ..$(S)common$(S)title.bas
 
-START = $(EMULATOR) $(BINDIR)basic.rom@b storage$(S)load.dat@$(LSOURCE) graphics.bin@$(LSPRITES)
+START = $(EMULATOR) $(BINDIR)basic.rom@b storage$(S)load.dat@x graphics.bin@s
 # $(LSOURCE) is hardcoded in backload.asm
 
 #

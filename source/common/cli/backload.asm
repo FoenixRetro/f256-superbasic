@@ -22,7 +22,11 @@ BackloadProgram:
 		ldx 	#_BLLoad >> 8
 		lda 	#_BLLoad & $FF
 		jsr 	PrintStringXA
-		.set16 	BackLoadPointer,SOURCE_ADDRESS
+		lda 	8+3 						; save current mapping for $6000
+		pha
+		lda 	#SOURCE_ADDRESS >> 13 		; map source code in there.
+		sta 	8+3
+		.set16 	BackLoadPointer,$6000 		; and load from there.
 		lda 	#$FF
 		sta 	$FFFA
 _BPLoop:		
@@ -59,6 +63,8 @@ _BPEndLine:
 		;		Exit backloading
 		;
 _BPExit:
+		pla 								; restore memory setup.
+		sta 	8+3
 		stz 	$FFFA
 		jsr 	ClearCommand 				; clear variables etc.
 		rts
@@ -100,5 +106,6 @@ BackLoadPointer:
 ;		Date			Notes
 ;		==== 			=====
 ;		26/11/22  		Reinserted speed up emulator hack (write to $FFFA)
+; 		02/12/22 		Partial rewrite to load 8k from a fixed physical address.
 ;
 ; ************************************************************************************************

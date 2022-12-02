@@ -33,7 +33,7 @@ MODULES= +hardware +graphics +tokeniser +sound
 RELEASEDIR = ..$(S)release
 RELEASE = "`cat $(SCRIPTDIR)$(S)buildcount.txt`"
 
-START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@$(LSOURCE) $(BINDIR)graphics.bin@$(LSPRITES) boot@8000
+START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@x $(BINDIR)graphics.bin@s boot@8000
 
 all :  basic
 #
@@ -140,7 +140,7 @@ benchmark:
 assembler: 
 	python $(SCRIPTDIR)asmtest.py
 	64tass -q -b -c common$(S)generated$(S)asmtest.tass -L output$(S)asmtest.lst -o output$(S)asmtest.bin
-	$(EMULATOR) $(APPNAME)@8000 storage$(S)load.dat@3000 
+	$(EMULATOR) $(APPNAME)@b storage$(S)load.dat@x
 	python $(SCRIPTDIR)asmcheck.py
 
 lineedit:

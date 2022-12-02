@@ -21,7 +21,7 @@ TTYPORT = /dev/ttyUSB0
 LANGUAGE = en
 SOURCE = demo.bas
 
-START = $(EMULATOR) $(BINDIR)basic.rom@b storage$(S)load.dat@3000 graphics.bin@$(LSPRITES)
+START = $(EMULATOR) $(BINDIR)basic.rom@b storage$(S)load.dat@x graphics.bin@s
 # 3000 is hardcoded in backload.asm
 
 #
@@ -56,6 +56,6 @@ go: sprites program
 	$(CCOPY) $(BINDIR)foenixmgr.ini .	
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)lockout.rom --address $(LLOCKOUT)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary graphics.bin --address $(LSPRITES)
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 3000
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address $(LSOURCE)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)basic.rom --address $(LBASIC)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address $(LMONITOR)

@@ -40,3 +40,6 @@ Release 8 (01/12/22):
 Release 9 (01/12/22):	
 
 	CHG: Made line input buffer long again (long source lines via cross-dev could crash it)
+	CHG: Code now loaded from $28000 physical.
+
+Release 10 (01/12/22):	
