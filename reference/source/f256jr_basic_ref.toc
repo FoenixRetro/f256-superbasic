@@ -10,4 +10,10 @@
 \contentsline {chapter}{\numberline {6}Sprites}{15}{chapter.6}%
 \contentsline {chapter}{\numberline {7}Sound}{17}{chapter.7}%
 \contentsline {chapter}{\numberline {8}Cross Development of BASIC Programs}{19}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Connection}{19}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Software}{19}{section.8.2}%
+\contentsline {section}{\numberline {8.3}BASIC}{19}{section.8.3}%
+\contentsline {section}{\numberline {8.4}Uploading and running}{20}{section.8.4}%
+\contentsline {section}{\numberline {8.5}Versions}{20}{section.8.5}%
+\contentsline {section}{\numberline {8.6}Sprites}{20}{section.8.6}%
 \contentsline {chapter}{\numberline {9}Keyword Reference}{21}{chapter.9}%

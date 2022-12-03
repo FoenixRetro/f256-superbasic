@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2022.12.2)  2 DEC 2022 16:24
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2022.12.2)  2 DEC 2022 20:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -805,24 +805,7 @@ Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
 [][][][][][][][][][]  
  []
 
-LaTeX Font Info:    Font shape `T1/NotoSerif-TLF/m/n' will be
-(Font)              scaled to size 12.9599pt on input line 5.
-LaTeX Font Info:    Font shape `T1/NotoSerif-TLF/b/n' will be
-(Font)              scaled to size 12.9599pt on input line 5.
-LaTeX Font Info:    Font shape `T1/NotoSerif-TLF/m/n' will be
-(Font)              scaled to size 10.79993pt on input line 7.
-LaTeX Font Info:    Font shape `T1/NotoSerif-TLF/b/n' will be
-(Font)              scaled to size 10.79993pt on input line 7.
-
-LaTeX Warning: Reference `fig:rear' on page 5 undefined on input line 9.
-
-LaTeX Font Info:    Font shape `T1/NotoSerif-TLF/m/it' will be
-(Font)              scaled to size 8.99994pt on input line 18.
-LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 2
-3.
-(/usr/share/texmf-dist/tex/latex/base/t1cmtt.fd
-File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
-)) (./programs.tex [5] [6
+) (./programs.tex [5] [6
 
 ]
 Chapter 2.
@@ -830,9 +813,6 @@ Chapter 2.
 Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
 [][][][][][][][][][]  
  []
-
-
-LaTeX Warning: Reference `fig:rear' on page 7 undefined on input line 9.
 
 ) (./procedures.tex [7] [8
 
@@ -843,9 +823,6 @@ Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
 [][][][][][][][][][]  
  []
 
-
-LaTeX Warning: Reference `fig:rear' on page 9 undefined on input line 9.
-
 ) (./variables.tex [9] [10
 
 ]
@@ -854,9 +831,6 @@ Chapter 4.
 Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
 [][][][][][][][][][]  
  []
-
-
-LaTeX Warning: Reference `fig:rear' on page 11 undefined on input line 9.
 
 ) (./graphics.tex [11] [12
 
@@ -867,6 +841,10 @@ Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
 [][][][][][][][][][]  
  []
 
+LaTeX Font Info:    Font shape `T1/NotoSerif-TLF/m/n' will be
+(Font)              scaled to size 12.9599pt on input line 3.
+LaTeX Font Info:    Font shape `T1/NotoSerif-TLF/b/n' will be
+(Font)              scaled to size 12.9599pt on input line 3.
 LaTeX Font Info:    Trying to load font information for TS1+NotoSerif-TLF on in
 put line 8.
 (/usr/share/texmf-dist/tex/latex/noto/TS1NotoSerif-TLF.fd
@@ -876,28 +854,24 @@ rif-TLF.
 LaTeX Font Info:    Font shape `TS1/NotoSerif-TLF/m/n' will be
 (Font)              scaled to size 8.99994pt on input line 8.
 
-! Misplaced \noalign.
-\hline ->\noalign 
-                  {\ifnum 0=`}\fi \hrule \@height \arrayrulewidth \futurelet...
-l.36 \end{tabular}\hline
-                        
-I expect to see \noalign only after the \cr of
-an alignment. Proceed, and I'll ignore this case.
-
-
-Overfull \hbox (2.86497pt too wide) in paragraph at lines 19--36
+Overfull \hbox (2.86497pt too wide) in paragraph at lines 19--38
 [][] 
  []
 
-[13]) (./sprites.tex [14]
+LaTeX Font Info:    Font shape `T1/NotoSerif-TLF/m/n' will be
+(Font)              scaled to size 10.79993pt on input line 43.
+LaTeX Font Info:    Font shape `T1/NotoSerif-TLF/b/n' will be
+(Font)              scaled to size 10.79993pt on input line 43.
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 4
+4.
+(/usr/share/texmf-dist/tex/latex/base/t1cmtt.fd
+File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+) [13]) (./sprites.tex [14]
 Chapter 6.
 
 Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
 [][][][][][][][][][]  
  []
-
-
-LaTeX Warning: Reference `fig:rear' on page 15 undefined on input line 9.
 
 ) (./sound.tex [15
 
@@ -910,9 +884,6 @@ Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
 [][][][][][][][][][]  
  []
 
-
-LaTeX Warning: Reference `fig:rear' on page 17 undefined on input line 9.
-
 ) (./crossdev.tex [17] [18
 
 ]
@@ -922,19 +893,24 @@ Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
 [][][][][][][][][][]  
  []
 
+LaTeX Font Info:    Font shape `T1/NotoSerif-TLF/m/it' will be
+(Font)              scaled to size 8.99994pt on input line 13.
 
-LaTeX Warning: Reference `fig:rear' on page 19 undefined on input line 9.
+Overfull \hbox (1.03424pt too wide) in paragraph at lines 13--14
+\T1/NotoSerif-TLF/m/n/10 There are two ways of pro-gram-ming the board. I pre-f
+er FnxMgr \T1/NotoSerif-TLF/m/it/10 https://github.com/pweingar/FoenixMgr
+ []
 
-) (./reference.tex [19] [20
-
-]
+[19]) (./reference.tex [20]
 Chapter 9.
 
 Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
 [][][][][][][][][][]  
  []
 
-[21] [22]
+[21
+
+] [22]
 Underfull \hbox (badness 10000) in paragraph at lines 113--113
 
  []
@@ -958,23 +934,20 @@ Overfull \hbox (42.90874pt too wide) in paragraph at lines 419--420
  []
 
 [31] [32] [33] [34] [35]) [36] (./f256jr_basic_ref.aux)
-
-LaTeX Warning: There were undefined references.
-
 Package rerunfilecheck Info: File `f256jr_basic_ref.out' has not changed.
-(rerunfilecheck)             Checksum: AFD3BBA642A69FED346E364DC6B67D43;1788.
+(rerunfilecheck)             Checksum: E73B9165B028545BF245B0DA24D95FE5;2419.
  ) 
 Here is how much of TeX's memory you used:
- 19207 strings out of 478238
- 353586 string characters out of 5850456
- 545685 words of memory out of 5000000
- 36910 multiletter control sequences out of 15000+600000
+ 19200 strings out of 478238
+ 353504 string characters out of 5850456
+ 545688 words of memory out of 5000000
+ 36915 multiletter control sequences out of 15000+600000
  535937 words of font info for 84 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  84i,8n,90p,597b,1007s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/noto/a_wcjgjy.enc}{/usr/share/texmf-di
-st/fonts/enc/dvips/noto/a_honops.enc}{/usr/share/texmf-dist/fonts/enc/dvips/cm-
-super/cm-super-t1.enc}{/usr/share/texmf-dist/fonts/enc/dvips/noto/a_mz6bs5.enc}
+st/fonts/enc/dvips/noto/a_mz6bs5.enc}{/usr/share/texmf-dist/fonts/enc/dvips/cm-
+super/cm-super-t1.enc}{/usr/share/texmf-dist/fonts/enc/dvips/noto/a_honops.enc}
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts
 /type1/public/notomath/NotoMathMI.pfb></usr/share/texmf-dist/fonts/type1/google
 /noto/NotoSans-Bold.pfb></usr/share/texmf-dist/fonts/type1/google/noto/NotoSeri
@@ -982,10 +955,10 @@ f-Bold.pfb></usr/share/texmf-dist/fonts/type1/google/noto/NotoSerif-Italic.pfb>
 </usr/share/texmf-dist/fonts/type1/google/noto/NotoSerif-Regular.pfb></usr/shar
 e/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/share/texmf-dist/fo
 nts/type1/urw/zapfchan/uzcmi8a.pfb>
-Output written on f256jr_basic_ref.pdf (36 pages, 184344 bytes).
+Output written on f256jr_basic_ref.pdf (36 pages, 183106 bytes).
 PDF statistics:
- 516 PDF objects out of 1000 (max. 8388607)
- 457 compressed objects within 5 object streams
- 241 named destinations out of 1000 (max. 500000)
- 105 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 526 PDF objects out of 1000 (max. 8388607)
+ 467 compressed objects within 5 object streams
+ 229 named destinations out of 1000 (max. 500000)
+ 153 words of extra memory for PDF output out of 10000 (max. 10000000)
 

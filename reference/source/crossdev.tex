@@ -1,35 +1,54 @@
 \chapter{Cross Development of BASIC Programs}
 
-This manual is meant to be as complete as possible an introduction to the various hardware features of the \jr. In it, I will attempt to explain each of the major subsystems of the \jr\ and provide simple but practical examples of their use.
+At present, Cross Development is the only practical way to develop BASIC on the F256 ; at the time of writing the IEC / SDCard is incomplete ao there are no options to LOAD and SAVE programs. 
 
-\section*{About the Machine}
+This should be available soon. However, this will still be available as a method of development, and it has much to commend it.
 
-\subsection*{Ports}
+\section{Connection}
 
-The connectors of the back of the \jr\ from left to right are (see figure:~\ref{fig:rear}):
+To connect your F256Junior to a PC (Windows, Linux, Mac) you need a standard USB cable with a Micro USB plug. This needs to be a data cable, some cables only provide power. The Micro USB plug plugs into the board, and the USB plug into the PC.
 
-\begin{description}
-    \item[Audio Line Out] the stereo audio output. These are standard RCA style line level outputs.
+\section{Software}
 
-    \item[SD Card Slot] for standard SD cards for storage of files and programs.
+There are two ways of programming the board. I prefer FnxMgr \emph{https://github.com/pweingar/FoenixMgr} which is a Python script which runs on all platform, and can easily automate uploading. It can also be uploaded through the Foenix IDE in Windows\underline{}.
 
-    \item[DVI Monitor Port] for output to your monitor. This can be connected to the DVI input of a monitor or run through a simple DVI-VGA connector to use with an older VGA input.
+Besides Python version 3, the FnxMgr script requires pyserial.
 
-    \item[IEC Serial Port] supports the Commodore serial bus. A Commodore disk drive (1541, 1571, 1581, {\it etc.}), a Commodore compatible serial printer, or other device supporting the Commodore serial bus can be connected here.
-\end{description}
+\section{BASIC}
 
+The input to the program is standard ASCII files, with line numbers. Line numbers are required for editing only. (There is a python script on the superbasic github which adds these automatically). However, you do not need to use line numbers in programming, though GOTO and GOSUB are implemented if you wish, or want to port old software.
 
-\example{Print an A to the Screen}
+I would start with something simple though.
+
+\example{Print to the screen}
 \begin{verbatim}
-    lda $0001       ; Save the current MMU setting
-    pha
-
-    lda #$02        ; Swap I/O Page 2 into bank 6
-    sta $0001
-
-    lda #'A'        ; Write 'A' to the upper left corner
-    sta $C000
-
-    pla             ; Restore the old MMU setting
-    sta $0001
+	10 print "Hello, world !"
+	20 zap
 \end{verbatim}
+
+Each file should end in a character with an ASCII code greater than 127, which marks the end of the file.  You can copy one from the software in github.
+
+\section{Uploading and running}
+
+This is written for people with 'B' boards which automatically start up into BASIC. If you are booting from RAM, or have an A board, it will be slightly different.
+
+Uploading works by loading the ASCII text into memory. It is then effectively 'typed in' by either the \textbf{load} command or the \textbf{go} command. The first loads the program in (and it can then be listed or edited or run in the normal way. The second loads and runs it.
+
+To load the program into memory to be "loaded" you need something like the below. The first one works on my Arch Linux Box. The second is simply a guess ; I do not know what the COM ports are for each system. You should be able to discover this with the Device Manager (Windows) or lsusb (Linux).
+
+\example{Linux Upload}
+\begin{verbatim}
+	python ../bin/fnxmgr.zip --port /dev/ttyUSB0 --binary load.bas  --address 28000
+\end{verbatim}
+
+\example{Windows Upload (not tried)}
+\begin{verbatim}
+	python ..\bin\fnxmgr.zip --port COM1 --binary load.bas  --address 28000
+\end{verbatim}
+
+\section{Versions}
+
+Between release Alpha 9 and Alpha 10 the load address (the 28000 in the above commands) has moved. If you have Alpha-9 or earlier, these need to be replaced by 5000 (if you have a B with autostart) or 3000 (if you are using the toy kernel)
+
+\section{Sprites}
+Sprites are loaded (in BASIC) to \$30000 and there is a simple index format. This is covered in the sprites section.
