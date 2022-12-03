@@ -4,7 +4,7 @@
 ;		Name:		instruction.asm
 ;		Purpose:	Assemble one instruction with type
 ;		Created:	4th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	3rd December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -25,11 +25,13 @@ AssembleModeX:
 		;
 		lda 	IsGroup1
 		beq 	_AMXGroup2
+
 		; ----------------------------------------------------------------------------------------
 		;
 		;		Group 1 code (LDA, STA etc.) the main group of 8
 		;
 		; ----------------------------------------------------------------------------------------
+
 		txa 							; is it in group # 1
 		and 	#AM_ISG1 				
 		beq 	_AMXFail 				; no, give up.
@@ -90,10 +92,10 @@ _AMXAnySize:
 _AMXOutputCode:		
 		jsr 	AssemblerWriteByte 		; write the opcode out.
 
-		cpx 	#AM_ACC 				; A mode (e.g. ASL A)
+		cpx 	#AM_ACC 				; A mode (e.g. ASL)
 		beq 	_AMXExit
 
-		lda 	NSMantissa0 				; write LSB operand
+		lda 	NSMantissa0 			; write LSB operand
 		jsr 	AssemblerWriteByte
 		cpx 	#$00 					; zeropage ?
 		bmi 	_AMXExit		

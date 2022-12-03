@@ -4,7 +4,7 @@
 ;		Name:		label.asm
 ;		Purpose:	Handle assembler labels
 ;		Created:	4th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	3rd November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -21,24 +21,24 @@
 LabelHere:
 		iny 								; skip .
 		ldx 	#0 							; get a term
-		jsr 	EvaluateTerm 				; get a term
+		jsr 	EvaluateTerm 				
 		lda 	NSStatus 					; needs to be an integer reference.
 		cmp 	#NSTInteger+NSBIsReference
-		bne 	_ALType
+		bne 	_ALType 					; otherwise typing error
 		;
 		lda 	NSMantissa0,x 				; copy reference address to zTemp0
-		sta 	zTemp0
+		sta 	zTemp0 						; (e.g. where we store the address)
 		lda 	NSMantissa1,x
 		sta 	zTemp0+1
 
-		phy 								; copy address in.
+		phy 								; copy address in (64k)
 		ldy 	#1
 		lda	 	AssemblerAddress
 		sta 	(zTemp0)
 		lda	 	AssemblerAddress+1
 		sta 	(zTemp0),y
 		iny
-		lda 	#0
+		lda 	#0 							; zero the rest.
 		sta 	(zTemp0),y
 		iny
 		sta 	(zTemp0),y

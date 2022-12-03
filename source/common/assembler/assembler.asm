@@ -4,7 +4,7 @@
 ;		Name:		assembler.asm
 ;		Purpose:	Assembler main
 ;		Created:	4th October 2022
-;		Reviewed:
+;		Reviewed:	3rd November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -23,10 +23,12 @@
 		;		Group 1 - LDA/STA/ADC etc.
 		;
 		; ----------------------------------------------------------------------------------------
+
 AssembleGroup1:
-		lda 	#$FF
+		lda 	#$FF 						; flag for group 1 / mask.
 		sta 	ModeMask 					; initialise the mode mask - all for all
-		bra 	AsmGroup12 				
+		bra 	AsmGroup12 	
+
 		; ----------------------------------------------------------------------------------------
 		;
 		;		Group 2 - LDX, INC, LSR etc.
@@ -34,7 +36,7 @@ AssembleGroup1:
 		; ----------------------------------------------------------------------------------------
 
 AssembleGroup2:
-		lda 	#$00 						
+		lda 	#$00 						; flag for group 2
 AsmGroup12:
 		sta 	IsGroup1 					; save the 'group 1' flag
 

@@ -4,7 +4,7 @@
 ;		Name:		operands.asm
 ;		Purpose:	Operand code
 ;		Created:	4th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	3rd December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -20,15 +20,20 @@
 ;
 ;		The absind etc. are dealt with seperately. Returns type in X.
 ;
+;		X and Y will be tokenised as variables , so they will always exist, but there value
+;		does not affect the assembler or their use as variables.
+;
 ; ************************************************************************************************
 
 TypeAndCalculateOperand:
 		.cget 								; get first character
+
 		; ---------------------------------------------------------------------------------------
 		;
-		;		Check if just stand alone e.g. LSR INC 
+		;		Check if just stand alone e.g. LSR INC - we don't support ASL (etc) A
 		;
 		; ---------------------------------------------------------------------------------------
+
 		ldx 	#AM_ACC 					; ACC if : or EOL
 		cmp 	#KWD_COLON
 		beq 	_TACOExit
@@ -40,6 +45,7 @@ TypeAndCalculateOperand:
 		;		Check if Immediate e.g. LDA #42
 		;
 		; ---------------------------------------------------------------------------------------
+
 		iny
 		ldx 	#AM_IMMEDIATE
 		cmp 	#KWD_HASH 					; if hash, then immediate - constant.
