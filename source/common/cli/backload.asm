@@ -19,6 +19,7 @@
 ; ************************************************************************************************
 
 BackloadProgram:
+		jsr 	NewProgram 					; does the actual NEW.
 		ldx 	#_BLLoad >> 8
 		lda 	#_BLLoad & $FF
 		jsr 	PrintStringXA

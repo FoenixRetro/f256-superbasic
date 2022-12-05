@@ -17,6 +17,11 @@ Boot:	jmp 	Start
 
 Start:	ldx 	#$FF 						; stack reset
 		txs	
+
+		lda 	0  							; turn on editing of MMU LUT
+		ora 	#$80
+		sta 	0
+
 		jsr 	EXTInitialise 				; hardware initialise
 
 		.if 	graphicsIntegrated==1 		; if installed

@@ -42,4 +42,9 @@ Release 9 (01/12/22):
 	CHG: Made line input buffer long again (long source lines via cross-dev could crash it)
 	CHG: Code now loaded from $28000 physical.
 
-Release 10 (01/12/22):	
+Release 10 (02/12/22):	
+
+	CHG: Now turns editing of MMU at start up. Kernel may change so this is required if you want to play with the MMU.
+	CHG: List reports a break.
+	
+Release 11 (05/12/22):		

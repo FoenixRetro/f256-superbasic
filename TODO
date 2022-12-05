@@ -1,9 +1,9 @@
 Progress:
-	Tidy up the new Junior uploader and switching stuff.
-	Investigate $7F in ?0
-	Unlock $0
-	Bad index array error when undeclared.
+	Upload Alpha-11.
 	Fix Backload page switching (into readbyte not global)
+
+	Tweak boot up message to fix.
+	Bad index array error when undeclared.
 	map()
 	Ticktimer during listing.
 	Continue documentation.
@@ -20,3 +20,11 @@ Later:
 	Changing Kerning ?
 
 
+Notes:
+	Getting break first off.
+
+Discover:
+	Is break fired first time ? Yes, returns $72 in P
+	Initial value of $0 is $7F
+
+Will BreakCheck work when paged ?	

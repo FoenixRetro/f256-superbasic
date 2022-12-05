@@ -19,15 +19,15 @@ endif
 SYSTEM = 0 						
 BINDIR = $(ROOTDIR)bin$(S)
 ASMOPTS = -q -b -Wall -c -D HARDWARE="$(SYSTEM)" -L output$(S)basic.lst -l output$(S)basic.lbl -Wall 
-APPNAME = basic.rom
+APPNAME = build$(S)basic.rom
 SCRIPTDIR = scripts$(S)
 EMULATOR = $(BINDIR)jr256$(APPSTEM)
-TTYPORT = /dev/ttyUSB0
 LANGUAGE = en
 
 EMU_REPO= ..$(S)..$(S)junior-emulator
 UTL_REPO= ..$(S)..$(S)junior-utilities
 KRN_REPO= ..$(S)..$(S)junior-tinykernel
+LDR_FILE= ..$(S)..$(S)FoenixMgr-junior
 
 MODULES= +hardware +graphics +tokeniser +sound
 RELEASEDIR = ..$(S)release
@@ -47,15 +47,31 @@ testbasic:prelim
 	64tass -D AUTORUN=1 $(AADDRESSES) $(ASMOPTS) _basic.asm -o $(APPNAME)
 	$(CCOPY) $(APPNAME) $(BINDIR)
 #
-#		Run on real hardware
+#		Switch to Flash-Boot or RAM-Boot
+#	
+flashboot:
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --boot flash 
+ramboot:	
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --boot ram
 #
-go : 
+#		Run on real hardware (RAM operation)
+#
+go : ramboot
 	python scripts$(S)checkload.py
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)lockout.rom --address $(LLOCKOUT)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)graphics.bin --address $(LSPRITES)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address $(LSOURCE)
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary basic.rom --address $(LBASIC)
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(APPNAME) --address $(LBASIC)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address $(LMONITOR)
+#
+#		Run on real hardware (Flash Operation)
+#
+fupload: flashboot basic
+	make -C build 
+
+fgo: flashboot
+	python scripts$(S)checkload.py
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 28000
 #
 #		Create sprites
 #
@@ -70,9 +86,12 @@ shim:
 	64tass -q -b _shim.asm -o shim.bin
 	
 fnxmgr:	
-	make -B -C $(UTL_REPO)
-	$(CCOPY) $(UTL_REPO)$(S)fnxmgr.zip $(BINDIR)
-	$(CCOPY) $(UTL_REPO)$(S)foenixmgr.ini .
+	$(CDEL) temp$(S)*.*
+	$(CCOPY) $(LDR_FILE)$(S)FoenixMgr$(S)*.* temp
+	$(CCOPY) temp$(S)fnxmgr.py temp$(S)__main__.py 
+	zip temp$(S)fnxmgr.zip -j temp$(S)__main__.py temp$(S)constants.py temp$(S)foenix_config.py temp$(S)intelhex.py \
+			temp$(S)pgx.py temp$(S)srec.py temp$(S)foenix.py temp$(S)pgz.py temp$(S)wdc.py
+	$(CCOPY) temp$(S)fnxmgr.zip $(BINDIR) 
 
 monitor:
 	make -B -C $(KRN_REPO)
@@ -116,9 +135,9 @@ release:
 	python $(SCRIPTDIR)timestamp.py
 	mkdir -p $(RELEASEDIR)$(S)$(RELEASE)	
 	make -C .
-	$(CCOPY) basic.rom $(RELEASEDIR)$(S)$(RELEASE)$(S)basic_$(RELEASE).rom	
+	$(CCOPY) $(APPNAME) $(RELEASEDIR)$(S)$(RELEASE)$(S)basic_$(RELEASE).rom	
 	make -C . testbasic
-	$(CCOPY) basic.rom $(RELEASEDIR)$(S)$(RELEASE)$(S)basic_autoload_$(RELEASE).rom	
+	$(CCOPY) $(APPNAME) $(RELEASEDIR)$(S)$(RELEASE)$(S)basic_autoload_$(RELEASE).rom	
 #
 #		Run various tests.
 #

@@ -70,7 +70,7 @@ _CLStart
 		;
 _CLLoop:
 		jsr 	EXTBreakCheck 				; break check here, as we want the option of breaking out of long lists.
-		beq 	_CLExit
+		beq 	_CLBreak
 
 		.cget0 								; any more ?
 		beq 	_CLExit
@@ -89,6 +89,9 @@ _CLNext:
 		bra 	_CLLoop
 _CLExit:
 		jmp 	WarmStart
+_CLBreak:
+		.error_break
+
 
 ; ************************************************************************************************
 ;
@@ -201,5 +204,6 @@ _CLIDExitFalse:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		05/12/22 		LIST break reports.
 ;
 ; ************************************************************************************************
