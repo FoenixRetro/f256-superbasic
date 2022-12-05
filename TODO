@@ -1,6 +1,11 @@
 Progress:
+	Tidy up the new Junior uploader and switching stuff.
+	Bad index array error when undeclared.
+	Investigate $7F in ?0
+	Fix Backload page switching (into readbyte not global)
+	map()
 	Ticktimer during listing.
-	Start on documentation conversion.
+	Continue documentation.
 	Debug Hack
 	tiles ?
 	DMA ?

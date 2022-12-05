@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o basic.rom _basic.asm
-; Sat Dec  3 10:24:06 2022
+; Mon Dec  5 08:39:19 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -467,11 +467,11 @@
 ;******  Processing file: ./common/assembler/assembler.asm
 
 .8072					AssembleGroup1:
-.8072	a9 ff		lda #$ff			lda 	#$FF
+.8072	a9 ff		lda #$ff			lda 	#$FF 						; flag for group 1 / mask.
 .8074	8d 25 04	sta $0425			sta 	ModeMask 					; initialise the mode mask - all for all
 .8077	80 02		bra $807b			bra 	AsmGroup12
 .8079					AssembleGroup2:
-.8079	a9 00		lda #$00			lda 	#$00
+.8079	a9 00		lda #$00			lda 	#$00 						; flag for group 2
 .807b					AsmGroup12:
 .807b	8d 23 04	sta $0423			sta 	IsGroup1 					; save the 'group 1' flag
 .807e	68		pla				pla 								; pop the return address to access the information following.
@@ -667,9 +667,9 @@
 .81b0	6d 24 04	adc $0424			adc 	BaseOpcode
 .81b3					_AMXOutputCode:
 .81b3	20 1f 81	jsr $811f			jsr 	AssemblerWriteByte 		; write the opcode out.
-.81b6	e0 28		cpx #$28			cpx 	#AM_ACC 				; A mode (e.g. ASL A)
+.81b6	e0 28		cpx #$28			cpx 	#AM_ACC 				; A mode (e.g. ASL)
 .81b8	f0 0e		beq $81c8			beq 	_AMXExit
-.81ba	a5 58		lda $58				lda 	NSMantissa0 				; write LSB operand
+.81ba	a5 58		lda $58				lda 	NSMantissa0 			; write LSB operand
 .81bc	20 1f 81	jsr $811f			jsr 	AssemblerWriteByte
 .81bf	e0 00		cpx #$00			cpx 	#$00 					; zeropage ?
 .81c1	30 05		bmi $81c8			bmi 	_AMXExit
@@ -726,22 +726,22 @@
 .8212					LabelHere:
 .8212	c8		iny				iny 								; skip .
 .8213	a2 00		ldx #$00			ldx 	#0 							; get a term
-.8215	20 5e 98	jsr $985e			jsr 	EvaluateTerm 				; get a term
+.8215	20 5e 98	jsr $985e			jsr 	EvaluateTerm
 .8218	a5 50		lda $50				lda 	NSStatus 					; needs to be an integer reference.
 .821a	c9 20		cmp #$20			cmp 	#NSTInteger+NSBIsReference
-.821c	d0 22		bne $8240			bne 	_ALType
+.821c	d0 22		bne $8240			bne 	_ALType 					; otherwise typing error
 .821e	b5 58		lda $58,x			lda 	NSMantissa0,x 				; copy reference address to zTemp0
-.8220	85 36		sta $36				sta 	zTemp0
+.8220	85 36		sta $36				sta 	zTemp0 						; (e.g. where we store the address)
 .8222	b5 60		lda $60,x			lda 	NSMantissa1,x
 .8224	85 37		sta $37				sta 	zTemp0+1
-.8226	5a		phy				phy 								; copy address in.
+.8226	5a		phy				phy 								; copy address in (64k)
 .8227	a0 01		ldy #$01			ldy 	#1
 .8229	ad 1e 04	lda $041e			lda	 	AssemblerAddress
 .822c	92 36		sta ($36)			sta 	(zTemp0)
 .822e	ad 1f 04	lda $041f			lda	 	AssemblerAddress+1
 .8231	91 36		sta ($36),y			sta 	(zTemp0),y
 .8233	c8		iny				iny
-.8234	a9 00		lda #$00			lda 	#0
+.8234	a9 00		lda #$00			lda 	#0 							; zero the rest.
 .8236	91 36		sta ($36),y			sta 	(zTemp0),y
 .8238	c8		iny				iny
 .8239	91 36		sta ($36),y			sta 	(zTemp0),y
