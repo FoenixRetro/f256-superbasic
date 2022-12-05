@@ -1,4 +1,6 @@
 Progress:
+	Check games work.
+	Not initialised flag on variables. ?
 	Bad index array error when undeclared.
 	map()
 	Ticktimer during listing.
@@ -6,7 +8,6 @@ Progress:
 	Debug Hack
 	tiles ?
 	DMA ?
-	Not initialised flag on variables. ?
 	Remove Breakcheck fudge	
 
 Ongoing:
