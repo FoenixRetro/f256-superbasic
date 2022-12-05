@@ -1,7 +1,8 @@
 Progress:
 	Tidy up the new Junior uploader and switching stuff.
-	Bad index array error when undeclared.
 	Investigate $7F in ?0
+	Unlock $0
+	Bad index array error when undeclared.
 	Fix Backload page switching (into readbyte not global)
 	map()
 	Ticktimer during listing.
