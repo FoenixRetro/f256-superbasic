@@ -23,11 +23,11 @@ BackloadProgram:
 		ldx 	#_BLLoad >> 8
 		lda 	#_BLLoad & $FF
 		jsr 	PrintStringXA
-		lda 	8+3 						; save current mapping for $6000
-		pha
-		lda 	#SOURCE_ADDRESS >> 13 		; map source code in there.
-		sta 	8+3
+
+		lda 	#SOURCE_ADDRESS >> 13 		; start page
+		sta 	BackLoadPage
 		.set16 	BackLoadPointer,$6000 		; and load from there.
+
 		lda 	#$FF
 		sta 	$FFFA
 _BPLoop:		
@@ -64,8 +64,6 @@ _BPEndLine:
 		;		Exit backloading
 		;
 _BPExit:
-		pla 								; restore memory setup.
-		sta 	8+3
 		stz 	$FFFA
 		jsr 	ClearCommand 				; clear variables etc.
 		rts
@@ -80,6 +78,12 @@ _BLLoad:
 ; ************************************************************************************************
 
 BLReadByte:
+		phx
+		ldx 	8+3 						; save current mapping for $6000 in X
+
+		lda 	BackLoadPage	 			; set current page
+		sta 	8+3
+
 		lda 	BackLoadPointer 			; copy pointer to zTemp0
 		sta 	zTemp0 	
 		lda 	BackLoadPointer+1
@@ -92,14 +96,19 @@ BLReadByte:
 		pha
 		lda 	#$60 						; reset pointer
 		sta 	BackLoadPointer+1
-		inc 	8+3 						; next page from source.
+		inc 	BackLoadPage 				; next page from source.
 		pla
 _BLNoCarry:
+		stx 	8+3 						; restore mapping, then X.
+		plx		
+
 		cmp 	#0
 		rts
 		.send code
 
 		.section storage
+BackLoadPage:
+		.fill  	1		
 BackLoadPointer:
 		.fill 	2
 		.send storage
@@ -114,5 +123,7 @@ BackLoadPointer:
 ;		==== 			=====
 ;		26/11/22  		Reinserted speed up emulator hack (write to $FFFA)
 ; 		02/12/22 		Partial rewrite to load 8k from a fixed physical address.
+; 		05/12/22 		Fixed so >8k files work properly, moving page switch to
+;						BLReadByte
 ;
 ; ************************************************************************************************

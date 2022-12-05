@@ -138,6 +138,9 @@ release:
 	$(CCOPY) $(APPNAME) $(RELEASEDIR)$(S)$(RELEASE)$(S)basic_$(RELEASE).rom	
 	make -C . testbasic
 	$(CCOPY) $(APPNAME) $(RELEASEDIR)$(S)$(RELEASE)$(S)basic_autoload_$(RELEASE).rom	
+	make -C build build
+	$(CCOPY) build$(S)*.bin $(RELEASEDIR)$(S)$(RELEASE)
+	$(CCOPY) build$(S)bulk.csv $(RELEASEDIR)$(S)$(RELEASE)
 #
 #		Run various tests.
 #

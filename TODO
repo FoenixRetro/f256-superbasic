@@ -1,8 +1,4 @@
 Progress:
-	Upload Alpha-11.
-	Fix Backload page switching (into readbyte not global)
-
-	Tweak boot up message to fix.
 	Bad index array error when undeclared.
 	map()
 	Ticktimer during listing.
@@ -11,17 +7,14 @@ Progress:
 	tiles ?
 	DMA ?
 	Not initialised flag on variables. ?
-	
+	Remove Breakcheck fudge	
+
 Ongoing:
 	Code reading.
 	
 Later:
 	Disable interrupts enable at end of line command ?
 	Changing Kerning ?
-
-
-Notes:
-	Getting break first off.
 
 Discover:
 	Is break fired first time ? Yes, returns $72 in P

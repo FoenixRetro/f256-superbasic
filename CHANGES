@@ -48,3 +48,6 @@ Release 10 (02/12/22):
 	CHG: List reports a break.
 	
 Release 11 (05/12/22):		
+
+	CHG: Fixed loading in background of longer files.
+	CHG: New boot message.

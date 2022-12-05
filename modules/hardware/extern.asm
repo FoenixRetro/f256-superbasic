@@ -41,7 +41,7 @@ _EXMoveDown: 								; move down past prompt to 6th line.
 		lda 	#13
 		jsr 	PAGEDPrintCharacter
 		lda 	EXTRow
-		cmp 	#6
+		cmp 	#8
 		bne 	_EXMoveDown
 
 		stz 	1

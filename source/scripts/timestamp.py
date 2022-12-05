@@ -12,12 +12,13 @@
 import os,sys,math,datetime
 
 h = open("scripts/buildcount.txt")
-buildCount = int(h.read(-1))+1
+buildCount = int(h.read(-1))
 h.close()
 
-h = open("scripts/buildcount.txt","w")
-h.write("{0}\n".format(buildCount))
-h.close()
+if False:
+	h = open("scripts/buildcount.txt","w")
+	h.write("{0}\n".format(buildCount+1))
+	h.close()
 
 time = datetime.datetime.now()
 build = time.strftime("(%d-%b-%y)")

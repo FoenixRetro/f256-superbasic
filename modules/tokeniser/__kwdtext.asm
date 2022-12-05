@@ -106,8 +106,7 @@ KeywordSet1:
 	.text	5,$8d,"SHOOT"          ; $8f SHOOT
 	.text	7,$2a,"SPRITES"        ; $90 SPRITES
 	.text	4,$46,"STOP"           ; $91 STOP
-	.text	3,$ee,"WHO"            ; $92 WHO
-	.text	3,$eb,"ZAP"            ; $93 ZAP
+	.text	3,$eb,"ZAP"            ; $92 ZAP
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF

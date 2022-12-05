@@ -169,8 +169,7 @@ VectorSet1:
 	.word	ShootCommand                     ; $8f SHOOT
 	.word	SpritesCtrl                      ; $90 SPRITES
 	.word	StopCommand                      ; $91 STOP
-	.word	WhoCommand                       ; $92 WHO
-	.word	ZapCommand                       ; $93 ZAP
+	.word	ZapCommand                       ; $92 ZAP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
