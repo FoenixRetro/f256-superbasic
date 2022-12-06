@@ -87,15 +87,15 @@ _VHNoSecondIndex:
 		;		So first check if the number of indices match
 		;
 		phy 								; save position
-
-		ldy 	#2 							; check first index is not-zero, e.g. array defined
-		lda 	(zaTemp),y
-		beq 	_VHBadIndex
-		
-		lda 	NSMantissa0,x 				; copy record address to zaTemp
+		;
+		lda 	NSMantissa0,x 				; copy record address to zaTemp (moved 6/12/22)
 		sta 	zaTemp
 		lda 	NSMantissa1,x
 		sta 	zaTemp+1
+		;
+		ldy 	#2 							; check first index is not-zero, e.g. array defined
+		lda 	(zaTemp),y
+		beq 	_VHBadArray
 		;
 		ldy 	#3 							; get the second index - which is 0 if there is one index.
 		lda 	(zaTemp),y
@@ -177,6 +177,8 @@ _VHNoMultiply:
 
 _VHBadIndex:
 		.error_arrayidx
+_VHBadArray:
+		.error_arraydec
 
 		.send code
 
@@ -188,5 +190,9 @@ _VHBadIndex:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		06/12/22 		Added array not declared error.
+;		06/12/22 		At the check of indices match, around line 87, the copy into zaTemp was
+;						done *before* zaTemp was initialised,so it checked the last assigned value.
+;						Swapped round. Would only be picked up with uninitialised arrays.
 ;
 ; ************************************************************************************************

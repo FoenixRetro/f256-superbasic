@@ -36,4 +36,5 @@ ErrorText:
 	.text	"Array already defined",0
 	.text	"Array size",0
 	.text	"Bad array index",0
+	.text	"Array not declared",0
 .send code

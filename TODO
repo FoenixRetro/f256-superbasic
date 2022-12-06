@@ -1,6 +1,5 @@
 Progress:
 	Not initialised flag on variables. ?
-	Bad index array error when undeclared.
 	map()
 	Ticktimer during listing.
 	Continue documentation.
