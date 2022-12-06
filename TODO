@@ -1,5 +1,4 @@
 Progress:
-	Check games work.
 	Not initialised flag on variables. ?
 	Bad index array error when undeclared.
 	map()
@@ -9,12 +8,12 @@ Progress:
 	tiles ?
 	DMA ?
 	Remove Breakcheck fudge	
+	No games work on Real Kernel (Joystick functionality)
 
 Ongoing:
 	Code reading.
 	
 Later:
-	Disable interrupts enable at end of line command ?
 	Changing Kerning ?
 
 Discover:

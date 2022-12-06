@@ -17,7 +17,6 @@ endif
 
 BINDIR = ..$(S)..$(S)bin$(S)
 EMULATOR = $(BINDIR)jr256$(APPSTEM)
-TTYPORT = /dev/ttyUSB0
 LANGUAGE = en
 SOURCE = demo.bas
 
@@ -54,8 +53,17 @@ run: sprites program
 #
 go: sprites program 
 	$(CCOPY) $(BINDIR)foenixmgr.ini .	
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --boot ram
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)lockout.rom --address $(LLOCKOUT)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary graphics.bin --address $(LSPRITES)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address $(LSOURCE)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)basic.rom --address $(LBASIC)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address $(LMONITOR)
+#
+#		Run on kernel hardware
+#
+fgo: sprites program 
+	$(CCOPY) $(BINDIR)foenixmgr.ini .	
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --boot flash
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary graphics.bin --address $(LSPRITES)
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address $(LSOURCE)
