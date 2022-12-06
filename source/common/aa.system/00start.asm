@@ -55,11 +55,12 @@ Start:	ldx 	#$FF 						; stack reset
 		jmp 	WarmStart
 		.endif
 
-Prompt:	.text 	"6502 SuperBASIC"
-		.include "../generated/timestamp.asm"
-		.byte  	13
+Prompt:	.text 	"6502 SuperBASIC",13
 		.text 	"Copyright 2022 Paul Robson",13
 		.text  	"Paul@Robsons.org.uk",13	
+		.text "F256 "
+		.include "../generated/timestamp.asm"
+		.byte  	13
 		.text 	13,13,0
 
 		.send code
