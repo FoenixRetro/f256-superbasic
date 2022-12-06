@@ -1,4 +1,5 @@
 Progress:
+	Break check fails on paged ROM.
 	Not initialised flag on variables. ?
 	map()
 	Ticktimer during listing.
@@ -19,4 +20,4 @@ Discover:
 	Is break fired first time ? Yes, returns $72 in P
 	Initial value of $0 is $7F
 
-Will BreakCheck work when paged ?	
+

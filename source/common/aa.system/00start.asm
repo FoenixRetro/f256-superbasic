@@ -55,7 +55,13 @@ Start:	ldx 	#$FF 						; stack reset
 		jmp 	WarmStart
 		.endif
 
-Prompt:	.text 	"6502 SuperBASIC",13
+Prompt:	.text 	"6502 SuperBASIC ("
+		.if 	PagingEnabled==1
+		.text 	"24"
+		.else
+		.text 	"16"
+		.endif
+		.text 	"k)",13
 		.text 	"Copyright 2022 Paul Robson",13
 		.text  	"Paul@Robsons.org.uk",13	
 		.text "F256 "
