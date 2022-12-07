@@ -1,5 +1,8 @@
 Progress:
-	Break check fails on paged ROM.
+	Break doesn't work at all ?
+	Break check fails on paged ROM (verify this now works).
+	Alt Keyboard Driver
+	
 	Cross module call on timer check may not work as is, not re-entrant ? Silence sound at Warm Start ? Wait for it to return. Needs some bullying.
 	Not initialised flag on variables. ?
 	map()
@@ -8,6 +11,8 @@ Progress:
 	Debug Hack
 	tiles ?
 	DMA ?
+	RTC ?
+	CSV Functions ?
 	Remove Breakcheck fudge	
 	No games work on Real Kernel (Joystick functionality)
 
@@ -22,3 +27,24 @@ Discover:
 	Initial value of $0 is $7F
 
 
+; Keyboard & Mouse
+KBD_MSE_CTRL_REG = $D640 
+;KBD_Read_Strobe = $01 ; Deprecated
+KBD_Write_Strobe = $02
+;MS_Read_Strobe = $04 ; Deprecated
+MS_Write_Strobe = $08
+KBD_FIFO_CLEAR  = $10 ; Dump entire FIFO, set to 1 and then back to 0
+MSE_FIFO_CLEAR  = $20 ; Dump entire FIFO, set to 1 and then back to 0
+
+
+KBD_MS_WR_DATA_REG = $D641      ; Data to Send to Keyboard or Mouse
+KBD_RD_SCAN_REG = $D642         ; DATA Out from KBD FIFO
+MS_RD_SCAN_REG = $D643          ; DATA Out from MSE FIFO 
+
+KBD_MS_RD_STATUS = $D644       ; Keyboard RD/WR Status
+KBD_FIFO_Empty = $01           ; Set when Keyboard FIFO is empty
+MSE_FIFO_Empty = $02           ; Set when Mouse FIFO is empty
+MS_Stat_Tx_Error_No_Ack = $10
+MS_Stat_Tx_Ack = $20            ; When 1, it ack the Tx
+KBD_Stat_Tx_Error_No_Ack = $40
+KBD_Stat_Tx_Ack = $80            ; When 1, it ack the Tx

@@ -28,7 +28,9 @@ for module in exports.keys():
 		if paging:
 			print("\tinc 8+5")
 			print("\tjsr\tExport_{0}".format(routine))
+			print("\tphp")
 			print("\tdec 8+5")
+			print("\tplp")
 			print("\trts")
 		else:
 			print("\tjmp\tExport_{0}".format(routine))

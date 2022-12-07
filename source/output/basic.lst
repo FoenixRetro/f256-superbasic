@@ -1,13 +1,13 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
-; 64tass -D AUTORUN=1 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Tue Dec  6 08:51:30 2022
+; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
+; Wed Dec  7 11:44:23 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
 ;******  Command line definitions
 
-=1					AUTORUN=1
+=0					AUTORUN=0
 =$e000					 MONITOR_ADDRESS=$E000
 =$f000					 LOCKOUT_ADDRESS=$F000
 =$38000					 BASIC_ADDRESS=$38000
@@ -451,8 +451,8 @@
 .8041	a9 4f		lda #$4f			lda 	#Prompt & $FF
 .8043	20 58 8f	jsr $8f58			jsr 	PrintStringXA
 .8046	20 34 8a	jsr $8a34			jsr 	NewProgram 					; erase current program
-.8049	20 26 83	jsr $8326			jsr 	BackloadProgram
-.804c	4c 75 8b	jmp $8b75			jmp 	CommandRun
+.8049	4c dd 83	jmp $83dd			jmp 	WarmStart					; make same size.
+.804c	4c dd 83	jmp $83dd			jmp 	WarmStart
 >804f	36 35 30 32 20 53 75 70		Prompt:	.text 	"6502 SuperBASIC ("
 >8057	65 72 42 41 53 49 43 20 28
 >8060	31 36						.text 	"16"
@@ -904,8 +904,8 @@
 .8363	b0 ea		bcs $834f			bcs 	_BPCopy 					; until a control character, should be 13 received.
 .8365					_BPEndLine:
 .8365	20 21 80	jsr $8021			jsr 	TKTokeniseLine 				; tokenise the line.
-.8368	ea		nop				nop
-.8369	20 b8 83	jsr $83b8			jsr 	EditProgramCode
+.8368	38		sec				sec 								; append not insert
+.8369	20 fe a4	jsr $a4fe			jsr 	MemoryInsertLine 			; append to current program
 .836c	80 d6		bra $8344			bra 	_BPLoop
 .836e					_BPExit:
 .836e	9c fa ff	stz $fffa			stz 	$FFFA
