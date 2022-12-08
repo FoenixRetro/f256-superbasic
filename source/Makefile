@@ -25,9 +25,8 @@ EMULATOR = $(BINDIR)jr256$(APPSTEM)
 LANGUAGE = en
 
 EMU_REPO= ..$(S)..$(S)junior-emulator
-UTL_REPO= ..$(S)..$(S)junior-utilities
 KRN_REPO= ..$(S)..$(S)junior-tinykernel
-LDR_FILE= ..$(S)..$(S)FoenixMgr-junior
+LDR_FILE= ..$(S)..$(S)FoenixMgr
 
 MODULES= +hardware +graphics +tokeniser +sound
 RELEASEDIR = ..$(S)release
