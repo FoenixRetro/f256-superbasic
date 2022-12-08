@@ -1,10 +1,13 @@
 Progress:
 	Break doesn't work at all ?
 	Break check fails on paged ROM (verify this now works).
-	Alt Keyboard Driver
+
+	Alt Keyboard Driver - write alternate hardware driver, 8042 emulation split out to file.
 	
 	Cross module call on timer check may not work as is, not re-entrant ? Silence sound at Warm Start ? Wait for it to return. Needs some bullying.
+
 	Not initialised flag on variables. ?
+
 	map()
 	Ticktimer during listing.
 	Continue documentation.
@@ -13,7 +16,6 @@ Progress:
 	DMA ?
 	RTC ?
 	CSV Functions ?
-	Remove Breakcheck fudge	
 	No games work on Real Kernel (Joystick functionality)
 
 Ongoing:

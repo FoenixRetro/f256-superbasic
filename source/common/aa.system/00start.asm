@@ -18,8 +18,6 @@ Boot:	jmp 	Start
 Start:	ldx 	#$FF 						; stack reset
 		txs	
 
-		jsr 	EXTBreakCheck 				; added to stop initial break bug.
-
 		lda 	0  							; turn on editing of MMU LUT
 		ora 	#$80
 		sta 	0
@@ -82,5 +80,6 @@ Prompt:	.text 	"6502 SuperBASIC ("
 ;		27/11/22 		Removed prompt - now doesn't clear screen and drops to line 6.
 ;		05/12/22 		Added call to break to temporarily handle break bug in Kernel.
 ;						Added Gadget-style boot prompt.
+;		08/12/22 		Removed initial break check call.
 ;
 ; ************************************************************************************************
