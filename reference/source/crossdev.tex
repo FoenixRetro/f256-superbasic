@@ -48,7 +48,7 @@ To load the program into memory to be "loaded" you need something like the below
 
 \section{Versions}
 
-Between release Alpha 9 and Alpha 10 the load address (the 28000 in the above commands) has moved. If you have Alpha-9 or earlier, these need to be replaced by 5000 (if you have a B with autostart) or 3000 (if you are using the toy kernel)
+Initially the lower 32k of RAM (0000-7FFF) has a logical address equal to its physical address. 
 
 \section{Sprites}
 Sprites are loaded (in BASIC) to \$30000 and there is a simple index format. This is covered in the sprites section.

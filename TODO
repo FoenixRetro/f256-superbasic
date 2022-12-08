@@ -1,12 +1,12 @@
 Progress:
-	Break doesn't work at all ?
+	Break doesn't work at all ? (Gadget bug)
 	Break check fails on paged ROM (verify this now works).
 
 	Alt Keyboard Driver - write alternate hardware driver, 8042 emulation split out to file.
 	
 	Cross module call on timer check may not work as is, not re-entrant ? Silence sound at Warm Start ? Wait for it to return. Needs some bullying.
 
-	Not initialised flag on variables. ?
+	Not initialised flag on variables. ? LH/RH issue.
 
 	map()
 	Ticktimer during listing.
@@ -24,9 +24,7 @@ Ongoing:
 Later:
 	Changing Kerning ?
 
-Discover:
-	Is break fired first time ? Yes, returns $72 in P
-	Initial value of $0 is $7F
+
 
 
 ; Keyboard & Mouse
