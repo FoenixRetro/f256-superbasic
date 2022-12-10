@@ -24,8 +24,12 @@ Ongoing:
 Later:
 	Changing Kerning ?
 
-
-
+Fixing Keyboard Buffer:
+	Make it uploadable from junior-tinykernel
+	Make it print something before initialising the keyboard
+	Make it echo on exit
+	Try to make it work, then work in BASIC
+	Make it work in the Emulator.
 
 ; Keyboard & Mouse
 KBD_MSE_CTRL_REG = $D640 
