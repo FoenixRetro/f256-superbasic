@@ -835,9 +835,9 @@ Export_EXTBreakCheck:
 ; ************************************************************************************************
 
 ifpressed .macro
-		lda 	#((\1) >> 3)
+		lda 	#KP_\1_ROW
 		jsr 	$FFE7
-		and 	#($01 << ((\1) & 7))
+		and 	#KP_\1_COL
 		beq 	_NoSet1
 		txa
 		ora 	#\2
@@ -845,15 +845,28 @@ ifpressed .macro
 _NoSet1:
 		.endm
 
+
+KP_Z_ROW = 3
+KP_Z_COL = $04
+KP_X_ROW = 4
+KP_X_COL = $04
+KP_K_ROW = 8
+KP_K_COL = $04
+KP_M_ROW = 7
+KP_M_COL = $04
+KP_L_ROW = 9
+KP_L_COL = $08
+
 Export_EXTReadController:
 		phx
 		ldx 	#0
-		.ifpressed $2D,1 				; X right
-		.ifpressed $2C,2 				; Z left
-		.ifpressed $32,4 				; M down
-		.ifpressed $25,8 				; K up
-		.ifpressed $26,16 				; L fire#1
+		.ifpressed X,1 				; X right
+		.ifpressed Z,2 				; Z left
+		.ifpressed M,4 				; M down
+		.ifpressed K,8 				; K up
+		.ifpressed L,16 			; L fire#1
 		txa
+		jsr 	PrintHex
 		plx
 		rts
 
