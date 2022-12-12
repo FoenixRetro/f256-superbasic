@@ -859,7 +859,7 @@ KP_L_COL = $08
 
 Export_EXTReadController:
 		phx
-		ldx 	#0
+	ldx 	#0
 		.ifpressed X,1 				; X right
 		.ifpressed Z,2 				; Z left
 		.ifpressed M,4 				; M down

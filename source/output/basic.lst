@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$3C000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Mon Dec 12 08:41:33 2022
+; Mon Dec 12 08:48:40 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -465,8 +465,8 @@
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->8096	41 6c 70 68 61 20 31 33			.text "Alpha 13 built 08-Dec-22. "
->809e	20 62 75 69 6c 74 20 30 38 2d 44 65 63 2d 32 32
+>8096	41 6c 70 68 61 20 31 34			.text "Alpha 14 built 12-Dec-22. "
+>809e	20 62 75 69 6c 74 20 31 32 2d 44 65 63 2d 32 32
 >80ae	2e 20
 
 ;******  Return to file: ./common/aa.system/00start.asm
@@ -5808,8 +5808,8 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->a132	41 6c 70 68 61 20 31 33			.text "Alpha 13 built 08-Dec-22. "
->a13a	20 62 75 69 6c 74 20 30 38 2d 44 65 63 2d 32 32
+>a132	41 6c 70 68 61 20 31 34			.text "Alpha 14 built 12-Dec-22. "
+>a13a	20 62 75 69 6c 74 20 31 32 2d 44 65 63 2d 32 32
 >a14a	2e 20
 
 ;******  Return to file: _basic.asm
@@ -7450,7 +7450,7 @@
 =$08					KP_L_COL = $08
 .aaf4					Export_EXTReadController:
 .aaf4	da		phx				phx
-.aaf5	a2 00		ldx #$00			ldx 	#0
+.aaf5	a2 00		ldx #$00		ldx 	#0
 .aaf7	a9 04		lda #$04			lda 	#KP_X_ROW
 .aaf9	20 e7 ff	jsr $ffe7			jsr 	$FFE7
 .aafc	29 04		and #$04			and 	#KP_X_COL
