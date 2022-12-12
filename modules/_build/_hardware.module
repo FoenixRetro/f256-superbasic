@@ -866,7 +866,6 @@ Export_EXTReadController:
 		.ifpressed K,8 				; K up
 		.ifpressed L,16 			; L fire#1
 		txa
-		jsr 	PrintHex
 		plx
 		rts
 

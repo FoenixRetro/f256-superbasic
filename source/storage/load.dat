@@ -1,4 +1,4 @@
-10 print joyx(0),joyy(0),joyb(0)
+10 a = joyx(0)
+15 print a
 20 goto 10
-
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ

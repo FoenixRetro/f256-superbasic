@@ -1,7 +1,6 @@
 Progress:	
-	Finish emulator coding of new keyboard interface.
 	joyx() not working ; doesn't seem to be accessing the code.
-
+	Blank lines on Upload ?
 	Break doesn't work at all ? (Gadget bug)
 	Break check fails on paged ROM (verify this now works).
 

@@ -123,7 +123,7 @@ autorun:
 	$(START)
 	
 prelim:
-	make -B -C ../modules
+	make -B -C ..$(S)modules
 	python $(SCRIPTDIR)errors.py $(LANGUAGE)
 	python $(SCRIPTDIR)opcodes.py >common$(S)generated$(S)asmcore.asm
 	python $(SCRIPTDIR)makebuild.py $(MODULES)
