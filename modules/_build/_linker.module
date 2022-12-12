@@ -1,31 +1,86 @@
-PagingEnabled = 0
+PagingEnabled = 1
 	.if hardwareIntegrated == 1
 EXTPrintCharacter:
-	jmp	Export_EXTPrintCharacter
+	inc 8+5
+	jsr	Export_EXTPrintCharacter
+	php
+	dec 8+5
+	plp
+	rts
 EXTInitialise:
-	jmp	Export_EXTInitialise
+	inc 8+5
+	jsr	Export_EXTInitialise
+	php
+	dec 8+5
+	plp
+	rts
 EXTInputSingleCharacter:
-	jmp	Export_EXTInputSingleCharacter
+	inc 8+5
+	jsr	Export_EXTInputSingleCharacter
+	php
+	dec 8+5
+	plp
+	rts
 EXTBreakCheck:
-	jmp	Export_EXTBreakCheck
+	inc 8+5
+	jsr	Export_EXTBreakCheck
+	php
+	dec 8+5
+	plp
+	rts
 EXTReadController:
-	jmp	Export_EXTReadController
+	inc 8+5
+	jsr	Export_EXTReadController
+	php
+	dec 8+5
+	plp
+	rts
 EXTInputLine:
-	jmp	Export_EXTInputLine
+	inc 8+5
+	jsr	Export_EXTInputLine
+	php
+	dec 8+5
+	plp
+	rts
 	.endif
 	.if graphicsIntegrated == 1
 GXGraphicDraw:
-	jmp	Export_GXGraphicDraw
+	inc 8+5
+	jsr	Export_GXGraphicDraw
+	php
+	dec 8+5
+	plp
+	rts
 	.endif
 	.if soundIntegrated == 1
 SNDCommand:
-	jmp	Export_SNDCommand
+	inc 8+5
+	jsr	Export_SNDCommand
+	php
+	dec 8+5
+	plp
+	rts
 SNDUpdate:
-	jmp	Export_SNDUpdate
+	inc 8+5
+	jsr	Export_SNDUpdate
+	php
+	dec 8+5
+	plp
+	rts
 	.endif
 	.if tokeniserIntegrated == 1
 TKListConvertLine:
-	jmp	Export_TKListConvertLine
+	inc 8+5
+	jsr	Export_TKListConvertLine
+	php
+	dec 8+5
+	plp
+	rts
 TKTokeniseLine:
-	jmp	Export_TKTokeniseLine
+	inc 8+5
+	jsr	Export_TKTokeniseLine
+	php
+	dec 8+5
+	plp
+	rts
 	.endif

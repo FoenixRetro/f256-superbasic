@@ -11,7 +11,7 @@
 
 import os,sys,re
 
-paging = False
+paging = True
 
 exports = {}
 exports["hardware"] = 	[ "EXTPrintCharacter","EXTInitialise","EXTInputSingleCharacter","EXTBreakCheck","EXTReadController","EXTInputLine" ]
