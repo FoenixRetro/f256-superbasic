@@ -42,7 +42,7 @@ Start:	ldx 	#$FF 						; stack reset
 
 		.tickinitialise 					; initialise tick handler
 											; (mandatory)
-		
+
 		jsr 	NewProgram 					; erase current program
 
 		.if 	AUTORUN==1 					; run straight off
