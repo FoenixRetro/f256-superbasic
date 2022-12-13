@@ -52,6 +52,10 @@ _BPNotTab:
 _BPEndLine:		
 		jsr 	TKTokeniseLine 				; tokenise the line.
 
+		lda 	TokenLineNumber 			; line number = 0
+		ora 	TokenLineNumber+1
+		beq 	_BPLoop 					; not legal code, blank line or maybe a comment.
+
 		.if AUTORUN==1 						; if autorun do full insert/delete for testing
 		nop
 		jsr 	EditProgramCode
@@ -125,5 +129,6 @@ BackLoadPointer:
 ; 		02/12/22 		Partial rewrite to load 8k from a fixed physical address.
 ; 		05/12/22 		Fixed so >8k files work properly, moving page switch to
 ;						BLReadByte
+;		13/12/22 		Blank line in text doesn't create a line 0
 ;
 ; ************************************************************************************************

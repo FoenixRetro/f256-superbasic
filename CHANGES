@@ -64,3 +64,11 @@ Release 13 (06/12/22):
 	CHG: Pre-paging release. Release 15 should be running in 24k.
 
 Release 14 (12/12/22):
+
+	CHG: Paging turned on in build, permanently unless severe issues found.
+
+Release 15 (12/12/22):
+
+	BUG: Blank or non numeric lines in imported BASIC source do not create line 0 (not issue for typed at CLI)
+
+	

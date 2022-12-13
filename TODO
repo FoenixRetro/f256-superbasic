@@ -1,21 +1,18 @@
 Progress:	
 	Break doesn't work at all ? (Gadget bug fixed in 12.1)
-	$FC xx xx helper.
-	Blank lines on Upload ?
-	Cross module call on timer check may not work as is, not re-entrant ? Silence sound at Warm Start ? Wait for it to return. Needs some bullying.
-	Not initialised flag on variables. ? LH/RH issue.
+
 	map()
 	Ticktimer during listing.
-	Continue documentation.
-	Debug Hack
 	tiles ?
 	DMA ?
 	RTC ?
 	CSV Functions ?
+
 	No games work on Real Kernel (Joystick functionality)
 
 Ongoing:
 	Code reading.
+	Continue documentation.
 	
 Later:
 	Changing Kerning ?

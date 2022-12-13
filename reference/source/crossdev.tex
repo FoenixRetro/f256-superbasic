@@ -48,7 +48,11 @@ To load the program into memory to be "loaded" you need something like the below
 
 \section{Versions}
 
-Initially the lower 32k of RAM (0000-7FFF) has a logical address equal to its physical address. 
+Initially the lower 32k of RAM (0000-7FFF) has a logical address equal to its physical address. The BASIC ROM is mapped into 8000-BFFF. 
+
+The memory block C000-DFFF is reserved by the Kernel - you can change I/O registers, but do not map RAM here and change it unless you are absolutely sure of what you are doing.
+
+The memory block E000-FFFF contains the Kernel.
 
 \section{Sprites}
 Sprites are loaded (in BASIC) to \$30000 and there is a simple index format. This is covered in the sprites section.
