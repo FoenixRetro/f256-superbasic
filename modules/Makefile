@@ -17,6 +17,8 @@ endif
 
 all:
 	make -C graphics
+	make -C hardware/header
+	
 	python _scripts$(S)makebuild.py graphics >_build$(S)_graphics.module
 
 	$(CCOPY) ..$(S)source$(S)common$(S)generated$(S)kwdtext.dat tokeniser$(S)__kwdtext.asm

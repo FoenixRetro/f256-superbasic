@@ -26,9 +26,7 @@ Export_EXTInitialise:
 		lda 	#1+8						; Timer On at 70Hz counting up.
 		sta 	$D658
 		;
-		lda 	#3 							; get current text colour from whatever the kernel
-		sta 	1 							; has set it to, looking at top left character
-		lda 	$C000
+		lda 	#$52
 		sta 	EXTTextColour
 		;
 		lda 	#80 						; set screen dimensions.
@@ -36,14 +34,15 @@ Export_EXTInitialise:
 		lda 	#60
 		sta 	EXTScreenHeight
 
-		jsr 	EXTHomeCursor 				; home cursor 
-_EXMoveDown: 								; move down past prompt to 6th line.
+		jsr 	EXTClearScreenCode 			; clear the screen
+
+_EXMoveDown: 								; move down past prompt 
 		lda 	#13
 		jsr 	PAGEDPrintCharacter
 		lda 	EXTRow
-		cmp 	#8
+		cmp 	#Header_Height+1
 		bne 	_EXMoveDown
-
+		jsr 	EXTShowHeader
 		stz 	1
 		rts				
 
