@@ -112,6 +112,7 @@
 	.include	"./memory/memory.flat/insert.asm"
 	.include	"./memory/memory.flat/memory.asm"
 	.include	"./memory/memory.flat/search.asm"
+	.include	"./font_update/newfont.asm"
 	.include	"./module.interface/sound/effects.asm"
 	.include	"./module.interface/sound/playing.asm"
 	.include	"./module.interface/sound/sound.asm"

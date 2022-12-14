@@ -80,7 +80,7 @@ EXTSetHardwareCursor:
 		stz 	1 							; I/O Page zero
 		lda 	#1+4 						; enable cursor
 		sta 	$D010 				
-		lda 	#$B1
+		lda 	#179
 		sta 	$D012
 		lda 	EXTColumn
 		sta 	$D014 						; set cursor position

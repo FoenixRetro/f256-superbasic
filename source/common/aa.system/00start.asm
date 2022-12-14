@@ -22,8 +22,9 @@ Start:	ldx 	#$FF 						; stack reset
 		ora 	#$80
 		sta 	0
 
+		jsr		UpdateFont 					; update font if between FPGA updates.
+		
 		jsr 	EXTInitialise 				; hardware initialise
-
 		.if 	graphicsIntegrated==1 		; if installed
 		lda 	#0 							; graphics system initialise.
 		tax

@@ -1,3 +1,6 @@
+;
+;	Automatically generated.
+;
 	.section code
 
 Header_Height = 14

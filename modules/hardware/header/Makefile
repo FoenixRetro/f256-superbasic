@@ -23,3 +23,4 @@ all:
 	$(CCOPY) $(PROMPTDIR)f256jr_std_text_palette.hex palette.hex
 	$(CCOPY) "$(PROMPTDIR)tile sets$(S)C64 PETSCII.json" font.json
 	python process.py
+	$(CCOPY) font.dat ..$(S)..$(S)..$(S)source$(S)common$(S)generated
