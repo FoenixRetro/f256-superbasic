@@ -1,13 +1,13 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
-; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Wed Dec 14 14:42:54 2022
+; 64tass -D AUTORUN=1 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
+; Thu Dec 15 09:10:32 2022
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
 ;******  Command line definitions
 
-=0						AUTORUN=0
+=1						AUTORUN=1
 =$e000						 MONITOR_ADDRESS=$E000
 =$f000						 LOCKOUT_ADDRESS=$F000
 =$38000						 BASIC_ADDRESS=$38000
@@ -506,14 +506,14 @@
 .808e		a9 9c		lda #$9c			lda 	#Prompt & $FF
 .8090		20 62 8f	jsr $8f62			jsr 	PrintStringXA
 .8093		20 3e 8a	jsr $8a3e			jsr 	NewProgram 					; erase current program
-.8096		4c e7 83	jmp $83e7			jmp 	WarmStart					; make same size.
-.8099		4c e7 83	jmp $83e7			jmp 	WarmStart
+.8096		20 28 83	jsr $8328			jsr 	BackloadProgram
+.8099		4c 7f 8b	jmp $8b7f			jmp 	CommandRun
 .809c						Prompt:
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->809c		41 6c 70 68 61 20 31 36			.text "Alpha 16 built 14-Dec-22. "
->80a4		20 62 75 69 6c 74 20 31 34 2d 44 65 63 2d 32 32
+>809c		41 6c 70 68 61 20 31 36			.text "Alpha 16 built 15-Dec-22. "
+>80a4		20 62 75 69 6c 74 20 31 35 2d 44 65 63 2d 32 32
 >80b4		2e 20
 
 ;******  Return to file: ./common/aa.system/00start.asm
@@ -952,8 +952,8 @@
 .836a		ad 2b 04	lda $042b			lda 	TokenLineNumber 			; line number = 0
 .836d		0d 2c 04	ora $042c			ora 	TokenLineNumber+1
 .8370		f0 d4		beq $8346			beq 	_BPLoop 					; not legal code, blank line or maybe a comment.
-.8372		38		sec				sec 								; append not insert
-.8373		20 08 a5	jsr $a508			jsr 	MemoryInsertLine 			; append to current program
+.8372		ea		nop				nop
+.8373		20 c2 83	jsr $83c2			jsr 	EditProgramCode
 .8376		80 ce		bra $8346			bra 	_BPLoop
 .8378						_BPExit:
 .8378		9c fa ff	stz $fffa			stz 	$FFFA
@@ -1023,7 +1023,7 @@
 .83e7						WarmStart:
 .83e7		a2 ff		ldx #$ff			ldx 	#$FF
 .83e9		9a		txs				txs
-.83ea		a9 85		lda #$85			lda 	#CLICommandLine+$80 		; set console colour whatever the current colour is.
+.83ea		a9 89		lda #$89			lda 	#CLICommandLine+$80 		; set console colour whatever the current colour is.
 .83ec		20 03 80	jsr $8003			jsr 	EXTPrintCharacter
 .83ef		20 35 80	jsr $8035			jsr 	EXTInputLine 				; get line to lineBuffer
 .83f2		20 67 80	jsr $8067			jsr 	TKTokeniseLine 				; tokenise the line
@@ -5857,8 +5857,8 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->a140		41 6c 70 68 61 20 31 36			.text "Alpha 16 built 14-Dec-22. "
->a148		20 62 75 69 6c 74 20 31 34 2d 44 65 63 2d 32 32
+>a140		41 6c 70 68 61 20 31 36			.text "Alpha 16 built 15-Dec-22. "
+>a148		20 62 75 69 6c 74 20 31 35 2d 44 65 63 2d 32 32
 >a158		2e 20
 
 ;******  Return to file: _basic.asm
@@ -7178,32 +7178,32 @@
 
 =1						hardwareIntegrated=1
 =0						CONBlack = 0
-=1						CONWhite = 1
-=2						CONRed = 2
-=3						CONCyan = 3
+=1						CONGrey = 1
+=2						CONDarkBlue = 2
+=3						CONGreen = 3
 =4						CONPurple = 4
-=5						CONGreen = 5
-=6						CONBlue = 6
-=7						CONYellow = 7
-=8						CONOrange = 8
-=9						CONBrown = 9
-=10						CONYellowGreen = 10
-=11						CONRosa = 11
-=12						CONBlueGreen = 12
-=13						CONLightBlue = 13
-=14						CONPink = 14
-=15						CONLightGreen = 15
-=7						CONForeground = CONYellow
-=6						CONBackground = CONBlue
-=5						CLICommandLine = CONGreen
-=0						CLIFComment = CONBlack
-=7						CLIBComment = CONYellow
-=9						CLILineNumber = CONBrown
-=3						CLIToken = CONCyan
-=13						CLIConstant = CONLightBlue
-=7						CLIIdentifier = CONYellow
-=10						CLIPunctuation = CONYellowGreen
-=1						CLIData = CONWhite
+=5						CONBrown = 5
+=6						CONOrange = 6
+=7						CONCyan = 7
+=8						CONDarkGrey = 8
+=9						CONLightGrey = 9
+=10						CONLightBlue = 10
+=11						CONLightGreen = 11
+=12						CONPink = 12
+=13						CONRed = 13
+=14						CONYellow = 14
+=15						CONWhite = 15
+=9						CONForeground = CONLightGrey
+=2						CONBackground = CONDarkBlue
+=9						CLICommandLine = CONLightGrey
+=5						CLIFComment = CONBrown
+=14						CLIBComment = CONYellow
+=13						CLILineNumber = CONRed
+=6						CLIToken = CONOrange
+=10						CLIConstant = CONLightBlue
+=14						CLIIdentifier = CONYellow
+=12						CLIPunctuation = CONPink
+=15						CLIData = CONWhite
 .c000	a000					Export_EXTPrintCharacter:
 .c000	a000					PAGEDPrintCharacter:
 .c000	a000	48		pha				pha
@@ -9483,7 +9483,7 @@
 .d4ea	b4ea	9c 1d 04	stz $041d			stz 	tbOffset
 .d4ed	b4ed	9c 2d 04	stz $042d			stz 	tokenBuffer
 .d4f0	b4f0	9c 29 04	stz $0429			stz 	currentListColour
-.d4f3	b4f3	a9 89		lda #$89			lda 	#CLILineNumber+$80
+.d4f3	b4f3	a9 8d		lda #$8d			lda 	#CLILineNumber+$80
 .d4f5	b4f5	20 72 b6	jsr $b672			jsr 	LCLWriteColour
 .d4f8	b4f8	a0 02		ldy #$02			ldy 	#2 							; convert line number to string
 .d4fa	b4fa	b1 30		lda ($30),y			lda 	(codePtr),y
@@ -9513,7 +9513,7 @@
 .d526	b526	d0 f4		bne $b51c			bne 	_LCPadOut
 .d528	b528	a0 03		ldy #$03			ldy 	#3 							; start position.
 .d52a	b52a					_LCMainLoop:
-.d52a	b52a	a9 8a		lda #$8a			lda 	#CLIPunctuation+$80
+.d52a	b52a	a9 8c		lda #$8c			lda 	#CLIPunctuation+$80
 .d52c	b52c	20 72 b6	jsr $b672			jsr 	LCLWriteColour
 .d52f	b52f	b1 30		lda ($30),y			lda 	(codePtr),y
 .d531	b531	c9 80		cmp #$80			cmp 	#KWC_EOL 					; end of line ?
@@ -9571,7 +9571,7 @@
 .d587	b587	b0 07		bcs $b590			bcs 	_LCPNotConstant
 .d589	b589					_LCPIsConstant:
 .d589	b589	48		pha				pha
-.d58a	b58a	a9 8d		lda #$8d			lda 	#CLIConstant+$80
+.d58a	b58a	a9 8a		lda #$8a			lda 	#CLIConstant+$80
 .d58c	b58c	20 72 b6	jsr $b672			jsr 	LCLWriteColour
 .d58f	b58f	68		pla				pla
 .d590	b590					_LCPNotConstant:
@@ -9587,7 +9587,7 @@
 .d59e	b59e	85 36		sta $36				sta 	zTemp0
 .d5a0	b5a0	c8		iny				iny
 .d5a1	b5a1	5a		phy				phy 								; save position
-.d5a2	b5a2	a9 87		lda #$87			lda 	#CLIIdentifier+$80
+.d5a2	b5a2	a9 8e		lda #$8e			lda 	#CLIIdentifier+$80
 .d5a4	b5a4	20 72 b6	jsr $b672			jsr 	LCLWriteColour
 .d5a7	b5a7	a0 07		ldy #$07			ldy 	#7 							; output the identifier at +8
 .d5a9	b5a9					_LCOutIdentifier:
@@ -9640,7 +9640,7 @@
 .d5f7	b5f7	5a		phy				phy 								; save List position
 .d5f8	b5f8	b2 36		lda ($36)			lda 	(zTemp0)					; count to print
 .d5fa	b5fa	aa		tax				tax
-.d5fb	b5fb	a9 83		lda #$83			lda 	#CLIToken+$80
+.d5fb	b5fb	a9 86		lda #$86			lda 	#CLIToken+$80
 .d5fd	b5fd	20 72 b6	jsr $b672			jsr 	LCLWriteColour
 .d600	b600	a0 02		ldy #$02			ldy 	#2
 .d602	b602					_LCCopyToken:
@@ -9664,7 +9664,7 @@
 .d61f	b61f	c9 fe		cmp #$fe			cmp 	#$FE
 .d621	b621	f0 22		beq $b645			beq 	_LCHaveOpener
 .d623	b623	a2 22		ldx #$22			ldx 	#'"'
-.d625	b625	a9 81		lda #$81			lda 	#CLIData+$80
+.d625	b625	a9 8f		lda #$8f			lda 	#CLIData+$80
 .d627	b627	20 72 b6	jsr $b672			jsr 	LCLWriteColour
 .d62a	b62a	c0 04		cpy #$04			cpy 	#4 							; must be 2nd thing on line
 .d62c	b62c	d0 17		bne $b645			bne 	_LCHaveOpener
@@ -9675,9 +9675,9 @@
 .d634	b634	d0 0f		bne $b645			bne 	_LCHaveOpener
 .d636	b636	a9 09		lda #$09			lda 	#9 							; tab
 .d638	b638	20 7b b6	jsr $b67b			jsr 	LCLWrite
-.d63b	b63b	a9 97		lda #$97			lda 	#$90+CLIBComment
+.d63b	b63b	a9 9e		lda #$9e			lda 	#$90+CLIBComment
 .d63d	b63d	20 7b b6	jsr $b67b			jsr 	LCLWrite
-.d640	b640	a9 80		lda #$80			lda 	#CLIFComment+$80
+.d640	b640	a9 85		lda #$85			lda 	#CLIFComment+$80
 .d642	b642	20 72 b6	jsr $b672			jsr 	LCLWriteColour
 .d645	b645					_LCHaveOpener:
 .d645	b645	8a		txa				txa 								; output prefix (# or ")

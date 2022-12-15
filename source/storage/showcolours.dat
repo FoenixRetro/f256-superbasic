@@ -1,0 +1,4 @@
+100 for i = 0 to 15
+110 print i,chr$(i+128);"Colour ";i;chr$(5+128)
+120 next
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ

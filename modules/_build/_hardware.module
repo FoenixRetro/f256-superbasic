@@ -17,35 +17,35 @@ hardwareIntegrated=1
 ; ************************************************************************************************
 
 CONBlack = 0
-CONWhite = 1
-CONRed = 2
-CONCyan = 3
+CONGrey = 1
+CONDarkBlue = 2
+CONGreen = 3
 CONPurple = 4
-CONGreen = 5
-CONBlue = 6
-CONYellow = 7
-CONOrange = 8
-CONBrown = 9
-CONYellowGreen = 10
-CONRosa = 11
-CONBlueGreen = 12
-CONLightBlue = 13
-CONPink = 14
-CONLightGreen = 15
+CONBrown = 5
+CONOrange = 6
+CONCyan = 7
+CONDarkGrey = 8
+CONLightGrey = 9
+CONLightBlue = 10
+CONLightGreen = 11
+CONPink = 12
+CONRed = 13
+CONYellow = 14
+CONWhite = 15
 
-CONForeground = CONYellow
-CONBackground = CONBlue
+CONForeground = CONLightGrey
+CONBackground = CONDarkBlue
 
-CLICommandLine = CONGreen
+CLICommandLine = CONLightGrey
 
-CLIFComment = CONBlack
+CLIFComment = CONBrown
 CLIBComment = CONYellow
 
-CLILineNumber = CONBrown
-CLIToken = CONCyan
+CLILineNumber = CONRed
+CLIToken = CONOrange
 CLIConstant = CONLightBlue
 CLIIdentifier = CONYellow
-CLIPunctuation = CONYellowGreen
+CLIPunctuation = CONPink
 CLIData = CONWhite
 
 ; ************************************************************************************************
