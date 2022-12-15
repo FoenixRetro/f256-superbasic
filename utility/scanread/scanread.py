@@ -48,7 +48,8 @@ for root,dirs,files in os.walk("source"):
 for root,dirs,files in os.walk("modules"):
 	for f in files:
 		if (f.endswith(".inc") or f.endswith(".asm")) and not f.startswith("_"):
-			sourceList[root+os.sep+f] = { "date": None }
+			if f != "headerdata.asm":
+				sourceList[root+os.sep+f] = { "date": None }
 
 revCount = 0
 toCount = 0

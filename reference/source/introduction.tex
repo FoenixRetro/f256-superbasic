@@ -1,2 +1,28 @@
 \chapter{Introduction}
 
+\section{Introduction}
+
+F256's SuperBASIC is a modernised BASIC interpreter for the 65C02 processor. It currently occupies 3 pages (24k) of Flash, mapped into 2 pages (16k) of the 65C02 memory space. At present, this is from $8000-$BFFF
+
+Currently editing is still done using line numbers, however it is possible to cross-develop without line numbers, there are some examples of such at the primary github at http://github.com/paulscottrobson/superbasic under the 'games' directory.
+
+However, there is no requirement to actually use them in programs. GOTO, GOSUB and RETURN are supported but this is more for backwards compatibility with older programs. It is advised to use Procedures, For/Next, While, Repeat and If/Else/Endif commands for better programming and clarity.
+
+\section{Storage}
+
+Programs are stored in ASCII format, so in cross development any editor can be used. LOAD and SAVE read and write files in this format. 
+
+Internally the format is quite different.
+
+\section{Memory usage}
+
+Memory usage is split into 2 parts. 
+
+The main space from \$2000-\$7FFF contains the tokenised BASIC code. Keywords such as REPEAT are replaced by a single byte, or for less common options, by two bytes. 
+
+Identifiers are replaced by a reference into the identifier table from \$1000-\$1FFF. The first part of this table is a list of identifiers along with the current value.
+Arrays and allocated memory (using alloc() follow that).
+Finally string memory occupies the top of this memory area and works down.
+
+This should be entirely transparent to the developer.
+

@@ -21,6 +21,9 @@
 Command_List:	;; [list]
 		stz 	listIndent 					; reset indent.
 		;
+		lda 	#$3F 						; silence at list.
+		jsr 	SNDCommand
+		;
 		.cget 								; followed by an identifier ?
 		and 	#$C0 				 		; if so, we are list procedure() which is a seperate block		
 		cmp 	#$40  						; of code.
@@ -205,5 +208,6 @@ _CLIDExitFalse:
 ;		Date			Notes
 ;		==== 			=====
 ;		05/12/22 		LIST break reports.
+;		15/12/22 		LIST silences sound.
 ;
 ; ************************************************************************************************

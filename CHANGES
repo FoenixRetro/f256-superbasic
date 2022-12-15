@@ -74,3 +74,7 @@ Release 15 (12/12/22):
 	INF: Non paged BASICs are now no longer available - there's about 4k in non module space and about 1k in module space.
 
 Release 16 (14/12/22):	
+
+	CHG: New Boot screen logo
+	CHG: Colours revamped for new logo
+	CHG: List turns sound off.
