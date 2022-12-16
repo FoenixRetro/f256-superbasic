@@ -2,7 +2,7 @@
 ; ************************************************************************************************
 ;
 ;		Name:		crossdev.asm
-;		Purpose:	Cross Develop support commands.
+;		Purpose:	Cross Develop support commands.ma
 ;		Created:	1st November 2022
 ;		Reviewed: 	16th December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
