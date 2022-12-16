@@ -78,3 +78,7 @@ Release 16 (14/12/22):
 	CHG: New Boot screen logo
 	CHG: Colours revamped for new logo
 	CHG: List turns sound off.
+	CHG: Javascript version compiles again.
+	CHG: Load and Go are changed to XLoad and XGo
+
+	

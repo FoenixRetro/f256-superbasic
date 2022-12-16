@@ -159,9 +159,9 @@ VectorSet1:
 	.word	BitmapCtrl                       ; $85 BITMAP
 	.word	EndCommand                       ; $86 END
 	.word	Explode                          ; $87 EXPLODE
-	.word	GoCommand                        ; $88 GO
+	.word	SyntaxError                      ; $88 GO
 	.word	Command_List                     ; $89 LIST
-	.word	LoadCommand                      ; $8a LOAD
+	.word	SyntaxError                      ; $8a LOAD
 	.word	NewCommand                       ; $8b NEW
 	.word	PingCommand                      ; $8c PING
 	.word	Command_Restore                  ; $8d RESTORE
@@ -169,7 +169,9 @@ VectorSet1:
 	.word	ShootCommand                     ; $8f SHOOT
 	.word	SpritesCtrl                      ; $90 SPRITES
 	.word	StopCommand                      ; $91 STOP
-	.word	ZapCommand                       ; $92 ZAP
+	.word	XGoCommand                       ; $92 XGO
+	.word	XLoadCommand                     ; $93 XLOAD
+	.word	ZapCommand                       ; $94 ZAP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

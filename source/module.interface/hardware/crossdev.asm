@@ -1,10 +1,10 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		load.asm
-;		Purpose:	A fudged version of LOAD
+;		Name:		crossdev.asm
+;		Purpose:	Cross Develop support commands.
 ;		Created:	1st November 2022
-;		Reviewed: 	No
+;		Reviewed: 	16th December 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -12,12 +12,12 @@
 
 		.section code
 
-LoadCommand: ;; [load]
+XLoadCommand: ;; [xload]
 		jsr 	NewProgram
 		jsr 	BackLoadProgram
 		jmp 	WarmStart
 
-GoCommand: ;; [go]
+XGoCommand: ;; [xgo]
 		jsr 	NewProgram
 		jsr 	BackLoadProgram
 		jmp 	CommandRun	

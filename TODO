@@ -1,11 +1,11 @@
 Progress:	
+	CSV Functions ?
 	No games work on Real Kernel (Joystick functionality)
 	Should CR in PRINT clear to EOL.
-	Improve the Open Structure.
 	tiles ?
 	DMA ?
 	RTC ?
-	CSV Functions ?
+
 
 Ongoing:
 	Code reading.

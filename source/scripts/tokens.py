@@ -54,7 +54,7 @@ class TokenSource(object):
 				end 		new 		list 		run 		stop			
 				restore 	assert 		assemble 	bitmap		sprites
 				load 		go 			zap	 		ping
-				shoot 		explode
+				shoot 		explode 	xload 		xgo
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	

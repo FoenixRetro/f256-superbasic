@@ -4,7 +4,7 @@
 ;		Name:		insert.asm
 ;		Purpose:	Insert line into code
 ;		Created:	5th October 2022
-;		Reviewed: 	No.
+;		Reviewed: 	16th December 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -22,16 +22,16 @@ MemoryInsertLine:
 		php
 		jsr 	IMemoryFindEnd 				; find end to zTemp2.
 
-		lda 	zTemp2+1 					; space ?
+		lda 	zTemp2+1 					; is there space for the new line ?
 		inc 	a
 		cmp 	#(BasicEnd >> 8)-1
-		bcs 	_MDLIError
+		bcs 	_MDLIError 					; no, fail.
 		;
-		plp
-		bcc 	_MDLIFound 					
+		plp 								; do at a specific point or the end ?
+		bcc 	_MDLIFound 					; if specific point already set.
 		;
-		lda 	zTemp2 						; if CS on entry append.
-		sta 	codePtr
+		lda 	zTemp2 						; if CS on entry append, so put on the
+		sta 	codePtr 					; end.
 		lda 	zTemp2+1
 		sta 	codePtr+1
 		;
@@ -42,17 +42,17 @@ _MDLIFound:
 		lda 	tokenOffset 				; insert gap in Y, the offset, e.g. length of the new line
 		tay
 _MDLIInsert:		
-		lda 	(zTemp2) 					; shift one byte up , at least one covers end case.
+		lda 	(zTemp2) 					; shift one byte up , at least one covers end case (copying link 0)
 		sta 	(zTemp2),y 					; work from top down.
 
-		lda 	codePtr 					; done insert point ?
+		lda 	codePtr 					; reached insert point ?
 		cmp 	zTemp2
 		bne 	_MDLINext
 		lda 	codePtr+1
 		cmp 	zTemp2+1
 		beq 	_MDLIHaveSpace
 _MDLINext:
-		lda 	zTemp2 						; if no, keep zTemp2 going backwards
+		lda 	zTemp2 						; if no, keep zTemp2 going backwards opening up space.
 		bne 	_MDLINoBorrow
 		dec 	zTemp2+1
 _MDLINoBorrow:
@@ -63,7 +63,7 @@ _MDLINoBorrow:
 		;
 _MDLIHaveSpace:		
 		ldy 	tokenOffset 				; bytes to copy
-		dey 								; from offset-1 to 0
+		dey 								; from offset-1 (last written) to the end of the buffer.
 _MDLICopy:
 		lda 	tokenOffset,y
 		sta 	(codePtr),y

@@ -4,7 +4,7 @@
 ;		Name:		delete.asm
 ;		Purpose:	Delete line from current position
 ;		Created:	5th October 2022
-;		Reviewed: 	No.
+;		Reviewed: 	16th December 2022
 ;		Author : 	Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -14,7 +14,7 @@
 
 ; ************************************************************************************************
 ;
-;							Delete line at current position from the program
+;					Delete line at current position (codePtr) from the program
 ;		
 ; ************************************************************************************************
 
@@ -28,7 +28,7 @@ _MDDLLoop:
 		sta 	(codePtr)
 
 		lda 	codePtr 					; check done the lot.
-		cmp 	zTemp2
+		cmp 	zTemp2 						; has codePtr (copyFrom) reached the last byte to copy.
 		bne 	_MDLDLNext
 		lda 	codePtr+1
 		cmp 	zTemp2+1
@@ -44,14 +44,16 @@ _MDLDLNext:
 
 ; ************************************************************************************************
 ;
-;						Move zTemp2 to program end (not a required function)
+;								Move zTemp2 to program end 
+;
+;								(not a required function)
 ;
 ; ************************************************************************************************
 
 IMemoryFindEnd:
-		.set16 	zTemp2,BasicStart
+		.set16 	zTemp2,BasicStart 			; final position
 _MDLFELoop:
-		lda 	(zTemp2)
+		lda 	(zTemp2) 					; scan forward using offsets.
 		beq 	_MDLFEExit
 		clc
 		adc 	zTemp2
