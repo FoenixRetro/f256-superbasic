@@ -70,8 +70,8 @@ So variables and arrays are as follows:
 Hexadecimal constant prefix. \$2A is the same as the decimal constant 42.
 \example{}
 \begin{verbatim}
-	100 print \$2a
-	110 !\$7ffe = 31702
+	100 print $2a
+	110 !$7ffe = 31702
 \end{verbatim}
 
 \section*{*}
@@ -140,11 +140,11 @@ Binary and operator. This is a binary operator not a logical, e.g. it is the bin
 	100 print count \& 7
 \end{verbatim}
 
-\section*{XOR}
+\section*{<Hat Character>}
 Binary exclusive or operator. This is a binary operator not a logical, e.g. it is the binary and not a logical and so it can return values other than true and false
 \example{}
 \begin{verbatim}
-	100 print a  $0e
+	100 print a^$0E
 \end{verbatim}
 
 \section*{|}
@@ -190,14 +190,14 @@ Every good programming language should have assert. It verifies contracts and de
 Turns the bitmap on or off, or clears it. Only one bitmap is used, and it is located at \$10000 in F256 Memory Space. Can be postfixed with ON OFF or CLEAR with a colour.
 \example{}
 \begin{verbatim}
-	100 bitmap on:bitmap clear \$1c
+	100 bitmap on:bitmap clear $1c
 \end{verbatim}
 
 \section*{chr\$()}
 Convert an ASCII integer to a single character string.
 \example{}
 \begin{verbatim}
-	100 print chr\$(42)
+	100 print chr$(42)
 \end{verbatim}
 
 \section*{circle}
@@ -225,15 +225,15 @@ Deek and Peek read two or one bytes respectively from the 6502 memory
 Doke and Poke write two or one bytes respectively to 6502 memory
 \example{}
 \begin{verbatim}
-	100 poke 4096,1: doke \$c004,\$a705
+	100 poke 4096,1: doke $c004,$a705
 \end{verbatim}
 
 \section*{dim}
 Dimension number or string arrays with up to two dimensions, with a maximum of 254 elements in each dimension.
 \example{}
 \begin{verbatim}
-	100 dim a\$(10),a_sine#(10)
-	110 dim name\$(10,2)
+	100 dim a$(10),a_sine#(10)
+	110 dim name$(10,2)
 \end{verbatim}
 
 \section*{end}
@@ -305,8 +305,8 @@ This only works if sprites are positioned via the graphics system ; there is no 
 	100 print hit(1,2)
 \end{verbatim}
 
-\section*{if then else endif}
-If has two forms. The first is classic BASIC, e.g. if <condition> then <do something>
+\section*{if then and if else endif}
+If has two forms. The first is classic BASIC, e.g. if <condition> then <do something>. All the code is on one line. The THEN is mandatory - you cannot write if a = 2 goto 420 (say)
 \example{}
 \begin{verbatim}
 	100 if name=”benny” then my_iq = 70
@@ -318,7 +318,7 @@ The second form is more complex. It allows multi line conditional execution, wit
 \end{verbatim}
 
 \section*{image}
-Draws a possibly scaled or flipped sprite image on the bitmap, using the standard syntax. Flipping is done using bits 7 and 6 of the mode (e.g. $80 and $40) in the colour option. This requires both sprites and bitmap to be on. For more information see the graphics section.
+Draws a possibly scaled or flipped sprite image on the bitmap, using the standard syntax. Flipping is done using bits 7 and 6 of the mode (e.g. \$80 and \$40) in the colour option. This requires both sprites and bitmap to be on. For more information see the graphics section.
 \example{}
 \begin{verbatim}
 	100 image 4 dim 3 colour 0,$80 to 100,100
@@ -328,7 +328,7 @@ Draws a possibly scaled or flipped sprite image on the bitmap, using the standar
 Input uses the same syntax as print, except that where there is a variable a value is entered into that variable, rather than the variable being printed.
 \example{}
 \begin{verbatim}
-	100 input a\$
+	100 input a$
 \end{verbatim}
 
 \section*{int()}
@@ -364,7 +364,7 @@ Returns the directional value of a gamepad in the x and y axes respectively as -
 Returns several characters from a string counting from the left
 \example{}
 \begin{verbatim}
-	100 print left\$("mystring",4)
+	100 print left$("mystring",4)
 \end{verbatim}
 
 \section*{len()}
@@ -379,8 +379,8 @@ Assignment statement. The LET is optional. You can also use \@a where a is a ref
 \example{}
 \begin{verbatim}
 	100 let a = 42
-	110 a\$=”hello”
-	120 a\#=22.7
+	110 a$=”hello”
+	120 a#=22.7
 \end{verbatim}
 
 \section*{line}
@@ -405,7 +405,7 @@ Lists the program.  It is possible to list any part of the program using the lin
 Defines the list of variables (no arrays allowed) as local to the current procedure. The locals are initialised to an empty string or zero depending on their type. 
 \example{}
 \begin{verbatim}
-	100 local test\$,count
+	100 local test$,count
 \end{verbatim}
 
 \section*{max() min()}
@@ -419,8 +419,8 @@ Returns the largest or smallest of the parameters, there can be any number of th
 Returns a subsegment of a string, given the start position (first character is 1) and the length, so mid\$(“abcdef”,3,2) returns “cd”. 
 \example{}
 \begin{verbatim}
-	100 print mid\$(“hello”,2,3)
-	110 print mid\$(“another word”,2,99)
+	100 print mid$(“hello”,2,3)
+	110 print mid$(“another word”,2,99)
 \end{verbatim}
 
 \section*{new}
@@ -471,8 +471,8 @@ Simple procedures. These should be used rather than gosub. Or else.  The empty b
 \begin{verbatim}
 	100 printmessage(“hello”,42)
 	110 end
-	120 proc printmessage(msg\$,n)
-	130 print msg\$+“world  x “+str\$(n)
+	120 proc printmessage(msg$,n)
+	130 print msg$+“world  x “+str$(n)
 	140 endproc
 \end{verbatim}
 
@@ -487,7 +487,7 @@ Generates random numbers. this has two forms, which is still many fewer than odo
 Reads from DATA statements the types must match. For syntactic consistency, string data must be in quote marks
 \example{}
 \begin{verbatim}
-	100 read a\$,b
+	100 read a$,b
 	110 data “hello world”
 	120 data 59
 \end{verbatim}
@@ -527,7 +527,7 @@ Return from GOSUB call. You can make up your own death threats.
 Returns several characters from a string counting from the right
 \example{}
 \begin{verbatim}
-	100 print right\$("last four characters",4)
+	100 print right$("last four characters",4)
 \end{verbatim}
 
 \section*{run}
@@ -577,7 +577,7 @@ Sound off
 Return a string consisting of a given number of spaces
 \example{}
 \begin{verbatim}
-	100 a\$ = spc(32)
+	100 a$ = spc(32)
 \end{verbatim}
 
 \section*{sprite}

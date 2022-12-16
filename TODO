@@ -2,6 +2,7 @@ Progress:
 	Break doesn't work at all ? (Gadget bug fixed in 12.1)
 	No games work on Real Kernel (Joystick functionality)
 	Should CR in PRINT clear to EOL.
+	Improve the Open Structure.
 	tiles ?
 	DMA ?
 	RTC ?
