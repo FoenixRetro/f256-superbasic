@@ -38,8 +38,8 @@ class TokenSource(object):
 				left$( 		mid$( 		right$( 	rnd( 		sgn( 		int( 				
 				spc( 		str$( 		val(  		isval(		true 		false
 				not(		random(	 	timer( 		event( 		joyx(		joyy(
-				joyb( 		min(		max( 		hit( 		playing(	
-				peek( 		peekw( 		peekl(		peekd(
+				joyb( 		min(		max( 		hit( 		playing(	gettime$(
+				peek( 		peekw( 		peekl(		peekd(		getdate$(	
 
 			{0}							// Set 0
 				cls 		data 		dim 		let 		goto		gosub 		
@@ -53,8 +53,8 @@ class TokenSource(object):
 			{1}							// Set 1
 				end 		new 		list 		run 		stop			
 				restore 	assert 		assemble 	bitmap		sprites
-				load 		go 			zap	 		ping
-				shoot 		explode 	xload 		xgo
+				load 		go 			zap	 		ping 		setdate
+				shoot 		explode 	xload 		xgo 		settime
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	

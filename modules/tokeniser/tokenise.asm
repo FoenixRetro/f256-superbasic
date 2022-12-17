@@ -106,7 +106,10 @@ _TKStandardPunctuation:
 _TKNoShift:		
 		jsr 	TOKWriteByte 				; write the punctuation character
 		inx 								; consume the character
-		bra 	_TKTokeniseLoop 			; and loop round again.
+		cmp 	#KWD_QUOTE 					; quote found ?
+		bne 	_TKTokeniseLoop 			; and loop round again.
+		jsr 	TOKCheckComment 			; comment checl
+		bra 	_TKTokeniseLoop
 		;
 		;		String tokeniser.
 		;
@@ -116,6 +119,16 @@ _TKString: 									; tokenise a string "Hello world"
 _TKHexConstant: 							; tokenise hex constant #A277
 		jsr 	TOKHexConstant
 		bra 	_TKTokeniseLoop
+
+		;----------------------------------------------------------------------------------------
+		;
+		;		Exit point, writes EOL and returns
+		;
+		;----------------------------------------------------------------------------------------
+
+_TKExit:lda 	#KWC_EOL 					; write end of line byte
+		jsr 	TOKWriteByte		
+		rts	
 
 		;----------------------------------------------------------------------------------------
 		;
@@ -141,16 +154,6 @@ _TKCheckDouble:
 		inx 								; consume both
 		inx
 		bra 	_TKTokeniseLoop
-
-		;----------------------------------------------------------------------------------------
-		;
-		;		Exit point, writes EOL and returns
-		;
-		;----------------------------------------------------------------------------------------
-
-_TKExit:lda 	#KWC_EOL 					; write end of line byte
-		jsr 	TOKWriteByte		
-		rts	
 
 		;----------------------------------------------------------------------------------------
 		;
@@ -251,8 +254,52 @@ _TKFoundToken:
 _TKNoTShift:
 		pla 								; restore and write token
 		jsr 	TOKWriteByte
+		cpx 	#0 							; check for REM and '
+		bne 	_TKNotRem 			 		; not shifted ?
+		cmp 	#KWD_REM
+		bne 	_TKNotRem
+		ldx 	identTypeEnd 				; check if comment follows.
+		jsr 	TOKCheckComment
+		jmp 	_TKTokeniseLoop
+
+_TKNotRem:		
 		ldx 	identTypeEnd 				; X points to following byte
 		jmp 	_TKTokeniseLoop 			; and go round again.
+
+; ************************************************************************************************
+;
+;		Comment check for REM and ' - check if quoted string/EOL follows, if not, insert
+;		rest of line as comment.
+;
+; ************************************************************************************************
+
+TOKCheckComment:
+		lda 	lineBuffer,x 				; skip over space
+		inx
+		cmp 	#' '
+		beq 	TOKCheckComment
+		dex 								; first non space character
+		cmp 	#'"'						; quote mark
+		beq 	_TOKCCExit 					; then we are okay
+		cmp 	#0 							; EOL
+		beq 	_TOKCCExit 					; then we are okay
+		phx
+_TOKCCLowerCase: 							; the pre-processing capitalises it. I did think
+		lda 	lineBuffer,x 				; about making it lower case it all, but I thought
+		cmp 	#"A"		 				; that was a bit risky. So it's converted to L/C here.
+		bcc 	_TOKKCNotUC
+		cmp 	#"Z"+1
+		bcs 	_TOKKCNotUC
+		eor 	#$20
+		sta 	lineBuffer,x
+_TOKKCNotUC:		
+		inx
+		cmp 	#0
+		bne 	_TOKCCLowerCase
+		plx
+		jsr 	TOKTokenString 				; tokenise rest of line as a string.
+_TOKCCExit:		
+		rts
 
 ; ************************************************************************************************
 ;
@@ -347,5 +394,7 @@ _THFoundEnd:
 ;
 ;		Date			Notes
 ;		==== 			=====
+; 		17/12/22 		Added TOKCheckComment which checks for non-quoted comments. Inserted at
+;						2 positions are checks - end of tokenising and end of punctuation processing.
 ;
 ; ************************************************************************************************

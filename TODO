@@ -1,7 +1,5 @@
 Progress:	
 
-	REM Hack.
-
 	CSV Functions ?
 	-	ItemCount(String,Seperator)
 	-	ItemGet(String,Index,Seperator) (starts at 1)
