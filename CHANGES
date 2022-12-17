@@ -80,5 +80,7 @@ Release 16 (14/12/22):
 	CHG: List turns sound off.
 	CHG: Javascript version compiles again.
 	CHG: Load and Go are changed to XLoad and XGo
+	CHG: Peek/Poke changes (1-4 bytes DEEK -> PEEKD)
 
+	
 	

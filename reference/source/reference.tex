@@ -214,19 +214,7 @@ Clears all variables to zero or empty string, and erases all arrays. Done when a
 	100 clear
 \end{verbatim}
 
-\section*{deek() peek()}
-Deek and Peek read two or one bytes respectively from the 6502 memory 
-\example{}
-\begin{verbatim}
-	100 print deek(42),peek(1)
-\end{verbatim}
 
-\section*{doke poke}
-Doke and Poke write two or one bytes respectively to 6502 memory
-\example{}
-\begin{verbatim}
-	100 poke 4096,1: doke $c004,$a705
-\end{verbatim}
 
 \section*{dim}
 Dimension number or string arrays with up to two dimensions, with a maximum of 254 elements in each dimension.
@@ -444,6 +432,13 @@ Sets the graphics palette. The parameters are the colour id and the red, green a
 	100 palette 1,255,128,0
 \end{verbatim}
 
+\section*{peek() peekw() peekl() peekd() }
+The peek, peekw, peekl and peekd functions retrieve 1-4 bytes from the 6502 memory space.
+\example{}
+\begin{verbatim}
+	100 print peekd(42),peek(1)
+\end{verbatim}
+
 \section*{playing()}
 Returns true if a channel is currently playing a sound.
 \example{}
@@ -456,6 +451,13 @@ Plot a point in the current colour using the standard syntax which is described 
 \example{}
 \begin{verbatim}
 	100 plot to 100,200
+\end{verbatim}
+
+\section*{poke pokew pokel poked}
+The poke, pokew, pokel and poked functions write one to four bytes to the 6502 memory space.
+\example{}
+\begin{verbatim}
+	100 poke 4096,1: pokew $c004,$a705
 \end{verbatim}
 
 \section*{print}

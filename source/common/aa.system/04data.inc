@@ -67,7 +67,7 @@ NSStatus: 									; Status bits of stack.
 		.fill 	MathStackSize
 NSMantissa0: 								; Mantissa on stack (address in 0,1 for string/reference)
 		.fill 	MathStackSize 				; (this is my integer mantissa system)
-NSMantissa1:
+NSMantissa1: 								; the order of the mantissa elements is required.
 		.fill 	MathStackSize
 NSMantissa2:
 		.fill 	MathStackSize

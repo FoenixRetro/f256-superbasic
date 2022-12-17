@@ -1,4 +1,7 @@
 Progress:	
+
+	REM Hack.
+
 	CSV Functions ?
 	-	ItemCount(String,Seperator)
 	-	ItemGet(String,Index,Seperator) (starts at 1)
@@ -7,10 +10,13 @@ Progress:
 	Should CR in PRINT clear to EOL.
 	
 	tiles ?
+
 	DMA ?
 		econtreasd's ideas on this.
+
 	RTC ?
 		GETDATE$ 	GETTIME$	SETDATE 	SETTIME ?
+
 
 
 Ongoing:

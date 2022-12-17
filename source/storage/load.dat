@@ -1,5 +1,10 @@
-10 print "hello world"
-20 input a$
-30 if a$ = "" goto 20
-40 end
+10 n = $12345678
+20 poke $6000,n
+30 pokew $6004,n
+40 pokel $6008,n
+50 poked $600C,n
+60 print peek($600C),$78
+60 print peekw($600C),$5678
+60 print peekl($600C),$345678
+60 print peekd($600C),$12345678
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ

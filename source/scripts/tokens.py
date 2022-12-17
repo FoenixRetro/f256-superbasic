@@ -38,8 +38,8 @@ class TokenSource(object):
 				left$( 		mid$( 		right$( 	rnd( 		sgn( 		int( 				
 				spc( 		str$( 		val(  		isval(		true 		false
 				not(		random(	 	timer( 		event( 		joyx(		joyy(
-				joyb( 		min(		max( 		hit( 		playing(	peek(
-				deek(
+				joyb( 		min(		max( 		hit( 		playing(	
+				peek( 		peekw( 		peekl(		peekd(
 
 			{0}							// Set 0
 				cls 		data 		dim 		let 		goto		gosub 		
@@ -48,7 +48,7 @@ class TokenSource(object):
 				text 		circle 		here 		color 		colour 		by
 				solid 		outline 	gfx			clear 		image 		from
 				plot 		on 			off 		palette 	sound 		input
-				poke 		doke
+				poke 		pokew 		pokel 		poked
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop			
