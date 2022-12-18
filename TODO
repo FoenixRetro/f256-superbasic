@@ -1,4 +1,6 @@
 Progress:	
+	EContreASDs bug ?
+	Joystick controls ? Implement in emulator and kernel.
 
 	CSV Functions ?
 	-	ItemCount(String,Seperator)

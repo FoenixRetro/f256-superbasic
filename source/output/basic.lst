@@ -1,13 +1,13 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
-; 64tass -D AUTORUN=1 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Sat Dec 17 09:45:23 2022
+; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
+; Sun Dec 18 20:53:36 2022
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
 ;******  Command line definitions
 
-=1						AUTORUN=1
+=0						AUTORUN=0
 =$e000						 MONITOR_ADDRESS=$E000
 =$f000						 LOCKOUT_ADDRESS=$F000
 =$38000						 BASIC_ADDRESS=$38000
@@ -512,14 +512,14 @@
 .808e		a9 9c		lda #$9c			lda 	#Prompt & $FF
 .8090		20 8e 8f	jsr $8f8e			jsr 	PrintStringXA
 .8093		20 1a 8a	jsr $8a1a			jsr 	NewProgram 					; erase current program
-.8096		20 28 83	jsr $8328			jsr 	BackloadProgram
-.8099		4c 98 8b	jmp $8b98			jmp 	CommandRun
+.8096		4c e7 83	jmp $83e7			jmp 	WarmStart					; make same size.
+.8099		4c e7 83	jmp $83e7			jmp 	WarmStart
 .809c						Prompt:
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->809c		41 6c 70 68 61 20 31 36			.text "Alpha 16 built 17-Dec-22. "
->80a4		20 62 75 69 6c 74 20 31 37 2d 44 65 63 2d 32 32
+>809c		41 6c 70 68 61 20 31 36			.text "Alpha 16 built 18-Dec-22. "
+>80a4		20 62 75 69 6c 74 20 31 38 2d 44 65 63 2d 32 32
 >80b4		2e 20
 
 ;******  Return to file: ./common/aa.system/00start.asm
@@ -958,8 +958,8 @@
 .836a		ad 2b 04	lda $042b			lda 	TokenLineNumber 			; line number = 0
 .836d		0d 2c 04	ora $042c			ora 	TokenLineNumber+1
 .8370		f0 d4		beq $8346			beq 	_BPLoop 					; not legal code, blank line or maybe a comment.
-.8372		ea		nop				nop
-.8373		20 c2 83	jsr $83c2			jsr 	EditProgramCode
+.8372		38		sec				sec 								; append not insert
+.8373		20 58 a5	jsr $a558			jsr 	MemoryInsertLine 			; append to current program
 .8376		80 ce		bra $8346			bra 	_BPLoop
 .8378						_BPExit:
 .8378		9c fa ff	stz $fffa			stz 	$FFFA
@@ -5910,8 +5910,8 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->a190		41 6c 70 68 61 20 31 36			.text "Alpha 16 built 17-Dec-22. "
->a198		20 62 75 69 6c 74 20 31 37 2d 44 65 63 2d 32 32
+>a190		41 6c 70 68 61 20 31 36			.text "Alpha 16 built 18-Dec-22. "
+>a198		20 62 75 69 6c 74 20 31 38 2d 44 65 63 2d 32 32
 >a1a8		2e 20
 
 ;******  Return to file: _basic.asm
