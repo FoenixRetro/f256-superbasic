@@ -1,4 +1,5 @@
 Progress:	
+	Jessies's latest kernel.
 
 	Look at making SD2IEC load work.
 
@@ -15,8 +16,6 @@ Progress:
 
 	RTC ?
 		GETDATE$ 	GETTIME$	SETDATE 	SETTIME ?
-
-
 
 Ongoing:
 	Code reading.
