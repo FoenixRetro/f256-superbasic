@@ -1,14 +1,11 @@
 Progress:	
-	EContreASDs bug ? (hacking page 0 issue)
-	Odd kernel behaviour ??? Keyboard read from Micah ?
-	
-	Joystick controls ? Implement in emulator and kernel.
+
+	Look at making SD2IEC load work.
 
 	CSV Functions ?
 	-	ItemCount(String,Seperator)
 	-	ItemGet(String,Index,Seperator) (starts at 1)
 
-	No games work on Real Kernel (Joystick functionality)
 	Should CR in PRINT clear to EOL.
 	
 	tiles ?
@@ -29,24 +26,4 @@ Later:
 	Changing Kerning ?
 
 
-   // ' = 8d
-    // down cursor = 19
-    // shift-2 = 60
-    // shift-4 = 68 'h'
-    // shift-5 = 9d
-    // shift-7 = 0x0c
-    // shift-9 = 0xcc
-    // shift-0 = 8d
-    // shift-enter and enter = 0x09
-    // shift-E = cd
-    // shift-P = 0x0a (lf)
-    // shift-A = 96
-    // shift-D = b7
-    // shift-H = 48 (H) ** match **
-    // shift-J = 14
-    // shift-K = 3
-    // shift-L = 9
-    // shift-N = b0
-    // tab = 0x01
-    // everything else = 0
 

@@ -82,4 +82,6 @@ Release 16 (14/12/22):
 	CHG: Load and Go are changed to XLoad and XGo
 	CHG: Peek/Poke changes (1-4 bytes DEEK -> PEEKD)
 	CHG: Will insert quotes in REM if you forget (but makes it all lower case)
-	
+	CHG: Joystick now accesses $DC00 in I/O 0.
+
+Release 17 (20/12/22):	

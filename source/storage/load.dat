@@ -1,13 +1,4 @@
-10 p = alloc(256)
-15 for pass = 0 to 1
-20 assemble p,pass*3
-30 .echo
-40 jsr $FFE4:cmp #0:beq echo
-45 pha:lsr:lsr:lsr:lsr:jsr nibble:pla:jsr nibble
-50 lda #32:jsr $FFD2
-70 bra echo
-72 .nibble:and #15:cmp #10:bcc nibl2:adc #6
-74 .nibl2:clc:adc #48:jmp $FFD2
-75 next
-80 call echo
+10 repeat
+20 print joyx(0),joyy(0),joyb(0)
+30 until false
 ÿÿÿÿ

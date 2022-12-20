@@ -31,19 +31,19 @@ JoyMain:
 		;
 		jsr 	EXTReadController 			; read the controller.
 		plp
-		bcc 	_JMNoShift 					; if Y then shift bits 3,2 -> 1,0
+		bcs 	_JMNoShift 					; if X then shift bits 3,2 -> 1,0
 		lsr 	a
 		lsr 	a
 _JMNoShift:
-		lsr 	a 							; if bit 0 set then right/down e.g. +1
-		bcs 	_JMIsRight
-		lsr 	a 							; if bit 1 set then left/up e.g. -1
-		bcs 	_JMIsLeft
+		lsr 	a 							; if bit 0 set then left/up e.g. -1
+		bcs 	JMIsLeft
+		lsr 	a 							; if bit 1 set then right/down e.g. +1
+		bcs 	JMIsRight
 		jsr 	NSMSetZero 					; zero result
 		rts
-_JMIsLeft:
+JMIsLeft:
 		jmp 	ReturnTrue
-_JMIsRight:
+JMIsRight:
 		lda 	#1
 		jsr 	NSMSetByte
 		rts				
@@ -53,12 +53,9 @@ UnaryJoyB: ;; [joyb(]
 		jsr 	Evaluate8BitInteger 		; ignore the parameter
 		jsr 	CheckRightBracket
 		jsr 	EXTReadController 			; read the controller.
-		lsr 	a
-		lsr 	a
-		lsr 	a
-		lsr 	a
-		and 	#1
-		jsr 	NSMSetByte
+		and 	#$10
+		bne 	JMIsLeft
+		jsr 	NSMSetZero
 		rts				
 
 		.send code
@@ -71,5 +68,6 @@ UnaryJoyB: ;; [joyb(]
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		20/12/22 		Fixed for controller changes $DC00 layout different.
 ;
 ; ************************************************************************************************

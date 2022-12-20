@@ -82,42 +82,16 @@ Export_EXTBreakCheck:
 
 ; ************************************************************************************************
 ;
-;						Read Game Controller A -> A (Fire/Up/Down/Left/Right)
+;						Read Game Controller A -> A (Button1/Right/Left/Down/Up)
 ;
 ; ************************************************************************************************
 
-ifpressed .macro
-		lda 	#KP_\1_ROW
-		jsr 	$FFE7
-		and 	#KP_\1_COL
-		beq 	_NoSet1
-		txa
-		ora 	#\2
-		tax
-_NoSet1:		
-		.endm
-
-
-KP_Z_ROW = 3
-KP_Z_COL = $04
-KP_X_ROW = 4
-KP_X_COL = $04
-KP_K_ROW = 8
-KP_K_COL = $04
-KP_M_ROW = 7
-KP_M_COL = $04
-KP_L_ROW = 9
-KP_L_COL = $08
-
 Export_EXTReadController:
 		phx
-	ldx 	#0
-		.ifpressed X,1 				; X right
-		.ifpressed Z,2 				; Z left
-		.ifpressed M,4 				; M down
-		.ifpressed K,8 				; K up
-		.ifpressed L,16 			; L fire#1
-		txa
+		ldx 	1 							; save current I/O in X
+		stz 	1 							; switch to I/O 0
+		lda 	$DC00  						; read VIA register
+		stx 	1 							; repair old I/O and exit
 		plx
 		rts
 
@@ -132,5 +106,6 @@ Export_EXTReadController:
 ;		Date			Notes
 ;		==== 			=====
 ;		27/11/22 		Rather than clearing screen, it now goes to line 6 after initialising.
+; 		20/12/22 		Joystick data now read from $DC00
 ;
 ; ************************************************************************************************
