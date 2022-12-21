@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Tue Dec 20 21:20:25 2022
+; Wed Dec 21 18:58:52 2022
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -7250,7 +7250,7 @@
 =14						CLIBComment = CONYellow
 =13						CLILineNumber = CONRed
 =6						CLIToken = CONOrange
-=10						CLIConstant = CONLightBlue
+=7						CLIConstant = CONCyan
 =14						CLIIdentifier = CONYellow
 =12						CLIPunctuation = CONPink
 =15						CLIData = CONWhite
@@ -9587,7 +9587,7 @@
 .d5a0	b5a0	b0 07		bcs $b5a9			bcs 	_LCPNotConstant
 .d5a2	b5a2					_LCPIsConstant:
 .d5a2	b5a2	48		pha				pha
-.d5a3	b5a3	a9 8a		lda #$8a			lda 	#CLIConstant+$80
+.d5a3	b5a3	a9 87		lda #$87			lda 	#CLIConstant+$80
 .d5a5	b5a5	20 8b b6	jsr $b68b			jsr 	LCLWriteColour
 .d5a8	b5a8	68		pla				pla
 .d5a9	b5a9					_LCPNotConstant:

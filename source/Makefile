@@ -25,8 +25,9 @@ EMULATOR = $(BINDIR)jr256$(APPSTEM)
 LANGUAGE = en
 
 EMU_REPO= ..$(S)..$(S)junior-emulator
-KRN_REPO= ..$(S)..$(S)junior-tinykernel
+TNY_REPO= ..$(S)..$(S)junior-tinykernel
 LDR_FILE= ..$(S)..$(S)FoenixMgr
+KRN_REPO= ..$(S)..$(S)F256_Jr_Kernel_DOS
 
 MODULES= +hardware +graphics +tokeniser +sound
 RELEASEDIR = ..$(S)release
@@ -52,6 +53,12 @@ flashboot:
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --boot flash 
 ramboot:	
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --boot ram
+#
+#		Build & update Kernel
+#
+updatekernel:
+	make -B -C $(KRN_REPO)
+	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)*.bin build
 #
 #		Run on real hardware (RAM operation)
 #
@@ -93,9 +100,9 @@ fnxmgr:
 	$(CCOPY) temp$(S)fnxmgr.zip $(BINDIR) 
 
 monitor:
-	make -B -C $(KRN_REPO)
-	$(CCOPY) $(KRN_REPO)$(S)monitor.rom $(BINDIR)
-	$(CCOPY) $(KRN_REPO)$(S)lockout.rom $(BINDIR)
+	make -B -C $(TNY_REPO)
+	$(CCOPY) $(TNY_REPO)$(S)monitor.rom $(BINDIR)
+	$(CCOPY) $(TNY_REPO)$(S)lockout.rom $(BINDIR)
 
 emu:
 	make -B -C $(EMU_REPO)
