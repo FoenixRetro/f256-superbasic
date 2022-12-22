@@ -29,7 +29,7 @@ TNY_REPO= ..$(S)..$(S)junior-tinykernel
 LDR_FILE= ..$(S)..$(S)FoenixMgr
 KRN_REPO= ..$(S)..$(S)F256_Jr_Kernel_DOS
 
-MODULES= +hardware +graphics +tokeniser +sound
+MODULES= +hardware +graphics +tokeniser +sound +kernel
 RELEASEDIR = ..$(S)release
 RELEASE = "`cat $(SCRIPTDIR)$(S)buildcount.txt`"
 
@@ -54,11 +54,12 @@ flashboot:
 ramboot:	
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --boot ram
 #
-#		Build & update Kernel
+#		Build & update Kernel & api.asm
 #
 updatekernel:
 	make -B -C $(KRN_REPO)
 	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)*.bin build
+	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)api.asm  module.interface$(S)kernel
 #
 #		Run on real hardware (RAM operation)
 #

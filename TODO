@@ -1,7 +1,12 @@
 Progress:	
-	Jessies's latest kernel.
+	Jessies's latest kernel and back-fix to emulator/tinykernel
+	- Program BASIC only.
+	- Keyboard I/O
+	- Break check
+
+	Configurable colours.
 	
-	Look at making SD2IEC load work.
+	Look at making SD2IEC load/save work.
 
 	CSV Functions ?
 	-	ItemCount(String,Seperator)

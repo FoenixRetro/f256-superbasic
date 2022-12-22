@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Wed Dec 21 18:58:52 2022
+; Thu Dec 22 08:28:15 2022
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -6478,6 +6478,486 @@
 ;******  Return to file: _basic.asm
 
 
+;******  Processing file: ./module.interface/kernel/api.asm
+
+>ff00						NextEvent   .fill   4   ; Copy the next event into user-space.
+>ff04						ReadData    .fill   4   ; Copy primary bulk event data into user-space
+>ff08						ReadExt     .fill   4   ; Copy secondary bolk event data into user-space
+>ff0c						Yield       .fill   4   ; Give unused time to the kernel.
+>ff10						Putch       .fill   4   ; deprecated
+>ff14						Basic       .fill   4   ; deprecated
+>ff18						            .fill   4   ; reserved
+>ff1c						            .fill   4   ; reserved
+>ff20						List        .fill   4   ; Returns a bit-set of available block-accessible devices.
+>ff24						GetName     .fill   4   ; Gets the hardware level name of the given block device or media.
+>ff28						GetSize     .fill   4   ; Get the number of raw sectors (48 bits) for the given device
+>ff2c						Read        .fill   4   ; Read a raw sector (48 bit LBA)
+>ff30						Write       .fill   4   ; Write a raw sector (48 bit LBA)
+>ff34						Format      .fill   4   ; Perform a low-level format if the media support it.
+>ff38						Export      .fill   4   ; Update the FileSystem table with the partition table (if present).
+>ff3c						List        .fill   4   ; Returns a bit-set of available logical devices.
+>ff40						GetSize     .fill   4   ; Get the size of the partition or logical device in sectors.
+>ff44						MkFS        .fill   4   ; Creates a new file-system on the logical device.
+>ff48						CheckFS     .fill   4   ; Checks the file-system for errors and corrects them.
+>ff4c						Mount       .fill   4   ; Mark the file-system as available for File and Directory operations.
+>ff50						Unmount     .fill   4   ; Mark the file-system as unavailable for File and Directory operations.
+>ff54						ReadBlock   .fill   4   ; Read a partition-local raw sector on an unmounted device.
+>ff58						WriteBlock  .fill   4   ; Write a partition-local raw sector on an unmounted device.
+>ff5c						Open        .fill   4   ; Open the given file for read, create, or append.
+>ff60						Read        .fill   4   ; Request bytes from a file opened for reading.
+>ff64						Write       .fill   4   ; Write bytes to a file opened for create or append.
+>ff68						Close       .fill   4   ; Close an open file.
+>ff6c						Rename      .fill   4   ; Rename a closed file.
+>ff70						Delete      .fill   4   ; Delete a closed file.
+>ff74						Open        .fill   4   ; Open a directory for reading.
+>ff78						Read        .fill   4   ; Read a directory entry; may also return VOLUME and FREE events.
+>ff7c						Close       .fill   4   ; Close a directory once finished reading.
+>ff80						            .fill   4   ; call gate
+>ff84						GetSize     .fill   4   ; Returns rows/cols in kernel args.
+>ff88						DrawRow     .fill   4   ; Draw text/color buffers left-to-right
+>ff8c						DrawColumn  .fill   4   ; Draw text/color buffers top-to-bottom
+>ff90						GetIP       .fill   4   ; Get the local IP address.
+>ff94						SetIP       .fill   4   ; Set the local IP address.
+>ff98						GetDNS      .fill   4   ; Get the configured DNS IP address.
+>ff9c						SetDNS      .fill   4   ; Set the configured DNS IP address.
+>ffa0						GetTime     .fill   4
+>ffa4						SetTime     .fill   4
+>ffa8						GetSysInfo  .fill   4
+>ffac						SetBPS      .fill   4   ; Set the serial BPS (should match the SLIP router's speed).
+>ffb0						InitUDP     .fill   4
+>ffb4						SendUDP     .fill   4
+>ffb8						RecvUDP     .fill   4
+>ffbc						InitTCP     .fill   4
+>ffc0						SendTCP     .fill   4
+>ffc4						RecvTCP     .fill   4
+>ffc8						SendICMP    .fill   4
+>ffcc						RecvICMP    .fill   4
+.00f0						args
+.00f0						events
+>00f0						dest        .word       ?   ; GetNextEvent copies event data here
+>00f2						pending     .byte       ?   ; Negative count of pending events
+.00f3						end
+.00f3						recv
+=$fb						buf         = args.buf
+=$fd						buflen      = args.buflen
+.00f3						fs
+.00f3						format
+>00f3						drive       .byte       ?
+>00f4						cookie      .byte       ?
+=$fb						label       = args.buf
+=$fd						label_len   = args.buflen
+.00f3						mkfs
+>00f3						drive       .byte       ?
+>00f4						cookie      .byte       ?
+=$fb						label       = args.buf
+=$fd						label_len   = args.buflen
+.00f3						file
+.00f3						open
+>00f3						drive       .byte       ?
+>00f4						cookie      .byte       ?
+=$fb						fname       = args.buf
+=$fd						fname_len   = args.buflen
+>00f5						mode        .byte       ?
+=0						READ        = 0
+=1						WRITE       = 1
+=2						END         = 2
+.00f3						read
+>00f3						stream      .byte       ?
+>00f4						buflen      .byte       ?
+.00f3						write
+>00f3						stream      .byte       ?
+=$fb						buf         = args.buf
+=$fd						buflen      = args.buflen
+.00f3						close
+>00f3						stream      .byte       ?
+.00f3						rename
+>00f3						drive       .byte       ?
+>00f4						cookie      .byte       ?
+=$fb						old         = args.buf
+=$fd						old_len     = args.buflen
+=$f8						new         = args.ext
+=$fa						new_len     = args.extlen
+.00f3						delete
+>00f3						drive       .byte       ?
+>00f4						cookie      .byte       ?
+=$fb						fname       = args.buf
+=$fd						fname_len   = args.buflen
+>00f5						mode        .byte       ?
+=0						READ        = 0
+=1						WRITE       = 1
+=2						END         = 2
+.00f3						directory
+.00f3						open
+>00f3						drive       .byte       ?
+>00f4						cookie      .byte       ?
+=$fb						fname       = args.buf
+=$fd						fname_len   = args.buflen
+.00f3						read
+>00f3						stream      .byte       ?
+>00f4						buflen      .byte       ?
+.00f3						close
+>00f3						stream      .byte       ?
+.00f3						display
+>00f3						x           .byte       ?   ; coordinate or size
+>00f4						y           .byte       ?   ; coordinate or size
+=$fb						text        = args.buf      ; text
+=$f8						color       = args.ext      ; color
+=$fb						buf         = args.buf      ; deprecated
+=$f8						buf2        = args.ext      ; deprecated
+=$fd						buflen      = args.buflen
+.00f3						net
+>00f3						socket      .word       ?
+>00f5						src_port    .word       ?
+>00f7						dest_port   .word       ?
+>00f9						dest_ip     .fill       4
+>00f5						buf         .word       ?
+>00f7						buflen      .byte       ?
+>00f8						ext         .word       ?
+>00fa						extlen      .byte       ?
+=$f8						ext         = $f8
+=$fa						extlen      = $fa
+=$fb						buf         = $fb
+=$fd						buflen      = $fd
+=$fe						ptr         = $fe
+.0000						args_t
+.0000						events
+>0000						dest        .word       ?   ; GetNextEvent copies event data here
+>0002						pending     .byte       ?   ; Negative count of pending events
+.0003						end
+.0003						recv
+=$fb						buf         = args.buf
+=$fd						buflen      = args.buflen
+.0003						fs
+.0003						format
+>0003						drive       .byte       ?
+>0004						cookie      .byte       ?
+=$fb						label       = args.buf
+=$fd						label_len   = args.buflen
+.0003						mkfs
+>0003						drive       .byte       ?
+>0004						cookie      .byte       ?
+=$fb						label       = args.buf
+=$fd						label_len   = args.buflen
+.0003						file
+.0003						open
+>0003						drive       .byte       ?
+>0004						cookie      .byte       ?
+=$fb						fname       = args.buf
+=$fd						fname_len   = args.buflen
+>0005						mode        .byte       ?
+=0						READ        = 0
+=1						WRITE       = 1
+=2						END         = 2
+.0003						read
+>0003						stream      .byte       ?
+>0004						buflen      .byte       ?
+.0003						write
+>0003						stream      .byte       ?
+=$fb						buf         = args.buf
+=$fd						buflen      = args.buflen
+.0003						close
+>0003						stream      .byte       ?
+.0003						rename
+>0003						drive       .byte       ?
+>0004						cookie      .byte       ?
+=$fb						old         = args.buf
+=$fd						old_len     = args.buflen
+=$f8						new         = args.ext
+=$fa						new_len     = args.extlen
+.0003						delete
+>0003						drive       .byte       ?
+>0004						cookie      .byte       ?
+=$fb						fname       = args.buf
+=$fd						fname_len   = args.buflen
+>0005						mode        .byte       ?
+=0						READ        = 0
+=1						WRITE       = 1
+=2						END         = 2
+.0003						directory
+.0003						open
+>0003						drive       .byte       ?
+>0004						cookie      .byte       ?
+=$fb						fname       = args.buf
+=$fd						fname_len   = args.buflen
+.0003						read
+>0003						stream      .byte       ?
+>0004						buflen      .byte       ?
+.0003						close
+>0003						stream      .byte       ?
+.0003						display
+>0003						x           .byte       ?   ; coordinate or size
+>0004						y           .byte       ?   ; coordinate or size
+=$fb						text        = args.buf      ; text
+=$f8						color       = args.ext      ; color
+=$fb						buf         = args.buf      ; deprecated
+=$f8						buf2        = args.ext      ; deprecated
+=$fd						buflen      = args.buflen
+.0003						net
+>0003						socket      .word       ?
+>0005						src_port    .word       ?
+>0007						dest_port   .word       ?
+>0009						dest_ip     .fill       4
+>0005						buf         .word       ?
+>0007						buflen      .byte       ?
+>0008						ext         .word       ?
+>000a						extlen      .byte       ?
+=$f8						ext         = $f8
+=$fa						extlen      = $fa
+=$fb						buf         = $fb
+=$fd						buflen      = $fd
+=$fe						ptr         = $fe
+.0000						event_t
+>0000						dest        .word       ?   ; GetNextEvent copies event data here
+>0002						pending     .byte       ?   ; Negative count of pending events
+.0003						end
+.0000						recv_t
+=$fb						buf         = args.buf
+=$fd						buflen      = args.buflen
+.0000						fs_t
+.0000						format
+>0000						drive       .byte       ?
+>0001						cookie      .byte       ?
+=$fb						label       = args.buf
+=$fd						label_len   = args.buflen
+.0000						mkfs
+>0000						drive       .byte       ?
+>0001						cookie      .byte       ?
+=$fb						label       = args.buf
+=$fd						label_len   = args.buflen
+.0000						fs_mkfs_t
+>0000						drive       .byte       ?
+>0001						cookie      .byte       ?
+=$fb						label       = args.buf
+=$fd						label_len   = args.buflen
+.0000						file_t
+.0000						open
+>0000						drive       .byte       ?
+>0001						cookie      .byte       ?
+=$fb						fname       = args.buf
+=$fd						fname_len   = args.buflen
+>0002						mode        .byte       ?
+=0						READ        = 0
+=1						WRITE       = 1
+=2						END         = 2
+.0000						read
+>0000						stream      .byte       ?
+>0001						buflen      .byte       ?
+.0000						write
+>0000						stream      .byte       ?
+=$fb						buf         = args.buf
+=$fd						buflen      = args.buflen
+.0000						close
+>0000						stream      .byte       ?
+.0000						rename
+>0000						drive       .byte       ?
+>0001						cookie      .byte       ?
+=$fb						old         = args.buf
+=$fd						old_len     = args.buflen
+=$f8						new         = args.ext
+=$fa						new_len     = args.extlen
+.0000						delete
+>0000						drive       .byte       ?
+>0001						cookie      .byte       ?
+=$fb						fname       = args.buf
+=$fd						fname_len   = args.buflen
+>0002						mode        .byte       ?
+=0						READ        = 0
+=1						WRITE       = 1
+=2						END         = 2
+.0000						fs_open_t
+>0000						drive       .byte       ?
+>0001						cookie      .byte       ?
+=$fb						fname       = args.buf
+=$fd						fname_len   = args.buflen
+>0002						mode        .byte       ?
+=0						READ        = 0
+=1						WRITE       = 1
+=2						END         = 2
+.0000						fs_read_t
+>0000						stream      .byte       ?
+>0001						buflen      .byte       ?
+.0000						fs_write_t
+>0000						stream      .byte       ?
+=$fb						buf         = args.buf
+=$fd						buflen      = args.buflen
+.0000						fs_close_t
+>0000						stream      .byte       ?
+.0000						fs_rename_t
+>0000						drive       .byte       ?
+>0001						cookie      .byte       ?
+=$fb						old         = args.buf
+=$fd						old_len     = args.buflen
+=$f8						new         = args.ext
+=$fa						new_len     = args.extlen
+.0000						fs_delete_t
+>0000						drive       .byte       ?
+>0001						cookie      .byte       ?
+=$fb						fnane       = args.buf
+=$fd						fname_len   = args.buflen
+.0000						dir_t
+.0000						open
+>0000						drive       .byte       ?
+>0001						cookie      .byte       ?
+=$fb						fname       = args.buf
+=$fd						fname_len   = args.buflen
+.0000						read
+>0000						stream      .byte       ?
+>0001						buflen      .byte       ?
+.0000						close
+>0000						stream      .byte       ?
+.0000						dir_open_t
+>0000						drive       .byte       ?
+>0001						cookie      .byte       ?
+=$fb						fname       = args.buf
+=$fd						fname_len   = args.buflen
+.0000						dir_read_t
+>0000						stream      .byte       ?
+>0001						buflen      .byte       ?
+.0000						dir_close_t
+>0000						stream      .byte       ?
+.0000						display_t
+>0000						x           .byte       ?   ; coordinate or size
+>0001						y           .byte       ?   ; coordinate or size
+=$fb						text        = args.buf      ; text
+=$f8						color       = args.ext      ; color
+=$fb						buf         = args.buf      ; deprecated
+=$f8						buf2        = args.ext      ; deprecated
+=$fd						buflen      = args.buflen
+.0000						net_t
+>0000						socket      .word       ?
+>0002						src_port    .word       ?
+>0004						dest_port   .word       ?
+>0006						dest_ip     .fill       4
+>0002						buf         .word       ?
+>0004						buflen      .byte       ?
+>0005						ext         .word       ?
+>0007						extlen      .byte       ?
+>dbdd						RESERVED    .word   ?
+>dbdf						MOUSE       .word   ?   ; Mouse event.
+>dbe1						GAME        .word   ?   ; Game Controller changes.
+>dbe3						DEVICE      .word   ?   ; Device added/removed.
+>dbe5						PRESSED     .word   ?   ; Key pressed
+>dbe7						RELEASED    .word   ?   ; Key released.
+>dbe9						NAME        .word   ?
+>dbeb						SIZE        .word   ?
+>dbed						DATA        .word   ?   ; The read request has succeeded.
+>dbef						WROTE       .word   ?   ; The write request has completed.
+>dbf1						FORMATTED   .word   ?
+>dbf3						ERROR       .word   ?
+>dbf5						SIZE        .word   ?
+>dbf7						CREATED     .word   ?
+>dbf9						CHECKED     .word   ?
+>dbfb						DATA        .word   ?   ; The read request has succeeded.
+>dbfd						WROTE       .word   ?   ; The write request has completed.
+>dbff						ERROR       .word   ?
+>dc01						NOT_FOUND   .word   ?   ; The file file was not found.
+>dc03						OPENED      .word   ?   ; The file was successfully opened.
+>dc05						DATA        .word   ?   ; The read request has succeeded.
+>dc07						WROTE       .word   ?   ; The write request has completed.
+>dc09						EOF         .word   ?   ; All file data has been read.
+>dc0b						CLOSED      .word   ?   ; The close request has completed.
+>dc0d						RENAMED     .word   ?   ; The rename request has completed.
+>dc0f						DELETED     .word   ?   ; The delete request has completed.
+>dc11						ERROR       .word   ?   ; An error occured; close the file if opened.
+>dc13						OPENED      .word   ?   ; The directory open request succeeded.
+>dc15						VOLUME      .word   ?   ; A volume record was found.
+>dc17						FILE        .word   ?   ; A file record was found.
+>dc19						FREE        .word   ?   ; A file-system free-space record was found.
+>dc1b						EOF         .word   ?   ; All data has been read.
+>dc1d						CLOSED      .word   ?   ; The directory file has been closed.
+>dc1f						ERROR       .word   ?   ; An error occured; user should close.
+>dc21						TCP         .word   ?
+>dc23						UDP         .word   ?
+.0000						event_t
+>0000						type        .byte   ?   ; Enum above
+>0001						buf         .byte   ?   ; page id or zero
+>0002						ext         .byte   ?   ; page id or zero
+.0003						key
+>0003						keyboard    .byte   ?   ; Keyboard ID
+>0004						key_cap     .byte   ?   ; Raw key ID
+>0005						ascii       .byte   ?   ; ASCII value
+>0006						flags       .byte   ?   ; Flags (META)
+=$80						META        = $80       ; Meta key; no associated ASCII value.
+.0003						mouse
+>0003						dx          .byte   ?
+>0004						dy          .byte   ?
+>0005						dz          .byte   ?
+>0006						buttons     .byte   ?
+.0003						udp
+>0003						token       .byte   ?   ; TODO: break out into fields
+.0003						file
+>0003						stream      .byte   ?
+>0004						cookie      .byte   ?
+.0005						data
+>0005						requested   .byte   ?   ; Requested number of bytes to read
+>0006						read        .byte   ?   ; Number of bytes actually read
+.0005						wrote
+>0005						requested   .byte   ?   ; Requested number of bytes to read
+>0006						wrote       .byte   ?   ; Number of bytes actually read
+.0003						directory
+>0003						stream      .byte   ?
+>0004						cookie      .byte   ?
+.0005						volume
+>0005						len         .byte   ?   ; Length of volname (in buf)
+>0006						flags       .byte   ?   ; block size, text encoding
+.0005						file
+>0005						len         .byte   ?
+>0006						flags       .byte   ?   ; block scale, text encoding, approx size
+.0005						free
+>0005						flags       .byte   ?   ; block scale, text encoding, approx size
+.0000						key_t
+>0000						keyboard    .byte   ?   ; Keyboard ID
+>0001						key_cap     .byte   ?   ; Raw key ID
+>0002						ascii       .byte   ?   ; ASCII value
+>0003						flags       .byte   ?   ; Flags (META)
+=$80						META        = $80       ; Meta key; no associated ASCII value.
+.0000						mouse_t
+>0000						dx          .byte   ?
+>0001						dy          .byte   ?
+>0002						dz          .byte   ?
+>0003						buttons     .byte   ?
+.0000						file_t
+>0000						stream      .byte   ?
+>0001						cookie      .byte   ?
+.0002						data
+>0002						requested   .byte   ?   ; Requested number of bytes to read
+>0003						read        .byte   ?   ; Number of bytes actually read
+.0002						wrote
+>0002						requested   .byte   ?   ; Requested number of bytes to read
+>0003						wrote       .byte   ?   ; Number of bytes actually read
+.0000						fs_data_t
+>0000						requested   .byte   ?   ; Requested number of bytes to read
+>0001						read        .byte   ?   ; Number of bytes actually read
+.0000						fs_wrote_t
+>0000						requested   .byte   ?   ; Requested number of bytes to read
+>0001						wrote       .byte   ?   ; Number of bytes actually read
+.0000						dir_t
+>0000						stream      .byte   ?
+>0001						cookie      .byte   ?
+.0002						volume
+>0002						len         .byte   ?   ; Length of volname (in buf)
+>0003						flags       .byte   ?   ; block size, text encoding
+.0002						file
+>0002						len         .byte   ?
+>0003						flags       .byte   ?   ; block scale, text encoding, approx size
+.0002						free
+>0002						flags       .byte   ?   ; block scale, text encoding, approx size
+.0000						dir_vol_t
+>0000						len         .byte   ?   ; Length of volname (in buf)
+>0001						flags       .byte   ?   ; block size, text encoding
+.0000						dir_file_t
+>0000						len         .byte   ?
+>0001						flags       .byte   ?   ; block scale, text encoding, approx size
+.0000						dir_free_t
+>0000						flags       .byte   ?   ; block scale, text encoding, approx size
+.0000						dir_ext_t
+>0000						free        .fill   6   ; blocks used/free
+.0000						udp_t
+>0000						token       .byte   ?   ; TODO: break out into fields
+
+;******  Return to file: _basic.asm
+
+
 ;******  Processing file: ./memory/memory.flat/delete.asm
 
 .a51f						MemoryDeleteLine:
@@ -10546,6 +11026,13 @@
 .dbd9	bbd9	20 59 ba	jsr $ba59			jsr 	SNDCheckChannel 			; more to do ?
 .dbdc	bbdc					_SNDUCExit:
 .dbdc	bbdc	60		rts				rts
+
+;******  Return to file: _basic.asm
+
+
+;******  Processing file: ../modules/_build/_kernel.module
+
+=1						kernelIntegrated=1
 
 ;******  Return to file: _basic.asm
 

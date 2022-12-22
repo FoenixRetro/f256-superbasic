@@ -32,3 +32,6 @@ build:
 flash:
 	python ..$(S)..$(S)bin$(S)fnxmgr.zip --port $(TTYPORT) --flash-bulk bulk.csv
 
+#
+#	
+#
