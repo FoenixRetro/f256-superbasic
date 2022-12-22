@@ -1,13 +1,13 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
-; 64tass -D AUTORUN=1 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Thu Dec 22 14:10:40 2022
+; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
+; Thu Dec 22 14:23:35 2022
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
 ;******  Command line definitions
 
-=1						AUTORUN=1
+=0						AUTORUN=0
 =$e000						 MONITOR_ADDRESS=$E000
 =$f000						 LOCKOUT_ADDRESS=$F000
 =$38000						 BASIC_ADDRESS=$38000
@@ -431,14 +431,14 @@
 .8016		60		rts			rts
 .8017						EXTBreakCheck:
 .8017		e6 0d		inc $0d			inc 8+5
-.8019		20 ee bb	jsr $bbee		jsr	Export_EXTBreakCheck
+.8019		20 eb bb	jsr $bbeb		jsr	Export_EXTBreakCheck
 .801c		08		php			php
 .801d		c6 0d		dec $0d			dec 8+5
 .801f		28		plp			plp
 .8020		60		rts			rts
 .8021						EXTReadController:
 .8021		e6 0d		inc $0d			inc 8+5
-.8023		20 f1 bb	jsr $bbf1		jsr	Export_EXTReadController
+.8023		20 ee bb	jsr $bbee		jsr	Export_EXTReadController
 .8026		08		php			php
 .8027		c6 0d		dec $0d			dec 8+5
 .8029		28		plp			plp
@@ -512,8 +512,8 @@
 .808e		a9 9c		lda #$9c			lda 	#Prompt & $FF
 .8090		20 8e 8f	jsr $8f8e			jsr 	PrintStringXA
 .8093		20 1a 8a	jsr $8a1a			jsr 	NewProgram 					; erase current program
-.8096		20 28 83	jsr $8328			jsr 	BackloadProgram
-.8099		4c 98 8b	jmp $8b98			jmp 	CommandRun
+.8096		4c e7 83	jmp $83e7			jmp 	WarmStart					; make same size.
+.8099		4c e7 83	jmp $83e7			jmp 	WarmStart
 .809c						Prompt:
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
@@ -958,8 +958,8 @@
 .836a		ad 2b 04	lda $042b			lda 	TokenLineNumber 			; line number = 0
 .836d		0d 2c 04	ora $042c			ora 	TokenLineNumber+1
 .8370		f0 d4		beq $8346			beq 	_BPLoop 					; not legal code, blank line or maybe a comment.
-.8372		ea		nop				nop
-.8373		20 c2 83	jsr $83c2			jsr 	EditProgramCode
+.8372		38		sec				sec 								; append not insert
+.8373		20 56 a5	jsr $a556			jsr 	MemoryInsertLine 			; append to current program
 .8376		80 ce		bra $8346			bra 	_BPLoop
 .8378						_BPExit:
 .8378		9c fa ff	stz $fffa			stz 	$FFFA
@@ -11026,31 +11026,30 @@
 .dbcf	bbcf	60		rts				rts
 .dbd0	bbd0					Export_KNLInkey:
 .dbd0	bbd0					CheckKeyPressed:
-.dbd0	bbd0	4c e4 ff	jmp $ffe4			jmp 	$FFE4						; *** remove to use kernel functionality ***
-.dbd3	bbd3	a9 44		lda #$44			lda     #<event 					; tell kernel where events go.
-.dbd5	bbd5	85 f0		sta $f0				sta     kernel.args.events+0
-.dbd7	bbd7	a9 08		lda #$08			lda     #>event
-.dbd9	bbd9	85 f1		sta $f1				sta     kernel.args.events+1
-.dbdb	bbdb	20 00 ff	jsr $ff00			jsr     kernel.NextEvent 			; get next event
-.dbde	bbde	b0 0b		bcs $bbeb			bcs 	_CKPNoEvent 				; no event
-.dbe0	bbe0	ad 44 08	lda $0844			lda     event.type
-.dbe3	bbe3	c9 08		cmp #$08			cmp     #kernel.event.key.PRESSED 	; must be a pressed event.
-.dbe5	bbe5	d0 04		bne $bbeb			bne 	_CKPNoEvent
-.dbe7	bbe7	ad 49 08	lda $0849			lda     event.key.ascii
+.dbd0	bbd0	a9 44		lda #$44			lda     #<event 					; tell kernel where events go.
+.dbd2	bbd2	85 f0		sta $f0				sta     kernel.args.events+0
+.dbd4	bbd4	a9 08		lda #$08			lda     #>event
+.dbd6	bbd6	85 f1		sta $f1				sta     kernel.args.events+1
+.dbd8	bbd8	20 00 ff	jsr $ff00			jsr     kernel.NextEvent 			; get next event
+.dbdb	bbdb	b0 0b		bcs $bbe8			bcs 	_CKPNoEvent 				; no event
+.dbdd	bbdd	ad 44 08	lda $0844			lda     event.type
+.dbe0	bbe0	c9 08		cmp #$08			cmp     #kernel.event.key.PRESSED 	; must be a pressed event.
+.dbe2	bbe2	d0 04		bne $bbe8			bne 	_CKPNoEvent
+.dbe4	bbe4	ad 49 08	lda $0849			lda     event.key.ascii
+.dbe7	bbe7	60		rts				rts
+.dbe8	bbe8					_CKPNoEvent:
+.dbe8	bbe8	a9 00		lda #$00			lda 	#0
 .dbea	bbea	60		rts				rts
-.dbeb	bbeb					_CKPNoEvent:
-.dbeb	bbeb	a9 00		lda #$00			lda 	#0
-.dbed	bbed	60		rts				rts
-.dbee	bbee					Export_EXTBreakCheck:
-.dbee	bbee	4c e1 ff	jmp $ffe1			jmp		$FFE1
-.dbf1	bbf1					Export_EXTReadController:
-.dbf1	bbf1	da		phx				phx
-.dbf2	bbf2	a6 01		ldx $01				ldx 	1 							; save current I/O in X
-.dbf4	bbf4	64 01		stz $01				stz 	1 							; switch to I/O 0
-.dbf6	bbf6	ad 00 dc	lda $dc00			lda 	$DC00  						; read VIA register
-.dbf9	bbf9	86 01		stx $01				stx 	1 							; repair old I/O and exit
-.dbfb	bbfb	fa		plx				plx
-.dbfc	bbfc	60		rts				rts
+.dbeb	bbeb					Export_EXTBreakCheck:
+.dbeb	bbeb	4c e1 ff	jmp $ffe1			jmp		$FFE1
+.dbee	bbee					Export_EXTReadController:
+.dbee	bbee	da		phx				phx
+.dbef	bbef	a6 01		ldx $01				ldx 	1 							; save current I/O in X
+.dbf1	bbf1	64 01		stz $01				stz 	1 							; switch to I/O 0
+.dbf3	bbf3	ad 00 dc	lda $dc00			lda 	$DC00  						; read VIA register
+.dbf6	bbf6	86 01		stx $01				stx 	1 							; repair old I/O and exit
+.dbf8	bbf8	fa		plx				plx
+.dbf9	bbf9	60		rts				rts
 .0844						event
 >0844						type        .byte   ?   ; Enum above
 >0845						buf         .byte   ?   ; page id or zero

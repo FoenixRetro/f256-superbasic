@@ -45,7 +45,7 @@ _EISCWait:
 
 Export_KNLInkey:
 CheckKeyPressed:
-		jmp 	$FFE4						; *** remove to use kernel functionality ***
+;		jmp 	$FFE4						; *** remove to use kernel functionality ***
 
 		lda     #<event 					; tell kernel where events go.
 		sta     kernel.args.events+0

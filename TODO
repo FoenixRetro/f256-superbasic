@@ -1,7 +1,5 @@
 Progress:	
-	- Fix monitor to fake event keyboard
 	- Break check
-
 	Look at making SD2IEC load/save work.
 
 	Configurable colours.
