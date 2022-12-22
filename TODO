@@ -26,6 +26,3 @@ Ongoing:
 Later:
 	Changing Kerning ?
 
-
-
-Paul, to test, my Makefile does a "cat kernel.ram basic.rom >kernel.bin", and I load kernel.bin into $e000.
