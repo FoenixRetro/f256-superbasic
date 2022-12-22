@@ -61,6 +61,9 @@ updatekernel:
 	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)*.bin build
 	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)api.asm  module.interface$(S)kernel
 
+#
+#		Build RAM based kernel / ROM combo and boot.
+#
 ramkernel: ramboot
 	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)kernel.ram build
 	cat build$(S)kernel.ram build$(S)basic.rom >build$(S)ramkernel.bin
