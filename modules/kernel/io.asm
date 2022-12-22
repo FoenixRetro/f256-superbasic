@@ -44,8 +44,15 @@ _EISCWait:
 ; ************************************************************************************************
 
 CheckKeyPressed:
-		jsr 	$FFE4 						; get a key
-		rts
+	jmp 	$FFE4
+
+        jsr     kernel.NextEvent
+        bcs     CheckKeyPressed
+;        lda     event.type
+ ;       cmp     #kernel.event.key.PRESSED
+  		bne 	CheckKeyPressed
+ ;		lda     event.key.ascii
+ 		rts
 
 ; ************************************************************************************************
 ;

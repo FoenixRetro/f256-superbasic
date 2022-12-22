@@ -117,6 +117,8 @@ buflen      = $fd
 ptr         = $fe
             .ends
 
+            .virtual    $0000
+
           ; Event calls
 event_t     .struct
 dest        .word       ?   ; GetNextEvent copies event data here
@@ -396,5 +398,7 @@ token       .byte   ?   ; TODO: break out into fields
 
             .endn
 
+            .endv
+            
 
             .endn

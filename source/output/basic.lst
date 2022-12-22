@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Thu Dec 22 10:20:40 2022
+; Thu Dec 22 10:47:13 2022
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -438,14 +438,14 @@
 .8020		60		rts			rts
 .8021						EXTBreakCheck:
 .8021		e6 0d		inc $0d			inc 8+5
-.8023		20 d2 bb	jsr $bbd2		jsr	Export_EXTBreakCheck
+.8023		20 d9 bb	jsr $bbd9		jsr	Export_EXTBreakCheck
 .8026		08		php			php
 .8027		c6 0d		dec $0d			dec 8+5
 .8029		28		plp			plp
 .802a		60		rts			rts
 .802b						EXTReadController:
 .802b		e6 0d		inc $0d			inc 8+5
-.802d		20 d5 bb	jsr $bbd5		jsr	Export_EXTReadController
+.802d		20 dc bb	jsr $bbdc		jsr	Export_EXTReadController
 .8030		08		php			php
 .8031		c6 0d		dec $0d			dec 8+5
 .8033		28		plp			plp
@@ -6832,42 +6832,42 @@
 >0004						buflen      .byte       ?
 >0005						ext         .word       ?
 >0007						extlen      .byte       ?
->dbe1						RESERVED    .word   ?
->dbe3						MOUSE       .word   ?   ; Mouse event.
->dbe5						GAME        .word   ?   ; Game Controller changes.
->dbe7						DEVICE      .word   ?   ; Device added/removed.
->dbe9						PRESSED     .word   ?   ; Key pressed
->dbeb						RELEASED    .word   ?   ; Key released.
->dbed						NAME        .word   ?
->dbef						SIZE        .word   ?
->dbf1						DATA        .word   ?   ; The read request has succeeded.
->dbf3						WROTE       .word   ?   ; The write request has completed.
->dbf5						FORMATTED   .word   ?
->dbf7						ERROR       .word   ?
->dbf9						SIZE        .word   ?
->dbfb						CREATED     .word   ?
->dbfd						CHECKED     .word   ?
->dbff						DATA        .word   ?   ; The read request has succeeded.
->dc01						WROTE       .word   ?   ; The write request has completed.
->dc03						ERROR       .word   ?
->dc05						NOT_FOUND   .word   ?   ; The file file was not found.
->dc07						OPENED      .word   ?   ; The file was successfully opened.
->dc09						DATA        .word   ?   ; The read request has succeeded.
->dc0b						WROTE       .word   ?   ; The write request has completed.
->dc0d						EOF         .word   ?   ; All file data has been read.
->dc0f						CLOSED      .word   ?   ; The close request has completed.
->dc11						RENAMED     .word   ?   ; The rename request has completed.
->dc13						DELETED     .word   ?   ; The delete request has completed.
->dc15						ERROR       .word   ?   ; An error occured; close the file if opened.
->dc17						OPENED      .word   ?   ; The directory open request succeeded.
->dc19						VOLUME      .word   ?   ; A volume record was found.
->dc1b						FILE        .word   ?   ; A file record was found.
->dc1d						FREE        .word   ?   ; A file-system free-space record was found.
->dc1f						EOF         .word   ?   ; All data has been read.
->dc21						CLOSED      .word   ?   ; The directory file has been closed.
->dc23						ERROR       .word   ?   ; An error occured; user should close.
->dc25						TCP         .word   ?
->dc27						UDP         .word   ?
+>0000						RESERVED    .word   ?
+>0002						MOUSE       .word   ?   ; Mouse event.
+>0004						GAME        .word   ?   ; Game Controller changes.
+>0006						DEVICE      .word   ?   ; Device added/removed.
+>0008						PRESSED     .word   ?   ; Key pressed
+>000a						RELEASED    .word   ?   ; Key released.
+>000c						NAME        .word   ?
+>000e						SIZE        .word   ?
+>0010						DATA        .word   ?   ; The read request has succeeded.
+>0012						WROTE       .word   ?   ; The write request has completed.
+>0014						FORMATTED   .word   ?
+>0016						ERROR       .word   ?
+>0018						SIZE        .word   ?
+>001a						CREATED     .word   ?
+>001c						CHECKED     .word   ?
+>001e						DATA        .word   ?   ; The read request has succeeded.
+>0020						WROTE       .word   ?   ; The write request has completed.
+>0022						ERROR       .word   ?
+>0024						NOT_FOUND   .word   ?   ; The file file was not found.
+>0026						OPENED      .word   ?   ; The file was successfully opened.
+>0028						DATA        .word   ?   ; The read request has succeeded.
+>002a						WROTE       .word   ?   ; The write request has completed.
+>002c						EOF         .word   ?   ; All file data has been read.
+>002e						CLOSED      .word   ?   ; The close request has completed.
+>0030						RENAMED     .word   ?   ; The rename request has completed.
+>0032						DELETED     .word   ?   ; The delete request has completed.
+>0034						ERROR       .word   ?   ; An error occured; close the file if opened.
+>0036						OPENED      .word   ?   ; The directory open request succeeded.
+>0038						VOLUME      .word   ?   ; A volume record was found.
+>003a						FILE        .word   ?   ; A file record was found.
+>003c						FREE        .word   ?   ; A file-system free-space record was found.
+>003e						EOF         .word   ?   ; All data has been read.
+>0040						CLOSED      .word   ?   ; The directory file has been closed.
+>0042						ERROR       .word   ?   ; An error occured; user should close.
+>0044						TCP         .word   ?
+>0046						UDP         .word   ?
 .0000						event_t
 >0000						type        .byte   ?   ; Enum above
 >0001						buf         .byte   ?   ; page id or zero
@@ -11024,18 +11024,21 @@
 .dbcc	bbcc	fa		plx				plx
 .dbcd	bbcd	60		rts				rts
 .dbce	bbce					CheckKeyPressed:
-.dbce	bbce	20 e4 ff	jsr $ffe4			jsr 	$FFE4 						; get a key
-.dbd1	bbd1	60		rts				rts
-.dbd2	bbd2					Export_EXTBreakCheck:
-.dbd2	bbd2	4c e1 ff	jmp $ffe1			jmp		$FFE1
-.dbd5	bbd5					Export_EXTReadController:
-.dbd5	bbd5	da		phx				phx
-.dbd6	bbd6	a6 01		ldx $01				ldx 	1 							; save current I/O in X
-.dbd8	bbd8	64 01		stz $01				stz 	1 							; switch to I/O 0
-.dbda	bbda	ad 00 dc	lda $dc00			lda 	$DC00  						; read VIA register
-.dbdd	bbdd	86 01		stx $01				stx 	1 							; repair old I/O and exit
-.dbdf	bbdf	fa		plx				plx
-.dbe0	bbe0	60		rts				rts
+.dbce	bbce	4c e4 ff	jmp $ffe4		jmp 	$FFE4
+.dbd1	bbd1	20 00 ff	jsr $ff00	        jsr     kernel.NextEvent
+.dbd4	bbd4	b0 f8		bcs $bbce	        bcs     CheckKeyPressed
+.dbd6	bbd6	d0 f6		bne $bbce	  		bne 	CheckKeyPressed
+.dbd8	bbd8	60		rts		 		rts
+.dbd9	bbd9					Export_EXTBreakCheck:
+.dbd9	bbd9	4c e1 ff	jmp $ffe1			jmp		$FFE1
+.dbdc	bbdc					Export_EXTReadController:
+.dbdc	bbdc	da		phx				phx
+.dbdd	bbdd	a6 01		ldx $01				ldx 	1 							; save current I/O in X
+.dbdf	bbdf	64 01		stz $01				stz 	1 							; switch to I/O 0
+.dbe1	bbe1	ad 00 dc	lda $dc00			lda 	$DC00  						; read VIA register
+.dbe4	bbe4	86 01		stx $01				stx 	1 							; repair old I/O and exit
+.dbe6	bbe6	fa		plx				plx
+.dbe7	bbe7	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
