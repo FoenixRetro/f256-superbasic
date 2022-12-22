@@ -1,11 +1,11 @@
 Progress:	
-
+	- Fix monitor to fake event keyboard
 	- Break check
 
-	Can't delete line # 1 - 9 ?
+	Look at making SD2IEC load/save work.
+
 	Configurable colours.
 	
-	Look at making SD2IEC load/save work.
 
 	CSV Functions ?
 	-	ItemCount(String,Seperator)

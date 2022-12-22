@@ -546,12 +546,13 @@ _EILScrapeLine:
 		;
 _EILTrimSpaces: 							; right trim
 		dey
-		beq 	_EILEndTrim
+		cpy 	#$FF 						; back past the start
+		beq 	_EILEndTrim		 			; zero the input line.
 		lda 	lineBuffer,y
 		cmp 	#' '
-		beq 	_EILTrimSpaces
-		iny 								; trim after non space character.
+		beq 	_EILTrimSpaces 				; if fail this found non space character
 _EILEndTrim:
+		iny 								; trim after non space character.
 		lda 	#0 							; trim here.
 		sta 	lineBuffer,y
 		lda 	#13 						; echo the RETURN
@@ -611,6 +612,8 @@ _EXTIExit:
 ;		Date			Notes
 ;		==== 			=====
 ;		27/11/22 		Added Ctrl+D Delete at character
+;		22/12/22 		When trimming if first character was non-space got erased so deleting
+;						lines 1-9 did not work.
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************

@@ -87,3 +87,5 @@ Release 16 (14/12/22):
 Release 17 (20/12/22):	
 
 	CHG: Tweak the colourising.
+	CHG: Lines consisting of single input characters did not work (so you couldn't delete 1..9)
+	CHG: Keyboard input uses Kernel event method.
