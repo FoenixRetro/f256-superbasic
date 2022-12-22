@@ -1,7 +1,5 @@
 Progress:	
-	Jessies's latest kernel and back-fix to emulator/tinykernel
-	- Program BASIC only.
-	- Keyboard I/O
+	- Keyboard I/O - why does UP not work.
 	- Break check
 
 	Configurable colours.

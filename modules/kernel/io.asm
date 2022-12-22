@@ -44,15 +44,21 @@ _EISCWait:
 ; ************************************************************************************************
 
 CheckKeyPressed:
-	jmp 	$FFE4
-
-        jsr     kernel.NextEvent
-        bcs     CheckKeyPressed
-;        lda     event.type
- ;       cmp     #kernel.event.key.PRESSED
-  		bne 	CheckKeyPressed
- ;		lda     event.key.ascii
- 		rts
+		lda     #<event 					; tell kernel where events go.
+		sta     kernel.args.events+0
+		lda     #>event
+		sta     kernel.args.events+1
+		   
+		jsr     kernel.NextEvent 			; get next event
+		bcs 	_CKPNoEvent 				; no event
+		lda     event.type
+		cmp     #kernel.event.key.PRESSED 	; must be a pressed event.
+		bne 	_CKPNoEvent
+		lda     event.key.ascii		
+		rts
+_CKPNoEvent:
+		lda 	#0
+		rts		
 
 ; ************************************************************************************************
 ;
@@ -77,9 +83,11 @@ Export_EXTReadController:
 		stx 	1 							; repair old I/O and exit
 		plx
 		rts
-
 		.send code
 
+		.section storage
+event       .dstruct    kernel.event.event_t   
+		.send storage
 
 ; ************************************************************************************************
 ;
