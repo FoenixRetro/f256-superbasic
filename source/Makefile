@@ -60,6 +60,12 @@ updatekernel:
 	make -B -C $(KRN_REPO)
 	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)*.bin build
 	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)api.asm  module.interface$(S)kernel
+
+ramkernel: ramboot
+	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)kernel.ram build
+	cat build$(S)kernel.ram build$(S)basic.rom >build$(S)ramkernel.bin
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary build$(S)ramkernel.bin --address E000
+
 #
 #		Run on real hardware (RAM operation)
 #
