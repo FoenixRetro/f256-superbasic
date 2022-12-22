@@ -31,7 +31,7 @@ Start:	ldx 	#$FF 						; stack reset
 		tay
 		jsr 	GXGraphicDraw
 		.endif
-
+		
 		.if 	soundIntegrated==1 			; if installed
 		lda 	#$0F 						; initialise sound system
 		jsr 	SNDCommand

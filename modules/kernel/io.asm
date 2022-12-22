@@ -24,7 +24,7 @@
 ;
 ; ************************************************************************************************
 
-Export_EXTInputSingleCharacter:
+Export_KNLInputSingleCharacter:
 PagedInputSingleCharacter:
 		phx
 		phy
@@ -43,7 +43,10 @@ _EISCWait:
 ;
 ; ************************************************************************************************
 
+Export_KNLInkey:
 CheckKeyPressed:
+		jmp 	$FFE4						; *** remove to use kernel functionality ***
+
 		lda     #<event 					; tell kernel where events go.
 		sta     kernel.args.events+0
 		lda     #>event

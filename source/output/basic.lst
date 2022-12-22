@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Thu Dec 22 12:10:26 2022
+; Thu Dec 22 13:56:41 2022
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -429,30 +429,30 @@
 .8013		c6 0d		dec $0d			dec 8+5
 .8015		28		plp			plp
 .8016		60		rts			rts
-.8017						EXTInputSingleCharacter:
+.8017						EXTBreakCheck:
 .8017		e6 0d		inc $0d			inc 8+5
-.8019		20 a8 bb	jsr $bba8		jsr	Export_EXTInputSingleCharacter
+.8019		20 ec bb	jsr $bbec		jsr	Export_EXTBreakCheck
 .801c		08		php			php
 .801d		c6 0d		dec $0d			dec 8+5
 .801f		28		plp			plp
 .8020		60		rts			rts
-.8021						EXTBreakCheck:
+.8021						EXTReadController:
 .8021		e6 0d		inc $0d			inc 8+5
-.8023		20 e9 bb	jsr $bbe9		jsr	Export_EXTBreakCheck
+.8023		20 ef bb	jsr $bbef		jsr	Export_EXTReadController
 .8026		08		php			php
 .8027		c6 0d		dec $0d			dec 8+5
 .8029		28		plp			plp
 .802a		60		rts			rts
-.802b						EXTReadController:
+.802b						EXTInputLine:
 .802b		e6 0d		inc $0d			inc 8+5
-.802d		20 ec bb	jsr $bbec		jsr	Export_EXTReadController
+.802d		20 af a1	jsr $a1af		jsr	Export_EXTInputLine
 .8030		08		php			php
 .8031		c6 0d		dec $0d			dec 8+5
 .8033		28		plp			plp
 .8034		60		rts			rts
-.8035						EXTInputLine:
+.8035						KNLInputSingleCharacter:
 .8035		e6 0d		inc $0d			inc 8+5
-.8037		20 af a1	jsr $a1af		jsr	Export_EXTInputLine
+.8037		20 a8 bb	jsr $bba8		jsr	Export_KNLInputSingleCharacter
 .803a		08		php			php
 .803b		c6 0d		dec $0d			dec 8+5
 .803d		28		plp			plp
@@ -1031,7 +1031,7 @@
 .83e9		9a		txs				txs
 .83ea		a9 89		lda #$89			lda 	#CLICommandLine+$80 		; set console colour whatever the current colour is.
 .83ec		20 03 80	jsr $8003			jsr 	EXTPrintCharacter
-.83ef		20 35 80	jsr $8035			jsr 	EXTInputLine 				; get line to lineBuffer
+.83ef		20 2b 80	jsr $802b			jsr 	EXTInputLine 				; get line to lineBuffer
 .83f2		20 67 80	jsr $8067			jsr 	TKTokeniseLine 				; tokenise the line
 .83f5		ad 2b 04	lda $042b			lda 	TokenLineNumber 			; line number <> 0
 .83f8		0d 2c 04	ora $042c			ora 	TokenLineNumber+1
@@ -1709,7 +1709,7 @@
 .87f7						CPPrintVector:
 .87f7		4c 03 80	jmp $8003			jmp 	EXTPrintCharacter
 .87fa						CPInputVector:
-.87fa		4c 17 80	jmp $8017			jmp 	EXTInputSingleCharacter
+.87fa		4c 35 80	jmp $8035			jmp 	KNLInputSingleCharacter
 
 ;******  Return to file: _basic.asm
 
@@ -1806,7 +1806,7 @@
 .8896		a9 20		lda #$20			lda 	#((BasicStart) >> 8)
 .8898		85 31		sta $31				sta 	codePtr+1
 .889a						_CLLoop:
-.889a		20 21 80	jsr $8021			jsr 	EXTBreakCheck 				; break check here, as we want the option of breaking out of long lists.
+.889a		20 17 80	jsr $8017			jsr 	EXTBreakCheck 				; break check here, as we want the option of breaking out of long lists.
 .889d		f0 27		beq $88c6			beq 	_CLBreak
 .889f		b2 30		lda ($30)			lda 	(codePtr)
 .88a1		f0 20		beq $88c3			beq 	_CLExit
@@ -2322,7 +2322,7 @@
 .8bac		0e 13 04	asl $0413			asl 	breakCheck 					; clears 1 time in 8
 .8baf		d0 22		bne $8bd3			bne 	_CRNoBreakCheck
 .8bb1		ce 13 04	dec $0413			dec	 	breakCheck 					; set it back to $FF
-.8bb4		20 21 80	jsr $8021			jsr 	EXTBreakCheck 				; break check
+.8bb4		20 17 80	jsr $8017			jsr 	EXTBreakCheck 				; break check
 .8bb7		f0 64		beq $8c1d			beq 	_CRBreak
 .8bb9		a5 01		lda $01				lda 	1 							; save I/O 0
 .8bbb		48		pha				pha
@@ -6428,7 +6428,7 @@
 .a4d2		08		php				php 								; save carry (set for Y)
 .a4d3		20 1b 9e	jsr $9e1b			jsr 	Evaluate8BitInteger 		; ignore the parameter
 .a4d6		20 1c 8f	jsr $8f1c			jsr 	CheckRightBracket
-.a4d9		20 2b 80	jsr $802b			jsr 	EXTReadController 			; read the controller.
+.a4d9		20 21 80	jsr $8021			jsr 	EXTReadController 			; read the controller.
 .a4dc		28		plp				plp
 .a4dd		b0 02		bcs $a4e1			bcs 	_JMNoShift 					; if X then shift bits 3,2 -> 1,0
 .a4df		4a		lsr a				lsr 	a
@@ -6450,7 +6450,7 @@
 .a4f4		fa		plx				plx 								; get pos
 .a4f5		20 1b 9e	jsr $9e1b			jsr 	Evaluate8BitInteger 		; ignore the parameter
 .a4f8		20 1c 8f	jsr $8f1c			jsr 	CheckRightBracket
-.a4fb		20 2b 80	jsr $802b			jsr 	EXTReadController 			; read the controller.
+.a4fb		20 21 80	jsr $8021			jsr 	EXTReadController 			; read the controller.
 .a4fe		29 10		and #$10			and 	#$10
 .a500		d0 e9		bne $a4eb			bne 	JMIsLeft
 .a502		20 80 9e	jsr $9e80			jsr 	NSMSetZero
@@ -10998,7 +10998,7 @@
 ;******  Processing file: ../modules/_build/_kernel.module
 
 =1						kernelIntegrated=1
-.dba8	bba8					Export_EXTInputSingleCharacter:
+.dba8	bba8					Export_KNLInputSingleCharacter:
 .dba8	bba8					PagedInputSingleCharacter:
 .dba8	bba8	da		phx				phx
 .dba9	bba9	5a		phy				phy
@@ -11023,31 +11023,33 @@
 .dbcb	bbcb	7a		ply				ply
 .dbcc	bbcc	fa		plx				plx
 .dbcd	bbcd	60		rts				rts
+.dbce	bbce					Export_KNLInkey:
 .dbce	bbce					CheckKeyPressed:
-.dbce	bbce	a9 44		lda #$44			lda     #<event 					; tell kernel where events go.
-.dbd0	bbd0	85 f0		sta $f0				sta     kernel.args.events+0
-.dbd2	bbd2	a9 08		lda #$08			lda     #>event
-.dbd4	bbd4	85 f1		sta $f1				sta     kernel.args.events+1
-.dbd6	bbd6	20 00 ff	jsr $ff00			jsr     kernel.NextEvent 			; get next event
-.dbd9	bbd9	b0 0b		bcs $bbe6			bcs 	_CKPNoEvent 				; no event
-.dbdb	bbdb	ad 44 08	lda $0844			lda     event.type
-.dbde	bbde	c9 08		cmp #$08			cmp     #kernel.event.key.PRESSED 	; must be a pressed event.
-.dbe0	bbe0	d0 04		bne $bbe6			bne 	_CKPNoEvent
-.dbe2	bbe2	ad 49 08	lda $0849			lda     event.key.ascii
-.dbe5	bbe5	60		rts				rts
-.dbe6	bbe6					_CKPNoEvent:
-.dbe6	bbe6	a9 00		lda #$00			lda 	#0
+.dbce	bbce	4c e4 ff	jmp $ffe4			jmp 	$FFE4
+.dbd1	bbd1	a9 44		lda #$44			lda     #<event 					; tell kernel where events go.
+.dbd3	bbd3	85 f0		sta $f0				sta     kernel.args.events+0
+.dbd5	bbd5	a9 08		lda #$08			lda     #>event
+.dbd7	bbd7	85 f1		sta $f1				sta     kernel.args.events+1
+.dbd9	bbd9	20 00 ff	jsr $ff00			jsr     kernel.NextEvent 			; get next event
+.dbdc	bbdc	b0 0b		bcs $bbe9			bcs 	_CKPNoEvent 				; no event
+.dbde	bbde	ad 44 08	lda $0844			lda     event.type
+.dbe1	bbe1	c9 08		cmp #$08			cmp     #kernel.event.key.PRESSED 	; must be a pressed event.
+.dbe3	bbe3	d0 04		bne $bbe9			bne 	_CKPNoEvent
+.dbe5	bbe5	ad 49 08	lda $0849			lda     event.key.ascii
 .dbe8	bbe8	60		rts				rts
-.dbe9	bbe9					Export_EXTBreakCheck:
-.dbe9	bbe9	4c e1 ff	jmp $ffe1			jmp		$FFE1
-.dbec	bbec					Export_EXTReadController:
-.dbec	bbec	da		phx				phx
-.dbed	bbed	a6 01		ldx $01				ldx 	1 							; save current I/O in X
-.dbef	bbef	64 01		stz $01				stz 	1 							; switch to I/O 0
-.dbf1	bbf1	ad 00 dc	lda $dc00			lda 	$DC00  						; read VIA register
-.dbf4	bbf4	86 01		stx $01				stx 	1 							; repair old I/O and exit
-.dbf6	bbf6	fa		plx				plx
-.dbf7	bbf7	60		rts				rts
+.dbe9	bbe9					_CKPNoEvent:
+.dbe9	bbe9	a9 00		lda #$00			lda 	#0
+.dbeb	bbeb	60		rts				rts
+.dbec	bbec					Export_EXTBreakCheck:
+.dbec	bbec	4c e1 ff	jmp $ffe1			jmp		$FFE1
+.dbef	bbef					Export_EXTReadController:
+.dbef	bbef	da		phx				phx
+.dbf0	bbf0	a6 01		ldx $01				ldx 	1 							; save current I/O in X
+.dbf2	bbf2	64 01		stz $01				stz 	1 							; switch to I/O 0
+.dbf4	bbf4	ad 00 dc	lda $dc00			lda 	$DC00  						; read VIA register
+.dbf7	bbf7	86 01		stx $01				stx 	1 							; repair old I/O and exit
+.dbf9	bbf9	fa		plx				plx
+.dbfa	bbfa	60		rts				rts
 .0844						event
 >0844						type        .byte   ?   ; Enum above
 >0845						buf         .byte   ?   ; page id or zero

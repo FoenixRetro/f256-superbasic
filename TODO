@@ -1,7 +1,8 @@
 Progress:	
-	- Keyboard I/O - why does UP not work.
+
 	- Break check
 
+	Can't delete line # 1 - 9 ?
 	Configurable colours.
 	
 	Look at making SD2IEC load/save work.

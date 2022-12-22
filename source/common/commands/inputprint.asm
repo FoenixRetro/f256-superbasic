@@ -214,7 +214,7 @@ CPPrintVector:
 		jmp 	EXTPrintCharacter
 
 CPInputVector:
-		jmp 	EXTInputSingleCharacter
+		jmp 	KNLInputSingleCharacter
 
 		.send code
 

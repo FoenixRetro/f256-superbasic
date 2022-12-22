@@ -14,13 +14,6 @@ EXTInitialise:
 	dec 8+5
 	plp
 	rts
-EXTInputSingleCharacter:
-	inc 8+5
-	jsr	Export_EXTInputSingleCharacter
-	php
-	dec 8+5
-	plp
-	rts
 EXTBreakCheck:
 	inc 8+5
 	jsr	Export_EXTBreakCheck
@@ -38,6 +31,15 @@ EXTReadController:
 EXTInputLine:
 	inc 8+5
 	jsr	Export_EXTInputLine
+	php
+	dec 8+5
+	plp
+	rts
+	.endif
+	.if kernelIntegrated == 1
+KNLInputSingleCharacter:
+	inc 8+5
+	jsr	Export_KNLInputSingleCharacter
 	php
 	dec 8+5
 	plp
