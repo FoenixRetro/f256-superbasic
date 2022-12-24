@@ -332,7 +332,7 @@ directory   .dstruct    kernel.event.dir_t
           ; Data in keyboard events
 key_t       .struct
 keyboard    .byte   ?   ; Keyboard ID
-key_cap     .byte   ?   ; Raw key ID
+raw         .byte   ?   ; Raw key ID
 ascii       .byte   ?   ; ASCII value
 flags       .byte   ?   ; Flags (META)
 META        = $80       ; Meta key; no associated ASCII value.

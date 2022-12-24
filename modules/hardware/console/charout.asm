@@ -278,6 +278,35 @@ EXTScreenScroll:
 		jsr 	EXTScrollFill
 		rts
 
+; ************************************************************************************************
+;
+;										Print Hex in space
+;	
+; ************************************************************************************************
+
+PAGEDPrintHex:
+		pha
+		lda 	#' '
+		jsr 	PAGEDPrintCharacter
+		pla
+		pha
+		lsr 	a
+		lsr 	a
+		lsr 	a
+		lsr 	a
+		jsr 	_PPHNibble
+		pla
+_PPHNibble:
+		pha
+		and 	#15
+		cmp 	#10
+		bcc 	_PPHOut
+		adc 	#6
+_PPHOut:adc 	#48
+		jsr		PAGEDPrintCharacter 			
+		pla
+		rts
+
 		.send code
 
 ; ************************************************************************************************
