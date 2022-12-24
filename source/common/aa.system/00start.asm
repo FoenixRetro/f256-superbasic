@@ -26,7 +26,7 @@ Start:	ldx 	#$FF 						; stack reset
 		
 		jsr 	EXTInitialise 				; hardware initialise
 
-		;jsr 	KNLLoadFile
+		jsr 	KNLLoadFile
 			
 		.if 	graphicsIntegrated==1 		; if installed
 		lda 	#0 							; graphics system initialise.

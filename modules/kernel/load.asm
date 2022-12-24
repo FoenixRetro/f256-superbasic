@@ -32,7 +32,7 @@ Export_KNLLoadFile:
         lda     #fname >> 8
         sta     kernel.args.file.open.fname+1
         ;
-        ;		File Name length (why not use ASCIIZ ?)
+        ;		File Name length :-( ASCIIZ rules.
         ;
         lda     #4
         sta     kernel.args.file.open.fname_len
