@@ -23,11 +23,11 @@
 
 Command_Input:  ;; [input]
 		lda 	#$FF 						; set input flag
-		sta 	IsInputFlag
+		sta 	isInputFlag
 		bra 	Command_IP_Main
 
 Command_Print:	;; [print]
-		stz 	IsInputFlag 				; clear input flag
+		stz 	isInputFlag 				; clear input flag
 		;
 Command_IP_Main:		
 		clc 								; carry being clear means last print wasn't comma/semicolon
@@ -59,7 +59,7 @@ _CPLoop:
 		and 	#NSBIsReference 			; is it a reference
 		beq 	_CPIsValue 					; no, display it.
 		;
-		lda 	IsInputFlag 				; if print, dereference and print.
+		lda 	isInputFlag 				; if print, dereference and print.
 		beq 	_CPIsPrint 					; otherwise display.
 		jsr 	CIInputValue 				; input a value to the reference
 		bra 	_CPNewLine
@@ -81,8 +81,8 @@ _CPIsValue:
 _CPNumber:
 		lda 	#5 							; maximum decimals
 		jsr 	ConvertNumberToString 		; convert to string (in unary str$() function)
-		ldx 	#DecimalBuffer >> 8
-		lda 	#DecimalBuffer & $FF
+		ldx 	#decimalBuffer >> 8
+		lda 	#decimalBuffer & $FF
 		jsr 	CPPrintStringXA 			; print it.
 		bra 	Command_IP_Main				; loop round clearing carry so NL if end		
 		;
@@ -136,7 +136,7 @@ _CIInputLine:
 		jsr 	CPPrintVector 				; echo it.
 		bra 	_CIInputLine
 		;
-_CIBackSpace:
+_CIBackspace:
 		cpx 	#0 							; nothing to delete
 		beq 	_CIInputLine
 		jsr 	CPPrintVector 				; echo it.
@@ -144,7 +144,7 @@ _CIBackSpace:
 		bra 	_CIInputLine
 		;
 _CIHaveValue:
-		stz 	LineBuffer,x 				; ASCIIZ string now in line buffer.
+		stz 	lineBuffer,x 				; ASCIIZ string now in line buffer.
 		lda 	NSStatus 					; was it a string assignment
 		and 	#NSBIsString 				
 		beq 	_CIAssignNumber 			; assign a number

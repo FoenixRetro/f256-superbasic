@@ -37,7 +37,7 @@ _CPParamLoop:
 		beq 	_CPParamLoop
 		dey 								; unpick.
 _CPEndParam:
-		stx 	LastParameter 				; save the last parameters index.
+		stx 	lastParameter 				; save the last parameters index.
 		iny									; skip right bracket
 		;
 		;		Save return address
@@ -72,7 +72,7 @@ _CPEndParam:
 		;		Now handle any parameters
 		;
 		ldx 	#ParameterStackPos 			; start position of parameters
-		cpx	 	LastParameter 				; check zero parameters at the start
+		cpx	 	lastParameter 				; check zero parameters at the start
 		beq 	_ParamExit 					; if so, exit.
 _ParamExtract:
 		dex 								; put a local term on the level before
@@ -80,7 +80,7 @@ _ParamExtract:
 		jsr 	AssignVariable 				; assign stacked value to the variable.
 		inx 								; advance to next parameter to do.
 		inx
-		cpx 	LastParameter 				; are we done ?
+		cpx 	lastParameter 				; are we done ?
 		beq 	_ParamExit
 		jsr 	CheckComma 					; comma seperating parameters
 		bra 	_ParamExtract

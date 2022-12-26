@@ -19,7 +19,7 @@
 ; ************************************************************************************************
 
 MemoryNew:
-		.cresetCodePointer 					; point to start of program memory
+		.cresetcodepointer 					; point to start of program memory
 		lda 	#0 							; write zero there erasing the program.
 		.cset0	
 		rts

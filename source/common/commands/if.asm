@@ -23,7 +23,7 @@ IfCommand: ;; [if]
 		;
 		.cget 								; what follows ?
 		cmp 	#KWD_THEN  					; could be THEN <stuff> 
-		bne 	_IFStructured 				; we still support it.
+		bne 	_IfStructured 				; we still support it.
 
 		; ------------------------------------------------------------------------
 		;

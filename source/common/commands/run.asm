@@ -30,7 +30,7 @@ EOLCommand: ;; [!0:EOF0]
 
 CommandRUN:	;; [run]
 		jsr 	ClearCommand 				; clear variable/stacks/etc.
-		.cresetCodePointer 					; set code address to start
+		.cresetcodepointer 					; set code address to start
 
 		; ----------------------------------------------------------------------------------------
 		;
@@ -38,7 +38,7 @@ CommandRUN:	;; [run]
 		;
 		; ----------------------------------------------------------------------------------------
 		
-RUNNewLine:		
+RunNewLine:		
 		.cget0 								; is there any more program to run ?
 		beq 	CRNoProgram         		; no then END.
 		ldx 	#$FF 						; reset stack

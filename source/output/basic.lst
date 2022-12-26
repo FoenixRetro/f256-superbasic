@@ -1,13 +1,13 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
-; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Mon Dec 26 07:05:41 2022
+; 64tass -D AUTORUN=1 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
+; Mon Dec 26 07:13:39 2022
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
 ;******  Command line definitions
 
-=0						AUTORUN=0
+=1						AUTORUN=1
 =$e000						 MONITOR_ADDRESS=$E000
 =$f000						 LOCKOUT_ADDRESS=$F000
 =$38000						 BASIC_ADDRESS=$38000
@@ -512,8 +512,8 @@
 .808e		a9 9c		lda #$9c			lda 	#Prompt & $FF
 .8090		20 8e 8f	jsr $8f8e			jsr 	PrintStringXA
 .8093		20 1a 8a	jsr $8a1a			jsr 	NewProgram 					; erase current program
-.8096		4c e7 83	jmp $83e7			jmp 	WarmStart					; make same size.
-.8099		4c e7 83	jmp $83e7			jmp 	WarmStart
+.8096		20 28 83	jsr $8328			jsr 	BackloadProgram
+.8099		4c 98 8b	jmp $8b98			jmp 	CommandRUN
 .809c						Prompt:
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
@@ -958,8 +958,8 @@
 .836a		ad 2b 04	lda $042b			lda 	tokenLineNumber 			; line number = 0
 .836d		0d 2c 04	ora $042c			ora 	tokenLineNumber+1
 .8370		f0 d4		beq $8346			beq 	_BPLoop 					; not legal code, blank line or maybe a comment.
-.8372		38		sec				sec 								; append not insert
-.8373		20 56 a5	jsr $a556			jsr 	MemoryInsertLine 			; append to current program
+.8372		ea		nop				nop
+.8373		20 c2 83	jsr $83c2			jsr 	EditProgramCode
 .8376		80 ce		bra $8346			bra 	_BPLoop
 .8378						_BPExit:
 .8378		9c fa ff	stz $fffa			stz 	$FFFA
@@ -1543,7 +1543,7 @@
 .86ea		20 ce 9d	jsr $9dce			jsr 	EvaluateNumber
 .86ed		b1 30		lda ($30),y			lda 	(codePtr),y
 .86ef		c9 ae		cmp #$ae			cmp 	#KWD_THEN  					; could be THEN <stuff>
-.86f1		d0 0a		bne $86fd			bne 	_IFStructured 				; we still support it.
+.86f1		d0 0a		bne $86fd			bne 	_IfStructured 				; we still support it.
 .86f3		c8		iny				iny 								; consume THEN
 .86f4		20 a2 9e	jsr $9ea2			jsr 	NSMIsZero 					; is it zero
 .86f7		f0 01		beq $86fa			beq 	_IfFail 					; if fail, go to next line
@@ -1573,10 +1573,10 @@
 
 .8712						Command_Input:
 .8712		a9 ff		lda #$ff			lda 	#$FF 						; set input flag
-.8714		8d 28 04	sta $0428			sta 	IsInputFlag
+.8714		8d 28 04	sta $0428			sta 	isInputFlag
 .8717		80 03		bra $871c			bra 	Command_IP_Main
 .8719						Command_Print:
-.8719		9c 28 04	stz $0428			stz 	IsInputFlag 				; clear input flag
+.8719		9c 28 04	stz $0428			stz 	isInputFlag 				; clear input flag
 .871c						Command_IP_Main:
 .871c		18		clc				clc 								; carry being clear means last print wasn't comma/semicolon
 .871d						_CPLoop:
@@ -1600,7 +1600,7 @@
 .873c		b5 50		lda $50,x			lda 	NSStatus,x 					; read the status
 .873e		29 20		and #$20			and 	#NSBIsReference 			; is it a reference
 .8740		f0 0d		beq $874f			beq 	_CPIsValue 					; no, display it.
-.8742		ad 28 04	lda $0428			lda 	IsInputFlag 				; if print, dereference and print.
+.8742		ad 28 04	lda $0428			lda 	isInputFlag 				; if print, dereference and print.
 .8745		f0 05		beq $874c			beq 	_CPIsPrint 					; otherwise display.
 .8747		20 81 87	jsr $8781			jsr 	CIInputValue 				; input a value to the reference
 .874a		80 20		bra $876c			bra 	_CPNewLine
@@ -1617,8 +1617,8 @@
 .875e						_CPNumber:
 .875e		a9 05		lda #$05			lda 	#5 							; maximum decimals
 .8760		20 b5 9c	jsr $9cb5			jsr 	ConvertNumberToString 		; convert to string (in unary str$() function)
-.8763		a2 06		ldx #$06			ldx 	#DecimalBuffer >> 8
-.8765		a9 49		lda #$49			lda 	#DecimalBuffer & $FF
+.8763		a2 06		ldx #$06			ldx 	#decimalBuffer >> 8
+.8765		a9 49		lda #$49			lda 	#decimalBuffer & $FF
 .8767		20 e4 87	jsr $87e4			jsr 	CPPrintStringXA 			; print it.
 .876a		80 b0		bra $871c			bra 	Command_IP_Main				; loop round clearing carry so NL if end
 .876c						_CPNewLine:
@@ -1654,14 +1654,14 @@
 .8799		e8		inx				inx
 .879a		20 f7 87	jsr $87f7			jsr 	CPPrintVector 				; echo it.
 .879d		80 e4		bra $8783			bra 	_CIInputLine
-.879f						_CIBackSpace:
+.879f						_CIBackspace:
 .879f		e0 00		cpx #$00			cpx 	#0 							; nothing to delete
 .87a1		f0 e0		beq $8783			beq 	_CIInputLine
 .87a3		20 f7 87	jsr $87f7			jsr 	CPPrintVector 				; echo it.
 .87a6		ca		dex				dex
 .87a7		80 da		bra $8783			bra 	_CIInputLine
 .87a9						_CIHaveValue:
-.87a9		9e 2a 05	stz $052a,x			stz 	LineBuffer,x 				; ASCIIZ string now in line buffer.
+.87a9		9e 2a 05	stz $052a,x			stz 	lineBuffer,x 				; ASCIIZ string now in line buffer.
 .87ac		a5 50		lda $50				lda 	NSStatus 					; was it a string assignment
 .87ae		29 10		and #$10			and 	#NSBIsString
 .87b0		f0 17		beq $87c9			beq 	_CIAssignNumber 			; assign a number
@@ -2111,7 +2111,7 @@
 .8a72		f0 f5		beq $8a69			beq 	_CPParamLoop
 .8a74		88		dey				dey 								; unpick.
 .8a75						_CPEndParam:
-.8a75		8e 16 04	stx $0416			stx 	LastParameter 				; save the last parameters index.
+.8a75		8e 16 04	stx $0416			stx 	lastParameter 				; save the last parameters index.
 .8a78		c8		iny				iny									; skip right bracket
 .8a79		a9 b3		lda #$b3			lda 	#STK_PROC+3 				; allocate 6 bytes on the return stack.
 .8a7b		20 4e af	jsr $af4e			jsr 	StackOpen
@@ -2135,7 +2135,7 @@
 .8a9e		b1 36		lda ($36),y			lda 	(zTemp0),y
 .8aa0		a8		tay				tay
 .8aa1		a2 02		ldx #$02			ldx 	#ParameterStackPos 			; start position of parameters
-.8aa3		ec 16 04	cpx $0416			cpx	 	LastParameter 				; check zero parameters at the start
+.8aa3		ec 16 04	cpx $0416			cpx	 	lastParameter 				; check zero parameters at the start
 .8aa6		f0 13		beq $8abb			beq 	_ParamExit 					; if so, exit.
 .8aa8						_ParamExtract:
 .8aa8		ca		dex				dex 								; put a local term on the level before
@@ -2143,7 +2143,7 @@
 .8aac		20 36 88	jsr $8836			jsr 	AssignVariable 				; assign stacked value to the variable.
 .8aaf		e8		inx				inx 								; advance to next parameter to do.
 .8ab0		e8		inx				inx
-.8ab1		ec 16 04	cpx $0416			cpx 	LastParameter 				; are we done ?
+.8ab1		ec 16 04	cpx $0416			cpx 	lastParameter 				; are we done ?
 .8ab4		f0 05		beq $8abb			beq 	_ParamExit
 .8ab6		20 24 8f	jsr $8f24			jsr 	CheckComma 					; comma seperating parameters
 .8ab9		80 ed		bra $8aa8			bra 	_ParamExtract
@@ -2311,7 +2311,7 @@
 .8b9d		85 30		sta $30				sta 	codePtr
 .8b9f		a9 20		lda #$20			lda 	#((BasicStart) >> 8)
 .8ba1		85 31		sta $31				sta 	codePtr+1
-.8ba3						RUNNewLine:
+.8ba3						RunNewLine:
 .8ba3		b2 30		lda ($30)			lda 	(codePtr)
 .8ba5		f0 7b		beq $8c22			beq 	CRNoProgram         		; no then END.
 .8ba7		a2 ff		ldx #$ff			ldx 	#$FF 						; reset stack
@@ -5238,10 +5238,10 @@
 .9ca4		da		phx				phx  								; copy the converted string into the buffer.
 .9ca5		a2 00		ldx #$00			ldx 	#0
 .9ca7						_USCopy:
-.9ca7		bd 49 06	lda $0649,x			lda 	DecimalBuffer,x
+.9ca7		bd 49 06	lda $0649,x			lda 	decimalBuffer,x
 .9caa		20 77 b0	jsr $b077			jsr 	StringTempWrite
 .9cad		e8		inx				inx
-.9cae		bd 49 06	lda $0649,x			lda 	DecimalBuffer,x
+.9cae		bd 49 06	lda $0649,x			lda 	decimalBuffer,x
 .9cb1		d0 f4		bne $9ca7			bne 	_USCopy
 .9cb3		fa		plx				plx
 .9cb4		60		rts				rts
@@ -5300,18 +5300,18 @@
 .9d17		20 b4 93	jsr $93b4			jsr 	ConvertInt32
 .9d1a		a2 00		ldx #$00			ldx	 	#0 							; write that to the decimal buffer.
 .9d1c						_MPTSCopy:
-.9d1c		bd 27 06	lda $0627,x			lda 	NumberBuffer,x
+.9d1c		bd 27 06	lda $0627,x			lda 	numberBuffer,x
 .9d1f		20 2a 9d	jsr $9d2a			jsr 	WriteDecimalBuffer
 .9d22		e8		inx				inx
-.9d23		bd 27 06	lda $0627,x			lda 	NumberBuffer,x
+.9d23		bd 27 06	lda $0627,x			lda 	numberBuffer,x
 .9d26		d0 f4		bne $9d1c			bne 	_MPTSCopy
 .9d28		fa		plx				plx
 .9d29		60		rts				rts
 .9d2a						WriteDecimalBuffer:
 .9d2a		da		phx				phx
 .9d2b		ae 15 04	ldx $0415			ldx 	dbOffset
-.9d2e		9d 49 06	sta $0649,x			sta 	DecimalBuffer,x
-.9d31		9e 4a 06	stz $064a,x			stz 	DecimalBuffer+1,x
+.9d2e		9d 49 06	sta $0649,x			sta 	decimalBuffer,x
+.9d31		9e 4a 06	stz $064a,x			stz 	decimalBuffer+1,x
 .9d34		ee 15 04	inc $0415			inc 	dbOffset
 .9d37		fa		plx				plx
 .9d38		60		rts				rts

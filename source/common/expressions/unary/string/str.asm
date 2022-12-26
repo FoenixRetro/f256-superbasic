@@ -31,10 +31,10 @@ Unary_Str: ;; [str$(]
 		phx  								; copy the converted string into the buffer.
 		ldx 	#0
 _USCopy:
-		lda 	DecimalBuffer,x
+		lda 	decimalBuffer,x
 		jsr 	StringTempWrite
 		inx
-		lda 	DecimalBuffer,x 			
+		lda 	decimalBuffer,x 			
 		bne 	_USCopy
 		plx		
 		rts
@@ -111,10 +111,10 @@ MakePlusTwoString:
 		jsr 	ConvertInt32 
 		ldx	 	#0 							; write that to the decimal buffer.
 _MPTSCopy:
-		lda 	NumberBuffer,x
+		lda 	numberBuffer,x
 		jsr 	WriteDecimalBuffer
 		inx		
-		lda 	NumberBuffer,x
+		lda 	numberBuffer,x
 		bne 	_MPTSCopy
 		plx
 		rts
@@ -128,8 +128,8 @@ _MPTSCopy:
 WriteDecimalBuffer:
 		phx
 		ldx 	dbOffset
-		sta 	DecimalBuffer,x
-		stz 	DecimalBuffer+1,x
+		sta 	decimalBuffer,x
+		stz 	decimalBuffer+1,x
 		inc 	dbOffset
 		plx
 		rts

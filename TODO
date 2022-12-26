@@ -2,12 +2,6 @@ Progress:
 	- Break check
 	Look at making SD2IEC load/save work.
 	zTemp0 in control.asm
-	"Getting started"
-	Configurable colours.
-
-	CSV Functions ?
-	-	ItemCount(String,Seperator)
-	-	ItemGet(String,Index,Seperator) (starts at 1)
 
 	Should CR in PRINT clear to EOL.
 	
