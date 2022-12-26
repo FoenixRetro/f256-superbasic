@@ -35,5 +35,5 @@ ramkernel: testcode.bin ramboot
 #
 #		Build image
 #
-testcode.bin: cmd_read.asm 
-	64tass $(ASMOPTS) cmd_read.asm reader.asm display.asm api.asm -o testcode.bin
+testcode.bin: cmd_read.asm reader.asm display.asm
+	64tass $(ASMOPTS) cmd_read.asm reader.asm display.asm  -o testcode.bin

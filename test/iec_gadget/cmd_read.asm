@@ -7,9 +7,11 @@
 		* = $0800
 		.dsection data
 
+		.include "api.asm"
+		
 			.section    code
-			ldx     #$FF
-			txs
+;			ldx     #$FF
+;			txs
 			jsr     initputc
 			lda 	#$00
 			jsr 	puth
@@ -32,8 +34,15 @@ cmd
 			lda     #>printfn
 			sta     print_func+1
 
-			lda     #0  ; Max read size
+            lda     #<event
+            sta     kernel.args.events+0
+            lda     #>event
+            sta     kernel.args.events+1
+
+            lda 	#$55
 			jsr  	puth
+
+			lda     #0  ; Max read size
 			ldx     #print_func
 			jmp     read_file
 			

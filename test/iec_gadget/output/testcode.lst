@@ -1,245 +1,14 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
-; 64tass -q -b -Wall -c -L output/testcode.lst -l output/testcode.lbl -Wall -o testcode.bin cmd_read.asm reader.asm display.asm api.asm
-; Mon Dec 26 11:23:42 2022
+; 64tass -q -b -Wall -c -L output/testcode.lst -l output/testcode.lbl -Wall -o testcode.bin cmd_read.asm reader.asm display.asm
+; Mon Dec 26 15:17:02 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
 ;******  Processing input file: cmd_read.asm
 
-.8000	a2 ff		ldx #$ff				ldx     #$FF
-.8002	9a		txs					txs
-.8003	20 01 81	jsr $8101				jsr     initputc
-.8006	a9 00		lda #$00				lda 	#$00
-.8008	20 26 81	jsr $8126				jsr 	puth
-.800b	20 10 80	jsr $8010				jsr 	cmd
-.800e	80 fe		bra $800e	h1:			bra 	h1
->00d0					print_func   .word       ?
-.8010					cmd
-.8010	a9 22		lda #$22				lda     #<printfn
-.8012	85 d0		sta $d0					sta     print_func+0
-.8014	a9 80		lda #$80				lda     #>printfn
-.8016	85 d1		sta $d1					sta     print_func+1
-.8018	a9 00		lda #$00				lda     #0  ; Max read size
-.801a	20 26 81	jsr $8126				jsr  	puth
-.801d	a2 d0		ldx #$d0				ldx     #print_func
-.801f	4c 29 80	jmp $8029				jmp     read_file
-.8022					printfn
-.8022	4c 05 81	jmp $8105				jmp     putc
->0800					buf         .fill       256     ; Used to fetch data from the kernel.
->0900					drive       .byte       ?                       ; Current selected (logical) drive #
-.0901					event
->0901					type        .byte   ?   ; Enum above
->0902					buf         .byte   ?   ; page id or zero
->0903					ext         .byte   ?   ; page id or zero
-.0904					key
->0904					keyboard    .byte   ?   ; Keyboard ID
->0905					raw         .byte   ?   ; Raw key ID
->0906					ascii       .byte   ?   ; ASCII value
->0907					flags       .byte   ?   ; Flags (META)
-=$80					META        = $80       ; Meta key; no associated ASCII value.
-.0904					mouse
-.0904					delta
->0904					x           .byte   ?
->0905					y           .byte   ?
->0906					z           .byte   ?
->0907					buttons     .byte   ?
-.0904					clicks
->0904					inner       .byte   ?
->0905					middle      .byte   ?
->0906					outer       .byte   ?
-.0904					udp
->0904					token       .byte   ?   ; TODO: break out into fields
-.0904					file
->0904					stream      .byte   ?
->0905					cookie      .byte   ?
-.0906					data
->0906					requested   .byte   ?   ; Requested number of bytes to read
->0907					read        .byte   ?   ; Number of bytes actually read
-.0906					wrote
->0906					requested   .byte   ?   ; Requested number of bytes to read
->0907					wrote       .byte   ?   ; Number of bytes actually read
-.0904					directory
->0904					stream      .byte   ?
->0905					cookie      .byte   ?
-.0906					volume
->0906					len         .byte   ?   ; Length of volname (in buf)
->0907					flags       .byte   ?   ; block size, text encoding
-.0906					file
->0906					len         .byte   ?
->0907					flags       .byte   ?   ; block scale, text encoding, approx size
-.0906					free
->0906					flags       .byte   ?   ; block scale, text encoding, approx size
->00d2					eol         .byte       ?
->00d3					drives      .byte       ?
->00d4					tmp         .word       ?
 
-;******  Processing input file: reader.asm
-
->0908					stop        .byte       ?
->0909					read_len    .byte       ?
->090a					print_fn    .byte       ?
->090b					remaining   .byte       ?
->8025	54 45 53 54			fileName:	.text 		"TEST"
-=4					fileNameLen = 4
-.8029					read_file
-.8029	8d 09 09	sta $0909				sta     read_len
-.802c	8d 0b 09	sta $090b				sta     remaining
-.802f	8e 0a 09	stx $090a				stx     print_fn
-.8032	9c 08 09	stz $0908				stz     stop
-.8035	ad 00 09	lda $0900				lda     drive
-.8038	a9 00		lda #$00				lda 	#0
-.803a	85 f3		sta $f3					sta     kernel.args.file.open.drive
-.803c	a5 25		lda $25					lda     fileName & $FF
-.803e	85 fb		sta $fb					sta     kernel.args.file.open.fname+0
-.8040	a5 80		lda $80					lda     fileName >> 8
-.8042	85 fc		sta $fc					sta     kernel.args.file.open.fname+1
-.8044	a9 04		lda #$04				lda 	#fileNameLen
-.8046	85 fd		sta $fd					sta     kernel.args.file.open.fname_len
-.8048	a9 00		lda #$00				lda     #kernel.args.file.open.READ
-.804a	85 f5		sta $f5					sta     kernel.args.file.open.mode
-.804c	20 5c ff	jsr $ff5c				jsr     kernel.File.Open
-.804f	b0 1e		bcs $806f				bcs     _error
-.8051					_loop
-.8051	20 0c ff	jsr $ff0c				jsr     kernel.Yield    ; Not required; but good while waiting.
-.8054	20 00 ff	jsr $ff00				jsr     kernel.NextEvent
-.8057	b0 f8		bcs $8051				bcs     _loop
-.8059	ad 01 09	lda $0901				lda 	event.type
-.805c	20 26 81	jsr $8126				jsr 	puth
-.805f	ad 01 09	lda $0901				lda     event.type
-.8062	c9 32		cmp #$32				cmp     #kernel.event.file.CLOSED
-.8064	f0 10		beq $8076				beq     _done
-.8066	c9 28		cmp #$28				cmp     #kernel.event.file.NOT_FOUND
-.8068	f0 26		beq $8090				beq     _not_found
-.806a	20 7b 80	jsr $807b				jsr     _dispatch
-.806d	80 e2		bra $8051				bra     _loop
-.806f					_error
-.806f	38		sec					sec
-.8070	a9 fd		lda #$fd				lda 	#$FD
-.8072	4c f4 80	jmp $80f4				jmp 	puts_cr
-.8075	60		rts					rts
-.8076					_done
-.8076	a9 ff		lda #$ff				lda 	#$FF
-.8078	4c f4 80	jmp $80f4				jmp     puts_cr
-.807b					_dispatch
-.807b	c9 2a		cmp #$2a				cmp     #kernel.event.file.OPENED
-.807d	f0 1d		beq $809c				beq     _read
-.807f	c9 2c		cmp #$2c				cmp     #kernel.event.file.DATA
-.8081	f0 30		beq $80b3				beq     _data
-.8083	c9 38		cmp #$38				cmp     #kernel.event.file.ERROR
-.8085	f0 3d		beq $80c4				beq     _eof
-.8087	c9 30		cmp #$30				cmp     #kernel.event.file.EOF
-.8089	f0 39		beq $80c4				beq     _eof
-.808b	c9 08		cmp #$08				cmp     #kernel.event.key.PRESSED
-.808d	f0 06		beq $8095				beq     _key
-.808f	60		rts					rts
-.8090					_not_found
-.8090	a9 fe		lda #$fe				lda     #$FE
-.8092	4c f4 80	jmp $80f4				jmp     puts_cr
-.8095					_key
-.8095	ad 06 09	lda $0906				lda     event.key.ascii
-.8098	8d 08 09	sta $0908				sta     stop
-.809b	60		rts					rts
-.809c					_read
-.809c	ad 08 09	lda $0908				lda     stop
-.809f	d0 23		bne $80c4				bne     _eof
-.80a1	ad 04 09	lda $0904				lda     event.file.stream
-.80a4	85 f3		sta $f3					sta     kernel.args.file.read.stream
-.80a6	ad 0b 09	lda $090b				lda     remaining
-.80a9	d0 03		bne $80ae				bne     _set
-.80ab	ad 09 09	lda $0909				lda     read_len
-.80ae	85 f4		sta $f4		_set        sta     kernel.args.file.read.buflen
-.80b0	4c 60 ff	jmp $ff60				jmp     kernel.File.Read
-.80b3					_data
-.80b3	20 cc 80	jsr $80cc				jsr     data
-.80b6	ad 0b 09	lda $090b				lda     remaining
-.80b9	f0 e1		beq $809c				beq     _read
-.80bb	38		sec					sec
-.80bc	ed 07 09	sbc $0907				sbc     event.file.data.read
-.80bf	8d 0b 09	sta $090b				sta     remaining
-.80c2	80 d8		bra $809c				bra     _read
-.80c4					_eof
-.80c4	ad 04 09	lda $0904				lda     event.file.stream
-.80c7	85 f3		sta $f3					sta     kernel.args.file.close.stream
-.80c9	4c 68 ff	jmp $ff68				jmp     kernel.File.Close
-.80cc					data
-.80cc	ad 07 09	lda $0907				lda     event.file.data.read
-.80cf	20 e1 80	jsr $80e1				jsr     read_data
-.80d2	a0 00		ldy #$00				ldy     #0
-.80d4	b9 00 08	lda $0800,y	_loop       lda     buf,y
-.80d7	20 ee 80	jsr $80ee				jsr     print
-.80da	c8		iny					iny
-.80db	cc 07 09	cpy $0907				cpy     event.file.data.read
-.80de	d0 f4		bne $80d4				bne     _loop
-.80e0					_done
-.80e0	60		rts					rts
-.80e1					read_data
-.80e1	85 fd		sta $fd					sta     kernel.args.recv.buflen
-.80e3	a9 00		lda #$00				lda     #<buf
-.80e5	85 fb		sta $fb					sta     kernel.args.recv.buf+0
-.80e7	a9 08		lda #$08				lda     #>buf
-.80e9	85 fc		sta $fc					sta     kernel.args.recv.buf+1
-.80eb	4c 04 ff	jmp $ff04				jmp     kernel.ReadData
-.80ee					print
-.80ee	ae 0a 09	ldx $090a				ldx     print_fn
-.80f1	7c 00 00	jmp ($0000,x)				jmp     (0,x)
-.80f4	20 26 81	jsr $8126	puts_cr 	jsr 	puth
-.80f7	a9 2a		lda #$2a				lda 	#42
-.80f9	20 05 81	jsr $8105				jsr 	putc
-.80fc	20 05 81	jsr $8105				jsr 	putc
-.80ff	80 fe		bra $80ff	h2:			bra 	h2
-
-;******  Processing input file: display.asm
-
-.090c					screenPos:
->090c							.fill   1
-.8101					initputc
-.8101	9c 0c 09	stz $090c			stz 	screenPos
-.8104	60		rts				rts
-.8105					putc:
-.8105	48		pha				pha
-.8106	da		phx				phx
-.8107	5a		phy				phy
-.8108	a4 01		ldy $01				ldy 	1
-.810a	5a		phy				phy
-.810b	ae 0c 09	ldx $090c			ldx 	screenPos
-.810e	a0 02		ldy #$02			ldy 	#2
-.8110	84 01		sty $01				sty 	1
-.8112	9d 00 c0	sta $c000,x			sta 	$C000,x
-.8115	e6 01		inc $01				inc 	1
-.8117	a9 52		lda #$52			lda 	#$52
-.8119	9d 00 c0	sta $c000,x			sta 	$C000,x
-.811c	7a		ply				ply
-.811d	84 01		sty $01				sty 	1
-.811f	ee 0c 09	inc $090c			inc 	screenPos
-.8122	7a		ply				ply
-.8123	fa		plx				plx
-.8124	68		pla				pla
-.8125	60		rts				rts
-.8126	48		pha		puth:	pha
-.8127	48		pha				pha
-.8128	48		pha				pha
-.8129	a9 20		lda #$20			lda 	#' '
-.812b	20 05 81	jsr $8105			jsr 	putc
-.812e	68		pla				pla
-.812f	4a		lsr a				lsr 	a
-.8130	4a		lsr a				lsr 	a
-.8131	4a		lsr a				lsr 	a
-.8132	4a		lsr a				lsr 	a
-.8133	20 3c 81	jsr $813c			jsr 	putn
-.8136	68		pla				pla
-.8137	20 3c 81	jsr $813c			jsr 	putn
-.813a	68		pla				pla
-.813b	60		rts				rts
-.813c					putn:
-.813c	29 0f		and #$0f			and 	#15
-.813e	c9 0a		cmp #$0a			cmp 	#10
-.8140	90 02		bcc $8144			bcc 	_putn2
-.8142	69 06		adc #$06			adc 	#6
-.8144	69 30		adc #$30	_putn2:	adc 	#48
-.8146	4c 05 81	jmp $8105			jmp 	putc
-
-;******  Processing input file: api.asm
+;******  Processing file: api.asm
 
 >ff00					NextEvent   .fill   4   ; Copy the next event into user-space.
 >ff04					ReadData    .fill   4   ; Copy primary bulk event data into user-space
@@ -736,5 +505,245 @@
 >0000					free        .fill   6   ; blocks used/free
 .0000					udp_t
 >0000					token       .byte   ?   ; TODO: break out into fields
+
+;******  Return to file: cmd_read.asm
+
+.8000	20 0a 81	jsr $810a				jsr     initputc
+.8003	a9 00		lda #$00				lda 	#$00
+.8005	20 2f 81	jsr $812f				jsr 	puth
+.8008	20 0d 80	jsr $800d				jsr 	cmd
+.800b	80 fe		bra $800b	h1:			bra 	h1
+>00d0					print_func   .word       ?
+.800d					cmd
+.800d	a9 29		lda #$29				lda     #<printfn
+.800f	85 d0		sta $d0					sta     print_func+0
+.8011	a9 80		lda #$80				lda     #>printfn
+.8013	85 d1		sta $d1					sta     print_func+1
+.8015	a9 01		lda #$01	            lda     #<event
+.8017	85 f0		sta $f0		            sta     kernel.args.events+0
+.8019	a9 09		lda #$09	            lda     #>event
+.801b	85 f1		sta $f1		            sta     kernel.args.events+1
+.801d	a9 55		lda #$55	            lda 	#$55
+.801f	20 2f 81	jsr $812f				jsr  	puth
+.8022	a9 00		lda #$00				lda     #0  ; Max read size
+.8024	a2 d0		ldx #$d0				ldx     #print_func
+.8026	4c 31 80	jmp $8031				jmp     read_file
+.8029					printfn
+.8029	4c 0e 81	jmp $810e				jmp     putc
+>0800					buf         .fill       256     ; Used to fetch data from the kernel.
+>0900					drive       .byte       ?                       ; Current selected (logical) drive #
+.0901					event
+>0901					type        .byte   ?   ; Enum above
+>0902					buf         .byte   ?   ; page id or zero
+>0903					ext         .byte   ?   ; page id or zero
+.0904					key
+>0904					keyboard    .byte   ?   ; Keyboard ID
+>0905					raw         .byte   ?   ; Raw key ID
+>0906					ascii       .byte   ?   ; ASCII value
+>0907					flags       .byte   ?   ; Flags (META)
+=$80					META        = $80       ; Meta key; no associated ASCII value.
+.0904					mouse
+.0904					delta
+>0904					x           .byte   ?
+>0905					y           .byte   ?
+>0906					z           .byte   ?
+>0907					buttons     .byte   ?
+.0904					clicks
+>0904					inner       .byte   ?
+>0905					middle      .byte   ?
+>0906					outer       .byte   ?
+.0904					udp
+>0904					token       .byte   ?   ; TODO: break out into fields
+.0904					file
+>0904					stream      .byte   ?
+>0905					cookie      .byte   ?
+.0906					data
+>0906					requested   .byte   ?   ; Requested number of bytes to read
+>0907					read        .byte   ?   ; Number of bytes actually read
+.0906					wrote
+>0906					requested   .byte   ?   ; Requested number of bytes to read
+>0907					wrote       .byte   ?   ; Number of bytes actually read
+.0904					directory
+>0904					stream      .byte   ?
+>0905					cookie      .byte   ?
+.0906					volume
+>0906					len         .byte   ?   ; Length of volname (in buf)
+>0907					flags       .byte   ?   ; block size, text encoding
+.0906					file
+>0906					len         .byte   ?
+>0907					flags       .byte   ?   ; block scale, text encoding, approx size
+.0906					free
+>0906					flags       .byte   ?   ; block scale, text encoding, approx size
+>00d2					eol         .byte       ?
+>00d3					drives      .byte       ?
+>00d4					tmp         .word       ?
+
+;******  Processing input file: reader.asm
+
+>0908					stop        .byte       ?
+>0909					read_len    .byte       ?
+>090a					print_fn    .byte       ?
+>090b					remaining   .byte       ?
+>090c					name 		.fill 		8
+>802c	54 45 53 54 00			fileName:	.text 		"TEST",0
+=4					fileNameLen = 4
+.8031					read_file
+.8031	8d 09 09	sta $0909				sta     read_len
+.8034	8d 0b 09	sta $090b				sta     remaining
+.8037	8e 0a 09	stx $090a				stx     print_fn
+.803a	9c 08 09	stz $0908				stz     stop
+.803d	a9 00		lda #$00				lda 	#0
+.803f	85 f3		sta $f3					sta     kernel.args.file.open.drive
+.8041	a5 2c		lda $2c					lda     fileName & $FF
+.8043	85 fb		sta $fb					sta     kernel.args.file.open.fname+0
+.8045	a5 80		lda $80					lda     fileName >> 8
+.8047	85 fc		sta $fc					sta     kernel.args.file.open.fname+1
+.8049	a9 04		lda #$04				lda 	#fileNameLen
+.804b	85 fd		sta $fd					sta     kernel.args.file.open.fname_len
+.804d	a9 00		lda #$00				lda     #kernel.args.file.open.READ
+.804f	85 f5		sta $f5					sta     kernel.args.file.open.mode
+.8051	20 5c ff	jsr $ff5c				jsr     kernel.File.Open
+.8054	b0 22		bcs $8078				bcs     _error
+.8056					_loop
+.8056	20 0c ff	jsr $ff0c				jsr     kernel.Yield    ; Not required; but good while waiting.
+.8059	20 00 ff	jsr $ff00				jsr     kernel.NextEvent
+.805c	b0 f8		bcs $8056				bcs     _loop
+.805e	ad 01 09	lda $0901				lda 	event.type
+.8061	48		pha					pha
+.8062	20 2f 81	jsr $812f				jsr 	puth
+.8065	a9 21		lda #$21				lda 	#"!"
+.8067	20 0e 81	jsr $810e				jsr 	putc
+.806a	68		pla					pla
+.806b	c9 32		cmp #$32				cmp     #kernel.event.file.CLOSED
+.806d	f0 10		beq $807f				beq     _done
+.806f	c9 28		cmp #$28				cmp     #kernel.event.file.NOT_FOUND
+.8071	f0 26		beq $8099				beq     _not_found
+.8073	20 84 80	jsr $8084				jsr     _dispatch
+.8076	80 de		bra $8056				bra     _loop
+.8078					_error
+.8078	38		sec					sec
+.8079	a9 fd		lda #$fd				lda 	#$FD
+.807b	4c fd 80	jmp $80fd				jmp 	puts_cr
+.807e	60		rts					rts
+.807f					_done
+.807f	a9 ff		lda #$ff				lda 	#$FF
+.8081	4c fd 80	jmp $80fd				jmp     puts_cr
+.8084					_dispatch
+.8084	c9 2a		cmp #$2a				cmp     #kernel.event.file.OPENED
+.8086	f0 1d		beq $80a5				beq     _read
+.8088	c9 2c		cmp #$2c				cmp     #kernel.event.file.DATA
+.808a	f0 30		beq $80bc				beq     _data
+.808c	c9 38		cmp #$38				cmp     #kernel.event.file.ERROR
+.808e	f0 3d		beq $80cd				beq     _eof
+.8090	c9 30		cmp #$30				cmp     #kernel.event.file.EOF
+.8092	f0 39		beq $80cd				beq     _eof
+.8094	c9 08		cmp #$08				cmp     #kernel.event.key.PRESSED
+.8096	f0 06		beq $809e				beq     _key
+.8098	60		rts					rts
+.8099					_not_found
+.8099	a9 fe		lda #$fe				lda     #$FE
+.809b	4c fd 80	jmp $80fd				jmp     puts_cr
+.809e					_key
+.809e	ad 06 09	lda $0906				lda     event.key.ascii
+.80a1	8d 08 09	sta $0908				sta     stop
+.80a4	60		rts					rts
+.80a5					_read
+.80a5	ad 08 09	lda $0908				lda     stop
+.80a8	d0 23		bne $80cd				bne     _eof
+.80aa	ad 04 09	lda $0904				lda     event.file.stream
+.80ad	85 f3		sta $f3					sta     kernel.args.file.read.stream
+.80af	ad 0b 09	lda $090b				lda     remaining
+.80b2	d0 03		bne $80b7				bne     _set
+.80b4	ad 09 09	lda $0909				lda     read_len
+.80b7	85 f4		sta $f4		_set        sta     kernel.args.file.read.buflen
+.80b9	4c 60 ff	jmp $ff60				jmp     kernel.File.Read
+.80bc					_data
+.80bc	20 d5 80	jsr $80d5				jsr     data
+.80bf	ad 0b 09	lda $090b				lda     remaining
+.80c2	f0 e1		beq $80a5				beq     _read
+.80c4	38		sec					sec
+.80c5	ed 07 09	sbc $0907				sbc     event.file.data.read
+.80c8	8d 0b 09	sta $090b				sta     remaining
+.80cb	80 d8		bra $80a5				bra     _read
+.80cd					_eof
+.80cd	ad 04 09	lda $0904				lda     event.file.stream
+.80d0	85 f3		sta $f3					sta     kernel.args.file.close.stream
+.80d2	4c 68 ff	jmp $ff68				jmp     kernel.File.Close
+.80d5					data
+.80d5	ad 07 09	lda $0907				lda     event.file.data.read
+.80d8	20 ea 80	jsr $80ea				jsr     read_data
+.80db	a0 00		ldy #$00				ldy     #0
+.80dd	b9 00 08	lda $0800,y	_loop       lda     buf,y
+.80e0	20 f7 80	jsr $80f7				jsr     print
+.80e3	c8		iny					iny
+.80e4	cc 07 09	cpy $0907				cpy     event.file.data.read
+.80e7	d0 f4		bne $80dd				bne     _loop
+.80e9					_done
+.80e9	60		rts					rts
+.80ea					read_data
+.80ea	85 fd		sta $fd					sta     kernel.args.recv.buflen
+.80ec	a9 00		lda #$00				lda     #<buf
+.80ee	85 fb		sta $fb					sta     kernel.args.recv.buf+0
+.80f0	a9 08		lda #$08				lda     #>buf
+.80f2	85 fc		sta $fc					sta     kernel.args.recv.buf+1
+.80f4	4c 04 ff	jmp $ff04				jmp     kernel.ReadData
+.80f7					print
+.80f7	ae 0a 09	ldx $090a				ldx     print_fn
+.80fa	7c 00 00	jmp ($0000,x)				jmp     (0,x)
+.80fd	20 2f 81	jsr $812f	puts_cr 	jsr 	puth
+.8100	a9 2a		lda #$2a				lda 	#42
+.8102	20 0e 81	jsr $810e				jsr 	putc
+.8105	20 0e 81	jsr $810e				jsr 	putc
+.8108	80 fe		bra $8108	h2:			bra 	h2
+
+;******  Processing input file: display.asm
+
+.0914					screenPos:
+>0914							.fill   1
+.810a					initputc
+.810a	9c 14 09	stz $0914			stz 	screenPos
+.810d	60		rts				rts
+.810e					putc:
+.810e	48		pha				pha
+.810f	da		phx				phx
+.8110	5a		phy				phy
+.8111	a4 01		ldy $01				ldy 	1
+.8113	5a		phy				phy
+.8114	ae 14 09	ldx $0914			ldx 	screenPos
+.8117	a0 02		ldy #$02			ldy 	#2
+.8119	84 01		sty $01				sty 	1
+.811b	9d 00 c0	sta $c000,x			sta 	$C000,x
+.811e	e6 01		inc $01				inc 	1
+.8120	a9 52		lda #$52			lda 	#$52
+.8122	9d 00 c0	sta $c000,x			sta 	$C000,x
+.8125	7a		ply				ply
+.8126	84 01		sty $01				sty 	1
+.8128	ee 14 09	inc $0914			inc 	screenPos
+.812b	7a		ply				ply
+.812c	fa		plx				plx
+.812d	68		pla				pla
+.812e	60		rts				rts
+.812f	48		pha		puth:	pha
+.8130	48		pha				pha
+.8131	48		pha				pha
+.8132	a9 20		lda #$20			lda 	#' '
+.8134	20 0e 81	jsr $810e			jsr 	putc
+.8137	68		pla				pla
+.8138	4a		lsr a				lsr 	a
+.8139	4a		lsr a				lsr 	a
+.813a	4a		lsr a				lsr 	a
+.813b	4a		lsr a				lsr 	a
+.813c	20 45 81	jsr $8145			jsr 	putn
+.813f	68		pla				pla
+.8140	20 45 81	jsr $8145			jsr 	putn
+.8143	68		pla				pla
+.8144	60		rts				rts
+.8145					putn:
+.8145	29 0f		and #$0f			and 	#15
+.8147	c9 0a		cmp #$0a			cmp 	#10
+.8149	90 02		bcc $814d			bcc 	_putn2
+.814b	69 06		adc #$06			adc 	#6
+.814d	69 30		adc #$30	_putn2:	adc 	#48
+.814f	4c 0e 81	jmp $810e			jmp 	putc
 
 ;******  End of listing

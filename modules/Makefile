@@ -16,8 +16,8 @@ include ../documents/common.make
 endif
 
 all:
-	make -C graphics
-	make -C hardware/header
+	make -B -C graphics
+	make -B -C hardware/header
 	
 	python _scripts$(S)makebuild.py graphics >_build$(S)_graphics.module
 

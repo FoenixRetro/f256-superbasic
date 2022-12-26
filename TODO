@@ -1,6 +1,6 @@
 Progress:	
 	- Break check
-	Look at making SD2IEC load/save work.
+	Look at making SD2IEC load/save work (same problem)
 	zTemp0 in control.asm
 
 	Should CR in PRINT clear to EOL.

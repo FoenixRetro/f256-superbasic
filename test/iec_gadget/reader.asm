@@ -5,11 +5,12 @@ stop        .byte       ?
 read_len    .byte       ?
 print_fn    .byte       ?
 remaining   .byte       ?
+name 		.fill 		8
 			.send            
 
 			.section    code
 
-fileName:	.text 		"TEST"
+fileName:	.text 		"TEST",0
 fileNameLen = 4
 
 read_file
@@ -30,10 +31,10 @@ read_file
 			stz     stop
 
 		  ; Set the drive 
-			lda     drive
 
-			lda 	#0 
+			lda 	#0
 			sta     kernel.args.file.open.drive
+
 
 		  ; Set the filename (conveniently aligned)
 			lda     fileName & $FF
@@ -58,9 +59,12 @@ _loop
 			bcs     _loop
 
 			lda 	event.type
+			pha
 			jsr 	puth
+			lda 	#"!"
+			jsr 	putc
+			pla
 
-			lda     event.type  
 			cmp     #kernel.event.file.CLOSED
 			beq     _done
 			cmp     #kernel.event.file.NOT_FOUND
