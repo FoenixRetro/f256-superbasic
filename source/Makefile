@@ -65,7 +65,8 @@ updatekernel:
 #		Build RAM based kernel / ROM combo and boot.
 #
 ramkernel: ramboot
-	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)kernel.ram build
+#	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)kernel.ram build
+	cat build$(S)3f.bin build$(S)3e.bin build$(S)01.bin  >build$(S)kernel.ram 
 	cat build$(S)kernel.ram build$(S)basic.rom >build$(S)ramkernel.bin
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary build$(S)ramkernel.bin --address E000
 

@@ -25,8 +25,6 @@ Start:	ldx 	#$FF 						; stack reset
 		jsr		UpdateFont 					; update font if between FPGA updates.
 		
 		jsr 	EXTInitialise 				; hardware initialise
-
-		;jsr 	KNLLoadFile
 			
 		.if 	graphicsIntegrated==1 		; if installed
 		lda 	#0 							; graphics system initialise.
