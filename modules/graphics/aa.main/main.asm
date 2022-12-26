@@ -32,10 +32,10 @@ Export_GXGraphicDraw:
 		;
 _GDCoordinate:
 		pha 								; save AXY
-		phx 
-		phy		
+		phx
+		phy
 		ldx 	#3 							; copy currentX to lastX
-_GDCopy1:		
+_GDCopy1:
 		lda 	gxCurrentX,x
 		sta 	gxLastX,x
 		dex
@@ -45,7 +45,7 @@ _GDCopy1:
 		sta 	gxCurrentY
 		stz 	gxCurrentY+1
 		;
-		pla 
+		pla
 		sta 	gxCurrentX
 		pla 								; get A (command+X.1) back
 		pha
@@ -70,7 +70,7 @@ _GDCheckY:
 		bcc 	_GDCopyToWorkArea
 _GDError1:
 		pla
-_GDError2:		
+_GDError2:
 		sec
 		rts
 
@@ -81,12 +81,12 @@ _GDCopy2:
 		lda 	gxCurrentX,x
 		sta 	gxX0,x
 		dex
-		bpl 	_GDCopy2		
+		bpl 	_GDCopy2
 		;
 		;		Execute command X
-		;		
+		;
 		pla 								; get command
-_GDExecuteA:		
+_GDExecuteA:
 		cmp 	#GRFirstFreeCode*2 			; bad ?
 		bcs 	_GDError2
 		tax
@@ -97,7 +97,7 @@ GXMove: ;; <32:Move>
 		rts
 
 GRUndefined:
-		.debug	
+		.debug
 
 ; ************************************************************************************************
 ;											DRAWING MODES

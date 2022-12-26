@@ -139,7 +139,7 @@ _SNDFNNSearch:
 		bne 	_SNDFNNSearch 				; no, go back.
 _SNDFNNFail:		
 		clc
-_SNDFNNexit:		
+_SNDFNNExit:		
 		rts
 
 ; ************************************************************************************************

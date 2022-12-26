@@ -14,20 +14,20 @@
 
 ; ************************************************************************************************
 ;
-;		For GXX0,GXY0 calculate position in gxzScreen, offset in gsOffset and select current
+;		For gxX0,gxY0 calculate position in gxzScreen, offset in gxOffset and select current
 ;		segment.
 ;
 ; ************************************************************************************************
 ;
-;		The main calculation is GXY0*320 = GXY0 * 5 * 64
+;		The main calculation is gxY0*320 = gxY0 * 5 * 64
 ;
-GXPositionCalc:
+gxPositionCalc:
 		lda 	gxzTemp0 					; save temp memory slot
 		pha
 		;
-		;		Calculate GXY0 * 5 => gxzScreen
+		;		Calculate gxY0 * 5 => gxzScreen
 		;
-		lda 	GXY0 						; gxzScreen = Y0
+		lda 	gxY0 						; gxzScreen = Y0
 		sta 	gxzScreen
 		stz 	gxzScreen+1
 		;
@@ -45,7 +45,7 @@ _GXPCNoCarry:
 		asl 	gxzScreen 						; now Y0 * 10. Needs to be multiplied by another
 		rol 	gxzScreen+1 					; 32. At this point the MSB contains the offset
 		lda	 	gxzScreen+1 					; so save this in zTemp0 and zero it.
-		sta 	gxzTemp0 					
+		sta 	gxzTemp0
 		stz 	gxzScreen+1
 		;
 		lda 	#5 							; now multiply by 32, this puts this in the range 0..8191
@@ -56,10 +56,10 @@ _GXPCMultiply32:
 		bne 	_GXPCMultiply32
 		;
 		clc
-		lda 	GXX0 						; add X to this value, put the result in gsOffset, gxzScreen has to be on a page boundary
-		adc 	gxzScreen 						
-		sta 	gsOffset
-		lda 	GXX0+1
+		lda 	gxX0 						; add X to this value, put the result in gxOffset, gxzScreen has to be on a page boundary
+		adc 	gxzScreen
+		sta 	gxOffset
+		lda 	gxX0+1
 		adc 	gxzScreen+1
 		;
 		cmp 	#$20 						; has it overflowed into the next one ?
@@ -76,32 +76,32 @@ _GXPCNoOverflow:
 		adc 	gxBasePage 					; by adding the base page
 		sta 	GXEditSlot 				; and map it into memory.
 		;
-		pla 
+		pla
 		sta 	gxzTemp0
 		rts
 
 ; ************************************************************************************************
 ;
-;						Move the (gxzScreen),gsOffset down one line
+;						Move the (gxzScreen),gxOffset down one line
 ;
 ; ************************************************************************************************
 
 GXMovePositionDown:
 		clc 								; add 320 to offset/temp+1
-		lda 	gsOffset
+		lda 	gxOffset
 		adc 	#64
-		sta 	gsOffset
+		sta 	gxOffset
 		lda 	gxzScreen+1
 		adc 	#1
 		sta 	gxzScreen+1
 		cmp 	#((GXMappingAddress+$2000) >> 8) ; on to the next page
 		bcc 	_GXMPDExit
 		sec  								; next page
-		sbc 	#$20 	
+		sbc 	#$20
 		sta 	gxzScreen+1
 		inc 	GXEditSlot
 _GXMPDExit:
-		rts		
+		rts
 		.send 	code
 
 ; ************************************************************************************************

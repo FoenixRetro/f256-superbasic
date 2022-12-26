@@ -22,8 +22,8 @@ EditProgramCode:
 		;
 		;		Delete the line first
 		;
-		lda 	TokenLineNumber 			; try to find the line.
-		ldx 	TokenLineNumber+1
+		lda 	tokenLineNumber 			; try to find the line.
+		ldx 	tokenLineNumber+1
 		jsr 	MemorySearch
 		bcc 	_EPCNoDelete 				; reached the end : don't delete
 		bne 	_EPCNoDelete 				; found slot but didn't match : no delete
@@ -32,12 +32,12 @@ _EPCNoDelete:
 		;
 		;		Insert the line.
 		;
-		lda 	TokenBuffer 				; buffer empty - we just want to delete a line.
+		lda 	tokenBuffer 				; buffer empty - we just want to delete a line.
 		cmp 	#KWC_EOL
 		beq 	_EPCNoInsert
 
-		lda 	TokenLineNumber 			; find the line - it cannot exist as we've just deleted it.
-		ldx 	TokenLineNumber+1 			; so this can't fail, it returns some point in the code.
+		lda 	tokenLineNumber 			; find the line - it cannot exist as we've just deleted it.
+		ldx 	tokenLineNumber+1 			; so this can't fail, it returns some point in the code.
 		jsr 	MemorySearch
 		clc 								; insert at this point.
 		jsr 	MemoryInsertLine 			; insert the line

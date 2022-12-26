@@ -22,15 +22,15 @@ GXFontHandler: ;; <5:DrawFont>
 		lda 	gxzTemp0+1 					; eor with mode
 		eor 	gxMode
 		sta 	gxUseMode
-		
+
 		stz 	gxzTemp0+1 					; gxzTemp0 is font #
 		asl	 	gxzTemp0 					; x 2
 		rol	 	gxzTemp0+1
 		asl	 	gxzTemp0 					; x 4
 		rol	 	gxzTemp0+1
-		asl	 	gxzTemp0 					; x 8		
+		asl	 	gxzTemp0 					; x 8
 		rol	 	gxzTemp0+1
-		
+
 		lda 	gxzTemp0+1 					; put in page C0
 		ora 	#$C0
 		sta 	gxzTemp0+1
@@ -58,12 +58,12 @@ _GXExpand:
 		bcc 	_GXNoPixel
 		pha 								; if set, set pixel buffer to current colour.
 		lda 	gxColour
-		sta 	gxPixelBuffer,x		
+		sta 	gxPixelBuffer,x
 		pla
 _GXNoPixel:
 		inx 								; do the whole byte.
 		cpx 	#8
-		bne 	_GXExpand		
+		bne 	_GXExpand
 		rts
 
 		.send code

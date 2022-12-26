@@ -18,20 +18,20 @@
 ;
 ; ************************************************************************************************
 
-GXDrawGraphicElement:		
-		sta 	gxSize 						; save size 
+GXDrawGraphicElement:
+		sta 	gxSize 						; save size
 		dec 	a
 		sta 	gxMask 						; and mask
 
-		lda 	gxBitmapsOn 				; check BMP on 
+		lda 	gxBitmapsOn 				; check BMP on
 		beq 	_GXSLFail
 
 		lda 	gxY0 						; push Y on stack
-		pha 
+		pha
 
 		sty 	gxAcquireVector+1 			; and acquisition vector
 		stx 	gxAcquireVector
-		jsr 	gxOpenBitmap 				; open the bitmap.
+		jsr 	GXOpenBitmap 				; open the bitmap.
 
 		lda 	gxUseMode 					; scale bits
 		lsr 	a
@@ -49,7 +49,7 @@ _GXGELoop:
 		lda 	gxMask
 		sec
 		sbc 	gxzTemp1
-_GXNoVFlip:		
+_GXNoVFlip:
 
 		tax 								; get the Xth line.
 		jsr 	_GXCallAcquire 				; get that data.
@@ -62,7 +62,7 @@ _GXGELoop2:
 
 		jsr 	GXRenderOneLine 			; render line
 		dec 	gxzTemp1+1 					; scale times.
-		bne 	_GXGELoop2		
+		bne 	_GXGELoop2
 		inc 	gxzTemp1 					; done all lines.
 		lda 	gxzTemp1
 		cmp 	gxSize
@@ -81,11 +81,11 @@ _GXShiftLeft:
 		inc 	gxX0+1
 _GXSLNoCarry:
 		dex
-		bne 	_GXShiftLeft		
+		bne 	_GXShiftLeft
 
 		jsr 	GXCloseBitmap
 		clc
-		rts		
+		rts
 _GXSLFail:
 		sec
 		rts
@@ -100,8 +100,8 @@ _GXCallAcquire:
 ; ************************************************************************************************
 
 GXRenderOneLine:
-		jsr 	GXPositionCalc 				; calculate position/offset.
-		ldy 	gsOffset 					; Y contains position.
+		jsr 	gxPositionCalc 				; calculate position/offset.
+		ldy 	gxOffset 					; Y contains position.
 		stz 	gxzTemp2 					; do size pixels
 _GXROLLoop1:
 		lda 	gxScale 					; set to do 'scale' times
@@ -109,7 +109,7 @@ _GXROLLoop1:
 _GXROLLoop2:
 		lda 	gxzTemp2 					; get current pixel
 		bit 	gxMode 						; check H Flip
-		bvc 	_GXNoHFlip 		
+		bvc 	_GXNoHFlip
 		lda 	gxMask
 		sec
 		sbc 	gxzTemp2
@@ -119,8 +119,8 @@ _GXNoHFlip:
 		bne 	_GXDraw 					; draw if non zero
 		lda 	gxUseMode 					; check to see if solid background
 		and 	#4
-		beq 	_GXZeroPixel		
-_GXDraw:		
+		beq 	_GXZeroPixel
+_GXDraw:
 		lda 	(gxzScreen),y
 		and 	gxANDValue
 		eor 	gxPixelBuffer,x
@@ -130,9 +130,9 @@ _GXZeroPixel:
 		bne 	_GXNoShift
 		inc 	gxzScreen+1 				; carry to next
 		jsr 	GXDLTCheckWrap				; check for new page.
-_GXNoShift:		
+_GXNoShift:
 		dec 	gxzTemp2+1 					; do the inner loop gxScale times.
-		bne 	_GXROLLoop2 
+		bne 	_GXROLLoop2
 		inc 	gxzTemp2 					; next pixel.
 		lda 	gxzTemp2
 		cmp 	gxSize
@@ -148,11 +148,11 @@ gxSize:
 gxMask:
 		.fill 	1
 gxAcquireVector:
-		.fill 	2				
+		.fill 	2
 gxScale:
-		.fill 	1			
+		.fill 	1
 gxUseMode:
-		.fill 	1		
+		.fill 	1
 		.send storage
 
 

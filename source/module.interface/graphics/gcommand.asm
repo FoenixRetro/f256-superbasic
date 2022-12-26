@@ -168,8 +168,8 @@ RunGraphicsCommand:
 		bne 	_RGINoCarry
 		inx
 _RGINoCarry:
-		sta 	GXHandler
-		stx 	GXHandler+1
+		sta 	gxHandler
+		stx 	gxHandler+1
 		; ------------------------------------------------------------------
 		;
 		;		Now start processing commands
@@ -264,10 +264,10 @@ _RGI_By:
 		jsr 	GCSignedCoordinatePair 		; get coordinate pair into slot #1,#2
 		clc
 		lda 	NSMantissa0+1 				; copy it into space.
-		adc 	gxxPos
+		adc 	gxXPos
 		sta 	gxXPos
 		lda 	NSMantissa1+1
-		adc 	gxxPos+1
+		adc 	gxXPos+1
 		sta 	gxXPos+1
 		lda 	NSMantissa0+2
 		clc
@@ -317,7 +317,7 @@ _RGICDefaultMode:
 _RGIRange:
 		jmp 	RangeError
 _RGICallHandler:
-		jmp 	(GXHandler)
+		jmp 	(gxHandler)
 		;
 		;		Additional sprite instructions
 		;

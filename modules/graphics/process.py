@@ -93,3 +93,7 @@ for f in sources:
 		l = source[i]
 		for t in test:
 			l = re.sub(t, convert[t], l, flags=re.IGNORECASE)
+		source[i] = l
+	h = open(f,"w")
+	h.write("\n".join(source))
+	h.close()

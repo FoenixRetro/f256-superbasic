@@ -52,8 +52,8 @@ _BPNotTab:
 _BPEndLine:		
 		jsr 	TKTokeniseLine 				; tokenise the line.
 
-		lda 	TokenLineNumber 			; line number = 0
-		ora 	TokenLineNumber+1
+		lda 	tokenLineNumber 			; line number = 0
+		ora 	tokenLineNumber+1
 		beq 	_BPLoop 					; not legal code, blank line or maybe a comment.
 
 		.if AUTORUN==1 						; if autorun do full insert/delete for testing

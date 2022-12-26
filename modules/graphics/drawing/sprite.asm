@@ -22,7 +22,7 @@ GXSelect: ;; <7:SpriteUse>
 		lda 	gxSpritesOn
 		beq 	_GXSFail
 
-		lda 	gxzTemp0 					; illegal sprite #		
+		lda 	gxzTemp0 					; illegal sprite #
 		cmp 	#64
 		bcs 	_GXSFail
 		sta 	GSCurrentSpriteID
@@ -43,7 +43,7 @@ GXSelect: ;; <7:SpriteUse>
 
 _GXSFail:
 		sec
-		rts		
+		rts
 
 ; ************************************************************************************************
 ;
@@ -66,7 +66,7 @@ GXSelectImage: ;; <8:SpriteImage>
 		lda 	gxzTemp0 					; sprite image
 		pha
 		jsr 	GXOpenBitmap
-		pla		
+		pla
 		jsr 	GXFindSprite
 		bcs 	_GXSICloseFail 				; no image
 
@@ -76,46 +76,46 @@ GXSelectImage: ;; <8:SpriteImage>
 		lda 	GSCurrentSpriteAddr+1
 		sta 	gxzTemp0+1
 
-		lda 	GXSpriteOffset
+		lda 	gxSpriteOffset
 		sta	 	(gxzTemp0),y
 		clc
-		lda 	GXSpriteOffset+1
-		adc 	GXSpriteOffsetBase
+		lda 	gxSpriteOffset+1
+		adc 	gxSpriteOffsetBase
 		iny
 		sta	 	(gxzTemp0),y
 
-		lda 	GXSpriteOffsetBase+1
+		lda 	gxSpriteOffsetBase+1
 		adc 	#0
 		iny
 		sta	 	(gxzTemp0),y
 
-		lda 	GXSizeBits 					; get raw size
+		lda 	gxSizeBits 					; get raw size
 		eor 	#3 							; make it right (00=32 etc.)
 		rol 	a 							; x 2
 		asl 	a 							; x 4
 		asl 	a 							; x 8
 		asl 	a 							; x 16
-		ora 	GXSpriteLUT 				; Or with LUT
+		ora 	gxSpriteLUT 				; Or with LUT
 		asl 	a 							; 1 shift
 		ora 	#1 							; enable sprite.
 		sta 	(gxzTemp0) 					; and write back
-		jsr 	GXCloseBitmap 				
+		jsr 	GXCloseBitmap
 		;
 		ldx 	GSCurrentSpriteID 			; point to sprite entries.
-		lda 	GXSpriteHigh,x 				; clear upper two bits of size
+		lda 	gxSpriteHigh,x 				; clear upper two bits of size
 		and 	#$3F
-		sta 	GXSpriteHigh,x
-		lda 	GXSizeBits 					; get bit size 
+		sta 	gxSpriteHigh,x
+		lda 	gxSizeBits 					; get bit size
 		ror 	a 							; shift into bits 6/7
-		ror 	a 
-		ror 	a 	
-		and 	#$C0 
-		ora 	GXSpriteHigh,x 				; put in  upper 2 bits of sprite data
-		sta 	GXSpriteHigh,x
+		ror 	a
+		ror 	a
+		and 	#$C0
+		ora 	gxSpriteHigh,x 				; put in  upper 2 bits of sprite data
+		sta 	gxSpriteHigh,x
 		;
-		lda 	GXSpriteLow,x 				; clear hidden flag.
+		lda 	gxSpriteLow,x 				; clear hidden flag.
 		and 	#$7F
-		sta 	GXSpriteLow,x
+		sta 	gxSpriteLow,x
 		clc
 		rts
 
@@ -133,9 +133,9 @@ _GXSIHide:
 		lda 	#0
 		sta 	(gxzTemp0)
 		ldx 	GSCurrentSpriteID 			; get sprite ID
-		lda 	GXSpriteLow,x 				; set the hidden bit. 	
+		lda 	gxSpriteLow,x 				; set the hidden bit.
 		ora 	#$80
-		sta 	GXSpriteLow,x
+		sta 	gxSpriteLow,x
 		clc
 		rts
 
@@ -144,7 +144,7 @@ _GXSIHide:
 ;
 ;									Move Sprite
 ;
-; ************************************************************************************************		
+; ************************************************************************************************
 
 GXMoveSprite: ;; <41:SpriteMove>
 		lda 	gxSpritesOn
@@ -159,10 +159,10 @@ GXMoveSprite: ;; <41:SpriteMove>
 		sta 	gxzTemp0
 		;
 		ldx 	GSCurrentSpriteID 			; get the size from the upper two bits
-		lda 	GXSpriteHigh,x
+		lda 	gxSpriteHigh,x
 		rol 	a	 						; into bits 0,1.
-		rol 	a	
-		rol 	a	
+		rol 	a
+		rol 	a
 		and 	#3
 		tax
 		lda 	_GXMSOffset,x 				; get 32-SpriteSize/2
@@ -187,21 +187,21 @@ GXMoveSprite: ;; <41:SpriteMove>
 		;
 		lsr 	gxX0+1 						; divide X by 4
 		ror 	gxX0
-		lsr 	gxX0 
+		lsr 	gxX0
 		;
 		lsr 	gxY0 						; divide Y by 4
 		lsr 	gxY0
 
 		ldx 	GSCurrentSpriteID 			; copy X/4 and Y/4 into the status bytes
-		lda 	GXSpriteLow,x
+		lda 	gxSpriteLow,x
 		and 	#$80
 		ora 	gxX0
-		sta 	GXSpriteLow,x
-		
-		lda 	GXSpriteHigh,x
+		sta 	gxSpriteLow,x
+
+		lda 	gxSpriteHigh,x
 		and 	#$C0
 		ora 	gxY0
-		sta 	GXSpriteHigh,x
+		sta 	gxSpriteHigh,x
 		clc
 		rts
 

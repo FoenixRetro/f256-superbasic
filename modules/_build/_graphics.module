@@ -209,7 +209,7 @@ gxOriginalLUTValue:
 ;
 ;		Offset in calculation.
 ;
-gsOffset:
+gxOffset:
 		.fill 	1
 ;
 ;		ID and Address of current selected sprite in I/O (MSB=0 => None)
@@ -221,7 +221,7 @@ GSCurrentSpriteAddr:
 ;
 ;		Base address for sprite area
 ;
-GXSpriteOffsetBase:
+gxSpriteOffsetBase:
 		.fill 	2
 ;
 ;		Sprite location store
@@ -229,9 +229,9 @@ GXSpriteOffsetBase:
 ;		Low <Hidden bit> <X Position >> 2>
 ; 		High <Size (00=8,01=16,10=24,11=32)> <Y Position >> 2>
 ;
-GXSpriteLow:
+gxSpriteLow:
 		.fill 	64
-GXSpriteHigh:
+gxSpriteHigh:
 		.fill 	64
 
 
@@ -406,8 +406,8 @@ GXCircle:
 		jsr 	GXCircleSetup 				; set up for drawing
 		stz 	gxYChanged
 _GXCircleDraw:
-		lda 	gXCentre					; while x <= y
-		cmp 	gYCentre
+		lda 	gxxCentre					; while x <= y
+		cmp 	gxYCentre
 		bcc 	_GXCircleContinue
 		bne 	_GXNoLast
 		jsr 	GXPlot1
@@ -433,15 +433,15 @@ _GXCFail:
 GXPlot2:
 		jsr 	GXPlot1 						; plot and swap, fall through does twice
 GXPlot1:
-		lda 	gYCentre 						; if y = 0, don't do it twice (xor)
+		lda 	gxYCentre 						; if y = 0, don't do it twice (xor)
 		beq 	_GXPlot1Only
 		jsr 	GXPlot0 						; plot and negate
 _GXPlot1Only:
 		jsr 	GXPlot0 						; twice, undoing negation
-		lda 	gXCentre 						; swap X and Y
-		ldx	 	gYCentre
-		sta 	gYCentre
-		stx 	gXCentre
+		lda 	gxxCentre 						; swap X and Y
+		ldx	 	gxYCentre
+		sta 	gxYCentre
+		stx 	gxxCentre
 		lda 	gxYChanged 						; toggle Y Changed flag
 		lda 	#$FF
 		sta 	gxYChanged
@@ -459,13 +459,13 @@ GXPlot0:lda 	gxIsFillMode 					; outline mode, always draw as X or Y will change
 		beq 	GXPlot0Exit
 _GXPlot0Always:
 		ldx 	#2 								; copy Y1-A => Y0
-		lda 	gYCentre
+		lda 	gxYCentre
 		jsr 	GXSubCopy
 		ldx 	#0 								; copy X1-A => X0,
-		lda 	gXCentre
+		lda 	gxxCentre
 		jsr 	GXSubCopy
 		pha 									; save last offset X
-		jsr 	GXPositionCalc 					; calculate position/offset.
+		jsr 	gxPositionCalc 					; calculate position/offset.
 		pla
 		;
 		asl 	a 								; store 2 x last offset in gxzTemp0
@@ -478,8 +478,8 @@ _GXPlot0Always:
 		jsr 	GXDrawLineTemp0 				; routine from Rectangle.
 		sec 									; GY = -GY
 		lda 	#0
-		sbc 	gYCentre
-		sta 	gYCentre
+		sbc 	gxYCentre
+		sta 	gxYCentre
 GXPlot0Exit:
 		rts
 ;
@@ -494,12 +494,12 @@ GXSubCopy:
 _GXNoSx:
 		;
 		sec
-		lda 	gXX1,x
+		lda 	gxX1,x
 		sbc 	gxzTemp0
-		sta 	gXX0,x
-		lda 	gXX1+1,x
+		sta 	gxX0,x
+		lda 	gxX1+1,x
 		sbc 	gxzTemp0+1
-		sta 	gXX0+1,x
+		sta 	gxX0+1,x
 		lda 	gxzTemp0 						; return A
 		rts
 
@@ -516,8 +516,8 @@ GXCircleMove:
 		;
 		;		D < 0 : inc X, add 4x+6
 		;
-		inc 	gXCentre 					; X++
-		lda 	gXCentre
+		inc 	gxxCentre 					; X++
+		lda 	gxxCentre
 		jsr 	_GXAdd4TimesToD 			; add 4 x A to D
 		lda 	#6  						; and add 6
 		bra 	_GXEMAddD
@@ -525,12 +525,12 @@ GXCircleMove:
 		;		D >= 0 : inc X, dec Y, add 4(x-y)+10
 		;
 _GXEMPositive:
-		inc 	gXCentre					; X++
-		dec 	gyCentre 					; Y--
+		inc 	gxxCentre					; X++
+		dec 	gxYCentre 					; Y--
 		;
 		sec 								; calculate X-Y
-		lda 	gXCentre
-		sbc 	gYCentre
+		lda 	gxxCentre
+		sbc 	gxYCentre
 		jsr 	_GXAdd4TimesToD 			; add 4 x A to D
 		lda 	#10  						; and add 10
 		dec 	gxYChanged
@@ -592,9 +592,9 @@ GXCircleSetup:
 		;
 		;		X = 0, Y = R
 		;
-		stz 	gXCentre
+		stz 	gxxCentre
 		lda 	gxRadius
-		sta 	gYCentre
+		sta 	gxYCentre
 		;
 		;		d = 3 - 2 x R
 		;
@@ -614,13 +614,13 @@ GXCircleSetup:
 _GXCalculateCentre:
 		sec
 		lda 	gxX1,x
-		adc 	gXX0,x
-		sta 	gXX1,x
-		lda 	gXX1+1,x
-		adc 	gXX0+1,x
+		adc 	gxX0,x
+		sta 	gxX1,x
+		lda 	gxX1+1,x
+		adc 	gxX0+1,x
 		lsr 	a
-		sta 	gXX1+1,x
-		ror 	gXX1,x
+		sta 	gxX1+1,x
+		ror 	gxX1,x
 		rts
 
 		.send code
@@ -628,9 +628,9 @@ _GXCalculateCentre:
 		.section storage
 gxRadius:
 		.fill 	1
-gXCentre:
+gxxCentre:
 		.fill 	1
-gYCentre:
+gxYCentre:
 		.fill 	1
 gxIsFillMode:
 		.fill 	1
@@ -641,7 +641,7 @@ gxYChanged:
 ; ************************************************************************************************
 ;
 ;		Usage
-;			gxzScreen and gsOffset are used as usual
+;			gxzScreen and gxOffset are used as usual
 ;			gxzTemp0 holds the line length and is general workspace.
 ;			x1,y1 hold the circle centre
 ;			gX,gY are the coordinates x,y (note x, y both < 128)
@@ -769,8 +769,8 @@ GXInitialise: ;; <0:Initialise>
 		lda 	#1
 		sta 	$D000
 		clc
-		stz 	GXSpritesOn
-		stz 	GXBitmapsOn
+		stz 	gxSpritesOn
+		stz 	gxBitmapsOn
 		ldx 	#15
 _GXIClear:
 		stz 	gxCurrentX,x
@@ -854,9 +854,9 @@ _CSNotDefault:
 		sta 	gxSpritePage
 		jsr 	GXCalculateBaseAddress 	 	; convert page# to address
 		lda 	zTemp0
-		sta 	GXSpriteOffsetBase
+		sta 	gxSpriteOffsetBase
 		lda 	zTemp0+1
-		sta 	GXSpriteOffsetBase+1
+		sta 	gxSpriteOffsetBase+1
 		;
 		ldx 	#0 							; disable all sprites, clears all sprite memory.
 _CSClear:
@@ -896,9 +896,9 @@ _GXShift:
 GXClearSpriteStore:
 		ldx 	#63 						; erase 64 sprite store elements
 _GXCSSLoop:
-		stz 	GXSpriteHigh,x
+		stz 	gxSpriteHigh,x
 		lda 	#$80 						; set the 'hidden' bit.
-		sta 	GXSpriteLow,x
+		sta 	gxSpriteLow,x
 		dex
 		bpl 	_GXCSSLoop
 		rts
@@ -936,14 +936,14 @@ _GXCSSLoop:
 ; ************************************************************************************************
 
 GXLine: ;; <33:Line>
-		lda 	GXBitmapsOn
+		lda 	gxBitmapsOn
 		beq 	_GXLFail
 		jsr 	GXOpenBitmap
 		jsr 	GXSortY						; sort pairs so Y1 >= Y0 e.g. top to bottom.
 		jsr 	GXLineSetup 				; the calculations in the linescanner constructor
-		jsr 	GXPositionCalc 				; calculate position/offset.
+		jsr 	gxPositionCalc 				; calculate position/offset.
 _GXDrawLoop:
-		ldy 	gsOffset 					; draw the pixel
+		ldy 	gxOffset 					; draw the pixel
 		lda 	(gxzScreen),y
 		.plotpixel
 		sta 	(gxzScreen),y
@@ -967,20 +967,20 @@ _GXLFail:
 ; ************************************************************************************************
 
 GXLineIsComplete:
-		lda 	GXIsDiffYLarger 			; is dy larger
+		lda 	gxIsDiffYLarger 			; is dy larger
 		bne 	_GXLICCompareY 				; if so compare Y1/Y0
 
-		lda 	GXX0 						; compare X, LSB and MSB
-		eor 	GXX1
+		lda 	gxX0 						; compare X, LSB and MSB
+		eor 	gxX1
 		bne 	_GXLICExit
-		lda 	GXX0+1
-		eor 	GXX1+1
+		lda 	gxX0+1
+		eor 	gxX1+1
 _GXLICExit:
 		rts
 
 _GXLICCompareY: 							; compare Y
-		lda 	GXY1
-		eor 	GXY0
+		lda 	gxY1
+		eor 	gxY0
 		rts
 
 ; ************************************************************************************************
@@ -991,35 +991,35 @@ _GXLICCompareY: 							; compare Y
 
 GXLineAdvance:
 		clc 								; add adjust to position
-		lda 	GXPosition
-		adc 	GXAdjust
-		sta 	GXPosition
-		stz 	GXAddSelect 				; clear add select flag
+		lda 	gxPosition
+		adc 	gxAdjust
+		sta 	gxPosition
+		stz 	gxAddSelect 				; clear add select flag
 		bcs 	_GXLAOverflow 				; if carry out, overflowed.
-		cmp 	GXTotal 					; if exceeded total
+		cmp 	gxTotal 					; if exceeded total
 		bcc 	_GXLANoExtra
 _GXLAOverflow:
-		dec 	GXAddSelect 				; set addselect to $FF
+		dec 	gxAddSelect 				; set addselect to $FF
 		sec 								; subtract total and write back
-		sbc 	GXTotal
-		sta 	GXPosition
+		sbc 	gxTotal
+		sta 	gxPosition
 _GXLANoExtra:
-		lda 	GXIsDiffYLarger
+		lda 	gxIsDiffYLarger
 		beq 	_GXDXLarger
 		;
 		;		dy larger, so always do y and sometimes x
 		;
 		jsr 	GXIncrementY
-		lda 	GXAddSelect
+		lda 	gxAddSelect
 		beq 	_GXLAExit
-		jsr 	GXAdjustX
+		jsr 	gxAdjustX
 		bra 	_GXLAExit
 		;
 		;		dx larger, so always do x and sometimes Y
 		;
 _GXDXLarger:
-		jsr 	GXAdjustX
-		lda 	GXAddSelect
+		jsr 	gxAdjustX
+		lda 	gxAddSelect
 		beq 	_GXLAExit
 		jsr 	GXIncrementY
 _GXLAExit:
@@ -1031,20 +1031,20 @@ _GXLAExit:
 ;
 ; ************************************************************************************************
 
-GXAdjustX:
-		lda 	GXDXNegative
+gxAdjustX:
+		lda 	gxDXNegative
 		bpl 	_GXAXRight
 		;
 		;		Go left.
 		;
-		lda 	GXX0
+		lda 	gxX0
 		bne 	_GXAXNoBorrow
-		dec 	GXX0+1
+		dec 	gxX0+1
 _GXAXNoBorrow:
-		dec 	GXX0
+		dec 	gxX0
 		;
-		dec 	gsOffset 					; pixel left
-		lda 	gsOffset
+		dec 	gxOffset 					; pixel left
+		lda 	gxOffset
 		cmp 	#$FF
 		bne 	_GXAYExit 					; underflow
 		dec 	gxzScreen+1 					; borrow
@@ -1061,11 +1061,11 @@ _GXAYExit:
 		;		Go right.
 		;
 _GXAXRight:
-		inc 	GXX0
+		inc 	gxX0
 		bne 	_GXAXNoCarry
-		inc 	GXX0+1
+		inc 	gxX0+1
 _GXAXNoCarry:
-		inc 	gsOffset 					; pixel right
+		inc 	gxOffset 					; pixel right
 		bne 	_GXAXExit 					; if not overflowed, exit.
 		inc 	gxzScreen+1 					; next line
 		lda 	gxzScreen+1
@@ -1078,7 +1078,7 @@ _GXAXExit:
 		rts
 
 GXIncrementY:
-		inc 	GXY0
+		inc 	gxY0
 		jsr 	GXMovePositionDown
 		rts
 
@@ -1093,57 +1093,57 @@ GXLineSetup:
 		;
 		; 		diffY = (y1 - y0) / 2
 		;
-		lda 	GXY1
+		lda 	gxY1
 		sec
-		sbc 	GXY0
+		sbc 	gxY0
 		lsr 	a
-		sta 	GXDiffY
+		sta 	gxDiffY
 		;
 		; 		diffX = |(x1-x0)|/2 , and set the flag for dX being negative.
 		;
-		stz 	GXDXNegative 				; clear -ve flag
+		stz 	gxDXNegative 				; clear -ve flag
 		sec
-		lda 	GXX1
-		sbc 	GXX0
-		sta 	GXDiffX
+		lda 	gxX1
+		sbc 	gxX0
+		sta 	gxDiffX
 		;
-		lda 	GXX1+1 						; calculate MSB
-		sbc 	GXX0+1
+		lda 	gxX1+1 						; calculate MSB
+		sbc 	gxX0+1
 		ror 	a 							; rotate bit into DiffX halving it
-		ror 	GXDiffX
+		ror 	gxDiffX
 		asl 	a
 		bpl 	_GDXNotNegative
 		lda 	#0 							; make absolute value of |dx|
 		sec
-		sbc 	GXDiffX
-		sta 	GXDiffX
-		dec 	GXDXNegative 				; -ve flag = $FF.
+		sbc 	gxDiffX
+		sta 	gxDiffX
+		dec 	gxDXNegative 				; -ve flag = $FF.
 _GDXNotNegative:
 		;
 		; 		See if dy > dx, and set adjust and total accordingly.
 		;
-		stz 	GXIsDiffYLarger 			; clear larger flag
+		stz 	gxIsDiffYLarger 			; clear larger flag
 
-		lda 	GXDiffY 					; set adjust and total.
-		sta 	GXAdjust
-		lda 	GXDiffX
-		sta 	GXTotal
+		lda 	gxDiffY 					; set adjust and total.
+		sta 	gxAdjust
+		lda 	gxDiffX
+		sta 	gxTotal
 
-		lda 	GXDiffY 					; if dy > dx
-		cmp 	GXDiffX
+		lda 	gxDiffY 					; if dy > dx
+		cmp 	gxDiffX
 		bcc 	_GDXNotLarger
-		dec 	GXIsDiffYLarger 			; set the dy larger flag
-		lda 	GXDiffX 					; set adjust and total other way round
-		sta 	GXAdjust
-		lda 	GXDiffY
-		sta 	GXTotal
+		dec 	gxIsDiffYLarger 			; set the dy larger flag
+		lda 	gxDiffX 					; set adjust and total other way round
+		sta 	gxAdjust
+		lda 	gxDiffY
+		sta 	gxTotal
 _GDXNotLarger:
 		;
 		;		Pos = total / 2
 		;
-		lda 	GXTotal
+		lda 	gxTotal
 		lsr 	a
-		sta 	GXPosition
+		sta 	gxPosition
 		rts
 
 		.send code
@@ -1155,21 +1155,21 @@ _GDXNotLarger:
 ; ************************************************************************************************
 
 		.section storage
-GXDiffX:
+gxDiffX:
 		.fill 	1
-GXDiffY:
+gxDiffY:
 		.fill 	1
-GXIsDiffYLarger:
+gxIsDiffYLarger:
 		.fill 	1
-GXDXNegative:
+gxDXNegative:
 		.fill 	1
-GXPosition:
+gxPosition:
 		.fill 	1
-GXAdjust:
+gxAdjust:
 		.fill 	1
-GXTotal:
+gxTotal:
 		.fill 	1
-GXAddSelect:
+gxAddSelect:
 		.fill 	1
 
 		.send storage
@@ -1277,8 +1277,8 @@ _GXSDCNoFlip:
 
 GXPlotPoint: ;; <40:Plot>
 		jsr 	GXOpenBitmap 				; start drawing
-		jsr 	GXPositionCalc 				; setup gxzScreen, gsOffset and the position.
-		ldy 	gsOffset
+		jsr 	gxPositionCalc 				; setup gxzScreen, gxOffset and the position.
+		ldy 	gxOffset
 		lda 	(gxzScreen),y 					; set pixel on the right
 		.plotpixel
 		sta 	(gxzScreen),y
@@ -1332,7 +1332,7 @@ GXRectangle:
 		;
 		;		Do the top line first.
 		;
-		jsr 	GXPositionCalc 				; setup gxzScreen, gsOffset and the position.
+		jsr 	gxPositionCalc 				; setup gxzScreen, gxOffset and the position.
 		sec 								; sec = Draw line
 		jsr 	GXDrawLineX1X0 				; draw a line length X1-X0
 
@@ -1343,7 +1343,7 @@ _GXRectLoop:
 		jsr 	GXMovePositionDown 			; down one.
 		inc 	gxY0 						; change Y pos
 		lda 	gxY0 						; reached last line
-		cmp 	gXY1
+		cmp 	gxY1
 		beq 	_GXLastLine
 		plp 								; get flag back
 		php
@@ -1372,11 +1372,11 @@ _GXRFail:
 GXDrawLineX1X0:
 		php 								; save solid/either-end
 		sec
-		lda		gXX1
-		sbc 	gXX0
+		lda		gxX1
+		sbc 	gxX0
 		sta 	gxzTemp0
-		lda 	gXX1+1
-		sbc 	gXX0+1
+		lda 	gxX1+1
+		sbc 	gxX0+1
 		sta 	gxzTemp0+1
 		plp
 		;
@@ -1388,15 +1388,15 @@ GXDrawLineX1X0:
 
 GXDrawLineTemp0:
 
-		lda 	gxzScreen 						; push gxzScreen, gsOffset and GXEditSlot on stack
+		lda 	gxzScreen 						; push gxzScreen, gxOffset and GXEditSlot on stack
 		pha
 		lda 	gxzScreen+1
 		pha
-		lda 	gsOffset
+		lda 	gxOffset
 		pha
 		lda 	GXEditSlot
 		pha
-		ldy 	gsOffset 					; Y offset
+		ldy 	gxOffset 					; Y offset
 		bcc 	_GXDLTEndPoints 			; if CC draw end points only.
 		;
 		;		Draw solid line.
@@ -1442,7 +1442,7 @@ _GXDLTExit: 								; restore screen position.
 		pla
 		sta 	GXEditSlot
 		pla
-		sta 	gsOffset
+		sta 	gxOffset
 		pla
 		sta 	gxzScreen+1
 		pla
@@ -1506,7 +1506,7 @@ GXDrawGraphicElement:
 
 		sty 	gxAcquireVector+1 			; and acquisition vector
 		stx 	gxAcquireVector
-		jsr 	gxOpenBitmap 				; open the bitmap.
+		jsr 	GXOpenBitmap 				; open the bitmap.
 
 		lda 	gxUseMode 					; scale bits
 		lsr 	a
@@ -1575,8 +1575,8 @@ _GXCallAcquire:
 ; ************************************************************************************************
 
 GXRenderOneLine:
-		jsr 	GXPositionCalc 				; calculate position/offset.
-		ldy 	gsOffset 					; Y contains position.
+		jsr 	gxPositionCalc 				; calculate position/offset.
+		ldy 	gxOffset 					; Y contains position.
 		stz 	gxzTemp2 					; do size pixels
 _GXROLLoop1:
 		lda 	gxScale 					; set to do 'scale' times
@@ -1759,7 +1759,7 @@ GXSpriteHandler: ;; <6:DrawSprite>
 		plp
 		bcs		_GXSHExit 					; exit if find failed.
 
-		lda 	GXSizePixels 				; return size
+		lda 	gxSizePixels 				; return size
 		ldx 	#GXSpriteAcquire & $FF
 		ldy 	#GXSpriteAcquire >> 8
 		jsr 	GXDrawGraphicElement
@@ -1767,14 +1767,14 @@ _GXSHExit:
 		rts
 
 GXSpriteAcquire:
-		lda 	GXSpritePage				; point to base page
+		lda 	gxSpritePage				; point to base page
 		sta 	GXEditSlot
 		;
 		;		Multiply Row Number by Sprite Size (0,1,2,3) + 1 * 8 e.g. 8,16,24 or 32
 		;
 		stx 	zTemp0 						; row number x 1,2,3,4
 		lda 	#0
-		ldx 	GXSizeBits
+		ldx 	gxSizeBits
 _GXTimesRowNumber:
 		clc
 		adc 	zTemp0
@@ -1793,10 +1793,10 @@ _GXTimesRowNumber:
 		;
 		clc 								; add base address.
 		lda 	gxzTemp0
-		adc 	GXSpriteOffset
+		adc 	gxSpriteOffset
 		sta 	gxzTemp0
 		lda 	gxzTemp0+1
-		adc 	GXSpriteOffset+1
+		adc 	gxSpriteOffset+1
 		;
 		; 		Get MSB in range $00-$1F, e.g. in the current page, bumping the selected page.
 		;
@@ -1818,7 +1818,7 @@ _GXSACopyLoop:
 		lda 	(gxzTemp0),y
 		sta 	gxPixelBuffer,y
 		iny
-		cpy 	GXSizePixels
+		cpy 	gxSizePixels
 		bne 	_GXSACopyLoop
 		rts
 
@@ -1913,46 +1913,46 @@ GXSelectImage: ;; <8:SpriteImage>
 		lda 	GSCurrentSpriteAddr+1
 		sta 	gxzTemp0+1
 
-		lda 	GXSpriteOffset
+		lda 	gxSpriteOffset
 		sta	 	(gxzTemp0),y
 		clc
-		lda 	GXSpriteOffset+1
-		adc 	GXSpriteOffsetBase
+		lda 	gxSpriteOffset+1
+		adc 	gxSpriteOffsetBase
 		iny
 		sta	 	(gxzTemp0),y
 
-		lda 	GXSpriteOffsetBase+1
+		lda 	gxSpriteOffsetBase+1
 		adc 	#0
 		iny
 		sta	 	(gxzTemp0),y
 
-		lda 	GXSizeBits 					; get raw size
+		lda 	gxSizeBits 					; get raw size
 		eor 	#3 							; make it right (00=32 etc.)
 		rol 	a 							; x 2
 		asl 	a 							; x 4
 		asl 	a 							; x 8
 		asl 	a 							; x 16
-		ora 	GXSpriteLUT 				; Or with LUT
+		ora 	gxSpriteLUT 				; Or with LUT
 		asl 	a 							; 1 shift
 		ora 	#1 							; enable sprite.
 		sta 	(gxzTemp0) 					; and write back
 		jsr 	GXCloseBitmap
 		;
 		ldx 	GSCurrentSpriteID 			; point to sprite entries.
-		lda 	GXSpriteHigh,x 				; clear upper two bits of size
+		lda 	gxSpriteHigh,x 				; clear upper two bits of size
 		and 	#$3F
-		sta 	GXSpriteHigh,x
-		lda 	GXSizeBits 					; get bit size
+		sta 	gxSpriteHigh,x
+		lda 	gxSizeBits 					; get bit size
 		ror 	a 							; shift into bits 6/7
 		ror 	a
 		ror 	a
 		and 	#$C0
-		ora 	GXSpriteHigh,x 				; put in  upper 2 bits of sprite data
-		sta 	GXSpriteHigh,x
+		ora 	gxSpriteHigh,x 				; put in  upper 2 bits of sprite data
+		sta 	gxSpriteHigh,x
 		;
-		lda 	GXSpriteLow,x 				; clear hidden flag.
+		lda 	gxSpriteLow,x 				; clear hidden flag.
 		and 	#$7F
-		sta 	GXSpriteLow,x
+		sta 	gxSpriteLow,x
 		clc
 		rts
 
@@ -1970,9 +1970,9 @@ _GXSIHide:
 		lda 	#0
 		sta 	(gxzTemp0)
 		ldx 	GSCurrentSpriteID 			; get sprite ID
-		lda 	GXSpriteLow,x 				; set the hidden bit.
+		lda 	gxSpriteLow,x 				; set the hidden bit.
 		ora 	#$80
-		sta 	GXSpriteLow,x
+		sta 	gxSpriteLow,x
 		clc
 		rts
 
@@ -1996,7 +1996,7 @@ GXMoveSprite: ;; <41:SpriteMove>
 		sta 	gxzTemp0
 		;
 		ldx 	GSCurrentSpriteID 			; get the size from the upper two bits
-		lda 	GXSpriteHigh,x
+		lda 	gxSpriteHigh,x
 		rol 	a	 						; into bits 0,1.
 		rol 	a
 		rol 	a
@@ -2030,15 +2030,15 @@ GXMoveSprite: ;; <41:SpriteMove>
 		lsr 	gxY0
 
 		ldx 	GSCurrentSpriteID 			; copy X/4 and Y/4 into the status bytes
-		lda 	GXSpriteLow,x
+		lda 	gxSpriteLow,x
 		and 	#$80
 		ora 	gxX0
-		sta 	GXSpriteLow,x
+		sta 	gxSpriteLow,x
 
-		lda 	GXSpriteHigh,x
+		lda 	gxSpriteHigh,x
 		and 	#$C0
 		ora 	gxY0
-		sta 	GXSpriteHigh,x
+		sta 	gxSpriteHigh,x
 		clc
 		rts
 
@@ -2131,20 +2131,20 @@ GXCloseBitmap:
 
 ; ************************************************************************************************
 ;
-;		For GXX0,GXY0 calculate position in gxzScreen, offset in gsOffset and select current
+;		For gxX0,gxY0 calculate position in gxzScreen, offset in gxOffset and select current
 ;		segment.
 ;
 ; ************************************************************************************************
 ;
-;		The main calculation is GXY0*320 = GXY0 * 5 * 64
+;		The main calculation is gxY0*320 = gxY0 * 5 * 64
 ;
-GXPositionCalc:
+gxPositionCalc:
 		lda 	gxzTemp0 					; save temp memory slot
 		pha
 		;
-		;		Calculate GXY0 * 5 => gxzScreen
+		;		Calculate gxY0 * 5 => gxzScreen
 		;
-		lda 	GXY0 						; gxzScreen = Y0
+		lda 	gxY0 						; gxzScreen = Y0
 		sta 	gxzScreen
 		stz 	gxzScreen+1
 		;
@@ -2173,10 +2173,10 @@ _GXPCMultiply32:
 		bne 	_GXPCMultiply32
 		;
 		clc
-		lda 	GXX0 						; add X to this value, put the result in gsOffset, gxzScreen has to be on a page boundary
+		lda 	gxX0 						; add X to this value, put the result in gxOffset, gxzScreen has to be on a page boundary
 		adc 	gxzScreen
-		sta 	gsOffset
-		lda 	GXX0+1
+		sta 	gxOffset
+		lda 	gxX0+1
 		adc 	gxzScreen+1
 		;
 		cmp 	#$20 						; has it overflowed into the next one ?
@@ -2199,15 +2199,15 @@ _GXPCNoOverflow:
 
 ; ************************************************************************************************
 ;
-;						Move the (gxzScreen),gsOffset down one line
+;						Move the (gxzScreen),gxOffset down one line
 ;
 ; ************************************************************************************************
 
 GXMovePositionDown:
 		clc 								; add 320 to offset/temp+1
-		lda 	gsOffset
+		lda 	gxOffset
 		adc 	#64
-		sta 	gsOffset
+		sta 	gxOffset
 		lda 	gxzScreen+1
 		adc 	#1
 		sta 	gxzScreen+1
@@ -2260,13 +2260,13 @@ GXCollide: 	;; <9:SpriteCollide>
 		bne 	_GXCollideFail 				; if either >= 64, fail.
 		ldy 	gxzTemp0+1 					; at this point X is 1st sprite and Y is 2nd sprite.
 		;
-		lda 	GXSpriteLow,y 				; check if either hidden bit is set
-		ora 	GXSpriteLow,x
+		lda 	gxSpriteLow,y 				; check if either hidden bit is set
+		ora 	gxSpriteLow,x
 		bmi 	_GXOkayFail 				; if either hidden, then they cannot collide.
 		;
 		clc 								; need to calculate sum of sizes.
-		lda 	GXSpriteHigh,y
-		adc 	GXSpriteHigh,x 				; at this point, CS, Bit 6 and 7 contain that sum.
+		lda 	gxSpriteHigh,y
+		adc 	gxSpriteHigh,x 				; at this point, CS, Bit 6 and 7 contain that sum.
 		;
 		;		So for 24 (10) and 32 (11) after AND CS:A is 1:0100 0000
 		;		After the shifts it is 1:0100 (20)
@@ -2285,11 +2285,11 @@ GXCollide: 	;; <9:SpriteCollide>
 		lsr 	a
 		sta 	gxzTemp1 					; so the difference between the centres has to be less than this.
 		;
-		lda 	GXSpriteHigh,y 				; calculate y1-y0
+		lda 	gxSpriteHigh,y 				; calculate y1-y0
 		and 	#$3F
 		sta 	gxzTemp1+1
 		sec
-		lda 	GXSpriteHigh,x
+		lda 	gxSpriteHigh,x
 		and 	#$3F
 		sbc 	gxzTemp1+1
 		bcs 	_GXCAbs1 					; calculate |y1-y0|
@@ -2301,8 +2301,8 @@ _GXCAbs1:
 		sta 	gxzTemp1+1 					; save |y1-y0|
 		;
 		sec 								; calculate |x1-x0|
-		lda 	GXSpriteLow,y
-		sbc 	GXSpriteLow,x
+		lda 	gxSpriteLow,y
+		sbc 	gxSpriteLow,x
 		bcs 	_GXCAbs2
 		eor 	#$FF
 		inc 	a
@@ -2361,7 +2361,7 @@ _GXCollideFail:
 GXFindSprite:
 		tax
 
-		lda 	GXSpritePage 				; access the base page of the sprite
+		lda 	gxSpritePage 				; access the base page of the sprite
 		sta 	GXEditSlot
 		;
 		lda 	GXMappingAddress+256,x 		; check a valid sprite
@@ -2369,31 +2369,31 @@ GXFindSprite:
 		beq 	_GXFSFail
 		;
 		lda 	GXMappingAddress+256,x 		; MSB
-		sta 	GXSpriteOffset+1
+		sta 	gxSpriteOffset+1
 		;
 		lda 	GXMappingAddress,x 			; LSB
 		pha 								; save twice
 		pha
 		and 	#3 							; get sprite size
-		sta 	GXSizeBits 					; save raw (0-3)
+		sta 	gxSizeBits 					; save raw (0-3)
 		tax
 		lda 	_GXFXSSTTable,x 			; read sprite size
-		sta 	GXSizePixels 					; save (8/16/24/32)
+		sta 	gxSizePixels 					; save (8/16/24/32)
 
 		pla 								; get LUT
 		lsr		a
 		lsr		a
 		and 	#3
-		sta 	GXSpriteLUT
+		sta 	gxSpriteLUT
 		;
 		pla 								; address, neeeds to be x 4
 		and 	#$F0
-		sta 	GXSpriteOffset
+		sta 	gxSpriteOffset
 
-		asl 	GXSpriteOffset
-		rol 	GXSpriteOffset+1
-		asl 	GXSpriteOffset
-		rol 	GXSpriteOffset+1
+		asl 	gxSpriteOffset
+		rol 	gxSpriteOffset+1
+		asl 	gxSpriteOffset
+		rol 	gxSpriteOffset+1
 
 		clc
 		rts
@@ -2408,13 +2408,13 @@ _GXFXSSTTable:
 		.send code
 		.section storage
 
-GXSizePixels: 									; sprite size (in pixels)
+gxSizePixels: 									; sprite size (in pixels)
 		.fill 	1
-GXSizeBits: 								; size (0-3)
+gxSizeBits: 								; size (0-3)
 		.fill 	1
-GXSpriteLUT: 									; LUT to use
+gxSpriteLUT: 									; LUT to use
 		.fill 	1
-GXSpriteOffset: 								; offset from base page.
+gxSpriteOffset: 								; offset from base page.
 		.fill 	2
 
 		.send storage
@@ -2453,8 +2453,8 @@ GXSortXY:
 		jsr 	GXSortY 					; will be sorted on Y now
 		lda 	gxX0 						; compare X0 v X1
 		cmp 	gxX1
-		lda 	gXX0+1
-		sbc 	gXX1+1
+		lda 	gxX0+1
+		sbc 	gxX1+1
 		bcc 	_GXSXYExit 					; X0 < X1 exit
 		ldx 	#0 							; swap them over
 		ldy 	#4

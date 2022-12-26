@@ -20,8 +20,8 @@
 
 GXPlotPoint: ;; <40:Plot>
 		jsr 	GXOpenBitmap 				; start drawing
-		jsr 	GXPositionCalc 				; setup gxzScreen, gsOffset and the position.
-		ldy 	gsOffset
+		jsr 	gxPositionCalc 				; setup gxzScreen, gxOffset and the position.
+		ldy 	gxOffset
 		lda 	(gxzScreen),y 					; set pixel on the right
 		.plotpixel
 		sta 	(gxzScreen),y

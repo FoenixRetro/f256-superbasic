@@ -23,18 +23,18 @@ GXFillRectangle: ;; <35:FillRect>
 		bra 	GXRectangle
 GXFrameRectangle: ;; <34:FrameRect>
 		clc
-GXRectangle:	
+GXRectangle:
 		lda 	gxBitmapsOn
-		beq 	_GXRFail	
+		beq 	_GXRFail
 		php 								; save Fill flag (CS)
 		jsr 	GXOpenBitmap 				; start drawing
 		jsr 	GXSortXY 					; sort both X and Y so top left/bottom right
 		;
-		;		Do the top line first. 
+		;		Do the top line first.
 		;
-		jsr 	GXPositionCalc 				; setup gxzScreen, gsOffset and the position.
+		jsr 	gxPositionCalc 				; setup gxzScreen, gxOffset and the position.
 		sec 								; sec = Draw line
-		jsr 	GXDrawLineX1X0 				; draw a line length X1-X0		
+		jsr 	GXDrawLineX1X0 				; draw a line length X1-X0
 
 		lda 	gxY0 						; reached end of rectangle ?
 		cmp 	gxY1
@@ -43,7 +43,7 @@ _GXRectLoop:
 		jsr 	GXMovePositionDown 			; down one.
 		inc 	gxY0 						; change Y pos
 		lda 	gxY0 						; reached last line
-		cmp 	gXY1
+		cmp 	gxY1
 		beq 	_GXLastLine
 		plp 								; get flag back
 		php
@@ -54,7 +54,7 @@ _GXLastLine: 								; draw the last solid line.
 		sec
 		jsr 	GXDrawLineX1X0
 _GXRectangleExit:
-		pla 								; throw fill flag.		
+		pla 								; throw fill flag.
 		jsr 	GXCloseBitmap 				; stop drawing and exit
 		clc
 		rts
@@ -62,7 +62,7 @@ _GXRectangleExit:
 _GXRFail:
 		sec
 		rts
-		
+
 ; ************************************************************************************************
 ;
 ;					Draw solid line/ends from current position length x1-x0
@@ -71,12 +71,12 @@ _GXRFail:
 
 GXDrawLineX1X0:
 		php 								; save solid/either-end
-		sec 								
-		lda		gXX1
-		sbc 	gXX0
-		sta 	gxzTemp0 	
-		lda 	gXX1+1
-		sbc 	gXX0+1
+		sec
+		lda		gxX1
+		sbc 	gxX0
+		sta 	gxzTemp0
+		lda 	gxX1+1
+		sbc 	gxX0+1
 		sta 	gxzTemp0+1
 		plp
 		;
@@ -86,17 +86,17 @@ GXDrawLineX1X0:
 ;
 ; ************************************************************************************************
 
-GXDrawLineTemp0:		
+GXDrawLineTemp0:
 
-		lda 	gxzScreen 						; push gxzScreen, gsOffset and GXEditSlot on stack
+		lda 	gxzScreen 						; push gxzScreen, gxOffset and GXEditSlot on stack
 		pha
 		lda 	gxzScreen+1
 		pha
-		lda 	gsOffset
+		lda 	gxOffset
 		pha
 		lda 	GXEditSlot
 		pha
-		ldy 	gsOffset 					; Y offset
+		ldy 	gxOffset 					; Y offset
 		bcc 	_GXDLTEndPoints 			; if CC draw end points only.
 		;
 		;		Draw solid line.
@@ -107,13 +107,13 @@ _GXDLTLine:
 		sta 	(gxzScreen),y
 		;
 		lda 	gxzTemp0 					; decrement counter
-		bne 	_GXDLTNoBorrow 
+		bne 	_GXDLTNoBorrow
 		dec 	gxzTemp0+1 					; borrow, if goes -ve then exit
 		bmi 	_GXDLTExit
 _GXDLTNoBorrow:
 		dec 	gxzTemp0
 		iny 								; next slot.
-		bne 	_GXDLTLine		
+		bne 	_GXDLTLine
 		inc 	gxzScreen+1 					; carry to next
 		jsr 	GXDLTCheckWrap				; check for new page.
 		bra 	_GXDLTLine
@@ -142,24 +142,24 @@ _GXDLTExit: 								; restore screen position.
 		pla
 		sta 	GXEditSlot
 		pla
-		sta 	gsOffset
+		sta 	gxOffset
 		pla
 		sta 	gxzScreen+1
 		pla
 		sta 	gxzScreen
-		rts		
+		rts
 ;
 ;		Check if gxzScreen needs wrapping round.
 ;
 GXDLTCheckWrap:
 		lda 	gxzScreen+1 					; check end of page
-		cmp 	#((GXMappingAddress+$2000) >> 8) 
+		cmp 	#((GXMappingAddress+$2000) >> 8)
 		bcc 	_GXDLTCWExit
 		sbc 	#$20 						; fix up
 		sta 	gxzScreen+1
 		inc 	GXEditSlot
-_GXDLTCWExit:	
-		rts		
+_GXDLTCWExit:
+		rts
 
 		.send code
 

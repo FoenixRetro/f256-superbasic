@@ -56,7 +56,7 @@ _GXClearBlock:
 _GXCB0:
 		lda 	gxzTemp0
 		ldy 	#0
-_GXCB1:	
+_GXCB1:
 		sta 	(gxzTemp1),y
 		iny
 		sta 	(gxzTemp1),y

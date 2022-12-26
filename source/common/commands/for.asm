@@ -259,7 +259,7 @@ _NCCompare:
 _NCNoOverflow:
 		ply 								; restore Y position
 		asl 	a 							; is bit 7 set.
-		bcc 	_NCLoopback 				; if no , >= so loop back
+		bcc 	_NCLoopBack 				; if no , >= so loop back
 		;
 		jsr 	StackClose 					; exit the loop
 		rts

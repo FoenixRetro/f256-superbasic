@@ -33,18 +33,18 @@ GXSetColourMode: ;; <4:Colour>
 		cmp 	#2 										; if mode 2/3 And with colour
 		bcc 	_GXSDCNotAndColour
 		stx 	gxANDValue
-_GXSDCNotAndColour:		
+_GXSDCNotAndColour:
 		bne 	_GXSDCNotAnd 							; mode 2, Don't EOR with colour
 		stz 	gxEORValue
 _GXSDCNotAnd:
-		lsr 	a 										; if bit 0 set, 1's complement AND value		
+		lsr 	a 										; if bit 0 set, 1's complement AND value
 		bcc 	_GXSDCNoFlip
 		lda	 	gxANDValue
 		eor 	#$FF
 		sta 	gxANDValue
 _GXSDCNoFlip:
 		clc
-		rts		
+		rts
 
 ; ************************************************************************************************
 ;											DRAWING MODES

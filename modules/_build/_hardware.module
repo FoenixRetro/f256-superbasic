@@ -293,7 +293,7 @@ _EXPCActionTable:
 		.word 	_EXPCEnd 					; 05 E End of Line
 		.word 	_EXPCRight 					; 06 F Right
 		.word 	_EXPCExit 					; 07
-		.word 	_EXPCBackspace 				; 08 H Backspace
+		.word 	_EXPCBackSpace 				; 08 H Backspace
 		.word 	_EXPCTab 					; 09 I Tab
 		.word 	_EXPCExit 					; 0A
 		.word 	_EXPCClearEOL 				; 0B K Clear to EOL
@@ -535,7 +535,7 @@ _EILLoop:
 		jsr 	EXTILInsert 				; insert in colour screen
 		pla 								; get character back.
 _EILPrintLoop:
-		jsr 	PagedPrintCharacter
+		jsr 	PAGEDPrintCharacter
 		bra 	_EILLoop
 		rts
 		;
@@ -545,7 +545,7 @@ _EILBackspace:
 		lda 	EXTColumn					; can we backspace ?
 		beq 	_EILLoop
 		lda 	#2 							; move cursor left
-		jsr 	PagedPrintCharacter
+		jsr 	PAGEDPrintCharacter
 _EILDelete
 		;
 		lda 	#2 							; text block
@@ -585,7 +585,7 @@ _EILEndTrim:
 		lda 	#0 							; trim here.
 		sta 	lineBuffer,y
 		lda 	#13 						; echo the RETURN
-		jsr 	PagedPrintCharacter
+		jsr 	PAGEDPrintCharacter
 		pla 								; reset I/O page
 		sta 	1
 
@@ -866,13 +866,13 @@ EXTShowHeader:
 		pha
 		;
 		lda 	#2
-		ldx 	#(Header_Chars & $FF)
-		ldy 	#(Header_Chars >> 8)
+		ldx 	#(Header_chars & $FF)
+		ldy 	#(Header_chars >> 8)
 		jsr 	_ESHCopyBlock
 		;
 		lda 	#3
-		ldx 	#(Header_Attrs & $FF)
-		ldy 	#(Header_Attrs >> 8)
+		ldx 	#(Header_attrs & $FF)
+		ldy 	#(Header_attrs >> 8)
 		jsr 	_ESHCopyBlock
 		;
 		stz 	1

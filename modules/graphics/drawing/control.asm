@@ -23,13 +23,13 @@ GXInitialise: ;; <0:Initialise>
 		lda 	#1
 		sta 	$D000
 		clc
-		stz 	GXSpritesOn
-		stz 	GXBitmapsOn
+		stz 	gxSpritesOn
+		stz 	gxBitmapsOn
 		ldx 	#15
 _GXIClear:
 		stz 	gxCurrentX,x
 		dex
-		bpl 	_GXIClear	
+		bpl 	_GXIClear
 		jsr 	GXClearSpriteStore
 		rts
 
@@ -41,7 +41,7 @@ _GXIClear:
 
 GXControlBitmap: ;; <1:BitmapCtl>
 		stz 	1
-		
+
 		lda 	gxzTemp0 					; get control bits
 		and 	#1 							; set bitmap flag
 		sta 	gxBitmapsOn
@@ -51,7 +51,7 @@ GXControlBitmap: ;; <1:BitmapCtl>
 		and 	#$F7 						; clear bitmap bit
 		bcc 	_CBNotOn
 		ora 	#$08 						; bitmap on if 1 on 0 off
-_CBNotOn:		
+_CBNotOn:
 		sta 	$D000 						; update Vicky MCR
 
 		lda 	gxzTemp0 					; get control settings (bits 0-2)
@@ -61,7 +61,7 @@ _CBNotOn:
 		lda 	gxzTemp0+1 					; get the base page
 		bne 	_CBNotDefault
 		lda 	#8  						; if zero, use 8 e.g. bitmap at $10000
-_CBNotDefault:		
+_CBNotDefault:
 		sta 	gxBasePage
 		jsr 	GXCalculateBaseAddress 	 	; convert page# to address
 
@@ -76,7 +76,7 @@ _CBNotDefault:
 		and 	#1
 		beq 	_CBHaveHeight
 		ldx 	#200 						; if bit 0 set 320x200
-_CBHaveHeight		
+_CBHaveHeight
 		stx 	gxHeight
 		clc
 		rts
@@ -98,26 +98,26 @@ GXControlSprite: ;; <2:SpriteCtl>
 		and 	#$DF 						; clear sprite bit
 		bcc 	_CSNotOn
 		ora 	#$20 						; sprite on if 1 on 0 off
-_CSNotOn:		
+_CSNotOn:
 		sta 	$D000 						; update Vicky MCR
 
 		lda 	gxzTemp0+1 					; get the base page
 		bne 	_CSNotDefault
 		lda 	#24  						; if zero, use 24 e.g. sprites at $30000
-_CSNotDefault:		
+_CSNotDefault:
 		sta 	gxSpritePage
 		jsr 	GXCalculateBaseAddress 	 	; convert page# to address
 		lda 	zTemp0
-		sta 	GXSpriteOffsetBase
+		sta 	gxSpriteOffsetBase
 		lda 	zTemp0+1
-		sta 	GXSpriteOffsetBase+1
+		sta 	gxSpriteOffsetBase+1
 		;
 		ldx 	#0 							; disable all sprites, clears all sprite memory.
 _CSClear:
 		stz 	$D900,x
 		stz 	$DA00,x
 		dex
-		bne 	_CSClear	
+		bne 	_CSClear
 		;
 		stz 	GSCurrentSpriteAddr+1 		; no sprite selected.
 		jsr 	GXClearSpriteStore
@@ -135,11 +135,11 @@ GXCalculateBaseAddress:
 		stz 	gxzTemp0+1
 		lda 	#5
 _GXShift:
-		asl 	gxzTemp0	
+		asl 	gxzTemp0
 		rol 	gxzTemp0+1
 		dec		a
 		bne 	_GXShift
-		rts		
+		rts
 
 ; ************************************************************************************************
 ;
@@ -150,9 +150,9 @@ _GXShift:
 GXClearSpriteStore:
 		ldx 	#63 						; erase 64 sprite store elements
 _GXCSSLoop:
-		stz 	GXSpriteHigh,x
+		stz 	gxSpriteHigh,x
 		lda 	#$80 						; set the 'hidden' bit.
-		sta 	GXSpriteLow,x		
+		sta 	gxSpriteLow,x
 		dex
 		bpl 	_GXCSSLoop
 		rts

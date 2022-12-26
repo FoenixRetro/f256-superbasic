@@ -323,7 +323,7 @@ LCLWrite:
 		inc 	tbOffset 					; bump the position
 		ora 	#0 							; don't update last character if colour data
 		bmi 	_LCLNoColour		
-		sta 	LCLastCharacter
+		sta 	lcLastCharacter
 _LCLNoColour:		
 		plx
 		rts
@@ -355,7 +355,7 @@ _LCDLSExit:
 ; ************************************************************************************************
 
 LCLCheckSpaceRequired:
-		lda 	LCLastCharacter 			; check last character
+		lda 	lcLastCharacter 			; check last character
 		cmp 	#'$' 						; $ # and ) require that token space.
 		beq 	_LCCSRSpace
 		cmp 	#')'

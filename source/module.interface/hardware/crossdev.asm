@@ -14,13 +14,13 @@
 
 XLoadCommand: ;; [xload]
 		jsr 	NewProgram
-		jsr 	BackLoadProgram
+		jsr 	BackloadProgram
 		jmp 	WarmStart
 
 XGoCommand: ;; [xgo]
 		jsr 	NewProgram
-		jsr 	BackLoadProgram
-		jmp 	CommandRun	
+		jsr 	BackloadProgram
+		jmp 	CommandRUN
 
 		.send code
 

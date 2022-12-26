@@ -23,13 +23,13 @@ EXTShowHeader:
 		pha
 		;
 		lda 	#2
-		ldx 	#(Header_Chars & $FF)
-		ldy 	#(Header_Chars >> 8)
+		ldx 	#(Header_chars & $FF)
+		ldy 	#(Header_chars >> 8)
 		jsr 	_ESHCopyBlock
 		;
 		lda 	#3
-		ldx 	#(Header_Attrs & $FF)
-		ldy 	#(Header_Attrs >> 8)
+		ldx 	#(Header_attrs & $FF)
+		ldy 	#(Header_attrs >> 8)
 		jsr 	_ESHCopyBlock
 		;
 		stz 	1

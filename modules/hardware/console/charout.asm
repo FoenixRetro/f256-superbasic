@@ -233,7 +233,7 @@ _EXPCActionTable:
 		.word 	_EXPCEnd 					; 05 E End of Line
 		.word 	_EXPCRight 					; 06 F Right
 		.word 	_EXPCExit 					; 07 
-		.word 	_EXPCBackspace 				; 08 H Backspace
+		.word 	_EXPCBackSpace 				; 08 H Backspace
 		.word 	_EXPCTab 					; 09 I Tab
 		.word 	_EXPCExit 					; 0A 
 		.word 	_EXPCClearEOL 				; 0B K Clear to EOL

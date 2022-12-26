@@ -28,15 +28,15 @@ WarmStart:
 		;
 		;		Decide whether editing or running
 		;
-		lda 	TokenLineNumber 			; line number <> 0
-		ora 	TokenLineNumber+1
+		lda 	tokenLineNumber 			; line number <> 0
+		ora 	tokenLineNumber+1
 		bne 	_WSEditCode 				; if so,edit code.
 		;
 		;		Run code in token buffer
 		;		
-		stz 	TokenOffset 				; zero the "offset", meaning it only runs one line.
-		.csetCodePointer TokenOffset		; set up the code pointer.
-		lda 	TokenBuffer 				; nothing to run
+		stz 	tokenOffset 				; zero the "offset", meaning it only runs one line.
+		.csetcodepointer tokenOffset		; set up the code pointer.
+		lda 	tokenBuffer 				; nothing to run
 		cmp 	#KWC_EOL
 		beq 	WarmStart
 		jsr 	RUNCodePointerLine 			; execute that line.

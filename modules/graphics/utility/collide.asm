@@ -20,56 +20,56 @@
 
 GXCollide: 	;; <9:SpriteCollide>
 		lda 	gxzTemp0 					; check if sprite numbers are legal.
-		tax 				
+		tax
 		ora 	gxzTemp0+1
 		and 	#$C0
 		sec
 		bne 	_GXCollideFail 				; if either >= 64, fail.
 		ldy 	gxzTemp0+1 					; at this point X is 1st sprite and Y is 2nd sprite.
 		;
-		lda 	GXSpriteLow,y 				; check if either hidden bit is set
-		ora 	GXSpriteLow,x
+		lda 	gxSpriteLow,y 				; check if either hidden bit is set
+		ora 	gxSpriteLow,x
 		bmi 	_GXOkayFail 				; if either hidden, then they cannot collide.
 		;
 		clc 								; need to calculate sum of sizes.
-		lda 	GXSpriteHigh,y
-		adc 	GXSpriteHigh,x 				; at this point, CS, Bit 6 and 7 contain that sum.
+		lda 	gxSpriteHigh,y
+		adc 	gxSpriteHigh,x 				; at this point, CS, Bit 6 and 7 contain that sum.
 		;
 		;		So for 24 (10) and 32 (11) after AND CS:A is 1:0100 0000
 		;		After the shifts it is 1:0100 (20)
 		;		Adding the 8 (allowing for 00) => 28 which is (24+32)/2
-		; 		
-		;		Then adjust for coordinates being stored / 2	
+		;
+		;		Then adjust for coordinates being stored / 2
 		;
 		and 	#$C0 					 	; mask off
 		ror 	a 							; 5/6/7
 		lsr 	a 							; 4/5/6
 		lsr 	a 							; 3/4/5
 		lsr 	a 							; 2/3/4
-		clc 
-		adc 	#$08 			
+		clc
+		adc 	#$08
 		lsr 	a 							; adjust because all coordinates are divided by 4 to store.
 		lsr 	a
 		sta 	gxzTemp1 					; so the difference between the centres has to be less than this.
 		;
-		lda 	GXSpriteHigh,y 				; calculate y1-y0
+		lda 	gxSpriteHigh,y 				; calculate y1-y0
 		and 	#$3F
-		sta 	gxzTemp1+1		
-		sec 								
-		lda 	GXSpriteHigh,x 				
+		sta 	gxzTemp1+1
+		sec
+		lda 	gxSpriteHigh,x
 		and 	#$3F
-		sbc 	gxzTemp1+1		
+		sbc 	gxzTemp1+1
 		bcs 	_GXCAbs1 					; calculate |y1-y0|
 		eor 	#$FF
 		inc 	a
-_GXCAbs1:		
+_GXCAbs1:
 		cmp 	gxzTemp1 					; if >= difference then no overlap
 		bcs 	_GXOkayFail
 		sta 	gxzTemp1+1 					; save |y1-y0|
 		;
 		sec 								; calculate |x1-x0|
-		lda 	GXSpriteLow,y
-		sbc 	GXSpriteLow,x
+		lda 	gxSpriteLow,y
+		sbc 	gxSpriteLow,x
 		bcs 	_GXCAbs2
 		eor 	#$FF
 		inc 	a
@@ -84,13 +84,13 @@ _GXCHaveLowest:
 		asl 	a 							; scale to allow for >> 2
 		asl 	a
 		clc
-		rts					
+		rts
 
 _GXOkayFail:
 		clc
 _GXCollideFail:
 		lda 	#$FF
-		rts		
+		rts
 
 		.send code
 

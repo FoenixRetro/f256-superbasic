@@ -19,7 +19,7 @@
 ; ************************************************************************************************
 
 StringSystemInitialise:
-		.set16	StringMemory,EndVariableSpace-1
+		.set16	stringMemory,EndVariableSpace-1
 		stz 	EndVariableSpace-1 			; put a zero at the end, so know end of string memory.
 		rts
 
@@ -33,13 +33,13 @@ StringSpaceInitialise:
 		jsr 	CheckIdentifierStringSpace 	; check memory allocation.
 		;
 		lda 	#$FF 						; only initialise once (set to $FF, bit used to test it)
-		sta 	StringInitialised
+		sta 	stringInitialised
 		;
-		lda 	StringMemory 				; allocate 256 bytes for one concreted string
-		sta 	StringTempPointer 			; so temporary string space is allocated below that.
-		lda 	StringMemory+1
+		lda 	stringMemory 				; allocate 256 bytes for one concreted string
+		sta 	stringTempPointer 			; so temporary string space is allocated below that.
+		lda 	stringMemory+1
 		dec 	a
-		sta 	StringTempPointer+1
+		sta 	stringTempPointer+1
 		rts
 
 ; ************************************************************************************************
@@ -54,7 +54,7 @@ StringTempAllocate:
 		cmp 	#252+1 						; max length of strings
 		bcs 	_STALength
 		;
-		bit 	StringInitialised 			; already initialised
+		bit 	stringInitialised 			; already initialised
 		bmi 	_STAAllocate
 		;
 		pha 								; save value to subtract.
@@ -64,13 +64,13 @@ _STAAllocate:
 		;
 		eor 	#$FF 						; 2's complement add to StringTempPointer
 		clc  								; deliberate allows one more
-		adc 	StringTempPointer 			; subtract from temp pointer
-		sta 	StringTempPointer  			
+		adc 	stringTempPointer 			; subtract from temp pointer
+		sta 	stringTempPointer  			
 		sta 	NSMantissa0,x 				; address in mantissa
 		sta 	zsTemp 						; and zsTemp
-		lda 	StringTempPointer+1
+		lda 	stringTempPointer+1
 		adc 	#$FF
-		sta 	StringTempPointer+1 		
+		sta 	stringTempPointer+1 		
 		sta 	zsTemp+1
 		sta 	NSMantissa1,x
 		;
