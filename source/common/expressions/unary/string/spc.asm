@@ -32,7 +32,7 @@ _SpcLoop:
 		lda 	#32
 		jsr 	StringTempWrite
 		dey
-		bra 	_SPCLoop
+		bra 	_SpcLoop
 _SpcExit:
 		ply
 		jsr 	CheckRightBracket

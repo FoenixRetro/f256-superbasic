@@ -109,9 +109,9 @@ _DRFClear23:
 		bne 	_DRFNotString
 
 		lda 	#_DRFNullString & $FF 		; if so, return reference to ""
-		sta 	NSMantissa0,X
+		sta 	NSMantissa0,x
 		lda 	#_DRFNullString >> 8
-		sta 	NSMantissa1,X
+		sta 	NSMantissa1,x
 
 _DRFNotString		
 		ply 								; restore Y and exit

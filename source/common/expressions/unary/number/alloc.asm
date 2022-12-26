@@ -100,7 +100,7 @@ CheckIdentifierStringSpace:
 		lda 	lowMemPtr+1 				; get low memory pointer
 		clc
 		adc 	#2 							; need at least 2 256 byte pages
-		cmp 	StringMemory+1 				; is it >= StringMemory
+		cmp 	stringMemory+1 				; is it >= StringMemory
 		bcs 	CISSMemory
 		pla
 		rts

@@ -47,14 +47,14 @@ _SAHaveLength:
 		;
 		sec
 		eor 	#$FF 						; add to StringMemory using 2's complement
-		adc 	StringMemory
-		sta 	StringMemory
+		adc 	stringMemory
+		sta 	stringMemory
 		sta 	zTemp2 						; update storage address
 		sta 	NSMantissa0,x 				; update mantissa address
 		;
 		lda 	#$FF 						; now do the MSB
-		adc 	StringMemory+1
-		sta 	StringMemory+1
+		adc 	stringMemory+1
+		sta 	stringMemory+1
 		sta 	zTemp2+1
 		sta 	NSMantissa1,x
 		;

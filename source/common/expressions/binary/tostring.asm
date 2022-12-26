@@ -41,16 +41,16 @@ ConvertInt32:
 		bpl 	_CI32NotNeg
 		pha
 		lda 	#'-'
-		sta 	NumberBuffer,y
+		sta 	numberBuffer,y
 		iny
 		pla
 _CI32NotNeg:
 		jsr 	_CI32DivideConvert 			; recursive conversion
 		lda 	#0 							; make ASCIIZ
-		sta 	NumberBuffer,y
+		sta 	numberBuffer,y
 		ply
-		ldx 	#NumberBuffer >> 8 			; return address in XA
-		lda 	#NumberBuffer & $FF
+		ldx 	#numberBuffer >> 8 			; return address in XA
+		lda 	#numberBuffer & $FF
 		rts
 
 _CI32DivideConvert:
@@ -76,7 +76,7 @@ _CI32NoRecurse:
 		adc 	#6+32
 _CI32NotHex:
 		adc 	#48		
-		sta 	NumberBuffer,y 				; write out and exit		
+		sta 	numberBuffer,y 				; write out and exit		
 		iny
 		rts
 

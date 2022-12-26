@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Mon Dec 26 06:59:54 2022
+; Mon Dec 26 07:05:41 2022
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -3652,16 +3652,16 @@
 .93b9		10 08		bpl $93c3			bpl 	_CI32NotNeg
 .93bb		48		pha				pha
 .93bc		a9 2d		lda #$2d			lda 	#'-'
-.93be		99 27 06	sta $0627,y			sta 	NumberBuffer,y
+.93be		99 27 06	sta $0627,y			sta 	numberBuffer,y
 .93c1		c8		iny				iny
 .93c2		68		pla				pla
 .93c3						_CI32NotNeg:
 .93c3		20 d1 93	jsr $93d1			jsr 	_CI32DivideConvert 			; recursive conversion
 .93c6		a9 00		lda #$00			lda 	#0 							; make ASCIIZ
-.93c8		99 27 06	sta $0627,y			sta 	NumberBuffer,y
+.93c8		99 27 06	sta $0627,y			sta 	numberBuffer,y
 .93cb		7a		ply				ply
-.93cc		a2 06		ldx #$06			ldx 	#NumberBuffer >> 8 			; return address in XA
-.93ce		a9 27		lda #$27			lda 	#NumberBuffer & $FF
+.93cc		a2 06		ldx #$06			ldx 	#numberBuffer >> 8 			; return address in XA
+.93ce		a9 27		lda #$27			lda 	#numberBuffer & $FF
 .93d0		60		rts				rts
 .93d1						_CI32DivideConvert:
 .93d1		e8		inx				inx 								; write to next slot up
@@ -3682,7 +3682,7 @@
 .93ee		69 26		adc #$26			adc 	#6+32
 .93f0						_CI32NotHex:
 .93f0		69 30		adc #$30			adc 	#48
-.93f2		99 27 06	sta $0627,y			sta 	NumberBuffer,y 				; write out and exit
+.93f2		99 27 06	sta $0627,y			sta 	numberBuffer,y 				; write out and exit
 .93f5		c8		iny				iny
 .93f6		60		rts				rts
 
@@ -4296,9 +4296,9 @@
 .973d		15 60		ora $60,x			ora 	NSMantissa1,x
 .973f		d0 08		bne $9749			bne 	_DRFNotString
 .9741		a9 4b		lda #$4b			lda 	#_DRFNullString & $FF 		; if so, return reference to ""
-.9743		95 58		sta $58,x			sta 	NSMantissa0,X
+.9743		95 58		sta $58,x			sta 	NSMantissa0,x
 .9745		a9 97		lda #$97			lda 	#_DRFNullString >> 8
-.9747		95 60		sta $60,x			sta 	NSMantissa1,X
+.9747		95 60		sta $60,x			sta 	NSMantissa1,x
 .9749						_DRFNotString
 .9749		7a		ply				ply 								; restore Y and exit
 .974a						_DRFExit:
@@ -4358,7 +4358,7 @@
 .978a		90 0a		bcc $9796			bcc 	_ENIsOkay
 .978c						_ENBadNumber:
 .978c		28		plp				plp 								; throw saved reset
-.978d		ad 05 04	lda $0405			lda 	EncodeState 				; if in decimal mode, construct final number
+.978d		ad 05 04	lda $0405			lda 	encodeState 				; if in decimal mode, construct final number
 .9790		c9 03		cmp #$03			cmp 	#ESTA_Decimal
 .9792		f0 7b		beq $980f			beq 	_ENConstructFinal
 .9794						_ENFail:
@@ -4374,7 +4374,7 @@
 .979f		20 82 9e	jsr $9e82			jsr 	NSMSetByte 					; in single byte mode.
 .97a2		a9 01		lda #$01			lda 	#ESTA_Low
 .97a4						_ENExitChange:
-.97a4		8d 05 04	sta $0405			sta 	EncodeState 				; save new state
+.97a4		8d 05 04	sta $0405			sta 	encodeState 				; save new state
 .97a7		38		sec				sec
 .97a8		60		rts				rts
 .97a9						_ENFirstDP:
@@ -4382,7 +4382,7 @@
 .97ac		80 3c		bra $97ea			bra 	_ESTASwitchFloat			; go straight to float and exi
 .97ae						_ENNoRestart:
 .97ae		48		pha				pha 								; save digit or DP on stack.
-.97af		ad 05 04	lda $0405			lda 	EncodeState 				; get current state
+.97af		ad 05 04	lda $0405			lda 	encodeState 				; get current state
 .97b2		c9 01		cmp #$01			cmp 	#ESTA_Low
 .97b4		f0 09		beq $97bf			beq  	_ESTALowState
 .97b6		c9 02		cmp #$02			cmp 	#ESTA_High
@@ -4395,18 +4395,18 @@
 .97c0		c9 2e		cmp #$2e			cmp 	#"."						; decimal point
 .97c2		f0 26		beq $97ea			beq 	_ESTASwitchFloat 			; then we need to do the floating point bit
 .97c4		29 0f		and #$0f			and 	#15 						; make digit
-.97c6		8d 06 04	sta $0406			sta 	DigitTemp 					; save it.
+.97c6		8d 06 04	sta $0406			sta 	digitTemp 					; save it.
 .97c9		b5 58		lda $58,x			lda 	NSMantissa0,x 				; x mantissa0 x 10 and add it
 .97cb		0a		asl a				asl 	a
 .97cc		0a		asl a				asl 	a
 .97cd		75 58		adc $58,x			adc 	NSMantissa0,x
 .97cf		0a		asl a				asl 	a
-.97d0		6d 06 04	adc $0406			adc 	DigitTemp
+.97d0		6d 06 04	adc $0406			adc 	digitTemp
 .97d3		95 58		sta $58,x			sta 	NSMantissa0,x
 .97d5		c9 19		cmp #$19			cmp 	#25 						; if >= 25 cannot guarantee next will be okay
 .97d7		90 05		bcc $97de			bcc 	_ESTANoSwitch 				; as could be 25 x 10 + 9
 .97d9		a9 02		lda #$02			lda 	#ESTA_High 					; so if so, switch to the high encoding state
-.97db		8d 05 04	sta $0405			sta 	EncodeState
+.97db		8d 05 04	sta $0405			sta 	encodeState
 .97de						_ESTANoSwitch:
 .97de		38		sec				sec
 .97df		60		rts				rts
@@ -4418,7 +4418,7 @@
 .97e8		38		sec				sec
 .97e9		60		rts				rts
 .97ea						_ESTASwitchFloat:
-.97ea		9c 07 04	stz $0407			stz 	DecimalCount 				; reset the count of digits - we divide by 10^n at the end.
+.97ea		9c 07 04	stz $0407			stz 	decimalCount 				; reset the count of digits - we divide by 10^n at the end.
 .97ed		e8		inx				inx 								; zero the decimal additive.
 .97ee		20 80 9e	jsr $9e80			jsr 	NSMSetZero
 .97f1		ca		dex				dex
@@ -4431,8 +4431,8 @@
 .97fb		e8		inx				inx 								; put digit into fractional part of X+1
 .97fc		20 43 98	jsr $9843			jsr 	ESTAShiftDigitIntoMantissa
 .97ff		ca		dex				dex
-.9800		ee 07 04	inc $0407			inc 	DecimalCount 				; bump the count of decimals
-.9803		ad 07 04	lda $0407			lda 	DecimalCount 				; too many decimal digits.
+.9800		ee 07 04	inc $0407			inc 	decimalCount 				; bump the count of decimals
+.9803		ad 07 04	lda $0407			lda 	decimalCount 				; too many decimal digits.
 .9806		c9 0b		cmp #$0b			cmp 	#11
 .9808		f0 02		beq $980c			beq 	_ESTADSFail
 .980a		38		sec				sec
@@ -4440,12 +4440,12 @@
 .980c						_ESTADSFail:
 .980c		4c 03 a0	jmp $a003			jmp 	RangeError
 .980f						_ENConstructFinal:
-.980f		ad 07 04	lda $0407			lda 	DecimalCount 				; get decimal count
+.980f		ad 07 04	lda $0407			lda 	decimalCount 				; get decimal count
 .9812		f0 2d		beq $9841			beq 	_ENCFExit 					; no decimals
 .9814		5a		phy				phy
 .9815		0a		asl a				asl 	a 							; x 4 and CLC
 .9816		0a		asl a				asl 	a
-.9817		6d 07 04	adc $0407			adc 	DecimalCount
+.9817		6d 07 04	adc $0407			adc 	decimalCount
 .981a		a8		tay				tay
 .981b		b9 c2 9f	lda $9fc2,y			lda 	DecimalScalarTable-5,y 		; copy decimal scalar to X+2
 .981e		95 5a		sta $5a,x			sta 	NSMantissa0+2,x  			; this is 10^-n
@@ -4824,7 +4824,7 @@
 .9a70		ad 0d 04	lda $040d			lda 	lowMemPtr+1 				; get low memory pointer
 .9a73		18		clc				clc
 .9a74		69 02		adc #$02			adc 	#2 							; need at least 2 256 byte pages
-.9a76		cd 0f 04	cmp $040f			cmp 	StringMemory+1 				; is it >= StringMemory
+.9a76		cd 0f 04	cmp $040f			cmp 	stringMemory+1 				; is it >= StringMemory
 .9a79		b0 02		bcs $9a7d			bcs 	CISSMemory
 .9a7b		68		pla				pla
 .9a7c		60		rts				rts
@@ -5049,16 +5049,16 @@
 .9b95		10 1f		bpl $9bb6			bpl 	_URDontSeed
 .9b97		b5 58		lda $58,x			lda 	NSMantissa0,x 				; copy - value to seed butchering it.
 .9b99		49 17		eor #$17			eor 	#$17
-.9b9b		8d 08 04	sta $0408			sta 	RandomSeed+0
+.9b9b		8d 08 04	sta $0408			sta 	randomSeed+0
 .9b9e		b5 60		lda $60,x			lda 	NSMantissa1,x
 .9ba0		49 a5		eor #$a5			eor 	#$A5
-.9ba2		8d 09 04	sta $0409			sta 	RandomSeed+1
+.9ba2		8d 09 04	sta $0409			sta 	randomSeed+1
 .9ba5		b5 68		lda $68,x			lda 	NSMantissa2,x
 .9ba7		49 c2		eor #$c2			eor 	#$C2
-.9ba9		8d 0a 04	sta $040a			sta 	RandomSeed+2
+.9ba9		8d 0a 04	sta $040a			sta 	randomSeed+2
 .9bac		b5 70		lda $70,x			lda 	NSMantissa3,x
 .9bae		49 9d		eor #$9d			eor 	#$9D
-.9bb0		8d 0b 04	sta $040b			sta 	RandomSeed+3
+.9bb0		8d 0b 04	sta $040b			sta 	randomSeed+3
 .9bb3		20 dc 9b	jsr $9bdc			jsr 	Random32Bit
 .9bb6						_URDontSeed:
 .9bb6		20 dc 9b	jsr $9bdc			jsr 	Random32Bit 				; generate a number
@@ -5070,34 +5070,34 @@
 .9bc2		95 50		sta $50,x			sta 	NSStatus,x 					; positive float
 .9bc4		60		rts				rts
 .9bc5						URCopyToMantissa:
-.9bc5		ad 08 04	lda $0408			lda 	RandomSeed+0
+.9bc5		ad 08 04	lda $0408			lda 	randomSeed+0
 .9bc8		95 58		sta $58,x			sta 	NSMantissa0,x
-.9bca		ad 09 04	lda $0409			lda 	RandomSeed+1
+.9bca		ad 09 04	lda $0409			lda 	randomSeed+1
 .9bcd		95 60		sta $60,x			sta 	NSMantissa1,x
-.9bcf		ad 0a 04	lda $040a			lda 	RandomSeed+2
+.9bcf		ad 0a 04	lda $040a			lda 	randomSeed+2
 .9bd2		95 68		sta $68,x			sta 	NSMantissa2,x
-.9bd4		ad 0b 04	lda $040b			lda 	RandomSeed+3
+.9bd4		ad 0b 04	lda $040b			lda 	randomSeed+3
 .9bd7		29 3f		and #$3f			and 	#$3F 						; make legal mantissa
 .9bd9		95 70		sta $70,x			sta 	NSMantissa3,x
 .9bdb		60		rts				rts
 .9bdc						Random32Bit:
 .9bdc		5a		phy				phy
 .9bdd		a0 07		ldy #$07			ldy 	#7 							; do it 7 times
-.9bdf		ad 08 04	lda $0408			lda 	RandomSeed+0 				; check the seed isn't zero
+.9bdf		ad 08 04	lda $0408			lda 	randomSeed+0 				; check the seed isn't zero
 .9be2		d0 03		bne $9be7			bne 	_Random1
 .9be4		a8		tay				tay 								; if so do it 256 times
 .9be5		a9 aa		lda #$aa			lda		#$AA 						; and use this to seed the seed....
 .9be7						_Random1:
 .9be7		0a		asl a				asl 	a 							; LSFR RNG
-.9be8		2e 09 04	rol $0409			rol 	RandomSeed+1
-.9beb		2e 0a 04	rol $040a			rol 	RandomSeed+2
-.9bee		2e 0b 04	rol $040b			rol 	RandomSeed+3
+.9be8		2e 09 04	rol $0409			rol 	randomSeed+1
+.9beb		2e 0a 04	rol $040a			rol 	randomSeed+2
+.9bee		2e 0b 04	rol $040b			rol 	randomSeed+3
 .9bf1		90 02		bcc $9bf5			bcc 	_Random2
 .9bf3		49 c5		eor #$c5			eor 	#$C5
 .9bf5						_Random2:
 .9bf5		88		dey				dey
 .9bf6		d0 ef		bne $9be7			bne 	_Random1
-.9bf8		8d 08 04	sta $0408			sta 	RandomSeed+0
+.9bf8		8d 08 04	sta $0408			sta 	randomSeed+0
 .9bfb		7a		ply				ply
 .9bfc		60		rts				rts
 
@@ -5216,7 +5216,7 @@
 .9c86		a9 20		lda #$20			lda 	#32
 .9c88		20 77 b0	jsr $b077			jsr 	StringTempWrite
 .9c8b		88		dey				dey
-.9c8c		80 f4		bra $9c82			bra 	_SPCLoop
+.9c8c		80 f4		bra $9c82			bra 	_SpcLoop
 .9c8e						_SpcExit:
 .9c8e		7a		ply				ply
 .9c8f		20 1c 8f	jsr $8f1c			jsr 	CheckRightBracket
@@ -5247,7 +5247,7 @@
 .9cb4		60		rts				rts
 .9cb5						ConvertNumberToString:
 .9cb5		5a		phy				phy 								; save code position
-.9cb6		8d 14 04	sta $0414			sta 	DecimalPlaces	 			; save number of DPs.
+.9cb6		8d 14 04	sta $0414			sta 	decimalPlaces	 			; save number of DPs.
 .9cb9		9c 15 04	stz $0415			stz 	dbOffset 					; offset into decimal buffer = start.
 .9cbc		b5 50		lda $50,x			lda 	NSStatus,x  				; is it -ve.
 .9cbe		10 09		bpl $9cc9			bpl 	_CNTSNotNegative
@@ -5275,7 +5275,7 @@
 .9cea		a9 2e		lda #$2e			lda 	#"."
 .9cec		20 2a 9d	jsr $9d2a			jsr 	WriteDecimalBuffer 			; write decimal place
 .9cef						_CNTSDecimal:
-.9cef		ce 14 04	dec $0414			dec 	DecimalPlaces 				; done all the decimals
+.9cef		ce 14 04	dec $0414			dec 	decimalPlaces 				; done all the decimals
 .9cf2		30 16		bmi $9d0a			bmi 	_CNTSExit
 .9cf4		e8		inx				inx 								; x 10.0
 .9cf5		a9 0a		lda #$0a			lda 	#10
@@ -5339,9 +5339,9 @@
 .9d51		f5 59		sbc $59,x			sbc 	NSMantissa0+1,x 			; length - required.
 .9d53		b0 02		bcs $9d57			bcs 	_URNotUnderflow
 .9d55		a9 00		lda #$00			lda 	#0 							; start from the beginning, as something like right$("AB",3)
-.9d57						_URNotUnderFlow:
+.9d57						_URNotUnderflow:
 .9d57		95 59		sta $59,x			sta 	NSMantissa0+1,x 			; this is the start position
-.9d59		80 10		bra $9d6b			bra 	SubStringMain
+.9d59		80 10		bra $9d6b			bra 	SubstringMain
 .9d5b						Unary_Mid:
 .9d5b		fa		plx				plx
 .9d5c		38		sec				sec 								; two parameters
@@ -5349,10 +5349,10 @@
 .9d60		b5 59		lda $59,x			lda 	NSMantissa0+1,x 			; first parameter is zero ?
 .9d62		f0 04		beq $9d68			beq 	_UMError
 .9d64		d6 59		dec $59,x			dec 	NSMantissa0+1,x				; reduce initial offset by 1 as MID$(a$,1..) is actually the first character
-.9d66		80 03		bra $9d6b			bra 	SubStringMain
+.9d66		80 03		bra $9d6b			bra 	SubstringMain
 .9d68						_UMError:
 .9d68		4c 0d a0	jmp $a00d			jmp 	ArgumentError
-.9d6b						SubStringMain:
+.9d6b						SubstringMain:
 .9d6b		b5 59		lda $59,x			lda 	NSMantissa0+1,x 			; is the initial offset >= the length
 .9d6d		d5 78		cmp $78,x			cmp 	NSExponent,x
 .9d6f		b0 27		bcs $9d98			bcs 	_SSMNull 					; if so, return an empty string.
@@ -7625,13 +7625,13 @@
 .afe0		48		pha				pha 								; save length.
 .afe1		38		sec				sec
 .afe2		49 ff		eor #$ff			eor 	#$FF 						; add to StringMemory using 2's complement
-.afe4		6d 0e 04	adc $040e			adc 	StringMemory
-.afe7		8d 0e 04	sta $040e			sta 	StringMemory
+.afe4		6d 0e 04	adc $040e			adc 	stringMemory
+.afe7		8d 0e 04	sta $040e			sta 	stringMemory
 .afea		85 3a		sta $3a				sta 	zTemp2 						; update storage address
 .afec		95 58		sta $58,x			sta 	NSMantissa0,x 				; update mantissa address
 .afee		a9 ff		lda #$ff			lda 	#$FF 						; now do the MSB
-.aff0		6d 0f 04	adc $040f			adc 	StringMemory+1
-.aff3		8d 0f 04	sta $040f			sta 	StringMemory+1
+.aff0		6d 0f 04	adc $040f			adc 	stringMemory+1
+.aff3		8d 0f 04	sta $040f			sta 	stringMemory+1
 .aff6		85 3b		sta $3b				sta 	zTemp2+1
 .aff8		95 60		sta $60,x			sta 	NSMantissa1,x
 .affa		68		pla				pla 								; save length-3 (chars allowed) in first byte

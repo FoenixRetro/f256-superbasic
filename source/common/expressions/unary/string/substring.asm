@@ -44,9 +44,9 @@ Unary_Right: 	;; [right$(]
 		sbc 	NSMantissa0+1,x 			; length - required.
 		bcs 	_URNotUnderflow		
 		lda 	#0 							; start from the beginning, as something like right$("AB",3)
-_URNotUnderFlow:
+_URNotUnderflow:
 		sta 	NSMantissa0+1,x 			; this is the start position		
-		bra 	SubStringMain
+		bra 	SubstringMain
 
 ; ************************************************************************************************
 ;
@@ -62,7 +62,7 @@ Unary_Mid: 	;; [mid$(]
 		lda 	NSMantissa0+1,x 			; first parameter is zero ?
 		beq 	_UMError
 		dec 	NSMantissa0+1,x				; reduce initial offset by 1 as MID$(a$,1..) is actually the first character
-		bra 	SubStringMain
+		bra 	SubstringMain
 _UMError:		
 		jmp 	ArgumentError
 
@@ -72,7 +72,7 @@ _UMError:
 ;
 ; ************************************************************************************************
 
-SubStringMain:		
+SubstringMain:		
 		lda 	NSMantissa0+1,x 			; is the initial offset >= the length	
 		cmp 	NSExponent,x 	
 		bcs 	_SSMNull 					; if so, return an empty string.

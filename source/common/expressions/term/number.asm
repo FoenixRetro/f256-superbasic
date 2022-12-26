@@ -47,7 +47,7 @@ EncodeNumber:
 		bcc 	_ENIsOkay
 _ENBadNumber:		
 		plp 								; throw saved reset
-		lda 	EncodeState 				; if in decimal mode, construct final number
+		lda 	encodeState 				; if in decimal mode, construct final number
 		cmp 	#ESTA_Decimal
 		beq 	_ENConstructFinal		
 _ENFail:
@@ -74,7 +74,7 @@ _ENStartEncode:
 		;		Come here to successfully change state.
 		;
 _ENExitChange:
-		sta 	EncodeState 				; save new state		
+		sta 	encodeState 				; save new state		
 		sec
 		rts
 
@@ -89,7 +89,7 @@ _ENFirstDP:
 		; --------------------------------------------------------------------
 _ENNoRestart:		
 		pha 								; save digit or DP on stack.
-		lda 	EncodeState 				; get current state
+		lda 	encodeState 				; get current state
 		cmp 	#ESTA_Low
 		beq  	_ESTALowState	
 		cmp 	#ESTA_High
@@ -109,19 +109,19 @@ _ESTALowState:
 		cmp 	#"."						; decimal point
 		beq 	_ESTASwitchFloat 			; then we need to do the floating point bit
 		and 	#15 						; make digit
-		sta 	DigitTemp 					; save it.
+		sta 	digitTemp 					; save it.
 		;
 		lda 	NSMantissa0,x 				; x mantissa0 x 10 and add it
 		asl 	a
 		asl 	a
 		adc 	NSMantissa0,x
 		asl 	a
-		adc 	DigitTemp
+		adc 	digitTemp
 		sta 	NSMantissa0,x
 		cmp 	#25 						; if >= 25 cannot guarantee next will be okay
 		bcc 	_ESTANoSwitch 				; as could be 25 x 10 + 9
 		lda 	#ESTA_High 					; so if so, switch to the high encoding state
-		sta 	EncodeState
+		sta 	encodeState
 _ESTANoSwitch:
 		sec
 		rts		
@@ -147,7 +147,7 @@ _ESTAHighState:
 		; --------------------------------------------------------------------
 
 _ESTASwitchFloat:
-		stz 	DecimalCount 				; reset the count of digits - we divide by 10^n at the end.
+		stz 	decimalCount 				; reset the count of digits - we divide by 10^n at the end.
 		inx 								; zero the decimal additive.
 		jsr 	NSMSetZero
 		dex
@@ -169,9 +169,9 @@ _ESTADecimalState:
 		jsr 	ESTAShiftDigitIntoMantissa
 		dex
 		;
-		inc 	DecimalCount 				; bump the count of decimals
+		inc 	decimalCount 				; bump the count of decimals
 		;
-		lda 	DecimalCount 				; too many decimal digits.
+		lda 	decimalCount 				; too many decimal digits.
 		cmp 	#11
 		beq 	_ESTADSFail
 		sec
@@ -186,12 +186,12 @@ _ESTADSFail:
 		; --------------------------------------------------------------------
 
 _ENConstructFinal:
-		lda 	DecimalCount 				; get decimal count
+		lda 	decimalCount 				; get decimal count
 		beq 	_ENCFExit 					; no decimals
 		phy
 		asl 	a 							; x 4 and CLC
 		asl 	a
-		adc 	DecimalCount
+		adc 	decimalCount
 		tay 
 		;
 		lda 	DecimalScalarTable-5,y 		; copy decimal scalar to X+2

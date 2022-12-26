@@ -55,16 +55,16 @@ Unary_Rnd: ;; [rnd(]
 
 		lda 	NSMantissa0,x 				; copy - value to seed butchering it.
 		eor 	#$17
-		sta 	RandomSeed+0
+		sta 	randomSeed+0
 		lda 	NSMantissa1,x
 		eor 	#$A5
-		sta 	RandomSeed+1
+		sta 	randomSeed+1
 		lda 	NSMantissa2,x
 		eor 	#$C2
-		sta 	RandomSeed+2	
+		sta 	randomSeed+2	
 		lda 	NSMantissa3,x
 		eor 	#$9D
-		sta 	RandomSeed+3
+		sta 	randomSeed+3
 		jsr 	Random32Bit
 _URDontSeed:
 		jsr 	Random32Bit 				; generate a number
@@ -78,13 +78,13 @@ _URCopySeed:
 		rts
 
 URCopyToMantissa:
-		lda 	RandomSeed+0
+		lda 	randomSeed+0
 		sta 	NSMantissa0,x
-		lda 	RandomSeed+1
+		lda 	randomSeed+1
 		sta 	NSMantissa1,x
-		lda 	RandomSeed+2
+		lda 	randomSeed+2
 		sta 	NSMantissa2,x
-		lda 	RandomSeed+3
+		lda 	randomSeed+3
 		and 	#$3F 						; make legal mantissa
 		sta 	NSMantissa3,x
 		rts
@@ -98,21 +98,21 @@ URCopyToMantissa:
 Random32Bit:
 		phy
 		ldy 	#7 							; do it 7 times
-		lda 	RandomSeed+0 				; check the seed isn't zero
+		lda 	randomSeed+0 				; check the seed isn't zero
 		bne 	_Random1
 		tay 								; if so do it 256 times
 		lda		#$AA 						; and use this to seed the seed....
 _Random1:
 		asl 	a 							; LSFR RNG
-		rol 	RandomSeed+1
-		rol 	RandomSeed+2
-		rol 	RandomSeed+3
+		rol 	randomSeed+1
+		rol 	randomSeed+2
+		rol 	randomSeed+3
 		bcc 	_Random2
 		eor 	#$C5
 _Random2:		
 		dey
 		bne 	_Random1
-		sta 	RandomSeed+0
+		sta 	randomSeed+0
 		ply
 		rts
 

@@ -47,7 +47,7 @@ _USCopy:
 
 ConvertNumberToString:
 		phy 								; save code position
-		sta 	DecimalPlaces	 			; save number of DPs.
+		sta 	decimalPlaces	 			; save number of DPs.
 		stz 	dbOffset 					; offset into decimal buffer = start.
 
 		lda 	NSStatus,x  				; is it -ve.
@@ -78,7 +78,7 @@ _CNTSNotFloat:
 		lda 	#"."
 		jsr 	WriteDecimalBuffer 			; write decimal place
 _CNTSDecimal:
-		dec 	DecimalPlaces 				; done all the decimals
+		dec 	decimalPlaces 				; done all the decimals
 		bmi 	_CNTSExit
 		inx 								; x 10.0
 		lda 	#10
