@@ -5,8 +5,10 @@ else
 include ../../documents/common.make
 endif
 
+all : ramkernel
+
 BINDIR = ..$(S)..$(S)bin$(S)
-ASMOPTS = -q -b -Wall -c -D HARDWARE="$(SYSTEM)" -L output$(S)basic.lst -l output$(S)basic.lbl -Wall 
+ASMOPTS = -q -b -Wall -c -L output$(S)testcode.lst -l output$(S)testcode.lbl -Wall 
 KRN_REPO= ..$(S)..$(S)..$(S)F256_Jr_Kernel_DOS
 #
 #		Switch to Flash-Boot or RAM-Boot
@@ -26,8 +28,12 @@ updatekernel:
 #
 #		Build RAM based kernel / test ROM combo and boot.
 #
-ramkernel: ramboot
-	cat 3f.bin 3e.bin 01.bin  >kernel.ram 
+ramkernel: testcode.bin ramboot
+	cat 3f.bin 3e.bin 01.bin testcode.bin  >kernel.ram 
 	cat kernel.ram $(BINDIR)$(S)basic.rom >ramkernel.bin
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary ramkernel.bin --address E000
-
+#
+#		Build image
+#
+testcode.bin: cmd_read.asm 
+	64tass $(ASMOPTS) cmd_read.asm reader.asm display.asm api.asm -o testcode.bin

@@ -1,0 +1,740 @@
+
+; 64tass Turbo Assembler Macro V1.57.2900 listing file
+; 64tass -q -b -Wall -c -L output/testcode.lst -l output/testcode.lbl -Wall -o testcode.bin cmd_read.asm reader.asm display.asm api.asm
+; Mon Dec 26 11:23:42 2022
+
+;Offset	;Hex		;Monitor	;Source
+
+;******  Processing input file: cmd_read.asm
+
+.8000	a2 ff		ldx #$ff				ldx     #$FF
+.8002	9a		txs					txs
+.8003	20 01 81	jsr $8101				jsr     initputc
+.8006	a9 00		lda #$00				lda 	#$00
+.8008	20 26 81	jsr $8126				jsr 	puth
+.800b	20 10 80	jsr $8010				jsr 	cmd
+.800e	80 fe		bra $800e	h1:			bra 	h1
+>00d0					print_func   .word       ?
+.8010					cmd
+.8010	a9 22		lda #$22				lda     #<printfn
+.8012	85 d0		sta $d0					sta     print_func+0
+.8014	a9 80		lda #$80				lda     #>printfn
+.8016	85 d1		sta $d1					sta     print_func+1
+.8018	a9 00		lda #$00				lda     #0  ; Max read size
+.801a	20 26 81	jsr $8126				jsr  	puth
+.801d	a2 d0		ldx #$d0				ldx     #print_func
+.801f	4c 29 80	jmp $8029				jmp     read_file
+.8022					printfn
+.8022	4c 05 81	jmp $8105				jmp     putc
+>0800					buf         .fill       256     ; Used to fetch data from the kernel.
+>0900					drive       .byte       ?                       ; Current selected (logical) drive #
+.0901					event
+>0901					type        .byte   ?   ; Enum above
+>0902					buf         .byte   ?   ; page id or zero
+>0903					ext         .byte   ?   ; page id or zero
+.0904					key
+>0904					keyboard    .byte   ?   ; Keyboard ID
+>0905					raw         .byte   ?   ; Raw key ID
+>0906					ascii       .byte   ?   ; ASCII value
+>0907					flags       .byte   ?   ; Flags (META)
+=$80					META        = $80       ; Meta key; no associated ASCII value.
+.0904					mouse
+.0904					delta
+>0904					x           .byte   ?
+>0905					y           .byte   ?
+>0906					z           .byte   ?
+>0907					buttons     .byte   ?
+.0904					clicks
+>0904					inner       .byte   ?
+>0905					middle      .byte   ?
+>0906					outer       .byte   ?
+.0904					udp
+>0904					token       .byte   ?   ; TODO: break out into fields
+.0904					file
+>0904					stream      .byte   ?
+>0905					cookie      .byte   ?
+.0906					data
+>0906					requested   .byte   ?   ; Requested number of bytes to read
+>0907					read        .byte   ?   ; Number of bytes actually read
+.0906					wrote
+>0906					requested   .byte   ?   ; Requested number of bytes to read
+>0907					wrote       .byte   ?   ; Number of bytes actually read
+.0904					directory
+>0904					stream      .byte   ?
+>0905					cookie      .byte   ?
+.0906					volume
+>0906					len         .byte   ?   ; Length of volname (in buf)
+>0907					flags       .byte   ?   ; block size, text encoding
+.0906					file
+>0906					len         .byte   ?
+>0907					flags       .byte   ?   ; block scale, text encoding, approx size
+.0906					free
+>0906					flags       .byte   ?   ; block scale, text encoding, approx size
+>00d2					eol         .byte       ?
+>00d3					drives      .byte       ?
+>00d4					tmp         .word       ?
+
+;******  Processing input file: reader.asm
+
+>0908					stop        .byte       ?
+>0909					read_len    .byte       ?
+>090a					print_fn    .byte       ?
+>090b					remaining   .byte       ?
+>8025	54 45 53 54			fileName:	.text 		"TEST"
+=4					fileNameLen = 4
+.8029					read_file
+.8029	8d 09 09	sta $0909				sta     read_len
+.802c	8d 0b 09	sta $090b				sta     remaining
+.802f	8e 0a 09	stx $090a				stx     print_fn
+.8032	9c 08 09	stz $0908				stz     stop
+.8035	ad 00 09	lda $0900				lda     drive
+.8038	a9 00		lda #$00				lda 	#0
+.803a	85 f3		sta $f3					sta     kernel.args.file.open.drive
+.803c	a5 25		lda $25					lda     fileName & $FF
+.803e	85 fb		sta $fb					sta     kernel.args.file.open.fname+0
+.8040	a5 80		lda $80					lda     fileName >> 8
+.8042	85 fc		sta $fc					sta     kernel.args.file.open.fname+1
+.8044	a9 04		lda #$04				lda 	#fileNameLen
+.8046	85 fd		sta $fd					sta     kernel.args.file.open.fname_len
+.8048	a9 00		lda #$00				lda     #kernel.args.file.open.READ
+.804a	85 f5		sta $f5					sta     kernel.args.file.open.mode
+.804c	20 5c ff	jsr $ff5c				jsr     kernel.File.Open
+.804f	b0 1e		bcs $806f				bcs     _error
+.8051					_loop
+.8051	20 0c ff	jsr $ff0c				jsr     kernel.Yield    ; Not required; but good while waiting.
+.8054	20 00 ff	jsr $ff00				jsr     kernel.NextEvent
+.8057	b0 f8		bcs $8051				bcs     _loop
+.8059	ad 01 09	lda $0901				lda 	event.type
+.805c	20 26 81	jsr $8126				jsr 	puth
+.805f	ad 01 09	lda $0901				lda     event.type
+.8062	c9 32		cmp #$32				cmp     #kernel.event.file.CLOSED
+.8064	f0 10		beq $8076				beq     _done
+.8066	c9 28		cmp #$28				cmp     #kernel.event.file.NOT_FOUND
+.8068	f0 26		beq $8090				beq     _not_found
+.806a	20 7b 80	jsr $807b				jsr     _dispatch
+.806d	80 e2		bra $8051				bra     _loop
+.806f					_error
+.806f	38		sec					sec
+.8070	a9 fd		lda #$fd				lda 	#$FD
+.8072	4c f4 80	jmp $80f4				jmp 	puts_cr
+.8075	60		rts					rts
+.8076					_done
+.8076	a9 ff		lda #$ff				lda 	#$FF
+.8078	4c f4 80	jmp $80f4				jmp     puts_cr
+.807b					_dispatch
+.807b	c9 2a		cmp #$2a				cmp     #kernel.event.file.OPENED
+.807d	f0 1d		beq $809c				beq     _read
+.807f	c9 2c		cmp #$2c				cmp     #kernel.event.file.DATA
+.8081	f0 30		beq $80b3				beq     _data
+.8083	c9 38		cmp #$38				cmp     #kernel.event.file.ERROR
+.8085	f0 3d		beq $80c4				beq     _eof
+.8087	c9 30		cmp #$30				cmp     #kernel.event.file.EOF
+.8089	f0 39		beq $80c4				beq     _eof
+.808b	c9 08		cmp #$08				cmp     #kernel.event.key.PRESSED
+.808d	f0 06		beq $8095				beq     _key
+.808f	60		rts					rts
+.8090					_not_found
+.8090	a9 fe		lda #$fe				lda     #$FE
+.8092	4c f4 80	jmp $80f4				jmp     puts_cr
+.8095					_key
+.8095	ad 06 09	lda $0906				lda     event.key.ascii
+.8098	8d 08 09	sta $0908				sta     stop
+.809b	60		rts					rts
+.809c					_read
+.809c	ad 08 09	lda $0908				lda     stop
+.809f	d0 23		bne $80c4				bne     _eof
+.80a1	ad 04 09	lda $0904				lda     event.file.stream
+.80a4	85 f3		sta $f3					sta     kernel.args.file.read.stream
+.80a6	ad 0b 09	lda $090b				lda     remaining
+.80a9	d0 03		bne $80ae				bne     _set
+.80ab	ad 09 09	lda $0909				lda     read_len
+.80ae	85 f4		sta $f4		_set        sta     kernel.args.file.read.buflen
+.80b0	4c 60 ff	jmp $ff60				jmp     kernel.File.Read
+.80b3					_data
+.80b3	20 cc 80	jsr $80cc				jsr     data
+.80b6	ad 0b 09	lda $090b				lda     remaining
+.80b9	f0 e1		beq $809c				beq     _read
+.80bb	38		sec					sec
+.80bc	ed 07 09	sbc $0907				sbc     event.file.data.read
+.80bf	8d 0b 09	sta $090b				sta     remaining
+.80c2	80 d8		bra $809c				bra     _read
+.80c4					_eof
+.80c4	ad 04 09	lda $0904				lda     event.file.stream
+.80c7	85 f3		sta $f3					sta     kernel.args.file.close.stream
+.80c9	4c 68 ff	jmp $ff68				jmp     kernel.File.Close
+.80cc					data
+.80cc	ad 07 09	lda $0907				lda     event.file.data.read
+.80cf	20 e1 80	jsr $80e1				jsr     read_data
+.80d2	a0 00		ldy #$00				ldy     #0
+.80d4	b9 00 08	lda $0800,y	_loop       lda     buf,y
+.80d7	20 ee 80	jsr $80ee				jsr     print
+.80da	c8		iny					iny
+.80db	cc 07 09	cpy $0907				cpy     event.file.data.read
+.80de	d0 f4		bne $80d4				bne     _loop
+.80e0					_done
+.80e0	60		rts					rts
+.80e1					read_data
+.80e1	85 fd		sta $fd					sta     kernel.args.recv.buflen
+.80e3	a9 00		lda #$00				lda     #<buf
+.80e5	85 fb		sta $fb					sta     kernel.args.recv.buf+0
+.80e7	a9 08		lda #$08				lda     #>buf
+.80e9	85 fc		sta $fc					sta     kernel.args.recv.buf+1
+.80eb	4c 04 ff	jmp $ff04				jmp     kernel.ReadData
+.80ee					print
+.80ee	ae 0a 09	ldx $090a				ldx     print_fn
+.80f1	7c 00 00	jmp ($0000,x)				jmp     (0,x)
+.80f4	20 26 81	jsr $8126	puts_cr 	jsr 	puth
+.80f7	a9 2a		lda #$2a				lda 	#42
+.80f9	20 05 81	jsr $8105				jsr 	putc
+.80fc	20 05 81	jsr $8105				jsr 	putc
+.80ff	80 fe		bra $80ff	h2:			bra 	h2
+
+;******  Processing input file: display.asm
+
+.090c					screenPos:
+>090c							.fill   1
+.8101					initputc
+.8101	9c 0c 09	stz $090c			stz 	screenPos
+.8104	60		rts				rts
+.8105					putc:
+.8105	48		pha				pha
+.8106	da		phx				phx
+.8107	5a		phy				phy
+.8108	a4 01		ldy $01				ldy 	1
+.810a	5a		phy				phy
+.810b	ae 0c 09	ldx $090c			ldx 	screenPos
+.810e	a0 02		ldy #$02			ldy 	#2
+.8110	84 01		sty $01				sty 	1
+.8112	9d 00 c0	sta $c000,x			sta 	$C000,x
+.8115	e6 01		inc $01				inc 	1
+.8117	a9 52		lda #$52			lda 	#$52
+.8119	9d 00 c0	sta $c000,x			sta 	$C000,x
+.811c	7a		ply				ply
+.811d	84 01		sty $01				sty 	1
+.811f	ee 0c 09	inc $090c			inc 	screenPos
+.8122	7a		ply				ply
+.8123	fa		plx				plx
+.8124	68		pla				pla
+.8125	60		rts				rts
+.8126	48		pha		puth:	pha
+.8127	48		pha				pha
+.8128	48		pha				pha
+.8129	a9 20		lda #$20			lda 	#' '
+.812b	20 05 81	jsr $8105			jsr 	putc
+.812e	68		pla				pla
+.812f	4a		lsr a				lsr 	a
+.8130	4a		lsr a				lsr 	a
+.8131	4a		lsr a				lsr 	a
+.8132	4a		lsr a				lsr 	a
+.8133	20 3c 81	jsr $813c			jsr 	putn
+.8136	68		pla				pla
+.8137	20 3c 81	jsr $813c			jsr 	putn
+.813a	68		pla				pla
+.813b	60		rts				rts
+.813c					putn:
+.813c	29 0f		and #$0f			and 	#15
+.813e	c9 0a		cmp #$0a			cmp 	#10
+.8140	90 02		bcc $8144			bcc 	_putn2
+.8142	69 06		adc #$06			adc 	#6
+.8144	69 30		adc #$30	_putn2:	adc 	#48
+.8146	4c 05 81	jmp $8105			jmp 	putc
+
+;******  Processing input file: api.asm
+
+>ff00					NextEvent   .fill   4   ; Copy the next event into user-space.
+>ff04					ReadData    .fill   4   ; Copy primary bulk event data into user-space
+>ff08					ReadExt     .fill   4   ; Copy secondary bolk event data into user-space
+>ff0c					Yield       .fill   4   ; Give unused time to the kernel.
+>ff10					Putch       .fill   4   ; deprecated
+>ff14					Basic       .fill   4   ; deprecated
+>ff18					            .fill   4   ; reserved
+>ff1c					            .fill   4   ; reserved
+>ff20					List        .fill   4   ; Returns a bit-set of available block-accessible devices.
+>ff24					GetName     .fill   4   ; Gets the hardware level name of the given block device or media.
+>ff28					GetSize     .fill   4   ; Get the number of raw sectors (48 bits) for the given device
+>ff2c					Read        .fill   4   ; Read a raw sector (48 bit LBA)
+>ff30					Write       .fill   4   ; Write a raw sector (48 bit LBA)
+>ff34					Format      .fill   4   ; Perform a low-level format if the media support it.
+>ff38					Export      .fill   4   ; Update the FileSystem table with the partition table (if present).
+>ff3c					List        .fill   4   ; Returns a bit-set of available logical devices.
+>ff40					GetSize     .fill   4   ; Get the size of the partition or logical device in sectors.
+>ff44					MkFS        .fill   4   ; Creates a new file-system on the logical device.
+>ff48					CheckFS     .fill   4   ; Checks the file-system for errors and corrects them.
+>ff4c					Mount       .fill   4   ; Mark the file-system as available for File and Directory operations.
+>ff50					Unmount     .fill   4   ; Mark the file-system as unavailable for File and Directory operations.
+>ff54					ReadBlock   .fill   4   ; Read a partition-local raw sector on an unmounted device.
+>ff58					WriteBlock  .fill   4   ; Write a partition-local raw sector on an unmounted device.
+>ff5c					Open        .fill   4   ; Open the given file for read, create, or append.
+>ff60					Read        .fill   4   ; Request bytes from a file opened for reading.
+>ff64					Write       .fill   4   ; Write bytes to a file opened for create or append.
+>ff68					Close       .fill   4   ; Close an open file.
+>ff6c					Rename      .fill   4   ; Rename a closed file.
+>ff70					Delete      .fill   4   ; Delete a closed file.
+>ff74					Open        .fill   4   ; Open a directory for reading.
+>ff78					Read        .fill   4   ; Read a directory entry; may also return VOLUME and FREE events.
+>ff7c					Close       .fill   4   ; Close a directory once finished reading.
+>ff80					            .fill   4   ; call gate
+>ff84					GetSize     .fill   4   ; Returns rows/cols in kernel args.
+>ff88					DrawRow     .fill   4   ; Draw text/color buffers left-to-right
+>ff8c					DrawColumn  .fill   4   ; Draw text/color buffers top-to-bottom
+>ff90					GetIP       .fill   4   ; Get the local IP address.
+>ff94					SetIP       .fill   4   ; Set the local IP address.
+>ff98					GetDNS      .fill   4   ; Get the configured DNS IP address.
+>ff9c					SetDNS      .fill   4   ; Set the configured DNS IP address.
+>ffa0					GetTime     .fill   4
+>ffa4					SetTime     .fill   4
+>ffa8					GetSysInfo  .fill   4
+>ffac					SetBPS      .fill   4   ; Set the serial BPS (should match the SLIP router's speed).
+>ffb0					InitUDP     .fill   4
+>ffb4					SendUDP     .fill   4
+>ffb8					RecvUDP     .fill   4
+>ffbc					InitTCP     .fill   4
+>ffc0					SendTCP     .fill   4
+>ffc4					RecvTCP     .fill   4
+>ffc8					SendICMP    .fill   4
+>ffcc					RecvICMP    .fill   4
+.00f0					args
+.00f0					events
+>00f0					dest        .word       ?   ; GetNextEvent copies event data here
+>00f2					pending     .byte       ?   ; Negative count of pending events
+.00f3					end
+.00f3					recv
+=$fb					buf         = args.buf
+=$fd					buflen      = args.buflen
+.00f3					fs
+.00f3					format
+>00f3					drive       .byte       ?
+>00f4					cookie      .byte       ?
+=$fb					label       = args.buf
+=$fd					label_len   = args.buflen
+.00f3					mkfs
+>00f3					drive       .byte       ?
+>00f4					cookie      .byte       ?
+=$fb					label       = args.buf
+=$fd					label_len   = args.buflen
+.00f3					file
+.00f3					open
+>00f3					drive       .byte       ?
+>00f4					cookie      .byte       ?
+=$fb					fname       = args.buf
+=$fd					fname_len   = args.buflen
+>00f5					mode        .byte       ?
+=0					READ        = 0
+=1					WRITE       = 1
+=2					END         = 2
+.00f3					read
+>00f3					stream      .byte       ?
+>00f4					buflen      .byte       ?
+.00f3					write
+>00f3					stream      .byte       ?
+=$fb					buf         = args.buf
+=$fd					buflen      = args.buflen
+.00f3					close
+>00f3					stream      .byte       ?
+.00f3					rename
+>00f3					drive       .byte       ?
+>00f4					cookie      .byte       ?
+=$fb					old         = args.buf
+=$fd					old_len     = args.buflen
+=$f8					new         = args.ext
+=$fa					new_len     = args.extlen
+.00f3					delete
+>00f3					drive       .byte       ?
+>00f4					cookie      .byte       ?
+=$fb					fname       = args.buf
+=$fd					fname_len   = args.buflen
+>00f5					mode        .byte       ?
+=0					READ        = 0
+=1					WRITE       = 1
+=2					END         = 2
+.00f3					directory
+.00f3					open
+>00f3					drive       .byte       ?
+>00f4					cookie      .byte       ?
+=$fb					fname       = args.buf
+=$fd					fname_len   = args.buflen
+.00f3					read
+>00f3					stream      .byte       ?
+>00f4					buflen      .byte       ?
+.00f3					close
+>00f3					stream      .byte       ?
+.00f3					display
+>00f3					x           .byte       ?   ; coordinate or size
+>00f4					y           .byte       ?   ; coordinate or size
+=$fb					text        = args.buf      ; text
+=$f8					color       = args.ext      ; color
+=$fb					buf         = args.buf      ; deprecated
+=$f8					buf2        = args.ext      ; deprecated
+=$fd					buflen      = args.buflen
+.00f3					net
+>00f3					socket      .word       ?
+>00f5					src_port    .word       ?
+>00f7					dest_port   .word       ?
+>00f9					dest_ip     .fill       4
+>00f5					buf         .word       ?
+>00f7					buflen      .byte       ?
+>00f8					ext         .word       ?
+>00fa					extlen      .byte       ?
+=$f8					ext         = $f8
+=$fa					extlen      = $fa
+=$fb					buf         = $fb
+=$fd					buflen      = $fd
+=$fe					ptr         = $fe
+.0000					args_t
+.0000					events
+>0000					dest        .word       ?   ; GetNextEvent copies event data here
+>0002					pending     .byte       ?   ; Negative count of pending events
+.0003					end
+.0003					recv
+=$fb					buf         = args.buf
+=$fd					buflen      = args.buflen
+.0003					fs
+.0003					format
+>0003					drive       .byte       ?
+>0004					cookie      .byte       ?
+=$fb					label       = args.buf
+=$fd					label_len   = args.buflen
+.0003					mkfs
+>0003					drive       .byte       ?
+>0004					cookie      .byte       ?
+=$fb					label       = args.buf
+=$fd					label_len   = args.buflen
+.0003					file
+.0003					open
+>0003					drive       .byte       ?
+>0004					cookie      .byte       ?
+=$fb					fname       = args.buf
+=$fd					fname_len   = args.buflen
+>0005					mode        .byte       ?
+=0					READ        = 0
+=1					WRITE       = 1
+=2					END         = 2
+.0003					read
+>0003					stream      .byte       ?
+>0004					buflen      .byte       ?
+.0003					write
+>0003					stream      .byte       ?
+=$fb					buf         = args.buf
+=$fd					buflen      = args.buflen
+.0003					close
+>0003					stream      .byte       ?
+.0003					rename
+>0003					drive       .byte       ?
+>0004					cookie      .byte       ?
+=$fb					old         = args.buf
+=$fd					old_len     = args.buflen
+=$f8					new         = args.ext
+=$fa					new_len     = args.extlen
+.0003					delete
+>0003					drive       .byte       ?
+>0004					cookie      .byte       ?
+=$fb					fname       = args.buf
+=$fd					fname_len   = args.buflen
+>0005					mode        .byte       ?
+=0					READ        = 0
+=1					WRITE       = 1
+=2					END         = 2
+.0003					directory
+.0003					open
+>0003					drive       .byte       ?
+>0004					cookie      .byte       ?
+=$fb					fname       = args.buf
+=$fd					fname_len   = args.buflen
+.0003					read
+>0003					stream      .byte       ?
+>0004					buflen      .byte       ?
+.0003					close
+>0003					stream      .byte       ?
+.0003					display
+>0003					x           .byte       ?   ; coordinate or size
+>0004					y           .byte       ?   ; coordinate or size
+=$fb					text        = args.buf      ; text
+=$f8					color       = args.ext      ; color
+=$fb					buf         = args.buf      ; deprecated
+=$f8					buf2        = args.ext      ; deprecated
+=$fd					buflen      = args.buflen
+.0003					net
+>0003					socket      .word       ?
+>0005					src_port    .word       ?
+>0007					dest_port   .word       ?
+>0009					dest_ip     .fill       4
+>0005					buf         .word       ?
+>0007					buflen      .byte       ?
+>0008					ext         .word       ?
+>000a					extlen      .byte       ?
+=$f8					ext         = $f8
+=$fa					extlen      = $fa
+=$fb					buf         = $fb
+=$fd					buflen      = $fd
+=$fe					ptr         = $fe
+.0000					event_t
+>0000					dest        .word       ?   ; GetNextEvent copies event data here
+>0002					pending     .byte       ?   ; Negative count of pending events
+.0003					end
+.0000					recv_t
+=$fb					buf         = args.buf
+=$fd					buflen      = args.buflen
+.0000					fs_t
+.0000					format
+>0000					drive       .byte       ?
+>0001					cookie      .byte       ?
+=$fb					label       = args.buf
+=$fd					label_len   = args.buflen
+.0000					mkfs
+>0000					drive       .byte       ?
+>0001					cookie      .byte       ?
+=$fb					label       = args.buf
+=$fd					label_len   = args.buflen
+.0000					fs_mkfs_t
+>0000					drive       .byte       ?
+>0001					cookie      .byte       ?
+=$fb					label       = args.buf
+=$fd					label_len   = args.buflen
+.0000					file_t
+.0000					open
+>0000					drive       .byte       ?
+>0001					cookie      .byte       ?
+=$fb					fname       = args.buf
+=$fd					fname_len   = args.buflen
+>0002					mode        .byte       ?
+=0					READ        = 0
+=1					WRITE       = 1
+=2					END         = 2
+.0000					read
+>0000					stream      .byte       ?
+>0001					buflen      .byte       ?
+.0000					write
+>0000					stream      .byte       ?
+=$fb					buf         = args.buf
+=$fd					buflen      = args.buflen
+.0000					close
+>0000					stream      .byte       ?
+.0000					rename
+>0000					drive       .byte       ?
+>0001					cookie      .byte       ?
+=$fb					old         = args.buf
+=$fd					old_len     = args.buflen
+=$f8					new         = args.ext
+=$fa					new_len     = args.extlen
+.0000					delete
+>0000					drive       .byte       ?
+>0001					cookie      .byte       ?
+=$fb					fname       = args.buf
+=$fd					fname_len   = args.buflen
+>0002					mode        .byte       ?
+=0					READ        = 0
+=1					WRITE       = 1
+=2					END         = 2
+.0000					fs_open_t
+>0000					drive       .byte       ?
+>0001					cookie      .byte       ?
+=$fb					fname       = args.buf
+=$fd					fname_len   = args.buflen
+>0002					mode        .byte       ?
+=0					READ        = 0
+=1					WRITE       = 1
+=2					END         = 2
+.0000					fs_read_t
+>0000					stream      .byte       ?
+>0001					buflen      .byte       ?
+.0000					fs_write_t
+>0000					stream      .byte       ?
+=$fb					buf         = args.buf
+=$fd					buflen      = args.buflen
+.0000					fs_close_t
+>0000					stream      .byte       ?
+.0000					fs_rename_t
+>0000					drive       .byte       ?
+>0001					cookie      .byte       ?
+=$fb					old         = args.buf
+=$fd					old_len     = args.buflen
+=$f8					new         = args.ext
+=$fa					new_len     = args.extlen
+.0000					fs_delete_t
+>0000					drive       .byte       ?
+>0001					cookie      .byte       ?
+=$fb					fnane       = args.buf
+=$fd					fname_len   = args.buflen
+.0000					dir_t
+.0000					open
+>0000					drive       .byte       ?
+>0001					cookie      .byte       ?
+=$fb					fname       = args.buf
+=$fd					fname_len   = args.buflen
+.0000					read
+>0000					stream      .byte       ?
+>0001					buflen      .byte       ?
+.0000					close
+>0000					stream      .byte       ?
+.0000					dir_open_t
+>0000					drive       .byte       ?
+>0001					cookie      .byte       ?
+=$fb					fname       = args.buf
+=$fd					fname_len   = args.buflen
+.0000					dir_read_t
+>0000					stream      .byte       ?
+>0001					buflen      .byte       ?
+.0000					dir_close_t
+>0000					stream      .byte       ?
+.0000					display_t
+>0000					x           .byte       ?   ; coordinate or size
+>0001					y           .byte       ?   ; coordinate or size
+=$fb					text        = args.buf      ; text
+=$f8					color       = args.ext      ; color
+=$fb					buf         = args.buf      ; deprecated
+=$f8					buf2        = args.ext      ; deprecated
+=$fd					buflen      = args.buflen
+.0000					net_t
+>0000					socket      .word       ?
+>0002					src_port    .word       ?
+>0004					dest_port   .word       ?
+>0006					dest_ip     .fill       4
+>0002					buf         .word       ?
+>0004					buflen      .byte       ?
+>0005					ext         .word       ?
+>0007					extlen      .byte       ?
+>0000					RESERVED    .word   ?
+>0002					MOUSEEV     .word   ?   ; Mouse event.
+>0004					GAME        .word   ?   ; Game Controller changes.
+>0006					DEVICE      .word   ?   ; Device added/removed.
+>0008					PRESSED     .word   ?   ; Key pressed
+>000a					RELEASED    .word   ?   ; Key released.
+>000c					DELTA       .word   ?   ; Regular mouse move and button state
+>000e					CLICKS      .word   ?   ; Click count
+>0010					NAME        .word   ?
+>0012					SIZE        .word   ?
+>0014					DATA        .word   ?   ; The read request has succeeded.
+>0016					WROTE       .word   ?   ; The write request has completed.
+>0018					FORMATTED   .word   ?
+>001a					ERROR       .word   ?
+>001c					SIZE        .word   ?
+>001e					CREATED     .word   ?
+>0020					CHECKED     .word   ?
+>0022					DATA        .word   ?   ; The read request has succeeded.
+>0024					WROTE       .word   ?   ; The write request has completed.
+>0026					ERROR       .word   ?
+>0028					NOT_FOUND   .word   ?   ; The file file was not found.
+>002a					OPENED      .word   ?   ; The file was successfully opened.
+>002c					DATA        .word   ?   ; The read request has succeeded.
+>002e					WROTE       .word   ?   ; The write request has completed.
+>0030					EOF         .word   ?   ; All file data has been read.
+>0032					CLOSED      .word   ?   ; The close request has completed.
+>0034					RENAMED     .word   ?   ; The rename request has completed.
+>0036					DELETED     .word   ?   ; The delete request has completed.
+>0038					ERROR       .word   ?   ; An error occured; close the file if opened.
+>003a					OPENED      .word   ?   ; The directory open request succeeded.
+>003c					VOLUME      .word   ?   ; A volume record was found.
+>003e					FILE        .word   ?   ; A file record was found.
+>0040					FREE        .word   ?   ; A file-system free-space record was found.
+>0042					EOF         .word   ?   ; All data has been read.
+>0044					CLOSED      .word   ?   ; The directory file has been closed.
+>0046					ERROR       .word   ?   ; An error occured; user should close.
+>0048					TCP         .word   ?
+>004a					UDP         .word   ?
+.0000					event_t
+>0000					type        .byte   ?   ; Enum above
+>0001					buf         .byte   ?   ; page id or zero
+>0002					ext         .byte   ?   ; page id or zero
+.0003					key
+>0003					keyboard    .byte   ?   ; Keyboard ID
+>0004					raw         .byte   ?   ; Raw key ID
+>0005					ascii       .byte   ?   ; ASCII value
+>0006					flags       .byte   ?   ; Flags (META)
+=$80					META        = $80       ; Meta key; no associated ASCII value.
+.0003					mouse
+.0003					delta
+>0003					x           .byte   ?
+>0004					y           .byte   ?
+>0005					z           .byte   ?
+>0006					buttons     .byte   ?
+.0003					clicks
+>0003					inner       .byte   ?
+>0004					middle      .byte   ?
+>0005					outer       .byte   ?
+.0003					udp
+>0003					token       .byte   ?   ; TODO: break out into fields
+.0003					file
+>0003					stream      .byte   ?
+>0004					cookie      .byte   ?
+.0005					data
+>0005					requested   .byte   ?   ; Requested number of bytes to read
+>0006					read        .byte   ?   ; Number of bytes actually read
+.0005					wrote
+>0005					requested   .byte   ?   ; Requested number of bytes to read
+>0006					wrote       .byte   ?   ; Number of bytes actually read
+.0003					directory
+>0003					stream      .byte   ?
+>0004					cookie      .byte   ?
+.0005					volume
+>0005					len         .byte   ?   ; Length of volname (in buf)
+>0006					flags       .byte   ?   ; block size, text encoding
+.0005					file
+>0005					len         .byte   ?
+>0006					flags       .byte   ?   ; block scale, text encoding, approx size
+.0005					free
+>0005					flags       .byte   ?   ; block scale, text encoding, approx size
+.0000					key_t
+>0000					keyboard    .byte   ?   ; Keyboard ID
+>0001					raw         .byte   ?   ; Raw key ID
+>0002					ascii       .byte   ?   ; ASCII value
+>0003					flags       .byte   ?   ; Flags (META)
+=$80					META        = $80       ; Meta key; no associated ASCII value.
+.0000					mouse_t
+.0000					delta
+>0000					x           .byte   ?
+>0001					y           .byte   ?
+>0002					z           .byte   ?
+>0003					buttons     .byte   ?
+.0000					clicks
+>0000					inner       .byte   ?
+>0001					middle      .byte   ?
+>0002					outer       .byte   ?
+.0000					m_delta_t
+>0000					x           .byte   ?
+>0001					y           .byte   ?
+>0002					z           .byte   ?
+>0003					buttons     .byte   ?
+.0000					m_clicks_t
+>0000					inner       .byte   ?
+>0001					middle      .byte   ?
+>0002					outer       .byte   ?
+.0000					file_t
+>0000					stream      .byte   ?
+>0001					cookie      .byte   ?
+.0002					data
+>0002					requested   .byte   ?   ; Requested number of bytes to read
+>0003					read        .byte   ?   ; Number of bytes actually read
+.0002					wrote
+>0002					requested   .byte   ?   ; Requested number of bytes to read
+>0003					wrote       .byte   ?   ; Number of bytes actually read
+.0000					fs_data_t
+>0000					requested   .byte   ?   ; Requested number of bytes to read
+>0001					read        .byte   ?   ; Number of bytes actually read
+.0000					fs_wrote_t
+>0000					requested   .byte   ?   ; Requested number of bytes to read
+>0001					wrote       .byte   ?   ; Number of bytes actually read
+.0000					dir_t
+>0000					stream      .byte   ?
+>0001					cookie      .byte   ?
+.0002					volume
+>0002					len         .byte   ?   ; Length of volname (in buf)
+>0003					flags       .byte   ?   ; block size, text encoding
+.0002					file
+>0002					len         .byte   ?
+>0003					flags       .byte   ?   ; block scale, text encoding, approx size
+.0002					free
+>0002					flags       .byte   ?   ; block scale, text encoding, approx size
+.0000					dir_vol_t
+>0000					len         .byte   ?   ; Length of volname (in buf)
+>0001					flags       .byte   ?   ; block size, text encoding
+.0000					dir_file_t
+>0000					len         .byte   ?
+>0001					flags       .byte   ?   ; block scale, text encoding, approx size
+.0000					dir_free_t
+>0000					flags       .byte   ?   ; block scale, text encoding, approx size
+.0000					dir_ext_t
+>0000					free        .fill   6   ; blocks used/free
+.0000					udp_t
+>0000					token       .byte   ?   ; TODO: break out into fields
+
+;******  End of listing
