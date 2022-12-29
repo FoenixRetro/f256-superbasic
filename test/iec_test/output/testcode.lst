@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -q -b -Wall -c -L output/testcode.lst -l output/testcode.lbl -Wall -o testcode.bin readfile.asm
-; Thu Dec 29 09:12:59 2022
+; Thu Dec 29 15:48:12 2022
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -629,11 +629,11 @@
 .80c4	20 51 80	jsr $8051				jsr 	displayPrintSpace
 .80c7	ad 00 10	lda $1000				lda 	event.type
 .80ca	c9 38		cmp #$38				cmp     #kernel.event.file.ERROR ; Event $38
-.80cc	f0 49		beq $8117				beq     ReportA
+.80cc	f0 55		beq $8123				beq     ReportA
 .80ce	c9 32		cmp #$32				cmp     #kernel.event.file.CLOSED ; Event $32
-.80d0	f0 45		beq $8117				beq     ReportA
+.80d0	f0 51		beq $8123				beq     ReportA
 .80d2	c9 28		cmp #$28				cmp     #kernel.event.file.NOT_FOUND ; Event $28
-.80d4	f0 41		beq $8117				beq     ReportA
+.80d4	f0 4d		beq $8123				beq     ReportA
 .80d6	c9 2a		cmp #$2a				cmp     #kernel.event.file.OPENED ; Event $2A
 .80d8	f0 08		beq $80e2				beq     RequestRead
 .80da	c9 2c		cmp #$2c				cmp     #kernel.event.file.DATA ; Event $2C
@@ -655,31 +655,35 @@
 .80f8	a9 10		lda #$10	            lda     #buffer >> 8
 .80fa	85 fc		sta $fc		            sta     kernel.args.recv.buf+1
 .80fc	20 04 ff	jsr $ff04	            jsr     kernel.ReadData			; read the data into the buffer.
-.80ff	a9 28		lda #$28	            lda 	#"("
-.8101	20 0d 80	jsr $800d	            jsr 	displayPrintCharacter
-.8104	ad 07 10	lda $1007	            lda 	buffer
+.80ff	ad 06 10	lda $1006	            lda 	event.file.data.read
+.8102	20 35 80	jsr $8035	            jsr 	displayPrintHex
+.8105	a9 28		lda #$28	            lda 	#"("
 .8107	20 0d 80	jsr $800d	            jsr 	displayPrintCharacter
-.810a	a9 29		lda #$29	            lda 	#")"
-.810c	20 0d 80	jsr $800d	            jsr 	displayPrintCharacter
-.810f	20 51 80	jsr $8051	            jsr 	displayPrintSpace
-.8112	4c e2 80	jmp $80e2	            jmp 	RequestRead 			; more data please
-.8115					ReportEOF:
-.8115	a9 00		lda #$00				lda 	#0
-.8117					ReportA:
-.8117	48		pha					pha 							; display ER xx
-.8118	48		pha				pha
-.8119	a9 45		lda #$45			lda 	#'E'
-.811b	20 0d 80	jsr $800d			jsr 	displayPrintCharacter
-.811e	a9 52		lda #$52			lda 	#'R'
-.8120	20 0d 80	jsr $800d			jsr 	displayPrintCharacter
-.8123	20 51 80	jsr $8051			jsr 	displayPrintSpace
-.8126	68		pla				pla
-.8127	68		pla					pla
-.8128	20 32 80	jsr $8032				jsr 	displayPrintHexSpace
-.812b	ad 03 10	lda $1003				lda     event.file.stream 		; close the stream
-.812e	85 f3		sta $f3					sta     kernel.args.file.close.stream
-.8130	20 68 ff	jsr $ff68				jsr     kernel.File.Close
-.8133	4c 9f 80	jmp $809f				jmp 	Halt 					; and stop.
+.810a	ad 07 10	lda $1007	            lda 	buffer
+.810d	20 0d 80	jsr $800d	            jsr 	displayPrintCharacter
+.8110	ad 08 10	lda $1008	            lda 	buffer+1
+.8113	20 0d 80	jsr $800d	            jsr 	displayPrintCharacter
+.8116	a9 29		lda #$29	            lda 	#")"
+.8118	20 0d 80	jsr $800d	            jsr 	displayPrintCharacter
+.811b	20 51 80	jsr $8051	            jsr 	displayPrintSpace
+.811e	4c e2 80	jmp $80e2	            jmp 	RequestRead 			; more data please
+.8121					ReportEOF:
+.8121	a9 00		lda #$00				lda 	#0
+.8123					ReportA:
+.8123	48		pha					pha 							; display ER xx
+.8124	48		pha				pha
+.8125	a9 45		lda #$45			lda 	#'E'
+.8127	20 0d 80	jsr $800d			jsr 	displayPrintCharacter
+.812a	a9 52		lda #$52			lda 	#'R'
+.812c	20 0d 80	jsr $800d			jsr 	displayPrintCharacter
+.812f	20 51 80	jsr $8051			jsr 	displayPrintSpace
+.8132	68		pla				pla
+.8133	68		pla					pla
+.8134	20 32 80	jsr $8032				jsr 	displayPrintHexSpace
+.8137	ad 03 10	lda $1003				lda     event.file.stream 		; close the stream
+.813a	85 f3		sta $f3					sta     kernel.args.file.close.stream
+.813c	20 68 ff	jsr $ff68				jsr     kernel.File.Close
+.813f	4c 9f 80	jmp $809f				jmp 	Halt 					; and stop.
 .1000					event
 >1000					type        .byte   ?   ; Enum above
 >1001					buf         .byte   ?   ; page id or zero

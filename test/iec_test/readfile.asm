@@ -148,9 +148,13 @@ RequestData:
 
             jsr     kernel.ReadData			; read the data into the buffer.
 
+            lda 	event.file.data.read
+            jsr 	displayPrintHex
             lda 	#"("
             jsr 	displayPrintCharacter           
             lda 	buffer
+            jsr 	displayPrintCharacter
+            lda 	buffer+1
             jsr 	displayPrintCharacter
             lda 	#")"
             jsr 	displayPrintCharacter           
