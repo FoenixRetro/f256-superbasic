@@ -1,6 +1,5 @@
 Progress:	
 	- Break check
-	Look at making SD2IEC load/save work (same problem)
 	Check font is right.
 	zTemp0 in control.asm
 
