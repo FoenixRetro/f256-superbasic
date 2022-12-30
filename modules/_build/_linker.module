@@ -44,6 +44,27 @@ KNLInputSingleCharacter:
 	dec 8+5
 	plp
 	rts
+KNLOpenFileRead:
+	inc 8+5
+	jsr	Export_KNLOpenFileRead
+	php
+	dec 8+5
+	plp
+	rts
+KNLReadByte:
+	inc 8+5
+	jsr	Export_KNLReadByte
+	php
+	dec 8+5
+	plp
+	rts
+KNLCloseFile:
+	inc 8+5
+	jsr	Export_KNLCloseFile
+	php
+	dec 8+5
+	plp
+	rts
 	.endif
 	.if graphicsIntegrated == 1
 GXGraphicDraw:

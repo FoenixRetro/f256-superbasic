@@ -154,8 +154,6 @@ RequestData:
             jsr 	displayPrintCharacter           
             lda 	buffer
             jsr 	displayPrintCharacter
-            lda 	buffer+1
-            jsr 	displayPrintCharacter
             lda 	#")"
             jsr 	displayPrintCharacter           
             jsr 	displayPrintSpace

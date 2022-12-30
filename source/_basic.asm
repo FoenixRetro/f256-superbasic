@@ -38,6 +38,7 @@
 	.include	"./common/commands/inputprint.asm"
 	.include	"./common/commands/let.asm"
 	.include	"./common/commands/list.asm"
+	.include	"./common/commands/load.asm"
 	.include	"./common/commands/local.asm"
 	.include	"./common/commands/new.asm"
 	.include	"./common/commands/poke.asm"

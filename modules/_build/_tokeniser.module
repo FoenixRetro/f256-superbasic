@@ -115,14 +115,16 @@ KeywordSet1:
 	.text	4,$2e,"PING"           ; $8c PING
 	.text	7,$24,"RESTORE"        ; $8d RESTORE
 	.text	3,$f5,"RUN"            ; $8e RUN
-	.text	7,$0a,"SETDATE"        ; $8f SETDATE
-	.text	7,$1b,"SETTIME"        ; $90 SETTIME
-	.text	5,$8d,"SHOOT"          ; $91 SHOOT
-	.text	7,$2a,"SPRITES"        ; $92 SPRITES
-	.text	4,$46,"STOP"           ; $93 STOP
-	.text	3,$ee,"XGO"            ; $94 XGO
-	.text	5,$78,"XLOAD"          ; $95 XLOAD
-	.text	3,$eb,"ZAP"            ; $96 ZAP
+	.text	4,$2f,"SAVE"           ; $8f SAVE
+	.text	7,$0a,"SETDATE"        ; $90 SETDATE
+	.text	7,$1b,"SETTIME"        ; $91 SETTIME
+	.text	5,$8d,"SHOOT"          ; $92 SHOOT
+	.text	7,$2a,"SPRITES"        ; $93 SPRITES
+	.text	4,$46,"STOP"           ; $94 STOP
+	.text	6,$d5,"VERIFY"         ; $95 VERIFY
+	.text	3,$ee,"XGO"            ; $96 XGO
+	.text	5,$78,"XLOAD"          ; $97 XLOAD
+	.text	3,$eb,"ZAP"            ; $98 ZAP
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF

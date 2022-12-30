@@ -167,19 +167,21 @@ VectorSet1:
 	.word	Explode                          ; $87 EXPLODE
 	.word	SyntaxError                      ; $88 GO
 	.word	Command_List                     ; $89 LIST
-	.word	SyntaxError                      ; $8a LOAD
+	.word	Command_Load                     ; $8a LOAD
 	.word	NewCommand                       ; $8b NEW
 	.word	PingCommand                      ; $8c PING
 	.word	Command_Restore                  ; $8d RESTORE
 	.word	CommandRUN                       ; $8e RUN
-	.word	SyntaxError                      ; $8f SETDATE
-	.word	SyntaxError                      ; $90 SETTIME
-	.word	ShootCommand                     ; $91 SHOOT
-	.word	SpritesCtrl                      ; $92 SPRITES
-	.word	StopCommand                      ; $93 STOP
-	.word	XGoCommand                       ; $94 XGO
-	.word	XLoadCommand                     ; $95 XLOAD
-	.word	ZapCommand                       ; $96 ZAP
+	.word	SyntaxError                      ; $8f SAVE
+	.word	SyntaxError                      ; $90 SETDATE
+	.word	SyntaxError                      ; $91 SETTIME
+	.word	ShootCommand                     ; $92 SHOOT
+	.word	SpritesCtrl                      ; $93 SPRITES
+	.word	StopCommand                      ; $94 STOP
+	.word	SyntaxError                      ; $95 VERIFY
+	.word	XGoCommand                       ; $96 XGO
+	.word	XLoadCommand                     ; $97 XLOAD
+	.word	ZapCommand                       ; $98 ZAP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

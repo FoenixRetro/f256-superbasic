@@ -69,7 +69,10 @@ ramkernel: ramboot
 	cat build$(S)3f.bin build$(S)3e.bin build$(S)01.bin  >build$(S)kernel.ram 
 	cat build$(S)kernel.ram build$(S)basic.rom >build$(S)ramkernel.bin
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary build$(S)ramkernel.bin --address E000
-
+#
+#		Run on real hardware (Flash RAM operation)
+#	
+rgo : putcode ramkernel
 #
 #		Run on real hardware (RAM operation)
 #
@@ -80,6 +83,12 @@ go : ramboot
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address $(LSOURCE)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(APPNAME) --address $(LBASIC)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address $(LMONITOR)
+#
+#		Store Basic code in upper RAM
+#
+putcode:
+	python scripts$(S)checkload.py
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address $(LSOURCE)
 #
 #		Run on real hardware (Flash Operation)
 #

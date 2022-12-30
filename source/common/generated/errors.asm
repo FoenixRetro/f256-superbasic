@@ -37,4 +37,6 @@ ErrorText:
 	.text	"Array size",0
 	.text	"Bad array index",0
 	.text	"Array not declared",0
+	.text	"File not found",0
+	.text	"Drive not found",0
 .send code

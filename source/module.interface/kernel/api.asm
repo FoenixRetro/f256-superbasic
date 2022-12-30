@@ -259,8 +259,8 @@ extlen      .byte       ?
 event       .namespace
 
             .virtual 0
-RESERVED    .word   ?
-MOUSEEV     .word   ?   ; Mouse event.
+            .word   ?   ; Reserved
+            .word   ?   ; Deprecated
 GAME        .word   ?   ; Game Controller changes.
 DEVICE      .word   ?   ; Device added/removed.
 
@@ -271,7 +271,7 @@ RELEASED    .word   ?   ; Key released.
 
 mouse       .namespace
 DELTA       .word   ?   ; Regular mouse move and button state
-CLICKS      .word   ?   ; Click count
+CLICKS      .word   ?   ; Click counts
             .endn
 
 block       .namespace
@@ -279,7 +279,7 @@ NAME        .word   ?
 SIZE        .word   ?
 DATA        .word   ?   ; The read request has succeeded.
 WROTE       .word   ?   ; The write request has completed.
-FORMATTED   .word   ?
+FORMATTED   .word   ?   ; The low-level format has completed.
 ERROR       .word   ?
             .endn
 

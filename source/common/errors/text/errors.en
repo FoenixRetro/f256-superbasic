@@ -37,3 +37,6 @@ Redefine:	Array already defined
 ArraySize:	Array size 
 ArrayIdx:	Bad array index
 ArrayDec:	Array not declared
+NotFound:	File not found
+Drive:		Drive not found
+		
