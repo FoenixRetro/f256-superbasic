@@ -25,6 +25,7 @@ Command_Load: ;; [LOAD]
 		jsr 	KNLOpenFileRead 			; open file for reading
 		bcs 	_CLDriveNotFound 			; drive not found (apparently)
 		jsr 	NewProgram 					; does the actual NEW.
+		stz 	LoadEOFFlag 				; clear EOF Flag.
 _CLLoop:
 		jsr 	LoadReadLine 				; get next line.
 		beq 	_CLExit 					; end, exit.
@@ -66,7 +67,8 @@ _LRLLoop:
 		stz 	lineBuffer+1,x 				; make ASCIIZ
 		inx
 		jsr 	LoadReadCharacter 			; next line
-		cmp 	#' ' 						; until < space ctrl/eof.
+
+		cmp 	#32 						; until < space ctrl/eof.
 		bcs 	_LRLLoop		
 		lda 	#1 							; return code 1, okay.
 _LRLExit:
@@ -82,10 +84,15 @@ _LRLExit:
 LoadReadCharacter:
 		phx
 		phy
+		lda 	LoadEOFFlag 				; already done EOF.
+		bne 	_LRCIsEOF
+
 		jsr 	KNLReadByte 				; read a byte
 		bcc		_LRCExit 					; read okay.
 		cmp 	#KERR_EOF 					; if error not EOF it's an actual error.
 		bne 	_LRCFatal
+		dec 	LoadEOFFlag
+_LRCIsEOF:		
 		lda 	#0
 _LRCExit:
 		cmp 	#8 							; convert tab to space
@@ -109,6 +116,11 @@ _LRFNotFound:
 		.error_notfound	
 
 		.send code
+
+		.section storage
+LoadEOFFlag:
+		.fill 	1
+		.send storage
 
 ; ************************************************************************************************
 ;
