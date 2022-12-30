@@ -28,7 +28,7 @@ Command_Load: ;; [LOAD]
 _CLLoop:
 		jsr 	KNLReadByte		
 		bcs 	_CLExit
-		jsr 	EXTPrintCharacter
+		;jsr 	EXTPrintCharacter
 		bra 	_CLLoop
 _CLExit:				
 		jmp 	WarmStart
