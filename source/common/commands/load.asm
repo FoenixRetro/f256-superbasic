@@ -24,7 +24,7 @@ Command_Load: ;; [LOAD]
 		lda 	zTemp0 
 		jsr 	KNLOpenFileRead 			; open file for reading
 		bcs 	_CLDriveNotFound 			; drive not found (apparently)
-
+		jsr 	NewProgram 					; does the actual NEW.
 _CLLoop:
 		jsr 	LoadReadLine 				; get next line.
 		beq 	_CLExit 					; end, exit.
