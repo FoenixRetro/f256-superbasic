@@ -131,3 +131,8 @@ error_drive .macro
 	lda	#26
 	jmp	ErrorHandler
 	.endm
+ERRID_DRIVEIO = 27
+error_driveio .macro
+	lda	#27
+	jmp	ErrorHandler
+	.endm

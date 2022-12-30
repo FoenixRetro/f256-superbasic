@@ -39,4 +39,4 @@ ArrayIdx:	Bad array index
 ArrayDec:	Array not declared
 NotFound:	File not found
 Drive:		Drive not found
-		
+DriveIO:	Storage error		

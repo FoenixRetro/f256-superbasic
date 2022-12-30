@@ -297,6 +297,7 @@ _TOKKCNotUC:
 		cmp 	#0
 		bne 	_TOKCCLowerCase
 		plx
+		dex 								; tokenise string expects initial skip.
 		jsr 	TOKTokenString 				; tokenise rest of line as a string.
 _TOKCCExit:		
 		rts
@@ -396,5 +397,7 @@ _THFoundEnd:
 ;		==== 			=====
 ; 		17/12/22 		Added TOKCheckComment which checks for non-quoted comments. Inserted at
 ;						2 positions are checks - end of tokenising and end of punctuation processing.
+; 		30/12/22 		dex before call to tokenise just before _TOKCCExit - rem abcd was tokenising
+;						as rem "bcd" e.g. missing the first character.
 ;
 ; ************************************************************************************************
