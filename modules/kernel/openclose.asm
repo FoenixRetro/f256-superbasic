@@ -33,9 +33,15 @@ KERR_EOF = kernel.event.file.EOF 			; Event $30
 ;
 ; ************************************************************************************************
 
+Export_KNLOpenFileWrite:
+		pha
+		lda 	#kernel.args.file.open.WRITE
+		bra 	KNLOpenStart
+		
 Export_KNLOpenFileRead:
 		pha
         lda     #kernel.args.file.open.READ ; set READ mode.
+KNLOpenStart:        
         sta     kernel.args.file.open.mode
         pla
 

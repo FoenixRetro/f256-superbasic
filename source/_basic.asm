@@ -48,6 +48,7 @@
 	.include	"./common/commands/repeat.asm"
 	.include	"./common/commands/restore.asm"
 	.include	"./common/commands/run.asm"
+	.include	"./common/commands/save.asm"
 	.include	"./common/commands/stop.asm"
 	.include	"./common/commands/utilities/procscan.asm"
 	.include	"./common/commands/utilities/scanforward.asm"

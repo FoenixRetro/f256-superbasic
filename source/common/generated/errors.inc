@@ -126,13 +126,8 @@ error_notfound .macro
 	lda	#25
 	jmp	ErrorHandler
 	.endm
-ERRID_DRIVE = 26
-error_drive .macro
-	lda	#26
-	jmp	ErrorHandler
-	.endm
-ERRID_DRIVEIO = 27
+ERRID_DRIVEIO = 26
 error_driveio .macro
-	lda	#27
+	lda	#26
 	jmp	ErrorHandler
 	.endm

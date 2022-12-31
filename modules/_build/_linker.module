@@ -51,6 +51,13 @@ KNLOpenFileRead:
 	dec 8+5
 	plp
 	rts
+KNLOpenFileWrite:
+	inc 8+5
+	jsr	Export_KNLOpenFileWrite
+	php
+	dec 8+5
+	plp
+	rts
 KNLReadByteInit:
 	inc 8+5
 	jsr	Export_KNLReadByteInit
@@ -61,6 +68,13 @@ KNLReadByteInit:
 KNLReadByte:
 	inc 8+5
 	jsr	Export_KNLReadByte
+	php
+	dec 8+5
+	plp
+	rts
+KNLWriteBlock:
+	inc 8+5
+	jsr	Export_KNLWriteBlock
 	php
 	dec 8+5
 	plp

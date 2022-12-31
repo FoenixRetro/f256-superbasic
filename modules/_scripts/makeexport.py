@@ -15,7 +15,7 @@ paging = True
 
 exports = {}
 exports["hardware"] = 	[ "EXTPrintCharacter","EXTInitialise","EXTBreakCheck","EXTReadController","EXTInputLine" ]
-exports["kernel"] = 	[ "KNLInputSingleCharacter","KNLOpenFileRead","KNLReadByteInit","KNLReadByte","KNLCloseFile" ]
+exports["kernel"] = 	[ "KNLInputSingleCharacter","KNLOpenFileRead","KNLOpenFileWrite","KNLReadByteInit","KNLReadByte","KNLWriteBlock","KNLCloseFile" ]
 exports["graphics"] = 	[ "GXGraphicDraw" ]
 exports["sound"] = 		[ "SNDCommand","SNDUpdate"]
 exports["tokeniser"] = 	[ "TKListConvertLine","TKTokeniseLine" ]

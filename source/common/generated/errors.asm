@@ -38,6 +38,5 @@ ErrorText:
 	.text	"Bad array index",0
 	.text	"Array not declared",0
 	.text	"File not found",0
-	.text	"Drive not found",0
 	.text	"Storage error",0
 .send code

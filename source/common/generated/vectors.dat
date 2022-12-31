@@ -172,7 +172,7 @@ VectorSet1:
 	.word	PingCommand                      ; $8c PING
 	.word	Command_Restore                  ; $8d RESTORE
 	.word	CommandRUN                       ; $8e RUN
-	.word	SyntaxError                      ; $8f SAVE
+	.word	Command_Save                     ; $8f SAVE
 	.word	SyntaxError                      ; $90 SETDATE
 	.word	SyntaxError                      ; $91 SETTIME
 	.word	ShootCommand                     ; $92 SHOOT

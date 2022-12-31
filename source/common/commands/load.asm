@@ -24,8 +24,8 @@ Command_Load: ;; [LOAD]
 		ldx 	zTemp0+1					; zTemp0 -> XA
 		lda 	zTemp0 
 		jsr 	KNLOpenFileRead 			; open file for reading
-		bcs 	_CLErrorHandler 			; error, so fail.
-		sta 	ReadStream 					; save the reading stream.
+		bcs 	CLErrorHandler 				; error, so fail.
+		sta 	CurrentFileStream 			; save the reading stream.
 
 		jsr     KNLReadByteInit             ; Init reader with the stream
 		jsr 	NewProgram 					; does the actual NEW.
@@ -43,30 +43,38 @@ _CLLoop:
 		jsr 	EditProgramCode 			; do the editing etc.	
 		bra 	_CLLoop
 		;
-		;		File loaded, this added because it's so slow.
+		;		File loaded
 		;
 _CLExit:			
-		lda 	#"O"
-		jsr 	EXTPrintCharacter
-		lda 	#"k"
-		jsr 	EXTPrintCharacter
-		lda 	#13
-		jsr 	EXTPrintCharacter
+		lda 	CurrentFileStream
+		jsr 	KNLCloseFile
+		;
+		;		Complete message - it's a bit slow.
+		;		
+CLComplete:
+		lda 	#_CLCMsg & $FF
+		ldx 	#_CLCMsg >> 8
+		jsr 	PrintStringXA
 		jmp 	WarmStart
-
+_CLCMsg:
+		.text 	"Complete.",13,0
 		;
 		;		Close file and handle error
 		;
-_CLCloseError:
+CLCloseError:
 		pha
-		lda 	ReadStream
+		lda 	CurrentFileStream
 		jsr 	KNLCloseFile
 		pla
 		;
-		;		Handle error, file never opened
+		;		Handle error, file never opened, file handling stuff.
 		;
-_CLErrorHandler:
-		.error_drive
+CLErrorHandler:
+		cmp 	#KERR_NOTFOUND
+		beq 	_CLEHNotFound
+		.error_driveio
+_CLEHNotFound:
+		.error_notfound		
 
 ; ************************************************************************************************
 ;
@@ -107,8 +115,9 @@ LoadReadCharacter:
 
 		jsr 	KNLReadByte 				; read a byte
 		bcc		_LRCExit 					; read okay.
+
 		cmp 	#KERR_EOF 					; if error not EOF it's an actual error.
-		bne 	_LRCFatal
+		bne 	CLCloseError
 		dec 	LoadEOFFlag
 _LRCIsEOF:		
 		lda 	#0
@@ -125,13 +134,6 @@ _LRCNotLF:
 		plx		
 		cmp 	#0 							; set Z flag if EOF.
 		rts		
-;
-_LRCFatal:
-		cmp 	#KERR_NOTFOUND
-		beq 	_LRFNotFound
-		.error_driveio
-_LRFNotFound:
-		.error_notfound	
 
 		.send code
 
@@ -139,7 +141,7 @@ _LRFNotFound:
 
 LoadEOFFlag:
 		.fill 	1
-ReadStream:
+CurrentFileStream:
 		.fill 	1
 
 		.send storage
