@@ -122,7 +122,7 @@ LoadReadCharacter:
 _LRCIsEOF:		
 		lda 	#0
 _LRCExit:
-		cmp 	#8 							; convert tab to space
+		cmp 	#9 							; convert tab to space
 		bne 	_LRCNotTab
 		lda 	#' '
 _LRCNotTab:

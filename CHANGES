@@ -97,3 +97,4 @@ Release 18 (30/12/22):
 	CHG: Fixed EOF bug.
 	CHG: Imported Jessie's suggestions/rewrites to the loader, much quicker :)
 	CHG: SAVE now working. 
+	CHG: Now imports TAB (chr(9)) correctly, was breaking comments.
