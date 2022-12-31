@@ -424,9 +424,6 @@ _KNLWLoop:									; wait for an event.
         jsr     kernel.NextEvent
         bcs     _KNLWLoop
 
-        lda 	event.type
-        jsr 	PAGEDPrintHex
-
         lda     event.type 					; various errors.
         cmp     #kernel.event.file.CLOSED
         beq 	_KWBFailed
