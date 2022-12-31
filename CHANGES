@@ -95,3 +95,5 @@ Release 17 (20/12/22):
 Release 18 (30/12/22):
 	
 	CHG: Fixed EOF bug.
+	CHG: Imported Jessie's suggestions/rewrites to the loader, much quicker :)
+	

@@ -20,10 +20,14 @@
 
 Command_Load: ;; [LOAD]
 		jsr 	EvaluateString 				; file name to load
+
 		ldx 	zTemp0+1					; zTemp0 -> XA
 		lda 	zTemp0 
 		jsr 	KNLOpenFileRead 			; open file for reading
-		bcs 	_CLDriveNotFound 			; drive not found (apparently)
+		bcs 	_CLErrorHandler 			; error, so fail.
+		sta 	ReadStream 					; save the reading stream.
+
+		jsr     KNLReadByteInit             ; Init reader with the stream
 		jsr 	NewProgram 					; does the actual NEW.
 		stz 	LoadEOFFlag 				; clear EOF Flag.
 _CLLoop:
@@ -35,9 +39,12 @@ _CLLoop:
 		lda 	tokenLineNumber 			; line number = 0
 		ora 	tokenLineNumber+1
 		beq 	_CLLoop 					; not legal code, blank line or maybe a comment.
+
 		jsr 	EditProgramCode 			; do the editing etc.	
 		bra 	_CLLoop
-
+		;
+		;		File loaded, this added because it's so slow.
+		;
 _CLExit:			
 		lda 	#"O"
 		jsr 	EXTPrintCharacter
@@ -47,7 +54,18 @@ _CLExit:
 		jsr 	EXTPrintCharacter
 		jmp 	WarmStart
 
-_CLDriveNotFound:
+		;
+		;		Close file and handle error
+		;
+_CLCloseError:
+		pha
+		lda 	ReadStream
+		jsr 	KNLCloseFile
+		pla
+		;
+		;		Handle error, file never opened
+		;
+_CLErrorHandler:
 		.error_drive
 
 ; ************************************************************************************************
@@ -118,8 +136,12 @@ _LRFNotFound:
 		.send code
 
 		.section storage
+
 LoadEOFFlag:
 		.fill 	1
+ReadStream:
+		.fill 	1
+
 		.send storage
 
 ; ************************************************************************************************

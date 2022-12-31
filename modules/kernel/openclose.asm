@@ -5,7 +5,8 @@
 ;		Purpose:	File Input/Output commands
 ;		Created:	30th December 2022
 ;		Reviewed: 	No
-;		Author:		Paul Robson (paul@robsons.org.uk)
+;		Authors:	Paul Robson (paul@robsons.org.uk)
+;					Jessie Oberreuter (gadget@hackwrenchlabs.com)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
@@ -14,7 +15,7 @@
 
 ; ************************************************************************************************
 ;
-;				Set errors so not directly accessing variables.
+;						Set errors so not directly accessing variables.
 ;
 ; ************************************************************************************************
 
@@ -25,7 +26,10 @@ KERR_EOF = kernel.event.file.EOF 			; Event $30
 
 ; ************************************************************************************************
 ;
-;				Open file for input/output, CS = failed (drive/file not found likely)
+;									Open file for input/output
+;		
+;		Succeeded : Carry Clear, A contains stream to read.
+;		Failed :	Carry Set, A contains error event.
 ;
 ; ************************************************************************************************
 
@@ -46,16 +50,36 @@ Export_KNLOpenFileRead:
 		sta 	kernel.args.file.open.drive
 
         jsr     kernel.File.Open 			; open the file and exit.
+        lda     #kernel.event.file.ERROR 
+        bcs     _out
+        
+_loop
+		jsr     kernel.Yield    			; event wait		
+		jsr     kernel.NextEvent
+		bcs     _loop
+
+		lda 	event.type 
+		cmp     #kernel.event.file.OPENED
+		beq 	_success
+		cmp     #kernel.event.file.NOT_FOUND 
+		beq 	_out
+		cmp     #kernel.event.file.ERROR 
+		beq 	_out
+		bra     _loop
+
+_success
+        lda     event.file.stream
+        clc
+_out
         rts
 
 ; ************************************************************************************************
 ;
-;									Close currently open file
+;						Close currently open file - A should countain stream
 ;
 ; ************************************************************************************************
 
 Export_KNLCloseFile:
-		lda     event.file.stream 			; close the stream
 		sta     kernel.args.file.close.stream
 		jsr     kernel.File.Close
 		rts
