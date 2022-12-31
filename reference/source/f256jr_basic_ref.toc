@@ -24,11 +24,12 @@
 \contentsline {section}{\numberline {7.1}Introduction}{17}{section.7.1}%
 \contentsline {section}{\numberline {7.2}Channels}{17}{section.7.2}%
 \contentsline {section}{\numberline {7.3}Easy commands}{17}{section.7.3}%
-\contentsline {chapter}{\numberline {8}Cross Development of BASIC Programs}{19}{chapter.8}%
-\contentsline {section}{\numberline {8.1}Connection}{19}{section.8.1}%
-\contentsline {section}{\numberline {8.2}Software}{19}{section.8.2}%
-\contentsline {section}{\numberline {8.3}BASIC}{19}{section.8.3}%
-\contentsline {section}{\numberline {8.4}Uploading and running}{20}{section.8.4}%
-\contentsline {section}{\numberline {8.5}Versions}{20}{section.8.5}%
-\contentsline {section}{\numberline {8.6}Sprites}{20}{section.8.6}%
-\contentsline {chapter}{\numberline {9}Keyword Reference}{21}{chapter.9}%
+\contentsline {chapter}{\numberline {8}Inline Assembly}{19}{chapter.8}%
+\contentsline {chapter}{\numberline {9}Cross Development of BASIC Programs}{21}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Connection}{21}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Software}{21}{section.9.2}%
+\contentsline {section}{\numberline {9.3}BASIC}{21}{section.9.3}%
+\contentsline {section}{\numberline {9.4}Uploading and running}{22}{section.9.4}%
+\contentsline {section}{\numberline {9.5}Versions}{22}{section.9.5}%
+\contentsline {section}{\numberline {9.6}Sprites}{22}{section.9.6}%
+\contentsline {chapter}{\numberline {10}Keyword Reference}{23}{chapter.10}%

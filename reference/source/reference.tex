@@ -348,6 +348,13 @@ Returns the directional value of a gamepad in the x and y axes respectively as -
 	100 x = x + joyx(0)
 \end{verbatim}
 
+\section*{load}
+Loads a BASIC program from the current drive.
+\example{}
+\begin{verbatim}
+	load "game.bas"
+\end{verbatim}
+
 \section*{left\$()}
 Returns several characters from a string counting from the left
 \example{}
@@ -537,6 +544,13 @@ Runs the current program after clearing variables as for CLEAR.
 \example{}
 \begin{verbatim}
 	100 run
+\end{verbatim}
+
+\section*{save}
+Saves a BASIC program to the current drive.
+\example{}
+\begin{verbatim}
+	save "game.bas"
 \end{verbatim}
 
 \section*{sgn()}

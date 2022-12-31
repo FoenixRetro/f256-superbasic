@@ -1,6 +1,8 @@
 Progress:	
-	DIR
 	VERIFY
+	DIR
+	DRIVE
+	HIMEM
 	- Break check
 	Check font is right.
 	zTemp0 in control.asm
