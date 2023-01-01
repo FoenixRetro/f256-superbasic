@@ -30,8 +30,6 @@ LDR_FILE= ..$(S)..$(S)FoenixMgr
 KRN_REPO= ..$(S)..$(S)F256_Jr_Kernel_DOS
 
 MODULES= +hardware +graphics +tokeniser +sound +kernel
-RELEASEDIR = ..$(S)release
-RELEASE = "`cat $(SCRIPTDIR)$(S)buildcount.txt`"
 
 START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@x $(BINDIR)graphics.bin@s boot@8000
 
@@ -158,15 +156,16 @@ prelim:
 	python $(SCRIPTDIR)constants.py
 
 release:
-	python $(SCRIPTDIR)timestamp.py
-	mkdir -p $(RELEASEDIR)$(S)$(RELEASE)	
-	make -C .
-	$(CCOPY) $(APPNAME) $(RELEASEDIR)$(S)$(RELEASE)$(S)basic_$(RELEASE).rom	
 	make -C . testbasic
-	$(CCOPY) $(APPNAME) $(RELEASEDIR)$(S)$(RELEASE)$(S)basic_autoload_$(RELEASE).rom	
+	$(CCOPY) $(APPNAME) release$(S)basic_autoload.rom	
+	make -C . basic
+	$(CCOPY) $(APPNAME) release$(S)basic.rom	
 	make -C build build
-	$(CCOPY) build$(S)*.bin $(RELEASEDIR)$(S)$(RELEASE)
-	$(CCOPY) build$(S)bulk.csv $(RELEASEDIR)$(S)$(RELEASE)
+	$(CCOPY) build$(S)*.bin release
+	$(CCOPY) build$(S)bulk.csv release
+	$(CCOPY) ..$(S)CHANGES release
+	$(CDEL) release$(S)superbasic.zip
+	zip release$(S)superbasic.zip release$(S)*
 #
 #		Run various tests.
 #

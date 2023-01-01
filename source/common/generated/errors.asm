@@ -39,4 +39,5 @@ ErrorText:
 	.text	"Array not declared",0
 	.text	"File not found",0
 	.text	"Storage error",0
+	.text	"Verify failed",0
 .send code

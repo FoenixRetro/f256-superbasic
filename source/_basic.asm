@@ -125,6 +125,7 @@
 	.include	"./common/stack/setup.asm"
 	.include	"./common/strings/concrete.asm"
 	.include	"./common/strings/stringalloc.asm"
+	.include	"./storage/verify.asm"
 
 
 .section code

@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Sat Dec 31 23:20:59 2022
+; Sun Jan  1 07:17:58 2023
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -219,6 +219,7 @@
 =24						ERRID_ARRAYDEC = 24
 =25						ERRID_NOTFOUND = 25
 =26						ERRID_DRIVEIO = 26
+=27						ERRID_VERIFY = 27
 
 ;******  Return to file: _basic.asm
 
@@ -544,7 +545,7 @@
 .80b0		a5 00		lda $00				lda 	0  							; turn on editing of MMU LUT
 .80b2		09 80		ora #$80			ora 	#$80
 .80b4		85 00		sta $00				sta 	0
-.80b6		20 90 a7	jsr $a790			jsr		UpdateFont 					; update font if between FPGA updates.
+.80b6		20 9e a7	jsr $a79e			jsr		UpdateFont 					; update font if between FPGA updates.
 .80b9		20 0d 80	jsr $800d			jsr 	EXTInitialise 				; hardware initialise
 .80bc		a9 00		lda #$00			lda 	#0 							; graphics system initialise.
 .80be		aa		tax				tax
@@ -1003,7 +1004,7 @@
 .83a9		0d 2c 04	ora $042c			ora 	tokenLineNumber+1
 .83ac		f0 d4		beq $8382			beq 	_BPLoop 					; not legal code, blank line or maybe a comment.
 .83ae		38		sec				sec 								; append not insert
-.83af		20 b9 a6	jsr $a6b9			jsr 	MemoryInsertLine 			; append to current program
+.83af		20 c7 a6	jsr $a6c7			jsr 	MemoryInsertLine 			; append to current program
 .83b2		80 ce		bra $8382			bra 	_BPLoop
 .83b4						_BPExit:
 .83b4		9c fa ff	stz $fffa			stz 	$FFFA
@@ -1049,19 +1050,19 @@
 .83fe						EditProgramCode:
 .83fe		ad 2b 04	lda $042b			lda 	tokenLineNumber 			; try to find the line.
 .8401		ae 2c 04	ldx $042c			ldx 	tokenLineNumber+1
-.8404		20 5d a7	jsr $a75d			jsr 	MemorySearch
+.8404		20 6b a7	jsr $a76b			jsr 	MemorySearch
 .8407		90 05		bcc $840e			bcc 	_EPCNoDelete 				; reached the end : don't delete
 .8409		d0 03		bne $840e			bne 	_EPCNoDelete 				; found slot but didn't match : no delete
-.840b		20 82 a6	jsr $a682			jsr 	MemoryDeleteLine 			; delete the line
+.840b		20 90 a6	jsr $a690			jsr 	MemoryDeleteLine 			; delete the line
 .840e						_EPCNoDelete:
 .840e		ad 2d 04	lda $042d			lda 	tokenBuffer 				; buffer empty - we just want to delete a line.
 .8411		c9 80		cmp #$80			cmp 	#KWC_EOL
 .8413		f0 0d		beq $8422			beq 	_EPCNoInsert
 .8415		ad 2b 04	lda $042b			lda 	tokenLineNumber 			; find the line - it cannot exist as we've just deleted it.
 .8418		ae 2c 04	ldx $042c			ldx 	tokenLineNumber+1 			; so this can't fail, it returns some point in the code.
-.841b		20 5d a7	jsr $a75d			jsr 	MemorySearch
+.841b		20 6b a7	jsr $a76b			jsr 	MemorySearch
 .841e		18		clc				clc 								; insert at this point.
-.841f		20 b9 a6	jsr $a6b9			jsr 	MemoryInsertLine 			; insert the line
+.841f		20 c7 a6	jsr $a6c7			jsr 	MemoryInsertLine 			; insert the line
 .8422						_EPCNoInsert:
 .8422		60		rts				rts
 
@@ -1209,8 +1210,8 @@
 .84f1		a5 37		lda $37				lda 	zTemp0+1
 .84f3		69 00		adc #$00			adc 	#0
 .84f5		8d 0d 04	sta $040d			sta 	lowMemPtr+1
-.84f8		20 17 b1	jsr $b117			jsr 	StackReset
-.84fb		20 7d b1	jsr $b17d			jsr 	StringSystemInitialise
+.84f8		20 25 b1	jsr $b125			jsr 	StackReset
+.84fb		20 8b b1	jsr $b18b			jsr 	StringSystemInitialise
 .84fe		20 6b 8f	jsr $8f6b			jsr 	ProcedureScan
 .8501		20 35 8c	jsr $8c35			jsr 	Command_Restore
 .8504		9c 1e 04	stz $041e			stz 	AssemblerAddress
@@ -1375,7 +1376,7 @@
 
 .85e1						ForCommand:
 .85e1		a9 d9		lda #$d9			lda 	#STK_FOR+9 					; allocate 18 bytes on the return stack (see above).
-.85e3		20 b1 b0	jsr $b0b1			jsr 	StackOpen
+.85e3		20 bf b0	jsr $b0bf			jsr 	StackOpen
 .85e6		a2 00		ldx #$00			ldx 	#0
 .85e8		20 c9 99	jsr $99c9			jsr 	EvaluateTerm
 .85eb		b5 50		lda $50,x			lda 	NSStatus,x
@@ -1395,7 +1396,7 @@
 .8606						_FCNoSyntax:
 .8606		e8		inx				inx
 .8607		20 33 9f	jsr $9f33			jsr 	EvaluateInteger
-.860a		20 f6 b0	jsr $b0f6			jsr 	STKSaveCodePosition 		; save loop back position
+.860a		20 04 b1	jsr $b104			jsr 	STKSaveCodePosition 		; save loop back position
 .860d		68		pla				pla 								; restore DOWNTO or TO
 .860e		5a		phy				phy 								; save Y on the stack
 .860f		49 ba		eor #$ba			eor 	#KWD_DOWNTO 				; 0 if DOWNTO, #0 if TO
@@ -1483,7 +1484,7 @@
 .8693						NextCommand:
 .8693		a9 d9		lda #$d9			lda 	#STK_FOR+9 					; check FOR is TOS
 .8695		a2 11		ldx #$11			ldx 	#ERRID_FOR 					; this error
-.8697		20 de b0	jsr $b0de			jsr 	StackCheckFrame
+.8697		20 ec b0	jsr $b0ec			jsr 	StackCheckFrame
 .869a		5a		phy				phy
 .869b		a0 10		ldy #$10			ldy 	#16 						; get the step count
 .869d		b1 34		lda ($34),y			lda 	(basicStack),y
@@ -1530,10 +1531,10 @@
 .86e0		7a		ply				ply 								; restore Y position
 .86e1		0a		asl a				asl 	a 							; is bit 7 set.
 .86e2		90 04		bcc $86e8			bcc 	_NCLoopBack 				; if no , >= so loop back
-.86e4		20 d0 b0	jsr $b0d0			jsr 	StackClose 					; exit the loop
+.86e4		20 de b0	jsr $b0de			jsr 	StackClose 					; exit the loop
 .86e7		60		rts				rts
 .86e8						_NCLoopBack:
-.86e8		20 07 b1	jsr $b107			jsr 	STKLoadCodePosition 		; loop back
+.86e8		20 15 b1	jsr $b115			jsr 	STKLoadCodePosition 		; loop back
 .86eb		60		rts				rts
 
 ;******  Return to file: _basic.asm
@@ -1545,15 +1546,15 @@
 .86ec		a2 00		ldx #$00			ldx 	#0
 .86ee		20 46 9f	jsr $9f46			jsr 	Evaluate16BitInteger 		; line number in Stack.0
 .86f1		a9 e3		lda #$e3			lda 	#STK_GOSUB+3
-.86f3		20 b1 b0	jsr $b0b1			jsr 	StackOpen 					; create frame
-.86f6		20 f6 b0	jsr $b0f6			jsr 	STKSaveCodePosition 		; save current position
+.86f3		20 bf b0	jsr $b0bf			jsr 	StackOpen 					; create frame
+.86f6		20 04 b1	jsr $b104			jsr 	STKSaveCodePosition 		; save current position
 .86f9		4c 0f 87	jmp $870f			jmp 	GotoStackX
 .86fc						Command_RETURN:
 .86fc		a9 e0		lda #$e0			lda 	#STK_GOSUB 					; check TOS is this
 .86fe		a2 0e		ldx #$0e			ldx 	#ERRID_GOSUB 				; this error
-.8700		20 de b0	jsr $b0de			jsr 	StackCheckFrame
-.8703		20 07 b1	jsr $b107			jsr 	STKLoadCodePosition 		; restore code position
-.8706		20 d0 b0	jsr $b0d0			jsr 	StackClose
+.8700		20 ec b0	jsr $b0ec			jsr 	StackCheckFrame
+.8703		20 15 b1	jsr $b115			jsr 	STKLoadCodePosition 		; restore code position
+.8706		20 de b0	jsr $b0de			jsr 	StackClose
 .8709		60		rts				rts
 
 ;******  Return to file: _basic.asm
@@ -1569,7 +1570,7 @@
 .8711		48		pha				pha 								; it is slightly inefficient, just in cases.
 .8712		b5 58		lda $58,x			lda 	NSMantissa0,x
 .8714		fa		plx				plx
-.8715		20 5d a7	jsr $a75d			jsr 	MemorySearch 				; transfer to line number AX.
+.8715		20 6b a7	jsr $a76b			jsr 	MemorySearch 				; transfer to line number AX.
 .8718		90 05		bcc $871f			bcc 	_GotoError 					; not found, off end.
 .871a		d0 03		bne $871f			bne 	_GotoError 					; not found exactly
 .871c		4c 7f 8c	jmp $8c7f			jmp 	RunNewLine 					; and go straight to new line code.
@@ -2084,16 +2085,16 @@
 .8a55		a0 00		ldy #$00			ldy 	#0 							; push 0 to 4 inclusive, the number values, on the stack, and zero them as you go.
 .8a57						_LNTPushNumLoop:
 .8a57		b1 36		lda ($36),y			lda		(zTemp0),y
-.8a59		20 90 b0	jsr $b090			jsr 	StackPushByte
+.8a59		20 9e b0	jsr $b09e			jsr 	StackPushByte
 .8a5c		c8		iny				iny
 .8a5d		c0 05		cpy #$05			cpy 	#5
 .8a5f		d0 f6		bne $8a57			bne 	_LNTPushNumLoop
 .8a61		a5 36		lda $36				lda 	zTemp0 						; push the actual target address to write on the stack
-.8a63		20 90 b0	jsr $b090			jsr 	StackPushByte
+.8a63		20 9e b0	jsr $b09e			jsr 	StackPushByte
 .8a66		a5 37		lda $37				lda 	zTemp0+1
-.8a68		20 90 b0	jsr $b090			jsr 	StackPushByte
+.8a68		20 9e b0	jsr $b09e			jsr 	StackPushByte
 .8a6b		a9 01		lda #$01			lda 	#STK_LOCALN 				; push local-number marker.
-.8a6d		20 90 b0	jsr $b090			jsr 	StackPushByte
+.8a6d		20 9e b0	jsr $b09e			jsr 	StackPushByte
 .8a70		7a		ply				ply
 .8a71		60		rts				rts
 .8a72						_LNTPushString:
@@ -2109,43 +2110,43 @@
 .8a83						_LNTPushStrLoop:
 .8a83		b1 38		lda ($38),y			lda 	(zTemp1),y
 .8a85		f0 06		beq $8a8d			beq 	_LNTStringOut
-.8a87		20 90 b0	jsr $b090			jsr 	StackPushByte
+.8a87		20 9e b0	jsr $b09e			jsr 	StackPushByte
 .8a8a		c8		iny				iny
 .8a8b		80 f6		bra $8a83			bra 	_LNTPushStrLoop
 .8a8d						_LNTStringOut:
 .8a8d		98		tya				tya									; output length (chars written).
-.8a8e		20 90 b0	jsr $b090			jsr 	StackPushByte
+.8a8e		20 9e b0	jsr $b09e			jsr 	StackPushByte
 .8a91		b5 58		lda $58,x			lda 	NSMantissa0,x 				; output address of the string record *not* the string itself
-.8a93		20 90 b0	jsr $b090			jsr 	StackPushByte
+.8a93		20 9e b0	jsr $b09e			jsr 	StackPushByte
 .8a96		b5 60		lda $60,x			lda 	NSMantissa1,x
-.8a98		20 90 b0	jsr $b090			jsr 	StackPushByte
+.8a98		20 9e b0	jsr $b09e			jsr 	StackPushByte
 .8a9b		a9 02		lda #$02			lda 	#STK_LOCALS 				; push local-string marker.
-.8a9d		20 90 b0	jsr $b090			jsr 	StackPushByte
+.8a9d		20 9e b0	jsr $b09e			jsr 	StackPushByte
 .8aa0		7a		ply				ply
 .8aa1		60		rts				rts
 .8aa2						_LNTError:
 .8aa2		4c 44 a1	jmp $a144			jmp 	SyntaxError
 .8aa5						LocalPopValue:
-.8aa5		20 a8 b0	jsr $b0a8			jsr 	StackPopByte
+.8aa5		20 b6 b0	jsr $b0b6			jsr 	StackPopByte
 .8aa8		c9 01		cmp #$01			cmp 	#STK_LOCALN 				; if not local-N
 .8aaa		d0 17		bne $8ac3			bne 	_LPVString
-.8aac		20 a8 b0	jsr $b0a8			jsr 	StackPopByte 				; address
+.8aac		20 b6 b0	jsr $b0b6			jsr 	StackPopByte 				; address
 .8aaf		85 37		sta $37				sta 	zTemp0+1
-.8ab1		20 a8 b0	jsr $b0a8			jsr 	StackPopByte
+.8ab1		20 b6 b0	jsr $b0b6			jsr 	StackPopByte
 .8ab4		85 36		sta $36				sta 	zTemp0
 .8ab6		5a		phy				phy
 .8ab7		a0 04		ldy #$04			ldy 	#4 							; copy back
 .8ab9						_LPVNumberCopy:
-.8ab9		20 a8 b0	jsr $b0a8			jsr 	StackPopByte
+.8ab9		20 b6 b0	jsr $b0b6			jsr 	StackPopByte
 .8abc		91 36		sta ($36),y			sta 	(zTemp0),y
 .8abe		88		dey				dey
 .8abf		10 f8		bpl $8ab9			bpl 	_LPVNumberCopy
 .8ac1		7a		ply				ply 								; and complete
 .8ac2		60		rts				rts
 .8ac3						_LPVString:
-.8ac3		20 a8 b0	jsr $b0a8			jsr 	StackPopByte 				; address of record copied to zTemp0
+.8ac3		20 b6 b0	jsr $b0b6			jsr 	StackPopByte 				; address of record copied to zTemp0
 .8ac6		85 37		sta $37				sta 	zTemp0+1
-.8ac8		20 a8 b0	jsr $b0a8			jsr 	StackPopByte
+.8ac8		20 b6 b0	jsr $b0b6			jsr 	StackPopByte
 .8acb		85 36		sta $36				sta 	zTemp0
 .8acd		5a		phy				phy
 .8ace		b2 36		lda ($36)			lda 	(zTemp0) 					; address to write string to copied to zTemp1
@@ -2153,7 +2154,7 @@
 .8ad2		a0 01		ldy #$01			ldy 	#1
 .8ad4		b1 36		lda ($36),y			lda 	(zTemp0),y
 .8ad6		85 39		sta $39				sta 	zTemp1+1
-.8ad8		20 a8 b0	jsr $b0a8			jsr 	StackPopByte 				; # chars to get => y
+.8ad8		20 b6 b0	jsr $b0b6			jsr 	StackPopByte 				; # chars to get => y
 .8adb		a8		tay				tay
 .8adc		a5 39		lda $39				lda 	zTemp1+1 					; if no target (e.g. was "" originally) exit
 .8ade		f0 0e		beq $8aee			beq 	_LPVStringCopied
@@ -2162,7 +2163,7 @@
 .8ae4						_LPVStringCopy:
 .8ae4		88		dey				dey
 .8ae5		30 07		bmi $8aee			bmi 	_LPVStringCopied
-.8ae7		20 a8 b0	jsr $b0a8			jsr 	StackPopByte
+.8ae7		20 b6 b0	jsr $b0b6			jsr 	StackPopByte
 .8aea		91 38		sta ($38),y			sta 	(zTemp1),y
 .8aec		80 f6		bra $8ae4			bra 	_LPVStringCopy
 .8aee						_LPVStringCopied:
@@ -2178,7 +2179,7 @@
 .8af0		20 f6 8a	jsr $8af6			jsr 	NewProgram 					; does the actual NEW.
 .8af3		4c 23 84	jmp $8423			jmp 	WarmStart 					; and warm starts straight away.
 .8af6						NewProgram:
-.8af6		20 3f a7	jsr $a73f			jsr 	MemoryNew
+.8af6		20 4d a7	jsr $a74d			jsr 	MemoryNew
 .8af9		9c 00 10	stz $1000			stz 	VariableSpace 				; erase all variables.
 .8afc		20 b9 84	jsr $84b9			jsr 	ClearCommand 				; clear everything.
 .8aff		60		rts				rts
@@ -2252,8 +2253,8 @@
 .8b51		8e 16 04	stx $0416			stx 	lastParameter 				; save the last parameters index.
 .8b54		c8		iny				iny									; skip right bracket
 .8b55		a9 b3		lda #$b3			lda 	#STK_PROC+3 				; allocate 6 bytes on the return stack.
-.8b57		20 b1 b0	jsr $b0b1			jsr 	StackOpen
-.8b5a		20 f6 b0	jsr $b0f6			jsr 	STKSaveCodePosition 		; save loop position
+.8b57		20 bf b0	jsr $b0bf			jsr 	StackOpen
+.8b5a		20 04 b1	jsr $b104			jsr 	STKSaveCodePosition 		; save loop position
 .8b5d		a5 58		lda $58				lda 	NSMantissa0 				; copy variable (e.g. procedure) address to zTemp0
 .8b5f		85 36		sta $36				sta 	zTemp0 						; this is the DATA not the RECORD
 .8b61		a5 60		lda $60				lda 	NSMantissa1
@@ -2291,9 +2292,9 @@
 .8b9b						Command_ENDPROC:
 .8b9b		a9 b0		lda #$b0			lda 	#STK_PROC 					; check TOS is this
 .8b9d		a2 14		ldx #$14			ldx 	#ERRID_PROC
-.8b9f		20 de b0	jsr $b0de			jsr 	StackCheckFrame
-.8ba2		20 07 b1	jsr $b107			jsr 	STKLoadCodePosition 		; restore code position
-.8ba5		20 d0 b0	jsr $b0d0			jsr 	StackClose
+.8b9f		20 ec b0	jsr $b0ec			jsr 	StackCheckFrame
+.8ba2		20 15 b1	jsr $b115			jsr 	STKLoadCodePosition 		; restore code position
+.8ba5		20 de b0	jsr $b0de			jsr 	StackClose
 .8ba8		60		rts				rts
 
 ;******  Return to file: _basic.asm
@@ -2378,21 +2379,21 @@
 
 .8c13						Command_REPEAT:
 .8c13		a9 c3		lda #$c3			lda 	#STK_REPEAT+3 				; allocate 6 bytes on the return stack.
-.8c15		20 b1 b0	jsr $b0b1			jsr 	StackOpen
-.8c18		20 f6 b0	jsr $b0f6			jsr 	STKSaveCodePosition 		; save loop position
+.8c15		20 bf b0	jsr $b0bf			jsr 	StackOpen
+.8c18		20 04 b1	jsr $b104			jsr 	STKSaveCodePosition 		; save loop position
 .8c1b		60		rts				rts
 .8c1c						Command_UNTIL:
 .8c1c		a9 c3		lda #$c3			lda 	#STK_REPEAT+3 				; check REPEAT is TOS
 .8c1e		a2 0f		ldx #$0f			ldx 	#ERRID_REPEAT 				; this error
-.8c20		20 de b0	jsr $b0de			jsr 	StackCheckFrame
+.8c20		20 ec b0	jsr $b0ec			jsr 	StackCheckFrame
 .8c23		a2 00		ldx #$00			ldx 	#0
 .8c25		20 14 9f	jsr $9f14			jsr 	EvaluateNumber 				; work out the number
 .8c28		20 e8 9f	jsr $9fe8			jsr 	NSMIsZero 					; check if zero
 .8c2b		f0 04		beq $8c31			beq 	_CULoopBack 				; if so keep looping
-.8c2d		20 d0 b0	jsr $b0d0			jsr 	StackClose		 			; return
+.8c2d		20 de b0	jsr $b0de			jsr 	StackClose		 			; return
 .8c30		60		rts				rts
 .8c31						_CULoopBack:
-.8c31		20 07 b1	jsr $b107			jsr 	STKLoadCodePosition 		; loop back
+.8c31		20 15 b1	jsr $b115			jsr 	STKLoadCodePosition 		; loop back
 .8c34		60		rts				rts
 
 ;******  Return to file: _basic.asm
@@ -2620,17 +2621,17 @@
 >8d9c		58 9b					.word	AllocUnary                       ; $84 ALLOC(
 >8d9e		c8 9b					.word	AscUnary                         ; $85 ASC(
 >8da0		ac 9d					.word	ChrUnary                         ; $86 CHR$(
->8da2		d3 a5					.word	UnaryEvent                       ; $87 EVENT(
+>8da2		e1 a5					.word	UnaryEvent                       ; $87 EVENT(
 >8da4		f2 90					.word	UnaryFalse                       ; $88 FALSE
 >8da6		d5 9b					.word	FracUnary                        ; $89 FRAC(
 >8da8		44 a1					.word	SyntaxError                      ; $8a GETDATE$(
 >8daa		44 a1					.word	SyntaxError                      ; $8b GETTIME$(
->8dac		5d a5					.word	UnaryHit                         ; $8c HIT(
+>8dac		6b a5					.word	UnaryHit                         ; $8c HIT(
 >8dae		ea 9b					.word	IntUnary                         ; $8d INT(
 >8db0		6b 9d					.word	IsValUnary                       ; $8e ISVAL(
->8db2		57 a6					.word	UnaryJoyB                        ; $8f JOYB(
->8db4		30 a6					.word	UnaryJoyX                        ; $90 JOYX(
->8db6		33 a6					.word	UnaryJoyY                        ; $91 JOYY(
+>8db2		65 a6					.word	UnaryJoyB                        ; $8f JOYB(
+>8db4		3e a6					.word	UnaryJoyX                        ; $90 JOYX(
+>8db6		41 a6					.word	UnaryJoyY                        ; $91 JOYY(
 >8db8		7f 9e					.word	Unary_Left                       ; $92 LEFT$(
 >8dba		fb 9b					.word	LenUnary                         ; $93 LEN(
 >8dbc		19 9c					.word	Unary_Max                        ; $94 MAX(
@@ -2641,14 +2642,14 @@
 >8dc6		83 9c					.word	PeekDUnary                       ; $99 PEEKD(
 >8dc8		7f 9c					.word	PeekLUnary                       ; $9a PEEKL(
 >8dca		7b 9c					.word	PeekWUnary                       ; $9b PEEKW(
->8dcc		0e b0					.word	UnaryPlaying                     ; $9c PLAYING(
+>8dcc		1c b0					.word	UnaryPlaying                     ; $9c PLAYING(
 >8dce		b0 9c					.word	Unary_Random                     ; $9d RANDOM(
 >8dd0		8c 9e					.word	Unary_Right                      ; $9e RIGHT$(
 >8dd2		cd 9c					.word	Unary_Rnd                        ; $9f RND(
 >8dd4		43 9d					.word	SgnUnary                         ; $a0 SGN(
 >8dd6		be 9d					.word	SpcUnary                         ; $a1 SPC(
 >8dd8		d9 9d					.word	Unary_Str                        ; $a2 STR$(
->8dda		69 a6					.word	UnaryTimer                       ; $a3 TIMER(
+>8dda		77 a6					.word	UnaryTimer                       ; $a3 TIMER(
 >8ddc		e7 90					.word	UnaryTrue                        ; $a4 TRUE
 >8dde		61 9d					.word	ValUnary                         ; $a5 VAL(
 >8de0		e1 85					.word	ForCommand                       ; $a6 FOR
@@ -2664,7 +2665,7 @@
 >8df4		54 90					.word	Command_WEND                     ; $b0 WEND
 >8df6		44 a1					.word	SyntaxError                      ; $b1 BY
 >8df8		84 84					.word	CallCommand                      ; $b2 CALL
->8dfa		11 a3					.word	CircleCommand                    ; $b3 CIRCLE
+>8dfa		1f a3					.word	CircleCommand                    ; $b3 CIRCLE
 >8dfc		b9 84					.word	ClearCommand                     ; $b4 CLEAR
 >8dfe		11 85					.word	ClearScreen                      ; $b5 CLS
 >8e00		44 a1					.word	SyntaxError                      ; $b6 COLOR
@@ -2674,33 +2675,33 @@
 >8e08		11 8d					.word	Unused3                          ; $ba DOWNTO
 >8e0a		46 87					.word	ElseCode                         ; $bb ELSE
 >8e0c		44 a1					.word	SyntaxError                      ; $bc FROM
->8e0e		30 a5					.word	GfxCommand                       ; $bd GFX
+>8e0e		3e a5					.word	GfxCommand                       ; $bd GFX
 >8e10		ec 86					.word	Command_GOSUB                    ; $be GOSUB
 >8e12		0a 87					.word	GotoCommand                      ; $bf GOTO
 >8e14		44 a1					.word	SyntaxError                      ; $c0 HERE
->8e16		3a a3					.word	ImageCommand                     ; $c1 IMAGE
+>8e16		48 a3					.word	ImageCommand                     ; $c1 IMAGE
 >8e18		4e 87					.word	Command_Input                    ; $c2 INPUT
 >8e1a		39 88					.word	LetCommand                       ; $c3 LET
->8e1c		8c a3					.word	LineCommand                      ; $c4 LINE
+>8e1c		9a a3					.word	LineCommand                      ; $c4 LINE
 >8e1e		2f 8a					.word	Command_LOCAL                    ; $c5 LOCAL
 >8e20		44 a1					.word	SyntaxError                      ; $c6 OFF
 >8e22		44 a1					.word	SyntaxError                      ; $c7 ON
 >8e24		44 a1					.word	SyntaxError                      ; $c8 OUTLINE
->8e26		81 a5					.word	PaletteCommand                   ; $c9 PALETTE
->8e28		85 a3					.word	PlotCommand                      ; $ca PLOT
+>8e26		8f a5					.word	PaletteCommand                   ; $c9 PALETTE
+>8e28		93 a3					.word	PlotCommand                      ; $ca PLOT
 >8e2a		00 8b					.word	PokeBCommand                     ; $cb POKE
 >8e2c		0c 8b					.word	PokeDCommand                     ; $cc POKED
 >8e2e		08 8b					.word	PokeLCommand                     ; $cd POKEL
 >8e30		04 8b					.word	PokeWCommand                     ; $ce POKEW
 >8e32		55 87					.word	Command_Print                    ; $cf PRINT
 >8e34		a9 8b					.word	Command_Read                     ; $d0 READ
->8e36		0d a3					.word	RectangleCommand                 ; $d1 RECT
+>8e36		1b a3					.word	RectangleCommand                 ; $d1 RECT
 >8e38		06 8c					.word	RemCommand                       ; $d2 REM
 >8e3a		fc 86					.word	Command_RETURN                   ; $d3 RETURN
 >8e3c		44 a1					.word	SyntaxError                      ; $d4 SOLID
->8e3e		2a b0					.word	SoundCommand                     ; $d5 SOUND
->8e40		1c a3					.word	SpriteCommand                    ; $d6 SPRITE
->8e42		56 a3					.word	TextCommand                      ; $d7 TEXT
+>8e3e		38 b0					.word	SoundCommand                     ; $d5 SOUND
+>8e40		2a a3					.word	SpriteCommand                    ; $d6 SPRITE
+>8e42		64 a3					.word	TextCommand                      ; $d7 TEXT
 >8e44		11 8d					.word	Unused2                          ; $d8 TO
 .8e46						VectorSet1:
 >8e46		44 a1					.word	SyntaxError                      ; $80 !0:EOF
@@ -2708,26 +2709,26 @@
 >8e4a		44 a1					.word	SyntaxError                      ; $82 !2:SH2
 >8e4c		58 84					.word	AssembleCommand                  ; $83 ASSEMBLE
 >8e4e		74 84					.word	AssertCommand                    ; $84 ASSERT
->8e50		d0 a4					.word	BitmapCtrl                       ; $85 BITMAP
+>8e50		de a4					.word	BitmapCtrl                       ; $85 BITMAP
 >8e52		de 85					.word	EndCommand                       ; $86 END
->8e54		e2 af					.word	Explode                          ; $87 EXPLODE
+>8e54		f0 af					.word	Explode                          ; $87 EXPLODE
 >8e56		44 a1					.word	SyntaxError                      ; $88 GO
 >8e58		89 88					.word	Command_List                     ; $89 LIST
 >8e5a		8f 89					.word	Command_Load                     ; $8a LOAD
 >8e5c		f0 8a					.word	NewCommand                       ; $8b NEW
->8e5e		be af					.word	PingCommand                      ; $8c PING
+>8e5e		cc af					.word	PingCommand                      ; $8c PING
 >8e60		35 8c					.word	Command_Restore                  ; $8d RESTORE
 >8e62		74 8c					.word	CommandRUN                       ; $8e RUN
 >8e64		00 8f					.word	Command_Save                     ; $8f SAVE
 >8e66		44 a1					.word	SyntaxError                      ; $90 SETDATE
 >8e68		44 a1					.word	SyntaxError                      ; $91 SETTIME
->8e6a		d6 af					.word	ShootCommand                     ; $92 SHOOT
->8e6c		15 a5					.word	SpritesCtrl                      ; $93 SPRITES
+>8e6a		e4 af					.word	ShootCommand                     ; $92 SHOOT
+>8e6c		23 a5					.word	SpritesCtrl                      ; $93 SPRITES
 >8e6e		66 8f					.word	StopCommand                      ; $94 STOP
->8e70		44 a1					.word	SyntaxError                      ; $95 VERIFY
->8e72		ca a5					.word	XGoCommand                       ; $96 XGO
->8e74		c1 a5					.word	XLoadCommand                     ; $97 XLOAD
->8e76		ca af					.word	ZapCommand                       ; $98 ZAP
+>8e70		f7 b1					.word	Command_VERIFY                   ; $95 VERIFY
+>8e72		d8 a5					.word	XGoCommand                       ; $96 XGO
+>8e74		cf a5					.word	XLoadCommand                     ; $97 XLOAD
+>8e76		d8 af					.word	ZapCommand                       ; $98 ZAP
 .8e78						VectorSet2:
 >8e78		44 a1					.word	SyntaxError                      ; $80 !0:EOF
 >8e7a		44 a1					.word	SyntaxError                      ; $81 !1:SH1
@@ -3028,8 +3029,8 @@
 .9040		88		dey				dey 								; so we execute the WHILE command again.
 .9041		48		pha				pha 								; push after test on the stack
 .9042		a9 a3		lda #$a3			lda 	#STK_WHILE+3 				; allocate 6 bytes on the return stack.
-.9044		20 b1 b0	jsr $b0b1			jsr 	StackOpen
-.9047		20 f6 b0	jsr $b0f6			jsr 	STKSaveCodePosition 		; save loop position - where the test value expr is.
+.9044		20 bf b0	jsr $b0bf			jsr 	StackOpen
+.9047		20 04 b1	jsr $b104			jsr 	STKSaveCodePosition 		; save loop position - where the test value expr is.
 .904a		7a		ply				ply 								; restore the position *after* the test
 .904b		60		rts				rts
 .904c						_WHExitLoop:
@@ -3041,9 +3042,9 @@
 .9054						Command_WEND:
 .9054		a9 a3		lda #$a3			lda 	#STK_WHILE+3 				; check WHILE is TOS e.g. in a while loop :)
 .9056		a2 10		ldx #$10			ldx 	#ERRID_WHILE 				; this error if not.
-.9058		20 de b0	jsr $b0de			jsr 	StackCheckFrame
-.905b		20 07 b1	jsr $b107			jsr 	STKLoadCodePosition 		; loop back to the WHILE keyword.
-.905e		20 d0 b0	jsr $b0d0			jsr 	StackClose		 			; erase the frame
+.9058		20 ec b0	jsr $b0ec			jsr 	StackCheckFrame
+.905b		20 15 b1	jsr $b115			jsr 	STKLoadCodePosition 		; loop back to the WHILE keyword.
+.905e		20 de b0	jsr $b0de			jsr 	StackClose		 			; erase the frame
 .9061		60		rts				rts
 
 ;******  Return to file: _basic.asm
@@ -3262,7 +3263,7 @@
 .9196		20 ad 91	jsr $91ad			jsr 	_SCSetupZ0 					; setup for first
 .9199		20 b6 91	jsr $91b6			jsr 	_SCLengthZ0 				; length for first
 .919c		a5 38		lda $38				lda 	zTemp1 						; allocate memory using total.
-.919e		20 a1 b1	jsr $b1a1			jsr 	StringTempAllocate
+.919e		20 af b1	jsr $b1af			jsr 	StringTempAllocate
 .91a1		20 cd 91	jsr $91cd			jsr 	_SCCopy 					; copy first out, using zTemp0 from above
 .91a4		e8		inx				inx
 .91a5		20 ad 91	jsr $91ad			jsr 	_SCSetupZ0 					; copy second out
@@ -3297,7 +3298,7 @@
 .91d0						_SCCopyLoop:
 .91d0		b1 36		lda ($36),y			lda 	(zTemp0),y
 .91d2		f0 06		beq $91da			beq 	_SCCExit
-.91d4		20 da b1	jsr $b1da			jsr 	StringTempWrite
+.91d4		20 e8 b1	jsr $b1e8			jsr 	StringTempWrite
 .91d7		c8		iny				iny
 .91d8		80 f6		bra $91d0			bra 	_SCCopyLoop
 .91da						_SCCExit:
@@ -4424,7 +4425,7 @@
 .9816		91 3c		sta ($3c),y			sta 	(zsTemp),y
 .9818						_ASNewStringRequired:
 .9818		e8		inx				inx 								; concrete the new string.
-.9819		20 24 b1	jsr $b124			jsr 	StringConcrete				; (breaks zTemp1/2, not zTemp0 and zsTemp)
+.9819		20 32 b1	jsr $b132			jsr 	StringConcrete				; (breaks zTemp1/2, not zTemp0 and zsTemp)
 .981c		ca		dex				dex
 .981d		18		clc				clc
 .981e		b5 59		lda $59,x			lda 	NSMantissa0+1,x 			; copy that new address to the reference.
@@ -4775,7 +4776,7 @@
 .9a29		b1 30		lda ($30),y			lda 	(codePtr),y
 .9a2b		48		pha				pha
 .9a2c		c8		iny				iny 								; first character
-.9a2d		20 4c a7	jsr $a74c			jsr 	MemoryInline 				; put address of string at (code-Ptr),y on stack
+.9a2d		20 5a a7	jsr $a75a			jsr 	MemoryInline 				; put address of string at (code-Ptr),y on stack
 .9a30		68		pla				pla 								; restore count and save
 .9a31		85 36		sta $36				sta 	zTemp0
 .9a33		98		tya				tya 								; add length to Y to skip it.
@@ -5394,9 +5395,9 @@
 .9db0		48		pha				pha
 .9db1		20 62 90	jsr $9062			jsr 	CheckRightBracket
 .9db4		a9 01		lda #$01			lda 	#1 							; allocate space for one char
-.9db6		20 a1 b1	jsr $b1a1			jsr 	StringTempAllocate
+.9db6		20 af b1	jsr $b1af			jsr 	StringTempAllocate
 .9db9		68		pla				pla 								; write number to it
-.9dba		20 da b1	jsr $b1da			jsr 	StringTempWrite
+.9dba		20 e8 b1	jsr $b1e8			jsr 	StringTempWrite
 .9dbd		60		rts				rts
 
 ;******  Return to file: _basic.asm
@@ -5409,13 +5410,13 @@
 .9dbf		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger			; get value
 .9dc2		5a		phy				phy
 .9dc3		48		pha				pha 								; save count
-.9dc4		20 a1 b1	jsr $b1a1			jsr 	StringTempAllocate
+.9dc4		20 af b1	jsr $b1af			jsr 	StringTempAllocate
 .9dc7		7a		ply				ply 								; to do count in Y
 .9dc8						_SpcLoop:
 .9dc8		c0 00		cpy #$00			cpy 	#0 							; copy Y spaces in.
 .9dca		f0 08		beq $9dd4			beq 	_SpcExit
 .9dcc		a9 20		lda #$20			lda 	#32
-.9dce		20 da b1	jsr $b1da			jsr 	StringTempWrite
+.9dce		20 e8 b1	jsr $b1e8			jsr 	StringTempWrite
 .9dd1		88		dey				dey
 .9dd2		80 f4		bra $9dc8			bra 	_SpcLoop
 .9dd4						_SpcExit:
@@ -5435,12 +5436,12 @@
 .9de0		a9 05		lda #$05			lda 	#5 							; maximum decimals, from Basic816
 .9de2		20 fb 9d	jsr $9dfb			jsr 	ConvertNumberToString 		; do the conversion.
 .9de5		a9 21		lda #$21			lda		#33 						; create buffer
-.9de7		20 a1 b1	jsr $b1a1			jsr 	StringTempAllocate 			; allocate memory
+.9de7		20 af b1	jsr $b1af			jsr 	StringTempAllocate 			; allocate memory
 .9dea		da		phx				phx  								; copy the converted string into the buffer.
 .9deb		a2 00		ldx #$00			ldx 	#0
 .9ded						_USCopy:
 .9ded		bd 49 06	lda $0649,x			lda 	decimalBuffer,x
-.9df0		20 da b1	jsr $b1da			jsr 	StringTempWrite
+.9df0		20 e8 b1	jsr $b1e8			jsr 	StringTempWrite
 .9df3		e8		inx				inx
 .9df4		bd 49 06	lda $0649,x			lda 	decimalBuffer,x
 .9df7		d0 f4		bne $9ded			bne 	_USCopy
@@ -5568,13 +5569,13 @@
 .9ec6		85 37		sta $37				sta 	zTemp0+1
 .9ec8						_SSMNoCarry:
 .9ec8		b5 5a		lda $5a,x			lda 	NSMantissa0+2,x 			; characters required.
-.9eca		20 a1 b1	jsr $b1a1			jsr 	StringTempAllocate 			; allocate that many characters
+.9eca		20 af b1	jsr $b1af			jsr 	StringTempAllocate 			; allocate that many characters
 .9ecd		5a		phy				phy 								; save Y
 .9ece		a0 00		ldy #$00			ldy 	#0 							; start copying in.
 .9ed0						_SSMCopy:
 .9ed0		b1 36		lda ($36),y			lda 	(zTemp0),y 					; get next character
 .9ed2		f0 08		beq $9edc			beq 	_SSMEString 				; no more to copy
-.9ed4		20 da b1	jsr $b1da			jsr 	StringTempWrite 			; and write it out.
+.9ed4		20 e8 b1	jsr $b1e8			jsr 	StringTempWrite 			; and write it out.
 .9ed7		c8		iny				iny
 .9ed8		d6 5a		dec $5a,x			dec 	NSMantissa0+2,x
 .9eda		d0 f4		bne $9ed0			bne 	_SSMCopy
@@ -5584,7 +5585,7 @@
 .9edd		60		rts				rts
 .9ede						_SSMNull:
 .9ede		a9 00		lda #$00			lda 	#0
-.9ee0		20 a1 b1	jsr $b1a1			jsr 	StringTempAllocate
+.9ee0		20 af b1	jsr $b1af			jsr 	StringTempAllocate
 .9ee3		60		rts				rts
 .9ee4						SubstringInitial:
 .9ee4		da		phx				phx 								; save initial stack position
@@ -6109,275 +6110,277 @@
 >a2de		20 66 6f 75 6e 64 00
 >a2e5		53 74 6f 72 61 67 65 20			.text	"Storage error",0
 >a2ed		65 72 72 6f 72 00
+>a2f3		56 65 72 69 66 79 20 66			.text	"Verify failed",0
+>a2fb		61 69 6c 65 64 00
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->a2f3		41 6c 70 68 61 20 31 39			.text "Alpha 19 built 31-Dec-22. "
->a2fb		20 62 75 69 6c 74 20 33 31 2d 44 65 63 2d 32 32
->a30b		2e 20
+>a301		41 6c 70 68 61 20 31 39			.text "Alpha 19 built 31-Dec-22. "
+>a309		20 62 75 69 6c 74 20 33 31 2d 44 65 63 2d 32 32
+>a319		2e 20
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./module.interface/graphics/gcommand.asm
 
-.a30d						RectangleCommand:
-.a30d		a9 44		lda #$44			lda 	#GCMD_FrameRect				; frame rectangle
-.a30f		80 02		bra $a313			bra 	ShapeDrawCmd
-.a311						CircleCommand:
-.a311		a9 48		lda #$48			lda 	#GCMD_FrameCircle 				; framed circle
-.a313						ShapeDrawCmd:
-.a313		20 9d a3	jsr $a39d			jsr 	RunGraphicsCommand
-.a316						ShapeDraw:
-.a316		0d 60 06	ora $0660			ora 	gxFillSolid  				; adjust AXY for solid fill.
-.a319		4c 91 a3	jmp $a391			jmp 	ExecuteGraphicCommand	 	; and complete
-.a31c						SpriteCommand:
-.a31c		a2 00		ldx #$00			ldx 	#0
-.a31e		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; get image number.
-.a321		5a		phy				phy
-.a322		a9 0e		lda #$0e			lda 	#GCMD_SpriteUse 			; use that image.
-.a324		a6 58		ldx $58				ldx 	NSMantissa0
-.a326		e0 40		cpx #$40			cpx 	#64 						; 0-63 only
-.a328		b0 0d		bcs $a337			bcs 	_SCRange
-.a32a		a0 ff		ldy #$ff			ldy 	#255
-.a32c		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
-.a32f		a9 52		lda #$52			lda 	#GCMD_SpriteMove
-.a331		7a		ply				ply
-.a332		20 9d a3	jsr $a39d			jsr 	RunGraphicsCommand
-.a335		80 5a		bra $a391			bra 	ExecuteGraphicCommand
-.a337						_SCRange:
-.a337		4c 49 a1	jmp $a149			jmp 	RangeError
-.a33a						ImageCommand:
-.a33a		a2 00		ldx #$00			ldx 	#0
-.a33c		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; get image number.
-.a33f		20 9d a3	jsr $a39d			jsr 	RunGraphicsCommand
-.a342						ImageRunDraw:
-.a342		09 40		ora #$40			ora 	#GCMD_Move					; move cursor
-.a344		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
-.a347		ad 66 06	lda $0666			lda 	gxDrawScale
-.a34a		0a		asl a				asl 	a
-.a34b		0a		asl a				asl 	a
-.a34c		0a		asl a				asl 	a
-.a34d		a8		tay				tay
-.a34e		a9 0c		lda #$0c			lda 	#GCMD_DrawSprite 			; image drawing
-.a350		a6 58		ldx $58				ldx 	NSMantissa0
+.a31b						RectangleCommand:
+.a31b		a9 44		lda #$44			lda 	#GCMD_FrameRect				; frame rectangle
+.a31d		80 02		bra $a321			bra 	ShapeDrawCmd
+.a31f						CircleCommand:
+.a31f		a9 48		lda #$48			lda 	#GCMD_FrameCircle 				; framed circle
+.a321						ShapeDrawCmd:
+.a321		20 ab a3	jsr $a3ab			jsr 	RunGraphicsCommand
+.a324						ShapeDraw:
+.a324		0d 60 06	ora $0660			ora 	gxFillSolid  				; adjust AXY for solid fill.
+.a327		4c 9f a3	jmp $a39f			jmp 	ExecuteGraphicCommand	 	; and complete
+.a32a						SpriteCommand:
+.a32a		a2 00		ldx #$00			ldx 	#0
+.a32c		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; get image number.
+.a32f		5a		phy				phy
+.a330		a9 0e		lda #$0e			lda 	#GCMD_SpriteUse 			; use that image.
+.a332		a6 58		ldx $58				ldx 	NSMantissa0
+.a334		e0 40		cpx #$40			cpx 	#64 						; 0-63 only
+.a336		b0 0d		bcs $a345			bcs 	_SCRange
+.a338		a0 ff		ldy #$ff			ldy 	#255
+.a33a		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
+.a33d		a9 52		lda #$52			lda 	#GCMD_SpriteMove
+.a33f		7a		ply				ply
+.a340		20 ab a3	jsr $a3ab			jsr 	RunGraphicsCommand
+.a343		80 5a		bra $a39f			bra 	ExecuteGraphicCommand
+.a345						_SCRange:
+.a345		4c 49 a1	jmp $a149			jmp 	RangeError
+.a348						ImageCommand:
+.a348		a2 00		ldx #$00			ldx 	#0
+.a34a		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; get image number.
+.a34d		20 ab a3	jsr $a3ab			jsr 	RunGraphicsCommand
+.a350						ImageRunDraw:
+.a350		09 40		ora #$40			ora 	#GCMD_Move					; move cursor
 .a352		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
-.a355		60		rts				rts
-.a356						TextCommand:
-.a356		a2 00		ldx #$00			ldx 	#0
-.a358		20 1e 9f	jsr $9f1e			jsr 	EvaluateString 				; get text
-.a35b		20 9d a3	jsr $a39d			jsr 	RunGraphicsCommand
-.a35e						TextRunDraw:
-.a35e		09 40		ora #$40			ora 	#GCMD_Move 					; move cursor
+.a355		ad 66 06	lda $0666			lda 	gxDrawScale
+.a358		0a		asl a				asl 	a
+.a359		0a		asl a				asl 	a
+.a35a		0a		asl a				asl 	a
+.a35b		a8		tay				tay
+.a35c		a9 0c		lda #$0c			lda 	#GCMD_DrawSprite 			; image drawing
+.a35e		a6 58		ldx $58				ldx 	NSMantissa0
 .a360		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
-.a363		a0 00		ldy #$00			ldy 	#0
-.a365						_IRDLoop:
-.a365		a5 60		lda $60				lda 	NSMantissa1 				; access character
-.a367		85 37		sta $37				sta 	zTemp0+1
-.a369		a5 58		lda $58				lda 	NSMantissa0
-.a36b		85 36		sta $36				sta 	zTemp0
-.a36d		b1 36		lda ($36),y			lda 	(zTemp0),y
-.a36f		f0 13		beq $a384			beq 	_IRDExit
-.a371		5a		phy				phy									; save string pos
-.a372		48		pha				pha 								; save char
-.a373		ad 66 06	lda $0666			lda 	gxDrawScale 				; get scale
-.a376		0a		asl a				asl 	a
-.a377		0a		asl a				asl 	a
-.a378		0a		asl a				asl 	a
-.a379		a8		tay				tay
-.a37a		a9 0a		lda #$0a			lda 	#GCMD_DrawFont 				; char drawing
-.a37c		fa		plx				plx 								; char to draw
-.a37d		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
-.a380		7a		ply				ply 								; restore string pos
-.a381		c8		iny				iny
-.a382		90 e1		bcc $a365			bcc 	_IRDLoop 					; go back if no error.
-.a384						_IRDExit:
-.a384		60		rts				rts
-.a385						PlotCommand:
-.a385		a9 50		lda #$50			lda 	#GCMD_Plot 					; command ID to use
-.a387		20 9d a3	jsr $a39d			jsr 	RunGraphicsCommand
-.a38a		80 05		bra $a391			bra 	ExecuteGraphicCommand
-.a38c						LineCommand:
-.a38c		a9 42		lda #$42			lda 	#GCMD_Line 						; command ID to use
-.a38e		20 9d a3	jsr $a39d			jsr 	RunGraphicsCommand
-.a391						ExecuteGraphicCommand:
-.a391		0d 5f 06	ora $065f			ora 	gxCommandID 				; make a full command
-.a394		20 7b 80	jsr $807b			jsr 	GXGraphicDraw 				; draw it and exit
-.a397		b0 01		bcs $a39a			bcs 	_EGCError
-.a399		60		rts				rts
-.a39a						_EGCError:
-.a39a		4c 44 a1	jmp $a144			jmp 	SyntaxError
-.a39d						RunGraphicsCommand:
-.a39d		8d 5f 06	sta $065f			sta 	gxCommandID					; save TODO graphics command.
-.a3a0		68		pla				pla 								; pop handler address
-.a3a1		fa		plx				plx
-.a3a2		1a		inc a				inc 	a
-.a3a3		d0 01		bne $a3a6			bne 	_RGINoCarry
-.a3a5		e8		inx				inx
-.a3a6						_RGINoCarry:
-.a3a6		8d 64 06	sta $0664			sta 	gxHandler
-.a3a9		8e 65 06	stx $0665			stx 	gxHandler+1
-.a3ac						_RGICommandLoop:
-.a3ac		b1 30		lda ($30),y			lda 	(codePtr),y
-.a3ae		c8		iny				iny
-.a3af		c9 d8		cmp #$d8			cmp 	#KWD_TO						; is it TO x,y
-.a3b1		f0 53		beq $a406			beq 	_RGI_To
-.a3b3		c9 c0		cmp #$c0			cmp 	#KWD_HERE 					; do it here.
-.a3b5		f0 55		beq $a40c			beq 	_RGI_Here
-.a3b7		c9 80		cmp #$80			cmp 	#KWC_EOL 					; EOL or : , exit
-.a3b9		f0 3d		beq $a3f8			beq 	_RGI_Exit
-.a3bb		c9 3a		cmp #$3a			cmp 	#KWD_COLON
-.a3bd		f0 39		beq $a3f8			beq 	_RGI_Exit
-.a3bf		c9 c8		cmp #$c8			cmp 	#KWD_OUTLINE 				; solid or outline
-.a3c1		f0 3e		beq $a401			beq 	_RGI_Frame
-.a3c3		c9 d4		cmp #$d4			cmp 	#KWD_SOLID
-.a3c5		f0 33		beq $a3fa			beq 	_RGI_Solid
-.a3c7		c9 b1		cmp #$b1			cmp 	#KWD_BY 					; by offset
-.a3c9		f0 4b		beq $a416			beq 	_RGI_By
-.a3cb		c9 bc		cmp #$bc			cmp 	#KWD_FROM 					; from
-.a3cd		f0 17		beq $a3e6			beq 	_RGI_Move2
-.a3cf		c9 b9		cmp #$b9			cmp 	#KWD_DIM 					; dim (set scale)
-.a3d1		f0 62		beq $a435			beq 	_RGI_Dim
-.a3d3		c9 b7		cmp #$b7			cmp 	#KWD_COLOUR 				; colour or Color
-.a3d5		f0 74		beq $a44b			beq 	_RGI_Colour
-.a3d7		c9 b6		cmp #$b6			cmp 	#KWD_COLOR
-.a3d9		f0 70		beq $a44b			beq 	_RGI_Colour
-.a3db		ae 5f 06	ldx $065f			ldx 	gxCommandID
-.a3de		e0 52		cpx #$52			cpx 	#GCMD_SpriteMove 			; if not sprite
-.a3e0		d0 03		bne $a3e5			bne 	_RGI_Move 					; move
-.a3e2		4c 73 a4	jmp $a473			jmp		_RGI_SpriteInstructions
-.a3e5						_RGI_Move:
-.a3e5		88		dey				dey 								; unpick get.
-.a3e6						_RGI_Move2:
-.a3e6		20 99 a4	jsr $a499			jsr 	GCGetCoordinatePair 		; move to here
-.a3e9		20 c0 a4	jsr $a4c0			jsr 	GCCopyPairToStore 			; save
-.a3ec		5a		phy				phy
-.a3ed		20 b6 a4	jsr $a4b6			jsr 	GCLoadAXY 					; load in
-.a3f0		09 40		ora #$40			ora 	#GCMD_Move 					; move there
-.a3f2		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
-.a3f5		7a		ply				ply
-.a3f6		80 b4		bra $a3ac			bra 	_RGICommandLoop 			; and go round
-.a3f8						_RGI_Exit:
-.a3f8		88		dey				dey 								; unpick : / EOL
-.a3f9		60		rts				rts
-.a3fa						_RGI_Solid:
-.a3fa		a9 02		lda #$02			lda 	#2
-.a3fc		8d 60 06	sta $0660			sta 	gxFillSolid
-.a3ff		80 ab		bra $a3ac			bra 	_RGICommandLoop
-.a401						_RGI_Frame:
-.a401		9c 60 06	stz $0660			stz 	gxFillSolid
-.a404		80 a6		bra $a3ac			bra 	_RGICommandLoop
-.a406						_RGI_To:
-.a406		20 99 a4	jsr $a499			jsr 	GCGetCoordinatePair 		; get coordinate pair into slot #1,#2
-.a409		20 c0 a4	jsr $a4c0			jsr 	GCCopyPairToStore
-.a40c						_RGI_Here:
-.a40c		5a		phy				phy
-.a40d		20 b6 a4	jsr $a4b6			jsr 	GCLoadAXY 					; load it into AXY
-.a410		20 70 a4	jsr $a470			jsr 	_RGICallHandler 			; go do whatever it is.
-.a413		7a		ply				ply
-.a414		80 96		bra $a3ac			bra 	_RGICommandLoop 			; and go round
-.a416						_RGI_By:
-.a416		20 a6 a4	jsr $a4a6			jsr 	GCSignedCoordinatePair 		; get coordinate pair into slot #1,#2
-.a419		18		clc				clc
-.a41a		a5 59		lda $59				lda 	NSMantissa0+1 				; copy it into space.
-.a41c		6d 61 06	adc $0661			adc 	gxXPos
-.a41f		8d 61 06	sta $0661			sta 	gxXPos
-.a422		a5 61		lda $61				lda 	NSMantissa1+1
-.a424		6d 62 06	adc $0662			adc 	gxXPos+1
-.a427		8d 62 06	sta $0662			sta 	gxXPos+1
-.a42a		a5 5a		lda $5a				lda 	NSMantissa0+2
-.a42c		18		clc				clc
-.a42d		6d 63 06	adc $0663			adc 	gxYPos
-.a430		8d 63 06	sta $0663			sta 	gxYPos
-.a433		80 d7		bra $a40c			bra 	_RGI_Here
-.a435						_RGI_Dim:
-.a435		a2 01		ldx #$01			ldx	 	#1
-.a437		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger
-.a43a		a5 59		lda $59				lda 	NSMantissa0+1
-.a43c		c9 00		cmp #$00			cmp 	#0
-.a43e		f0 2d		beq $a46d			beq 	_RGIRange
-.a440		c9 09		cmp #$09			cmp 	#8+1
-.a442		b0 29		bcs $a46d			bcs		_RGIRange
-.a444		3a		dec a				dec 	a
-.a445		8d 66 06	sta $0666			sta 	gxDrawScale
-.a448		4c ac a3	jmp $a3ac			jmp 	_RGICommandLoop
-.a44b						_RGI_Colour:
-.a44b		a2 01		ldx #$01			ldx 	#1 							; colour
-.a44d		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger
-.a450		a2 02		ldx #$02			ldx 	#2 							; default zero for 2nd parameter
-.a452		20 c6 9f	jsr $9fc6			jsr 	NSMSetZero
-.a455		b1 30		lda ($30),y			lda 	(codePtr),y
-.a457		c9 2c		cmp #$2c			cmp 	#KWD_COMMA 					; check , => mode.
-.a459		d0 04		bne $a45f			bne 	_RGICDefaultMode
-.a45b		c8		iny				iny
-.a45c		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger
-.a45f						_RGICDefaultMode:
-.a45f		5a		phy				phy
-.a460		a9 08		lda #$08			lda 	#GCMD_Colour 				; set colour.
-.a462		a6 59		ldx $59				ldx 	NSMantissa0+1
-.a464		a4 5a		ldy $5a				ldy 	NSMantissa0+2
-.a466		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
-.a469		7a		ply				ply
-.a46a		4c ac a3	jmp $a3ac			jmp 	_RGICommandLoop 			; and go round
-.a46d						_RGIRange:
-.a46d		4c 49 a1	jmp $a149			jmp 	RangeError
-.a470						_RGICallHandler:
-.a470		6c 64 06	jmp ($0664)			jmp 	(gxHandler)
-.a473						_RGI_SpriteInstructions:
-.a473		c9 c6		cmp #$c6			cmp 	#KWD_OFF
-.a475		f0 07		beq $a47e			beq 	_RGISpriteOff
-.a477		c9 c1		cmp #$c1			cmp 	#KWD_IMAGE
-.a479		f0 13		beq $a48e			beq 	_RGISetImage
-.a47b		4c e5 a3	jmp $a3e5			jmp 	_RGI_Move
-.a47e						_RGISpriteOff:
-.a47e		5a		phy				phy
-.a47f		a0 01		ldy #$01			ldy 	#1
-.a481		a2 00		ldx #$00			ldx 	#0
-.a483						_RGIDoCommandLoop:
-.a483		a9 10		lda #$10			lda 	#GCMD_SpriteImage
-.a485		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
-.a488		7a		ply				ply
-.a489		b0 e2		bcs $a46d			bcs 	_RGIRange
-.a48b		4c ac a3	jmp $a3ac			jmp 	_RGICommandLoop
-.a48e						_RGISetImage:
-.a48e		a2 01		ldx #$01			ldx 	#1
-.a490		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger
-.a493		5a		phy				phy
-.a494		aa		tax				tax
-.a495		a0 00		ldy #$00			ldy 	#0
-.a497		80 ea		bra $a483			bra 	_RGIDoCommandLoop
-.a499						GCGetCoordinatePair:
-.a499		a2 01		ldx #$01			ldx 	#1
-.a49b		20 46 9f	jsr $9f46			jsr 	Evaluate16BitInteger
-.a49e		20 6a 90	jsr $906a			jsr 	CheckComma
-.a4a1		e8		inx				inx
-.a4a2		20 46 9f	jsr $9f46			jsr 	Evaluate16BitInteger
-.a4a5		60		rts				rts
-.a4a6						GCSignedCoordinatePair:
-.a4a6		a2 01		ldx #$01			ldx 	#1
-.a4a8		20 50 9f	jsr $9f50			jsr 	Evaluate16BitIntegerSigned
-.a4ab		20 6a 90	jsr $906a			jsr 	CheckComma
-.a4ae		e8		inx				inx
-.a4af		20 50 9f	jsr $9f50			jsr 	Evaluate16BitIntegerSigned
-.a4b2		60		rts				rts
-.a4b3						_GCCPRange:
-.a4b3		4c 49 a1	jmp $a149			jmp 	RangeError
-.a4b6						GCLoadAXY:
-.a4b6		ad 62 06	lda $0662			lda 	gxXPos+1
-.a4b9		ae 61 06	ldx $0661			ldx 	gxXPos
-.a4bc		ac 63 06	ldy $0663			ldy 	gxYPos
-.a4bf		60		rts				rts
-.a4c0						GCCopyPairToStore:
-.a4c0		a5 59		lda $59				lda 	NSMantissa0+1 				; copy it into space.
-.a4c2		8d 61 06	sta $0661			sta 	gxXPos
-.a4c5		a5 61		lda $61				lda 	NSMantissa1+1
-.a4c7		8d 62 06	sta $0662			sta 	gxXPos+1
-.a4ca		a5 5a		lda $5a				lda 	NSMantissa0+2
-.a4cc		8d 63 06	sta $0663			sta 	gxYPos
-.a4cf		60		rts				rts
+.a363		60		rts				rts
+.a364						TextCommand:
+.a364		a2 00		ldx #$00			ldx 	#0
+.a366		20 1e 9f	jsr $9f1e			jsr 	EvaluateString 				; get text
+.a369		20 ab a3	jsr $a3ab			jsr 	RunGraphicsCommand
+.a36c						TextRunDraw:
+.a36c		09 40		ora #$40			ora 	#GCMD_Move 					; move cursor
+.a36e		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
+.a371		a0 00		ldy #$00			ldy 	#0
+.a373						_IRDLoop:
+.a373		a5 60		lda $60				lda 	NSMantissa1 				; access character
+.a375		85 37		sta $37				sta 	zTemp0+1
+.a377		a5 58		lda $58				lda 	NSMantissa0
+.a379		85 36		sta $36				sta 	zTemp0
+.a37b		b1 36		lda ($36),y			lda 	(zTemp0),y
+.a37d		f0 13		beq $a392			beq 	_IRDExit
+.a37f		5a		phy				phy									; save string pos
+.a380		48		pha				pha 								; save char
+.a381		ad 66 06	lda $0666			lda 	gxDrawScale 				; get scale
+.a384		0a		asl a				asl 	a
+.a385		0a		asl a				asl 	a
+.a386		0a		asl a				asl 	a
+.a387		a8		tay				tay
+.a388		a9 0a		lda #$0a			lda 	#GCMD_DrawFont 				; char drawing
+.a38a		fa		plx				plx 								; char to draw
+.a38b		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
+.a38e		7a		ply				ply 								; restore string pos
+.a38f		c8		iny				iny
+.a390		90 e1		bcc $a373			bcc 	_IRDLoop 					; go back if no error.
+.a392						_IRDExit:
+.a392		60		rts				rts
+.a393						PlotCommand:
+.a393		a9 50		lda #$50			lda 	#GCMD_Plot 					; command ID to use
+.a395		20 ab a3	jsr $a3ab			jsr 	RunGraphicsCommand
+.a398		80 05		bra $a39f			bra 	ExecuteGraphicCommand
+.a39a						LineCommand:
+.a39a		a9 42		lda #$42			lda 	#GCMD_Line 						; command ID to use
+.a39c		20 ab a3	jsr $a3ab			jsr 	RunGraphicsCommand
+.a39f						ExecuteGraphicCommand:
+.a39f		0d 5f 06	ora $065f			ora 	gxCommandID 				; make a full command
+.a3a2		20 7b 80	jsr $807b			jsr 	GXGraphicDraw 				; draw it and exit
+.a3a5		b0 01		bcs $a3a8			bcs 	_EGCError
+.a3a7		60		rts				rts
+.a3a8						_EGCError:
+.a3a8		4c 44 a1	jmp $a144			jmp 	SyntaxError
+.a3ab						RunGraphicsCommand:
+.a3ab		8d 5f 06	sta $065f			sta 	gxCommandID					; save TODO graphics command.
+.a3ae		68		pla				pla 								; pop handler address
+.a3af		fa		plx				plx
+.a3b0		1a		inc a				inc 	a
+.a3b1		d0 01		bne $a3b4			bne 	_RGINoCarry
+.a3b3		e8		inx				inx
+.a3b4						_RGINoCarry:
+.a3b4		8d 64 06	sta $0664			sta 	gxHandler
+.a3b7		8e 65 06	stx $0665			stx 	gxHandler+1
+.a3ba						_RGICommandLoop:
+.a3ba		b1 30		lda ($30),y			lda 	(codePtr),y
+.a3bc		c8		iny				iny
+.a3bd		c9 d8		cmp #$d8			cmp 	#KWD_TO						; is it TO x,y
+.a3bf		f0 53		beq $a414			beq 	_RGI_To
+.a3c1		c9 c0		cmp #$c0			cmp 	#KWD_HERE 					; do it here.
+.a3c3		f0 55		beq $a41a			beq 	_RGI_Here
+.a3c5		c9 80		cmp #$80			cmp 	#KWC_EOL 					; EOL or : , exit
+.a3c7		f0 3d		beq $a406			beq 	_RGI_Exit
+.a3c9		c9 3a		cmp #$3a			cmp 	#KWD_COLON
+.a3cb		f0 39		beq $a406			beq 	_RGI_Exit
+.a3cd		c9 c8		cmp #$c8			cmp 	#KWD_OUTLINE 				; solid or outline
+.a3cf		f0 3e		beq $a40f			beq 	_RGI_Frame
+.a3d1		c9 d4		cmp #$d4			cmp 	#KWD_SOLID
+.a3d3		f0 33		beq $a408			beq 	_RGI_Solid
+.a3d5		c9 b1		cmp #$b1			cmp 	#KWD_BY 					; by offset
+.a3d7		f0 4b		beq $a424			beq 	_RGI_By
+.a3d9		c9 bc		cmp #$bc			cmp 	#KWD_FROM 					; from
+.a3db		f0 17		beq $a3f4			beq 	_RGI_Move2
+.a3dd		c9 b9		cmp #$b9			cmp 	#KWD_DIM 					; dim (set scale)
+.a3df		f0 62		beq $a443			beq 	_RGI_Dim
+.a3e1		c9 b7		cmp #$b7			cmp 	#KWD_COLOUR 				; colour or Color
+.a3e3		f0 74		beq $a459			beq 	_RGI_Colour
+.a3e5		c9 b6		cmp #$b6			cmp 	#KWD_COLOR
+.a3e7		f0 70		beq $a459			beq 	_RGI_Colour
+.a3e9		ae 5f 06	ldx $065f			ldx 	gxCommandID
+.a3ec		e0 52		cpx #$52			cpx 	#GCMD_SpriteMove 			; if not sprite
+.a3ee		d0 03		bne $a3f3			bne 	_RGI_Move 					; move
+.a3f0		4c 81 a4	jmp $a481			jmp		_RGI_SpriteInstructions
+.a3f3						_RGI_Move:
+.a3f3		88		dey				dey 								; unpick get.
+.a3f4						_RGI_Move2:
+.a3f4		20 a7 a4	jsr $a4a7			jsr 	GCGetCoordinatePair 		; move to here
+.a3f7		20 ce a4	jsr $a4ce			jsr 	GCCopyPairToStore 			; save
+.a3fa		5a		phy				phy
+.a3fb		20 c4 a4	jsr $a4c4			jsr 	GCLoadAXY 					; load in
+.a3fe		09 40		ora #$40			ora 	#GCMD_Move 					; move there
+.a400		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
+.a403		7a		ply				ply
+.a404		80 b4		bra $a3ba			bra 	_RGICommandLoop 			; and go round
+.a406						_RGI_Exit:
+.a406		88		dey				dey 								; unpick : / EOL
+.a407		60		rts				rts
+.a408						_RGI_Solid:
+.a408		a9 02		lda #$02			lda 	#2
+.a40a		8d 60 06	sta $0660			sta 	gxFillSolid
+.a40d		80 ab		bra $a3ba			bra 	_RGICommandLoop
+.a40f						_RGI_Frame:
+.a40f		9c 60 06	stz $0660			stz 	gxFillSolid
+.a412		80 a6		bra $a3ba			bra 	_RGICommandLoop
+.a414						_RGI_To:
+.a414		20 a7 a4	jsr $a4a7			jsr 	GCGetCoordinatePair 		; get coordinate pair into slot #1,#2
+.a417		20 ce a4	jsr $a4ce			jsr 	GCCopyPairToStore
+.a41a						_RGI_Here:
+.a41a		5a		phy				phy
+.a41b		20 c4 a4	jsr $a4c4			jsr 	GCLoadAXY 					; load it into AXY
+.a41e		20 7e a4	jsr $a47e			jsr 	_RGICallHandler 			; go do whatever it is.
+.a421		7a		ply				ply
+.a422		80 96		bra $a3ba			bra 	_RGICommandLoop 			; and go round
+.a424						_RGI_By:
+.a424		20 b4 a4	jsr $a4b4			jsr 	GCSignedCoordinatePair 		; get coordinate pair into slot #1,#2
+.a427		18		clc				clc
+.a428		a5 59		lda $59				lda 	NSMantissa0+1 				; copy it into space.
+.a42a		6d 61 06	adc $0661			adc 	gxXPos
+.a42d		8d 61 06	sta $0661			sta 	gxXPos
+.a430		a5 61		lda $61				lda 	NSMantissa1+1
+.a432		6d 62 06	adc $0662			adc 	gxXPos+1
+.a435		8d 62 06	sta $0662			sta 	gxXPos+1
+.a438		a5 5a		lda $5a				lda 	NSMantissa0+2
+.a43a		18		clc				clc
+.a43b		6d 63 06	adc $0663			adc 	gxYPos
+.a43e		8d 63 06	sta $0663			sta 	gxYPos
+.a441		80 d7		bra $a41a			bra 	_RGI_Here
+.a443						_RGI_Dim:
+.a443		a2 01		ldx #$01			ldx	 	#1
+.a445		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger
+.a448		a5 59		lda $59				lda 	NSMantissa0+1
+.a44a		c9 00		cmp #$00			cmp 	#0
+.a44c		f0 2d		beq $a47b			beq 	_RGIRange
+.a44e		c9 09		cmp #$09			cmp 	#8+1
+.a450		b0 29		bcs $a47b			bcs		_RGIRange
+.a452		3a		dec a				dec 	a
+.a453		8d 66 06	sta $0666			sta 	gxDrawScale
+.a456		4c ba a3	jmp $a3ba			jmp 	_RGICommandLoop
+.a459						_RGI_Colour:
+.a459		a2 01		ldx #$01			ldx 	#1 							; colour
+.a45b		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger
+.a45e		a2 02		ldx #$02			ldx 	#2 							; default zero for 2nd parameter
+.a460		20 c6 9f	jsr $9fc6			jsr 	NSMSetZero
+.a463		b1 30		lda ($30),y			lda 	(codePtr),y
+.a465		c9 2c		cmp #$2c			cmp 	#KWD_COMMA 					; check , => mode.
+.a467		d0 04		bne $a46d			bne 	_RGICDefaultMode
+.a469		c8		iny				iny
+.a46a		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger
+.a46d						_RGICDefaultMode:
+.a46d		5a		phy				phy
+.a46e		a9 08		lda #$08			lda 	#GCMD_Colour 				; set colour.
+.a470		a6 59		ldx $59				ldx 	NSMantissa0+1
+.a472		a4 5a		ldy $5a				ldy 	NSMantissa0+2
+.a474		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
+.a477		7a		ply				ply
+.a478		4c ba a3	jmp $a3ba			jmp 	_RGICommandLoop 			; and go round
+.a47b						_RGIRange:
+.a47b		4c 49 a1	jmp $a149			jmp 	RangeError
+.a47e						_RGICallHandler:
+.a47e		6c 64 06	jmp ($0664)			jmp 	(gxHandler)
+.a481						_RGI_SpriteInstructions:
+.a481		c9 c6		cmp #$c6			cmp 	#KWD_OFF
+.a483		f0 07		beq $a48c			beq 	_RGISpriteOff
+.a485		c9 c1		cmp #$c1			cmp 	#KWD_IMAGE
+.a487		f0 13		beq $a49c			beq 	_RGISetImage
+.a489		4c f3 a3	jmp $a3f3			jmp 	_RGI_Move
+.a48c						_RGISpriteOff:
+.a48c		5a		phy				phy
+.a48d		a0 01		ldy #$01			ldy 	#1
+.a48f		a2 00		ldx #$00			ldx 	#0
+.a491						_RGIDoCommandLoop:
+.a491		a9 10		lda #$10			lda 	#GCMD_SpriteImage
+.a493		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
+.a496		7a		ply				ply
+.a497		b0 e2		bcs $a47b			bcs 	_RGIRange
+.a499		4c ba a3	jmp $a3ba			jmp 	_RGICommandLoop
+.a49c						_RGISetImage:
+.a49c		a2 01		ldx #$01			ldx 	#1
+.a49e		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger
+.a4a1		5a		phy				phy
+.a4a2		aa		tax				tax
+.a4a3		a0 00		ldy #$00			ldy 	#0
+.a4a5		80 ea		bra $a491			bra 	_RGIDoCommandLoop
+.a4a7						GCGetCoordinatePair:
+.a4a7		a2 01		ldx #$01			ldx 	#1
+.a4a9		20 46 9f	jsr $9f46			jsr 	Evaluate16BitInteger
+.a4ac		20 6a 90	jsr $906a			jsr 	CheckComma
+.a4af		e8		inx				inx
+.a4b0		20 46 9f	jsr $9f46			jsr 	Evaluate16BitInteger
+.a4b3		60		rts				rts
+.a4b4						GCSignedCoordinatePair:
+.a4b4		a2 01		ldx #$01			ldx 	#1
+.a4b6		20 50 9f	jsr $9f50			jsr 	Evaluate16BitIntegerSigned
+.a4b9		20 6a 90	jsr $906a			jsr 	CheckComma
+.a4bc		e8		inx				inx
+.a4bd		20 50 9f	jsr $9f50			jsr 	Evaluate16BitIntegerSigned
+.a4c0		60		rts				rts
+.a4c1						_GCCPRange:
+.a4c1		4c 49 a1	jmp $a149			jmp 	RangeError
+.a4c4						GCLoadAXY:
+.a4c4		ad 62 06	lda $0662			lda 	gxXPos+1
+.a4c7		ae 61 06	ldx $0661			ldx 	gxXPos
+.a4ca		ac 63 06	ldy $0663			ldy 	gxYPos
+.a4cd		60		rts				rts
+.a4ce						GCCopyPairToStore:
+.a4ce		a5 59		lda $59				lda 	NSMantissa0+1 				; copy it into space.
+.a4d0		8d 61 06	sta $0661			sta 	gxXPos
+.a4d3		a5 61		lda $61				lda 	NSMantissa1+1
+.a4d5		8d 62 06	sta $0662			sta 	gxXPos+1
+.a4d8		a5 5a		lda $5a				lda 	NSMantissa0+2
+.a4da		8d 63 06	sta $0663			sta 	gxYPos
+.a4dd		60		rts				rts
 .065f						gxCommandID:
 >065f								.fill 	1
 .0660						gxFillSolid:
@@ -6396,289 +6399,289 @@
 
 ;******  Processing file: ./module.interface/graphics/gcontrol.asm
 
-.a4d0						BitmapCtrl:
-.a4d0		b1 30		lda ($30),y			lda 	(codePtr),y
-.a4d2		c8		iny				iny
-.a4d3		a2 01		ldx #$01			ldx 	#1
-.a4d5		c9 c7		cmp #$c7			cmp 	#KWD_ON
-.a4d7		f0 11		beq $a4ea			beq 	BitmapSwitch
-.a4d9		ca		dex				dex
-.a4da		c9 c6		cmp #$c6			cmp 	#KWD_OFF
-.a4dc		f0 0c		beq $a4ea			beq 	BitmapSwitch
-.a4de		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; get the colour
-.a4e1		5a		phy				phy
-.a4e2		aa		tax				tax
-.a4e3		a9 06		lda #$06			lda 	#GCMD_Clear					; clear to that colour
-.a4e5		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
-.a4e8		7a		ply				ply
-.a4e9		60		rts				rts
-.a4ea						BitmapSwitch:
-.a4ea		5a		phy				phy
-.a4eb		a0 00		ldy #$00			ldy 	#0 							; gfx 1,on/off,0
-.a4ed		a9 02		lda #$02			lda 	#GCMD_BitmapCtl
-.a4ef		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
-.a4f2		a9 08		lda #$08			lda 	#GCMD_Colour				; set colour to $FF
-.a4f4		a0 00		ldy #$00			ldy 	#0
-.a4f6		a2 ff		ldx #$ff			ldx 	#$FF
-.a4f8		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
-.a4fb		9c 60 06	stz $0660			stz 	gxFillSolid
-.a4fe		9c 61 06	stz $0661			stz 	gxXPos
-.a501		9c 62 06	stz $0662			stz 	gxXPos+1
-.a504		9c 63 06	stz $0663			stz 	gxYPos
-.a507		9c 66 06	stz $0666			stz 	gxDrawScale
-.a50a		a9 40		lda #$40			lda 	#GCMD_Move 						; home cursor
-.a50c		a2 00		ldx #$00			ldx 	#0
-.a50e		a0 00		ldy #$00			ldy 	#0
-.a510		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
-.a513		7a		ply				ply
-.a514		60		rts				rts
-.a515						SpritesCtrl:
-.a515		b1 30		lda ($30),y			lda 	(codePtr),y
-.a517		c8		iny				iny
-.a518		a2 01		ldx #$01			ldx 	#1
-.a51a		c9 c7		cmp #$c7			cmp 	#KWD_ON
-.a51c		f0 08		beq $a526			beq 	SpriteSwitch
-.a51e		ca		dex				dex
-.a51f		c9 c6		cmp #$c6			cmp 	#KWD_OFF
-.a521		f0 03		beq $a526			beq 	SpriteSwitch
-.a523		4c 44 a1	jmp $a144			jmp 	SyntaxError
-.a526						SpriteSwitch:
-.a526		5a		phy				phy
-.a527		a0 00		ldy #$00			ldy 	#0 							; gfx 2,on/off,0
-.a529		a9 04		lda #$04			lda 	#GCMD_SpriteCtl
-.a52b		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
-.a52e		7a		ply				ply
-.a52f		60		rts				rts
+.a4de						BitmapCtrl:
+.a4de		b1 30		lda ($30),y			lda 	(codePtr),y
+.a4e0		c8		iny				iny
+.a4e1		a2 01		ldx #$01			ldx 	#1
+.a4e3		c9 c7		cmp #$c7			cmp 	#KWD_ON
+.a4e5		f0 11		beq $a4f8			beq 	BitmapSwitch
+.a4e7		ca		dex				dex
+.a4e8		c9 c6		cmp #$c6			cmp 	#KWD_OFF
+.a4ea		f0 0c		beq $a4f8			beq 	BitmapSwitch
+.a4ec		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; get the colour
+.a4ef		5a		phy				phy
+.a4f0		aa		tax				tax
+.a4f1		a9 06		lda #$06			lda 	#GCMD_Clear					; clear to that colour
+.a4f3		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
+.a4f6		7a		ply				ply
+.a4f7		60		rts				rts
+.a4f8						BitmapSwitch:
+.a4f8		5a		phy				phy
+.a4f9		a0 00		ldy #$00			ldy 	#0 							; gfx 1,on/off,0
+.a4fb		a9 02		lda #$02			lda 	#GCMD_BitmapCtl
+.a4fd		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
+.a500		a9 08		lda #$08			lda 	#GCMD_Colour				; set colour to $FF
+.a502		a0 00		ldy #$00			ldy 	#0
+.a504		a2 ff		ldx #$ff			ldx 	#$FF
+.a506		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
+.a509		9c 60 06	stz $0660			stz 	gxFillSolid
+.a50c		9c 61 06	stz $0661			stz 	gxXPos
+.a50f		9c 62 06	stz $0662			stz 	gxXPos+1
+.a512		9c 63 06	stz $0663			stz 	gxYPos
+.a515		9c 66 06	stz $0666			stz 	gxDrawScale
+.a518		a9 40		lda #$40			lda 	#GCMD_Move 						; home cursor
+.a51a		a2 00		ldx #$00			ldx 	#0
+.a51c		a0 00		ldy #$00			ldy 	#0
+.a51e		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
+.a521		7a		ply				ply
+.a522		60		rts				rts
+.a523						SpritesCtrl:
+.a523		b1 30		lda ($30),y			lda 	(codePtr),y
+.a525		c8		iny				iny
+.a526		a2 01		ldx #$01			ldx 	#1
+.a528		c9 c7		cmp #$c7			cmp 	#KWD_ON
+.a52a		f0 08		beq $a534			beq 	SpriteSwitch
+.a52c		ca		dex				dex
+.a52d		c9 c6		cmp #$c6			cmp 	#KWD_OFF
+.a52f		f0 03		beq $a534			beq 	SpriteSwitch
+.a531		4c 44 a1	jmp $a144			jmp 	SyntaxError
+.a534						SpriteSwitch:
+.a534		5a		phy				phy
+.a535		a0 00		ldy #$00			ldy 	#0 							; gfx 2,on/off,0
+.a537		a9 04		lda #$04			lda 	#GCMD_SpriteCtl
+.a539		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
+.a53c		7a		ply				ply
+.a53d		60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./module.interface/graphics/gfx.asm
 
-.a530						GfxCommand:
-.a530		a2 00		ldx #$00			ldx 	#0
-.a532		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; command
-.a535		20 6a 90	jsr $906a			jsr 	CheckComma
-.a538		e8		inx				inx
-.a539		20 46 9f	jsr $9f46			jsr 	Evaluate16BitInteger 		; X
-.a53c		20 6a 90	jsr $906a			jsr 	CheckComma
-.a53f		e8		inx				inx
-.a540		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; Y
-.a543		a5 61		lda $61				lda 	NSMantissa1+1  				; shift bit 0 of X into CS, should now be zero
-.a545		4a		lsr a				lsr 	a
-.a546		d0 12		bne $a55a			bne 	_GfxError
-.a548		26 58		rol $58				rol 	NSMantissa0 				; rotate into command
-.a54a		b0 0e		bcs $a55a			bcs 	_GfxError 					; bit 7 should have been zero
-.a54c		5a		phy				phy 								; save pos
-.a54d		a5 58		lda $58				lda 	NSMantissa0 				; do the command
-.a54f		a6 59		ldx $59				ldx 	NSMantissa0+1
-.a551		a4 5a		ldy $5a				ldy 	NSMantissa0+2
-.a553		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
-.a556		b0 02		bcs $a55a			bcs 	_GfxError
-.a558		7a		ply				ply 								; restore pos and exit.
-.a559		60		rts				rts
-.a55a						_GfxError:
-.a55a		4c 49 a1	jmp $a149			jmp 	RangeError
+.a53e						GfxCommand:
+.a53e		a2 00		ldx #$00			ldx 	#0
+.a540		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; command
+.a543		20 6a 90	jsr $906a			jsr 	CheckComma
+.a546		e8		inx				inx
+.a547		20 46 9f	jsr $9f46			jsr 	Evaluate16BitInteger 		; X
+.a54a		20 6a 90	jsr $906a			jsr 	CheckComma
+.a54d		e8		inx				inx
+.a54e		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; Y
+.a551		a5 61		lda $61				lda 	NSMantissa1+1  				; shift bit 0 of X into CS, should now be zero
+.a553		4a		lsr a				lsr 	a
+.a554		d0 12		bne $a568			bne 	_GfxError
+.a556		26 58		rol $58				rol 	NSMantissa0 				; rotate into command
+.a558		b0 0e		bcs $a568			bcs 	_GfxError 					; bit 7 should have been zero
+.a55a		5a		phy				phy 								; save pos
+.a55b		a5 58		lda $58				lda 	NSMantissa0 				; do the command
+.a55d		a6 59		ldx $59				ldx 	NSMantissa0+1
+.a55f		a4 5a		ldy $5a				ldy 	NSMantissa0+2
+.a561		20 7b 80	jsr $807b			jsr 	GXGraphicDraw
+.a564		b0 02		bcs $a568			bcs 	_GfxError
+.a566		7a		ply				ply 								; restore pos and exit.
+.a567		60		rts				rts
+.a568						_GfxError:
+.a568		4c 49 a1	jmp $a149			jmp 	RangeError
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./module.interface/graphics/hit.asm
 
-.a55d						UnaryHit:
-.a55d		fa		plx				plx
-.a55e		a9 36		lda #$36			lda 	#zTemp0
-.a560		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; get sprite number 0
-.a563		20 6a 90	jsr $906a			jsr 	CheckComma
-.a566		e8		inx				inx
-.a567		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; get sprite number 1
-.a56a		20 62 90	jsr $9062			jsr		CheckRightBracket
-.a56d		ca		dex				dex 								; fix back up again.
-.a56e		da		phx				phx 								; save X/Y
-.a56f		5a		phy				phy
-.a570		b4 59		ldy $59,x			ldy 	NSMantissa0+1,x 			; get the sprite numbers into X/Y
-.a572		b5 58		lda $58,x			lda 	NSMantissa0,x
-.a574		aa		tax				tax
-.a575		a9 12		lda #$12			lda 	#GCMD_SpriteCollide 		; command check collision.
-.a577		20 7b 80	jsr $807b			jsr 	GXGraphicDraw 				; calculate result
-.a57a		1a		inc a				inc 	a 							; so 255 (fail) -> 0, otherwise 1,2,3,4 pixels etc.
-.a57b		7a		ply				ply 								; restore XY
-.a57c		fa		plx				plx
-.a57d		20 c8 9f	jsr $9fc8			jsr 	NSMSetByte 					; return the hit result
-.a580		60		rts				rts
+.a56b						UnaryHit:
+.a56b		fa		plx				plx
+.a56c		a9 36		lda #$36			lda 	#zTemp0
+.a56e		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; get sprite number 0
+.a571		20 6a 90	jsr $906a			jsr 	CheckComma
+.a574		e8		inx				inx
+.a575		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; get sprite number 1
+.a578		20 62 90	jsr $9062			jsr		CheckRightBracket
+.a57b		ca		dex				dex 								; fix back up again.
+.a57c		da		phx				phx 								; save X/Y
+.a57d		5a		phy				phy
+.a57e		b4 59		ldy $59,x			ldy 	NSMantissa0+1,x 			; get the sprite numbers into X/Y
+.a580		b5 58		lda $58,x			lda 	NSMantissa0,x
+.a582		aa		tax				tax
+.a583		a9 12		lda #$12			lda 	#GCMD_SpriteCollide 		; command check collision.
+.a585		20 7b 80	jsr $807b			jsr 	GXGraphicDraw 				; calculate result
+.a588		1a		inc a				inc 	a 							; so 255 (fail) -> 0, otherwise 1,2,3,4 pixels etc.
+.a589		7a		ply				ply 								; restore XY
+.a58a		fa		plx				plx
+.a58b		20 c8 9f	jsr $9fc8			jsr 	NSMSetByte 					; return the hit result
+.a58e		60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./module.interface/graphics/palette.asm
 
-.a581						PaletteCommand:
-.a581		a2 00		ldx #$00			ldx 	#0
-.a583		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; colour
-.a586		20 6a 90	jsr $906a			jsr 	CheckComma
-.a589		e8		inx				inx
-.a58a		20 46 9f	jsr $9f46			jsr 	Evaluate16BitInteger 		; r
-.a58d		20 6a 90	jsr $906a			jsr 	CheckComma
-.a590		e8		inx				inx
-.a591		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; g
+.a58f						PaletteCommand:
+.a58f		a2 00		ldx #$00			ldx 	#0
+.a591		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; colour
 .a594		20 6a 90	jsr $906a			jsr 	CheckComma
 .a597		e8		inx				inx
-.a598		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; b
-.a59b		a5 58		lda $58				lda 	NSMantissa0 				; get colour #
-.a59d		85 36		sta $36				sta 	zTemp0
-.a59f		a9 34		lda #$34			lda 	#$D0 >> 2 					; MSB = D0/4
-.a5a1		85 37		sta $37				sta 	zTemp0+1
-.a5a3		06 36		asl $36				asl 	zTemp0 						; zTemp = $D000+Colour x 4
-.a5a5		26 37		rol $37				rol	 	zTemp0+1
-.a5a7		06 36		asl $36				asl 	zTemp0
-.a5a9		26 37		rol $37				rol	 	zTemp0+1
-.a5ab		a9 01		lda #$01			lda 	#1 							; I/O Page 2
-.a5ad		85 01		sta $01				sta 	1
-.a5af		5a		phy				phy
-.a5b0		a5 5b		lda $5b				lda 	NSMantissa0+3 				; fix to r,g,b
-.a5b2		92 36		sta ($36)			sta 	(zTemp0)
-.a5b4		a0 01		ldy #$01			ldy 	#1
-.a5b6		a5 5a		lda $5a				lda 	NSMantissa0+2
-.a5b8		91 36		sta ($36),y			sta 	(zTemp0),y
-.a5ba		a5 59		lda $59				lda 	NSMantissa0+1
-.a5bc		c8		iny				iny
-.a5bd		91 36		sta ($36),y			sta 	(zTemp0),y
-.a5bf		7a		ply				ply
-.a5c0		60		rts				rts
+.a598		20 46 9f	jsr $9f46			jsr 	Evaluate16BitInteger 		; r
+.a59b		20 6a 90	jsr $906a			jsr 	CheckComma
+.a59e		e8		inx				inx
+.a59f		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; g
+.a5a2		20 6a 90	jsr $906a			jsr 	CheckComma
+.a5a5		e8		inx				inx
+.a5a6		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; b
+.a5a9		a5 58		lda $58				lda 	NSMantissa0 				; get colour #
+.a5ab		85 36		sta $36				sta 	zTemp0
+.a5ad		a9 34		lda #$34			lda 	#$D0 >> 2 					; MSB = D0/4
+.a5af		85 37		sta $37				sta 	zTemp0+1
+.a5b1		06 36		asl $36				asl 	zTemp0 						; zTemp = $D000+Colour x 4
+.a5b3		26 37		rol $37				rol	 	zTemp0+1
+.a5b5		06 36		asl $36				asl 	zTemp0
+.a5b7		26 37		rol $37				rol	 	zTemp0+1
+.a5b9		a9 01		lda #$01			lda 	#1 							; I/O Page 2
+.a5bb		85 01		sta $01				sta 	1
+.a5bd		5a		phy				phy
+.a5be		a5 5b		lda $5b				lda 	NSMantissa0+3 				; fix to r,g,b
+.a5c0		92 36		sta ($36)			sta 	(zTemp0)
+.a5c2		a0 01		ldy #$01			ldy 	#1
+.a5c4		a5 5a		lda $5a				lda 	NSMantissa0+2
+.a5c6		91 36		sta ($36),y			sta 	(zTemp0),y
+.a5c8		a5 59		lda $59				lda 	NSMantissa0+1
+.a5ca		c8		iny				iny
+.a5cb		91 36		sta ($36),y			sta 	(zTemp0),y
+.a5cd		7a		ply				ply
+.a5ce		60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./module.interface/hardware/crossdev.asm
 
-.a5c1						XLoadCommand:
-.a5c1		20 f6 8a	jsr $8af6			jsr 	NewProgram
-.a5c4		20 64 83	jsr $8364			jsr 	BackloadProgram
-.a5c7		4c 23 84	jmp $8423			jmp 	WarmStart
-.a5ca						XGoCommand:
-.a5ca		20 f6 8a	jsr $8af6			jsr 	NewProgram
-.a5cd		20 64 83	jsr $8364			jsr 	BackloadProgram
-.a5d0		4c 74 8c	jmp $8c74			jmp 	CommandRUN
+.a5cf						XLoadCommand:
+.a5cf		20 f6 8a	jsr $8af6			jsr 	NewProgram
+.a5d2		20 64 83	jsr $8364			jsr 	BackloadProgram
+.a5d5		4c 23 84	jmp $8423			jmp 	WarmStart
+.a5d8						XGoCommand:
+.a5d8		20 f6 8a	jsr $8af6			jsr 	NewProgram
+.a5db		20 64 83	jsr $8364			jsr 	BackloadProgram
+.a5de		4c 74 8c	jmp $8c74			jmp 	CommandRUN
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./module.interface/hardware/event.asm
 
-.a5d3						UnaryEvent:
-.a5d3		fa		plx				plx
-.a5d4		20 6d a6	jsr $a66d			jsr 	TimerToStackX 				; timer in +0
-.a5d7		e8		inx				inx  								; put reference into +1
-.a5d8		20 c9 99	jsr $99c9			jsr 	EvaluateTerm
-.a5db		b5 50		lda $50,x			lda 	NSStatus,x 					; check if is integer reference
-.a5dd		c9 20		cmp #$20			cmp 	#NSTInteger+NSBIsReference
-.a5df		d0 4c		bne $a62d			bne 	_UEType
-.a5e1		e8		inx				inx 								; put the step in +2
-.a5e2		20 6a 90	jsr $906a			jsr 	CheckComma
-.a5e5		20 46 9f	jsr $9f46			jsr 	Evaluate16BitInteger
-.a5e8		20 62 90	jsr $9062			jsr 	CheckRightBracket
-.a5eb		ca		dex				dex
-.a5ec		ca		dex				dex
-.a5ed		b5 59		lda $59,x			lda 	NSMantissa0+1,x 			; copy reference to zTemp0
-.a5ef		85 36		sta $36				sta 	zTemp0
-.a5f1		b5 61		lda $61,x			lda 	NSMantissa1+1,x
-.a5f3		85 37		sta $37				sta 	zTemp0+1
-.a5f5		5a		phy				phy
-.a5f6		a0 03		ldy #$03			ldy 	#3 							; check bit 7 of last bit, the packed sign bit
-.a5f8		b1 36		lda ($36),y			lda 	(zTemp0),y
-.a5fa		30 2d		bmi $a629			bmi 	_UEFalse 					; exit if signed.
-.a5fc		a0 00		ldy #$00			ldy 	#0 							; has it timed out (24 bit)
-.a5fe		b5 58		lda $58,x			lda 	NSMantissa0,x
-.a600		d1 36		cmp ($36),y			cmp 	(zTemp0),y
-.a602		c8		iny				iny
-.a603		b5 60		lda $60,x			lda 	NSMantissa1,x
-.a605		f1 36		sbc ($36),y			sbc		(zTemp0),y
-.a607		c8		iny				iny
-.a608		b5 68		lda $68,x			lda 	NSMantissa2,x
-.a60a		f1 36		sbc ($36),y			sbc		(zTemp0),y
-.a60c		90 1b		bcc $a629			bcc 	_UEFalse 					; no, return FALSE.
-.a60e		18		clc				clc
-.a60f		a0 00		ldy #$00			ldy 	#0 							; work out new value as timer() + step
-.a611		b5 58		lda $58,x			lda 	NSMantissa0,x
-.a613		75 5a		adc $5a,x			adc 	NSMantissa0+2,x
-.a615		91 36		sta ($36),y			sta 	(zTemp0),y
-.a617		c8		iny				iny
-.a618		b5 60		lda $60,x			lda 	NSMantissa1,x
-.a61a		75 62		adc $62,x			adc 	NSMantissa1+2,x
-.a61c		91 36		sta ($36),y			sta 	(zTemp0),y
-.a61e		c8		iny				iny
-.a61f		b5 68		lda $68,x			lda 	NSMantissa2,x
-.a621		75 6a		adc $6a,x			adc 	NSMantissa2+2,x
+.a5e1						UnaryEvent:
+.a5e1		fa		plx				plx
+.a5e2		20 7b a6	jsr $a67b			jsr 	TimerToStackX 				; timer in +0
+.a5e5		e8		inx				inx  								; put reference into +1
+.a5e6		20 c9 99	jsr $99c9			jsr 	EvaluateTerm
+.a5e9		b5 50		lda $50,x			lda 	NSStatus,x 					; check if is integer reference
+.a5eb		c9 20		cmp #$20			cmp 	#NSTInteger+NSBIsReference
+.a5ed		d0 4c		bne $a63b			bne 	_UEType
+.a5ef		e8		inx				inx 								; put the step in +2
+.a5f0		20 6a 90	jsr $906a			jsr 	CheckComma
+.a5f3		20 46 9f	jsr $9f46			jsr 	Evaluate16BitInteger
+.a5f6		20 62 90	jsr $9062			jsr 	CheckRightBracket
+.a5f9		ca		dex				dex
+.a5fa		ca		dex				dex
+.a5fb		b5 59		lda $59,x			lda 	NSMantissa0+1,x 			; copy reference to zTemp0
+.a5fd		85 36		sta $36				sta 	zTemp0
+.a5ff		b5 61		lda $61,x			lda 	NSMantissa1+1,x
+.a601		85 37		sta $37				sta 	zTemp0+1
+.a603		5a		phy				phy
+.a604		a0 03		ldy #$03			ldy 	#3 							; check bit 7 of last bit, the packed sign bit
+.a606		b1 36		lda ($36),y			lda 	(zTemp0),y
+.a608		30 2d		bmi $a637			bmi 	_UEFalse 					; exit if signed.
+.a60a		a0 00		ldy #$00			ldy 	#0 							; has it timed out (24 bit)
+.a60c		b5 58		lda $58,x			lda 	NSMantissa0,x
+.a60e		d1 36		cmp ($36),y			cmp 	(zTemp0),y
+.a610		c8		iny				iny
+.a611		b5 60		lda $60,x			lda 	NSMantissa1,x
+.a613		f1 36		sbc ($36),y			sbc		(zTemp0),y
+.a615		c8		iny				iny
+.a616		b5 68		lda $68,x			lda 	NSMantissa2,x
+.a618		f1 36		sbc ($36),y			sbc		(zTemp0),y
+.a61a		90 1b		bcc $a637			bcc 	_UEFalse 					; no, return FALSE.
+.a61c		18		clc				clc
+.a61d		a0 00		ldy #$00			ldy 	#0 							; work out new value as timer() + step
+.a61f		b5 58		lda $58,x			lda 	NSMantissa0,x
+.a621		75 5a		adc $5a,x			adc 	NSMantissa0+2,x
 .a623		91 36		sta ($36),y			sta 	(zTemp0),y
-.a625		7a		ply				ply
-.a626		4c e8 90	jmp $90e8			jmp 	ReturnTrue
-.a629						_UEFalse:
-.a629		7a		ply				ply 								; restore Y
-.a62a		4c f3 90	jmp $90f3			jmp 	ReturnFalse 				; and return False
-.a62d						_UEType:
-.a62d		4c 4e a1	jmp $a14e			jmp 	TypeError
+.a625		c8		iny				iny
+.a626		b5 60		lda $60,x			lda 	NSMantissa1,x
+.a628		75 62		adc $62,x			adc 	NSMantissa1+2,x
+.a62a		91 36		sta ($36),y			sta 	(zTemp0),y
+.a62c		c8		iny				iny
+.a62d		b5 68		lda $68,x			lda 	NSMantissa2,x
+.a62f		75 6a		adc $6a,x			adc 	NSMantissa2+2,x
+.a631		91 36		sta ($36),y			sta 	(zTemp0),y
+.a633		7a		ply				ply
+.a634		4c e8 90	jmp $90e8			jmp 	ReturnTrue
+.a637						_UEFalse:
+.a637		7a		ply				ply 								; restore Y
+.a638		4c f3 90	jmp $90f3			jmp 	ReturnFalse 				; and return False
+.a63b						_UEType:
+.a63b		4c 4e a1	jmp $a14e			jmp 	TypeError
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./module.interface/hardware/joy.asm
 
-.a630						UnaryJoyX:
-.a630		18		clc				clc
-.a631		80 01		bra $a634			bra 	JoyMain
-.a633						UnaryJoyY:
-.a633		38		sec				sec
-.a634						JoyMain:
-.a634		fa		plx				plx 								; get pos
-.a635		08		php				php 								; save carry (set for Y)
-.a636		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; ignore the parameter
-.a639		20 62 90	jsr $9062			jsr 	CheckRightBracket
-.a63c		20 21 80	jsr $8021			jsr 	EXTReadController 			; read the controller.
-.a63f		28		plp				plp
-.a640		b0 02		bcs $a644			bcs 	_JMNoShift 					; if X then shift bits 3,2 -> 1,0
-.a642		4a		lsr a				lsr 	a
-.a643		4a		lsr a				lsr 	a
-.a644						_JMNoShift:
-.a644		4a		lsr a				lsr 	a 							; if bit 0 set then left/up e.g. -1
-.a645		b0 07		bcs $a64e			bcs 	JMIsLeft
-.a647		4a		lsr a				lsr 	a 							; if bit 1 set then right/down e.g. +1
-.a648		b0 07		bcs $a651			bcs 	JMIsRight
-.a64a		20 c6 9f	jsr $9fc6			jsr 	NSMSetZero 					; zero result
-.a64d		60		rts				rts
-.a64e						JMIsLeft:
-.a64e		4c e8 90	jmp $90e8			jmp 	ReturnTrue
-.a651						JMIsRight:
-.a651		a9 01		lda #$01			lda 	#1
-.a653		20 c8 9f	jsr $9fc8			jsr 	NSMSetByte
-.a656		60		rts				rts
-.a657						UnaryJoyB:
-.a657		fa		plx				plx 								; get pos
-.a658		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; ignore the parameter
-.a65b		20 62 90	jsr $9062			jsr 	CheckRightBracket
-.a65e		20 21 80	jsr $8021			jsr 	EXTReadController 			; read the controller.
-.a661		29 10		and #$10			and 	#$10
-.a663		d0 e9		bne $a64e			bne 	JMIsLeft
-.a665		20 c6 9f	jsr $9fc6			jsr 	NSMSetZero
-.a668		60		rts				rts
+.a63e						UnaryJoyX:
+.a63e		18		clc				clc
+.a63f		80 01		bra $a642			bra 	JoyMain
+.a641						UnaryJoyY:
+.a641		38		sec				sec
+.a642						JoyMain:
+.a642		fa		plx				plx 								; get pos
+.a643		08		php				php 								; save carry (set for Y)
+.a644		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; ignore the parameter
+.a647		20 62 90	jsr $9062			jsr 	CheckRightBracket
+.a64a		20 21 80	jsr $8021			jsr 	EXTReadController 			; read the controller.
+.a64d		28		plp				plp
+.a64e		b0 02		bcs $a652			bcs 	_JMNoShift 					; if X then shift bits 3,2 -> 1,0
+.a650		4a		lsr a				lsr 	a
+.a651		4a		lsr a				lsr 	a
+.a652						_JMNoShift:
+.a652		4a		lsr a				lsr 	a 							; if bit 0 set then left/up e.g. -1
+.a653		b0 07		bcs $a65c			bcs 	JMIsLeft
+.a655		4a		lsr a				lsr 	a 							; if bit 1 set then right/down e.g. +1
+.a656		b0 07		bcs $a65f			bcs 	JMIsRight
+.a658		20 c6 9f	jsr $9fc6			jsr 	NSMSetZero 					; zero result
+.a65b		60		rts				rts
+.a65c						JMIsLeft:
+.a65c		4c e8 90	jmp $90e8			jmp 	ReturnTrue
+.a65f						JMIsRight:
+.a65f		a9 01		lda #$01			lda 	#1
+.a661		20 c8 9f	jsr $9fc8			jsr 	NSMSetByte
+.a664		60		rts				rts
+.a665						UnaryJoyB:
+.a665		fa		plx				plx 								; get pos
+.a666		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; ignore the parameter
+.a669		20 62 90	jsr $9062			jsr 	CheckRightBracket
+.a66c		20 21 80	jsr $8021			jsr 	EXTReadController 			; read the controller.
+.a66f		29 10		and #$10			and 	#$10
+.a671		d0 e9		bne $a65c			bne 	JMIsLeft
+.a673		20 c6 9f	jsr $9fc6			jsr 	NSMSetZero
+.a676		60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./module.interface/hardware/timer.asm
 
-.a669						UnaryTimer:
-.a669		fa		plx				plx
-.a66a		20 62 90	jsr $9062			jsr 	CheckRightBracket
-.a66d						TimerToStackX:
-.a66d		20 c6 9f	jsr $9fc6			jsr 	NSMSetZero 					; zero result
-.a670		64 01		stz $01				stz 	1 							; access I/O
-.a672		ad 59 d6	lda $d659			lda 	$D659 						; copy timer in
-.a675		95 58		sta $58,x			sta 	NSMantissa0,x
-.a677		ad 5a d6	lda $d65a			lda 	$D65A
-.a67a		95 60		sta $60,x			sta 	NSMantissa1,x
-.a67c		ad 5b d6	lda $d65b			lda 	$D65B
-.a67f		95 68		sta $68,x			sta 	NSMantissa2,x
-.a681		60		rts				rts
+.a677						UnaryTimer:
+.a677		fa		plx				plx
+.a678		20 62 90	jsr $9062			jsr 	CheckRightBracket
+.a67b						TimerToStackX:
+.a67b		20 c6 9f	jsr $9fc6			jsr 	NSMSetZero 					; zero result
+.a67e		64 01		stz $01				stz 	1 							; access I/O
+.a680		ad 59 d6	lda $d659			lda 	$D659 						; copy timer in
+.a683		95 58		sta $58,x			sta 	NSMantissa0,x
+.a685		ad 5a d6	lda $d65a			lda 	$D65A
+.a688		95 60		sta $60,x			sta 	NSMantissa1,x
+.a68a		ad 5b d6	lda $d65b			lda 	$D65B
+.a68d		95 68		sta $68,x			sta 	NSMantissa2,x
+.a68f		60		rts				rts
 
 ;******  Return to file: _basic.asm
 
@@ -7186,126 +7189,126 @@
 
 ;******  Processing file: ./memory/memory.flat/delete.asm
 
-.a682						MemoryDeleteLine:
-.a682		20 a1 a6	jsr $a6a1			jsr 	IMemoryFindEnd 				; find end to zTemp2.
-.a685		b2 30		lda ($30)			lda 	(codePtr) 					; size to delete => y
-.a687		a8		tay				tay
-.a688						_MDDLLoop:
-.a688		b1 30		lda ($30),y			lda 	(codePtr),y 				; copy down
-.a68a		92 30		sta ($30)			sta 	(codePtr)
-.a68c		a5 30		lda $30				lda 	codePtr 					; check done the lot.
-.a68e		c5 3a		cmp $3a				cmp 	zTemp2 						; has codePtr (copyFrom) reached the last byte to copy.
-.a690		d0 07		bne $a699			bne 	_MDLDLNext
-.a692		a5 31		lda $31				lda 	codePtr+1
-.a694		c5 3b		cmp $3b				cmp 	zTemp2+1
-.a696		d0 01		bne $a699			bne 	_MDLDLNext
-.a698						_MDDLExit:
-.a698		60		rts				rts
-.a699						_MDLDLNext:
-.a699		e6 30		inc $30				inc 	codePtr						; next byte
-.a69b		d0 eb		bne $a688			bne 	_MDDLLoop
-.a69d		e6 31		inc $31				inc 	codePtr+1
-.a69f		80 e7		bra $a688			bra 	_MDDLLoop
-.a6a1						IMemoryFindEnd:
-.a6a1		a9 00		lda #$00			lda 	#((BasicStart) & $FF)
-.a6a3		85 3a		sta $3a				sta 	0+zTemp2
-.a6a5		a9 20		lda #$20			lda 	#((BasicStart) >> 8)
-.a6a7		85 3b		sta $3b				sta 	1+zTemp2
-.a6a9						_MDLFELoop:
-.a6a9		b2 3a		lda ($3a)			lda 	(zTemp2) 					; scan forward using offsets.
-.a6ab		f0 0b		beq $a6b8			beq 	_MDLFEExit
-.a6ad		18		clc				clc
-.a6ae		65 3a		adc $3a				adc 	zTemp2
-.a6b0		85 3a		sta $3a				sta 	zTemp2
-.a6b2		90 f5		bcc $a6a9			bcc 	_MDLFELoop
-.a6b4		e6 3b		inc $3b				inc 	zTemp2+1
-.a6b6		80 f1		bra $a6a9			bra 	_MDLFELoop
-.a6b8						_MDLFEExit:
-.a6b8		60		rts				rts
+.a690						MemoryDeleteLine:
+.a690		20 af a6	jsr $a6af			jsr 	IMemoryFindEnd 				; find end to zTemp2.
+.a693		b2 30		lda ($30)			lda 	(codePtr) 					; size to delete => y
+.a695		a8		tay				tay
+.a696						_MDDLLoop:
+.a696		b1 30		lda ($30),y			lda 	(codePtr),y 				; copy down
+.a698		92 30		sta ($30)			sta 	(codePtr)
+.a69a		a5 30		lda $30				lda 	codePtr 					; check done the lot.
+.a69c		c5 3a		cmp $3a				cmp 	zTemp2 						; has codePtr (copyFrom) reached the last byte to copy.
+.a69e		d0 07		bne $a6a7			bne 	_MDLDLNext
+.a6a0		a5 31		lda $31				lda 	codePtr+1
+.a6a2		c5 3b		cmp $3b				cmp 	zTemp2+1
+.a6a4		d0 01		bne $a6a7			bne 	_MDLDLNext
+.a6a6						_MDDLExit:
+.a6a6		60		rts				rts
+.a6a7						_MDLDLNext:
+.a6a7		e6 30		inc $30				inc 	codePtr						; next byte
+.a6a9		d0 eb		bne $a696			bne 	_MDDLLoop
+.a6ab		e6 31		inc $31				inc 	codePtr+1
+.a6ad		80 e7		bra $a696			bra 	_MDDLLoop
+.a6af						IMemoryFindEnd:
+.a6af		a9 00		lda #$00			lda 	#((BasicStart) & $FF)
+.a6b1		85 3a		sta $3a				sta 	0+zTemp2
+.a6b3		a9 20		lda #$20			lda 	#((BasicStart) >> 8)
+.a6b5		85 3b		sta $3b				sta 	1+zTemp2
+.a6b7						_MDLFELoop:
+.a6b7		b2 3a		lda ($3a)			lda 	(zTemp2) 					; scan forward using offsets.
+.a6b9		f0 0b		beq $a6c6			beq 	_MDLFEExit
+.a6bb		18		clc				clc
+.a6bc		65 3a		adc $3a				adc 	zTemp2
+.a6be		85 3a		sta $3a				sta 	zTemp2
+.a6c0		90 f5		bcc $a6b7			bcc 	_MDLFELoop
+.a6c2		e6 3b		inc $3b				inc 	zTemp2+1
+.a6c4		80 f1		bra $a6b7			bra 	_MDLFELoop
+.a6c6						_MDLFEExit:
+.a6c6		60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./memory/memory.flat/insert.asm
 
-.a6b9						MemoryInsertLine:
-.a6b9		08		php				php
-.a6ba		20 a1 a6	jsr $a6a1			jsr 	IMemoryFindEnd 				; find end to zTemp2.
-.a6bd		a5 3b		lda $3b				lda 	zTemp2+1 					; is there space for the new line ?
-.a6bf		1a		inc a				inc 	a
-.a6c0		c9 7f		cmp #$7f			cmp 	#(BasicEnd >> 8)-1
-.a6c2		b0 36		bcs $a6fa			bcs 	_MDLIError 					; no, fail.
-.a6c4		28		plp				plp 								; do at a specific point or the end ?
-.a6c5		90 08		bcc $a6cf			bcc 	_MDLIFound 					; if specific point already set.
-.a6c7		a5 3a		lda $3a				lda 	zTemp2 						; if CS on entry append, so put on the
-.a6c9		85 30		sta $30				sta 	codePtr 					; end.
-.a6cb		a5 3b		lda $3b				lda 	zTemp2+1
-.a6cd		85 31		sta $31				sta 	codePtr+1
-.a6cf						_MDLIFound:
-.a6cf		ad 2a 04	lda $042a			lda 	tokenOffset 				; insert gap in Y, the offset, e.g. length of the new line
-.a6d2		a8		tay				tay
-.a6d3						_MDLIInsert:
-.a6d3		b2 3a		lda ($3a)			lda 	(zTemp2) 					; shift one byte up , at least one covers end case (copying link 0)
-.a6d5		91 3a		sta ($3a),y			sta 	(zTemp2),y 					; work from top down.
-.a6d7		a5 30		lda $30				lda 	codePtr 					; reached insert point ?
-.a6d9		c5 3a		cmp $3a				cmp 	zTemp2
-.a6db		d0 06		bne $a6e3			bne 	_MDLINext
-.a6dd		a5 31		lda $31				lda 	codePtr+1
-.a6df		c5 3b		cmp $3b				cmp 	zTemp2+1
-.a6e1		f0 0a		beq $a6ed			beq 	_MDLIHaveSpace
-.a6e3						_MDLINext:
-.a6e3		a5 3a		lda $3a				lda 	zTemp2 						; if no, keep zTemp2 going backwards opening up space.
-.a6e5		d0 02		bne $a6e9			bne 	_MDLINoBorrow
-.a6e7		c6 3b		dec $3b				dec 	zTemp2+1
-.a6e9						_MDLINoBorrow:
-.a6e9		c6 3a		dec $3a				dec 	zTemp2
-.a6eb		80 e6		bra $a6d3			bra 	_MDLIInsert
-.a6ed						_MDLIHaveSpace:
-.a6ed		ac 2a 04	ldy $042a			ldy 	tokenOffset 				; bytes to copy
-.a6f0		88		dey				dey 								; from offset-1 (last written) to the end of the buffer.
-.a6f1						_MDLICopy:
-.a6f1		b9 2a 04	lda $042a,y			lda 	tokenOffset,y
-.a6f4		91 30		sta ($30),y			sta 	(codePtr),y
-.a6f6		88		dey				dey
-.a6f7		10 f8		bpl $a6f1			bpl 	_MDLICopy
-.a6f9		60		rts				rts
-.a6fa						_MDLIError:
-.a6fa		a9 06		lda #$06		lda	#6
-.a6fc		4c 7b 90	jmp $907b		jmp	ErrorHandler
-.a6ff						MDLAppendLine:
-.a6ff		86 37		stx $37				stx 	zTemp0+1 					; save new line at zTemp0
-.a701		85 36		sta $36				sta 	zTemp0
-.a703		a9 00		lda #$00			lda 	#((BasicStart) & $FF)
-.a705		85 38		sta $38				sta 	0+zTemp1
-.a707		a9 20		lda #$20			lda 	#((BasicStart) >> 8)
-.a709		85 39		sta $39				sta 	1+zTemp1
-.a70b		b2 38		lda ($38)			lda 	(zTemp1)
-.a70d		d0 0a		bne $a719			bne 	_MDLANoInitialise
-.a70f		a9 00		lda #$00			lda 	#((BasicStart) & $FF)
-.a711		8d 67 06	sta $0667			sta 	0+AppendPointer
-.a714		a9 20		lda #$20			lda 	#((BasicStart) >> 8)
-.a716		8d 68 06	sta $0668			sta 	1+AppendPointer
-.a719						_MDLANoInitialise:
-.a719		18		clc				clc
-.a71a		ad 67 06	lda $0667			lda 	AppendPointer 				; copy append pointer to zTemp1 adding the offset as you go
-.a71d		85 38		sta $38				sta 	zTemp1
-.a71f		72 36		adc ($36)			adc 	(zTemp0)
-.a721		8d 67 06	sta $0667			sta 	AppendPointer
-.a724		ad 68 06	lda $0668			lda 	AppendPointer+1
-.a727		85 39		sta $39				sta 	zTemp1+1
-.a729		69 00		adc #$00			adc 	#0
-.a72b		8d 68 06	sta $0668			sta 	AppendPointer+1
-.a72e		a0 00		ldy #$00			ldy 	#0
-.a730						_MDLACopy:
-.a730		b1 36		lda ($36),y			lda 	(zTemp0),y 					; copy new line in
-.a732		91 38		sta ($38),y			sta 	(zTemp1),y
-.a734		c8		iny				iny
-.a735		98		tya				tya
-.a736		d2 36		cmp ($36)			cmp 	(zTemp0) 					; done whole line
-.a738		d0 f6		bne $a730			bne 	_MDLACopy
-.a73a		a9 00		lda #$00			lda 	#0 							; end of program.
-.a73c		91 38		sta ($38),y			sta 	(zTemp1),y
-.a73e		60		rts				rts
+.a6c7						MemoryInsertLine:
+.a6c7		08		php				php
+.a6c8		20 af a6	jsr $a6af			jsr 	IMemoryFindEnd 				; find end to zTemp2.
+.a6cb		a5 3b		lda $3b				lda 	zTemp2+1 					; is there space for the new line ?
+.a6cd		1a		inc a				inc 	a
+.a6ce		c9 7f		cmp #$7f			cmp 	#(BasicEnd >> 8)-1
+.a6d0		b0 36		bcs $a708			bcs 	_MDLIError 					; no, fail.
+.a6d2		28		plp				plp 								; do at a specific point or the end ?
+.a6d3		90 08		bcc $a6dd			bcc 	_MDLIFound 					; if specific point already set.
+.a6d5		a5 3a		lda $3a				lda 	zTemp2 						; if CS on entry append, so put on the
+.a6d7		85 30		sta $30				sta 	codePtr 					; end.
+.a6d9		a5 3b		lda $3b				lda 	zTemp2+1
+.a6db		85 31		sta $31				sta 	codePtr+1
+.a6dd						_MDLIFound:
+.a6dd		ad 2a 04	lda $042a			lda 	tokenOffset 				; insert gap in Y, the offset, e.g. length of the new line
+.a6e0		a8		tay				tay
+.a6e1						_MDLIInsert:
+.a6e1		b2 3a		lda ($3a)			lda 	(zTemp2) 					; shift one byte up , at least one covers end case (copying link 0)
+.a6e3		91 3a		sta ($3a),y			sta 	(zTemp2),y 					; work from top down.
+.a6e5		a5 30		lda $30				lda 	codePtr 					; reached insert point ?
+.a6e7		c5 3a		cmp $3a				cmp 	zTemp2
+.a6e9		d0 06		bne $a6f1			bne 	_MDLINext
+.a6eb		a5 31		lda $31				lda 	codePtr+1
+.a6ed		c5 3b		cmp $3b				cmp 	zTemp2+1
+.a6ef		f0 0a		beq $a6fb			beq 	_MDLIHaveSpace
+.a6f1						_MDLINext:
+.a6f1		a5 3a		lda $3a				lda 	zTemp2 						; if no, keep zTemp2 going backwards opening up space.
+.a6f3		d0 02		bne $a6f7			bne 	_MDLINoBorrow
+.a6f5		c6 3b		dec $3b				dec 	zTemp2+1
+.a6f7						_MDLINoBorrow:
+.a6f7		c6 3a		dec $3a				dec 	zTemp2
+.a6f9		80 e6		bra $a6e1			bra 	_MDLIInsert
+.a6fb						_MDLIHaveSpace:
+.a6fb		ac 2a 04	ldy $042a			ldy 	tokenOffset 				; bytes to copy
+.a6fe		88		dey				dey 								; from offset-1 (last written) to the end of the buffer.
+.a6ff						_MDLICopy:
+.a6ff		b9 2a 04	lda $042a,y			lda 	tokenOffset,y
+.a702		91 30		sta ($30),y			sta 	(codePtr),y
+.a704		88		dey				dey
+.a705		10 f8		bpl $a6ff			bpl 	_MDLICopy
+.a707		60		rts				rts
+.a708						_MDLIError:
+.a708		a9 06		lda #$06		lda	#6
+.a70a		4c 7b 90	jmp $907b		jmp	ErrorHandler
+.a70d						MDLAppendLine:
+.a70d		86 37		stx $37				stx 	zTemp0+1 					; save new line at zTemp0
+.a70f		85 36		sta $36				sta 	zTemp0
+.a711		a9 00		lda #$00			lda 	#((BasicStart) & $FF)
+.a713		85 38		sta $38				sta 	0+zTemp1
+.a715		a9 20		lda #$20			lda 	#((BasicStart) >> 8)
+.a717		85 39		sta $39				sta 	1+zTemp1
+.a719		b2 38		lda ($38)			lda 	(zTemp1)
+.a71b		d0 0a		bne $a727			bne 	_MDLANoInitialise
+.a71d		a9 00		lda #$00			lda 	#((BasicStart) & $FF)
+.a71f		8d 67 06	sta $0667			sta 	0+AppendPointer
+.a722		a9 20		lda #$20			lda 	#((BasicStart) >> 8)
+.a724		8d 68 06	sta $0668			sta 	1+AppendPointer
+.a727						_MDLANoInitialise:
+.a727		18		clc				clc
+.a728		ad 67 06	lda $0667			lda 	AppendPointer 				; copy append pointer to zTemp1 adding the offset as you go
+.a72b		85 38		sta $38				sta 	zTemp1
+.a72d		72 36		adc ($36)			adc 	(zTemp0)
+.a72f		8d 67 06	sta $0667			sta 	AppendPointer
+.a732		ad 68 06	lda $0668			lda 	AppendPointer+1
+.a735		85 39		sta $39				sta 	zTemp1+1
+.a737		69 00		adc #$00			adc 	#0
+.a739		8d 68 06	sta $0668			sta 	AppendPointer+1
+.a73c		a0 00		ldy #$00			ldy 	#0
+.a73e						_MDLACopy:
+.a73e		b1 36		lda ($36),y			lda 	(zTemp0),y 					; copy new line in
+.a740		91 38		sta ($38),y			sta 	(zTemp1),y
+.a742		c8		iny				iny
+.a743		98		tya				tya
+.a744		d2 36		cmp ($36)			cmp 	(zTemp0) 					; done whole line
+.a746		d0 f6		bne $a73e			bne 	_MDLACopy
+.a748		a9 00		lda #$00			lda 	#0 							; end of program.
+.a74a		91 38		sta ($38),y			sta 	(zTemp1),y
+.a74c		60		rts				rts
 .0667						AppendPointer:
 >0667								.fill 	2
 
@@ -7314,230 +7317,230 @@
 
 ;******  Processing file: ./memory/memory.flat/memory.asm
 
-.a73f						MemoryNew:
-.a73f		a9 00		lda #$00			lda 	#((BasicStart) & $FF)
-.a741		85 30		sta $30				sta 	codePtr
-.a743		a9 20		lda #$20			lda 	#((BasicStart) >> 8)
-.a745		85 31		sta $31				sta 	codePtr+1
-.a747		a9 00		lda #$00			lda 	#0 							; write zero there erasing the program.
-.a749		92 30		sta ($30)			sta 	(codePtr)
-.a74b		60		rts				rts
-.a74c						MemoryInline:
-.a74c		98		tya				tya 								; put address into stack,x
-.a74d		18		clc				clc  								; get the offset, add codePtr
-.a74e		65 30		adc $30				adc 	codePtr
-.a750		95 58		sta $58,x			sta 	NSMantissa0,x 				; store the result in the mantissa.
-.a752		a5 31		lda $31				lda 	codePtr+1
-.a754		69 00		adc #$00			adc 	#0
-.a756		95 60		sta $60,x			sta 	NSMantissa1,x
-.a758		74 68		stz $68,x			stz 	NSMantissa2,x
-.a75a		74 70		stz $70,x			stz 	NSMantissa3,x
-.a75c		60		rts				rts
+.a74d						MemoryNew:
+.a74d		a9 00		lda #$00			lda 	#((BasicStart) & $FF)
+.a74f		85 30		sta $30				sta 	codePtr
+.a751		a9 20		lda #$20			lda 	#((BasicStart) >> 8)
+.a753		85 31		sta $31				sta 	codePtr+1
+.a755		a9 00		lda #$00			lda 	#0 							; write zero there erasing the program.
+.a757		92 30		sta ($30)			sta 	(codePtr)
+.a759		60		rts				rts
+.a75a						MemoryInline:
+.a75a		98		tya				tya 								; put address into stack,x
+.a75b		18		clc				clc  								; get the offset, add codePtr
+.a75c		65 30		adc $30				adc 	codePtr
+.a75e		95 58		sta $58,x			sta 	NSMantissa0,x 				; store the result in the mantissa.
+.a760		a5 31		lda $31				lda 	codePtr+1
+.a762		69 00		adc #$00			adc 	#0
+.a764		95 60		sta $60,x			sta 	NSMantissa1,x
+.a766		74 68		stz $68,x			stz 	NSMantissa2,x
+.a768		74 70		stz $70,x			stz 	NSMantissa3,x
+.a76a		60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./memory/memory.flat/search.asm
 
-.a75d						MemorySearch:
-.a75d		85 36		sta $36				sta 	zTemp0 						; save line number in zTemp0
-.a75f		86 37		stx $37				stx 	zTemp0+1
-.a761		a9 00		lda #$00			lda 	#((BasicStart) & $FF)
-.a763		85 30		sta $30				sta 	codePtr
-.a765		a9 20		lda #$20			lda 	#((BasicStart) >> 8)
-.a767		85 31		sta $31				sta 	codePtr+1
-.a769						_MTAXLoop:
-.a769		b2 30		lda ($30)			lda 	(codePtr)
-.a76b		18		clc				clc
-.a76c		f0 21		beq $a78f			beq 	_MTAXExit 					; reached end, exit with CC.
-.a76e		a0 01		ldy #$01			ldy 	#1 							; calculate current line# - requested line#
-.a770		b1 30		lda ($30),y			lda 	(codePtr),y
-.a772		38		sec				sec
-.a773		e5 36		sbc $36				sbc 	zTemp0
-.a775		85 38		sta $38				sta 	zTemp1 						; save interim to set Z
-.a777		c8		iny				iny 								; do the MSB
-.a778		b1 30		lda ($30),y			lda 	(codePtr),y
-.a77a		e5 37		sbc $37				sbc 	zTemp0+1
-.a77c		05 38		ora $38				ora 	zTemp1 						; will set Z if result is zero, doesn't affect carry flag
-.a77e		f0 0f		beq $a78f			beq 	_MTAXExit	 				; found so exit (CS will be set)
-.a780		b0 0d		bcs $a78f			bcs 	_MTAXExit 					; current < required exit
-.a782		18		clc				clc
-.a783		b2 30		lda ($30)			lda 	(codePtr)					; get offset and add
-.a785		65 30		adc $30				adc 	codePtr
-.a787		85 30		sta $30				sta 	codePtr
-.a789		90 02		bcc $a78d			bcc 	_CREExit
-.a78b		e6 31		inc $31				inc 	codePtr+1 					; carry
-.a78d						_CREExit:
-.a78d		80 da		bra $a769			bra 	_MTAXLoop
-.a78f						_MTAXExit:
-.a78f		60		rts				rts
+.a76b						MemorySearch:
+.a76b		85 36		sta $36				sta 	zTemp0 						; save line number in zTemp0
+.a76d		86 37		stx $37				stx 	zTemp0+1
+.a76f		a9 00		lda #$00			lda 	#((BasicStart) & $FF)
+.a771		85 30		sta $30				sta 	codePtr
+.a773		a9 20		lda #$20			lda 	#((BasicStart) >> 8)
+.a775		85 31		sta $31				sta 	codePtr+1
+.a777						_MTAXLoop:
+.a777		b2 30		lda ($30)			lda 	(codePtr)
+.a779		18		clc				clc
+.a77a		f0 21		beq $a79d			beq 	_MTAXExit 					; reached end, exit with CC.
+.a77c		a0 01		ldy #$01			ldy 	#1 							; calculate current line# - requested line#
+.a77e		b1 30		lda ($30),y			lda 	(codePtr),y
+.a780		38		sec				sec
+.a781		e5 36		sbc $36				sbc 	zTemp0
+.a783		85 38		sta $38				sta 	zTemp1 						; save interim to set Z
+.a785		c8		iny				iny 								; do the MSB
+.a786		b1 30		lda ($30),y			lda 	(codePtr),y
+.a788		e5 37		sbc $37				sbc 	zTemp0+1
+.a78a		05 38		ora $38				ora 	zTemp1 						; will set Z if result is zero, doesn't affect carry flag
+.a78c		f0 0f		beq $a79d			beq 	_MTAXExit	 				; found so exit (CS will be set)
+.a78e		b0 0d		bcs $a79d			bcs 	_MTAXExit 					; current < required exit
+.a790		18		clc				clc
+.a791		b2 30		lda ($30)			lda 	(codePtr)					; get offset and add
+.a793		65 30		adc $30				adc 	codePtr
+.a795		85 30		sta $30				sta 	codePtr
+.a797		90 02		bcc $a79b			bcc 	_CREExit
+.a799		e6 31		inc $31				inc 	codePtr+1 					; carry
+.a79b						_CREExit:
+.a79b		80 da		bra $a777			bra 	_MTAXLoop
+.a79d						_MTAXExit:
+.a79d		60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./font_update/newfont.asm
 
-.a790						UpdateFont:
-.a790		a5 01		lda $01				lda 	1 							; save position
-.a792		48		pha				pha
-.a793		a9 01		lda #$01			lda 	#1 							; switch to I/O block 1
-.a795		85 01		sta $01				sta 	1
-.a797		a9 be		lda #$be			lda 	#((FontBinary) & $FF)
-.a799		85 36		sta $36				sta 	0+zTemp0
-.a79b		a9 a7		lda #$a7			lda 	#((FontBinary) >> 8)
-.a79d		85 37		sta $37				sta 	1+zTemp0
-.a79f		a9 00		lda #$00			lda 	#(($C000) & $FF)
-.a7a1		85 38		sta $38				sta 	0+zTemp1
-.a7a3		a9 c0		lda #$c0			lda 	#(($C000) >> 8)
-.a7a5		85 39		sta $39				sta 	1+zTemp1
-.a7a7						_UFCopy1:
-.a7a7		a0 00		ldy #$00			ldy 	#0
-.a7a9						_UFCopy2:
-.a7a9		b1 36		lda ($36),y			lda 	(zTemp0),y
-.a7ab		91 38		sta ($38),y			sta 	(zTemp1),y
-.a7ad		c8		iny				iny
-.a7ae		d0 f9		bne $a7a9			bne 	_UFCopy2
-.a7b0		e6 37		inc $37				inc 	zTemp0+1
-.a7b2		e6 39		inc $39				inc 	zTemp1+1
-.a7b4		a5 39		lda $39				lda 	zTemp1+1
-.a7b6		c9 c8		cmp #$c8			cmp 	#$C8
-.a7b8		d0 ed		bne $a7a7			bne 	_UFCopy1
-.a7ba		68		pla				pla 								; restore.
-.a7bb		85 01		sta $01				sta 	1
-.a7bd		60		rts				rts
+.a79e						UpdateFont:
+.a79e		a5 01		lda $01				lda 	1 							; save position
+.a7a0		48		pha				pha
+.a7a1		a9 01		lda #$01			lda 	#1 							; switch to I/O block 1
+.a7a3		85 01		sta $01				sta 	1
+.a7a5		a9 cc		lda #$cc			lda 	#((FontBinary) & $FF)
+.a7a7		85 36		sta $36				sta 	0+zTemp0
+.a7a9		a9 a7		lda #$a7			lda 	#((FontBinary) >> 8)
+.a7ab		85 37		sta $37				sta 	1+zTemp0
+.a7ad		a9 00		lda #$00			lda 	#(($C000) & $FF)
+.a7af		85 38		sta $38				sta 	0+zTemp1
+.a7b1		a9 c0		lda #$c0			lda 	#(($C000) >> 8)
+.a7b3		85 39		sta $39				sta 	1+zTemp1
+.a7b5						_UFCopy1:
+.a7b5		a0 00		ldy #$00			ldy 	#0
+.a7b7						_UFCopy2:
+.a7b7		b1 36		lda ($36),y			lda 	(zTemp0),y
+.a7b9		91 38		sta ($38),y			sta 	(zTemp1),y
+.a7bb		c8		iny				iny
+.a7bc		d0 f9		bne $a7b7			bne 	_UFCopy2
+.a7be		e6 37		inc $37				inc 	zTemp0+1
+.a7c0		e6 39		inc $39				inc 	zTemp1+1
+.a7c2		a5 39		lda $39				lda 	zTemp1+1
+.a7c4		c9 c8		cmp #$c8			cmp 	#$C8
+.a7c6		d0 ed		bne $a7b5			bne 	_UFCopy1
+.a7c8		68		pla				pla 								; restore.
+.a7c9		85 01		sta $01				sta 	1
+.a7cb		60		rts				rts
 
 ;******  Processing file: ./font_update/../common/generated/font.dat
 
-.a7be						FontBinary:
->a7be		06 09 10 3c 10 21 7e 00			.byte	$06,$09,$10,$3c,$10,$21,$7e,$00,$00,$00,$00,$00,$00,$00,$ff,$ff,$00,$00,$00,$00,$00,$ff,$ff,$ff,$00,$00,$00,$00,$ff,$ff,$ff,$ff,$00,$00,$00,$ff,$ff,$ff,$ff,$ff,$00,$00,$ff,$ff,$ff,$ff,$ff,$ff,$00,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$00,$ff,$ff,$ff,$ff,$ff,$ff,$00,$00,$ff,$ff,$ff,$ff,$ff,$00,$00,$00,$ff,$ff,$ff,$ff,$00,$00,$00,$00,$ff,$ff,$ff,$00,$00,$00,$00,$00,$ff,$ff,$00,$00,$00,$00,$00,$00,$ff,$00,$00,$00,$00,$00,$00,$00,$08,$00,$22,$00,$08,$00,$02,$00,$88,$00,$22,$00,$88,$00,$22,$00,$8a,$00,$2a,$00,$8a,$00,$2a,$00,$aa,$00,$aa,$00,$aa,$00,$aa,$00,$aa,$05,$aa,$11,$aa,$05,$aa,$11,$aa,$5f,$aa,$77,$aa,$5f,$aa,$77,$aa,$ff,$aa,$ff,$aa,$ff,$aa,$ff,$af,$ff,$bb,$ff,$af,$ff,$bb,$ff,$77,$ff,$dd,$ff,$77,$ff,$dd,$ff,$7f,$ff,$df,$ff,$77,$ff,$df,$ff,$ff,$ff,$df,$ff,$77,$ff,$dd,$ff,$bb,$ff,$ee,$ff,$aa,$ff,$aa,$ff,$aa,$ff,$aa,$77,$aa,$dd,$aa,$55,$aa,$55,$22,$55,$88,$55,$00,$55,$aa,$00,$aa,$00,$88,$00,$22,$00,$33,$99,$cc,$66,$33,$99,$cc,$66,$cc,$99,$33,$66,$cc,$99,$33,$66,$00,$00,$00,$00,$00,$00,$00,$00,$08,$08,$08,$08,$00,$00,$08,$00,$24,$24,$24,$00,$00,$00,$00,$00,$24,$24,$7e,$24,$7e,$24,$24,$00,$08,$1e,$28,$1c,$0a,$3c,$08,$00,$00,$62,$64,$08,$10,$26,$46,$00,$30,$48,$48,$30,$4a,$44,$3a,$00,$08,$08,$08,$00,$00,$00,$00,$00,$04,$08,$10,$10,$10,$08,$04,$00,$20,$10,$08,$08,$08,$10,$20,$00,$00,$2a,$1c,$3e,$1c,$2a,$00,$00,$00,$08,$08,$3e,$08,$08,$00,$00,$00,$00,$00,$00,$00,$08,$08,$10,$00,$00,$00,$7e,$00,$00,$00,$00,$00,$00,$00,$00,$00,$18,$18,$00,$00,$02,$04,$08,$10,$20,$40,$00,$3c,$42,$46,$5a,$62,$42,$3c,$00,$08,$18,$08,$08,$08,$08,$1c,$00,$3c,$42,$02,$3c,$40,$40,$7e,$00,$3c,$42,$02,$1c,$02,$42,$3c,$00,$04,$44,$44,$44,$7e,$04,$04,$00,$7e,$40,$40,$7c,$02,$02,$7c,$00,$3c,$40,$40,$7c,$42,$42,$3c,$00,$7e,$42,$04,$08,$10,$10,$10,$00,$3c,$42,$42,$3c,$42,$42,$3c,$00,$3c,$42,$42,$3e,$02,$02,$3c,$00,$00,$00,$08,$00,$00,$08,$00,$00,$00,$00,$08,$00,$00,$08,$08,$10,$08,$10,$20,$40,$20,$10,$08,$00,$00,$00,$7e,$00,$7e,$00,$00,$00,$10,$08,$04,$02,$04,$08,$10,$00,$3c,$42,$02,$0c,$10,$00,$10,$00,$3c,$42,$4e,$52,$4e,$40,$3c,$00,$3c,$42,$42,$7e,$42,$42,$42,$00,$7c,$42,$42,$7c,$42,$42,$7c,$00,$3c,$42,$40,$40,$40,$42,$3c,$00,$78,$44,$42,$42,$42,$44,$78,$00,$7e,$40,$40,$78,$40,$40,$7e,$00,$7e,$40,$40,$78,$40,$40,$40,$00,$3c,$42,$40,$4e,$42,$42,$3c,$00,$42,$42,$42,$7e,$42,$42,$42,$00,$1c,$08,$08,$08,$08,$08,$1c,$00,$0e,$04,$04,$04,$04,$44,$38,$00,$42,$44,$48,$70,$48,$44,$42,$00,$40,$40,$40,$40,$40,$40,$7e,$00,$41,$63,$55,$49,$41,$41,$41,$00,$42,$62,$52,$4a,$46,$42,$42,$00,$3c,$42,$42,$42,$42,$42,$3c,$00,$7c,$42,$42,$7c,$40,$40,$40,$00,$3c,$42,$42,$42,$4a,$44,$3a,$00,$7c,$42,$42,$7c,$48,$44,$42,$00,$3c,$42,$40,$3c,$02,$42,$3c,$00,$3e,$08,$08,$08,$08,$08,$08,$00,$42,$42,$42,$42,$42,$42,$3c,$00,$41,$41,$41,$22,$22,$14,$08,$00,$41,$41,$41,$49,$55,$63,$41,$00,$42,$42,$24,$18,$24,$42,$42,$00,$41,$22,$14,$08,$08,$08,$08,$00,$7f,$02,$04,$08,$10,$20,$7f,$00,$3c,$20,$20,$20,$20,$20,$3c,$00,$00,$40,$20,$10,$08,$04,$02,$00,$3c,$04,$04,$04,$04,$04,$3c,$00,$00,$08,$14,$22,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff,$10,$08,$04,$00,$00,$00,$00,$00,$00,$00,$3c,$02,$3e,$42,$3e,$00,$40,$40,$7c,$42,$42,$42,$7c,$00,$00,$00,$3c,$42,$40,$42,$3c,$00,$02,$02,$3e,$42,$42,$42,$3e,$00,$00,$00,$3c,$42,$7e,$40,$3c,$00,$0c,$10,$10,$7c,$10,$10,$10,$00,$00,$00,$3e,$42,$42,$3e,$02,$3c,$40,$40,$7c,$42,$42,$42,$42,$00,$08,$00,$18,$08,$08,$08,$08,$00,$04,$00,$0c,$04,$04,$04,$04,$38,$40,$40,$44,$48,$50,$68,$44,$00,$18,$08,$08,$08,$08,$08,$1c,$00,$00,$00,$76,$49,$49,$49,$49,$00,$00,$00,$7c,$42,$42,$42,$42,$00,$00,$00,$3c,$42,$42,$42,$3c,$00,$00,$00,$7c,$42,$42,$7c,$40,$40,$00,$00,$3e,$42,$42,$3e,$02,$02,$00,$00,$5c,$60,$40,$40,$40,$00,$00,$00,$3e,$40,$3c,$02,$7c,$00,$10,$10,$7c,$10,$10,$10,$0c,$00,$00,$00,$42,$42,$42,$46,$3a,$00,$00,$00,$42,$42,$42,$24,$18,$00,$00,$00,$41,$49,$49,$49,$36,$00,$00,$00,$42,$24,$18,$24,$42,$00,$00,$00,$42,$42,$42,$3e,$02,$3c,$00,$00,$7e,$04,$18,$20,$7e,$00,$0c,$10,$10,$20,$10,$10,$0c,$00,$10,$10,$10,$10,$10,$10,$10,$00,$60,$10,$10,$08,$10,$10,$60,$00,$00,$00,$30,$49,$06,$00,$00,$00,$08,$04,$04,$08,$10,$10,$08,$00,$02,$02,$02,$02,$02,$02,$02,$02,$04,$04,$04,$04,$04,$04,$04,$04,$08,$08,$08,$08,$08,$08,$08,$08,$10,$10,$10,$10,$10,$10,$10,$10,$20,$20,$20,$20,$20,$20,$20,$20,$40,$40,$40,$40,$40,$40,$40,$40,$80,$80,$80,$80,$80,$80,$80,$80,$c0,$c0,$c0,$c0,$c0,$c0,$c0,$c0,$e0,$e0,$e0,$e0,$e0,$e0,$e0,$e0,$f0,$f0,$f0,$f0,$f0,$f0,$f0,$f0,$f8,$f8,$f8,$f8,$f8,$f8,$f8,$f8,$fc,$fc,$fc,$fc,$fc,$fc,$fc,$fc,$fe,$fe,$fe,$fe,$fe,$fe,$fe,$fe,$7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f,$3f,$3f,$3f,$3f,$3f,$3f,$3f,$3f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$07,$07,$07,$07,$07,$07,$07,$07,$03,$03,$03,$03,$03,$03,$03,$03,$01,$01,$01,$01,$01,$01,$01,$01,$00,$00,$00,$00,$00,$00,$ff,$00,$00,$00,$00,$00,$00,$ff,$00,$00,$00,$00,$00,$00,$ff,$00,$00,$00,$00,$00,$00,$ff,$00,$00,$00,$00,$00,$00,$ff,$00,$00,$00,$00,$00,$00,$ff,$00,$00,$00,$00,$00,$00,$08,$08,$08,$08,$0f,$08,$08,$08,$00,$00,$00,$00,$ff,$08,$08,$08,$08,$08,$08,$08,$ff,$08,$08,$08,$08,$08,$08,$08,$ff,$00,$00,$00,$08,$08,$08,$08,$f8,$08,$08,$08,$81,$42,$24,$18,$18,$24,$42,$81,$00,$00,$00,$00,$0f,$08,$08,$08,$00,$00,$00,$00,$f8,$08,$08,$08,$08,$08,$08,$08,$0f,$00,$00,$00,$08,$08,$08,$08,$f8,$00,$00,$00,$18,$18,$18,$1f,$1f,$18,$18,$18,$00,$00,$00,$ff,$ff,$18,$18,$18,$18,$18,$18,$ff,$ff,$18,$18,$18,$18,$18,$18,$ff,$ff,$00,$00,$00,$18,$18,$18,$f8,$f8,$18,$18,$18,$00,$00,$00,$1f,$1f,$18,$18,$18,$00,$00,$00,$f8,$f8,$18,$18,$18,$18,$18,$18,$1f,$1f,$00,$00,$00,$18,$18,$18,$f8,$f8,$00,$00,$00,$00,$00,$00,$ff,$ff,$00,$00,$00,$18,$18,$18,$18,$18,$18,$18,$18,$00,$00,$00,$00,$03,$07,$0f,$0f,$00,$00,$00,$00,$c0,$e0,$f0,$f0,$0f,$0f,$07,$03,$00,$00,$00,$00,$f0,$f0,$e0,$c0,$00,$00,$00,$00,$00,$7e,$7e,$7e,$7e,$7e,$7e,$00,$00,$00,$3c,$3c,$3c,$3c,$00,$00,$00,$00,$00,$18,$18,$00,$00,$00,$00,$00,$00,$00,$08,$00,$00,$00,$00,$3c,$7e,$7e,$7e,$7e,$3c,$00,$00,$00,$18,$3c,$3c,$18,$00,$00,$00,$3c,$42,$42,$42,$42,$3c,$00,$00,$3c,$42,$5a,$5a,$42,$3c,$00,$ff,$81,$81,$81,$81,$81,$81,$ff,$00,$00,$03,$06,$6c,$38,$10,$00,$00,$00,$7e,$00,$7e,$00,$7e,$00,$00,$00,$00,$00,$03,$04,$08,$08,$00,$00,$00,$00,$e0,$10,$08,$08,$00,$00,$00,$00,$00,$00,$00,$55,$00,$00,$00,$00,$00,$00,$aa,$55,$00,$00,$00,$00,$00,$55,$aa,$55,$00,$00,$00,$00,$aa,$55,$aa,$55,$00,$00,$00,$55,$aa,$55,$aa,$55,$00,$00,$aa,$55,$aa,$55,$aa,$55,$00,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$00,$aa,$55,$aa,$55,$aa,$55,$00,$00,$aa,$55,$aa,$55,$aa,$00,$00,$00,$aa,$55,$aa,$55,$00,$00,$00,$00,$aa,$55,$aa,$00,$00,$00,$00,$00,$aa,$55,$00,$00,$00,$00,$00,$00,$aa,$00,$00,$00,$00,$00,$00,$00,$80,$00,$80,$00,$80,$00,$80,$00,$80,$40,$80,$40,$80,$40,$80,$40,$a0,$40,$a0,$40,$a0,$40,$a0,$40,$a0,$50,$a0,$50,$a0,$50,$a0,$50,$a8,$50,$a8,$50,$a8,$50,$a8,$50,$a8,$54,$a8,$54,$a8,$54,$a8,$54,$aa,$54,$aa,$54,$aa,$54,$aa,$54,$2a,$55,$2a,$55,$2a,$55,$2a,$55,$2a,$15,$2a,$15,$2a,$15,$2a,$15,$0a,$15,$0a,$15,$0a,$15,$0a,$15,$0a,$05,$0a,$05,$0a,$05,$0a,$05,$02,$05,$02,$05,$02,$05,$02,$05,$02,$01,$02,$01,$02,$01,$02,$01,$00,$01,$00,$01,$00,$01,$00,$01,$7e,$81,$9d,$a1,$a1,$9d,$81,$7e,$08,$08,$08,$04,$03,$00,$00,$00,$08,$08,$08,$10,$e0,$00,$00,$00,$80,$40,$20,$10,$08,$04,$02,$01,$01,$02,$04,$08,$10,$20,$40,$80,$ff,$7f,$3f,$1f,$0f,$07,$03,$01,$ff,$fe,$fc,$f8,$f0,$e0,$c0,$80,$01,$03,$07,$0f,$1f,$3f,$7f,$ff,$80,$c0,$e0,$f0,$f8,$fc,$fe,$ff,$3f,$1f,$0f,$07,$03,$01,$00,$00,$fc,$f8,$f0,$e0,$c0,$80,$00,$00,$00,$00,$01,$03,$07,$0f,$1f,$3f,$00,$00,$80,$c0,$e0,$f0,$f8,$fc,$0f,$07,$03,$01,$00,$00,$00,$00,$f0,$e0,$c0,$80,$00,$00,$00,$00,$00,$00,$00,$00,$01,$03,$07,$0f,$00,$00,$00,$00,$80,$c0,$e0,$f0,$03,$01,$00,$00,$00,$00,$00,$00,$c0,$80,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$01,$03,$00,$00,$00,$00,$00,$00,$80,$c0,$00,$00,$00,$00,$0f,$0f,$0f,$0f,$00,$00,$00,$00,$f0,$f0,$f0,$f0,$0f,$0f,$0f,$0f,$00,$00,$00,$00,$f0,$f0,$f0,$f0,$00,$00,$00,$00,$f0,$f0,$f0,$f0,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$f0,$f0,$f0,$f0,$00,$00,$00,$3e,$1c,$08,$00,$00,$00,$00,$08,$18,$38,$18,$08,$00,$00,$00,$10,$18,$1c,$18,$10,$00,$00,$00,$08,$1c,$3e,$00,$00,$00,$36,$7f,$7f,$7f,$3e,$1c,$08,$00,$08,$1c,$3e,$7f,$3e,$1c,$08,$00,$08,$1c,$3e,$7f,$7f,$1c,$3e,$00,$08,$1c,$2a,$77,$2a,$08,$1c,$00
->a7c6		00 00 00 00 00 00 ff ff 00 00 00 00 00 ff ff ff
->a7d6		00 00 00 00 ff ff ff ff 00 00 00 ff ff ff ff ff
->a7e6		00 00 ff ff ff ff ff ff 00 ff ff ff ff ff ff ff
->a7f6		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00
->a806		ff ff ff ff ff ff 00 00 ff ff ff ff ff 00 00 00
->a816		ff ff ff ff 00 00 00 00 ff ff ff 00 00 00 00 00
->a826		ff ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 00
->a836		08 00 22 00 08 00 02 00 88 00 22 00 88 00 22 00
->a846		8a 00 2a 00 8a 00 2a 00 aa 00 aa 00 aa 00 aa 00
->a856		aa 05 aa 11 aa 05 aa 11 aa 5f aa 77 aa 5f aa 77
->a866		aa ff aa ff aa ff aa ff af ff bb ff af ff bb ff
->a876		77 ff dd ff 77 ff dd ff 7f ff df ff 77 ff df ff
->a886		ff ff df ff 77 ff dd ff bb ff ee ff aa ff aa ff
->a896		aa ff aa 77 aa dd aa 55 aa 55 22 55 88 55 00 55
->a8a6		aa 00 aa 00 88 00 22 00 33 99 cc 66 33 99 cc 66
->a8b6		cc 99 33 66 cc 99 33 66 00 00 00 00 00 00 00 00
->a8c6		08 08 08 08 00 00 08 00 24 24 24 00 00 00 00 00
->a8d6		24 24 7e 24 7e 24 24 00 08 1e 28 1c 0a 3c 08 00
->a8e6		00 62 64 08 10 26 46 00 30 48 48 30 4a 44 3a 00
->a8f6		08 08 08 00 00 00 00 00 04 08 10 10 10 08 04 00
->a906		20 10 08 08 08 10 20 00 00 2a 1c 3e 1c 2a 00 00
->a916		00 08 08 3e 08 08 00 00 00 00 00 00 00 08 08 10
->a926		00 00 00 7e 00 00 00 00 00 00 00 00 00 18 18 00
->a936		00 02 04 08 10 20 40 00 3c 42 46 5a 62 42 3c 00
->a946		08 18 08 08 08 08 1c 00 3c 42 02 3c 40 40 7e 00
->a956		3c 42 02 1c 02 42 3c 00 04 44 44 44 7e 04 04 00
->a966		7e 40 40 7c 02 02 7c 00 3c 40 40 7c 42 42 3c 00
->a976		7e 42 04 08 10 10 10 00 3c 42 42 3c 42 42 3c 00
->a986		3c 42 42 3e 02 02 3c 00 00 00 08 00 00 08 00 00
->a996		00 00 08 00 00 08 08 10 08 10 20 40 20 10 08 00
->a9a6		00 00 7e 00 7e 00 00 00 10 08 04 02 04 08 10 00
->a9b6		3c 42 02 0c 10 00 10 00 3c 42 4e 52 4e 40 3c 00
->a9c6		3c 42 42 7e 42 42 42 00 7c 42 42 7c 42 42 7c 00
->a9d6		3c 42 40 40 40 42 3c 00 78 44 42 42 42 44 78 00
->a9e6		7e 40 40 78 40 40 7e 00 7e 40 40 78 40 40 40 00
->a9f6		3c 42 40 4e 42 42 3c 00 42 42 42 7e 42 42 42 00
->aa06		1c 08 08 08 08 08 1c 00 0e 04 04 04 04 44 38 00
->aa16		42 44 48 70 48 44 42 00 40 40 40 40 40 40 7e 00
->aa26		41 63 55 49 41 41 41 00 42 62 52 4a 46 42 42 00
->aa36		3c 42 42 42 42 42 3c 00 7c 42 42 7c 40 40 40 00
->aa46		3c 42 42 42 4a 44 3a 00 7c 42 42 7c 48 44 42 00
->aa56		3c 42 40 3c 02 42 3c 00 3e 08 08 08 08 08 08 00
->aa66		42 42 42 42 42 42 3c 00 41 41 41 22 22 14 08 00
->aa76		41 41 41 49 55 63 41 00 42 42 24 18 24 42 42 00
->aa86		41 22 14 08 08 08 08 00 7f 02 04 08 10 20 7f 00
->aa96		3c 20 20 20 20 20 3c 00 00 40 20 10 08 04 02 00
->aaa6		3c 04 04 04 04 04 3c 00 00 08 14 22 00 00 00 00
->aab6		00 00 00 00 00 00 00 ff 10 08 04 00 00 00 00 00
->aac6		00 00 3c 02 3e 42 3e 00 40 40 7c 42 42 42 7c 00
->aad6		00 00 3c 42 40 42 3c 00 02 02 3e 42 42 42 3e 00
->aae6		00 00 3c 42 7e 40 3c 00 0c 10 10 7c 10 10 10 00
->aaf6		00 00 3e 42 42 3e 02 3c 40 40 7c 42 42 42 42 00
->ab06		08 00 18 08 08 08 08 00 04 00 0c 04 04 04 04 38
->ab16		40 40 44 48 50 68 44 00 18 08 08 08 08 08 1c 00
->ab26		00 00 76 49 49 49 49 00 00 00 7c 42 42 42 42 00
->ab36		00 00 3c 42 42 42 3c 00 00 00 7c 42 42 7c 40 40
->ab46		00 00 3e 42 42 3e 02 02 00 00 5c 60 40 40 40 00
->ab56		00 00 3e 40 3c 02 7c 00 10 10 7c 10 10 10 0c 00
->ab66		00 00 42 42 42 46 3a 00 00 00 42 42 42 24 18 00
->ab76		00 00 41 49 49 49 36 00 00 00 42 24 18 24 42 00
->ab86		00 00 42 42 42 3e 02 3c 00 00 7e 04 18 20 7e 00
->ab96		0c 10 10 20 10 10 0c 00 10 10 10 10 10 10 10 00
->aba6		60 10 10 08 10 10 60 00 00 00 30 49 06 00 00 00
->abb6		08 04 04 08 10 10 08 00 02 02 02 02 02 02 02 02
->abc6		04 04 04 04 04 04 04 04 08 08 08 08 08 08 08 08
->abd6		10 10 10 10 10 10 10 10 20 20 20 20 20 20 20 20
->abe6		40 40 40 40 40 40 40 40 80 80 80 80 80 80 80 80
->abf6		c0 c0 c0 c0 c0 c0 c0 c0 e0 e0 e0 e0 e0 e0 e0 e0
->ac06		f0 f0 f0 f0 f0 f0 f0 f0 f8 f8 f8 f8 f8 f8 f8 f8
->ac16		fc fc fc fc fc fc fc fc fe fe fe fe fe fe fe fe
->ac26		7f 7f 7f 7f 7f 7f 7f 7f 3f 3f 3f 3f 3f 3f 3f 3f
->ac36		1f 1f 1f 1f 1f 1f 1f 1f 0f 0f 0f 0f 0f 0f 0f 0f
->ac46		07 07 07 07 07 07 07 07 03 03 03 03 03 03 03 03
->ac56		01 01 01 01 01 01 01 01 00 00 00 00 00 00 ff 00
->ac66		00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00
->ac76		00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00
->ac86		00 ff 00 00 00 00 00 00 08 08 08 08 0f 08 08 08
->ac96		00 00 00 00 ff 08 08 08 08 08 08 08 ff 08 08 08
->aca6		08 08 08 08 ff 00 00 00 08 08 08 08 f8 08 08 08
->acb6		81 42 24 18 18 24 42 81 00 00 00 00 0f 08 08 08
->acc6		00 00 00 00 f8 08 08 08 08 08 08 08 0f 00 00 00
->acd6		08 08 08 08 f8 00 00 00 18 18 18 1f 1f 18 18 18
->ace6		00 00 00 ff ff 18 18 18 18 18 18 ff ff 18 18 18
->acf6		18 18 18 ff ff 00 00 00 18 18 18 f8 f8 18 18 18
->ad06		00 00 00 1f 1f 18 18 18 00 00 00 f8 f8 18 18 18
->ad16		18 18 18 1f 1f 00 00 00 18 18 18 f8 f8 00 00 00
->ad26		00 00 00 ff ff 00 00 00 18 18 18 18 18 18 18 18
->ad36		00 00 00 00 03 07 0f 0f 00 00 00 00 c0 e0 f0 f0
->ad46		0f 0f 07 03 00 00 00 00 f0 f0 e0 c0 00 00 00 00
->ad56		00 7e 7e 7e 7e 7e 7e 00 00 00 3c 3c 3c 3c 00 00
->ad66		00 00 00 18 18 00 00 00 00 00 00 00 08 00 00 00
->ad76		00 3c 7e 7e 7e 7e 3c 00 00 00 18 3c 3c 18 00 00
->ad86		00 3c 42 42 42 42 3c 00 00 3c 42 5a 5a 42 3c 00
->ad96		ff 81 81 81 81 81 81 ff 00 00 03 06 6c 38 10 00
->ada6		00 00 7e 00 7e 00 7e 00 00 00 00 00 03 04 08 08
->adb6		00 00 00 00 e0 10 08 08 00 00 00 00 00 00 00 55
->adc6		00 00 00 00 00 00 aa 55 00 00 00 00 00 55 aa 55
->add6		00 00 00 00 aa 55 aa 55 00 00 00 55 aa 55 aa 55
->ade6		00 00 aa 55 aa 55 aa 55 00 55 aa 55 aa 55 aa 55
->adf6		aa 55 aa 55 aa 55 aa 55 aa 55 aa 55 aa 55 aa 00
->ae06		aa 55 aa 55 aa 55 00 00 aa 55 aa 55 aa 00 00 00
->ae16		aa 55 aa 55 00 00 00 00 aa 55 aa 00 00 00 00 00
->ae26		aa 55 00 00 00 00 00 00 aa 00 00 00 00 00 00 00
->ae36		80 00 80 00 80 00 80 00 80 40 80 40 80 40 80 40
->ae46		a0 40 a0 40 a0 40 a0 40 a0 50 a0 50 a0 50 a0 50
->ae56		a8 50 a8 50 a8 50 a8 50 a8 54 a8 54 a8 54 a8 54
->ae66		aa 54 aa 54 aa 54 aa 54 2a 55 2a 55 2a 55 2a 55
->ae76		2a 15 2a 15 2a 15 2a 15 0a 15 0a 15 0a 15 0a 15
->ae86		0a 05 0a 05 0a 05 0a 05 02 05 02 05 02 05 02 05
->ae96		02 01 02 01 02 01 02 01 00 01 00 01 00 01 00 01
->aea6		7e 81 9d a1 a1 9d 81 7e 08 08 08 04 03 00 00 00
->aeb6		08 08 08 10 e0 00 00 00 80 40 20 10 08 04 02 01
->aec6		01 02 04 08 10 20 40 80 ff 7f 3f 1f 0f 07 03 01
->aed6		ff fe fc f8 f0 e0 c0 80 01 03 07 0f 1f 3f 7f ff
->aee6		80 c0 e0 f0 f8 fc fe ff 3f 1f 0f 07 03 01 00 00
->aef6		fc f8 f0 e0 c0 80 00 00 00 00 01 03 07 0f 1f 3f
->af06		00 00 80 c0 e0 f0 f8 fc 0f 07 03 01 00 00 00 00
->af16		f0 e0 c0 80 00 00 00 00 00 00 00 00 01 03 07 0f
->af26		00 00 00 00 80 c0 e0 f0 03 01 00 00 00 00 00 00
->af36		c0 80 00 00 00 00 00 00 00 00 00 00 00 00 01 03
->af46		00 00 00 00 00 00 80 c0 00 00 00 00 0f 0f 0f 0f
->af56		00 00 00 00 f0 f0 f0 f0 0f 0f 0f 0f 00 00 00 00
->af66		f0 f0 f0 f0 00 00 00 00 f0 f0 f0 f0 0f 0f 0f 0f
->af76		0f 0f 0f 0f f0 f0 f0 f0 00 00 00 3e 1c 08 00 00
->af86		00 00 08 18 38 18 08 00 00 00 10 18 1c 18 10 00
->af96		00 00 08 1c 3e 00 00 00 36 7f 7f 7f 3e 1c 08 00
->afa6		08 1c 3e 7f 3e 1c 08 00 08 1c 3e 7f 7f 1c 3e 00
->afb6		08 1c 2a 77 2a 08 1c 00
+.a7cc						FontBinary:
+>a7cc		06 09 10 3c 10 21 7e 00			.byte	$06,$09,$10,$3c,$10,$21,$7e,$00,$00,$00,$00,$00,$00,$00,$ff,$ff,$00,$00,$00,$00,$00,$ff,$ff,$ff,$00,$00,$00,$00,$ff,$ff,$ff,$ff,$00,$00,$00,$ff,$ff,$ff,$ff,$ff,$00,$00,$ff,$ff,$ff,$ff,$ff,$ff,$00,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$00,$ff,$ff,$ff,$ff,$ff,$ff,$00,$00,$ff,$ff,$ff,$ff,$ff,$00,$00,$00,$ff,$ff,$ff,$ff,$00,$00,$00,$00,$ff,$ff,$ff,$00,$00,$00,$00,$00,$ff,$ff,$00,$00,$00,$00,$00,$00,$ff,$00,$00,$00,$00,$00,$00,$00,$08,$00,$22,$00,$08,$00,$02,$00,$88,$00,$22,$00,$88,$00,$22,$00,$8a,$00,$2a,$00,$8a,$00,$2a,$00,$aa,$00,$aa,$00,$aa,$00,$aa,$00,$aa,$05,$aa,$11,$aa,$05,$aa,$11,$aa,$5f,$aa,$77,$aa,$5f,$aa,$77,$aa,$ff,$aa,$ff,$aa,$ff,$aa,$ff,$af,$ff,$bb,$ff,$af,$ff,$bb,$ff,$77,$ff,$dd,$ff,$77,$ff,$dd,$ff,$7f,$ff,$df,$ff,$77,$ff,$df,$ff,$ff,$ff,$df,$ff,$77,$ff,$dd,$ff,$bb,$ff,$ee,$ff,$aa,$ff,$aa,$ff,$aa,$ff,$aa,$77,$aa,$dd,$aa,$55,$aa,$55,$22,$55,$88,$55,$00,$55,$aa,$00,$aa,$00,$88,$00,$22,$00,$33,$99,$cc,$66,$33,$99,$cc,$66,$cc,$99,$33,$66,$cc,$99,$33,$66,$00,$00,$00,$00,$00,$00,$00,$00,$08,$08,$08,$08,$00,$00,$08,$00,$24,$24,$24,$00,$00,$00,$00,$00,$24,$24,$7e,$24,$7e,$24,$24,$00,$08,$1e,$28,$1c,$0a,$3c,$08,$00,$00,$62,$64,$08,$10,$26,$46,$00,$30,$48,$48,$30,$4a,$44,$3a,$00,$08,$08,$08,$00,$00,$00,$00,$00,$04,$08,$10,$10,$10,$08,$04,$00,$20,$10,$08,$08,$08,$10,$20,$00,$00,$2a,$1c,$3e,$1c,$2a,$00,$00,$00,$08,$08,$3e,$08,$08,$00,$00,$00,$00,$00,$00,$00,$08,$08,$10,$00,$00,$00,$7e,$00,$00,$00,$00,$00,$00,$00,$00,$00,$18,$18,$00,$00,$02,$04,$08,$10,$20,$40,$00,$3c,$42,$46,$5a,$62,$42,$3c,$00,$08,$18,$08,$08,$08,$08,$1c,$00,$3c,$42,$02,$3c,$40,$40,$7e,$00,$3c,$42,$02,$1c,$02,$42,$3c,$00,$04,$44,$44,$44,$7e,$04,$04,$00,$7e,$40,$40,$7c,$02,$02,$7c,$00,$3c,$40,$40,$7c,$42,$42,$3c,$00,$7e,$42,$04,$08,$10,$10,$10,$00,$3c,$42,$42,$3c,$42,$42,$3c,$00,$3c,$42,$42,$3e,$02,$02,$3c,$00,$00,$00,$08,$00,$00,$08,$00,$00,$00,$00,$08,$00,$00,$08,$08,$10,$08,$10,$20,$40,$20,$10,$08,$00,$00,$00,$7e,$00,$7e,$00,$00,$00,$10,$08,$04,$02,$04,$08,$10,$00,$3c,$42,$02,$0c,$10,$00,$10,$00,$3c,$42,$4e,$52,$4e,$40,$3c,$00,$3c,$42,$42,$7e,$42,$42,$42,$00,$7c,$42,$42,$7c,$42,$42,$7c,$00,$3c,$42,$40,$40,$40,$42,$3c,$00,$78,$44,$42,$42,$42,$44,$78,$00,$7e,$40,$40,$78,$40,$40,$7e,$00,$7e,$40,$40,$78,$40,$40,$40,$00,$3c,$42,$40,$4e,$42,$42,$3c,$00,$42,$42,$42,$7e,$42,$42,$42,$00,$1c,$08,$08,$08,$08,$08,$1c,$00,$0e,$04,$04,$04,$04,$44,$38,$00,$42,$44,$48,$70,$48,$44,$42,$00,$40,$40,$40,$40,$40,$40,$7e,$00,$41,$63,$55,$49,$41,$41,$41,$00,$42,$62,$52,$4a,$46,$42,$42,$00,$3c,$42,$42,$42,$42,$42,$3c,$00,$7c,$42,$42,$7c,$40,$40,$40,$00,$3c,$42,$42,$42,$4a,$44,$3a,$00,$7c,$42,$42,$7c,$48,$44,$42,$00,$3c,$42,$40,$3c,$02,$42,$3c,$00,$3e,$08,$08,$08,$08,$08,$08,$00,$42,$42,$42,$42,$42,$42,$3c,$00,$41,$41,$41,$22,$22,$14,$08,$00,$41,$41,$41,$49,$55,$63,$41,$00,$42,$42,$24,$18,$24,$42,$42,$00,$41,$22,$14,$08,$08,$08,$08,$00,$7f,$02,$04,$08,$10,$20,$7f,$00,$3c,$20,$20,$20,$20,$20,$3c,$00,$00,$40,$20,$10,$08,$04,$02,$00,$3c,$04,$04,$04,$04,$04,$3c,$00,$00,$08,$14,$22,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff,$10,$08,$04,$00,$00,$00,$00,$00,$00,$00,$3c,$02,$3e,$42,$3e,$00,$40,$40,$7c,$42,$42,$42,$7c,$00,$00,$00,$3c,$42,$40,$42,$3c,$00,$02,$02,$3e,$42,$42,$42,$3e,$00,$00,$00,$3c,$42,$7e,$40,$3c,$00,$0c,$10,$10,$7c,$10,$10,$10,$00,$00,$00,$3e,$42,$42,$3e,$02,$3c,$40,$40,$7c,$42,$42,$42,$42,$00,$08,$00,$18,$08,$08,$08,$08,$00,$04,$00,$0c,$04,$04,$04,$04,$38,$40,$40,$44,$48,$50,$68,$44,$00,$18,$08,$08,$08,$08,$08,$1c,$00,$00,$00,$76,$49,$49,$49,$49,$00,$00,$00,$7c,$42,$42,$42,$42,$00,$00,$00,$3c,$42,$42,$42,$3c,$00,$00,$00,$7c,$42,$42,$7c,$40,$40,$00,$00,$3e,$42,$42,$3e,$02,$02,$00,$00,$5c,$60,$40,$40,$40,$00,$00,$00,$3e,$40,$3c,$02,$7c,$00,$10,$10,$7c,$10,$10,$10,$0c,$00,$00,$00,$42,$42,$42,$46,$3a,$00,$00,$00,$42,$42,$42,$24,$18,$00,$00,$00,$41,$49,$49,$49,$36,$00,$00,$00,$42,$24,$18,$24,$42,$00,$00,$00,$42,$42,$42,$3e,$02,$3c,$00,$00,$7e,$04,$18,$20,$7e,$00,$0c,$10,$10,$20,$10,$10,$0c,$00,$10,$10,$10,$10,$10,$10,$10,$00,$60,$10,$10,$08,$10,$10,$60,$00,$00,$00,$30,$49,$06,$00,$00,$00,$08,$04,$04,$08,$10,$10,$08,$00,$02,$02,$02,$02,$02,$02,$02,$02,$04,$04,$04,$04,$04,$04,$04,$04,$08,$08,$08,$08,$08,$08,$08,$08,$10,$10,$10,$10,$10,$10,$10,$10,$20,$20,$20,$20,$20,$20,$20,$20,$40,$40,$40,$40,$40,$40,$40,$40,$80,$80,$80,$80,$80,$80,$80,$80,$c0,$c0,$c0,$c0,$c0,$c0,$c0,$c0,$e0,$e0,$e0,$e0,$e0,$e0,$e0,$e0,$f0,$f0,$f0,$f0,$f0,$f0,$f0,$f0,$f8,$f8,$f8,$f8,$f8,$f8,$f8,$f8,$fc,$fc,$fc,$fc,$fc,$fc,$fc,$fc,$fe,$fe,$fe,$fe,$fe,$fe,$fe,$fe,$7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f,$3f,$3f,$3f,$3f,$3f,$3f,$3f,$3f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$07,$07,$07,$07,$07,$07,$07,$07,$03,$03,$03,$03,$03,$03,$03,$03,$01,$01,$01,$01,$01,$01,$01,$01,$00,$00,$00,$00,$00,$00,$ff,$00,$00,$00,$00,$00,$00,$ff,$00,$00,$00,$00,$00,$00,$ff,$00,$00,$00,$00,$00,$00,$ff,$00,$00,$00,$00,$00,$00,$ff,$00,$00,$00,$00,$00,$00,$ff,$00,$00,$00,$00,$00,$00,$08,$08,$08,$08,$0f,$08,$08,$08,$00,$00,$00,$00,$ff,$08,$08,$08,$08,$08,$08,$08,$ff,$08,$08,$08,$08,$08,$08,$08,$ff,$00,$00,$00,$08,$08,$08,$08,$f8,$08,$08,$08,$81,$42,$24,$18,$18,$24,$42,$81,$00,$00,$00,$00,$0f,$08,$08,$08,$00,$00,$00,$00,$f8,$08,$08,$08,$08,$08,$08,$08,$0f,$00,$00,$00,$08,$08,$08,$08,$f8,$00,$00,$00,$18,$18,$18,$1f,$1f,$18,$18,$18,$00,$00,$00,$ff,$ff,$18,$18,$18,$18,$18,$18,$ff,$ff,$18,$18,$18,$18,$18,$18,$ff,$ff,$00,$00,$00,$18,$18,$18,$f8,$f8,$18,$18,$18,$00,$00,$00,$1f,$1f,$18,$18,$18,$00,$00,$00,$f8,$f8,$18,$18,$18,$18,$18,$18,$1f,$1f,$00,$00,$00,$18,$18,$18,$f8,$f8,$00,$00,$00,$00,$00,$00,$ff,$ff,$00,$00,$00,$18,$18,$18,$18,$18,$18,$18,$18,$00,$00,$00,$00,$03,$07,$0f,$0f,$00,$00,$00,$00,$c0,$e0,$f0,$f0,$0f,$0f,$07,$03,$00,$00,$00,$00,$f0,$f0,$e0,$c0,$00,$00,$00,$00,$00,$7e,$7e,$7e,$7e,$7e,$7e,$00,$00,$00,$3c,$3c,$3c,$3c,$00,$00,$00,$00,$00,$18,$18,$00,$00,$00,$00,$00,$00,$00,$08,$00,$00,$00,$00,$3c,$7e,$7e,$7e,$7e,$3c,$00,$00,$00,$18,$3c,$3c,$18,$00,$00,$00,$3c,$42,$42,$42,$42,$3c,$00,$00,$3c,$42,$5a,$5a,$42,$3c,$00,$ff,$81,$81,$81,$81,$81,$81,$ff,$00,$00,$03,$06,$6c,$38,$10,$00,$00,$00,$7e,$00,$7e,$00,$7e,$00,$00,$00,$00,$00,$03,$04,$08,$08,$00,$00,$00,$00,$e0,$10,$08,$08,$00,$00,$00,$00,$00,$00,$00,$55,$00,$00,$00,$00,$00,$00,$aa,$55,$00,$00,$00,$00,$00,$55,$aa,$55,$00,$00,$00,$00,$aa,$55,$aa,$55,$00,$00,$00,$55,$aa,$55,$aa,$55,$00,$00,$aa,$55,$aa,$55,$aa,$55,$00,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$55,$aa,$00,$aa,$55,$aa,$55,$aa,$55,$00,$00,$aa,$55,$aa,$55,$aa,$00,$00,$00,$aa,$55,$aa,$55,$00,$00,$00,$00,$aa,$55,$aa,$00,$00,$00,$00,$00,$aa,$55,$00,$00,$00,$00,$00,$00,$aa,$00,$00,$00,$00,$00,$00,$00,$80,$00,$80,$00,$80,$00,$80,$00,$80,$40,$80,$40,$80,$40,$80,$40,$a0,$40,$a0,$40,$a0,$40,$a0,$40,$a0,$50,$a0,$50,$a0,$50,$a0,$50,$a8,$50,$a8,$50,$a8,$50,$a8,$50,$a8,$54,$a8,$54,$a8,$54,$a8,$54,$aa,$54,$aa,$54,$aa,$54,$aa,$54,$2a,$55,$2a,$55,$2a,$55,$2a,$55,$2a,$15,$2a,$15,$2a,$15,$2a,$15,$0a,$15,$0a,$15,$0a,$15,$0a,$15,$0a,$05,$0a,$05,$0a,$05,$0a,$05,$02,$05,$02,$05,$02,$05,$02,$05,$02,$01,$02,$01,$02,$01,$02,$01,$00,$01,$00,$01,$00,$01,$00,$01,$7e,$81,$9d,$a1,$a1,$9d,$81,$7e,$08,$08,$08,$04,$03,$00,$00,$00,$08,$08,$08,$10,$e0,$00,$00,$00,$80,$40,$20,$10,$08,$04,$02,$01,$01,$02,$04,$08,$10,$20,$40,$80,$ff,$7f,$3f,$1f,$0f,$07,$03,$01,$ff,$fe,$fc,$f8,$f0,$e0,$c0,$80,$01,$03,$07,$0f,$1f,$3f,$7f,$ff,$80,$c0,$e0,$f0,$f8,$fc,$fe,$ff,$3f,$1f,$0f,$07,$03,$01,$00,$00,$fc,$f8,$f0,$e0,$c0,$80,$00,$00,$00,$00,$01,$03,$07,$0f,$1f,$3f,$00,$00,$80,$c0,$e0,$f0,$f8,$fc,$0f,$07,$03,$01,$00,$00,$00,$00,$f0,$e0,$c0,$80,$00,$00,$00,$00,$00,$00,$00,$00,$01,$03,$07,$0f,$00,$00,$00,$00,$80,$c0,$e0,$f0,$03,$01,$00,$00,$00,$00,$00,$00,$c0,$80,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$01,$03,$00,$00,$00,$00,$00,$00,$80,$c0,$00,$00,$00,$00,$0f,$0f,$0f,$0f,$00,$00,$00,$00,$f0,$f0,$f0,$f0,$0f,$0f,$0f,$0f,$00,$00,$00,$00,$f0,$f0,$f0,$f0,$00,$00,$00,$00,$f0,$f0,$f0,$f0,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$f0,$f0,$f0,$f0,$00,$00,$00,$3e,$1c,$08,$00,$00,$00,$00,$08,$18,$38,$18,$08,$00,$00,$00,$10,$18,$1c,$18,$10,$00,$00,$00,$08,$1c,$3e,$00,$00,$00,$36,$7f,$7f,$7f,$3e,$1c,$08,$00,$08,$1c,$3e,$7f,$3e,$1c,$08,$00,$08,$1c,$3e,$7f,$7f,$1c,$3e,$00,$08,$1c,$2a,$77,$2a,$08,$1c,$00
+>a7d4		00 00 00 00 00 00 ff ff 00 00 00 00 00 ff ff ff
+>a7e4		00 00 00 00 ff ff ff ff 00 00 00 ff ff ff ff ff
+>a7f4		00 00 ff ff ff ff ff ff 00 ff ff ff ff ff ff ff
+>a804		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00
+>a814		ff ff ff ff ff ff 00 00 ff ff ff ff ff 00 00 00
+>a824		ff ff ff ff 00 00 00 00 ff ff ff 00 00 00 00 00
+>a834		ff ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 00
+>a844		08 00 22 00 08 00 02 00 88 00 22 00 88 00 22 00
+>a854		8a 00 2a 00 8a 00 2a 00 aa 00 aa 00 aa 00 aa 00
+>a864		aa 05 aa 11 aa 05 aa 11 aa 5f aa 77 aa 5f aa 77
+>a874		aa ff aa ff aa ff aa ff af ff bb ff af ff bb ff
+>a884		77 ff dd ff 77 ff dd ff 7f ff df ff 77 ff df ff
+>a894		ff ff df ff 77 ff dd ff bb ff ee ff aa ff aa ff
+>a8a4		aa ff aa 77 aa dd aa 55 aa 55 22 55 88 55 00 55
+>a8b4		aa 00 aa 00 88 00 22 00 33 99 cc 66 33 99 cc 66
+>a8c4		cc 99 33 66 cc 99 33 66 00 00 00 00 00 00 00 00
+>a8d4		08 08 08 08 00 00 08 00 24 24 24 00 00 00 00 00
+>a8e4		24 24 7e 24 7e 24 24 00 08 1e 28 1c 0a 3c 08 00
+>a8f4		00 62 64 08 10 26 46 00 30 48 48 30 4a 44 3a 00
+>a904		08 08 08 00 00 00 00 00 04 08 10 10 10 08 04 00
+>a914		20 10 08 08 08 10 20 00 00 2a 1c 3e 1c 2a 00 00
+>a924		00 08 08 3e 08 08 00 00 00 00 00 00 00 08 08 10
+>a934		00 00 00 7e 00 00 00 00 00 00 00 00 00 18 18 00
+>a944		00 02 04 08 10 20 40 00 3c 42 46 5a 62 42 3c 00
+>a954		08 18 08 08 08 08 1c 00 3c 42 02 3c 40 40 7e 00
+>a964		3c 42 02 1c 02 42 3c 00 04 44 44 44 7e 04 04 00
+>a974		7e 40 40 7c 02 02 7c 00 3c 40 40 7c 42 42 3c 00
+>a984		7e 42 04 08 10 10 10 00 3c 42 42 3c 42 42 3c 00
+>a994		3c 42 42 3e 02 02 3c 00 00 00 08 00 00 08 00 00
+>a9a4		00 00 08 00 00 08 08 10 08 10 20 40 20 10 08 00
+>a9b4		00 00 7e 00 7e 00 00 00 10 08 04 02 04 08 10 00
+>a9c4		3c 42 02 0c 10 00 10 00 3c 42 4e 52 4e 40 3c 00
+>a9d4		3c 42 42 7e 42 42 42 00 7c 42 42 7c 42 42 7c 00
+>a9e4		3c 42 40 40 40 42 3c 00 78 44 42 42 42 44 78 00
+>a9f4		7e 40 40 78 40 40 7e 00 7e 40 40 78 40 40 40 00
+>aa04		3c 42 40 4e 42 42 3c 00 42 42 42 7e 42 42 42 00
+>aa14		1c 08 08 08 08 08 1c 00 0e 04 04 04 04 44 38 00
+>aa24		42 44 48 70 48 44 42 00 40 40 40 40 40 40 7e 00
+>aa34		41 63 55 49 41 41 41 00 42 62 52 4a 46 42 42 00
+>aa44		3c 42 42 42 42 42 3c 00 7c 42 42 7c 40 40 40 00
+>aa54		3c 42 42 42 4a 44 3a 00 7c 42 42 7c 48 44 42 00
+>aa64		3c 42 40 3c 02 42 3c 00 3e 08 08 08 08 08 08 00
+>aa74		42 42 42 42 42 42 3c 00 41 41 41 22 22 14 08 00
+>aa84		41 41 41 49 55 63 41 00 42 42 24 18 24 42 42 00
+>aa94		41 22 14 08 08 08 08 00 7f 02 04 08 10 20 7f 00
+>aaa4		3c 20 20 20 20 20 3c 00 00 40 20 10 08 04 02 00
+>aab4		3c 04 04 04 04 04 3c 00 00 08 14 22 00 00 00 00
+>aac4		00 00 00 00 00 00 00 ff 10 08 04 00 00 00 00 00
+>aad4		00 00 3c 02 3e 42 3e 00 40 40 7c 42 42 42 7c 00
+>aae4		00 00 3c 42 40 42 3c 00 02 02 3e 42 42 42 3e 00
+>aaf4		00 00 3c 42 7e 40 3c 00 0c 10 10 7c 10 10 10 00
+>ab04		00 00 3e 42 42 3e 02 3c 40 40 7c 42 42 42 42 00
+>ab14		08 00 18 08 08 08 08 00 04 00 0c 04 04 04 04 38
+>ab24		40 40 44 48 50 68 44 00 18 08 08 08 08 08 1c 00
+>ab34		00 00 76 49 49 49 49 00 00 00 7c 42 42 42 42 00
+>ab44		00 00 3c 42 42 42 3c 00 00 00 7c 42 42 7c 40 40
+>ab54		00 00 3e 42 42 3e 02 02 00 00 5c 60 40 40 40 00
+>ab64		00 00 3e 40 3c 02 7c 00 10 10 7c 10 10 10 0c 00
+>ab74		00 00 42 42 42 46 3a 00 00 00 42 42 42 24 18 00
+>ab84		00 00 41 49 49 49 36 00 00 00 42 24 18 24 42 00
+>ab94		00 00 42 42 42 3e 02 3c 00 00 7e 04 18 20 7e 00
+>aba4		0c 10 10 20 10 10 0c 00 10 10 10 10 10 10 10 00
+>abb4		60 10 10 08 10 10 60 00 00 00 30 49 06 00 00 00
+>abc4		08 04 04 08 10 10 08 00 02 02 02 02 02 02 02 02
+>abd4		04 04 04 04 04 04 04 04 08 08 08 08 08 08 08 08
+>abe4		10 10 10 10 10 10 10 10 20 20 20 20 20 20 20 20
+>abf4		40 40 40 40 40 40 40 40 80 80 80 80 80 80 80 80
+>ac04		c0 c0 c0 c0 c0 c0 c0 c0 e0 e0 e0 e0 e0 e0 e0 e0
+>ac14		f0 f0 f0 f0 f0 f0 f0 f0 f8 f8 f8 f8 f8 f8 f8 f8
+>ac24		fc fc fc fc fc fc fc fc fe fe fe fe fe fe fe fe
+>ac34		7f 7f 7f 7f 7f 7f 7f 7f 3f 3f 3f 3f 3f 3f 3f 3f
+>ac44		1f 1f 1f 1f 1f 1f 1f 1f 0f 0f 0f 0f 0f 0f 0f 0f
+>ac54		07 07 07 07 07 07 07 07 03 03 03 03 03 03 03 03
+>ac64		01 01 01 01 01 01 01 01 00 00 00 00 00 00 ff 00
+>ac74		00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00
+>ac84		00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00
+>ac94		00 ff 00 00 00 00 00 00 08 08 08 08 0f 08 08 08
+>aca4		00 00 00 00 ff 08 08 08 08 08 08 08 ff 08 08 08
+>acb4		08 08 08 08 ff 00 00 00 08 08 08 08 f8 08 08 08
+>acc4		81 42 24 18 18 24 42 81 00 00 00 00 0f 08 08 08
+>acd4		00 00 00 00 f8 08 08 08 08 08 08 08 0f 00 00 00
+>ace4		08 08 08 08 f8 00 00 00 18 18 18 1f 1f 18 18 18
+>acf4		00 00 00 ff ff 18 18 18 18 18 18 ff ff 18 18 18
+>ad04		18 18 18 ff ff 00 00 00 18 18 18 f8 f8 18 18 18
+>ad14		00 00 00 1f 1f 18 18 18 00 00 00 f8 f8 18 18 18
+>ad24		18 18 18 1f 1f 00 00 00 18 18 18 f8 f8 00 00 00
+>ad34		00 00 00 ff ff 00 00 00 18 18 18 18 18 18 18 18
+>ad44		00 00 00 00 03 07 0f 0f 00 00 00 00 c0 e0 f0 f0
+>ad54		0f 0f 07 03 00 00 00 00 f0 f0 e0 c0 00 00 00 00
+>ad64		00 7e 7e 7e 7e 7e 7e 00 00 00 3c 3c 3c 3c 00 00
+>ad74		00 00 00 18 18 00 00 00 00 00 00 00 08 00 00 00
+>ad84		00 3c 7e 7e 7e 7e 3c 00 00 00 18 3c 3c 18 00 00
+>ad94		00 3c 42 42 42 42 3c 00 00 3c 42 5a 5a 42 3c 00
+>ada4		ff 81 81 81 81 81 81 ff 00 00 03 06 6c 38 10 00
+>adb4		00 00 7e 00 7e 00 7e 00 00 00 00 00 03 04 08 08
+>adc4		00 00 00 00 e0 10 08 08 00 00 00 00 00 00 00 55
+>add4		00 00 00 00 00 00 aa 55 00 00 00 00 00 55 aa 55
+>ade4		00 00 00 00 aa 55 aa 55 00 00 00 55 aa 55 aa 55
+>adf4		00 00 aa 55 aa 55 aa 55 00 55 aa 55 aa 55 aa 55
+>ae04		aa 55 aa 55 aa 55 aa 55 aa 55 aa 55 aa 55 aa 00
+>ae14		aa 55 aa 55 aa 55 00 00 aa 55 aa 55 aa 00 00 00
+>ae24		aa 55 aa 55 00 00 00 00 aa 55 aa 00 00 00 00 00
+>ae34		aa 55 00 00 00 00 00 00 aa 00 00 00 00 00 00 00
+>ae44		80 00 80 00 80 00 80 00 80 40 80 40 80 40 80 40
+>ae54		a0 40 a0 40 a0 40 a0 40 a0 50 a0 50 a0 50 a0 50
+>ae64		a8 50 a8 50 a8 50 a8 50 a8 54 a8 54 a8 54 a8 54
+>ae74		aa 54 aa 54 aa 54 aa 54 2a 55 2a 55 2a 55 2a 55
+>ae84		2a 15 2a 15 2a 15 2a 15 0a 15 0a 15 0a 15 0a 15
+>ae94		0a 05 0a 05 0a 05 0a 05 02 05 02 05 02 05 02 05
+>aea4		02 01 02 01 02 01 02 01 00 01 00 01 00 01 00 01
+>aeb4		7e 81 9d a1 a1 9d 81 7e 08 08 08 04 03 00 00 00
+>aec4		08 08 08 10 e0 00 00 00 80 40 20 10 08 04 02 01
+>aed4		01 02 04 08 10 20 40 80 ff 7f 3f 1f 0f 07 03 01
+>aee4		ff fe fc f8 f0 e0 c0 80 01 03 07 0f 1f 3f 7f ff
+>aef4		80 c0 e0 f0 f8 fc fe ff 3f 1f 0f 07 03 01 00 00
+>af04		fc f8 f0 e0 c0 80 00 00 00 00 01 03 07 0f 1f 3f
+>af14		00 00 80 c0 e0 f0 f8 fc 0f 07 03 01 00 00 00 00
+>af24		f0 e0 c0 80 00 00 00 00 00 00 00 00 01 03 07 0f
+>af34		00 00 00 00 80 c0 e0 f0 03 01 00 00 00 00 00 00
+>af44		c0 80 00 00 00 00 00 00 00 00 00 00 00 00 01 03
+>af54		00 00 00 00 00 00 80 c0 00 00 00 00 0f 0f 0f 0f
+>af64		00 00 00 00 f0 f0 f0 f0 0f 0f 0f 0f 00 00 00 00
+>af74		f0 f0 f0 f0 00 00 00 00 f0 f0 f0 f0 0f 0f 0f 0f
+>af84		0f 0f 0f 0f f0 f0 f0 f0 00 00 00 3e 1c 08 00 00
+>af94		00 00 08 18 38 18 08 00 00 00 10 18 1c 18 10 00
+>afa4		00 00 08 1c 3e 00 00 00 36 7f 7f 7f 3e 1c 08 00
+>afb4		08 1c 3e 7f 3e 1c 08 00 08 1c 3e 7f 7f 1c 3e 00
+>afc4		08 1c 2a 77 2a 08 1c 00
 
 ;******  Return to file: ./font_update/newfont.asm
 
@@ -7547,131 +7550,131 @@
 
 ;******  Processing file: ./module.interface/sound/effects.asm
 
-.afbe						PingCommand:
-.afbe		5a		phy				phy 								; save pos
-.afbf		a9 01		lda #$01			lda 	#1 						; push channel.
-.afc1		48		pha				pha
-.afc2		a9 c8		lda #$c8			lda 	#200 						; pitch LSB
-.afc4		a2 03		ldx #$03			ldx 	#3 						; length
-.afc6		a0 00		ldy #$00			ldy 	#0 						; slide LSB
-.afc8		80 24		bra $afee			bra 	SoundEffectCommand
-.afca						ZapCommand:
-.afca		5a		phy				phy 								; save pos
-.afcb		a9 01		lda #$01			lda 	#1 						; push channel.
-.afcd		48		pha				pha
-.afce		a9 ff		lda #$ff			lda 	#255 						; pitch LSB
-.afd0		a2 05		ldx #$05			ldx 	#5 						; length
-.afd2		a0 14		ldy #$14			ldy 	#20 						; slide LSB
-.afd4		80 18		bra $afee			bra 	SoundEffectCommand
-.afd6						ShootCommand:
-.afd6		5a		phy				phy 								; save pos
-.afd7		a9 03		lda #$03			lda 	#3 						; push channel.
-.afd9		48		pha				pha
-.afda		a9 20		lda #$20			lda 	#32 						; pitch LSB
-.afdc		a2 02		ldx #$02			ldx 	#2 						; length
-.afde		a0 00		ldy #$00			ldy 	#0 						; slide LSB
-.afe0		80 0c		bra $afee			bra 	SoundEffectCommand
-.afe2						Explode:
-.afe2		5a		phy				phy 								; save pos
-.afe3		a9 03		lda #$03			lda 	#3 						; push channel.
-.afe5		48		pha				pha
-.afe6		a9 50		lda #$50			lda 	#80 						; pitch LSB
-.afe8		a2 05		ldx #$05			ldx 	#5 						; length
-.afea		a0 00		ldy #$00			ldy 	#0 						; slide LSB
-.afec		80 00		bra $afee			bra 	SoundEffectCommand
-.afee						SoundEffectCommand:
-.afee		8d 69 06	sta $0669			sta 	SoundCommandBlock 			; set up the command block in sound.asm
-.aff1		9c 6a 06	stz $066a			stz 	SoundCommandBlock+1
-.aff4		a9 0f		lda #$0f			lda 	#15
-.aff6		8d 6b 06	sta $066b			sta 	SoundCommandBlock+2
-.aff9		8e 6c 06	stx $066c			stx 	SoundCommandBlock+3
-.affc		8c 6d 06	sty $066d			sty 	SoundCommandBlock+4
-.afff		9c 6e 06	stz $066e			stz 	SoundCommandBlock+5
-.b002		68		pla				pla
-.b003		09 10		ora #$10			ora 	#$10  						; execute command $11
-.b005		a2 69		ldx #$69			ldx 	#(SoundCommandBlock & $FF)
-.b007		a0 06		ldy #$06			ldy 	#(SoundCommandBlock >> 8)
-.b009		20 85 80	jsr $8085			jsr 	SNDCommand
-.b00c		7a		ply				ply
-.b00d		60		rts				rts
+.afcc						PingCommand:
+.afcc		5a		phy				phy 								; save pos
+.afcd		a9 01		lda #$01			lda 	#1 						; push channel.
+.afcf		48		pha				pha
+.afd0		a9 c8		lda #$c8			lda 	#200 						; pitch LSB
+.afd2		a2 03		ldx #$03			ldx 	#3 						; length
+.afd4		a0 00		ldy #$00			ldy 	#0 						; slide LSB
+.afd6		80 24		bra $affc			bra 	SoundEffectCommand
+.afd8						ZapCommand:
+.afd8		5a		phy				phy 								; save pos
+.afd9		a9 01		lda #$01			lda 	#1 						; push channel.
+.afdb		48		pha				pha
+.afdc		a9 ff		lda #$ff			lda 	#255 						; pitch LSB
+.afde		a2 05		ldx #$05			ldx 	#5 						; length
+.afe0		a0 14		ldy #$14			ldy 	#20 						; slide LSB
+.afe2		80 18		bra $affc			bra 	SoundEffectCommand
+.afe4						ShootCommand:
+.afe4		5a		phy				phy 								; save pos
+.afe5		a9 03		lda #$03			lda 	#3 						; push channel.
+.afe7		48		pha				pha
+.afe8		a9 20		lda #$20			lda 	#32 						; pitch LSB
+.afea		a2 02		ldx #$02			ldx 	#2 						; length
+.afec		a0 00		ldy #$00			ldy 	#0 						; slide LSB
+.afee		80 0c		bra $affc			bra 	SoundEffectCommand
+.aff0						Explode:
+.aff0		5a		phy				phy 								; save pos
+.aff1		a9 03		lda #$03			lda 	#3 						; push channel.
+.aff3		48		pha				pha
+.aff4		a9 50		lda #$50			lda 	#80 						; pitch LSB
+.aff6		a2 05		ldx #$05			ldx 	#5 						; length
+.aff8		a0 00		ldy #$00			ldy 	#0 						; slide LSB
+.affa		80 00		bra $affc			bra 	SoundEffectCommand
+.affc						SoundEffectCommand:
+.affc		8d 69 06	sta $0669			sta 	SoundCommandBlock 			; set up the command block in sound.asm
+.afff		9c 6a 06	stz $066a			stz 	SoundCommandBlock+1
+.b002		a9 0f		lda #$0f			lda 	#15
+.b004		8d 6b 06	sta $066b			sta 	SoundCommandBlock+2
+.b007		8e 6c 06	stx $066c			stx 	SoundCommandBlock+3
+.b00a		8c 6d 06	sty $066d			sty 	SoundCommandBlock+4
+.b00d		9c 6e 06	stz $066e			stz 	SoundCommandBlock+5
+.b010		68		pla				pla
+.b011		09 10		ora #$10			ora 	#$10  						; execute command $11
+.b013		a2 69		ldx #$69			ldx 	#(SoundCommandBlock & $FF)
+.b015		a0 06		ldy #$06			ldy 	#(SoundCommandBlock >> 8)
+.b017		20 85 80	jsr $8085			jsr 	SNDCommand
+.b01a		7a		ply				ply
+.b01b		60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./module.interface/sound/playing.asm
 
-.b00e						UnaryPlaying:
-.b00e		fa		plx				plx
-.b00f		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; get channel #
-.b012		48		pha				pha
-.b013		20 62 90	jsr $9062			jsr		CheckRightBracket
-.b016		68		pla				pla
-.b017		c9 04		cmp #$04			cmp 	#4
-.b019		b0 0c		bcs $b027			bcs 	_UPNotPlaying
-.b01b		09 20		ora #$20			ora 	#$20 						; query playing ?
-.b01d		20 85 80	jsr $8085			jsr 	SNDCommand
-.b020		c9 00		cmp #$00			cmp 	#0
-.b022		f0 03		beq $b027			beq 	_UPNotPlaying
-.b024		4c e8 90	jmp $90e8			jmp 	ReturnTrue
-.b027						_UPNotPlaying:
-.b027		4c f3 90	jmp $90f3			jmp 	ReturnFalse
+.b01c						UnaryPlaying:
+.b01c		fa		plx				plx
+.b01d		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; get channel #
+.b020		48		pha				pha
+.b021		20 62 90	jsr $9062			jsr		CheckRightBracket
+.b024		68		pla				pla
+.b025		c9 04		cmp #$04			cmp 	#4
+.b027		b0 0c		bcs $b035			bcs 	_UPNotPlaying
+.b029		09 20		ora #$20			ora 	#$20 						; query playing ?
+.b02b		20 85 80	jsr $8085			jsr 	SNDCommand
+.b02e		c9 00		cmp #$00			cmp 	#0
+.b030		f0 03		beq $b035			beq 	_UPNotPlaying
+.b032		4c e8 90	jmp $90e8			jmp 	ReturnTrue
+.b035						_UPNotPlaying:
+.b035		4c f3 90	jmp $90f3			jmp 	ReturnFalse
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./module.interface/sound/sound.asm
 
-.b02a						SoundCommand:
-.b02a		b1 30		lda ($30),y			lda 	(codePtr),y
-.b02c		c9 c6		cmp #$c6			cmp 	#KWD_OFF 					; SOUND OFF ?
-.b02e		d0 09		bne $b039			bne 	_SNDMain
-.b030		c8		iny				iny 								; skip OFF
-.b031		a9 3f		lda #$3f			lda 	#$3F 						; call command $3F (silence)
-.b033		5a		phy				phy
-.b034		20 85 80	jsr $8085			jsr 	SNDCommand
-.b037		7a		ply				ply
-.b038		60		rts				rts
-.b039						_SNDMain:
-.b039		a2 00		ldx #$00			ldx 	#0
-.b03b		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; channel
-.b03e		c9 04		cmp #$04			cmp 	#4 							; must be 0-3
-.b040		b0 4b		bcs $b08d			bcs 	_SndError
-.b042		e8		inx				inx 								; do the rest in slot 1.
-.b043		20 6a 90	jsr $906a			jsr 	CheckComma
-.b046		20 46 9f	jsr $9f46			jsr 	Evaluate16BitInteger 		; Pitch
-.b049		b5 60		lda $60,x			lda 	NSMantissa1,x 				; must be 10 bit
-.b04b		c9 10		cmp #$10			cmp 	#16
-.b04d		b0 3e		bcs $b08d			bcs 	_SndError
-.b04f		8d 6a 06	sta $066a			sta 	SoundCommandBlock+1 		; Pitch (2 bytes + 0)
-.b052		b5 58		lda $58,x			lda 	NSMantissa0,x
-.b054		8d 69 06	sta $0669			sta 	SoundCommandBlock
-.b057		20 6a 90	jsr $906a			jsr 	CheckComma
-.b05a		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; Length (1 byte + 3)
-.b05d		8d 6c 06	sta $066c			sta 	SoundCommandBlock+3
-.b060		a9 0f		lda #$0f			lda 	#15
-.b062		8d 6b 06	sta $066b			sta 	SoundCommandBlock+2 		; Volume (1 byte + 2)
-.b065		9c 6d 06	stz $066d			stz 	SoundCommandBlock+4 		; default slide (2 bytes +4)
-.b068		9c 6e 06	stz $066e			stz 	SoundCommandBlock+5
-.b06b		b1 30		lda ($30),y			lda 	(codePtr),y
-.b06d		c9 2c		cmp #$2c			cmp 	#KWD_COMMA
-.b06f		d0 0e		bne $b07f			bne 	_SNDPlay
-.b071		c8		iny				iny
-.b072		20 50 9f	jsr $9f50			jsr 	Evaluate16BitIntegerSigned 	; Slide
-.b075		b5 58		lda $58,x			lda 	NSMantissa0,x 				; Slide (2 bytes + 4)
-.b077		8d 6d 06	sta $066d			sta 	SoundCommandBlock+4
-.b07a		b5 60		lda $60,x			lda 	NSMantissa1,x
-.b07c		8d 6e 06	sta $066e			sta 	SoundCommandBlock+5
-.b07f						_SNDPlay:
-.b07f		5a		phy				phy
-.b080		a5 58		lda $58				lda 	NSMantissa0 				; channel.
-.b082		09 10		ora #$10			ora 	#$10 						; 1x = Queue sound
-.b084		a2 69		ldx #$69			ldx 	#(SoundCommandBlock & $FF)
-.b086		a0 06		ldy #$06			ldy 	#(SoundCommandBlock >> 8)
-.b088		20 85 80	jsr $8085			jsr 	SNDCommand
-.b08b		7a		ply				ply
-.b08c		60		rts				rts
-.b08d						_SndError:
-.b08d		4c 49 a1	jmp $a149			jmp 	RangeError
+.b038						SoundCommand:
+.b038		b1 30		lda ($30),y			lda 	(codePtr),y
+.b03a		c9 c6		cmp #$c6			cmp 	#KWD_OFF 					; SOUND OFF ?
+.b03c		d0 09		bne $b047			bne 	_SNDMain
+.b03e		c8		iny				iny 								; skip OFF
+.b03f		a9 3f		lda #$3f			lda 	#$3F 						; call command $3F (silence)
+.b041		5a		phy				phy
+.b042		20 85 80	jsr $8085			jsr 	SNDCommand
+.b045		7a		ply				ply
+.b046		60		rts				rts
+.b047						_SNDMain:
+.b047		a2 00		ldx #$00			ldx 	#0
+.b049		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; channel
+.b04c		c9 04		cmp #$04			cmp 	#4 							; must be 0-3
+.b04e		b0 4b		bcs $b09b			bcs 	_SndError
+.b050		e8		inx				inx 								; do the rest in slot 1.
+.b051		20 6a 90	jsr $906a			jsr 	CheckComma
+.b054		20 46 9f	jsr $9f46			jsr 	Evaluate16BitInteger 		; Pitch
+.b057		b5 60		lda $60,x			lda 	NSMantissa1,x 				; must be 10 bit
+.b059		c9 10		cmp #$10			cmp 	#16
+.b05b		b0 3e		bcs $b09b			bcs 	_SndError
+.b05d		8d 6a 06	sta $066a			sta 	SoundCommandBlock+1 		; Pitch (2 bytes + 0)
+.b060		b5 58		lda $58,x			lda 	NSMantissa0,x
+.b062		8d 69 06	sta $0669			sta 	SoundCommandBlock
+.b065		20 6a 90	jsr $906a			jsr 	CheckComma
+.b068		20 61 9f	jsr $9f61			jsr 	Evaluate8BitInteger 		; Length (1 byte + 3)
+.b06b		8d 6c 06	sta $066c			sta 	SoundCommandBlock+3
+.b06e		a9 0f		lda #$0f			lda 	#15
+.b070		8d 6b 06	sta $066b			sta 	SoundCommandBlock+2 		; Volume (1 byte + 2)
+.b073		9c 6d 06	stz $066d			stz 	SoundCommandBlock+4 		; default slide (2 bytes +4)
+.b076		9c 6e 06	stz $066e			stz 	SoundCommandBlock+5
+.b079		b1 30		lda ($30),y			lda 	(codePtr),y
+.b07b		c9 2c		cmp #$2c			cmp 	#KWD_COMMA
+.b07d		d0 0e		bne $b08d			bne 	_SNDPlay
+.b07f		c8		iny				iny
+.b080		20 50 9f	jsr $9f50			jsr 	Evaluate16BitIntegerSigned 	; Slide
+.b083		b5 58		lda $58,x			lda 	NSMantissa0,x 				; Slide (2 bytes + 4)
+.b085		8d 6d 06	sta $066d			sta 	SoundCommandBlock+4
+.b088		b5 60		lda $60,x			lda 	NSMantissa1,x
+.b08a		8d 6e 06	sta $066e			sta 	SoundCommandBlock+5
+.b08d						_SNDPlay:
+.b08d		5a		phy				phy
+.b08e		a5 58		lda $58				lda 	NSMantissa0 				; channel.
+.b090		09 10		ora #$10			ora 	#$10 						; 1x = Queue sound
+.b092		a2 69		ldx #$69			ldx 	#(SoundCommandBlock & $FF)
+.b094		a0 06		ldy #$06			ldy 	#(SoundCommandBlock >> 8)
+.b096		20 85 80	jsr $8085			jsr 	SNDCommand
+.b099		7a		ply				ply
+.b09a		60		rts				rts
+.b09b						_SndError:
+.b09b		4c 49 a1	jmp $a149			jmp 	RangeError
 .0669						SoundCommandBlock:
 >0669								.fill 	6
 
@@ -7680,255 +7683,306 @@
 
 ;******  Processing file: ./common/stack/bytes.asm
 
-.b090						StackPushByte:
-.b090		48		pha				pha 								; save byte on stack
-.b091		a5 34		lda $34				lda 	basicStack 					; decrement basic stack pointer
-.b093		d0 08		bne $b09d			bne 	_SPBNoBorrow
-.b095		c6 35		dec $35				dec 	basicStack+1 				; borrow
-.b097		a5 35		lda $35				lda 	basicStack+1 				; check range.
-.b099		c9 0e		cmp #$0e			cmp 	#BasicStackBase >> 8
-.b09b		90 06		bcc $b0a3			bcc 	_SPBMemory
-.b09d						_SPBNoBorrow:
-.b09d		c6 34		dec $34				dec 	basicStack
-.b09f		68		pla				pla 								; get back and write
-.b0a0		92 34		sta ($34)			sta 	(basicStack)
-.b0a2		60		rts				rts
-.b0a3						_SPBMemory:
-.b0a3		a9 12		lda #$12		lda	#18
-.b0a5		4c 7b 90	jmp $907b		jmp	ErrorHandler
-.b0a8						StackPopByte:
-.b0a8		b2 34		lda ($34)			lda 	(basicStack) 				; bump the stack pointer.
-.b0aa		e6 34		inc $34				inc 	basicStack
-.b0ac		d0 02		bne $b0b0			bne 	_SPBNoCarry
-.b0ae		e6 35		inc $35				inc 	basicStack+1
-.b0b0						_SPBNoCarry:
+.b09e						StackPushByte:
+.b09e		48		pha				pha 								; save byte on stack
+.b09f		a5 34		lda $34				lda 	basicStack 					; decrement basic stack pointer
+.b0a1		d0 08		bne $b0ab			bne 	_SPBNoBorrow
+.b0a3		c6 35		dec $35				dec 	basicStack+1 				; borrow
+.b0a5		a5 35		lda $35				lda 	basicStack+1 				; check range.
+.b0a7		c9 0e		cmp #$0e			cmp 	#BasicStackBase >> 8
+.b0a9		90 06		bcc $b0b1			bcc 	_SPBMemory
+.b0ab						_SPBNoBorrow:
+.b0ab		c6 34		dec $34				dec 	basicStack
+.b0ad		68		pla				pla 								; get back and write
+.b0ae		92 34		sta ($34)			sta 	(basicStack)
 .b0b0		60		rts				rts
+.b0b1						_SPBMemory:
+.b0b1		a9 12		lda #$12		lda	#18
+.b0b3		4c 7b 90	jmp $907b		jmp	ErrorHandler
+.b0b6						StackPopByte:
+.b0b6		b2 34		lda ($34)			lda 	(basicStack) 				; bump the stack pointer.
+.b0b8		e6 34		inc $34				inc 	basicStack
+.b0ba		d0 02		bne $b0be			bne 	_SPBNoCarry
+.b0bc		e6 35		inc $35				inc 	basicStack+1
+.b0be						_SPBNoCarry:
+.b0be		60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./common/stack/frames.asm
 
-.b0b1						StackOpen:
-.b0b1		48		pha				pha 								; save frame byte
-.b0b2		29 0f		and #$0f			and 	#$0F 						; the bytes to subtract.
-.b0b4		0a		asl a				asl 	a 							; claim twice this for storage
-.b0b5		49 ff		eor #$ff			eor 	#$FF 						; 2's complement addition
-.b0b7		38		sec				sec 								; so basically subtracting from
-.b0b8		65 34		adc $34				adc 	basicStack 	 				; basicStack
-.b0ba		85 34		sta $34				sta 	basicStack
-.b0bc		b0 09		bcs $b0c7			bcs 	_SONoBorrow
->b0be		db						.byte 	$DB 						; causes a break in the emulator
-.b0bf		c6 35		dec $35				dec 	basicStack+1
-.b0c1		a5 35		lda $35				lda 	basicStack+1 				; have we reached stack overflow
-.b0c3		c9 0e		cmp #$0e			cmp 	#BasicStackBase >> 8
-.b0c5		90 04		bcc $b0cb			bcc 	_SOMemory
-.b0c7						_SONoBorrow:
-.b0c7		68		pla				pla 								; get marker back and write at TOS
-.b0c8		92 34		sta ($34)			sta 	(basicStack)
-.b0ca		60		rts				rts
-.b0cb						_SOMemory:
-.b0cb		a9 12		lda #$12		lda	#18
-.b0cd		4c 7b 90	jmp $907b		jmp	ErrorHandler
-.b0d0						StackClose:
-.b0d0		b2 34		lda ($34)			lda 	(basicStack) 				; get TOS marker
-.b0d2		29 0f		and #$0f			and 	#$0F 						; bytes to add back
-.b0d4		0a		asl a				asl 	a 							; claim twice this.
-.b0d5		65 34		adc $34				adc 	basicStack 					; add to the stack pointer.
-.b0d7		85 34		sta $34				sta 	basicStack
-.b0d9		90 02		bcc $b0dd			bcc 	_SCExit
-.b0db		e6 35		inc $35				inc 	basicStack+1
-.b0dd						_SCExit:
-.b0dd		60		rts				rts
-.b0de						StackCheckFrame:
-.b0de		48		pha				pha
-.b0df						_StackRemoveLocals:
-.b0df		b2 34		lda ($34)			lda 	(basicStack) 				; check for local, keep popping them
-.b0e1		c9 03		cmp #$03			cmp 	#STK_LOCALS+1 				; is the frame a local ? S or N are 1/0
-.b0e3		b0 05		bcs $b0ea			bcs 	_SCNoLocal
-.b0e5		20 a5 8a	jsr $8aa5			jsr 	LocalPopValue 				; restore the local value
-.b0e8		80 f5		bra $b0df			bra 	_StackRemoveLocals 			; gr round again
-.b0ea						_SCNoLocal:
-.b0ea		68		pla				pla 								; get the frame check.
-.b0eb		52 34		eor ($34)			eor 	(basicStack) 				; xor with toS marker
-.b0ed		29 f0		and #$f0			and 	#$F0 						; check type bits
-.b0ef		d0 01		bne $b0f2			bne 	_SCFError 					; different, we have structures mixed up
-.b0f1		60		rts				rts
-.b0f2						_SCFError:
-.b0f2		8a		txa				txa 								; report error X
-.b0f3		4c 7b 90	jmp $907b			jmp 	ErrorHandler
+.b0bf						StackOpen:
+.b0bf		48		pha				pha 								; save frame byte
+.b0c0		29 0f		and #$0f			and 	#$0F 						; the bytes to subtract.
+.b0c2		0a		asl a				asl 	a 							; claim twice this for storage
+.b0c3		49 ff		eor #$ff			eor 	#$FF 						; 2's complement addition
+.b0c5		38		sec				sec 								; so basically subtracting from
+.b0c6		65 34		adc $34				adc 	basicStack 	 				; basicStack
+.b0c8		85 34		sta $34				sta 	basicStack
+.b0ca		b0 09		bcs $b0d5			bcs 	_SONoBorrow
+>b0cc		db						.byte 	$DB 						; causes a break in the emulator
+.b0cd		c6 35		dec $35				dec 	basicStack+1
+.b0cf		a5 35		lda $35				lda 	basicStack+1 				; have we reached stack overflow
+.b0d1		c9 0e		cmp #$0e			cmp 	#BasicStackBase >> 8
+.b0d3		90 04		bcc $b0d9			bcc 	_SOMemory
+.b0d5						_SONoBorrow:
+.b0d5		68		pla				pla 								; get marker back and write at TOS
+.b0d6		92 34		sta ($34)			sta 	(basicStack)
+.b0d8		60		rts				rts
+.b0d9						_SOMemory:
+.b0d9		a9 12		lda #$12		lda	#18
+.b0db		4c 7b 90	jmp $907b		jmp	ErrorHandler
+.b0de						StackClose:
+.b0de		b2 34		lda ($34)			lda 	(basicStack) 				; get TOS marker
+.b0e0		29 0f		and #$0f			and 	#$0F 						; bytes to add back
+.b0e2		0a		asl a				asl 	a 							; claim twice this.
+.b0e3		65 34		adc $34				adc 	basicStack 					; add to the stack pointer.
+.b0e5		85 34		sta $34				sta 	basicStack
+.b0e7		90 02		bcc $b0eb			bcc 	_SCExit
+.b0e9		e6 35		inc $35				inc 	basicStack+1
+.b0eb						_SCExit:
+.b0eb		60		rts				rts
+.b0ec						StackCheckFrame:
+.b0ec		48		pha				pha
+.b0ed						_StackRemoveLocals:
+.b0ed		b2 34		lda ($34)			lda 	(basicStack) 				; check for local, keep popping them
+.b0ef		c9 03		cmp #$03			cmp 	#STK_LOCALS+1 				; is the frame a local ? S or N are 1/0
+.b0f1		b0 05		bcs $b0f8			bcs 	_SCNoLocal
+.b0f3		20 a5 8a	jsr $8aa5			jsr 	LocalPopValue 				; restore the local value
+.b0f6		80 f5		bra $b0ed			bra 	_StackRemoveLocals 			; gr round again
+.b0f8						_SCNoLocal:
+.b0f8		68		pla				pla 								; get the frame check.
+.b0f9		52 34		eor ($34)			eor 	(basicStack) 				; xor with toS marker
+.b0fb		29 f0		and #$f0			and 	#$F0 						; check type bits
+.b0fd		d0 01		bne $b100			bne 	_SCFError 					; different, we have structures mixed up
+.b0ff		60		rts				rts
+.b100						_SCFError:
+.b100		8a		txa				txa 								; report error X
+.b101		4c 7b 90	jmp $907b			jmp 	ErrorHandler
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./common/stack/location.asm
 
-.b0f6						STKSaveCodePosition:
-.b0f6		5a		phy				phy
-.b0f7		98		tya				tya 								; save Y
-.b0f8		a0 05		ldy #$05			ldy 	#5
-.b0fa		91 34		sta ($34),y			sta 	(basicStack),y
-.b0fc		88		dey				dey 								; save Code Pointer
-.b0fd						_STKSaveLoop:
-.b0fd		b9 2f 00	lda $002f,y			lda 	safePtr-1,y 				; allows us to access the pointer w/out issues.
-.b100		91 34		sta ($34),y			sta 	(basicStack),y
-.b102		88		dey				dey
-.b103		d0 f8		bne $b0fd			bne 	_STKSaveLoop
-.b105		7a		ply				ply
-.b106		60		rts				rts
-.b107						STKLoadCodePosition:
-.b107		a0 01		ldy #$01			ldy 	#1 							; load code pointer back
-.b109						_STKLoadLoop:
-.b109		b1 34		lda ($34),y			lda 	(basicStack),y
-.b10b		99 2f 00	sta $002f,y			sta 	safePtr-1,y
-.b10e		c8		iny				iny
-.b10f		c0 05		cpy #$05			cpy 	#5
-.b111		d0 f6		bne $b109			bne 	_STKLoadLoop
-.b113		b1 34		lda ($34),y			lda 	(basicStack),y 				; get Y offset
-.b115		a8		tay				tay
-.b116		60		rts				rts
+.b104						STKSaveCodePosition:
+.b104		5a		phy				phy
+.b105		98		tya				tya 								; save Y
+.b106		a0 05		ldy #$05			ldy 	#5
+.b108		91 34		sta ($34),y			sta 	(basicStack),y
+.b10a		88		dey				dey 								; save Code Pointer
+.b10b						_STKSaveLoop:
+.b10b		b9 2f 00	lda $002f,y			lda 	safePtr-1,y 				; allows us to access the pointer w/out issues.
+.b10e		91 34		sta ($34),y			sta 	(basicStack),y
+.b110		88		dey				dey
+.b111		d0 f8		bne $b10b			bne 	_STKSaveLoop
+.b113		7a		ply				ply
+.b114		60		rts				rts
+.b115						STKLoadCodePosition:
+.b115		a0 01		ldy #$01			ldy 	#1 							; load code pointer back
+.b117						_STKLoadLoop:
+.b117		b1 34		lda ($34),y			lda 	(basicStack),y
+.b119		99 2f 00	sta $002f,y			sta 	safePtr-1,y
+.b11c		c8		iny				iny
+.b11d		c0 05		cpy #$05			cpy 	#5
+.b11f		d0 f6		bne $b117			bne 	_STKLoadLoop
+.b121		b1 34		lda ($34),y			lda 	(basicStack),y 				; get Y offset
+.b123		a8		tay				tay
+.b124		60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./common/stack/setup.asm
 
-.b117						StackReset:
-.b117		a9 ff		lda #$ff			lda 	#((BasicStackBase+BasicStackSize-1) & $FF)
-.b119		85 34		sta $34				sta 	0+basicStack
-.b11b		a9 0f		lda #$0f			lda 	#((BasicStackBase+BasicStackSize-1) >> 8)
-.b11d		85 35		sta $35				sta 	1+basicStack
-.b11f		a9 f0		lda #$f0			lda 	#$F0 						; impossible frame marker - cannot have one with 0 bytes.
-.b121		92 34		sta ($34)			sta 	(basicStack) 				; puts a dummy marker at TOS which will never match things like NEXT/RETURN
-.b123		60		rts				rts
+.b125						StackReset:
+.b125		a9 ff		lda #$ff			lda 	#((BasicStackBase+BasicStackSize-1) & $FF)
+.b127		85 34		sta $34				sta 	0+basicStack
+.b129		a9 0f		lda #$0f			lda 	#((BasicStackBase+BasicStackSize-1) >> 8)
+.b12b		85 35		sta $35				sta 	1+basicStack
+.b12d		a9 f0		lda #$f0			lda 	#$F0 						; impossible frame marker - cannot have one with 0 bytes.
+.b12f		92 34		sta ($34)			sta 	(basicStack) 				; puts a dummy marker at TOS which will never match things like NEXT/RETURN
+.b131		60		rts				rts
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./common/strings/concrete.asm
 
-.b124						StringConcrete:
-.b124		5a		phy				phy 								; save position on stack
-.b125		20 b5 9b	jsr $9bb5			jsr 	CheckIdentifierStringSpace 	; check memory allocation.
-.b128		b5 58		lda $58,x			lda 	NSMantissa0,x 				; copy target string to zTemp1
-.b12a		85 38		sta $38				sta 	zTemp1
-.b12c		b5 60		lda $60,x			lda 	NSMantissa1,x
-.b12e		85 39		sta $39				sta 	zTemp1+1
-.b130		a0 ff		ldy #$ff			ldy 	#$FF	 					; calculate string length
-.b132						_SALength:
-.b132		c8		iny				iny
-.b133		b1 38		lda ($38),y			lda 	(zTemp1),y
-.b135		d0 fb		bne $b132			bne 	_SALength
-.b137		c0 fd		cpy #$fd			cpy 	#253 						; string too long - cannot concrete.
-.b139		b0 3d		bcs $b178			bcs 	_SALengthError
-.b13b		98		tya				tya 				 				; length of the new string
-.b13c		18		clc				clc
-.b13d		69 08		adc #$08			adc 	#5+3 						; add 5 characters total plus 3 (length,status,EOS)
-.b13f		90 02		bcc $b143			bcc 	_SAHaveLength
-.b141		a9 ff		lda #$ff			lda 	#255 						; string max length is 255
-.b143						_SAHaveLength:
-.b143		48		pha				pha 								; save length.
-.b144		38		sec				sec
-.b145		49 ff		eor #$ff			eor 	#$FF 						; add to StringMemory using 2's complement
-.b147		6d 0e 04	adc $040e			adc 	stringMemory
-.b14a		8d 0e 04	sta $040e			sta 	stringMemory
-.b14d		85 3a		sta $3a				sta 	zTemp2 						; update storage address
-.b14f		95 58		sta $58,x			sta 	NSMantissa0,x 				; update mantissa address
-.b151		a9 ff		lda #$ff			lda 	#$FF 						; now do the MSB
-.b153		6d 0f 04	adc $040f			adc 	stringMemory+1
-.b156		8d 0f 04	sta $040f			sta 	stringMemory+1
-.b159		85 3b		sta $3b				sta 	zTemp2+1
-.b15b		95 60		sta $60,x			sta 	NSMantissa1,x
-.b15d		68		pla				pla 								; save length-3 (chars allowed) in first byte
-.b15e		38		sec				sec
-.b15f		e9 03		sbc #$03			sbc 	#3
-.b161		92 3a		sta ($3a)			sta 	(zTemp2)
-.b163		a9 00		lda #$00			lda 	#0 							; clear the status byte.
-.b165		a0 01		ldy #$01			ldy 	#1
-.b167		91 3a		sta ($3a),y			sta 	(zTemp2),y
-.b169						_SACopyNewString:
-.b169		a0 00		ldy #$00			ldy 	#0
-.b16b						_SACopyNSLoop:
-.b16b		b1 38		lda ($38),y			lda 	(zTemp1),y 					; get character
-.b16d		c8		iny				iny 								; write two on in string storage
-.b16e		c8		iny				iny
-.b16f		91 3a		sta ($3a),y			sta 	(zTemp2),y
-.b171		88		dey				dey 								; this makes it one one.
-.b172		c9 00		cmp #$00			cmp 	#0 							; until EOS copied
-.b174		d0 f5		bne $b16b			bne 	_SACopyNSLoop
-.b176		7a		ply				ply
-.b177		60		rts				rts
-.b178						_SALengthError:
-.b178		a9 09		lda #$09		lda	#9
-.b17a		4c 7b 90	jmp $907b		jmp	ErrorHandler
+.b132						StringConcrete:
+.b132		5a		phy				phy 								; save position on stack
+.b133		20 b5 9b	jsr $9bb5			jsr 	CheckIdentifierStringSpace 	; check memory allocation.
+.b136		b5 58		lda $58,x			lda 	NSMantissa0,x 				; copy target string to zTemp1
+.b138		85 38		sta $38				sta 	zTemp1
+.b13a		b5 60		lda $60,x			lda 	NSMantissa1,x
+.b13c		85 39		sta $39				sta 	zTemp1+1
+.b13e		a0 ff		ldy #$ff			ldy 	#$FF	 					; calculate string length
+.b140						_SALength:
+.b140		c8		iny				iny
+.b141		b1 38		lda ($38),y			lda 	(zTemp1),y
+.b143		d0 fb		bne $b140			bne 	_SALength
+.b145		c0 fd		cpy #$fd			cpy 	#253 						; string too long - cannot concrete.
+.b147		b0 3d		bcs $b186			bcs 	_SALengthError
+.b149		98		tya				tya 				 				; length of the new string
+.b14a		18		clc				clc
+.b14b		69 08		adc #$08			adc 	#5+3 						; add 5 characters total plus 3 (length,status,EOS)
+.b14d		90 02		bcc $b151			bcc 	_SAHaveLength
+.b14f		a9 ff		lda #$ff			lda 	#255 						; string max length is 255
+.b151						_SAHaveLength:
+.b151		48		pha				pha 								; save length.
+.b152		38		sec				sec
+.b153		49 ff		eor #$ff			eor 	#$FF 						; add to StringMemory using 2's complement
+.b155		6d 0e 04	adc $040e			adc 	stringMemory
+.b158		8d 0e 04	sta $040e			sta 	stringMemory
+.b15b		85 3a		sta $3a				sta 	zTemp2 						; update storage address
+.b15d		95 58		sta $58,x			sta 	NSMantissa0,x 				; update mantissa address
+.b15f		a9 ff		lda #$ff			lda 	#$FF 						; now do the MSB
+.b161		6d 0f 04	adc $040f			adc 	stringMemory+1
+.b164		8d 0f 04	sta $040f			sta 	stringMemory+1
+.b167		85 3b		sta $3b				sta 	zTemp2+1
+.b169		95 60		sta $60,x			sta 	NSMantissa1,x
+.b16b		68		pla				pla 								; save length-3 (chars allowed) in first byte
+.b16c		38		sec				sec
+.b16d		e9 03		sbc #$03			sbc 	#3
+.b16f		92 3a		sta ($3a)			sta 	(zTemp2)
+.b171		a9 00		lda #$00			lda 	#0 							; clear the status byte.
+.b173		a0 01		ldy #$01			ldy 	#1
+.b175		91 3a		sta ($3a),y			sta 	(zTemp2),y
+.b177						_SACopyNewString:
+.b177		a0 00		ldy #$00			ldy 	#0
+.b179						_SACopyNSLoop:
+.b179		b1 38		lda ($38),y			lda 	(zTemp1),y 					; get character
+.b17b		c8		iny				iny 								; write two on in string storage
+.b17c		c8		iny				iny
+.b17d		91 3a		sta ($3a),y			sta 	(zTemp2),y
+.b17f		88		dey				dey 								; this makes it one one.
+.b180		c9 00		cmp #$00			cmp 	#0 							; until EOS copied
+.b182		d0 f5		bne $b179			bne 	_SACopyNSLoop
+.b184		7a		ply				ply
+.b185		60		rts				rts
+.b186						_SALengthError:
+.b186		a9 09		lda #$09		lda	#9
+.b188		4c 7b 90	jmp $907b		jmp	ErrorHandler
 
 ;******  Return to file: _basic.asm
 
 
 ;******  Processing file: ./common/strings/stringalloc.asm
 
-.b17d						StringSystemInitialise:
-.b17d		a9 ff		lda #$ff			lda 	#((EndVariableSpace-1) & $FF)
-.b17f		8d 0e 04	sta $040e			sta 	0+stringMemory
-.b182		a9 1f		lda #$1f			lda 	#((EndVariableSpace-1) >> 8)
-.b184		8d 0f 04	sta $040f			sta 	1+stringMemory
-.b187		9c ff 1f	stz $1fff			stz 	EndVariableSpace-1 			; put a zero at the end, so know end of string memory.
-.b18a		60		rts				rts
-.b18b						StringSpaceInitialise:
-.b18b		20 b5 9b	jsr $9bb5			jsr 	CheckIdentifierStringSpace 	; check memory allocation.
-.b18e		a9 ff		lda #$ff			lda 	#$FF 						; only initialise once (set to $FF, bit used to test it)
-.b190		8d 10 04	sta $0410			sta 	stringInitialised
-.b193		ad 0e 04	lda $040e			lda 	stringMemory 				; allocate 256 bytes for one concreted string
-.b196		8d 11 04	sta $0411			sta 	stringTempPointer 			; so temporary string space is allocated below that.
-.b199		ad 0f 04	lda $040f			lda 	stringMemory+1
-.b19c		3a		dec a				dec 	a
-.b19d		8d 12 04	sta $0412			sta 	stringTempPointer+1
-.b1a0		60		rts				rts
-.b1a1						StringTempAllocate:
-.b1a1		c9 fd		cmp #$fd			cmp 	#252+1 						; max length of strings
-.b1a3		b0 30		bcs $b1d5			bcs 	_STALength
-.b1a5		2c 10 04	bit $0410			bit 	stringInitialised 			; already initialised
-.b1a8		30 05		bmi $b1af			bmi 	_STAAllocate
-.b1aa		48		pha				pha 								; save value to subtract.
-.b1ab		20 8b b1	jsr $b18b			jsr 	StringSpaceInitialise 		; initialise string memory allocation
-.b1ae		68		pla				pla 								; restore it
-.b1af						_STAAllocate:
-.b1af		49 ff		eor #$ff			eor 	#$FF 						; 2's complement add to StringTempPointer
-.b1b1		18		clc				clc  								; deliberate allows one more
-.b1b2		6d 11 04	adc $0411			adc 	stringTempPointer 			; subtract from temp pointer
-.b1b5		8d 11 04	sta $0411			sta 	stringTempPointer
-.b1b8		95 58		sta $58,x			sta 	NSMantissa0,x 				; address in mantissa
-.b1ba		85 3c		sta $3c				sta 	zsTemp 						; and zsTemp
-.b1bc		ad 12 04	lda $0412			lda 	stringTempPointer+1
-.b1bf		69 ff		adc #$ff			adc 	#$FF
-.b1c1		8d 12 04	sta $0412			sta 	stringTempPointer+1
-.b1c4		85 3d		sta $3d				sta 	zsTemp+1
-.b1c6		95 60		sta $60,x			sta 	NSMantissa1,x
-.b1c8		74 68		stz $68,x			stz 	NSMantissa2,x 				; set the typing data and the upper address bytes.
-.b1ca		74 70		stz $70,x			stz 	NSMantissa3,x
-.b1cc		a9 10		lda #$10			lda 	#NSTString
-.b1ce		95 50		sta $50,x			sta 	NSStatus,x
-.b1d0		a9 00		lda #$00			lda 	#0 							; clear the target string
-.b1d2		92 3c		sta ($3c)			sta 	(zsTemp)
-.b1d4		60		rts				rts
-.b1d5						_STALength:
-.b1d5		a9 09		lda #$09		lda	#9
-.b1d7		4c 7b 90	jmp $907b		jmp	ErrorHandler
-.b1da						StringTempWrite:
-.b1da		48		pha				pha
-.b1db		92 3c		sta ($3c)			sta 	(zsTemp) 					; write byte
-.b1dd		e6 3c		inc $3c				inc 	zsTemp 						; bump pointer
-.b1df		d0 02		bne $b1e3			bne 	_STWNoCarry
-.b1e1		e6 3d		inc $3d				inc 	zsTemp+1
-.b1e3						_STWNoCarry:
-.b1e3		a9 00		lda #$00			lda 	#0 							; make ASCIIZ
-.b1e5		92 3c		sta ($3c)			sta 	(zsTemp)
-.b1e7		68		pla				pla
-.b1e8		60		rts				rts
+.b18b						StringSystemInitialise:
+.b18b		a9 ff		lda #$ff			lda 	#((EndVariableSpace-1) & $FF)
+.b18d		8d 0e 04	sta $040e			sta 	0+stringMemory
+.b190		a9 1f		lda #$1f			lda 	#((EndVariableSpace-1) >> 8)
+.b192		8d 0f 04	sta $040f			sta 	1+stringMemory
+.b195		9c ff 1f	stz $1fff			stz 	EndVariableSpace-1 			; put a zero at the end, so know end of string memory.
+.b198		60		rts				rts
+.b199						StringSpaceInitialise:
+.b199		20 b5 9b	jsr $9bb5			jsr 	CheckIdentifierStringSpace 	; check memory allocation.
+.b19c		a9 ff		lda #$ff			lda 	#$FF 						; only initialise once (set to $FF, bit used to test it)
+.b19e		8d 10 04	sta $0410			sta 	stringInitialised
+.b1a1		ad 0e 04	lda $040e			lda 	stringMemory 				; allocate 256 bytes for one concreted string
+.b1a4		8d 11 04	sta $0411			sta 	stringTempPointer 			; so temporary string space is allocated below that.
+.b1a7		ad 0f 04	lda $040f			lda 	stringMemory+1
+.b1aa		3a		dec a				dec 	a
+.b1ab		8d 12 04	sta $0412			sta 	stringTempPointer+1
+.b1ae		60		rts				rts
+.b1af						StringTempAllocate:
+.b1af		c9 fd		cmp #$fd			cmp 	#252+1 						; max length of strings
+.b1b1		b0 30		bcs $b1e3			bcs 	_STALength
+.b1b3		2c 10 04	bit $0410			bit 	stringInitialised 			; already initialised
+.b1b6		30 05		bmi $b1bd			bmi 	_STAAllocate
+.b1b8		48		pha				pha 								; save value to subtract.
+.b1b9		20 99 b1	jsr $b199			jsr 	StringSpaceInitialise 		; initialise string memory allocation
+.b1bc		68		pla				pla 								; restore it
+.b1bd						_STAAllocate:
+.b1bd		49 ff		eor #$ff			eor 	#$FF 						; 2's complement add to StringTempPointer
+.b1bf		18		clc				clc  								; deliberate allows one more
+.b1c0		6d 11 04	adc $0411			adc 	stringTempPointer 			; subtract from temp pointer
+.b1c3		8d 11 04	sta $0411			sta 	stringTempPointer
+.b1c6		95 58		sta $58,x			sta 	NSMantissa0,x 				; address in mantissa
+.b1c8		85 3c		sta $3c				sta 	zsTemp 						; and zsTemp
+.b1ca		ad 12 04	lda $0412			lda 	stringTempPointer+1
+.b1cd		69 ff		adc #$ff			adc 	#$FF
+.b1cf		8d 12 04	sta $0412			sta 	stringTempPointer+1
+.b1d2		85 3d		sta $3d				sta 	zsTemp+1
+.b1d4		95 60		sta $60,x			sta 	NSMantissa1,x
+.b1d6		74 68		stz $68,x			stz 	NSMantissa2,x 				; set the typing data and the upper address bytes.
+.b1d8		74 70		stz $70,x			stz 	NSMantissa3,x
+.b1da		a9 10		lda #$10			lda 	#NSTString
+.b1dc		95 50		sta $50,x			sta 	NSStatus,x
+.b1de		a9 00		lda #$00			lda 	#0 							; clear the target string
+.b1e0		92 3c		sta ($3c)			sta 	(zsTemp)
+.b1e2		60		rts				rts
+.b1e3						_STALength:
+.b1e3		a9 09		lda #$09		lda	#9
+.b1e5		4c 7b 90	jmp $907b		jmp	ErrorHandler
+.b1e8						StringTempWrite:
+.b1e8		48		pha				pha
+.b1e9		92 3c		sta ($3c)			sta 	(zsTemp) 					; write byte
+.b1eb		e6 3c		inc $3c				inc 	zsTemp 						; bump pointer
+.b1ed		d0 02		bne $b1f1			bne 	_STWNoCarry
+.b1ef		e6 3d		inc $3d				inc 	zsTemp+1
+.b1f1						_STWNoCarry:
+.b1f1		a9 00		lda #$00			lda 	#0 							; make ASCIIZ
+.b1f3		92 3c		sta ($3c)			sta 	(zsTemp)
+.b1f5		68		pla				pla
+.b1f6		60		rts				rts
 
 ;******  Return to file: _basic.asm
 
-.b1e9						StartModuleCode:
+
+;******  Processing file: ./storage/verify.asm
+
+.b1f7						Command_VERIFY:
+.b1f7		20 1e 9f	jsr $9f1e			jsr 	EvaluateString 				; file name to verify
+.b1fa		a6 37		ldx $37				ldx 	zTemp0+1					; zTemp0 -> XA
+.b1fc		a5 36		lda $36				lda 	zTemp0
+.b1fe		20 3f 80	jsr $803f			jsr 	KNLOpenFileRead 			; open file for reading
+.b201		b0 4b		bcs $b24e			bcs 	_CVErrorHandler 			; error, so fail.
+.b203		8d 5d 06	sta $065d			sta 	CurrentFileStream 			; save the reading stream.
+.b206		20 53 80	jsr $8053			jsr     KNLReadByteInit             ; Init reader with the stream
+.b209		9c 5c 06	stz $065c			stz 	LoadEOFFlag 				; clear EOF Flag.
+.b20c		a9 00		lda #$00			lda 	#((BasicStart) & $FF)
+.b20e		85 30		sta $30				sta 	codePtr
+.b210		a9 20		lda #$20			lda 	#((BasicStart) >> 8)
+.b212		85 31		sta $31				sta 	codePtr+1
+.b214						_CVLoop:
+.b214		20 ed 89	jsr $89ed			jsr 	LoadReadLine 				; get next line.
+.b217		f0 27		beq $b240			beq 	_CVExit 					; end, exit.
+.b219		20 a3 80	jsr $80a3			jsr 	TKTokeniseLine 				; tokenise the line.
+.b21c		ad 2b 04	lda $042b			lda 	tokenLineNumber 			; line number = 0
+.b21f		0d 2c 04	ora $042c			ora 	tokenLineNumber+1
+.b222		f0 f0		beq $b214			beq 	_CVLoop 					; not legal code, blank line or maybe a comment.
+.b224		a0 00		ldy #$00			ldy 	#0 							; start compare
+.b226						_CVCompareLoop:
+.b226		b1 30		lda ($30),y			lda 	(codePtr),y
+.b228		d9 2a 04	cmp $042a,y			cmp 	tokenOffset,y 				; compare against actual code.
+.b22b		d0 1c		bne $b249			bne 	_CVCompareError
+.b22d		c8		iny				iny
+.b22e		cc 2a 04	cpy $042a			cpy 	tokenOffset 				; until done whole line of code
+.b231		d0 f3		bne $b226			bne 	_CVCompareLoop
+.b233		18		clc				clc
+.b234		b2 30		lda ($30)			lda 	(codePtr)					; get offset and add
+.b236		65 30		adc $30				adc 	codePtr
+.b238		85 30		sta $30				sta 	codePtr
+.b23a		90 02		bcc $b23e			bcc 	_CREExit
+.b23c		e6 31		inc $31				inc 	codePtr+1 					; carry
+.b23e						_CREExit:
+.b23e		80 d4		bra $b214			bra 	_CVLoop
+.b240						_CVExit:
+.b240		ad 5d 06	lda $065d			lda 	CurrentFileStream
+.b243		20 71 80	jsr $8071			jsr 	KNLCloseFile
+.b246		4c c2 89	jmp $89c2			jmp 	CLComplete
+.b249						_CVCompareError:
+.b249		a9 1b		lda #$1b		lda	#27
+.b24b		4c 7b 90	jmp $907b		jmp	ErrorHandler
+.b24e						_CVErrorHandler:
+.b24e		4c df 89	jmp $89df			jmp 	CLErrorHandler
+
+;******  Return to file: _basic.asm
+
+.b251						StartModuleCode:
 
 ;******  Processing file: ../modules/_build/_hardware.module
 

@@ -178,7 +178,7 @@ VectorSet1:
 	.word	ShootCommand                     ; $92 SHOOT
 	.word	SpritesCtrl                      ; $93 SPRITES
 	.word	StopCommand                      ; $94 STOP
-	.word	SyntaxError                      ; $95 VERIFY
+	.word	Command_VERIFY                   ; $95 VERIFY
 	.word	XGoCommand                       ; $96 XGO
 	.word	XLoadCommand                     ; $97 XLOAD
 	.word	ZapCommand                       ; $98 ZAP
