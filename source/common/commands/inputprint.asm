@@ -22,12 +22,12 @@
 ; ************************************************************************************************
 
 Command_Input:  ;; [input]
-		lda 	#$FF 						; set input flag
-		sta 	isInputFlag
+		stz 	isPrintFlag
 		bra 	Command_IP_Main
 
 Command_Print:	;; [print]
-		stz 	isInputFlag 				; clear input flag
+		lda 	#$FF 						; set input flag
+		sta 	isPrintFlag 				; clear input flag
 		;
 Command_IP_Main:		
 		clc 								; carry being clear means last print wasn't comma/semicolon
@@ -59,8 +59,8 @@ _CPLoop:
 		and 	#NSBIsReference 			; is it a reference
 		beq 	_CPIsValue 					; no, display it.
 		;
-		lda 	isInputFlag 				; if print, dereference and print.
-		beq 	_CPIsPrint 					; otherwise display.
+		lda 	isPrintFlag 				; if print, dereference and print.
+		bne 	_CPIsPrint 					; otherwise display.
 		jsr 	CIInputValue 				; input a value to the reference
 		bra 	_CPNewLine
 
@@ -226,5 +226,6 @@ CPInputVector:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		01/01/23 		isInputFlag => isPrintFlag
 ;
 ; ************************************************************************************************

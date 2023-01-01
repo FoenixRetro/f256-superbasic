@@ -152,7 +152,7 @@ listIndent:	 								; list indent level.
 		.fill 	1				
 lcLastCharacter: 							; last character output.
 		.fill 	1	
-isInputFlag:	 							; non-zero if input, zero if print
+isPrintFlag:	 							; zero if input, non-zero if print, bit 6 zero = character print
 		.fill 	1			
 currentListColour: 							; current set colour when listing.
 		.fill 	1

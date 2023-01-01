@@ -48,14 +48,15 @@ class TokenSource(object):
 				text 		circle 		here 		color 		colour 		by
 				solid 		outline 	gfx			clear 		image 		from
 				plot 		on 			off 		palette 	sound 		input
-				poke 		pokew 		pokel 		poked
+				poke 		pokew 		pokel 		poked 		cprint
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop			
 				restore 	assert 		assemble 	bitmap		sprites
 				load 		go 			zap	 		ping 		setdate
 				shoot 		explode 	xload 		xgo 		settime
-				save		verify		drive 		dir
+				save		verify		drive 		dir 		bload
+				bsave		himem
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	

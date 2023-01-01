@@ -123,39 +123,40 @@ VectorSet0:
 	.word	ClearScreen                      ; $b5 CLS
 	.word	SyntaxError                      ; $b6 COLOR
 	.word	SyntaxError                      ; $b7 COLOUR
-	.word	Command_Data                     ; $b8 DATA
-	.word	DimCommand                       ; $b9 DIM
-	.word	Unused3                          ; $ba DOWNTO
-	.word	ElseCode                         ; $bb ELSE
-	.word	SyntaxError                      ; $bc FROM
-	.word	GfxCommand                       ; $bd GFX
-	.word	Command_GOSUB                    ; $be GOSUB
-	.word	GotoCommand                      ; $bf GOTO
-	.word	SyntaxError                      ; $c0 HERE
-	.word	ImageCommand                     ; $c1 IMAGE
-	.word	Command_Input                    ; $c2 INPUT
-	.word	LetCommand                       ; $c3 LET
-	.word	LineCommand                      ; $c4 LINE
-	.word	Command_LOCAL                    ; $c5 LOCAL
-	.word	SyntaxError                      ; $c6 OFF
-	.word	SyntaxError                      ; $c7 ON
-	.word	SyntaxError                      ; $c8 OUTLINE
-	.word	PaletteCommand                   ; $c9 PALETTE
-	.word	PlotCommand                      ; $ca PLOT
-	.word	PokeBCommand                     ; $cb POKE
-	.word	PokeDCommand                     ; $cc POKED
-	.word	PokeLCommand                     ; $cd POKEL
-	.word	PokeWCommand                     ; $ce POKEW
-	.word	Command_Print                    ; $cf PRINT
-	.word	Command_Read                     ; $d0 READ
-	.word	RectangleCommand                 ; $d1 RECT
-	.word	RemCommand                       ; $d2 REM
-	.word	Command_RETURN                   ; $d3 RETURN
-	.word	SyntaxError                      ; $d4 SOLID
-	.word	SoundCommand                     ; $d5 SOUND
-	.word	SpriteCommand                    ; $d6 SPRITE
-	.word	TextCommand                      ; $d7 TEXT
-	.word	Unused2                          ; $d8 TO
+	.word	SyntaxError                      ; $b8 CPRINT
+	.word	Command_Data                     ; $b9 DATA
+	.word	DimCommand                       ; $ba DIM
+	.word	Unused3                          ; $bb DOWNTO
+	.word	ElseCode                         ; $bc ELSE
+	.word	SyntaxError                      ; $bd FROM
+	.word	GfxCommand                       ; $be GFX
+	.word	Command_GOSUB                    ; $bf GOSUB
+	.word	GotoCommand                      ; $c0 GOTO
+	.word	SyntaxError                      ; $c1 HERE
+	.word	ImageCommand                     ; $c2 IMAGE
+	.word	Command_Input                    ; $c3 INPUT
+	.word	LetCommand                       ; $c4 LET
+	.word	LineCommand                      ; $c5 LINE
+	.word	Command_LOCAL                    ; $c6 LOCAL
+	.word	SyntaxError                      ; $c7 OFF
+	.word	SyntaxError                      ; $c8 ON
+	.word	SyntaxError                      ; $c9 OUTLINE
+	.word	PaletteCommand                   ; $ca PALETTE
+	.word	PlotCommand                      ; $cb PLOT
+	.word	PokeBCommand                     ; $cc POKE
+	.word	PokeDCommand                     ; $cd POKED
+	.word	PokeLCommand                     ; $ce POKEL
+	.word	PokeWCommand                     ; $cf POKEW
+	.word	Command_Print                    ; $d0 PRINT
+	.word	Command_Read                     ; $d1 READ
+	.word	RectangleCommand                 ; $d2 RECT
+	.word	RemCommand                       ; $d3 REM
+	.word	Command_RETURN                   ; $d4 RETURN
+	.word	SyntaxError                      ; $d5 SOLID
+	.word	SoundCommand                     ; $d6 SOUND
+	.word	SpriteCommand                    ; $d7 SPRITE
+	.word	TextCommand                      ; $d8 TEXT
+	.word	Unused2                          ; $d9 TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
@@ -163,27 +164,30 @@ VectorSet1:
 	.word	AssembleCommand                  ; $83 ASSEMBLE
 	.word	AssertCommand                    ; $84 ASSERT
 	.word	BitmapCtrl                       ; $85 BITMAP
-	.word	Command_Dir                      ; $86 DIR
-	.word	Command_Drive                    ; $87 DRIVE
-	.word	EndCommand                       ; $88 END
-	.word	Explode                          ; $89 EXPLODE
-	.word	SyntaxError                      ; $8a GO
-	.word	Command_List                     ; $8b LIST
-	.word	Command_Load                     ; $8c LOAD
-	.word	NewCommand                       ; $8d NEW
-	.word	PingCommand                      ; $8e PING
-	.word	Command_Restore                  ; $8f RESTORE
-	.word	CommandRUN                       ; $90 RUN
-	.word	Command_Save                     ; $91 SAVE
-	.word	SyntaxError                      ; $92 SETDATE
-	.word	SyntaxError                      ; $93 SETTIME
-	.word	ShootCommand                     ; $94 SHOOT
-	.word	SpritesCtrl                      ; $95 SPRITES
-	.word	StopCommand                      ; $96 STOP
-	.word	Command_VERIFY                   ; $97 VERIFY
-	.word	XGoCommand                       ; $98 XGO
-	.word	XLoadCommand                     ; $99 XLOAD
-	.word	ZapCommand                       ; $9a ZAP
+	.word	SyntaxError                      ; $86 BLOAD
+	.word	SyntaxError                      ; $87 BSAVE
+	.word	Command_Dir                      ; $88 DIR
+	.word	Command_Drive                    ; $89 DRIVE
+	.word	EndCommand                       ; $8a END
+	.word	Explode                          ; $8b EXPLODE
+	.word	SyntaxError                      ; $8c GO
+	.word	SyntaxError                      ; $8d HIMEM
+	.word	Command_List                     ; $8e LIST
+	.word	Command_Load                     ; $8f LOAD
+	.word	NewCommand                       ; $90 NEW
+	.word	PingCommand                      ; $91 PING
+	.word	Command_Restore                  ; $92 RESTORE
+	.word	CommandRUN                       ; $93 RUN
+	.word	Command_Save                     ; $94 SAVE
+	.word	SyntaxError                      ; $95 SETDATE
+	.word	SyntaxError                      ; $96 SETTIME
+	.word	ShootCommand                     ; $97 SHOOT
+	.word	SpritesCtrl                      ; $98 SPRITES
+	.word	StopCommand                      ; $99 STOP
+	.word	Command_VERIFY                   ; $9a VERIFY
+	.word	XGoCommand                       ; $9b XGO
+	.word	XLoadCommand                     ; $9c XLOAD
+	.word	ZapCommand                       ; $9d ZAP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

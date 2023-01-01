@@ -59,39 +59,40 @@ KeywordSet0:
 	.text	3,$e2,"CLS"            ; $b5 CLS
 	.text	5,$7f,"COLOR"          ; $b6 COLOR
 	.text	6,$d4,"COLOUR"         ; $b7 COLOUR
-	.text	4,$1a,"DATA"           ; $b8 DATA
-	.text	3,$da,"DIM"            ; $b9 DIM
-	.text	6,$db,"DOWNTO"         ; $ba DOWNTO
-	.text	4,$29,"ELSE"           ; $bb ELSE
-	.text	4,$34,"FROM"           ; $bc FROM
-	.text	3,$e5,"GFX"            ; $bd GFX
-	.text	5,$80,"GOSUB"          ; $be GOSUB
-	.text	4,$39,"GOTO"           ; $bf GOTO
-	.text	4,$24,"HERE"           ; $c0 HERE
-	.text	5,$63,"IMAGE"          ; $c1 IMAGE
-	.text	5,$90,"INPUT"          ; $c2 INPUT
-	.text	3,$e5,"LET"            ; $c3 LET
-	.text	4,$28,"LINE"           ; $c4 LINE
-	.text	5,$6b,"LOCAL"          ; $c5 LOCAL
-	.text	3,$db,"OFF"            ; $c6 OFF
-	.text	2,$9d,"ON"             ; $c7 ON
-	.text	7,$20,"OUTLINE"        ; $c8 OUTLINE
-	.text	7,$0f,"PALETTE"        ; $c9 PALETTE
-	.text	4,$3f,"PLOT"           ; $ca PLOT
-	.text	4,$2f,"POKE"           ; $cb POKE
-	.text	5,$73,"POKED"          ; $cc POKED
-	.text	5,$7b,"POKEL"          ; $cd POKEL
-	.text	5,$86,"POKEW"          ; $ce POKEW
-	.text	5,$8d,"PRINT"          ; $cf PRINT
-	.text	4,$1c,"READ"           ; $d0 READ
-	.text	4,$2e,"RECT"           ; $d1 RECT
-	.text	3,$e4,"REM"            ; $d2 REM
-	.text	6,$e0,"RETURN"         ; $d3 RETURN
-	.text	5,$7b,"SOLID"          ; $d4 SOLID
-	.text	5,$89,"SOUND"          ; $d5 SOUND
-	.text	6,$d7,"SPRITE"         ; $d6 SPRITE
-	.text	4,$45,"TEXT"           ; $d7 TEXT
-	.text	2,$a3,"TO"             ; $d8 TO
+	.text	6,$d0,"CPRINT"         ; $b8 CPRINT
+	.text	4,$1a,"DATA"           ; $b9 DATA
+	.text	3,$da,"DIM"            ; $ba DIM
+	.text	6,$db,"DOWNTO"         ; $bb DOWNTO
+	.text	4,$29,"ELSE"           ; $bc ELSE
+	.text	4,$34,"FROM"           ; $bd FROM
+	.text	3,$e5,"GFX"            ; $be GFX
+	.text	5,$80,"GOSUB"          ; $bf GOSUB
+	.text	4,$39,"GOTO"           ; $c0 GOTO
+	.text	4,$24,"HERE"           ; $c1 HERE
+	.text	5,$63,"IMAGE"          ; $c2 IMAGE
+	.text	5,$90,"INPUT"          ; $c3 INPUT
+	.text	3,$e5,"LET"            ; $c4 LET
+	.text	4,$28,"LINE"           ; $c5 LINE
+	.text	5,$6b,"LOCAL"          ; $c6 LOCAL
+	.text	3,$db,"OFF"            ; $c7 OFF
+	.text	2,$9d,"ON"             ; $c8 ON
+	.text	7,$20,"OUTLINE"        ; $c9 OUTLINE
+	.text	7,$0f,"PALETTE"        ; $ca PALETTE
+	.text	4,$3f,"PLOT"           ; $cb PLOT
+	.text	4,$2f,"POKE"           ; $cc POKE
+	.text	5,$73,"POKED"          ; $cd POKED
+	.text	5,$7b,"POKEL"          ; $ce POKEL
+	.text	5,$86,"POKEW"          ; $cf POKEW
+	.text	5,$8d,"PRINT"          ; $d0 PRINT
+	.text	4,$1c,"READ"           ; $d1 READ
+	.text	4,$2e,"RECT"           ; $d2 RECT
+	.text	3,$e4,"REM"            ; $d3 REM
+	.text	6,$e0,"RETURN"         ; $d4 RETURN
+	.text	5,$7b,"SOLID"          ; $d5 SOLID
+	.text	5,$89,"SOUND"          ; $d6 SOUND
+	.text	6,$d7,"SPRITE"         ; $d7 SPRITE
+	.text	4,$45,"TEXT"           ; $d8 TEXT
+	.text	2,$a3,"TO"             ; $d9 TO
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF
@@ -100,27 +101,30 @@ KeywordSet1:
 	.text	8,$4c,"ASSEMBLE"       ; $83 ASSEMBLE
 	.text	6,$d2,"ASSERT"         ; $84 ASSERT
 	.text	6,$bd,"BITMAP"         ; $85 BITMAP
-	.text	3,$df,"DIR"            ; $86 DIR
-	.text	5,$7a,"DRIVE"          ; $87 DRIVE
-	.text	3,$d7,"END"            ; $88 END
-	.text	7,$11,"EXPLODE"        ; $89 EXPLODE
-	.text	2,$96,"GO"             ; $8a GO
-	.text	4,$3c,"LIST"           ; $8b LIST
-	.text	4,$20,"LOAD"           ; $8c LOAD
-	.text	3,$ea,"NEW"            ; $8d NEW
-	.text	4,$2e,"PING"           ; $8e PING
-	.text	7,$24,"RESTORE"        ; $8f RESTORE
-	.text	3,$f5,"RUN"            ; $90 RUN
-	.text	4,$2f,"SAVE"           ; $91 SAVE
-	.text	7,$0a,"SETDATE"        ; $92 SETDATE
-	.text	7,$1b,"SETTIME"        ; $93 SETTIME
-	.text	5,$8d,"SHOOT"          ; $94 SHOOT
-	.text	7,$2a,"SPRITES"        ; $95 SPRITES
-	.text	4,$46,"STOP"           ; $96 STOP
-	.text	6,$d5,"VERIFY"         ; $97 VERIFY
-	.text	3,$ee,"XGO"            ; $98 XGO
-	.text	5,$78,"XLOAD"          ; $99 XLOAD
-	.text	3,$eb,"ZAP"            ; $9a ZAP
+	.text	5,$62,"BLOAD"          ; $86 BLOAD
+	.text	5,$71,"BSAVE"          ; $87 BSAVE
+	.text	3,$df,"DIR"            ; $88 DIR
+	.text	5,$7a,"DRIVE"          ; $89 DRIVE
+	.text	3,$d7,"END"            ; $8a END
+	.text	7,$11,"EXPLODE"        ; $8b EXPLODE
+	.text	2,$96,"GO"             ; $8c GO
+	.text	5,$70,"HIMEM"          ; $8d HIMEM
+	.text	4,$3c,"LIST"           ; $8e LIST
+	.text	4,$20,"LOAD"           ; $8f LOAD
+	.text	3,$ea,"NEW"            ; $90 NEW
+	.text	4,$2e,"PING"           ; $91 PING
+	.text	7,$24,"RESTORE"        ; $92 RESTORE
+	.text	3,$f5,"RUN"            ; $93 RUN
+	.text	4,$2f,"SAVE"           ; $94 SAVE
+	.text	7,$0a,"SETDATE"        ; $95 SETDATE
+	.text	7,$1b,"SETTIME"        ; $96 SETTIME
+	.text	5,$8d,"SHOOT"          ; $97 SHOOT
+	.text	7,$2a,"SPRITES"        ; $98 SPRITES
+	.text	4,$46,"STOP"           ; $99 STOP
+	.text	6,$d5,"VERIFY"         ; $9a VERIFY
+	.text	3,$ee,"XGO"            ; $9b XGO
+	.text	5,$78,"XLOAD"          ; $9c XLOAD
+	.text	3,$eb,"ZAP"            ; $9d ZAP
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF
