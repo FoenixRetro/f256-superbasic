@@ -17,7 +17,7 @@ endif
 
 all:
 	make -B -C graphics
-	make -B -C hardware/header
+	make -B -C hardware$(S)header
 	
 	python _scripts$(S)makebuild.py graphics >_build$(S)_graphics.module
 

@@ -1,6 +1,6 @@
-5 dir
-10 rem "Aabdefghijklmnopqrstuvwxyzabdefghijklmnopqrstuvwxyz0123456789"
-20 rem "Babdefghijklmnopqrstuvwxyzabdefghijklmnopqrstuvwxyz0123456789"
-30 rem "Cabdefghijklmnopqrstuvwxyzabdefghijklmnopqrstuvwxyz0123456789"
-40 rem "Dabdefghijklmnopqrstuvwxyzabdefghijklmnopqrstuvwxyz0123456789"
+5 cls
+20 for i = 0 to 255
+30 ?1 = 2:i?$C000 = i
+35 ?1 = 3:i?$C000 = $F0
+40 next
 ÿÿÿÿ
