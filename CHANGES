@@ -112,3 +112,8 @@ Release 20 (01/01/23):
 	CHG: zTemp0 in graphics should be gxzTemp0 ; they are the same but they needn't be.
 	
 Release 21 (01/01/23):	
+
+	CHG: Remove capital neatening of file names.
+	CHG: Corrected block write to monitor bytes actually written out.
+
+Release 22 (01/01/23):	

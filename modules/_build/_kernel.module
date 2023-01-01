@@ -357,7 +357,7 @@ _KNLRBGetNextByte:
 		sta     kernel.args.recv.buflen
 
 		jsr     kernel.ReadData		       	; Get the data from the kernel  (Synchronous call, no error)
-		lda    event.file.data.read 		; Return # of bytes read (in A)
+		lda     event.file.data.read 		; Return # of bytes read (in A)
 
 		clc
 		rts
@@ -397,52 +397,53 @@ _KGNBExitFail:
 ;
 ;							Write data at (zTemp0) to Stream A, X bytes.
 ;
+;					  On error CS ; A = code. On success, CC, A = bytes read.
+;
 ; ************************************************************************************************
 
 Export_KNLWriteBlock:
-		pha
 		phx
 		phy
 		;
 		;		Already handled OPENED so can write out.
 		;
-        sta     kernel.args.file.write.stream ; save the stream.
+		sta     kernel.args.file.write.stream ; save the stream.
 
-        lda     zTemp0 						; save the data location.
-        sta     kernel.args.file.write.buf+0
-        lda     zTemp0+1
-        sta     kernel.args.file.write.buf+1
+		lda     zTemp0 						; save the data location.
+		sta     kernel.args.file.write.buf+0
+		lda     zTemp0+1
+		sta     kernel.args.file.write.buf+1
 
-        stx     kernel.args.file.write.buflen ; Set the buffer length
+		stx     kernel.args.file.write.buflen ; Set the buffer length
 
-        jsr     kernel.File.Write 			; write it out.
-        lda 	#kernel.event.file.ERROR 	; in case it fails.
-        bcs 	_KWBFailed
+		jsr     kernel.File.Write 			; write it out.
+		lda 	#kernel.event.file.ERROR 	; in case it fails.
+		bcs 	_KWBFailed
 
 _KNLWLoop:									; wait for an event.
-       	jsr     kernel.Yield
-        jsr     kernel.NextEvent
-        bcs     _KNLWLoop
+		jsr     kernel.Yield
+		jsr     kernel.NextEvent
+		bcs     _KNLWLoop
 
-        lda     event.type 					; various errors.
-        cmp     #kernel.event.file.CLOSED
-        beq 	_KWBFailed
-        cmp     #kernel.event.file.ERROR
-        beq 	_KWBFailed
-        cmp     #kernel.event.file.EOF
-        beq 	_KWBFailed
+		lda     event.type 					; various errors.
+		cmp     #kernel.event.file.CLOSED
+		beq 	_KWBFailed
+		cmp     #kernel.event.file.ERROR
+		beq 	_KWBFailed
+		cmp     #kernel.event.file.EOF
+		beq 	_KWBFailed
 
-        cmp     #kernel.event.file.WROTE 	; wait until block write succeeds
-      	bne 	_KNLWLoop
-      	clc
-      	bra 	_KWBExit
+		cmp     #kernel.event.file.WROTE 	; wait until block write succeeds
+		bne 	_KNLWLoop
+		clc
+		lda    event.file.wrote.wrote 		; get bytes written.
+		bra 	_KWBExit
 
 _KWBFailed:
 		sec
 _KWBExit:
 		ply
 		plx
-		pla
 		rts
 
 		.send code

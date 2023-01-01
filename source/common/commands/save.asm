@@ -24,7 +24,7 @@ Command_Save: ;; [SAVE]
 		ldx 	zTemp0+1					; zTemp0 -> XA
 		lda 	zTemp0 
 		jsr 	KNLOpenFileWrite 			; open file for writing
-		bcs 	_CSErrorHandler 			; error, so fail.
+		bcs 	CSErrorHandler 				; error, so fail.
 		sta 	CurrentFileStream 			; save the reading stream.
 
 		.cresetcodepointer 					; prepare to loop through code.
@@ -34,31 +34,7 @@ _CSLoop:
 		jsr 	CSGetCleanLine
 		sty 	zTemp0+1 					; save write address of data
 		sta 	zTemp0
-
-		cpx 	#64+1 						; <= 64 bytes to wite
-		bcc 	_CSWrite1
-		
-		phx
-		ldx 	#64 						; write first 64.		
-		lda 	CurrentFileStream 			; stream to write, count already in X
-		jsr 	KNLWriteBlock
-
-		pla 								; calculate second lot of bytes outout.
-		sec
-		sbc 	#64
-		tax
-
-		clc 								; point to second part to write.
-		lda 	zTemp0
-		adc 	#64
-		sta 	zTemp0
-		bcc 	_CSWrite1
-		inc 	zTemp0+1
-
-_CSWrite1:
-		lda 	CurrentFileStream 			; stream to write, count already in X
-		jsr 	KNLWriteBlock 				; write it out.
-		; 
+		jsr 	CLWriteByteBlock 			; write the block out.
 		.cnextline 							; go to next line.
 		bra 	_CSLoop
 
@@ -68,8 +44,41 @@ _CSExit:
 
 		jmp 	CLComplete 					; display complete message.
 
-_CSErrorHandler:
+CSErrorHandler:
 		jmp 	CLErrorHandler
+
+
+; ************************************************************************************************
+;
+;					Write X bytes out to CurrentFileStream from zTemp0
+;
+; ************************************************************************************************
+		
+CLWriteByteBlock:		
+		cpx 	#0 							; written the lot ?
+		beq 	_CLWBBExit					; if so, exit
+
+		lda 	CurrentFileStream 			; stream to write, count in X
+		jsr 	KNLWriteBlock 				; call one write attempt
+		bcs 	CSErrorHandler 				; error occurred
+
+		sta 	zTemp1 						; save bytes written.
+
+		txa 								; subtract bytes written from X, total count.
+		sec
+		sbc 	zTemp1
+		tax
+
+		clc 								; advance zTemp0 pointer by bytes written.
+		lda 	zTemp0
+		adc 	zTemp1
+		sta 	zTemp0
+		bcc 	CLWriteByteBlock
+		inc 	zTemp0+1
+		bra 	CLWriteByteBlock 			; and retry write out.
+
+_CLWBBExit:
+		rts
 
 ; ************************************************************************************************
 ;

@@ -1,5 +1,4 @@
 Progress:	
-	Fix Save.	
 	HIMEM
 	LOAD and SAVE memory.
 	- Break check
@@ -22,16 +21,3 @@ Progress:
 Ongoing:
 	Code reading.
 	Continue documentation.	
-
-Sorry for the misunderstanding.  It is functioning as designed ... just like POSIX 'write', and for mostly the same reasons (tho if I could do IEC in an interrupt, I could take up to 256 bytes at a time instead of 64).  Going into detail below so everyone can learn something:
-
-Kernels don't want to buffer data ... they only want to take what they can immediately hand over to a  device driver.  This is for several reasons, but the most important one is that kernel memory is typically allocated statically or per-process, and kernels need to treat all processes fairly (not letting one bad actor starve the others).  As a consequence, when a user performs a write, kernels have three choices:
-1. They can copy the immediately deliverable portion of the data into a small, per-socket buffer, 
-2. They can block the process until they can deliver the data,
-3. They can ask the process not to move or alter the data until signaled.
-
-#3 is hard on everyone, and #2 is a non-starter on an interactive system (even tho y'all are currently blocking yourselves, my games and operating systems won't be doing so).  That leaves #1.    Most unix-like kernels make the same choice for the same reason.  Do a "man 2 read" and a "man 2 write" and you'll see the exact same interface. 
-
-Now if you look under the covers of stdio, you're going to find that it just sits in a loop until it completes the read or write (or hits an error).  Why doesn't the kernel do it instead?  As designed, if you use the POSIX style interface, and you find that a socket is busy, you can do something else until it's no longer busy.  This lets you effect multi-tasking within a single process.  If you want to give up that ability for convenience (stdio), you're free to do so, but if the kernel blocked until the full write was complete, then everyone would be forced to give up the ability to multi-task.
-
-There's an extra little wrinkle with IEC.  Without IEC interrupts, I basically have to do the transfer on the user's thread.  This wouldn't be so bad, except IEC really is quite slow, and if I supported transactions of more than ~64 bytes at a time, the transfer could take so long that the kernel could run out of event objects and you would lose keystrokes or mouse events.  Thus, I force the driver to take no more than 64 bytes at a time.  This isn't a general limit (the kernel can take either 256 or 512 bytes depending on the device), and so it isn't an error to send more than 64 ... the kernel just won't take any more than that at a time for your own protection

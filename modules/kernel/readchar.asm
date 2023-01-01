@@ -121,7 +121,7 @@ _KNLRBGetNextByte:
 		sta     kernel.args.recv.buflen	  										
 
 		jsr     kernel.ReadData		       	; Get the data from the kernel  (Synchronous call, no error)
-		lda    event.file.data.read 		; Return # of bytes read (in A)
+		lda     event.file.data.read 		; Return # of bytes read (in A)
 
 		clc
 		rts

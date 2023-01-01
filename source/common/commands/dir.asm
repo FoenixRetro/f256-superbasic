@@ -69,7 +69,7 @@ _CDEVFile:
 		jsr 	EXTPrintCharacter
 		lda     event.directory.file.len
 		jsr     _CDReadData
-		jsr     _CDPrintData
+		jsr 	PrintStringXA
 		lda 	#13
 		jsr 	EXTPrintCharacter
 		bra     _CDEVRead
@@ -102,28 +102,8 @@ _CDReadData:
 		ldx     kernel.args.recv.buflen
 		stz     lineBuffer,x
 
-		rts
-
-; ************************************************************************************************
-;
-;								Print lineBuffer in lower case
-;
-; ************************************************************************************************
-
-_CDPrintData:
-		ldx 	#0
-_CDPLoop:
-		lda 	lineBuffer,x
-		cmp		#"A"
-		bcc 	_CDPNotUpper
-		cmp 	#"Z"+1
-		bcs 	_CDPNotUpper
-		eor 	#32
-_CDPNotUpper:
-		jsr 	EXTPrintCharacter
-		inx
-		lda 	lineBuffer,x
-		bne 	_CDPLoop
+		lda 	#lineBuffer & $FF
+		ldx 	#lineBuffer >> 8
 		rts
 
 ;read_ext
