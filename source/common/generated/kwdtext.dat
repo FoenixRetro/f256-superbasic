@@ -100,25 +100,27 @@ KeywordSet1:
 	.text	8,$4c,"ASSEMBLE"       ; $83 ASSEMBLE
 	.text	6,$d2,"ASSERT"         ; $84 ASSERT
 	.text	6,$bd,"BITMAP"         ; $85 BITMAP
-	.text	3,$d7,"END"            ; $86 END
-	.text	7,$11,"EXPLODE"        ; $87 EXPLODE
-	.text	2,$96,"GO"             ; $88 GO
-	.text	4,$3c,"LIST"           ; $89 LIST
-	.text	4,$20,"LOAD"           ; $8a LOAD
-	.text	3,$ea,"NEW"            ; $8b NEW
-	.text	4,$2e,"PING"           ; $8c PING
-	.text	7,$24,"RESTORE"        ; $8d RESTORE
-	.text	3,$f5,"RUN"            ; $8e RUN
-	.text	4,$2f,"SAVE"           ; $8f SAVE
-	.text	7,$0a,"SETDATE"        ; $90 SETDATE
-	.text	7,$1b,"SETTIME"        ; $91 SETTIME
-	.text	5,$8d,"SHOOT"          ; $92 SHOOT
-	.text	7,$2a,"SPRITES"        ; $93 SPRITES
-	.text	4,$46,"STOP"           ; $94 STOP
-	.text	6,$d5,"VERIFY"         ; $95 VERIFY
-	.text	3,$ee,"XGO"            ; $96 XGO
-	.text	5,$78,"XLOAD"          ; $97 XLOAD
-	.text	3,$eb,"ZAP"            ; $98 ZAP
+	.text	3,$df,"DIR"            ; $86 DIR
+	.text	5,$7a,"DRIVE"          ; $87 DRIVE
+	.text	3,$d7,"END"            ; $88 END
+	.text	7,$11,"EXPLODE"        ; $89 EXPLODE
+	.text	2,$96,"GO"             ; $8a GO
+	.text	4,$3c,"LIST"           ; $8b LIST
+	.text	4,$20,"LOAD"           ; $8c LOAD
+	.text	3,$ea,"NEW"            ; $8d NEW
+	.text	4,$2e,"PING"           ; $8e PING
+	.text	7,$24,"RESTORE"        ; $8f RESTORE
+	.text	3,$f5,"RUN"            ; $90 RUN
+	.text	4,$2f,"SAVE"           ; $91 SAVE
+	.text	7,$0a,"SETDATE"        ; $92 SETDATE
+	.text	7,$1b,"SETTIME"        ; $93 SETTIME
+	.text	5,$8d,"SHOOT"          ; $94 SHOOT
+	.text	7,$2a,"SPRITES"        ; $95 SPRITES
+	.text	4,$46,"STOP"           ; $96 STOP
+	.text	6,$d5,"VERIFY"         ; $97 VERIFY
+	.text	3,$ee,"XGO"            ; $98 XGO
+	.text	5,$78,"XLOAD"          ; $99 XLOAD
+	.text	3,$eb,"ZAP"            ; $9a ZAP
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF

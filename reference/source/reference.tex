@@ -214,7 +214,12 @@ Clears all variables to zero or empty string, and erases all arrays. Done when a
 	100 clear
 \end{verbatim}
 
-
+\section*{dir}
+Shows all the files in the current drive.
+\example{}
+\begin{verbatim}
+	100 dir
+\end{verbatim}
 
 \section*{dim}
 Dimension number or string arrays with up to two dimensions, with a maximum of 254 elements in each dimension.
@@ -222,6 +227,13 @@ Dimension number or string arrays with up to two dimensions, with a maximum of 2
 \begin{verbatim}
 	100 dim a$(10),a_sine#(10)
 	110 dim name$(10,2)
+\end{verbatim}
+
+\section*{drive}
+Sets the current drive for load save. The default drive is zero.
+\example{}
+\begin{verbatim}
+	100 drive 1
 \end{verbatim}
 
 \section*{end}

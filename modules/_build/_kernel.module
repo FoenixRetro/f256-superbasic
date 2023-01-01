@@ -150,24 +150,24 @@ Export_KNLOpenFileWrite:
 
 Export_KNLOpenFileRead:
 		pha
-        lda     #kernel.args.file.open.READ ; set READ mode.
+		lda     #kernel.args.file.open.READ ; set READ mode.
 KNLOpenStart:
-        sta     kernel.args.file.open.mode
-        pla
+		sta     kernel.args.file.open.mode
+		pla
 
 		jsr 	KNLSetupFileName
 
-        lda     #event & $FF 				; tell kernel where to store event data
-        sta     kernel.args.events+0
-        lda     #event >> 8
-        sta     kernel.args.events+1
+		lda     #event & $FF 				; tell kernel where to store event data
+		sta     kernel.args.events+0
+		lda     #event >> 8
+		sta     kernel.args.events+1
 
-		lda 	#0 							; currently drive zero only.
+		lda 	DefaultDrive 				; currently drive zero only.
 		sta 	kernel.args.file.open.drive
 
-        jsr     kernel.File.Open 			; open the file and exit.
-        lda     #kernel.event.file.ERROR
-        bcs     _out
+		jsr     kernel.File.Open 			; open the file and exit.
+		lda     #kernel.event.file.ERROR
+		bcs     _out
 
 _loop
 		jsr     kernel.Yield    			; event wait
@@ -184,10 +184,10 @@ _loop
 		bra     _loop
 
 _success
-        lda     event.file.stream
-        clc
+		lda     event.file.stream
+		clc
 _out
-        rts
+		rts
 
 ; ************************************************************************************************
 ;
@@ -210,10 +210,10 @@ KNLSetupFileName:
 		phy 								; save Y on stack
 		sta 	zTemp0 						; save filename position in temp, and in kenrel slot
 		stx 	zTemp0+1
-        sta     kernel.args.file.open.fname+0
-        stx     kernel.args.file.open.fname+1
-        ;
-        ldy 	#$FF 						; get the filename length => Kernel slot
+		sta     kernel.args.file.open.fname+0
+		stx     kernel.args.file.open.fname+1
+		;
+		ldy 	#$FF 						; get the filename length => Kernel slot
 _KNLGetLength:
 		iny
 		lda 	(zTemp0),y

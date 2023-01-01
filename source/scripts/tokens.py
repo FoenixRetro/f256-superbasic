@@ -55,7 +55,7 @@ class TokenSource(object):
 				restore 	assert 		assemble 	bitmap		sprites
 				load 		go 			zap	 		ping 		setdate
 				shoot 		explode 	xload 		xgo 		settime
-				save		verify
+				save		verify		drive 		dir
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	

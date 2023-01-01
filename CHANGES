@@ -106,3 +106,5 @@ Release 19 (01/01/23):
 	CHG: Save works for lines > 64 characters
 
 Release 20 (01/01/23):	
+
+	CHG: Added DIR and DRIVE

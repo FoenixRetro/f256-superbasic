@@ -1,8 +1,4 @@
 Progress:	
-	64 character save bug.
-	Add manual.	
-	DIR
-	DRIVE
 	HIMEM
 	LOAD and SAVE memory.
 	- Break check

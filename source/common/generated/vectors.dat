@@ -163,25 +163,27 @@ VectorSet1:
 	.word	AssembleCommand                  ; $83 ASSEMBLE
 	.word	AssertCommand                    ; $84 ASSERT
 	.word	BitmapCtrl                       ; $85 BITMAP
-	.word	EndCommand                       ; $86 END
-	.word	Explode                          ; $87 EXPLODE
-	.word	SyntaxError                      ; $88 GO
-	.word	Command_List                     ; $89 LIST
-	.word	Command_Load                     ; $8a LOAD
-	.word	NewCommand                       ; $8b NEW
-	.word	PingCommand                      ; $8c PING
-	.word	Command_Restore                  ; $8d RESTORE
-	.word	CommandRUN                       ; $8e RUN
-	.word	Command_Save                     ; $8f SAVE
-	.word	SyntaxError                      ; $90 SETDATE
-	.word	SyntaxError                      ; $91 SETTIME
-	.word	ShootCommand                     ; $92 SHOOT
-	.word	SpritesCtrl                      ; $93 SPRITES
-	.word	StopCommand                      ; $94 STOP
-	.word	Command_VERIFY                   ; $95 VERIFY
-	.word	XGoCommand                       ; $96 XGO
-	.word	XLoadCommand                     ; $97 XLOAD
-	.word	ZapCommand                       ; $98 ZAP
+	.word	Command_Dir                      ; $86 DIR
+	.word	Command_Drive                    ; $87 DRIVE
+	.word	EndCommand                       ; $88 END
+	.word	Explode                          ; $89 EXPLODE
+	.word	SyntaxError                      ; $8a GO
+	.word	Command_List                     ; $8b LIST
+	.word	Command_Load                     ; $8c LOAD
+	.word	NewCommand                       ; $8d NEW
+	.word	PingCommand                      ; $8e PING
+	.word	Command_Restore                  ; $8f RESTORE
+	.word	CommandRUN                       ; $90 RUN
+	.word	Command_Save                     ; $91 SAVE
+	.word	SyntaxError                      ; $92 SETDATE
+	.word	SyntaxError                      ; $93 SETTIME
+	.word	ShootCommand                     ; $94 SHOOT
+	.word	SpritesCtrl                      ; $95 SPRITES
+	.word	StopCommand                      ; $96 STOP
+	.word	Command_VERIFY                   ; $97 VERIFY
+	.word	XGoCommand                       ; $98 XGO
+	.word	XLoadCommand                     ; $99 XLOAD
+	.word	ZapCommand                       ; $9a ZAP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
