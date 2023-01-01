@@ -103,3 +103,6 @@ Release 18 (30/12/22):
 Release 19 (01/01/23):
 
 	CHG: Added preliminary documentation PDFs to release
+	CHG: Save works for lines > 64 characters
+
+Release 20 (01/01/23):	

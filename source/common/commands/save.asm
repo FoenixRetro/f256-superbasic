@@ -34,6 +34,28 @@ _CSLoop:
 		jsr 	CSGetCleanLine
 		sty 	zTemp0+1 					; save write address of data
 		sta 	zTemp0
+
+		cpx 	#64+1 						; <= 64 bytes to wite
+		bcc 	_CSWrite1
+		
+		phx
+		ldx 	#64 						; write first 64.		
+		lda 	CurrentFileStream 			; stream to write, count already in X
+		jsr 	KNLWriteBlock
+
+		pla 								; calculate second lot of bytes outout.
+		sec
+		sbc 	#64
+		tax
+
+		clc 								; point to second part to write.
+		lda 	zTemp0
+		adc 	#64
+		sta 	zTemp0
+		bcc 	_CSWrite1
+		inc 	zTemp0+1
+
+_CSWrite1:
 		lda 	CurrentFileStream 			; stream to write, count already in X
 		jsr 	KNLWriteBlock 				; write it out.
 		; 
