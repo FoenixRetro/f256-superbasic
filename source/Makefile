@@ -164,6 +164,10 @@ release:
 	$(CCOPY) build$(S)*.bin release
 	$(CCOPY) build$(S)bulk.csv release
 	$(CCOPY) ..$(S)CHANGES release
+	$(CCOPY) ..$(S)reference$(S)source$(S)*.pdf release
+	$(CCOPY) ..$(S)documents$(S)C256_Foenix_JR_UM_Rev002.pdf release
+	$(CCOPY) ..$(S)documents$(S)superbasic.sublime-syntax release
+
 	$(CDEL) release$(S)superbasic.zip
 	zip release$(S)superbasic.zip release$(S)*
 #
