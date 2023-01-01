@@ -158,19 +158,19 @@ prelim:
 
 release:
 	make -C . testbasic
-	$(CCOPY) $(APPNAME) release$(S)basic_autoload.rom	
+	$(CCOPY) $(APPNAME) release$(S)$(S)roms$(S)basic_autoload.rom
 	make -C . basic
-	$(CCOPY) $(APPNAME) release$(S)basic.rom	
+	$(CCOPY) $(APPNAME) release$(S)roms$(S)basic.rom
 	make -C build build
 	$(CCOPY) build$(S)*.bin release
 	$(CCOPY) build$(S)bulk.csv release
-	$(CCOPY) ..$(S)CHANGES release
-	$(CCOPY) ..$(S)reference$(S)source$(S)*.pdf release
-	$(CCOPY) ..$(S)documents$(S)C256_Foenix_JR_UM_Rev002.pdf release
-	$(CCOPY) ..$(S)documents$(S)superbasic.sublime-syntax release
+	$(CCOPY) ..$(S)CHANGES release$(S)documents
+	$(CCOPY) ..$(S)reference$(S)source$(S)*.pdf release$(S)documents
+	$(CCOPY) ..$(S)documents$(S)C256_Foenix_JR_UM_Rev002.pdf release$(S)documents
+	$(CCOPY) ..$(S)documents$(S)superbasic.sublime-syntax release$(S)documents
 
 	$(CDEL) release$(S)superbasic.zip
-	zip release$(S)superbasic.zip release$(S)*
+	zip -r release$(S)superbasic.zip release$(S)*
 #
 #		Run various tests.
 #
