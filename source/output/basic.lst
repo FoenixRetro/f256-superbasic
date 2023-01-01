@@ -1,13 +1,13 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
-; 64tass -D AUTORUN=1 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Sun Jan  1 13:39:41 2023
+; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
+; Sun Jan  1 15:17:37 2023
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
 ;******  Command line definitions
 
-=1						AUTORUN=1
+=0						AUTORUN=0
 =$e000						 MONITOR_ADDRESS=$E000
 =$f000						 LOCKOUT_ADDRESS=$F000
 =$38000						 BASIC_ADDRESS=$38000
@@ -558,8 +558,8 @@
 .80cd		a9 db		lda #$db			lda 	#Prompt & $FF
 .80cf		20 91 91	jsr $9191			jsr 	PrintStringXA
 .80d2		20 91 8b	jsr $8b91			jsr 	NewProgram 					; erase current program
-.80d5		20 67 83	jsr $8367			jsr 	BackloadProgram
-.80d8		4c 0f 8d	jmp $8d0f			jmp 	CommandRUN
+.80d5		4c 26 84	jmp $8426			jmp 	WarmStart					; make same size.
+.80d8		4c 26 84	jmp $8426			jmp 	WarmStart
 .80db						Prompt:
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
@@ -1004,8 +1004,8 @@
 .83a9		ad 2b 04	lda $042b			lda 	tokenLineNumber 			; line number = 0
 .83ac		0d 2c 04	ora $042c			ora 	tokenLineNumber+1
 .83af		f0 d4		beq $8385			beq 	_BPLoop 					; not legal code, blank line or maybe a comment.
-.83b1		ea		nop				nop
-.83b2		20 01 84	jsr $8401			jsr 	EditProgramCode
+.83b1		38		sec				sec 								; append not insert
+.83b2		20 84 a7	jsr $a784			jsr 	MemoryInsertLine 			; append to current program
 .83b5		80 ce		bra $8385			bra 	_BPLoop
 .83b7						_BPExit:
 .83b7		9c fa ff	stz $fffa			stz 	$FFFA
@@ -9216,9 +9216,9 @@
 .ca3b	aa3b					_CSNotDefault:
 .ca3b	aa3b	8d 88 06	sta $0688			sta 	gxSpritePage
 .ca3e	aa3e	20 5e aa	jsr $aa5e			jsr 	GXCalculateBaseAddress 	 	; convert page# to address
-.ca41	aa41	a5 36		lda $36				lda 	zTemp0
+.ca41	aa41	a5 36		lda $36				lda 	gxzTemp0
 .ca43	aa43	8d 93 06	sta $0693			sta 	gxSpriteOffsetBase
-.ca46	aa46	a5 37		lda $37				lda 	zTemp0+1
+.ca46	aa46	a5 37		lda $37				lda 	gxzTemp0+1
 .ca48	aa48	8d 94 06	sta $0694			sta 	gxSpriteOffsetBase+1
 .ca4b	aa4b	a2 00		ldx #$00			ldx 	#0 							; disable all sprites, clears all sprite memory.
 .ca4d	aa4d					_CSClear:
@@ -9740,12 +9740,12 @@
 .cde5	ade5					GXSpriteAcquire:
 .cde5	ade5	ad 88 06	lda $0688			lda 	gxSpritePage				; point to base page
 .cde8	ade8	85 0b		sta $0b				sta 	GXEditSlot
-.cdea	adea	86 36		stx $36				stx 	zTemp0 						; row number x 1,2,3,4
+.cdea	adea	86 36		stx $36				stx 	gxzTemp0 					; row number x 1,2,3,4
 .cdec	adec	a9 00		lda #$00			lda 	#0
 .cdee	adee	ae 29 07	ldx $0729			ldx 	gxSizeBits
 .cdf1	adf1					_GXTimesRowNumber:
 .cdf1	adf1	18		clc				clc
-.cdf2	adf2	65 36		adc $36				adc 	zTemp0
+.cdf2	adf2	65 36		adc $36				adc 	gxzTemp0
 .cdf4	adf4	ca		dex				dex
 .cdf5	adf5	10 fa		bpl $adf1			bpl 	_GXTimesRowNumber
 .cdf7	adf7	64 37		stz $37				stz 	gxzTemp0+1

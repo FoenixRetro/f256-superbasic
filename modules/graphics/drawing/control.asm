@@ -107,9 +107,9 @@ _CSNotOn:
 _CSNotDefault:
 		sta 	gxSpritePage
 		jsr 	GXCalculateBaseAddress 	 	; convert page# to address
-		lda 	zTemp0
+		lda 	gxzTemp0
 		sta 	gxSpriteOffsetBase
-		lda 	zTemp0+1
+		lda 	gxzTemp0+1
 		sta 	gxSpriteOffsetBase+1
 		;
 		ldx 	#0 							; disable all sprites, clears all sprite memory.

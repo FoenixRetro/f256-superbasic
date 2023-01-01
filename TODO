@@ -2,8 +2,11 @@ Progress:
 	HIMEM
 	LOAD and SAVE memory.
 	- Break check
-	Check font is right.
-	zTemp0 in control.asm
+	
+	HOWTO:
+		Create assembler programs
+		Cross develop BASIC programs
+		Update your firmware
 
 	Should CR in PRINT clear to EOL.
 	

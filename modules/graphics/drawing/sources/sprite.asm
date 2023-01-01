@@ -49,12 +49,12 @@ GXSpriteAcquire:
 		;
 		;		Multiply Row Number by Sprite Size (0,1,2,3) + 1 * 8 e.g. 8,16,24 or 32
 		;
-		stx 	zTemp0 						; row number x 1,2,3,4
+		stx 	gxzTemp0 					; row number x 1,2,3,4
 		lda 	#0
 		ldx 	gxSizeBits
 _GXTimesRowNumber:
 		clc
-		adc 	zTemp0
+		adc 	gxzTemp0
 		dex
 		bpl 	_GXTimesRowNumber
 		stz 	gxzTemp0+1
