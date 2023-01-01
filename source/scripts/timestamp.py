@@ -15,14 +15,6 @@ h = open("scripts/buildcount.txt")
 buildCount = int(h.read(-1))
 h.close()
 
-#
-#		Manually update buildcount.txt
-#
-#if False:
-#	h = open("scripts/buildcount.txt","w")
-#	h.write("{0}\n".format(buildCount+1))
-#	h.close()
-
 time = datetime.datetime.now()
 build = time.strftime("%d-%b-%y")
 h = open("common/generated/timestamp.asm","w")

@@ -154,6 +154,7 @@ prelim:
 	python $(SCRIPTDIR)makebuild.py $(MODULES)
 	python $(SCRIPTDIR)tokens.py
 	python $(SCRIPTDIR)constants.py
+	python $(SCRIPTDIR)timestamp.py
 
 release:
 	make -C . testbasic
