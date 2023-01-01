@@ -123,7 +123,7 @@ VectorSet0:
 	.word	ClearScreen                      ; $b5 CLS
 	.word	SyntaxError                      ; $b6 COLOR
 	.word	SyntaxError                      ; $b7 COLOUR
-	.word	SyntaxError                      ; $b8 CPRINT
+	.word	Command_CPrint                   ; $b8 CPRINT
 	.word	Command_Data                     ; $b9 DATA
 	.word	DimCommand                       ; $ba DIM
 	.word	Unused3                          ; $bb DOWNTO

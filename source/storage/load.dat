@@ -1,4 +1,7 @@
-5 rem "abdefghijklmnopqrstuvwxyzabdefghijklmnopqrstuvwxyzabdefghijklmnop"
+10 for i = 0 to 255
+20 cprint chr$(i);
+30 next:end
+500 rem "abdefghijklmnopqrstuvwxyzabdefghijklmnopqrstuvwxyzabdefghijklmnop"
 1007 print 22/7
 2010 save "s1"
 ÿÿÿÿ

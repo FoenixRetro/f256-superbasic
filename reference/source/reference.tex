@@ -214,6 +214,13 @@ Clears all variables to zero or empty string, and erases all arrays. Done when a
 	100 clear
 \end{verbatim}
 
+\section*{cprint}
+Operates the same as the print command, but control characters (e.g. 00-1F,80-FF) are printed using the characters from the FONT rom, not as control characters. The example below prints a horizontal upper bar character, not a new line.
+\example{}
+\begin{verbatim}
+	100 cprint chr$(13);
+\end{verbatim}
+
 \section*{dir}
 Shows all the files in the current drive.
 \example{}

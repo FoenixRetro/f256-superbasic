@@ -117,3 +117,5 @@ Release 21 (01/01/23):
 	CHG: Corrected block write to monitor bytes actually written out.
 
 Release 22 (01/01/23):	
+
+	CHG: Added CPRINT.

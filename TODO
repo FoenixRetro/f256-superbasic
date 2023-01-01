@@ -1,7 +1,6 @@
 Progress:	
-	CPRINT
 	HIMEM
-	LOAD and SAVE memory.
+	BLOAD and BSAVE memory.
 	- Break check
 	
 	HOWTO:

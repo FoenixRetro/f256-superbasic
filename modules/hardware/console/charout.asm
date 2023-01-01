@@ -14,6 +14,23 @@
 
 ; ************************************************************************************************
 ;
+;			Print character as standard, but treat all control characters as font
+;
+; ************************************************************************************************
+
+Export_EXTPrintNoControl:
+		pha
+		phx
+		phy
+
+		ldx 	1
+		phx
+
+		ldy 	EXTColumn 					; Y = Row, e.g. points to character.
+		bra 	PrintCharacterOnly
+
+; ************************************************************************************************
+;
 ;									Output Character A
 ;
 ;		control+'a'  ($01)  begin
@@ -43,12 +60,13 @@ PAGEDPrintCharacter:
 		ldy 	EXTColumn 					; Y = Row, e.g. points to character.
 
 		ora 	#$00 						; check $80-$FF
-		bmi 	_EXPCColour
+		bmi 	EXPCColour
 		cmp 	#$20 						; check $00-$1F
-		bcc 	_EXPCControl
+		bcc 	EXPCControl
 		;
 		;		Handle character.
 		;
+PrintCharacterOnly:		
 		ldx 	#2 							; select char memory
 		stx 	1
 		sta 	(EXTAddress),y
@@ -59,86 +77,86 @@ PAGEDPrintCharacter:
 		iny 								; advance horizontal position
 		sty 	EXTColumn		
 		cpy 	EXTScreenWidth 				; reached RHS ?
-		bcc 	_EXPCExit 					; no, then exit.
+		bcc 	EXPCExit 					; no, then exit.
 		;
 		;		Carriage return.
 		;
-_EXPCCRLF:		
+EXPCCRLF:		
 		inc 	EXTRow  					; bump row 		
 		stz 	EXTColumn 					; back to column 0
 		lda 	EXTRow 						; check if reached the bottom ?
 		cmp 	EXTScreenHeight 			; if so, then scroll.
-		beq 	_EXPCScroll
+		beq 	EXPCScroll
 		;
 		clc 								; add width to address.
 		lda 	EXTAddress
 		adc 	EXTScreenWidth
 		sta 	EXTAddress
-		bcc 	_EXPCExit
+		bcc 	EXPCExit
 		inc 	EXTAddress+1
-		bra 	_EXPCExit
+		bra 	EXPCExit
 		;
 		;		Move left / beginning of line.
 		;
-_EXPCLeft:
+EXPCLeft:
 		dec 	EXTColumn
-		bpl 	_EXPCExit
-_EXPCBegin:
+		bpl 	EXPCExit
+EXPCBegin:
 		stz 	EXTColumn
-		bra 	_EXPCExit		
+		bra 	EXPCExit		
 		;
 		;		Scroll screen up, blank line.
 		;
-_EXPCScroll:
+EXPCScroll:
 		dec 	EXTRow 						; the height-1 th line.
 		jsr 	EXTScreenScroll 			; scroll the screen
-		bra 	_EXPCExit		
+		bra 	EXPCExit		
 		;
 		;		Set FGR/BGR colour
 		;
-_EXPCColour:
+EXPCColour:
 		cmp 	#$A0						; 80-9F set foreground/background
-		bcs 	_EXPCExit
-		jsr 	_EXPCHandleColour 
-		bra 	_EXPCExit
+		bcs 	EXPCExit
+		jsr 	EXPCHandleColour 
+		bra 	EXPCExit
 		;
 		;		Handle control characters 00-1F 80-FF
 		;
-_EXPCControl:
+EXPCControl:
 		cmp 	#$11 						; only handle 00-10.
-		bcs 	_EXPCExit
+		bcs 	EXPCExit
 		asl 	a 							; double into X
 		tax
-		jmp 	(_EXPCActionTable,x) 		; and execute code.
+		jmp 	(EXPCActionTable,x) 		; and execute code.
 		;
 		;		Up
 		;
-_EXPCUp:
+EXPCUp:
 		lda 	EXTRow 						; already at top ?
-		beq 	_EXPCExit		
+		beq 	EXPCExit		
 		dec 	EXTRow 						; up one in position/address
 		sec
 		lda 	EXTAddress
 		sbc 	EXTScreenWidth
 		sta 	EXTAddress
-		bcs 	_EXPCExit
+		bcs 	EXPCExit
 		dec 	EXTAddress+1
-		bra 	_EXPCExit
+		bra 	EXPCExit
 		;
 		;		Right/End of line
 		;
-_EXPCRight:
+EXPCRight:
 		iny 	
 		sty 	EXTColumn
 		cpy 	EXTScreenWidth		
-		bne 	_EXPCExit
+		bne 	EXPCExit
 		dey
-_EXPCSetColumnY: 							; set column to Y
+EXPCSetColumnY: 							; set column to Y
 		sty 	EXTColumn		
 		;
 		;		Exit
 		;
-_EXPCExit:		
+EXPCExit:		
 		jsr 	EXTSetHardwareCursor 		; place the physical cursor.
 		pla
 		sta 	1
@@ -149,112 +167,112 @@ _EXPCExit:
 		;
 		;		Clear
 		;
-_EXPCClearScreen:
+EXPCClearScreen:
 		jsr		EXTClearScreenCode	
-		bra 	_EXPCExit
+		bra 	EXPCExit
 		;
 		;		Down
 		;
-_EXPCDown:		
+EXPCDown:		
 		lda 	EXTScreenHeight 			; at the bottom
 		dec 	a
 		cmp 	EXTRow
-		beq 	_EXPCExit
+		beq 	EXPCExit
 		inc 	EXTRow 						; down one in position/address
 		clc
 		lda 	EXTAddress
 		adc 	EXTScreenWidth
 		sta 	EXTAddress
-		bcc 	_EXPCExit
+		bcc 	EXPCExit
 		inc 	EXTAddress+1
-		bra 	_EXPCExit
+		bra 	EXPCExit
 		;
 		;		Tab
 		;
-_EXPCTab:
+EXPCTab:
 		lda 	EXTColumn 					; next tab stop
 		and 	#$F8
 		clc 	
 		adc 	#8
 		sta 	EXTColumn
 		cmp 	EXTScreenWidth 				; too far, stick end of line.
-		bcc 	_EXPCExit
-		bra 	_EXPCEnd
+		bcc 	EXPCExit
+		bra 	EXPCEnd
 		;
 		;		Backspace
 		;	
-_EXPCBackSpace:
+EXPCBackSpace:
 		dey
-		bmi 	_EXPCExit
+		bmi 	EXPCExit
 		dec 	EXTColumn
 		lda 	#2
 		sta 	1
 		lda 	#32
 		sta 	(EXTAddress),y
-		bra 	_EXPCExit
+		bra 	EXPCExit
 		;
 		;		End of line
 		;
-_EXPCEnd:
+EXPCEnd:
 		lda 	#2 							; access text screen
 		sta 	1
 		ldy 	EXTScreenWidth 				; point to last character
 		dey
-_EXPCEndSearch:		
+EXPCEndSearch:		
 		dey 								; if past start, move to col 0.
-		bmi 	_EXPCFound
+		bmi 	EXPCFound
 		lda 	(EXTAddress),y 				; keep going back till non space found
 		cmp 	#' '
-		beq 	_EXPCEndSearch
-_EXPCFound: 								
+		beq 	EXPCEndSearch
+EXPCFound: 								
 		iny 								; move to following cell.
-		bra 	_EXPCSetColumnY		
+		bra 	EXPCSetColumnY		
 		;
 		;		Clear to end of line
 		;
-_EXPCClearEOL:
+EXPCClearEOL:
 		lda 	#2 							; access character RAM
 		sta 	1
 		lda 	#' ' 						; write space
 		sta 	(EXTAddress),y
 		iny 
 		cpy 	EXTScreenWidth 				; until RHS of screen.
-		bcc 	_EXPCClearEOL
-		bra 	_EXPCExit					
+		bcc 	EXPCClearEOL
+		bra 	EXPCExit					
 		;
 		;		Vector table for CTRL+A to CTRL+P
 		;			
-_EXPCActionTable:
-		.word 	_EXPCExit 					; 00 
-		.word 	_EXPCBegin 					; 01 A Start of Line
-		.word 	_EXPCLeft 					; 02 B Left
-		.word 	_EXPCExit 					; 03 <Break>
-		.word 	_EXPCExit 					; 04 
-		.word 	_EXPCEnd 					; 05 E End of Line
-		.word 	_EXPCRight 					; 06 F Right
-		.word 	_EXPCExit 					; 07 
-		.word 	_EXPCBackSpace 				; 08 H Backspace
-		.word 	_EXPCTab 					; 09 I Tab
-		.word 	_EXPCExit 					; 0A 
-		.word 	_EXPCClearEOL 				; 0B K Clear to EOL
-		.word 	_EXPCClearScreen			; 0C L CLS
-		.word 	_EXPCCRLF 					; 0D M CR/LF
-		.word 	_EXPCDown 					; 0E N Down
-		.word 	_EXPCExit 					; 0F 
-		.word 	_EXPCUp 					; 10 P Up
+EXPCActionTable:
+		.word 	EXPCExit 					; 00 
+		.word 	EXPCBegin 					; 01 A Start of Line
+		.word 	EXPCLeft 					; 02 B Left
+		.word 	EXPCExit 					; 03 <Break>
+		.word 	EXPCExit 					; 04 
+		.word 	EXPCEnd 					; 05 E End of Line
+		.word 	EXPCRight 					; 06 F Right
+		.word 	EXPCExit 					; 07 
+		.word 	EXPCBackSpace 				; 08 H Backspace
+		.word 	EXPCTab 					; 09 I Tab
+		.word 	EXPCExit 					; 0A 
+		.word 	EXPCClearEOL 				; 0B K Clear to EOL
+		.word 	EXPCClearScreen			; 0C L CLS
+		.word 	EXPCCRLF 					; 0D M CR/LF
+		.word 	EXPCDown 					; 0E N Down
+		.word 	EXPCExit 					; 0F 
+		.word 	EXPCUp 					; 10 P Up
 ;
 ;		Handle colour change (80-9F)
 ;
-_EXPCHandleColour
+EXPCHandleColour
 		cmp 	#$90 						; 8x foreground 9x background
-		bcs 	_EXPCBackground
+		bcs 	EXPCBackground
 		;
 		asl 	a 							; shift it 4 bits to the right.
 		asl 	a
 		asl 	a
 		asl 	a
 		ldx 	#$0F 						; Mask in X
-_EXPCUpdate:
+EXPCUpdate:
 		pha 								; save new colour
 		txa 								; get mask
 		and 	EXTTextColour 				; mask out old.
@@ -263,10 +281,10 @@ _EXPCUpdate:
 		ora 	EXTTextColour
 		sta 	EXTTextColour
 		rts
-_EXPCBackground:
+EXPCBackground:
 		and 	#$0F 						; get the colour
 		ldx 	#$F0 						; mask
-		bra 	_EXPCUpdate		
+		bra 	EXPCUpdate		
 
 EXTScreenScroll:
 		lda 	#2 							; select text page
@@ -319,5 +337,6 @@ _PPHOut:adc 	#48
 ;		==== 			=====
 ;		27/11/22 		Changed End so to end of text line, e.g. after last non space
 ;						Added Ctrl+K delete to EOL suggested by Jessie O.
+;		01/01/23 		Added routine to print using only font characters.
 ;
 ; ************************************************************************************************

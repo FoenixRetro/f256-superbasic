@@ -25,6 +25,11 @@ Command_Input:  ;; [input]
 		stz 	isPrintFlag
 		bra 	Command_IP_Main
 
+Command_CPrint:	;; [cprint]
+		lda 	#$7F 						; set input flag to character mode
+		sta 	isPrintFlag 				; clear input flag
+		bra 	Command_IP_Main
+
 Command_Print:	;; [print]
 		lda 	#$FF 						; set input flag
 		sta 	isPrintFlag 				; clear input flag
@@ -90,14 +95,14 @@ _CPNumber:
 		;
 _CPNewLine:
 		lda 	#13		
-		bra 	_CPPrintChar
+		bra 	_CPPrintCharDirect
 		;
 		;		Comma, Semicolon.
 		;
 _CPTab:	
 		lda 	#9 							; print TAB
-_CPPrintChar:
-		jsr 	CPPrintVector
+_CPPrintCharDirect:
+		jsr 	CPPVControl 				; print TAB/CR using the non PETSCII 
 
 _CPContinueWithSameLine:		
 		sec 								; loop round with carry set, which
@@ -109,7 +114,7 @@ _CPExit:
 		plp 								; get last action flag
 		bcs 	_CPExit2  					; carry set, last was semicolon or comma
 		lda 	#13 						; print new line
-		jsr 	CPPrintVector			
+		jsr 	CPPVControl
 _CPExit2:		
 		rts
 
@@ -211,6 +216,10 @@ _PSXAExit:
 ; ************************************************************************************************
 
 CPPrintVector:
+		bit 	isPrintFlag 				; check if char only mode and call appropriate handler.
+		bmi 	CPPVControl
+		jmp 	EXTPrintNoControl
+CPPVControl:		
 		jmp 	EXTPrintCharacter
 
 CPInputVector:
@@ -226,6 +235,7 @@ CPInputVector:
 ;
 ;		Date			Notes
 ;		==== 			=====
-;		01/01/23 		isInputFlag => isPrintFlag
+;		01/01/23 		isInputFlag => isPrintFlag. Added CPrint command using that to detect
+;						print type.
 ;
 ; ************************************************************************************************
