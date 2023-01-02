@@ -57,8 +57,10 @@ Start:	ldx 	#$FF 						; stack reset
 		jmp 	WarmStart
 		.endif
 
-Prompt:	.include "../generated/timestamp.asm"
-		.text 	13,13,0
+Prompt:	.text 	128+13
+		.text 	13,13
+		.include "../generated/timestamp.asm"
+		.text 	13,13,13,0
 
 		.send code
 
@@ -74,5 +76,6 @@ Prompt:	.include "../generated/timestamp.asm"
 ;		05/12/22 		Added call to break to temporarily handle break bug in Kernel.
 ;						Added Gadget-style boot prompt.
 ;		08/12/22 		Removed initial break check call.
+;		02/01/23 		Tidied up boot display
 ;
 ; ************************************************************************************************

@@ -40,7 +40,7 @@ _EXMoveDown: 								; move down past prompt
 		lda 	#13
 		jsr 	PAGEDPrintCharacter
 		lda 	EXTRow
-		cmp 	#Header_Height+1
+		cmp 	#Header_Height-4
 		bne 	_EXMoveDown
 		jsr 	EXTShowHeader
 		stz 	1

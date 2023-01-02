@@ -87,23 +87,23 @@ Release 16 (14/12/22):
 Release 17 (20/12/22):	
 
 	CHG: Tweak the colourising.
-	CHG: Lines consisting of single input characters did not work (so you couldn't delete 1..9)
+	BUG: Lines consisting of single input characters did not work (so you couldn't delete 1..9)
 	CHG: Keyboard input uses Kernel event method.
-	CHG: REM without spaces trims first characters
+	BUG: REM without spaces trims first characters
 	CHG: Load works preliminary.
 
 Release 18 (30/12/22):
 	
-	CHG: Fixed EOF bug.
+	BUG: Fixed EOF bug.
 	CHG: Imported Jessie's suggestions/rewrites to the loader, much quicker :)
 	CHG: SAVE now working. 
-	CHG: Now imports TAB (chr(9)) correctly, was breaking comments.
+	BUG: Now imports TAB (chr(9)) correctly, was breaking comments.
 	CHG: Added VERIFY
 
 Release 19 (01/01/23):
 
 	CHG: Added preliminary documentation PDFs to release
-	CHG: Save works for lines > 64 characters
+	BUG: Save works for lines > 64 characters
 
 Release 20 (01/01/23):	
 
@@ -113,9 +113,10 @@ Release 20 (01/01/23):
 	
 Release 21 (01/01/23):	
 
-	CHG: Remove capital neatening of file names.
-	CHG: Corrected block write to monitor bytes actually written out.
+	BUG: Remove capital neatening of file names.
+	BUG: Corrected block write to monitor bytes actually written out.
 
 Release 22 (01/01/23):	
 
 	CHG: Added CPRINT.
+	CHG: Version in right place
