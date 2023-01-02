@@ -59,6 +59,8 @@ ramboot:
 #		Build & update Kernel & api.asm
 #
 updatekernel:
+	cd $(KRN_REPO) && git reset --hard
+	cd $(KRN_REPO) && git pull
 	make -B -C $(KRN_REPO)
 	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)*.bin build
 	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)api.asm  module.interface$(S)kernel
@@ -67,7 +69,6 @@ updatekernel:
 #		Build RAM based kernel / ROM combo and boot.
 #
 ramkernel: ramboot
-#	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)kernel.ram build
 	cat build$(S)3f.bin build$(S)3e.bin build$(S)01.bin  >build$(S)kernel.ram 
 	cat build$(S)kernel.ram build$(S)basic.rom >build$(S)ramkernel.bin
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary build$(S)ramkernel.bin --address E000
@@ -150,7 +151,9 @@ basic : prelim
 autorun:
 	python scripts$(S)checkload.py
 	$(START)
-	
+#
+#		Scripts run in advance generating tables etc.
+#	
 prelim:
 	make -B -C ..$(S)modules
 	python $(SCRIPTDIR)errors.py $(LANGUAGE)
@@ -159,7 +162,9 @@ prelim:
 	python $(SCRIPTDIR)tokens.py
 	python $(SCRIPTDIR)constants.py
 	python $(SCRIPTDIR)timestamp.py $(VERSION)
-
+#
+#		Create a working release.
+#
 release:
 	make -C . testbasic
 	$(CCOPY) $(APPNAME) release$(S)$(S)roms$(S)basic_autoload.rom
