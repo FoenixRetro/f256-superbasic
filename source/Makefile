@@ -178,6 +178,8 @@ release:
 	$(CDEL) release$(S)VERSION*
 	echo "" >release$(S)VERSION_${VERSION}
 
+	make -B -C ..$(S)howto
+
 	$(CDEL) release$(S)superbasic.zip
 	zip -r release$(S)superbasic.zip release$(S)*
 #

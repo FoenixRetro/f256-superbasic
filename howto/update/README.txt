@@ -6,8 +6,8 @@ This helper file allows you to update the F256Jr/K on Windows or Linux.
 
 You will need :-
 
-1) 	Python3 installed.
-2) 	The Python Serial Library.
+1) 	Python3 installed (http://www.python.org)
+2) 	The Python Serial Library "pyserial"
 
 Connect the PC to your F256 using the USB cable which plugs into the 
 debug port on the board.
