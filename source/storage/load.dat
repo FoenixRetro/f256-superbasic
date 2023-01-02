@@ -1,7 +1,6 @@
-10 for i = 0 to 255
-20 cprint chr$(i);
-30 next:end
-500 rem "abdefghijklmnopqrstuvwxyzabdefghijklmnopqrstuvwxyzabdefghijklmnop"
-1007 print 22/7
-2010 save "s1"
+100 t1 = timer()
+110 for i = 1 to 100000
+120 a = i * 2 \ 3 + 4 - 5
+130 next
+140 print timer()-t1
 ÿÿÿÿ

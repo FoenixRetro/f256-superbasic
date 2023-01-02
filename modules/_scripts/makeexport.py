@@ -14,7 +14,7 @@ import os,sys,re
 paging = True
 
 exports = {}
-exports["hardware"] = 	[ "EXTPrintCharacter","EXTPrintNoControl","EXTInitialise","EXTBreakCheck","EXTReadController","EXTInputLine" ]
+exports["hardware"] = 	[ "EXTPrintCharacter","EXTPrintNoControl","EXTInitialise","EXTReadController","EXTInputLine" ]
 exports["kernel"] = 	[ "KNLInputSingleCharacter","KNLOpenFileRead","KNLOpenFileWrite","KNLReadByteInit","KNLReadByte","KNLWriteBlock","KNLCloseFile" ]
 exports["graphics"] = 	[ "GXGraphicDraw" ]
 exports["sound"] = 		[ "SNDCommand","SNDUpdate"]

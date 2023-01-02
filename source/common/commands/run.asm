@@ -59,7 +59,7 @@ _CRIncMainLoop:
 		asl 	breakCheck 					; clears 1 time in 8
 		bne 	_CRNoBreakCheck
 		dec	 	breakCheck 					; set it back to $FF
-		jsr 	EXTBreakCheck 				; break check
+		.breakcheck							; break check
 		beq 	_CRBreak
 		.tickcheck TickHandler  			; if time elapsed call the tick handler.
 _CRNoBreakCheck:		
@@ -187,5 +187,6 @@ Unused4:	;; [then]
 ;		==== 			=====
 ;		27/11/22 		Break check was not being reset, checked every time. Added dec
 ;						instruction making it $FF => 8 more fails.
+;		02/01/23 		Break check call now a macro.
 ;
 ; ************************************************************************************************

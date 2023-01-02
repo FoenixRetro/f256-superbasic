@@ -72,7 +72,7 @@ _CLStart
 		.cresetcodepointer
 		;
 _CLLoop:
-		jsr 	EXTBreakCheck 				; break check here, as we want the option of breaking out of long lists.
+		.breakcheck 		 				; break check here, as we want the option of breaking out of long lists.
 		beq 	_CLBreak
 
 		.cget0 								; any more ?
@@ -209,5 +209,6 @@ _CLIDExitFalse:
 ;		==== 			=====
 ;		05/12/22 		LIST break reports.
 ;		15/12/22 		LIST silences sound.
+;		02/01/23 		Break check call now a macro.
 ;
 ; ************************************************************************************************

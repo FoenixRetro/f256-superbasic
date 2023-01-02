@@ -21,13 +21,6 @@ EXTInitialise:
 	dec 8+5
 	plp
 	rts
-EXTBreakCheck:
-	inc 8+5
-	jsr	Export_EXTBreakCheck
-	php
-	dec 8+5
-	plp
-	rts
 EXTReadController:
 	inc 8+5
 	jsr	Export_EXTReadController
