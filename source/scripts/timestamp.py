@@ -11,9 +11,7 @@
 
 import os,sys,math,datetime
 
-h = open("scripts/buildcount.txt")
-buildCount = int(h.read(-1))
-h.close()
+buildCount = int(sys.argv[-1])
 
 time = datetime.datetime.now()
 build = time.strftime("%d-%b-%y")

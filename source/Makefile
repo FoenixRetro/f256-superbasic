@@ -14,6 +14,10 @@ include ..\documents\common.make
 else
 include ../documents/common.make
 endif
+#
+#		Current version.
+#
+VERSION = 23
 
 #	System 0 = F256
 SYSTEM = 0 						
@@ -154,20 +158,25 @@ prelim:
 	python $(SCRIPTDIR)makebuild.py $(MODULES)
 	python $(SCRIPTDIR)tokens.py
 	python $(SCRIPTDIR)constants.py
-	python $(SCRIPTDIR)timestamp.py
+	python $(SCRIPTDIR)timestamp.py $(VERSION)
 
 release:
 	make -C . testbasic
 	$(CCOPY) $(APPNAME) release$(S)$(S)roms$(S)basic_autoload.rom
 	make -C . basic
 	$(CCOPY) $(APPNAME) release$(S)roms$(S)basic.rom
+
 	make -C build build
 	$(CCOPY) build$(S)*.bin release
 	$(CCOPY) build$(S)bulk.csv release
+
 	$(CCOPY) ..$(S)CHANGES release$(S)documents
 	$(CCOPY) ..$(S)reference$(S)source$(S)*.pdf release$(S)documents
 	$(CCOPY) ..$(S)documents$(S)C256_Foenix_JR_UM_Rev002.pdf release$(S)documents
 	$(CCOPY) ..$(S)documents$(S)superbasic.sublime-syntax release$(S)documents
+
+	$(CDEL) release$(S)VERSION*
+	echo "" >release$(S)VERSION_${VERSION}
 
 	$(CDEL) release$(S)superbasic.zip
 	zip -r release$(S)superbasic.zip release$(S)*
