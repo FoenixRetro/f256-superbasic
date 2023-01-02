@@ -42,12 +42,12 @@ def getDate(file,stem):
 sourceList = {}
 for root,dirs,files in os.walk("source"):
 	for f in files:
-		if (f.endswith(".inc") or f.endswith(".asm")) and not f.startswith("_"):
+		if (f.endswith(".inc") or f.endswith(".asm")) and not f.startswith("_") and f != "api.asm":
 			sourceList[root+os.sep+f] = { "date": None }
 
 for root,dirs,files in os.walk("modules"):
 	for f in files:
-		if (f.endswith(".inc") or f.endswith(".asm")) and not f.startswith("_"):
+		if (f.endswith(".inc") or f.endswith(".asm")) and not f.startswith("_") and f != "api.asm":
 			if f != "headerdata.asm":
 				sourceList[root+os.sep+f] = { "date": None }
 

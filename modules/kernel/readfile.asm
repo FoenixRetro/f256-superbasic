@@ -1,7 +1,7 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		readbyte.asm
+;		Name:		readfile.asm
 ;		Purpose:	Read a single byte from the currently open file.
 ;		Created:	30th December 2022
 ;		Reviewed: 	No
@@ -11,14 +11,14 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 
-KNLBufLen = 64 								; read buffer size.
+KNLReadBufferLen = 64 								; read buffer size.
 
 		.section storage
 
 KNLStream:   								; stream to read from
 		.byte   ? 						
-KNLBuf:      								; buffer 
-		.fill   KNLBufLen 				
+KNLReadBuffer:      						; buffer 
+		.fill   KNLReadBufferLen 				
 KNLNext:     								; next byte to return
 		.byte   ? 						
 KNLEnd:      								; end of bytes available.
@@ -43,7 +43,7 @@ Export_KNLReadByteInit:
 ; ************************************************************************************************
 ;
 ;				Read one character into A. CC = succeeded, CS = failed, A = Event error
-;               Stream closed and CS when finished (A = EOF)
+;              	CS when finished (A = EOF)
 ;
 ; ************************************************************************************************
 
@@ -66,7 +66,7 @@ Export_KNLReadByte:
 		;		Get next byte from the buffer
 		;
 _KNLRBGetNextByte:
-		lda     KNLBuf,x 					; get the next data item
+		lda     KNLReadBuffer,x 			; get the next data item
 		inc     KNLNext 					; and advance the index
 		clc 								; succeeded
 _KNLRBError:
@@ -75,15 +75,20 @@ _KNLRBError:
 
 ; ************************************************************************************************
 ;
-;								Read next block from the stream
+;				Read one block into A. CC = succeeded, A = bytes read. 
+;				CS = failed, A = Event error
+;              	CS when finished (A = EOF)
+;
+;				Do not mix block or byte reads - use one or the other :)
 ;
 ; ************************************************************************************************
 
+Export_KNLReadBlock:
 KNLRBGetNextBlock:
 		lda     KNLStream 					; set stream to read from
 		sta     kernel.args.file.read.stream
 
-		lda     #KNLBufLen 					; set bytes to read.
+		lda     #KNLReadBufferLen 					; set bytes to read.
 		sta     kernel.args.file.read.buflen
 
 		jsr     kernel.File.Read 			; read request
@@ -112,9 +117,9 @@ _KGRBEventLoop:
 		;
 _KNLRBGetNextByte:
 
-		lda     #<KNLBuf 					; Set the target buffer
+		lda     #<KNLReadBuffer 					; Set the target buffer
 		sta     kernel.args.recv.buf+0
-		lda     #>KNLBuf
+		lda     #>KNLReadBuffer
 		sta     kernel.args.recv.buf+1
 
 		lda     event.file.data.read 		; Set the target length

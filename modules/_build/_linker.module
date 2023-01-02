@@ -72,6 +72,13 @@ KNLReadByte:
 	dec 8+5
 	plp
 	rts
+KNLReadBlock:
+	inc 8+5
+	jsr	Export_KNLReadBlock
+	php
+	dec 8+5
+	plp
+	rts
 KNLWriteBlock:
 	inc 8+5
 	jsr	Export_KNLWriteBlock

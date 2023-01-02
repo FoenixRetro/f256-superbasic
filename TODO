@@ -1,10 +1,12 @@
 Progress:	
 	BLOAD and BSAVE memory.
-	- Break check
+	- Break check (see below)
 	
 	HOWTO:
 		Create assembler programs
 		Cross develop BASIC programs
+
+	CHECK:		
 		Update your firmware
 
 	Should CR in PRINT clear to EOL.
@@ -20,3 +22,20 @@ Progress:
 Ongoing:
 	Code reading.
 	Continue documentation.	
+
+As discussed earlier, replace STOP with a loop calling NextEvent until it returns empty (carry set).  This function will ultimately handle a variety of events, 
+but we can start by checking key.PRESSED events for (event.key.flags > 0) and (event.key.ascii == 3).  If so, STOP :).
+2. Set up tracking variables for 'dx', 'dy', 'dz', and 'buttons' from the mouse_delta event.  Every time you get a new mouse.DELTA event in #1, add its dx,dy,dz 
+values to your cumulative values, and replace your buttons value with the new value from the event.   Whenever your tracking variables are read by the basic 
+program (perhaps assign one or more functions to read them), reset them to zero.
+3. Set up tracking variables for mouse button inner_count, middle_count, outer_count, and pending.  Every time you get a new mouse.CLICKS event in #1, 
+replace the values in these variables with the new values from the event (pending just gets set to something non-zero).  Whenever the variables are read by 
+the basic program, reset them to zero.
+4. When it comes time to implement your key-status function, declare an array of 256 bytes (zero'd on startup).  Every time you get a key.PRESSED event, 
+use either the .raw or .ascii value (depending on how you want to handle ENTER/ESC/TAB/etc. vs meta keys) to index the array, and store a non-zero value
+there to indicate that the key is pressed.  Every time you get a key.RELEASED event, clear the associated value.  Now your function to test whether a 
+key is presently held down or not can simply consult the array.
+
+STOP is already calling NextEvent under the hood, so there shouldn't be any performance impact.  Ideally, you should be able to test kernel.args.pending first
+and skip the kernel call if it's zero, but I /think/ the count might presently be off, so let me make sure it's working before employing that optimization.  
+There's obviously no reason to call Yield in the STOP code, b/c you're actually doing something while waiting for events to come in (viz running the user's program :).
