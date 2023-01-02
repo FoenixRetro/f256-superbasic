@@ -263,7 +263,7 @@ EXPCActionTable:
 ;
 ;		Handle colour change (80-9F)
 ;
-EXPCHandleColour
+EXPCHandleColour:
 		cmp 	#$90 						; 8x foreground 9x background
 		bcs 	EXPCBackground
 		;

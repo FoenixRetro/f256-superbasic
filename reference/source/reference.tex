@@ -586,13 +586,13 @@ Sound has two forms
 \begin{verbatim}
 	100 sound 1,500,10
 \end{verbatim}
-generates a sound of pitch 1000 which runs for about 10 ticks (one tick is about 0.5s). The actual frequency is 111,563 / <pitch value>. The pitch value can be from 1 to 1023
+generates a sound of pitch 1000 which runs for about 10 timer ticks. The actual frequency is 111,563 / <pitch value>. The pitch value can be from 1 to 1023
 Sounds can be queued up , so you can play 3 notes in a row e.g.
 \example{}
 \begin{verbatim}
-	100 sound 1,1000,10:sound 1,500,10:sound 1,250,10
+	100 sound 1,1000,20:sound 1,500,10:sound 1,250,20
 \end{verbatim}
-An adjuster value can be added which adds a constant to the pitch every tick, which allows the creation of some simple warpy effects.
+An adjuster value can be added which adds a constant to the pitch every tick, which allows the creation of some simple warpy effects, as in the ZAP command.
 \example{}
 \begin{verbatim}
 	100 sound 1,500,10,10

@@ -23,8 +23,7 @@ tickinitialise 	.macro
 
 ; ************************************************************************************************
 ;
-;		Called 1 in every 8 instructions, firing if more than 3 clocks (e.g 0.05 seconds approx) 
-; 		has elapsed.
+;						Called 1 in every 8 instructions, firing each clock
 ;
 ; ************************************************************************************************
 
@@ -34,11 +33,9 @@ tickcheck		.macro
 		stz 	1 							; access I/O Page 0
 		sec 								; calculate timer - LastTick
 		lda 	$D659
-		tax 								; saving timer in X
-		sbc 	LastTick
-		cmp 	#3
-		bcc 	_NoFireTick 				; if < 3 clocks don't fire.
-		stx 	LastTick 					; update last timer
+		cmp 	LastTick
+		beq 	_NoFireTick 				; if < 3 clocks don't fire.
+		sta 	LastTick 					; update last timer
 		jsr 	\1 							; go do the code.
 _NoFireTick:		
 		pla 								; restore I/O 0
@@ -55,5 +52,6 @@ _NoFireTick:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		01/01/23 		Now fires every tick rather than 1 tick in 3.
 ;
 ; ************************************************************************************************

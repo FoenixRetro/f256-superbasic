@@ -29,16 +29,16 @@ effect 	.macro
 		.section code
 
 PingCommand: 	;; [ping]
-		.effect 1,200,3,0
+		.effect 1,200,6,0
 
 ZapCommand: 	;; [zap]
-		.effect 1,255,5,20
+		.effect 1,255,10,10
 
 ShootCommand:	;;	[shoot]
-		.effect 3,32,2,0
+		.effect 3,32,4,0
 
 Explode: 		;; [explode]		
-		.effect 3,80,5,0
+		.effect 3,80,10,0
 
 SoundEffectCommand:
 		sta 	SoundCommandBlock 			; set up the command block in sound.asm
