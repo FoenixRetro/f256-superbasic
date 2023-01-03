@@ -193,6 +193,16 @@ Turns the bitmap on or off, or clears it. Only one bitmap is used, and it is loc
 	100 bitmap on:bitmap clear $1c
 \end{verbatim}
 
+\section*{bload}
+Loads a file into memory. The 2nd parameter is the address in full memory space, *not* the 6502 CPU address. In the default set up, for the RAM area (0000-7FFF) this will however be the same.
+
+So the example below loads the binary file mypic.bin into the BASIC bitmap, which is stored in MMU page 8 onwards.
+\example{}
+\begin{verbatim}
+	100 bitmap on:bitmap clear 1
+	110 bload "mypic.bin",$10000
+\end{verbatim}
+
 \section*{chr\$()}
 Convert an ASCII integer to a single character string.
 \example{}

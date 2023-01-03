@@ -56,6 +56,7 @@ Export_KNLReadByte:
 		;
 	  	; 		Buffer empty; try to fetch more.
 	  	;
+		lda     KNLStream
 		jsr     KNLRBGetNextBlock 			; read next chunk from the stream
 		bcs     _KNLRBError 				; error has occurred on read.
 		;
@@ -85,10 +86,10 @@ _KNLRBError:
 
 Export_KNLReadBlock:
 KNLRBGetNextBlock:
-		lda     KNLStream 					; set stream to read from
+						 					; set stream to read from
 		sta     kernel.args.file.read.stream
 
-		lda     #KNLReadBufferLen 					; set bytes to read.
+		lda     #KNLReadBufferLen 			; set bytes to read.
 		sta     kernel.args.file.read.buflen
 
 		jsr     kernel.File.Read 			; read request

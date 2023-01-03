@@ -24,7 +24,6 @@ Command_BLoad: ;; [BLOAD]
 		jsr 	CheckComma 					; consume comma
 		inx 							
 		jsr 	EvaluateInteger 			; load address (full physical address)
-		.debug
 		phy
 		;
 		;		Try to open the file.
@@ -32,7 +31,7 @@ Command_BLoad: ;; [BLOAD]
 		lda 	NSMantissa0					; file name -> XA
 		ldx 	NSMantissa1
 		jsr 	KNLOpenFileRead 			; open file for reading
-		bcs 	CLErrorHandler 				; error, so fail.
+		bcs 	CBLErrorHandler 			; error, so fail.
 		sta 	CurrentFileStream 			; save the reading stream.
 		;
 		;		Open memory for access
@@ -43,30 +42,33 @@ Command_BLoad: ;; [BLOAD]
 		;		Keep reading file till empty.
 		;
 _BLReadFile:
-		jsr 	Export_KNLReadBlock 		; read next block
+		lda 	CurrentFileStream
+		jsr 	KNLReadBlock 				; read next block
 		bcs 	_BLFileError 				; file error, which might be EOF.
 
 		cmp 	#0 							; read nothing.
 		beq 	_BLReadFile
 		sta 	BLCopyCounter 				; counter.
+
 		;
 		ldy 	BLYOffset 					; copy the buffer out here
 		ldx 	#0 							; offset in buffer.
 _BLCopyLoop:
-		lda 	KNLReadBuffer,x
+		lda 	KNLReadBuffer,x 			; copy byte and advance
 		sta 	(zTemp2),y
 		iny
-		bne 	_BLNoAdjust
+		bne 	_BLNoAdjust 				; check changed 256 byte or 8k page.
 		jsr 	BLAdvancePhysicalMemory
 _BLNoAdjust:
 		inx
 		dec 	BLCopyCounter
 		bne 	_BLCopyLoop
+		sty 	BLYOffset 					; update Y offset
 		bra 	_BLReadFile 				; go ask for more.
 
 _BLFileError:
 		cmp 	#KERR_EOF 					; End of file
-		bne 	CBLCloseError 				; no, it's an actual error
+		bne 	CBLErrorHandler				; no, it's an actual error
 		jsr 	BLClosePhysicalMemory 		; close the access.
 		lda 	CurrentFileStream 			; close the file
 		jsr 	KNLCloseFile
@@ -156,6 +158,8 @@ BLNormalMapping:							; page the access page is normally mapped to.
 		.fill 	1
 BLYOffset: 									; position in zTemp2 page.
 		.fill 	1
+BLCopyCounter: 								; count of bytes to output.
+		.fill 	1		
 		.send storage
 
 ; ************************************************************************************************

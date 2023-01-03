@@ -1,4 +1,9 @@
-10  bload "l1",$3FF8
+5 print "Started"
+10  bload "L1",$3FF8
+15 for i = 0 to 128
+16 cprint chr$(i?$3FF8);
+17 next
+20 end
 100 t1 = timer()
 110 for i = 1 to 100000
 120 a = i * 2 \ 3 + 4 - 5
