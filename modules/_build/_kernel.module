@@ -227,7 +227,7 @@ _KNLGetLength:
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		readbyte.asm
+;		Name:		readfile.asm
 ;		Purpose:	Read a single byte from the currently open file.
 ;		Created:	30th December 2022
 ;		Reviewed: 	No
@@ -304,6 +304,8 @@ _KNLRBError:
 ;				Read one block into A. CC = succeeded, A = bytes read.
 ;				CS = failed, A = Event error
 ;              	CS when finished (A = EOF)
+;
+;				Do not mix block or byte reads - use one or the other :)
 ;
 ; ************************************************************************************************
 

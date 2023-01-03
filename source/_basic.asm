@@ -25,6 +25,7 @@
 	.include	"./common/cli/warmstart.asm"
 	.include	"./common/commands/assemble.asm"
 	.include	"./common/commands/assert.asm"
+	.include	"./common/commands/bload.asm"
 	.include	"./common/commands/call.asm"
 	.include	"./common/commands/clear.asm"
 	.include	"./common/commands/cls.asm"
