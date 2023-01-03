@@ -31,29 +31,42 @@ Command_BLoad: ;; [BLOAD]
 		;
 		lda 	NSMantissa0					; file name -> XA
 		ldx 	NSMantissa1
-;		jsr 	KNLOpenFileRead 			; open file for reading
-;		bcs 	CLErrorHandler 				; error, so fail.
-;		sta 	CurrentFileStream 			; save the reading stream.
+		jsr 	KNLOpenFileRead 			; open file for reading
+		bcs 	CLErrorHandler 				; error, so fail.
+		sta 	CurrentFileStream 			; save the reading stream.
 		;
 		;		Open memory for access
 		;
 		ldx 	#1 							; address is in slot # 1
 		jsr 	BLOpenPhysicalMemory 		; open for access.
+		;
+		;		Keep reading file till empty.
+		;
+_BLReadFile:
+		jsr 	Export_KNLReadBlock 		; read next block
+		bcs 	_BLFileError 				; file error, which might be EOF.
 
-		ldy 	BLYOffset
-		ldx 	#0 							; write 0 to 16 out
-_BLTest:
-		txa
-		ora 	#$80
+		cmp 	#0 							; read nothing.
+		beq 	_BLReadFile
+		sta 	BLCopyCounter 				; counter.
+		;
+		ldy 	BLYOffset 					; copy the buffer out here
+		ldx 	#0 							; offset in buffer.
+_BLCopyLoop:
+		lda 	KNLReadBuffer,x
 		sta 	(zTemp2),y
 		iny
 		bne 	_BLNoAdjust
 		jsr 	BLAdvancePhysicalMemory
 _BLNoAdjust:
 		inx
-		cpx 	#16
-		bne 	_BLTest
+		dec 	BLCopyCounter
+		bne 	_BLCopyLoop
+		bra 	_BLReadFile 				; go ask for more.
 
+_BLFileError:
+		cmp 	#KERR_EOF 					; End of file
+		bne 	CBLCloseError 				; no, it's an actual error
 		jsr 	BLClosePhysicalMemory 		; close the access.
 		lda 	CurrentFileStream 			; close the file
 		jsr 	KNLCloseFile
