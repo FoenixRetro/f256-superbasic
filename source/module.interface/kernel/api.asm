@@ -261,7 +261,7 @@ event       .namespace
             .virtual 0
             .word   ?   ; Reserved
             .word   ?   ; Deprecated
-GAME        .word   ?   ; Game Controller changes.
+JOYSTICK    .word   ?   ; Game Controller changes.
 DEVICE      .word   ?   ; Device added/removed.
 
 key         .namespace
@@ -328,6 +328,7 @@ ext         .byte   ?   ; page id or zero
             .union
 key         .dstruct    kernel.event.key_t
 mouse       .dstruct    kernel.event.mouse_t
+joystick    .dstruct    kernel.event.joystick_t
 udp         .dstruct    kernel.event.udp_t
 file        .dstruct    kernel.event.file_t
 directory   .dstruct    kernel.event.dir_t
@@ -361,6 +362,11 @@ inner       .byte   ?
 middle      .byte   ?
 outer       .byte   ?
             .ends            
+
+joystick_t  .struct
+joy0        .byte   ?
+joy1        .byte   ?
+            .ends
 
           ; Data in file events:
 file_t      .struct

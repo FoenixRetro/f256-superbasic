@@ -40,9 +40,31 @@ Start:	ldx 	#$FF 						; stack reset
 		jsr 	SNDCommand
 		.endif
 
+		lda 	#128+13 					; Display FPGA information.
+		jsr 	EXTPrintCharacter
+		lda 	#9
+		jsr 	EXTPrintCharacter
+		jsr 	EXTPrintCharacter
+		stz 	1
+		lda 	$D6AD
+		jsr 	PrintHex
+		lda 	$D6AC
+		jsr 	PrintHex
+		lda 	$D6AB
+		jsr 	PrintHex
+		lda 	$D6AA
+		jsr 	PrintHex
+		lda 	#32
+		jsr 	EXTPrintCharacter
+		lda 	$D6A8
+		jsr 	EXTPrintCharacter
+		lda 	$D6A9
+		jsr 	EXTPrintCharacter
+
 		ldx 	#Prompt >> 8 				; display prompt
 		lda 	#Prompt & $FF
 		jsr 	PrintStringXA
+
 
 		.tickinitialise 					; initialise tick handler
 											; (mandatory)
@@ -57,8 +79,7 @@ Start:	ldx 	#$FF 						; stack reset
 		jmp 	WarmStart
 		.endif
 
-Prompt:	.text 	128+13
-		.text 	13,13
+Prompt:	.text 	13,13
 		.include "../generated/timestamp.asm"
 		.text 	13,13,13,0
 

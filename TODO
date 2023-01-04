@@ -1,6 +1,7 @@
 Progress:	
 	BSAVE memory.
 	- Break check (see below)
+	Display Kernel version
 	
 	HOWTO:
 		Create assembler programs
