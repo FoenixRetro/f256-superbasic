@@ -165,7 +165,7 @@ VectorSet1:
 	.word	AssertCommand                    ; $84 ASSERT
 	.word	BitmapCtrl                       ; $85 BITMAP
 	.word	Command_BLoad                    ; $86 BLOAD
-	.word	SyntaxError                      ; $87 BSAVE
+	.word	Command_BSave                    ; $87 BSAVE
 	.word	Command_Dir                      ; $88 DIR
 	.word	Command_Drive                    ; $89 DRIVE
 	.word	EndCommand                       ; $8a END
