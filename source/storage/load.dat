@@ -1,2 +1,10 @@
-10 bsave "bs1",$8000,$50
+5  print "Saving"
+6 for i = 0 to 125:i?$5FF0 = 255-i:next
+10 bsave "bs1",$5FF0,125
+20 print "Saved"
+30 for i = 0 to 255:i?$7000 = $FF:next
+35 bload "bs1",$7000
+40 for i = 0 to 128
+50 cprint i?$7000;" ";
+60 next
 ÿÿÿÿ

@@ -1,5 +1,4 @@
 Progress:	
-	BSAVE memory.
 	- Break check (see below)
 	Display Kernel version
 	
@@ -11,8 +10,6 @@ Progress:
 		Update your firmware
 
 	Should CR in PRINT clear to EOL.
-	
-	tiles ?
 
 	DMA ?
 		econtreasd's ideas on this.
@@ -40,3 +37,9 @@ key is presently held down or not can simply consult the array.
 STOP is already calling NextEvent under the hood, so there shouldn't be any performance impact.  Ideally, you should be able to test kernel.args.pending first
 and skip the kernel call if it's zero, but I /think/ the count might presently be off, so let me make sure it's working before employing that optimization.  
 There's obviously no reason to call Yield in the STOP code, b/c you're actually doing something while waiting for events to come in (viz running the user's program :).
+
+It looks like the count is working fine.  kernel.args.events.pending.
+[20:16]
+Remember, it's negated (so you can test it with BIT without loading it). (edited)
+[20:16]
+If it's zero, no need to call NextEvent.

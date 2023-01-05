@@ -54,14 +54,14 @@ _BSWriteToFileLoop:
 		sbc 	#1
 		sta 	NSMantissa0+2
 		;
-		lda 	NSMantissa1+1 				
-		sbc 	#0
-		sta 	NSMantissa1+1
-		;
 		lda 	NSMantissa1+2 				
-		sbc 	#9
-		sta 	NSMantissa0+2
-		bmi 	_BSFileComplete
+		sbc 	#0
+		sta 	NSMantissa1+2
+		;
+		lda 	NSMantissa2+2 
+		sbc 	#0
+		sta 	NSMantissa2+2
+		bmi 	_BSFileComplete 			; undercounted, so exit.
 		;
 		lda 	(zTemp2),y 					; get byte to save
 		sta 	KNLReadBuffer,x 			; save in the buffer and bump buffer index

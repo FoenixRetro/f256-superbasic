@@ -75,7 +75,7 @@ ramkernel: ramboot
 #
 #		Run on real hardware (Flash RAM operation)
 #	
-rgo : putcode ramkernel
+rgo : ramkernel putcode
 #
 #		Run on real hardware (RAM operation)
 #

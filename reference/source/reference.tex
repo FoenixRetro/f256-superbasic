@@ -203,6 +203,16 @@ So the example below loads the binary file mypic.bin into the BASIC bitmap, whic
 	110 bload "mypic.bin",$10000
 \end{verbatim}
 
+\section*{bsave}
+Saves a chunk of memory into a file. The 2nd parameter is the address in full memory space, *not* the 6502 CPU address. The 3rd parameter is the number of bytes to save.
+
+In the default set up, for the RAM area (0000-7FFF) this will however be the same.
+
+\example{}
+\begin{verbatim}
+	100 bsave "memory.space",$0800,$7800
+\end{verbatim}
+
 \section*{chr\$()}
 Convert an ASCII integer to a single character string.
 \example{}
