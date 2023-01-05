@@ -124,3 +124,6 @@ Release 22 (01/01/23):
 	CHG: Converted break check to Macro.
 	CHG: Displays hardware information on boot.
 	CHG: Added BSAVE.
+	CHG: Removed final OSCall , the CHECK / STOP routine replaced with Kernel routines.
+
+Release 23 (05/01/23):

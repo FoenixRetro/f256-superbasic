@@ -35,12 +35,15 @@ set16 		.macro
 
 ; ************************************************************************************************
 ;
-;							Break check, returns Z set if breaking
+;							Break check, returns NZ set if breaking
 ;
 ; ************************************************************************************************
 		
 breakcheck 	.macro
-		jsr 	$FFE1
+		lda 	kernel.args.events.pending 	; load pending event count into accumulator
+		beq 	_NoEvents					; if zero, skip with Z flag set.
+		jsr 	ProcessEvents
+_NoEvents:
 		.endm		
 
 ; ************************************************************************************************

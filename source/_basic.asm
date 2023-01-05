@@ -15,6 +15,7 @@
 
 
 	.include	"./common/aa.system/00start.asm"
+	.include	"./common/aa.system/05events.asm"
 	.include	"./common/assembler/assembler.asm"
 	.include	"./common/assembler/aswrite.asm"
 	.include	"./common/assembler/instruction.asm"

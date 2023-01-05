@@ -1,5 +1,4 @@
 Progress:	
-	- Break check (see below)
 	Display Kernel version
 	
 	HOWTO:
@@ -21,8 +20,6 @@ Ongoing:
 	Code reading.
 	Continue documentation.	
 
-As discussed earlier, replace STOP with a loop calling NextEvent until it returns empty (carry set).  This function will ultimately handle a variety of events, 
-but we can start by checking key.PRESSED events for (event.key.flags > 0) and (event.key.ascii == 3).  If so, STOP :).
 2. Set up tracking variables for 'dx', 'dy', 'dz', and 'buttons' from the mouse_delta event.  Every time you get a new mouse.DELTA event in #1, add its dx,dy,dz 
 values to your cumulative values, and replace your buttons value with the new value from the event.   Whenever your tracking variables are read by the basic 
 program (perhaps assign one or more functions to read them), reset them to zero.
@@ -33,13 +30,3 @@ the basic program, reset them to zero.
 use either the .raw or .ascii value (depending on how you want to handle ENTER/ESC/TAB/etc. vs meta keys) to index the array, and store a non-zero value
 there to indicate that the key is pressed.  Every time you get a key.RELEASED event, clear the associated value.  Now your function to test whether a 
 key is presently held down or not can simply consult the array.
-
-STOP is already calling NextEvent under the hood, so there shouldn't be any performance impact.  Ideally, you should be able to test kernel.args.pending first
-and skip the kernel call if it's zero, but I /think/ the count might presently be off, so let me make sure it's working before employing that optimization.  
-There's obviously no reason to call Yield in the STOP code, b/c you're actually doing something while waiting for events to come in (viz running the user's program :).
-
-It looks like the count is working fine.  kernel.args.events.pending.
-[20:16]
-Remember, it's negated (so you can test it with BIT without loading it). (edited)
-[20:16]
-If it's zero, no need to call NextEvent.

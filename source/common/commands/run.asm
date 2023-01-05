@@ -56,11 +56,8 @@ RUNCodePointerLine:
 		; ----------------------------------------------------------------------------------------
 
 _CRIncMainLoop:
-		asl 	breakCheck 					; clears 1 time in 8
-		bne 	_CRNoBreakCheck
-		dec	 	breakCheck 					; set it back to $FF
 		.breakcheck							; break check
-		beq 	_CRBreak
+		bne 	_CRBreak
 		.tickcheck TickHandler  			; if time elapsed call the tick handler.
 _CRNoBreakCheck:		
 		; 									

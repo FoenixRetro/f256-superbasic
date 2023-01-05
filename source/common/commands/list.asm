@@ -73,7 +73,7 @@ _CLStart
 		;
 _CLLoop:
 		.breakcheck 		 				; break check here, as we want the option of breaking out of long lists.
-		beq 	_CLBreak
+		bne 	_CLBreak
 
 		.cget0 								; any more ?
 		beq 	_CLExit
