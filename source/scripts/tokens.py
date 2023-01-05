@@ -39,16 +39,16 @@ class TokenSource(object):
 				spc( 		str$( 		val(  		isval(		true 		false
 				not(		random(	 	timer( 		event( 		joyx(		joyy(
 				joyb( 		min(		max( 		hit( 		playing(	gettime$(
-				peek( 		peekw( 		peekl(		peekd(		getdate$(	
+				peek( 		peekw( 		peekl(		peekd(		getdate$(	inkey$(
+				get$( 		inkey(		get(
 
 			{0}							// Set 0
-				cls 		data 		dim 		let 		goto		gosub 		
-				return 		print		rem  		else 		to			downto
-				call 		read 		local 		line 		sprite 		rect
-				text 		circle 		here 		color 		colour 		by
-				solid 		outline 	gfx			clear 		image 		from
-				plot 		on 			off 		palette 	sound 		input
-				poke 		pokew 		pokel 		poked 		cprint
+				data 		dim 		let 		rem  		else 		to			
+				downto		call 		read 		local 		line 		by
+				sprite 		rect		text 		circle 		here 		color 		
+				colour 		solid 		outline 	gfx			clear 		image 		
+				from		plot 		on 			off 		palette 	sound 		
+				poke 		pokew 		pokel 		poked 		
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop			
@@ -56,7 +56,8 @@ class TokenSource(object):
 				load 		go 			zap	 		ping 		setdate
 				shoot 		explode 	xload 		xgo 		settime
 				save		verify		drive 		dir 		bload
-				bsave		himem
+				bsave		himem 		input 		cls 		gosub 		
+				return 		print 		cprint 		goto
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	

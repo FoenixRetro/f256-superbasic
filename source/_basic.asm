@@ -16,6 +16,7 @@
 
 	.include	"./common/aa.system/00start.asm"
 	.include	"./common/aa.system/05events.asm"
+	.include	"./common/aa.system/getinkey.asm"
 	.include	"./common/assembler/assembler.asm"
 	.include	"./common/assembler/aswrite.asm"
 	.include	"./common/assembler/instruction.asm"
@@ -57,6 +58,7 @@
 	.include	"./common/commands/stop.asm"
 	.include	"./common/commands/utilities/procscan.asm"
 	.include	"./common/commands/utilities/scanforward.asm"
+	.include	"./common/commands/verify.asm"
 	.include	"./common/commands/while.asm"
 	.include	"./common/errors/charcheck.asm"
 	.include	"./common/errors/errors.asm"
@@ -130,7 +132,6 @@
 	.include	"./common/stack/setup.asm"
 	.include	"./common/strings/concrete.asm"
 	.include	"./common/strings/stringalloc.asm"
-	.include	"./storage/verify.asm"
 
 
 .section code

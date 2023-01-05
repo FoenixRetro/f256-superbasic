@@ -28,7 +28,7 @@ ZeroPagePreference = $50
 ;
 ;		Variables that can go anywhere
 ;
-MemoryStorage = $280
+MemoryStorage = $400
 ;
 ;		Where program memory starts and stops
 ;
@@ -41,7 +41,7 @@ CodeStart = $8000
 ;
 ;		Start of variable/string space. This is a fixed location in memory.
 ;
-VariableSpace = $0800
+VariableSpace = $1000
 ;
 ;		End of variable space
 ;

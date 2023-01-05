@@ -79,6 +79,12 @@ _ClearZeroEnd:
 		stz 	AssemblerAddress+1
 		stz 	AssemblerControl	
 		;
+		;		Empty the keyboard queie.
+		;
+		stz 	KeyboardQueueEntries
+		;
+		; 		Check we aren't out of memory already.
+		;
 		jsr 	CheckIdentifierStringSpace 	; check identifier/string space 		
 		rts
 

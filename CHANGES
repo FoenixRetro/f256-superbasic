@@ -127,3 +127,7 @@ Release 22 (01/01/23):
 	CHG: Removed final OSCall , the CHECK / STOP routine replaced with Kernel routines.
 
 Release 23 (05/01/23):
+
+	CHG: Added INKEY$() INKEY() GET$() GET()
+
+Release 24 (05/01/23):	

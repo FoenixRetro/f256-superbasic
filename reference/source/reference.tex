@@ -301,6 +301,13 @@ Return the fractional part of a number
 	100 print frac(3.14159)
 \end{verbatim}
 
+\section*{get() and get\$()}
+Wait for the next key press then , return either the character as a string, or as the ASCII character code. 
+\example{}
+\begin{verbatim}
+	100 print "Letter ";get$()
+\end{verbatim}
+
 \section*{gfx}
 Sends three parameter command directly to the graphics subsystem. Often the last two parameters are coordinates (not always).  It is not advised to use this for general use as programs would be somewhat unreadable.
 This is a direct call to the graphics library.
@@ -349,6 +356,13 @@ Draws a possibly scaled or flipped sprite image on the bitmap, using the standar
 \example{}
 \begin{verbatim}
 	100 image 4 dim 3 colour 0,$80 to 100,100
+\end{verbatim}
+
+\section*{inkey() and inkey\$()}
+If there is a character key pressed, return either the character as a string, or as the ASCII character code. If no key is available return "" or 0.
+\example{}
+\begin{verbatim}
+	100 print inkey(),inkey$()
 \end{verbatim}
 
 \section*{input}
