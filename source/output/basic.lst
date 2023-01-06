@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Thu Jan  5 16:18:10 2023
+; Fri Jan  6 16:00:40 2023
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -589,8 +589,8 @@
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->811f		09 09 30 35 2f 30 31 2f			.text 9,9,"05/01/23 24"
->8127		32 33 20 32 34
+>811f		09 09 30 36 2f 30 31 2f			.text 9,9,"06/01/23 25"
+>8127		32 33 20 32 35
 
 ;******  Return to file: ./common/aa.system/00start.asm
 
@@ -6595,8 +6595,8 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->dd72		09 09 30 35 2f 30 31 2f			.text 9,9,"05/01/23 24"
->dd7a		32 33 20 32 34
+>dd72		09 09 30 36 2f 30 31 2f			.text 9,9,"06/01/23 25"
+>dd7a		32 33 20 32 35
 
 ;******  Return to file: _basic.asm
 
