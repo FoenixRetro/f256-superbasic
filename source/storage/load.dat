@@ -1,5 +1,5 @@
 100 repeat
-110 size = random(150):if i > 140 then size = random(2040)
+110 size = 1+random(150):if i > 140 then size = random(2040)
 120 file$ = chr$(random(4)+65)+str$(random(3))+".dat"
 130 print file$,size
 140 for i = 0 to size-1
