@@ -33,7 +33,7 @@ TNY_REPO= ..$(S)..$(S)junior-tinykernel
 LDR_FILE= ..$(S)..$(S)FoenixMgr
 KRN_REPO= ..$(S)..$(S)F256_Jr_Kernel_DOS
 
-MODULES= +hardware +graphics +tokeniser +sound +kernel
+MODULES= +hardware +graphics +tokeniser +sound
 
 START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@x $(BINDIR)graphics.bin@s boot@8000
 
@@ -63,7 +63,7 @@ updatekernel:
 	cd $(KRN_REPO) && git pull
 	make -B -C $(KRN_REPO)
 	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)*.bin build
-	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)api.asm  module.interface$(S)kernel
+	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)api.asm  common$(S)api
 
 #
 #		Build RAM based kernel / ROM combo and boot.

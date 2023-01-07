@@ -25,7 +25,7 @@ Command_Save: ;; [SAVE]
 		lda 	zTemp0 
 		jsr 	KNLOpenFileWrite 			; open file for writing
 		bcs 	CSErrorHandler 				; error, so fail.
-		sta 	CurrentFileStream 			; save the reading stream.
+		sta 	BasicFileStream 			; save the reading stream.
 
 		.cresetcodepointer 					; prepare to loop through code.
 _CSLoop:
@@ -39,7 +39,7 @@ _CSLoop:
 		bra 	_CSLoop
 
 _CSExit:
-		lda 	CurrentFileStream 			; close file
+		lda 	BasicFileStream 			; close file
 		jsr 	KNLCloseFile
 
 		jmp 	CLComplete 					; display complete message.
@@ -50,7 +50,7 @@ CSErrorHandler:
 
 ; ************************************************************************************************
 ;
-;					Write X bytes out to CurrentFileStream from zTemp0
+;					Write X bytes out to BasicFileStream from zTemp0
 ;
 ; ************************************************************************************************
 		
@@ -58,7 +58,7 @@ CLWriteByteBlock:
 		cpx 	#0 							; written the lot ?
 		beq 	_CLWBBExit					; if so, exit
 
-		lda 	CurrentFileStream 			; stream to write, count in X
+		lda 	BasicFileStream 			; stream to write, count in X
 		jsr 	KNLWriteBlock 				; call one write attempt
 		bcs 	CSErrorHandler 				; error occurred
 

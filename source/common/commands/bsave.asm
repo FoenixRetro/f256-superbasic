@@ -35,7 +35,7 @@ Command_BSave: ;; [BSAVE]
 		ldx 	NSMantissa1
 		jsr 	KNLOpenFileWrite 			; open file for reading
 		bcs 	CBSErrorHandler 			; error, so fail.
-		sta 	CurrentFileStream 			; save the reading stream.
+		sta 	BasicFileStream 			; save the reading stream.
 
 		;
 		;		Open memory for access
@@ -81,7 +81,7 @@ _BSNoCheck:
 _BSFileComplete:
 		jsr 	BSFlushBuffer 				; write the buffer remainder.
 		jsr 	BLClosePhysicalMemory 		; close the access.
-		lda 	CurrentFileStream 			; close the file
+		lda 	BasicFileStream 			; close the file
 		jsr 	KNLCloseFile
 		ply
 		rts
@@ -106,7 +106,7 @@ _BSFBExit:
 CBSSCloseError:
 		pha
 		jsr 	BLClosePhysicalMemory 	
-		lda 	CurrentFileStream
+		lda 	BasicFileStream
 		jsr 	KNLCloseFile
 		pla
 		;

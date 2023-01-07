@@ -26,7 +26,8 @@ Start:	ldx 	#$FF 						; stack reset
 		
 		jsr 	EXTInitialise 				; hardware initialise
 
-		stz 	DefaultDrive 				; zero the default drive.
+		lda 	#0 							; zero the default drive.
+		jsr 	KNLSetDrive
 
 		.if 	graphicsIntegrated==1 		; if installed
 		lda 	#0 							; graphics system initialise.

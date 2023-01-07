@@ -25,9 +25,9 @@ Command_Load: ;; [LOAD]
 		lda 	zTemp0 
 		jsr 	KNLOpenFileRead 			; open file for reading
 		bcs 	CLErrorHandler 				; error, so fail.
-		sta 	CurrentFileStream 			; save the reading stream.
+		sta 	BasicFileStream 			; save the reading stream.
 
-		jsr     KNLReadByteInit             ; Init reader with the stream
+		jsr     LoadReadByteInit            ; Init reader with the stream
 		jsr 	NewProgram 					; does the actual NEW.
 		stz 	LoadEOFFlag 				; clear EOF Flag.
 _CLLoop:
@@ -46,7 +46,7 @@ _CLLoop:
 		;		File loaded
 		;
 _CLExit:			
-		lda 	CurrentFileStream
+		lda 	BasicFileStream
 		jsr 	KNLCloseFile
 		;
 		;		Complete message - it's a bit slow.
@@ -63,7 +63,7 @@ _CLCMsg:
 		;
 CLCloseError:
 		pha
-		lda 	CurrentFileStream
+		lda 	BasicFileStream
 		jsr 	KNLCloseFile
 		pla
 		;
@@ -113,7 +113,7 @@ LoadReadCharacter:
 		lda 	LoadEOFFlag 				; already done EOF.
 		bne 	_LRCIsEOF
 
-		jsr 	KNLReadByte 				; read a byte
+		jsr 	LoadReadByte 				; read a byte
 		bcc		_LRCExit 					; read okay.
 
 		cmp 	#KERR_EOF 					; if error not EOF it's an actual error.
@@ -135,14 +135,68 @@ _LRCNotLF:
 		cmp 	#0 							; set Z flag if EOF.
 		rts		
 
+; ************************************************************************************************
+;
+;				Init the reader.  A = file stream; can't fail.
+;
+; ************************************************************************************************
+
+LoadReadByteInit:
+		sta     LoadFileStream 				; save stream
+		stz     LoadNextCharacter 			; reset buffer
+		stz     LoadEndCharacter
+		rts
+
+; ************************************************************************************************
+;
+;				Read one character into A. CC = succeeded, CS = failed, A = Event error
+;              	CS when finished (A = EOF)
+;
+; ************************************************************************************************
+
+LoadReadByte:
+		phx
+
+		ldx     LoadNextCharacter 					; all data consumed ?
+		cpx     LoadEndCharacter
+		bne     _KNLRBGetNextByte
+		;
+	  	; 		Buffer empty; try to fetch more.
+	  	;
+		lda     LoadFileStream
+		ldx     #KNLReadBufferLen 			; set bytes to read.
+		jsr     KNLReadBlock 				; read next chunk from the stream
+		bcs     _KNLRBError 				; error has occurred on read.
+		;
+		sta     LoadEndCharacter 						; # read is the number available
+		ldx     #0 							; reset the read pointer.
+		stx     LoadNextCharacter
+		;
+		;		Get next byte from the buffer
+		;
+_KNLRBGetNextByte:
+		lda     KNLReadBuffer,x 			; get the next data item
+		inc     LoadNextCharacter 					; and advance the index
+		clc 								; succeeded
+_KNLRBError:
+		plx
+		rts
+
+
 		.send code
 
 		.section storage
 
 LoadEOFFlag:
 		.fill 	1
-CurrentFileStream:
+BasicFileStream:
 		.fill 	1
+LoadFileStream:   								; stream to read from
+		.byte   ? 						
+LoadNextCharacter:     								; next byte to return
+		.byte   ? 						
+LoadEndCharacter:      								; end of bytes available.
+		.byte   ? 	
 
 		.send storage
 

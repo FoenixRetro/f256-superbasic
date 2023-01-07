@@ -20,15 +20,10 @@
 
 Command_Drive:	;; [drive]
 		jsr 	Evaluate8BitInteger
-		sta 	DefaultDrive
+		jsr 	KNLSetDrive
 		rts
 
 		.send code
-
-		.section storage
-DefaultDrive:
-		.fill 	1
-		.send storage		
 		
 ; ************************************************************************************************
 ;

@@ -21,13 +21,6 @@ EXTInitialise:
 	dec 8+5
 	plp
 	rts
-EXTReadController:
-	inc 8+5
-	jsr	Export_EXTReadController
-	php
-	dec 8+5
-	plp
-	rts
 EXTInputLine:
 	inc 8+5
 	jsr	Export_EXTInputLine
@@ -35,60 +28,9 @@ EXTInputLine:
 	dec 8+5
 	plp
 	rts
-	.endif
-	.if kernelIntegrated == 1
-KNLInputSingleCharacter:
+EXTInputSingleCharacter:
 	inc 8+5
-	jsr	Export_KNLInputSingleCharacter
-	php
-	dec 8+5
-	plp
-	rts
-KNLOpenFileRead:
-	inc 8+5
-	jsr	Export_KNLOpenFileRead
-	php
-	dec 8+5
-	plp
-	rts
-KNLOpenFileWrite:
-	inc 8+5
-	jsr	Export_KNLOpenFileWrite
-	php
-	dec 8+5
-	plp
-	rts
-KNLReadByteInit:
-	inc 8+5
-	jsr	Export_KNLReadByteInit
-	php
-	dec 8+5
-	plp
-	rts
-KNLReadByte:
-	inc 8+5
-	jsr	Export_KNLReadByte
-	php
-	dec 8+5
-	plp
-	rts
-KNLReadBlock:
-	inc 8+5
-	jsr	Export_KNLReadBlock
-	php
-	dec 8+5
-	plp
-	rts
-KNLWriteBlock:
-	inc 8+5
-	jsr	Export_KNLWriteBlock
-	php
-	dec 8+5
-	plp
-	rts
-KNLCloseFile:
-	inc 8+5
-	jsr	Export_KNLCloseFile
+	jsr	Export_EXTInputSingleCharacter
 	php
 	dec 8+5
 	plp

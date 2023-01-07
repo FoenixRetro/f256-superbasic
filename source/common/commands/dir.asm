@@ -20,7 +20,7 @@
 ; ************************************************************************************************
 
 Command_Dir:	;; [dir]
-		lda     DefaultDrive				; set drive to list.
+		lda     KNLDefaultDrive				; set drive to list.
 		sta     kernel.args.directory.open.drive
 		stz     kernel.args.directory.open.fname_len
 		jsr     kernel.Directory.Open

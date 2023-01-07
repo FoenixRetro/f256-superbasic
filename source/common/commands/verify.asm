@@ -1,4 +1,4 @@
-; ************************************************************************************************
+m; ************************************************************************************************
 ; ************************************************************************************************
 ;
 ;		Name:		verify.asm
@@ -25,8 +25,8 @@ Command_VERIFY: ;; [VERIFY]
 		lda 	zTemp0 
 		jsr 	KNLOpenFileRead 			; open file for reading
 		bcs 	_CVErrorHandler 			; error, so fail.
-		sta 	CurrentFileStream 			; save the reading stream.
-		jsr     KNLReadByteInit             ; Init reader with the stream
+		sta 	BasicFileStream 			; save the reading stream.
+		jsr     LoadReadByteInit            ; Init reader with the stream
 		stz 	LoadEOFFlag 				; clear EOF Flag.
 		.cresetcodepointer 					; prepare to loop through code.
 
@@ -53,7 +53,7 @@ _CVCompareLoop:
 		bra 	_CVLoop
 
 _CVExit:			
-		lda 	CurrentFileStream
+		lda 	BasicFileStream
 		jsr 	KNLCloseFile
 		jmp 	CLComplete
 

@@ -32,7 +32,7 @@ Command_BLoad: ;; [BLOAD]
 		ldx 	NSMantissa1
 		jsr 	KNLOpenFileRead 			; open file for reading
 		bcs 	CBLErrorHandler 			; error, so fail.
-		sta 	CurrentFileStream 			; save the reading stream.
+		sta 	BasicFileStream 			; save the reading stream.
 		;
 		;		Open memory for access
 		;
@@ -42,7 +42,8 @@ Command_BLoad: ;; [BLOAD]
 		;		Keep reading file till empty.
 		;
 _BLReadFile:
-		lda 	CurrentFileStream
+		lda 	BasicFileStream
+		ldx     #KNLReadBufferLen 			; set bytes to read.
 		jsr 	KNLReadBlock 				; read next block
 		bcs 	_BLFileError 				; file error, which might be EOF.
 
@@ -70,7 +71,7 @@ _BLFileError:
 		cmp 	#KERR_EOF 					; End of file
 		bne 	CBLErrorHandler				; no, it's an actual error
 		jsr 	BLClosePhysicalMemory 		; close the access.
-		lda 	CurrentFileStream 			; close the file
+		lda 	BasicFileStream 			; close the file
 		jsr 	KNLCloseFile
 		ply
 		rts
@@ -80,7 +81,7 @@ _BLFileError:
 CBLCloseError:
 		pha
 		jsr 	BLClosePhysicalMemory 	
-		lda 	CurrentFileStream
+		lda 	BasicFileStream
 		jsr 	KNLCloseFile
 		pla
 		;

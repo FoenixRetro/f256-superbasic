@@ -16,7 +16,9 @@
 
 	.include	"./common/aa.system/00start.asm"
 	.include	"./common/aa.system/05events.asm"
+	.include	"./common/aa.system/06wrapper.asm"
 	.include	"./common/aa.system/getinkey.asm"
+	.include	"./common/api/api.asm"
 	.include	"./common/assembler/assembler.asm"
 	.include	"./common/assembler/aswrite.asm"
 	.include	"./common/assembler/instruction.asm"
@@ -117,7 +119,6 @@
 	.include	"./module.interface/hardware/event.asm"
 	.include	"./module.interface/hardware/joy.asm"
 	.include	"./module.interface/hardware/timer.asm"
-	.include	"./module.interface/kernel/api.asm"
 	.include	"./memory/memory.flat/delete.asm"
 	.include	"./memory/memory.flat/insert.asm"
 	.include	"./memory/memory.flat/memory.asm"
@@ -145,4 +146,3 @@ StartModuleCode:
 	.include	"../modules/_build/_graphics.module"
 	.include	"../modules/_build/_tokeniser.module"
 	.include	"../modules/_build/_sound.module"
-	.include	"../modules/_build/_kernel.module"
