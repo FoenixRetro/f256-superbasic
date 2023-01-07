@@ -80,7 +80,7 @@ Start:	ldx 	#$FF 						; stack reset
 		jmp 	WarmStart
 		.endif
 
-Prompt:	.text 	13,13
+Prompt:	.text 	13,9,9,"Go go Gadget!",13
 		.include "../generated/timestamp.asm"
 		.text 	13,13,13,0
 
