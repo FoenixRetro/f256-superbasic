@@ -19,21 +19,18 @@
 		.section code
 
 ProcessEvents:
-		lda     #<event 					; tell kernel where events go.
-		sta     kernel.args.events+0
-		lda     #>event
-		sta     kernel.args.events+1
+		jsr 	KNLSetEventPointer
 		   
 		jsr     kernel.NextEvent 			; get next event
 		bcs 	_PEExitZ 					; nothing left to process.
 
-		lda 	event.type 					; go back if event not key.pressed.
+		lda 	KNLEvent.type 				; go back if event not key.pressed.
 		cmp 	#kernel.event.key.PRESSED
 		bne 	ProcessEvents
 
-		lda	 	event.key.flags 			; is event.key.flags = 0 ?
+		lda	 	KNLEvent.key.flags 			; is KNLEvent.key.flags = 0 ?
 		bne 	ProcessEvents
-		lda 	event.key.ascii 			; is it Ctrl+C
+		lda 	KNLEvent.key.ascii 			; is it Ctrl+C
 		cmp 	#3
 		beq 	_PEReturnBreak  			; no, keep going.
 
@@ -94,6 +91,7 @@ KeyboardQueueEntries:
 		.fill 	1
 
 		.send 	storage
+
 ; ************************************************************************************************
 ;
 ;									Changes and Updates

@@ -138,13 +138,13 @@ _CIInputLine:
 		bcs 	_CIInputLine
 		sta 	lineBuffer,x
 		inx
-		jsr 	CPPrintVector 				; echo it.
+		jsr 	EXTPrintCharacter 			; echo it.
 		bra 	_CIInputLine
 		;
 _CIBackspace:
 		cpx 	#0 							; nothing to delete
 		beq 	_CIInputLine
-		jsr 	CPPrintVector 				; echo it.
+		jsr 	EXTPrintCharacter 			; echo it.
 		dex
 		bra 	_CIInputLine
 		;
@@ -237,5 +237,7 @@ CPInputVector:
 ;		==== 			=====
 ;		01/01/23 		isInputFlag => isPrintFlag. Added CPrint command using that to detect
 ;						print type.
+;		08/01/23 		When inputting a string, the CPRINT routine was called causing the
+;						Backspace to display a solid block.
 ;
 ; ************************************************************************************************

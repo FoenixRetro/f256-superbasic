@@ -1,0 +1,17 @@
+100 repeat
+110 size = 1+random(150):if i > 140 then size = random(2040)
+120 file$ = chr$(random(4)+65)+str$(random(3))+".dat"
+130 print file$,size
+140 for i = 0 to size-1
+150 i?$6000 = random(256)
+160 next
+170 bsave file$,$6000,size
+180 size?$7000 = 255
+190 bload file$,$7000
+200 for i = 0 to size-1
+210 if i?$6000 <> i?$7000 then print "Failed offset ";i:end
+220 next
+230 if size?$7000 <> 255 then print "Overwrite end":end
+240 print "Ok"
+250 until false
+ÿÿÿÿ

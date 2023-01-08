@@ -31,7 +31,7 @@ _CDEventLoop:
 		jsr     kernel.NextEvent
 		bcs     _CDEventLoop
 
-		lda     event.type  
+		lda     KNLEvent.type  
 		cmp     #kernel.event.directory.CLOSED
 		beq    	_CDExit
 
@@ -57,7 +57,7 @@ _CDMessages:
 		rts
 
 _CDEVRead:
-		lda     event.directory.stream
+		lda     KNLEvent.directory.stream
 		sta     kernel.args.directory.read.stream
 		jmp     kernel.Directory.Read
 
@@ -67,7 +67,7 @@ _CDEVVolume:
 _CDEVFile:
 		lda 	#32
 		jsr 	EXTPrintCharacter
-		lda     event.directory.file.len
+		lda     KNLEvent.directory.file.len
 		jsr     _CDReadData
 		jsr 	PrintStringXA
 		lda 	#13
@@ -78,7 +78,7 @@ _CDEVFree:
 		bra     _CDEVEOF
 
 _CDEVEOF:
-		lda     event.directory.stream
+		lda     KNLEvent.directory.stream
 		sta     kernel.args.directory.close.stream
 		jmp     kernel.Directory.Close
 

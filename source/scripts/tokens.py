@@ -48,7 +48,7 @@ class TokenSource(object):
 				sprite 		rect		text 		circle 		here 		color 		
 				colour 		solid 		outline 	gfx			clear 		image 		
 				from		plot 		on 			off 		palette 	sound 		
-				poke 		pokew 		pokel 		poked 		
+				poke 		pokew 		pokel 		poked 		memcopy
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop			

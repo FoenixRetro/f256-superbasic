@@ -57,11 +57,8 @@ KNLOpenStart:
 		pla
 
 		jsr 	KNLSetupFileName
+		jsr 	KNLSetEventPointer
 
-		lda     #event & $FF 				; tell kernel where to store event data
-		sta     kernel.args.events+0
-		lda     #event >> 8
-		sta     kernel.args.events+1
 
 		lda 	KNLDefaultDrive 			; currently drive zero only.
 		sta 	kernel.args.file.open.drive
@@ -75,7 +72,7 @@ _loop
 		jsr     kernel.NextEvent
 		bcs     _loop
 
-		lda 	event.type 
+		lda 	KNLEvent.type 
 		cmp     #kernel.event.file.OPENED
 		beq 	_success
 		cmp     #kernel.event.file.NOT_FOUND 
@@ -85,9 +82,24 @@ _loop
 		bra     _loop
 
 _success
-		lda     event.file.stream
+		lda     KNLEvent.file.stream
 		clc
 _out
+		rts
+
+; ************************************************************************************************
+;
+;									Set pointer for events
+;
+; ************************************************************************************************
+
+KNLSetEventPointer:
+		pha
+		lda     #KNLEvent & $FF 			; tell kernel where to store event data
+		sta     kernel.args.events+0
+		lda     #KNLEvent >> 8
+		sta     kernel.args.events+1
+		pla
 		rts
 
 ; ************************************************************************************************
@@ -137,7 +149,7 @@ _KGRBEventLoop:
 		jsr     kernel.NextEvent
 		bcs     _KGRBEventLoop
 
-		lda 	event.type 					; get event		
+		lda 	KNLEvent.type 				; get event		
 
 		cmp     #kernel.event.file.DATA 	; data, return data
 		beq     _KNLRBGetNextByte
@@ -159,11 +171,11 @@ _KNLRBGetNextByte:
 		lda     #>KNLReadBuffer
 		sta     kernel.args.recv.buf+1
 
-		lda     event.file.data.read 		; Set the target length
+		lda     KNLEvent.file.data.read 	; Set the target length
 		sta     kernel.args.recv.buflen	  										
 
 		jsr     kernel.ReadData		       	; Get the data from the kernel  (Synchronous call, no error)
-		lda     event.file.data.read 		; Return # of bytes read (in A)
+		lda     KNLEvent.file.data.read 	; Return # of bytes read (in A)
 
 		clc
 		rts
@@ -204,7 +216,7 @@ _KNLWLoop:									; wait for an event.
 		jsr     kernel.NextEvent
 		bcs     _KNLWLoop
 
-		lda     event.type 					; various errors.
+		lda     KNLEvent.type 				; various errors.
 		cmp     #kernel.event.file.CLOSED
 		beq 	_KWBFailed
 		cmp     #kernel.event.file.ERROR
@@ -215,7 +227,7 @@ _KNLWLoop:									; wait for an event.
 		cmp     #kernel.event.file.WROTE 	; wait until block write succeeds
 		bne 	_KNLWLoop      
 		clc
-		lda    event.file.wrote.wrote 		; get bytes written.
+		lda    KNLEvent.file.wrote.wrote 	; get bytes written.
 		bra 	_KWBExit
 
 _KWBFailed:
@@ -243,17 +255,13 @@ KNLCloseFile:
 ; ************************************************************************************************
 
 KNLCheckKeyPressed:
-		lda     #<event 					; tell kernel where events go.
-		sta     kernel.args.events+0
-		lda     #>event
-		sta     kernel.args.events+1
-		   
+		jsr 	KNLSetEventPointer
 		jsr     kernel.NextEvent 			; get next event
 		bcs 	_CKPNoEvent 				; no event
-		lda     event.type
+		lda     KNLEvent.type
 		cmp     #kernel.event.key.PRESSED 	; must be a pressed event.
 		bne 	_CKPNoEvent
-		lda     event.key.ascii		
+		lda     KNLEvent.key.ascii		
 		rts
 _CKPNoEvent:
 		lda 	#0
@@ -283,7 +291,7 @@ KNLReadBuffer:      						; buffer
 		.fill   256				
 KNLDefaultDrive: 							; current default drive.
 		.byte 	?							
-event       .dstruct    kernel.event.event_t   
+KNLEvent   .dstruct    kernel.event.event_t   
 
 		.send storage       
 

@@ -17,7 +17,7 @@ endif
 #
 #		Current version.
 #
-VERSION = 25
+VERSION = 26
 
 #	System 0 = F256
 SYSTEM = 0 						
@@ -184,7 +184,8 @@ release:
 	echo "" >release$(S)VERSION_${VERSION}
 
 	make -B -C ..$(S)howto
-
+	cp ..$(S)howto$(S)howto*.zip release
+	
 	$(CDEL) release$(S)superbasic.zip
 	zip -r release$(S)superbasic.zip release$(S)*
 #

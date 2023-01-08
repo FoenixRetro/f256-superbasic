@@ -137,23 +137,24 @@ VectorSet0:
 	.word	LetCommand                       ; $c3 LET
 	.word	LineCommand                      ; $c4 LINE
 	.word	Command_LOCAL                    ; $c5 LOCAL
-	.word	SyntaxError                      ; $c6 OFF
-	.word	SyntaxError                      ; $c7 ON
-	.word	SyntaxError                      ; $c8 OUTLINE
-	.word	PaletteCommand                   ; $c9 PALETTE
-	.word	PlotCommand                      ; $ca PLOT
-	.word	PokeBCommand                     ; $cb POKE
-	.word	PokeDCommand                     ; $cc POKED
-	.word	PokeLCommand                     ; $cd POKEL
-	.word	PokeWCommand                     ; $ce POKEW
-	.word	Command_Read                     ; $cf READ
-	.word	RectangleCommand                 ; $d0 RECT
-	.word	RemCommand                       ; $d1 REM
-	.word	SyntaxError                      ; $d2 SOLID
-	.word	SoundCommand                     ; $d3 SOUND
-	.word	SpriteCommand                    ; $d4 SPRITE
-	.word	TextCommand                      ; $d5 TEXT
-	.word	Unused2                          ; $d6 TO
+	.word	SyntaxError                      ; $c6 MEMCOPY
+	.word	SyntaxError                      ; $c7 OFF
+	.word	SyntaxError                      ; $c8 ON
+	.word	SyntaxError                      ; $c9 OUTLINE
+	.word	PaletteCommand                   ; $ca PALETTE
+	.word	PlotCommand                      ; $cb PLOT
+	.word	PokeBCommand                     ; $cc POKE
+	.word	PokeDCommand                     ; $cd POKED
+	.word	PokeLCommand                     ; $ce POKEL
+	.word	PokeWCommand                     ; $cf POKEW
+	.word	Command_Read                     ; $d0 READ
+	.word	RectangleCommand                 ; $d1 RECT
+	.word	RemCommand                       ; $d2 REM
+	.word	SyntaxError                      ; $d3 SOLID
+	.word	SoundCommand                     ; $d4 SOUND
+	.word	SpriteCommand                    ; $d5 SPRITE
+	.word	TextCommand                      ; $d6 TEXT
+	.word	Unused2                          ; $d7 TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

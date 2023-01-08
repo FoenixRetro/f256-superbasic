@@ -135,3 +135,8 @@ Release 24 (05/01/23):
 	CHG: File I/O routine wrappers in their own wrapper file.
 	CHG: Keyboard input scanner in wrapper file.  Actual keyboard with sound check moved to hardware module
 	CHG: Deleted Kernel Module. Wrapper file located in always-on paging.
+
+Release 25 (08/01/23):	
+
+	BUG: Backspace on Input works correctly
+	CHG: Tweaked wrapper slightly.

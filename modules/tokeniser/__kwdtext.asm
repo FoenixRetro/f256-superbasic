@@ -73,23 +73,24 @@ KeywordSet0:
 	.text	3,$e5,"LET"            ; $c3 LET
 	.text	4,$28,"LINE"           ; $c4 LINE
 	.text	5,$6b,"LOCAL"          ; $c5 LOCAL
-	.text	3,$db,"OFF"            ; $c6 OFF
-	.text	2,$9d,"ON"             ; $c7 ON
-	.text	7,$20,"OUTLINE"        ; $c8 OUTLINE
-	.text	7,$0f,"PALETTE"        ; $c9 PALETTE
-	.text	4,$3f,"PLOT"           ; $ca PLOT
-	.text	4,$2f,"POKE"           ; $cb POKE
-	.text	5,$73,"POKED"          ; $cc POKED
-	.text	5,$7b,"POKEL"          ; $cd POKEL
-	.text	5,$86,"POKEW"          ; $ce POKEW
-	.text	4,$1c,"READ"           ; $cf READ
-	.text	4,$2e,"RECT"           ; $d0 RECT
-	.text	3,$e4,"REM"            ; $d1 REM
-	.text	5,$7b,"SOLID"          ; $d2 SOLID
-	.text	5,$89,"SOUND"          ; $d3 SOUND
-	.text	6,$d7,"SPRITE"         ; $d4 SPRITE
-	.text	4,$45,"TEXT"           ; $d5 TEXT
-	.text	2,$a3,"TO"             ; $d6 TO
+	.text	7,$1a,"MEMCOPY"        ; $c6 MEMCOPY
+	.text	3,$db,"OFF"            ; $c7 OFF
+	.text	2,$9d,"ON"             ; $c8 ON
+	.text	7,$20,"OUTLINE"        ; $c9 OUTLINE
+	.text	7,$0f,"PALETTE"        ; $ca PALETTE
+	.text	4,$3f,"PLOT"           ; $cb PLOT
+	.text	4,$2f,"POKE"           ; $cc POKE
+	.text	5,$73,"POKED"          ; $cd POKED
+	.text	5,$7b,"POKEL"          ; $ce POKEL
+	.text	5,$86,"POKEW"          ; $cf POKEW
+	.text	4,$1c,"READ"           ; $d0 READ
+	.text	4,$2e,"RECT"           ; $d1 RECT
+	.text	3,$e4,"REM"            ; $d2 REM
+	.text	5,$7b,"SOLID"          ; $d3 SOLID
+	.text	5,$89,"SOUND"          ; $d4 SOUND
+	.text	6,$d7,"SPRITE"         ; $d5 SPRITE
+	.text	4,$45,"TEXT"           ; $d6 TEXT
+	.text	2,$a3,"TO"             ; $d7 TO
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF

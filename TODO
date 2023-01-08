@@ -1,21 +1,39 @@
 Progress:	
-	Input Backspace doesn't work.
+	Mouse code.
 	Display Kernel version
-	
-	HOWTO:
-		Create assembler programs
-		Cross develop BASIC programs
 
-	CHECK:		
-		Update your firmware
+	RTC ?
+		=GETDATE$(0)
+			"DD:MM:YY"
+	 	=GETTIME$(0)
+	 		"HH:MM:SS"
+	 	SETDATE d,m,y
+	 	SETTIME h,m,s
+
+		$D690
+			0 	seconds 00 TT UUUU
+			2 	minutes 00 TT UUUU
+			4   hours 	[AP]0 TT UUUU
+
+			6 	Day 	00 TT UUUU	
+			9 	Month 	00 TT UUUU
+			10 	Year 	 TTTT UUUU
+
+	DMA ?
+		read PJW's explainer.
+		econtreasd's ideas on this.
+
+			MEMCOPY <addr>,<size> TO <address>
+			MEMCOPY <addr>,<size> POKE <byte>
+
+			MEMCOPY <addr> RECT <x>,<y> BY <width> TO <address>
+			MEMCOPY <addr> RECT <x>,<y> BY <width> POKE <byte>
+
+	HOWTO:
+		Create assembler programs (wait on Kernel change)
 
 	Should CR in PRINT clear to EOL.
 
-	DMA ?
-		econtreasd's ideas on this.
-
-	RTC ?
-		GETDATE$ 	GETTIME$	SETDATE 	SETTIME ?
 
 Ongoing:
 	Code reading.
