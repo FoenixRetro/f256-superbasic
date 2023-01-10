@@ -39,7 +39,8 @@ _UFCopy2:
 		sta 	1
 		rts
 
-		.include 	"../common/generated/font.dat"
+FontBinary:
+		.binary 	"../common/generated/font.bin"
 		.send code
 
 ; ************************************************************************************************

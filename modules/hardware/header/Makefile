@@ -16,11 +16,13 @@ include ../../../documents/common.make
 endif
 
 PROMPTDIR = ..$(S)..$(S)..$(S)..$(S)Foenix-F256JR-bootscreens$(S)
-
+FONTDIR = ..$(S)..$(S)..$(S)..$(S)Foenix-Fonts$(S)
 all:
 	$(CCOPY) $(PROMPTDIR)f256jr_boot_attrs.bin attrs.bin
 	$(CCOPY) $(PROMPTDIR)f256jr_boot_chars.bin chars.bin	
 	$(CCOPY) $(PROMPTDIR)f256jr_std_text_palette.hex palette.hex
-	$(CCOPY) "$(PROMPTDIR)tile sets$(S)C64 PETSCII.json" font.json
+	$(CCOPY) $(FONTDIR)standard/f256jr_std-charset.bin font.bin
+
 	python process.py
-	$(CCOPY) font.dat ..$(S)..$(S)..$(S)source$(S)common$(S)generated
+	
+	$(CCOPY) font.bin ..$(S)..$(S)..$(S)source$(S)common$(S)generated

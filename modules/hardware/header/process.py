@@ -58,20 +58,3 @@ for x in open("palette.hex").readlines():
 
 h.write("\t.send code\n\n")
 h.close()
-
-h = open("font.dat","w")
-h.write(";\n;\tAutomatically generated.\n;\n")
-h.write("\t.section code\n\n")
-h.write("FontBinary:\n")
-font = open("font.json").read(-1).replace(",","").replace("[","").replace("]","").replace("{","").replace("}","").replace(":","").replace('"',"").split("data")[1:]
-fontBin = [ 0 ] * 256 * 8
-for i in range(0,256):
-	fontData = font[i]
-	for b in range(0,8):
-		for r in range(0,8):
-			if fontData[b*8+r] == '1':
-				fontBin[i*8+b] |= (0x80 >> r)
-
-h.write("\t.byte\t{0}\n".format(",".join(["${0:02x}".format(c) for c in fontBin])))
-h.write("\t.send code\n\n")
-h.close()

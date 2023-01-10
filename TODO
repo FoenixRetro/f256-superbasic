@@ -2,6 +2,7 @@ Progress:
 	Mouse code.
 	Display Kernel version
 	Background reset.
+	Consider STEP.
 
 	RTC ?
 		=GETDATE$(0)
