@@ -1,7 +1,7 @@
 
-; 64tass Turbo Assembler Macro V1.57.2900 listing file
+; 64tass Turbo Assembler Macro V1.58.2974? listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Wed Jan 11 15:18:24 2023
+; Wed Jan 11 16:11:03 2023
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -3771,7 +3771,7 @@
 >9178		6c 99					.word	OraInteger                       ; $1c |
 >917a		ce a6					.word	SyntaxError                      ; $1d }
 >917c		ce a6					.word	SyntaxError                      ; $1e ~
->917e		ce a6					.word	SyntaxError                      ; $1f [7m<7F>[m
+>917e		ce a6					.word	SyntaxError                      ; $1f <7F>
 >9180		ce a6					.word	SyntaxError                      ; $20
 >9182		d6 99					.word	WordIndirect                     ; $21 !
 >9184		ce a6					.word	SyntaxError                      ; $22 "
@@ -5277,7 +5277,7 @@
 >9a89		01					.byte	 1	; $1c |
 >9a8a		00					.byte	 0	; $1d }
 >9a8b		00					.byte	 0	; $1e ~
->9a8c		00					.byte	 0	; $1f [7m<7F>[m
+>9a8c		00					.byte	 0	; $1f <7F>
 >9a8d		00					.byte	 0	; $20
 >9a8e		05					.byte	 5	; $21 !
 >9a8f		00					.byte	 0	; $22 "
