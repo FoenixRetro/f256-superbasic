@@ -1,7 +1,14 @@
-100 print "Today ";getdate$(0)
-110 print "Time ";gettime$(0)
-120 settime 09,40,30
-130 setdate 11,1,3
-200 print "Today ";getdate$(0)
-210 print "Time ";gettime$(0)
+100 cls:bitmap on:bitmap clear 1
+110 for i = 1 to 40
+120 rect colour random(255) outline random(320),random(100) to random(320),random(100)
+130 next
+140 ?1 = 0
+145 poke $DF00,$00
+150 pokel $DF04,$10000
+160 pokel $DF08,$18000
+170 pokel $DF0C,$04000
+175 poke $DF01,$E0
+180 poke $DF00,$85
+190 while (peek($DF01) & $80) <> 0:wend
+200 print "Done."
 ÿÿÿÿ

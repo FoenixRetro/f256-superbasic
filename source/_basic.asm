@@ -48,6 +48,7 @@
 	.include	"./common/commands/list.asm"
 	.include	"./common/commands/load.asm"
 	.include	"./common/commands/local.asm"
+	.include	"./common/commands/memcopy.asm"
 	.include	"./common/commands/new.asm"
 	.include	"./common/commands/poke.asm"
 	.include	"./common/commands/procedure.asm"

@@ -137,7 +137,7 @@ VectorSet0:
 	.word	LetCommand                       ; $c3 LET
 	.word	LineCommand                      ; $c4 LINE
 	.word	Command_LOCAL                    ; $c5 LOCAL
-	.word	SyntaxError                      ; $c6 MEMCOPY
+	.word	MCCommand                        ; $c6 MEMCOPY
 	.word	SyntaxError                      ; $c7 OFF
 	.word	SyntaxError                      ; $c8 ON
 	.word	SyntaxError                      ; $c9 OUTLINE

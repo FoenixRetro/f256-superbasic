@@ -8,11 +8,7 @@ Progress:
 		read PJW's explainer.
 		econtreasd's ideas on this.
 
-			MEMCOPY <addr>,<size> TO <address>
-			MEMCOPY <addr>,<size> POKE <byte>
 
-			MEMCOPY <addr> RECT <x>,<y> BY <width> TO <address>
-			MEMCOPY <addr> RECT <x>,<y> BY <width> POKE <byte>
 
 	HOWTO:
 		Create assembler programs (wait on Kernel change)
