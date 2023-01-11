@@ -144,4 +144,5 @@ Release 25 (08/01/23):
 
 Release 26 (10/01/23):
 
-	
+	CHG: Added RTC commands/functions GETDATE$() GETTIME$() SETDATE SETTIME
+	CHG: Fixed cursor

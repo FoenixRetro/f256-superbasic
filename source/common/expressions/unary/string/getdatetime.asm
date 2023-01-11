@@ -81,7 +81,7 @@ UGDTDigit:
 RTCROffset: 								; offset in table
 		.byte 	4,2,0,6,9,10
 RTCRMask:		 							; mask out unwanted bits. (e.g. AM/PM flag)
-		.byte 	$7F,$7F,$3F,$3F,$1F,$7F
+		.byte 	$3F,$7F,$7F,$3F,$1F,$7F
 		
 		.send code
 

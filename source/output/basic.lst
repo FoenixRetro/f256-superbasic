@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.57.2900 listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Wed Jan 11 09:39:37 2023
+; Wed Jan 11 09:58:58 2023
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -6699,7 +6699,7 @@
 .a27a						RTCROffset:
 >a27a		04 02 00 06 09 0a				.byte 	4,2,0,6,9,10
 .a280						RTCRMask:
->a280		7f 7f 3f 3f 1f 7f				.byte 	$7F,$7F,$3F,$3F,$1F,$7F
+>a280		3f 7f 7f 3f 1f 7f				.byte 	$3F,$7F,$7F,$3F,$1F,$7F
 
 ;******  Return to file: _basic.asm
 
@@ -9019,7 +9019,7 @@
 .c1bb	a1bb	64 01		stz $01				stz 	1 							; I/O Page zero
 .c1bd	a1bd	a9 05		lda #$05			lda 	#1+4 						; enable cursor
 .c1bf	a1bf	8d 10 d0	sta $d010			sta 	$D010
-.c1c2	a1c2	a9 b3		lda #$b3			lda 	#179
+.c1c2	a1c2	a9 d6		lda #$d6			lda 	#214
 .c1c4	a1c4	8d 12 d0	sta $d012			sta 	$D012
 .c1c7	a1c7	ad 87 07	lda $0787			lda 	EXTColumn
 .c1ca	a1ca	8d 14 d0	sta $d014			sta 	$D014 						; set cursor position
