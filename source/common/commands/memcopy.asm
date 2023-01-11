@@ -22,19 +22,19 @@
 ;
 ; ************************************************************************************************
 ;
-;			MEMCOPY <addr>,<size> TO <address>
+;			MEMCOPY <addr>,<size> TO <addr>
 ;			MEMCOPY <addr>,<size> POKE <byte>
 ;
-;			MEMCOPY <addr> RECT <x>,<y> BY <width> TO <address>
+;			MEMCOPY <addr> RECT <x>,<y> BY <width> TO <addr>
 ;			MEMCOPY <addr> RECT <x>,<y> BY <width> POKE <byte>
+;
+;			<addr> can be AT x,y on the bitmap.
 ;
 ; ************************************************************************************************
 
 		.section code
 
 MCCommand: ;; [memcopy]
-		.debug
-
 		lda 	1 							; save current I/O ; switch to I/O 0
 		pha
 		stz 	1
@@ -70,6 +70,7 @@ _MCSize1D:
 		jsr 	EvaluateInteger
 		ldx 	#$C 						; copy to size $DF0C-E
 		jsr 	MCCopyAddress
+		bra 	_MCDestination
 		;
 		;		2D RECT width,height syntax BY stride
 		;
@@ -122,6 +123,12 @@ _MCDestPoke:
 _MCDoDMA:		
 		lda 	DMAControlByte 				; set the DMA Control byte to go !
 		sta 	$DF00
+		;
+		;		Wait for DMA to complete
+		;
+_MCWaitBUSD:
+		lda 	$DF01
+		bmi 	_MCWaitBUSD
 		;
 		pla 								; restore I/O.
 		sta 	1

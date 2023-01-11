@@ -2,13 +2,7 @@
 110 for i = 1 to 40
 120 rect colour random(255) outline random(320),random(100) to random(320),random(100)
 130 next
-140 ?1 = 0
-145 poke $DF00,$00
-150 pokel $DF04,$10000
-160 pokel $DF08,$18000
-170 pokel $DF0C,$04000
-175 poke $DF01,$E0
-180 poke $DF00,$85
-190 while (peek($DF01) & $80) <> 0:wend
+135 memcopy $10000,640 poke $18
+140 memcopy $10000 rect 128,128 by 320 to $18000
 200 print "Done."
 ÿÿÿÿ

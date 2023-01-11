@@ -1,14 +1,14 @@
 Progress:	
+	DMA -> Emulator
+	MEMCOPY AT x,y option.
+	Document DMA instruction.
+	Random -> Emulator
+	Random -> SuperBASIC	
+	Background reset ???
+Release ?	
 	Mouse code.
 	Display Kernel version
-	Background reset.
 	Consider STEP.
-
-	DMA ?
-		read PJW's explainer.
-		econtreasd's ideas on this.
-
-
 
 	HOWTO:
 		Create assembler programs (wait on Kernel change)

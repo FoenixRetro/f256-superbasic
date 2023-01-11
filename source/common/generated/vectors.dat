@@ -120,41 +120,42 @@ VectorSet0:
 	.word	Unused4                          ; $b2 THEN
 	.word	Command_UNTIL                    ; $b3 UNTIL
 	.word	Command_WEND                     ; $b4 WEND
-	.word	SyntaxError                      ; $b5 BY
-	.word	CallCommand                      ; $b6 CALL
-	.word	CircleCommand                    ; $b7 CIRCLE
-	.word	ClearCommand                     ; $b8 CLEAR
-	.word	SyntaxError                      ; $b9 COLOR
-	.word	SyntaxError                      ; $ba COLOUR
-	.word	Command_Data                     ; $bb DATA
-	.word	DimCommand                       ; $bc DIM
-	.word	Unused3                          ; $bd DOWNTO
-	.word	ElseCode                         ; $be ELSE
-	.word	SyntaxError                      ; $bf FROM
-	.word	GfxCommand                       ; $c0 GFX
-	.word	SyntaxError                      ; $c1 HERE
-	.word	ImageCommand                     ; $c2 IMAGE
-	.word	LetCommand                       ; $c3 LET
-	.word	LineCommand                      ; $c4 LINE
-	.word	Command_LOCAL                    ; $c5 LOCAL
-	.word	MCCommand                        ; $c6 MEMCOPY
-	.word	SyntaxError                      ; $c7 OFF
-	.word	SyntaxError                      ; $c8 ON
-	.word	SyntaxError                      ; $c9 OUTLINE
-	.word	PaletteCommand                   ; $ca PALETTE
-	.word	PlotCommand                      ; $cb PLOT
-	.word	PokeBCommand                     ; $cc POKE
-	.word	PokeDCommand                     ; $cd POKED
-	.word	PokeLCommand                     ; $ce POKEL
-	.word	PokeWCommand                     ; $cf POKEW
-	.word	Command_Read                     ; $d0 READ
-	.word	RectangleCommand                 ; $d1 RECT
-	.word	RemCommand                       ; $d2 REM
-	.word	SyntaxError                      ; $d3 SOLID
-	.word	SoundCommand                     ; $d4 SOUND
-	.word	SpriteCommand                    ; $d5 SPRITE
-	.word	TextCommand                      ; $d6 TEXT
-	.word	Unused2                          ; $d7 TO
+	.word	SyntaxError                      ; $b5 AT
+	.word	SyntaxError                      ; $b6 BY
+	.word	CallCommand                      ; $b7 CALL
+	.word	CircleCommand                    ; $b8 CIRCLE
+	.word	ClearCommand                     ; $b9 CLEAR
+	.word	SyntaxError                      ; $ba COLOR
+	.word	SyntaxError                      ; $bb COLOUR
+	.word	Command_Data                     ; $bc DATA
+	.word	DimCommand                       ; $bd DIM
+	.word	Unused3                          ; $be DOWNTO
+	.word	ElseCode                         ; $bf ELSE
+	.word	SyntaxError                      ; $c0 FROM
+	.word	GfxCommand                       ; $c1 GFX
+	.word	SyntaxError                      ; $c2 HERE
+	.word	ImageCommand                     ; $c3 IMAGE
+	.word	LetCommand                       ; $c4 LET
+	.word	LineCommand                      ; $c5 LINE
+	.word	Command_LOCAL                    ; $c6 LOCAL
+	.word	MCCommand                        ; $c7 MEMCOPY
+	.word	SyntaxError                      ; $c8 OFF
+	.word	SyntaxError                      ; $c9 ON
+	.word	SyntaxError                      ; $ca OUTLINE
+	.word	PaletteCommand                   ; $cb PALETTE
+	.word	PlotCommand                      ; $cc PLOT
+	.word	PokeBCommand                     ; $cd POKE
+	.word	PokeDCommand                     ; $ce POKED
+	.word	PokeLCommand                     ; $cf POKEL
+	.word	PokeWCommand                     ; $d0 POKEW
+	.word	Command_Read                     ; $d1 READ
+	.word	RectangleCommand                 ; $d2 RECT
+	.word	RemCommand                       ; $d3 REM
+	.word	SyntaxError                      ; $d4 SOLID
+	.word	SoundCommand                     ; $d5 SOUND
+	.word	SpriteCommand                    ; $d6 SPRITE
+	.word	TextCommand                      ; $d7 TEXT
+	.word	Unused2                          ; $d8 TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

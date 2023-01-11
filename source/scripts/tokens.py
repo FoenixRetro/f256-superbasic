@@ -48,7 +48,7 @@ class TokenSource(object):
 				sprite 		rect		text 		circle 		here 		color 		
 				colour 		solid 		outline 	gfx			clear 		image 		
 				from		plot 		on 			off 		palette 	sound 		
-				poke 		pokew 		pokel 		poked 		memcopy
+				poke 		pokew 		pokel 		poked 		memcopy 	at
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop			
@@ -260,7 +260,7 @@ class TokenCollection(object):
 	def processName(self,s):
 		s = s.replace("!","PLING").replace("$","DOLLAR").replace(":","COLON").replace("(","LPAREN")
 		s = s.replace("<","LESS").replace(">","GREATER").replace("=","EQUAL").replace("\\","BACKSLASH").replace(")","RPAREN")
-		s = s.replace("@","AT").replace("[","LSQPAREN").replace("]","RSQPAREN").replace("^","HAT").replace("+","PLUS")
+		s = s.replace("@","ATCH").replace("[","LSQPAREN").replace("]","RSQPAREN").replace("^","HAT").replace("+","PLUS")
 		s = s.replace("-","MINUS").replace("*","STAR").replace("/","SLASH").replace("%","PERCENT").replace("&","AMPERSAND")
 		s = s.replace("?","QMARK").replace(";","SEMICOLON").replace("'","QUOTE").replace("`","BQUOTE").replace("{","LCURLY")
 		s = s.replace("}","RCURLY").replace("_","UNDERSCORE").replace("|","BAR").replace(",","COMMA").replace("#","HASH")

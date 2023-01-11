@@ -146,3 +146,6 @@ Release 26 (10/01/23):
 
 	CHG: Added RTC commands/functions GETDATE$() GETTIME$() SETDATE SETTIME
 	CHG: Fixed cursor
+	CHG: Added MEMCOPY DMA command and various options.
+
+	
