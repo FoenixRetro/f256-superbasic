@@ -17,7 +17,7 @@ endif
 #
 #		Current version.
 #
-VERSION = 26
+VERSION = 27
 
 #	System 0 = F256
 SYSTEM = 0 						

@@ -79,8 +79,8 @@ VectorSet0:
 	.word	FracUnary                        ; $89 FRAC(
 	.word	ChrGet                           ; $8a GET$(
 	.word	AscGet                           ; $8b GET(
-	.word	SyntaxError                      ; $8c GETDATE$(
-	.word	SyntaxError                      ; $8d GETTIME$(
+	.word	UnaryGetDate                     ; $8c GETDATE$(
+	.word	UnaryGetTime                     ; $8d GETTIME$(
 	.word	UnaryHit                         ; $8e HIT(
 	.word	ChrInkey                         ; $8f INKEY$(
 	.word	AscInkey                         ; $90 INKEY(
@@ -184,8 +184,8 @@ VectorSet1:
 	.word	Command_RETURN                   ; $99 RETURN
 	.word	CommandRUN                       ; $9a RUN
 	.word	Command_Save                     ; $9b SAVE
-	.word	SyntaxError                      ; $9c SETDATE
-	.word	SyntaxError                      ; $9d SETTIME
+	.word	CommandSetDate                   ; $9c SETDATE
+	.word	CommandSetTime                   ; $9d SETTIME
 	.word	ShootCommand                     ; $9e SHOOT
 	.word	SpritesCtrl                      ; $9f SPRITES
 	.word	StopCommand                      ; $a0 STOP

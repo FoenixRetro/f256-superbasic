@@ -4,23 +4,6 @@ Progress:
 	Background reset.
 	Consider STEP.
 
-	RTC ?
-		=GETDATE$(0)
-			"DD:MM:YY"
-	 	=GETTIME$(0)
-	 		"HH:MM:SS"
-	 	SETDATE d,m,y
-	 	SETTIME h,m,s
-
-		$D690
-			0 	seconds 00 TT UUUU
-			2 	minutes 00 TT UUUU
-			4   hours 	[AP]0 TT UUUU
-
-			6 	Day 	00 TT UUUU	
-			9 	Month 	00 TT UUUU
-			10 	Year 	 TTTT UUUU
-
 	DMA ?
 		read PJW's explainer.
 		econtreasd's ideas on this.
