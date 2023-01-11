@@ -1,9 +1,5 @@
 Progress:	
-
-	Random -> SuperBASIC	
-
-Release ?	
-
+	
 	Mouse code.
 	Display Kernel version
 	Consider STEP.
@@ -28,3 +24,4 @@ the basic program, reset them to zero.
 use either the .raw or .ascii value (depending on how you want to handle ENTER/ESC/TAB/etc. vs meta keys) to index the array, and store a non-zero value
 there to indicate that the key is pressed.  Every time you get a key.RELEASED event, clear the associated value.  Now your function to test whether a 
 key is presently held down or not can simply consult the array.
+

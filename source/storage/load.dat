@@ -1,7 +1,4 @@
-100 cls:bitmap on:bitmap clear 1
-110 for i = 1 to 140
-120 rect colour random(255) outline random(320),random(100) to random(320),random(100)
-130 next
-140 memcopy at 0,0 rect 64,48 by 320 to at 128,128
-200 print "Done."
+10 for i = 1 to 20
+20 print rnd(0),random(6)
+30 next
 ÿÿÿÿ

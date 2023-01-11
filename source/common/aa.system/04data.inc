@@ -103,10 +103,7 @@ encodeState: 								; state for simple encoding FSM
 digitTemp: 									; temporary in number conversion
 		.fill 	1
 decimalCount:								; decimal digit count
-
 		.fill 	1
-randomSeed: 								; random seed
-		.fill 	4				
 
 lowMemPtr: 									; memory allocation after program.
 		.fill 	2	

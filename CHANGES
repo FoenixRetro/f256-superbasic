@@ -140,7 +140,7 @@ Release 25 (08/01/23):
 
 	BUG: Backspace on Input works correctly
 	CHG: Tweaked wrapper slightly.
-	CHG: Font corrected
+	BUG: Font corrected
 
 Release 26 (10/01/23):
 
@@ -153,3 +153,8 @@ Release 26 (10/01/23):
 	CHG: Added AT to MEMCOPY.
 
 Release 27 (11/01/23):	
+
+	CHG: rnd() and random() use the Vicky LFSR random number generator.
+	CHG: Add volume/blocks to dir display
+
+Release 28 (11/01/23):	

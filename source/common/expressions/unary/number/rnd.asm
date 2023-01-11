@@ -3,8 +3,8 @@
 ;
 ;		Name:		rnd.asm
 ;		Purpose:	Random number generator
-;		Created:	29th September 2022
-;		Reviewed: 	27th November 2022
+;		Created:	11th January 2023 (rewrite)
+;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -20,8 +20,7 @@
 
 Unary_Random: ;; [random(]
 		plx
-		jsr 	Random32Bit 				; get a random number
-		jsr 	URCopyToMantissa  			; put in mantissa
+		jsr 	URCopyToMantissa  			; put random # in mantissa
 		.cget 								; ) follows
 		cmp 	#KWD_RPAREN
 		beq 	_URNoModulus 				; then we return a random 30 bit number.
@@ -47,28 +46,28 @@ Unary_Rnd: ;; [rnd(]
 		plx
 		jsr 	EvaluateNumber 				; number to use.
 		jsr 	CheckRightBracket 			; closing bracket
-		jsr 	NSMIsZero 					; if zero, then don't generate a new number
-		beq 	_URCopySeed
 
 		lda 	NSStatus,x 					; if -ve, then seed using parameter
 		bpl 	_URDontSeed
 
+		lda 	1 							; switch to page 0
+		pha
+		stz 	1
+
 		lda 	NSMantissa0,x 				; copy - value to seed butchering it.
 		eor 	#$17
-		sta 	randomSeed+0
+		sta 	$D6A4
 		lda 	NSMantissa1,x
 		eor 	#$A5
-		sta 	randomSeed+1
-		lda 	NSMantissa2,x
-		eor 	#$C2
-		sta 	randomSeed+2	
-		lda 	NSMantissa3,x
-		eor 	#$9D
-		sta 	randomSeed+3
-		jsr 	Random32Bit
+		sta 	$D6A5
+		lda 	#3 							; set bit 1 high/low to set seed.
+		sta 	$D6A6
+		lda 	#1
+		sta 	$D6A6
+		pla
+		sta 	1
+
 _URDontSeed:
-		jsr 	Random32Bit 				; generate a number
-_URCopySeed:
 		jsr 	URCopyToMantissa 			; copy into mantissa
 
 		lda 	#-30 						; force into 0-1 range
@@ -77,43 +76,32 @@ _URCopySeed:
 		sta 	NSStatus,x 					; positive float
 		rts
 
+; ************************************************************************************************
+;
+;							Copy a random 30 bit number to the mantissa
+;
+; ************************************************************************************************
+
 URCopyToMantissa:
-		lda 	randomSeed+0
+		lda 	1 							; switch to I/O page 1
+		pha
+		stz 	1
+
+		lda 	#1
+		sta 	$D6A6 						; enable LFSR
+
+		lda 	$D6A4
 		sta 	NSMantissa0,x
-		lda 	randomSeed+1
+		lda 	$D6A5
 		sta 	NSMantissa1,x
-		lda 	randomSeed+2
+		lda 	$D6A4
 		sta 	NSMantissa2,x
-		lda 	randomSeed+3
+		lda 	$D6A5
 		and 	#$3F 						; make legal mantissa
 		sta 	NSMantissa3,x
-		rts
 
-; ************************************************************************************************
-;
-;								Generate 32 bit random number.
-;
-; ************************************************************************************************
-
-Random32Bit:
-		phy
-		ldy 	#7 							; do it 7 times
-		lda 	randomSeed+0 				; check the seed isn't zero
-		bne 	_Random1
-		tay 								; if so do it 256 times
-		lda		#$AA 						; and use this to seed the seed....
-_Random1:
-		asl 	a 							; LSFR RNG
-		rol 	randomSeed+1
-		rol 	randomSeed+2
-		rol 	randomSeed+3
-		bcc 	_Random2
-		eor 	#$C5
-_Random2:		
-		dey
-		bne 	_Random1
-		sta 	randomSeed+0
-		ply
+		pla 
+		sta 	1
 		rts
 
 		.send 	code
@@ -129,5 +117,6 @@ _Random2:
 ; 		22/11/22 		RND(n) was only generating 0..0.5
 ;		22/11/22 		When setting the exponent and status at the end, was not doing so at
 ;						the current evaluation level.
+;		11/01/23 		Set to use hardware RNG.
 ;
 ; ************************************************************************************************

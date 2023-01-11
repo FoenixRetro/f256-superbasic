@@ -62,7 +62,20 @@ _CDEVRead:
 		jmp     kernel.Directory.Read
 
 _CDEVVolume:
+		lda 	#"["
+		jsr 	EXTPrintCharacter
+       	lda     KNLEvent.directory.volume.len
+		jsr     _CDReadData
+		jsr 	PrintStringXA
+		lda 	#"]"
+		jsr 	EXTPrintCharacter
+		lda 	#13
+		jsr 	EXTPrintCharacter
 		bra     _CDEVRead
+
+_CDExit:
+		jmp 	WarmStart
+
 
 _CDEVFile:
 		lda 	#32
@@ -70,10 +83,20 @@ _CDEVFile:
 		lda     KNLEvent.directory.file.len
 		jsr     _CDReadData
 		jsr 	PrintStringXA
-		lda 	#13
+		lda 	#32
 		jsr 	EXTPrintCharacter
+		jsr 	_CDReadExtended		
+		lda 	lineBuffer
+		ldx 	lineBuffer+1
+		jsr 	ConvertInt16
+		jsr 	PrintStringXA
+		ldx 	#_CDEVFMessage >> 8
+		lda 	#_CDEVFMessage & $FF
+		jsr 	PrintStringXA
 		bra     _CDEVRead
 
+_CDEVFMessage:
+		.text 	" block(s).",13,0
 _CDEVFree:
 		bra     _CDEVEOF
 
@@ -81,9 +104,6 @@ _CDEVEOF:
 		lda     KNLEvent.directory.stream
 		sta     kernel.args.directory.close.stream
 		jmp     kernel.Directory.Close
-
-_CDExit:
-		jmp 	WarmStart
 
 
 ;
@@ -106,27 +126,16 @@ _CDReadData:
 		ldx 	#lineBuffer >> 8
 		rts
 
-;read_ext
-;		lda     #<buf
-;		sta     kernel.args.recv.buf+0
-;		lda     #>buf
-;		sta     kernel.args.recv.buf+1
-;		lda     #2
-;		sta     kernel.args.recv.buflen
-;
-;		jmp     kernel.ReadExt
+_CDReadExtended:
+        lda     #2
+        sta     kernel.args.recv.buflen
+		lda     #lineBuffer & $FF
+		sta     kernel.args.recv.buf+0
+		lda     #lineBuffer >> 8
+		sta     kernel.args.recv.buf+1
+        jmp     kernel.ReadExt
 
-print_ext
-; TODO: overlay the appropriate struct and read the members.
-;
-;		lda     buf+1
-;		jsr     print_hex
-;
-;		lda     buf+0
-;		jsr     print_hex
-;
-;		rts
-;
+
 
 	.send code
 
