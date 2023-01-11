@@ -122,6 +122,7 @@
 	.include	"./module.interface/hardware/event.asm"
 	.include	"./module.interface/hardware/joy.asm"
 	.include	"./module.interface/hardware/timer.asm"
+	.include	"./build/lockout.asm"
 	.include	"./memory/memory.flat/delete.asm"
 	.include	"./memory/memory.flat/insert.asm"
 	.include	"./memory/memory.flat/memory.asm"

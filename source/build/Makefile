@@ -25,6 +25,7 @@ all: build flash
 build:	
 	$(CDEL) 02.bin 03.bin 04.bin
 	$(CDEL) bulk.csv
+	64tass -q -b -c lockout.asm -o lockout.bin 
 	python splitrom.py 
 #
 #		Reflash.

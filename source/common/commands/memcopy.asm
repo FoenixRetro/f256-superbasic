@@ -45,8 +45,7 @@ MCCommand: ;; [memcopy]
 		;
 		;		Put the first address in source and destination
 		;
-		ldx 	#0 							; get start address.
-		jsr 	EvaluateInteger
+		jsr 	MCPosition 					; start position
 		ldx 	#4 							; write to source AND $DF04 destination address $DF08
 		jsr 	MCCopyAddress
 		ldx 	#8 	
@@ -104,8 +103,7 @@ _MCDestination:
 		;
 		;		TO <address>
 		;
-		ldx 	#0 							; get target address
-		jsr 	EvaluateInteger
+		jsr 	MCPosition 					; get target address
 		ldx 	#8							; copy to target address at $DF08-A
 		jsr 	MCCopyAddress
 		bra 	_MCDoDMA 					; and we can go.
@@ -133,9 +131,13 @@ _MCWaitBUSD:
 		pla 								; restore I/O.
 		sta 	1
 		rts		
+
+; ************************************************************************************************
 ;
 ;		Copy number at slot 0 to DMA registers x,x+1,x+2
 ;		
+; ************************************************************************************************
+
 MCCopyAddress:
 		lda 	NSMantissa2 				; check valid vlaue
 		and 	#$FC
@@ -150,9 +152,13 @@ MCCopyAddress:
 		rts
 _MCRange:
 		.error_range
+
+; ************************************************************************************************
 ;
 ;		Evaluate 16 bit integer and put in DMA registers x,x+1
 ;
+; ************************************************************************************************
+
 MCEvalCopyData16:
 		phx 								
 		ldx 	#0
@@ -165,6 +171,61 @@ MCCopyData16:
 		sta 	$DF01,x
 		rts
 
+; ************************************************************************************************
+;
+;		Get a position or at x,y on the bitmap
+;
+; ************************************************************************************************
+
+MCPosition:
+		ldx 	#0 							; get start address.
+		.cget 								; is it AT x,y
+		cmp 	#KWD_AT
+		beq 	_MCPAt
+		jsr 	EvaluateInteger		
+		rts
+_MCPAt:
+		iny
+		jsr 	Evaluate8BitInteger 		; X position		
+		pha
+		jsr 	CheckComma
+		inx
+		jsr 	Evaluate8BitInteger 		; Y position		
+		dex
+		;
+		sta 	NSMantissa1 				; put Y x 64 in Mantissa.0
+		stz 	NSMantissa0
+		stz 	NSMantissa2
+		stz 	NSMantissa3
+		lsr 	NSMantissa1
+		ror 	NSMantissa0
+		lsr 	NSMantissa1
+		ror 	NSMantissa0
+		;
+		pla
+		clc
+		adc 	NSMantissa0 				; add X, Y * 256 and the 
+		sta 	NSMantissa0
+		;
+		lda 	NSMantissa1
+		adc 	NSMantissa0+1
+		sta 	NSMantissa1
+		bcc 	_MCPNoCarry
+		inc 	NSMantissa2
+_MCPNoCarry:
+		;
+		lda 	gxBasePage
+		sta 	NSMantissa2+1
+		stz 	NSMantissa0+1
+		stz 	NSMantissa1+1
+		stz 	NSMantissa3+1
+		ldx 	#1
+		jsr 	NSMShiftRight
+		jsr 	NSMShiftRight
+		jsr 	NSMShiftRight
+		ldx 	#0
+		jsr 	AddTopTwoStack
+		rts
 		.send code
 
 		.section storage

@@ -148,4 +148,8 @@ Release 26 (10/01/23):
 	CHG: Fixed cursor
 	CHG: Added MEMCOPY DMA command and various options.
 	 	  (RTC/DMA/Random support added to Emulator)
-	
+	CHG: Added lockout.bin to upload hopefully improving the weird behaviour of flashing.
+		  (writes to $3F at the start putting CPU in infinite loop on reset)
+	CHG: Added AT to MEMCOPY.
+
+Release 27 (11/01/23):	

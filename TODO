@@ -1,11 +1,9 @@
 Progress:	
-	DMA -> Emulator
-	MEMCOPY AT x,y option.
-	Document DMA instruction.
-	Random -> Emulator
+
 	Random -> SuperBASIC	
-	Background reset ???
+
 Release ?	
+
 	Mouse code.
 	Display Kernel version
 	Consider STEP.

@@ -23,6 +23,7 @@ for p in range(2,pages+2):															# output binary slices FROM 2.
 	h.close()
 
 h = open("bulk.csv","w")  															# create CSV file
+h.write("3f,lockout.bin\n")
 pages = [x for x in range(1,pages+2)] + [0x3D,0x3E,0x3F]  							# pages to send.
 for p in pages:
 	h.write("{0:02x},{0:02x}.bin\n".format(p))	
