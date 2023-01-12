@@ -1,4 +1,8 @@
-10 for i = 1 to 20
-20 print rnd(0),random(6)
-30 next
+
+100 s$ = "ab,cde,f,,ghi"
+102 print s$
+110 print itemcount(s$,",")
+120 for i = 1 to 5
+130 print i,"["+itemget$(s$,i,",")+"]"
+140 next
 ÿÿÿÿ

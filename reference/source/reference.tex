@@ -401,6 +401,23 @@ This is a support for val and takes the same parameter, a string  This deals wit
 	110 print isval(“i like chips in gravy”)
 \end{verbatim}
 
+\section*{itemcount()}
+Together , itemcount and itemget provide a way of encoding multiple data items in strings. A multiple-element string has a seperating character, which can be any ASCII character, often a comma. 
+itemcount() takes a string and a seperator and returns the number of items in the string if seperated by that seperator. The example prints '2' as there are two elements seperated by a comma, the strins hello and world.
+\example{}
+\begin{verbatim}
+	100 print itemcount("hello,world",",")
+\end{verbatim}
+
+\section*{itemget\$()}
+Together , itemcount and itemget provide a way of encoding multiple data items in strings. A multiple-element string has a seperating character, which can be any ASCII character, often a comma.  itemget\$() takes three parameters, the string, the index of the substring required, which starts at '1' and the seperator. A bad index will generate a range error.
+The example will print 'lizzie', this being the third item.
+\example{}
+\begin{verbatim}
+	100 print itemget$("paul,jane,lizzie,jack",3,",")
+\end{verbatim}
+
+
 \section*{joyb()}
 Returns a value indicating the status of the fire buttons on a gamepad, with the main fire button being bit 0. Takes a single parameter, the number of the gamepad.
 \example{}

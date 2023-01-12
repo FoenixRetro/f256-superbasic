@@ -86,8 +86,8 @@ VectorSet0:
 	.word	AscInkey                         ; $90 INKEY(
 	.word	IntUnary                         ; $91 INT(
 	.word	IsValUnary                       ; $92 ISVAL(
-	.word	SyntaxError                      ; $93 ITEMCOUNT(
-	.word	SyntaxError                      ; $94 ITEMGET$(
+	.word	ItemCountUnary                   ; $93 ITEMCOUNT(
+	.word	ItemGetUnary                     ; $94 ITEMGET$(
 	.word	UnaryJoyB                        ; $95 JOYB(
 	.word	UnaryJoyX                        ; $96 JOYX(
 	.word	UnaryJoyY                        ; $97 JOYY(

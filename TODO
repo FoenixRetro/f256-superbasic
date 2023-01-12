@@ -1,7 +1,6 @@
 Progress:	
-	- ItemCount(String,Seperator)
-	- ItemGet$(String,Index,Seperator) 
-	
+	- Document
+
 	Mouse code.
 	Display Kernel version
 	Consider STEP.

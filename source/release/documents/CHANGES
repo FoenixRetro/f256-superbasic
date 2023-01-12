@@ -1,4 +1,4 @@
-cd ..Changes summary:
+Changes summary:
 
 	NEW: First alpha release/official binaries.
 
@@ -160,3 +160,6 @@ Release 27 (11/01/23):
 Release 28 (11/01/23):	
 
 	CHG: Aligned block displays on DIR
+	CHG: Added ItemCount() and ItemGet$()
+
+Release 29 (12/01/23):	
