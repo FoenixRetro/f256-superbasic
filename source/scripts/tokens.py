@@ -40,7 +40,7 @@ class TokenSource(object):
 				not(		random(	 	timer( 		event( 		joyx(		joyy(
 				joyb( 		min(		max( 		hit( 		playing(	gettime$(
 				peek( 		peekw( 		peekl(		peekd(		getdate$(	inkey$(
-				get$( 		inkey(		get(
+				get$( 		inkey(		get( 		itemcount(	itemget$(
 
 			{0}							// Set 0
 				data 		dim 		let 		rem  		else 		to			

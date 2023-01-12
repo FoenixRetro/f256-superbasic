@@ -158,3 +158,5 @@ Release 27 (11/01/23):
 	CHG: Add volume/blocks to dir display
 
 Release 28 (11/01/23):	
+
+	CHG: Aligned block displays on DIR

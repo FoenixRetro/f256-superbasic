@@ -64,7 +64,7 @@ _CDEVRead:
 _CDEVVolume:
 		lda 	#"["
 		jsr 	EXTPrintCharacter
-       	lda     KNLEvent.directory.volume.len
+		lda     KNLEvent.directory.volume.len
 		jsr     _CDReadData
 		jsr 	PrintStringXA
 		lda 	#"]"
@@ -81,10 +81,19 @@ _CDEVFile:
 		lda 	#32
 		jsr 	EXTPrintCharacter
 		lda     KNLEvent.directory.file.len
+		pha
 		jsr     _CDReadData
 		jsr 	PrintStringXA
+		pla
+		eor 	#$FF
+		sec
+		adc 	#16
+		tax
+_CDEVTab:		
 		lda 	#32
 		jsr 	EXTPrintCharacter
+		dex
+		bpl 	_CDEVTab
 		jsr 	_CDReadExtended		
 		lda 	lineBuffer
 		ldx 	lineBuffer+1
@@ -127,13 +136,13 @@ _CDReadData:
 		rts
 
 _CDReadExtended:
-        lda     #2
-        sta     kernel.args.recv.buflen
+		lda     #2
+		sta     kernel.args.recv.buflen
 		lda     #lineBuffer & $FF
 		sta     kernel.args.recv.buf+0
 		lda     #lineBuffer >> 8
 		sta     kernel.args.recv.buf+1
-        jmp     kernel.ReadExt
+		jmp     kernel.ReadExt
 
 
 

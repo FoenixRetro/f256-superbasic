@@ -1,4 +1,6 @@
 Progress:	
+	- ItemCount(String,Seperator)
+	- ItemGet$(String,Index,Seperator) 
 	
 	Mouse code.
 	Display Kernel version
@@ -24,4 +26,7 @@ the basic program, reset them to zero.
 use either the .raw or .ascii value (depending on how you want to handle ENTER/ESC/TAB/etc. vs meta keys) to index the array, and store a non-zero value
 there to indicate that the key is pressed.  Every time you get a key.RELEASED event, clear the associated value.  Now your function to test whether a 
 key is presently held down or not can simply consult the array.
+
+Page0 ends $B7F0 : superfluous data $0800 (new font) + 50 odd bytes to upload it
+Page1 ends $DC5A : superfluous data $0410 (display header) + code to decode/upload it (128 bytes approx)
 
