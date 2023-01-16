@@ -220,3 +220,4 @@ lineedit:
 
 paging:
 	python $(SCRIPTDIR)checkpaging.py
+	

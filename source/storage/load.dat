@@ -1,8 +1,4 @@
-
-100 s$ = "ab,cde,f,,ghi"
-102 print s$
-110 print itemcount(s$,",")
-120 for i = 1 to 5
-130 print i,"["+itemget$(s$,i,",")+"]"
-140 next
+10 for i = 0 to 255
+20 cprint chr$(i);
+30 next
 ÿÿÿÿ

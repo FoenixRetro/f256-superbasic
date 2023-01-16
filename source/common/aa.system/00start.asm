@@ -21,7 +21,7 @@ Start:	ldx 	#$FF 						; stack reset
 		lda 	0  							; turn on editing of MMU LUT
 		ora 	#$80
 		sta 	0
-
+		
 		jsr		UpdateFont 					; update font if between FPGA updates.
 		
 		jsr 	EXTInitialise 				; hardware initialise
@@ -80,7 +80,7 @@ Start:	ldx 	#$FF 						; stack reset
 		jmp 	WarmStart
 		.endif
 
-Prompt:	.text 	13,9,9,"Go go Gadget!",13
+Prompt:	.text 	13,13
 		.include "../generated/timestamp.asm"
 		.text 	13,13,13,0
 
