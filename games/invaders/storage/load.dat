@@ -1,7 +1,7 @@
 1000 '
 1001 ' "Simplified Space Invaders Game"
 1002 '
-1003 title("Invaders"):cls:bitmap on:sprites on:bitmap clear 0
+1003 cls:bitmap on:sprites on:bitmap clear 0
 1004 skillLevel = 0:score = 0:lives = 3
 1005 defineVariables():text "SCORE<1>" dim 1 colour $FF to 136,1
 1006 resetlevel():resetPlayer():displayScore()

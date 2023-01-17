@@ -1,7 +1,7 @@
 1000 '
 1001 ' "Solarfox in SuperBasic"
 1002 '
-1003 title("Solar Fox"):cls:sprites on:bitmap on:bitmap clear 0
+1003 cls:sprites on:bitmap on:bitmap clear 0
 1004 initialise()
 1005 newLevel(level)
 1006 repeat
