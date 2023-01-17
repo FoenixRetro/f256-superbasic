@@ -163,3 +163,6 @@ Release 28 (11/01/23):
 	CHG: Added ItemCount() and ItemGet$()
 
 Release 29 (12/01/23):	
+
+	CHG: Release for SDCard support.
+	

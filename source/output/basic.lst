@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.58.2974? listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Mon Jan 16 16:20:26 2023
+; Tue Jan 17 00:24:24 2023
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -536,7 +536,7 @@
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->80d1		09 09 31 36 2f 30 31 2f			.text 9,9,"16/01/23 29"
+>80d1		09 09 31 37 2f 30 31 2f			.text 9,9,"17/01/23 29"
 >80d9		32 33 20 32 39
 
 ;******  Return to file: ./common/aa.system/00start.asm
@@ -923,8 +923,8 @@
 .00f3						open
 >00f3						drive       .byte       ?
 >00f4						cookie      .byte       ?
-=$fb						fname       = args.buf
-=$fd						fname_len   = args.buflen
+=$fb						path        = args.buf
+=$fd						path_len    = args.buflen
 .00f3						read
 >00f3						stream      .byte       ?
 >00f4						buflen      .byte       ?
@@ -1010,8 +1010,8 @@
 .0003						open
 >0003						drive       .byte       ?
 >0004						cookie      .byte       ?
-=$fb						fname       = args.buf
-=$fd						fname_len   = args.buflen
+=$fb						path        = args.buf
+=$fd						path_len    = args.buflen
 .0003						read
 >0003						stream      .byte       ?
 >0004						buflen      .byte       ?
@@ -1131,8 +1131,8 @@
 .0000						open
 >0000						drive       .byte       ?
 >0001						cookie      .byte       ?
-=$fb						fname       = args.buf
-=$fd						fname_len   = args.buflen
+=$fb						path        = args.buf
+=$fd						path_len    = args.buflen
 .0000						read
 >0000						stream      .byte       ?
 >0001						buflen      .byte       ?
@@ -1141,8 +1141,8 @@
 .0000						dir_open_t
 >0000						drive       .byte       ?
 >0001						cookie      .byte       ?
-=$fb						fname       = args.buf
-=$fd						fname_len   = args.buflen
+=$fb						path        = args.buf
+=$fd						path_len    = args.buflen
 .0000						dir_read_t
 >0000						stream      .byte       ?
 >0001						buflen      .byte       ?
@@ -2288,7 +2288,7 @@
 .883a						Command_Dir:
 .883a		ad 5e 07	lda $075e			lda     KNLDefaultDrive				; set drive to list.
 .883d		85 f3		sta $f3				sta     kernel.args.directory.open.drive
-.883f		64 fd		stz $fd				stz     kernel.args.directory.open.fname_len
+.883f		64 fd		stz $fd				stz     kernel.args.directory.open.path_len
 .8841		20 74 ff	jsr $ff74			jsr     kernel.Directory.Open
 .8844		b0 4f		bcs $8895			bcs     _CDExit
 .8846						_CDEventLoop:
@@ -7694,7 +7694,7 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->dc72		09 09 31 36 2f 30 31 2f			.text 9,9,"16/01/23 29"
+>dc72		09 09 31 37 2f 30 31 2f			.text 9,9,"17/01/23 29"
 >dc7a		32 33 20 32 39
 
 ;******  Return to file: _basic.asm

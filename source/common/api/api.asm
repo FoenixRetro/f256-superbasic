@@ -203,8 +203,8 @@ close       .dstruct    dir_close_t
 dir_open_t  .struct
 drive       .byte       ?
 cookie      .byte       ?
-fname       = args.buf
-fname_len   = args.buflen
+path        = args.buf
+path_len    = args.buflen
             .ends
 dir_read_t  .struct
 stream      .byte       ?

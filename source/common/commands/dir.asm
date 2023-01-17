@@ -22,7 +22,7 @@
 Command_Dir:	;; [dir]
 		lda     KNLDefaultDrive				; set drive to list.
 		sta     kernel.args.directory.open.drive
-		stz     kernel.args.directory.open.fname_len
+		stz     kernel.args.directory.open.path_len
 		jsr     kernel.Directory.Open
 		bcs     _CDExit
 
