@@ -18,7 +18,7 @@ endif
 BINDIR = ..$(S)..$(S)bin$(S)
 EMULATOR = $(BINDIR)jr256$(APPSTEM)
 LANGUAGE = en
-SOURCE = demo.bas
+SOURCE = main.bas
 
 START = $(EMULATOR) $(BINDIR)basic.rom@b storage$(S)load.dat@x graphics.bin@s
 # 3000 is hardcoded in backload.asm

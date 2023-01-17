@@ -18,7 +18,7 @@ endif
 BINDIR = ..$(S)..$(S)bin$(S)
 EMULATOR = $(BINDIR)jr256$(APPSTEM)
 LANGUAGE = en
-SOURCE = invaders.bas  ..$(S)common$(S)title.bas
+SOURCE = main.bas  ..$(S)common$(S)title.bas
 
 START = $(EMULATOR) $(BINDIR)basic.rom@b storage$(S)load.dat@x graphics.bin@s
 # $(LSOURCE) is hardcoded in backload.asm
