@@ -1,1 +1,1 @@
-make -B updatekernel build release
+make -B pullkernel updatekernel build release

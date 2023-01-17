@@ -11,7 +11,7 @@
 
 import re,os,sys 
 
-line = 1
+line = 1000
 for f in sys.argv[1:]:
 	for l in [x.strip() for x in open(f).readlines() if x.strip() != ""]:
 		n = l.find("'")
