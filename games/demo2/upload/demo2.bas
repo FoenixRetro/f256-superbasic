@@ -1,0 +1,29 @@
+100 print "Loading demo21.dat"
+110 bload "demo21.dat",$030000
+120 print "Loaded.
+1000 '
+1001 ' "Demo"
+1002 '
+1003 cls:bitmap on:sprites on:bitmap clear $6D:spriteCount = 20
+1004 palette $6D,$40,$40,$40:palette $FC,255,128,0
+1005 text "65C02 Foenix F256" dim 2 colour $FC to 24,10
+1006 dim x(spriteCount),y(spriteCount),xv(spriteCount),yv(spriteCount)
+1007 g = 2:line colour $E0 from 0,235 to 319,235
+1008 i = 20:while i <= 300:line i,35 to i,235:i = i + 20:wend
+1009 i = 35:while i < 235:line 20,i to 300,i:i = i + 20:wend
+1010 for i = 1 to spriteCount
+1011 x(i) = random(300)+10:y(i) = 10+random(200)
+1012 xv(i) = random(20)-10:yv(i) = 0
+1013 next
+1014 repeat
+1015 for i = 1 to spriteCount
+1016 if y(i) >= 0:sprite i image 0 to x(i),y(i):else:sprite 1 off:endif
+1017 yv(i) = yv(i)+g
+1018 x(i) = x(i)+xv(i):y(i) = y(i)+yv(i)
+1019 if y(i) > 220 then y(i) = y(i)-yv(i):yv(i) = -abs(yv(i)*7\8)
+1020 if x(i) < 4 | x(i) > 316 then xv(i) = -xv(i):x(i) = x(i)+xv(i)
+1021 if yv(i) = 0 then yv(i) = random(8)+12
+1022 next
+1023 until false
+ÿÿÿÿ
+

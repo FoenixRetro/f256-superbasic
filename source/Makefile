@@ -62,7 +62,7 @@ pullkernel:
 	cd $(KRN_REPO) && git reset --hard
 	cd $(KRN_REPO) && git pull
 
-updatekernel: 
+updatekernel: 	
 	make -B -C $(KRN_REPO)
 	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)*.bin build
 	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)api.asm  common$(S)api

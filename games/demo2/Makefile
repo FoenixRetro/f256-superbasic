@@ -55,3 +55,11 @@ fgo: sprites program
 	$(CCOPY) $(BINDIR)foenixmgr.ini .	
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary graphics.bin --address $(LSPRITES)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address $(LSOURCE)
+#
+#		Create for SDCard Upload
+#
+sdcard:
+	$(CCOPY) $(BINDIR)fnxmgr.zip upload
+	$(CCOPY) foenixmgr.ini upload
+	make -n -s fgo >upload$(S)files.lst
+	make -C upload

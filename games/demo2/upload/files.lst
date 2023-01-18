@@ -1,0 +1,5 @@
+python ../../bin/spritebuild.py sprites.def
+python ../../bin/basconv.py main.bas >storage/load.dat
+cp ../../bin/foenixmgr.ini .	
+python ../../bin/fnxmgr.zip --port /dev/ttyUSB0 --binary graphics.bin --address 30000
+python ../../bin/fnxmgr.zip --port /dev/ttyUSB0 --binary storage/load.dat --address 28000
