@@ -23,4 +23,6 @@ Anim:
 	inc 	$C001
 	bne 	Anim
 	inc 	$C002
+	bne 	Anim
+	inc 	$C003
 	bra 	Anim		

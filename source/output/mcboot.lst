@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.58.2974? listing file
 ; 64tass -q -b -Wall -C -c -L output/mcboot.lst -o output/mcboot.bin storage/mcboot.as
-; Wed Jan 18 18:29:26 2023
+; Wed Jan 18 18:31:17 2023
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -30,6 +30,8 @@
 .2025	ee 01 c0	inc $c001		inc 	$C001
 .2028	d0 f6		bne $2020		bne 	Anim
 .202a	ee 02 c0	inc $c002		inc 	$C002
-.202d	80 f1		bra $2020		bra 	Anim
+.202d	d0 f1		bne $2020		bne 	Anim
+.202f	ee 03 c0	inc $c003		inc 	$C003
+.2032	80 ec		bra $2020		bra 	Anim
 
 ;******  End of listing
