@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.58.2974? listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Wed Jan 18 18:28:34 2023
+; Wed Jan 18 19:12:08 2023
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -833,7 +833,7 @@
 >ff0c						Yield       .fill   4   ; Give unused time to the kernel.
 >ff10						Putch       .fill   4   ; deprecated
 >ff14						Basic       .fill   4   ; deprecated
->ff18						            .fill   4   ; reserved
+>ff18						RunNamed    .fill   4   ; Chain to resident program by name.
 >ff1c						            .fill   4   ; reserved
 >ff20						List        .fill   4   ; Returns a bit-set of available block-accessible devices.
 >ff24						GetName     .fill   4   ; Gets the hardware level name of the given block device or media.

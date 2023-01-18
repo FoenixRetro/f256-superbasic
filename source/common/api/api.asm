@@ -18,7 +18,7 @@ ReadExt     .fill   4   ; Copy secondary bolk event data into user-space
 Yield       .fill   4   ; Give unused time to the kernel.
 Putch       .fill   4   ; deprecated
 Basic       .fill   4   ; deprecated
-            .fill   4   ; reserved
+RunNamed    .fill   4   ; Chain to resident program by name.
             .fill   4   ; reserved
 
 BlockDevice .namespace
