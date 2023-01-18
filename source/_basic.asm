@@ -36,6 +36,7 @@
 	.include	"./common/commands/data.asm"
 	.include	"./common/commands/dim.asm"
 	.include	"./common/commands/dir.asm"
+	.include	"./common/commands/dos.asm"
 	.include	"./common/commands/drive.asm"
 	.include	"./common/commands/end.asm"
 	.include	"./common/commands/for.asm"

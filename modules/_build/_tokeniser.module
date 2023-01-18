@@ -113,32 +113,33 @@ KeywordSet1:
 	.text	3,$e2,"CLS"            ; $88 CLS
 	.text	6,$d0,"CPRINT"         ; $89 CPRINT
 	.text	3,$df,"DIR"            ; $8a DIR
-	.text	5,$7a,"DRIVE"          ; $8b DRIVE
-	.text	3,$d7,"END"            ; $8c END
-	.text	7,$11,"EXPLODE"        ; $8d EXPLODE
-	.text	2,$96,"GO"             ; $8e GO
-	.text	5,$80,"GOSUB"          ; $8f GOSUB
-	.text	4,$39,"GOTO"           ; $90 GOTO
-	.text	5,$70,"HIMEM"          ; $91 HIMEM
-	.text	5,$90,"INPUT"          ; $92 INPUT
-	.text	4,$3c,"LIST"           ; $93 LIST
-	.text	4,$20,"LOAD"           ; $94 LOAD
-	.text	3,$ea,"NEW"            ; $95 NEW
-	.text	4,$2e,"PING"           ; $96 PING
-	.text	5,$8d,"PRINT"          ; $97 PRINT
-	.text	7,$24,"RESTORE"        ; $98 RESTORE
-	.text	6,$e0,"RETURN"         ; $99 RETURN
-	.text	3,$f5,"RUN"            ; $9a RUN
-	.text	4,$2f,"SAVE"           ; $9b SAVE
-	.text	7,$0a,"SETDATE"        ; $9c SETDATE
-	.text	7,$1b,"SETTIME"        ; $9d SETTIME
-	.text	5,$8d,"SHOOT"          ; $9e SHOOT
-	.text	7,$2a,"SPRITES"        ; $9f SPRITES
-	.text	4,$46,"STOP"           ; $a0 STOP
-	.text	6,$d5,"VERIFY"         ; $a1 VERIFY
-	.text	3,$ee,"XGO"            ; $a2 XGO
-	.text	5,$78,"XLOAD"          ; $a3 XLOAD
-	.text	3,$eb,"ZAP"            ; $a4 ZAP
+	.text	3,$e6,"DOS"            ; $8b DOS
+	.text	5,$7a,"DRIVE"          ; $8c DRIVE
+	.text	3,$d7,"END"            ; $8d END
+	.text	7,$11,"EXPLODE"        ; $8e EXPLODE
+	.text	2,$96,"GO"             ; $8f GO
+	.text	5,$80,"GOSUB"          ; $90 GOSUB
+	.text	4,$39,"GOTO"           ; $91 GOTO
+	.text	5,$70,"HIMEM"          ; $92 HIMEM
+	.text	5,$90,"INPUT"          ; $93 INPUT
+	.text	4,$3c,"LIST"           ; $94 LIST
+	.text	4,$20,"LOAD"           ; $95 LOAD
+	.text	3,$ea,"NEW"            ; $96 NEW
+	.text	4,$2e,"PING"           ; $97 PING
+	.text	5,$8d,"PRINT"          ; $98 PRINT
+	.text	7,$24,"RESTORE"        ; $99 RESTORE
+	.text	6,$e0,"RETURN"         ; $9a RETURN
+	.text	3,$f5,"RUN"            ; $9b RUN
+	.text	4,$2f,"SAVE"           ; $9c SAVE
+	.text	7,$0a,"SETDATE"        ; $9d SETDATE
+	.text	7,$1b,"SETTIME"        ; $9e SETTIME
+	.text	5,$8d,"SHOOT"          ; $9f SHOOT
+	.text	7,$2a,"SPRITES"        ; $a0 SPRITES
+	.text	4,$46,"STOP"           ; $a1 STOP
+	.text	6,$d5,"VERIFY"         ; $a2 VERIFY
+	.text	3,$ee,"XGO"            ; $a3 XGO
+	.text	5,$78,"XLOAD"          ; $a4 XLOAD
+	.text	3,$eb,"ZAP"            ; $a5 ZAP
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF

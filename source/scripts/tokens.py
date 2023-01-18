@@ -57,7 +57,7 @@ class TokenSource(object):
 				shoot 		explode 	xload 		xgo 		settime
 				save		verify		drive 		dir 		bload
 				bsave		himem 		input 		cls 		gosub 		
-				return 		print 		cprint 		goto
+				return 		print 		cprint 		goto 		dos
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	

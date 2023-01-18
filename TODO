@@ -1,6 +1,6 @@
 Progress:	
 	- Document
-
+	Update run code to run from $8040
 	Mouse code.
 	Display Kernel version
 	Consider STEP.

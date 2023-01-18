@@ -171,5 +171,6 @@ Release 30 (18/01/23):
 	CHG: Can RUN "<filename>"
 	CHG: Added howto-crossdev-asm.zip, a simple way of running 6502 assembler cross-assembled.
 	CHG: Added Header, now boots properly.
+	CHG: Added DOS command.
 	
 Release 31 (18/01/23):	
