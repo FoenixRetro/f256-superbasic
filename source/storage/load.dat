@@ -1,4 +1,303 @@
-10 for i = 0 to 255
-20 cprint chr$(i);
-30 next
-����
+1 rem "Seed 80869"
+2 assert "">"nmgmdopu" = 0
+3 assert (-1526.298*-15885.895) = 24246609.7667100
+4 assert (-27372.291>31546.362) = 0
+5 assert (-25710.098--28186.688) = 2476.5900000
+6 assert (-733.371-29281.843) = -30015.2140000
+7 assert (((-6 * 10)) + ((6 + 8 * 0)) * ((-7) - (10))) = -162
+8 assert -1977=-9 = 0
+9 assert str$(379) = "379"
+10 assert str$(-644) = "-644"
+11 assert 1366=1983 = 0
+12 assert (-13068.423+-32373.561) = -45441.9840000
+13 assert (-18237.657<=10242.077) = -1
+14 assert ""<"n" = -1
+15 assert str$(222) = "222"
+16 assert mid$("lf",2,3) = "f"
+17 assert (((0 - 4 - -3) * (-2)) - ((6) + (-9) * (8)) + ((6))) = 74
+18 assert str$(-113.7) = "-113.70000"
+19 assert "unjcnmsiq"+"hb" = "unjcnmsiqhb"
+20 assert (-10309.339+-707.141) = -11016.4800000
+21 assert len("cdrsf") = 5
+22 assert (-2428.528*-37899.732) = 92040560.3544960
+23 assert mid$("gekeedbsc",5,2) = "ed"
+24 assert "srgatgea"+"l" = "srgatgeal"
+25 assert "pjkidpbtm"+"jlrqqqitf" = "pjkidpbtmjlrqqqitf"
+26 assert (13%20) = 13
+27 assert frac(-0.272) = 0.2720000
+28 assert (-24184.281+-17743.306) = -41927.5870000
+29 assert -20<=-20 = -1
+30 assert (8677.734>=-24546.095) = -1
+31 assert spc(9) = "         "
+32 assert (-11+-19) = -30
+33 assert chr$(84) = "T"
+34 assert (345%1205) = 345
+35 assert frac(1.84) = 0.8400000
+36 assert (-6117.447<>10664.257) = -1
+37 assert int(25985.726) = 25985
+38 assert (24547.406+-13679.097) = 10868.3090000
+39 assert "nqejko">"gj" = -1
+40 assert (14082.611=-33302.077) = 0
+41 assert (35594.487*-10087.71) = -359066862.4547700
+42 assert 5<-20 = 0
+43 assert "aqef"="ju" = 0
+44 assert int(-338) = -338
+45 assert frac(-2.587) = 0.5870000
+46 assert str$(511.3) = "511.30000"
+47 assert str$(-640.1) = "-640.10000"
+48 assert asc("") = 0
+49 assert (-21520.325-24895.618) = -46415.9430000
+50 assert (-31720.631-10950.247) = -42670.8780000
+51 assert (10182.665+-17949.799) = -7767.1340000
+52 assert 1519<-1363 = 0
+53 assert "icupglb">"rambm" = 0
+54 assert -10=-1076 = 0
+55 assert (848*-1628) = -1380544
+56 assert (-36973.667-16878.19) = -53851.8570000
+57 assert (-18724.169-6749.566) = -25473.7350000
+58 assert (((3)) + ((-10) - (10 + 3) - (-2))) = -18
+59 assert (-17830.284>=7065.332) = 0
+60 assert (((2 + 3 + 9) - (-2 * -3) * (8))) = -34
+61 assert mid$("nf",1,2) = "nf"
+62 assert "a"<"umu" = -1
+63 assert (957^917) = 40
+64 assert 3<-688 = 0
+65 assert min("qqorlueun","mq","qng","kbbd") = "kbbd"
+66 assert (-20223.099>=-29384.93) = -1
+67 assert 2>=4 = 0
+68 assert (((-9 + 2 + 8))) = 1
+69 assert (38829.531<=-39435.74) = 0
+70 assert frac(-4.933) = 0.9330000
+71 assert (((8))) = 8
+72 assert (((0) + (-9 + -8) + (6 - -10 - -6))) = 5
+73 assert "">="tjgqte" = 0
+74 assert asc("bmkbuj") = 98
+75 assert (38520.185+4860.565) = 43380.7500000
+76 assert (2^1939) = 1937
+77 assert (14|333) = 335
+78 assert (((8 * -2 * 1) * (5)) - ((-7 - 0) - (-7))) = -80
+79 assert "asjaonin"<="" = 0
+80 assert (-17964.225>=-10218.235) = 0
+81 assert "dsr"+"jrotbtf" = "dsrjrotbtf"
+82 assert (16515.058*21816.862) = 360306741.3079960
+83 assert (36623.162*-29065.922) = -1064485970.0853639
+84 assert (-17377.669--11247.999) = -6129.6700000
+85 assert (((-5 + -3))) = -8
+86 assert (31719.83+-38918.277) = -7198.4470000
+87 assert (10078.963<=37998.867) = -1
+88 assert (19&18) = 18
+89 assert (((5)) * ((-1 + 10 + -3))) = 30
+90 assert max(14,-1086,31109.9000000) = 31109.9000000
+91 assert "qn">"" = -1
+92 assert (-21801.131--38941.885) = 17140.7540000
+93 assert "clt">"omk" = 0
+94 assert (((-8 - -3)) * ((-2 + -3) + (7 - 5))) = 15
+95 assert (-10251.662>-11975.334) = -1
+96 assert asc("cdh") = 99
+97 assert 1925<-8 = 0
+98 assert (815-11) = 804
+99 assert "pbmksodi"<>"qdqerk" = -1
+100 assert (((-4 * 0 + 9) - (2 - 7 + -9)) - ((4 * -5 + -1) - (-8))) = 36
+101 assert "e"+"pdpgpjc" = "epdpgpjc"
+102 assert asc("sntkki") = 115
+103 assert (1699+2) = 1701
+104 assert "">="lpq" = 0
+105 assert "fjr"<"ukn" = -1
+106 assert (((5 * 10 + -6)) - ((-2 * -4 + -2) * (-1 - -1 - 8))) = 92
+107 assert "ggbqi">"huqphhgc" = 0
+108 assert -494<>678 = -1
+109 assert (19736.358>=-10343.266) = -1
+110 assert -495=-1005 = 0
+111 assert (((0) - (-6)) + ((-5)) * ((8 - 5) - (4) * (0))) = -9
+112 assert (47&20) = 4
+113 assert "ndfdbostq"<="b" = 0
+114 assert (1395|18) = 1395
+115 assert (-34.862<>-21905.455) = -1
+116 assert (((6 + 7)) + ((8 + 6 + 2) - (3) - (-5))) = 31
+117 assert mid$("teoos",2,1) = "e"
+118 assert (-5\682) = 0
+119 assert chr$(105) = "i"
+120 assert (12808.971+22430.249) = 35239.2200000
+121 assert (5887.47*29334.709) = 172707219.1962300
+122 assert min("jugqpdf","rqurkgdn") = "jugqpdf"
+123 assert abs(530) = 530
+124 assert ""+"fnull" = "fnull"
+125 assert "puddfoai"+"mthnsuljl" = "puddfoaimthnsuljl"
+126 assert -1082<=768 = -1
+127 assert left$("ho",1) = "h"
+128 assert "gfhaem"<"cdfk" = 0
+129 assert (-34951.811<-27756.426) = -1
+130 assert (19\16) = 1
+131 assert (19^694) = 677
+132 assert (((-6 * -1) - (4 * 7 * 4)) * ((4 * -8 - 10))) = 4452
+133 assert (1040%923) = 117
+134 assert mid$("nljfpdeb",8,2) = "b"
+135 assert spc(8) = "        "
+136 assert chr$(77) = "M"
+137 assert (8641.889<>6835.035) = -1
+138 assert "u">"fg" = -1
+139 assert (-22194.161<18011.634) = -1
+140 assert "ufofoap"<="jjn" = 0
+141 assert "h"<"d" = 0
+142 assert str$(993.7) = "993.70000"
+143 assert val("12") = 12
+144 assert (1413|17) = 1429
+145 assert str$(-664) = "-664"
+146 assert "ifrilbaa"+"kaftr" = "ifrilbaakaftr"
+147 assert (7|1546) = 1551
+148 assert "kboaduq"<>"mhhrb" = -1
+149 assert 730=-12 = 0
+150 assert "gdcjcc"+"rup" = "gdcjccrup"
+151 assert (674%113) = 109
+152 assert asc("eitan") = 101
+153 assert (504*-10) = -5040
+154 assert 1039<>777 = -1
+155 assert str$(-301) = "-301"
+156 assert "cahfb"+"ulgedokft" = "cahfbulgedokft"
+157 assert "qsjhamap"+"garekfl" = "qsjhamapgarekfl"
+158 assert (3^1603) = 1600
+159 assert len("i") = 1
+160 assert "ihrnh"+"npgjnte" = "ihrnhnpgjnte"
+161 assert (((7 + 7)) * ((-9))) = -126
+162 assert 3<-18 = 0
+163 assert (-15918.124*-10428.556) = 166003047.5489440
+164 assert (10613.022+-5900.233) = 4712.7890000
+165 assert (-38849.223+15589.451) = -23259.7720000
+166 assert (((8 * -4))) = -32
+167 assert (950+-416) = 534
+168 assert (1695&3) = 3
+169 assert not(1415) = 0
+170 assert not(0) = -1
+171 assert str$(44.7) = "44.70000"
+172 assert "ummjuu"+"dgmuqd" = "ummjuudgmuqd"
+173 assert "lnmai"<>"idnsmgo" = -1
+174 assert 2>-1285 = -1
+175 assert int(-39657.487) = -39657
+176 assert "plkbf"<"ejesuu" = 0
+177 assert "efnnqn"+"ilq" = "efnnqnilq"
+178 assert (-27943.242*15759.114) = -440360736.2075880
+179 assert len("injueuu") = 7
+180 assert not(-19) = 0
+181 assert (-39788.999<=9219.849) = -1
+182 assert (10|13) = 15
+183 assert -889<>-1529 = -1
+184 assert -15=0 = 0
+185 assert -7<>17 = -1
+186 assert (862\3) = 287
+187 assert "icddda"+"dfapbh" = "icdddadfapbh"
+188 assert 638<20 = 0
+189 assert (((-1 - -9 - 8)) * ((-1 * 0 * 0) + (-10 * -1)) + ((-9 * -3 * -8))) = -216
+190 assert abs(-12) = 12
+191 assert (-6962.195+-25901.801) = -32863.9960000
+192 assert int(-16) = -16
+193 assert not(3) = 0
+194 assert -1148<>16 = -1
+195 assert chr$(94) = "^"
+196 assert (16|17) = 17
+197 assert (51^12) = 63
+198 assert "jd">"ihtrkhm" = -1
+199 assert len("nebgkcekm") = 9
+200 assert (21909.906+-7474.694) = 14435.2120000
+201 assert 17>=5 = -1
+202 assert "fsshqimmr">"ukskdkcl" = 0
+203 assert (1189.9+-31589.402) = -30399.5020000
+204 assert 5>-3 = -1
+205 assert 5>1305 = 0
+206 assert mid$("tp",3,1) = ""
+207 assert "fcugh"<"mp" = -1
+208 assert (-26440.607=4429.639) = 0
+209 assert "njgso"+"" = "njgso"
+210 assert (((-5 - -9 + -8) * (9) * (6 * 6 * 10))) = -12960
+211 assert 20<319 = -1
+212 assert (17|13) = 29
+213 assert (((2 + -6)) + ((-3 + 0) * (-6) * (9))) = 158
+214 assert (32630.977--22966.661) = 55597.6380000
+215 assert (7^1101) = 1098
+216 assert sgn(-19770.065) = -1
+217 assert abs(8855.466) = 8855.466
+218 assert (((-5 + -2) * (0 * -4 * 4) - (-5)) * ((-8 - -1 - -6) - (-7 - 8 * -8) + (2))) = -280
+219 assert (((-5 - 9 * -1) + (10) * (-9 - -3 - -6)) * ((6 * 4) - (-2 + 5 * 5) - (6)) - ((5 - -3 - -8))) = -36
+220 assert mid$("d",2,3) = ""
+221 assert "g"+"iunodl" = "giunodl"
+222 assert (-7407.296+-15020.169) = -22427.4650000
+223 assert spc(11) = "           "
+224 assert (-898+19) = -879
+225 assert asc("") = 0
+226 assert "hacdpddm"+"tddgn" = "hacdpddmtddgn"
+227 assert right$("hcbanpgoh",4) = "pgoh"
+228 assert (927|1787) = 2047
+229 assert (((1) * (-5 + 9))) = 4
+230 assert (7820.887<39225.412) = -1
+231 assert (((5) - (-1 + -3 + -8) + (4)) * ((3) + (-3 + 6) * (-6 * 9)) * ((2 - -1) - (9 + 10))) = 53424
+232 assert (((2 - 9 - -3) * (-9) * (7 * -1)) + ((3 - -1 - -5) + (7 * -4 - -5) + (4)) - ((0) - (0) * (3 - 4 - -6))) = -262
+233 assert (14606.449*33672.237) = 491831812.4564130
+234 assert (-18541.651*-25895.799) = 480150867.4241490
+235 assert -843>-9 = 0
+236 assert "fdb"<>"" = -1
+237 assert mid$("uin",3,1) = "n"
+238 assert -10>=988 = 0
+239 assert 3>-143 = -1
+240 assert (957^12) = 945
+241 assert 1959<-10 = 0
+242 assert "d"<>"" = -1
+243 assert (35207.779=15018.964) = 0
+244 assert ""<"" = 0
+245 assert (-15456.097*-9368.78) = 144804772.4516600
+246 assert (-25460.443<>-10182.726) = -1
+247 assert chr$(50) = "2"
+248 assert (78.868>=13409.097) = 0
+249 assert "qbsbumbp">"epn" = -1
+250 assert (((-6 - 4)) - ((8 * -9 + 0) - (-8 * 3 + -7) * (-3 * -5 * -9))) = 4247
+251 assert (22997.6>=-10485.621) = -1
+252 assert (((-2 + 6) * (5)) - ((7 + -7)) + ((2 - -8 + 8) * (9))) = 182
+253 assert -14<=-3 = -1
+254 assert len("ekcosunp") = 8
+255 assert "qfq"<"fkcsb" = 0
+256 assert (((-7 * -5 - 8) + (4))) = 31
+257 assert right$("kebklrr",5) = "bklrr"
+258 assert (((-8 * -1) * (5 - 0)) + ((2 + 2 - 6) - (3 * -10 - -3))) = 65
+259 assert -1>=-3 = -1
+260 assert (((0 - 4)) - ((-10 - 9 * 8) * (5 + 3 - -7) + (-9 + -4)) * ((-7 + 2 + 3))) = -2490
+261 assert "srrgfqel">="" = -1
+262 assert (((0 - 6)) * ((5 + 3) * (-4 - 3 * -4))) = -384
+263 assert (465&20) = 16
+264 assert (1705%19) = 14
+265 assert chr$(116) = "t"
+266 assert (-6535.045+-25618.153) = -32153.1980000
+267 assert (33762.792+-2563.352) = 31199.4400000
+268 assert (-20756.925-2926.066) = -23682.9910000
+269 assert "bjpomsrrl">="bplmtng" = 0
+270 assert -10<-557 = 0
+271 assert (15162.621*35044.782) = 531370747.4936219
+272 assert (26144.166<=2183.01) = 0
+273 assert sgn(-15495.205) = -1
+274 assert spc(0) = ""
+275 assert (35928.279--27195.709) = 63123.9880000
+276 assert int(-18351.395) = -18351
+277 assert spc(4) = "    "
+278 assert (37822.899<=-28144.213) = 0
+279 assert (22146.484=31655.036) = 0
+280 assert 0=-1441 = 0
+281 assert len("") = 0
+282 assert (14^1579) = 1573
+283 assert sgn(-830) = -1
+284 assert -1<=17 = -1
+285 assert "us"+"kcrdtniq" = "uskcrdtniq"
+286 assert (-39711.324<=31139.691) = -1
+287 assert str$(984.9) = "984.90000"
+288 assert "hniiut"<"qodtrm" = -1
+289 assert (-28153.937+38042.525) = 9888.5880000
+290 assert str$(-37) = "-37"
+291 assert 4<>-1947 = -1
+292 assert right$("i",2) = "i"
+293 assert val("14706.9420000") = 14706.9420000
+294 assert "uausug"<="hll" = 0
+295 assert "ffhsgjuf"+"uuo" = "ffhsgjufuuo"
+296 assert abs(10908.077) = 10908.077
+297 assert -539>=98 = 0
+298 assert "cflfhcode"+"gnmjjjut" = "cflfhcodegnmjjjut"
+299 assert 223=-7 = 0
+300 assert (18|503) = 503
+301 assert spc(0) = ""
+302 call $ffff
+ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ

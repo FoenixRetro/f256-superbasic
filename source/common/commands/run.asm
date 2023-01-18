@@ -24,11 +24,25 @@ EOLCommand: ;; [!0:EOF0]
 
 ; ************************************************************************************************
 ;
-;										Run Program
+;								Run Program (optional load)
 ;
 ; ************************************************************************************************
 
-CommandRUN:	;; [run]
+CommandRUNOptLoad:	;; [run]
+		.cget 								; what follows
+		cmp 	#KWC_EOL 					; EOL / : just RUN
+		beq 	RunCurrentProgram
+		cmp 	#KWD_COLON
+		beq 	RunCurrentProgram
+		jsr 	LoadFile 					; load expected name file.
+
+; ************************************************************************************************
+;
+;							    Run program with current code
+;
+; ************************************************************************************************
+
+RunCurrentProgram:
 		jsr 	ClearCommand 				; clear variable/stacks/etc.
 		.cresetcodepointer 					; set code address to start
 
@@ -185,5 +199,6 @@ Unused4:	;; [then]
 ;		27/11/22 		Break check was not being reset, checked every time. Added dec
 ;						instruction making it $FF => 8 more fails.
 ;		02/01/23 		Break check call now a macro.
+;		18/01/23 		Can now RUN "program"
 ;
 ; ************************************************************************************************

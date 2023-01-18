@@ -20,7 +20,7 @@ XLoadCommand: ;; [xload]
 XGoCommand: ;; [xgo]
 		jsr 	NewProgram
 		jsr 	BackloadProgram
-		jmp 	CommandRUN
+		jmp 	RunCurrentProgram
 
 		.send code
 

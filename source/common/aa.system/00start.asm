@@ -23,7 +23,22 @@ Start:	ldx 	#$FF 						; stack reset
 		sta 	0
 		
 		jsr		UpdateFont 					; update font if between FPGA updates.
-		
+
+		lda 	$2002 						; if $2002..5 is BT65 then jump to $2000
+		cmp 	#"B"
+		bne 	_NoMachineCode
+		lda 	$2003
+		cmp 	#"T"
+		bne 	_NoMachineCode
+		lda 	$2004
+		cmp 	#"6"
+		bne 	_NoMachineCode
+		lda 	$2005
+		cmp 	#"5"
+		bne 	_NoMachineCode
+		jmp 	$2000
+
+_NoMachineCode:		
 		jsr 	EXTInitialise 				; hardware initialise
 
 		lda 	#0 							; zero the default drive.
@@ -74,7 +89,7 @@ Start:	ldx 	#$FF 						; stack reset
 
 		.if 	AUTORUN==1 					; run straight off
 		jsr 	BackloadProgram
-		jmp 	CommandRUN
+		jmp 	RunCurrentProgram
 		.else		
 		jmp 	WarmStart					; make same size.
 		jmp 	WarmStart

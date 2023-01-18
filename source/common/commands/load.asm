@@ -19,6 +19,16 @@
 		.section code
 
 Command_Load: ;; [LOAD]
+		jsr 	LoadFile
+		jmp 	WarmStart
+
+; ************************************************************************************************
+;
+;				Load named file.
+;
+; ************************************************************************************************
+
+LoadFile:		
 		jsr 	EvaluateString 				; file name to load
 
 		ldx 	zTemp0+1					; zTemp0 -> XA
@@ -55,7 +65,8 @@ CLComplete:
 		lda 	#_CLCMsg & $FF
 		ldx 	#_CLCMsg >> 8
 		jsr 	PrintStringXA
-		jmp 	WarmStart
+		rts
+
 _CLCMsg:
 		.text 	"Complete.",13,0
 		;
@@ -208,5 +219,6 @@ LoadEndCharacter:      								; end of bytes available.
 ;
 ;		Date			Notes
 ;		==== 			=====
+; 		18/01/23 		Made LOAD a seperate file.
 ;
 ; ************************************************************************************************

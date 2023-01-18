@@ -185,7 +185,7 @@ VectorSet1:
 	.word	Command_Print                    ; $97 PRINT
 	.word	Command_Restore                  ; $98 RESTORE
 	.word	Command_RETURN                   ; $99 RETURN
-	.word	CommandRUN                       ; $9a RUN
+	.word	CommandRUNOptLoad                ; $9a RUN
 	.word	Command_Save                     ; $9b SAVE
 	.word	CommandSetDate                   ; $9c SETDATE
 	.word	CommandSetTime                   ; $9d SETTIME

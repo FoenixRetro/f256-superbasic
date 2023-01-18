@@ -16,5 +16,5 @@ include ../../../documents/common.make
 endif
 
 all:
-	python sdcard.py fox
+	python sdcard.py fox	
 	sh upload.sh

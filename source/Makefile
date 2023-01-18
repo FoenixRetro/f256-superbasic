@@ -17,7 +17,7 @@ endif
 #
 #		Current version.
 #
-VERSION = 30
+VERSION = 31
 
 #	System 0 = F256
 SYSTEM = 0 						
@@ -222,4 +222,14 @@ lineedit:
 
 paging:
 	python $(SCRIPTDIR)checkpaging.py
-	
+#
+#		Machine code boot test.
+#	
+mcboot:
+	64tass -q -b -Wall -C -c storage$(S)mcboot.as -L output$(S)mcboot.lst -o output$(S)mcboot.bin
+
+mctest:mcboot	
+	$(START) output$(S)mcboot.bin@2000
+
+mcflash:mcboot 
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary output$(S)mcboot.bin --address 2000
