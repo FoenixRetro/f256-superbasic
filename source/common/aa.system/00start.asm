@@ -114,5 +114,6 @@ Prompt:	.text 	13,13
 ;						Added Gadget-style boot prompt.
 ;		08/12/22 		Removed initial break check call.
 ;		02/01/23 		Tidied up boot display
+;		18/01/23 		Added test for simple machine code boot.
 ;
 ; ************************************************************************************************
