@@ -16,15 +16,18 @@ pages = 2 if len(code) <= 16384 else 3  											# how many pages
 while len(code) < 8192*pages: 														# pad out
 	code.append(0xFF)
 
-for p in range(2,pages+2):															# output binary slices FROM 2.
-	chunk = code[(p-2)*8192:(p-1)*8192] 											# binary chunk
-	h = open("{0:02x}.bin".format(p),"wb") 											# write out.
+for p in range(1,pages+1):															# output binary slices FROM 2.
+	chunk = code[(p-1)*8192:(p-0)*8192] 											# binary chunk
+	h = open("sb{0:02x}.bin".format(p),"wb") 											# write out.
 	h.write(bytes(chunk))
 	h.close()
 
 h = open("bulk.csv","w")  															# create CSV file
 h.write("3f,lockout.bin\n")
-pages = [x for x in range(2,pages+2)]  						 						# pages to send.
-for p in [0x01] + pages + [0x3C,0x3D,0x3E,0x3F]:
+rompages = [x for x in range(1,pages+1)]  					 						# pages to send.
+for p in rompages:
+ 	h.write("{0:02x},sb{0:02x}.bin\n".format(p))	
+h.write("{0:02x},dos.bin\n".format(pages+1)) 	
+for p in [0x3C,0x3D,0x3E,0x3F]:
 	h.write("{0:02x},{0:02x}.bin\n".format(p))	
 h.close()

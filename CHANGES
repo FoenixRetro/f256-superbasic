@@ -169,8 +169,7 @@ Release 29 (12/01/23):
 Release 30 (18/01/23):
 
 	CHG: Can RUN "<filename>"
-	CHG: If $2002..5 at boot are 'BT65' then BASIC will jump to $2000 after initialising the stack/font
-		 (for running machine code simply, example in storage/mcboot.as)
 	CHG: Added howto-crossdev-asm.zip, a simple way of running 6502 assembler cross-assembled.
-
+	CHG: Added Header, now boots properly.
+	
 Release 31 (18/01/23):	
