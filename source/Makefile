@@ -35,7 +35,7 @@ KRN_REPO= ..$(S)..$(S)F256_Jr_Kernel_DOS
 
 MODULES= +hardware +graphics +tokeniser +sound
 
-START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@x $(BINDIR)graphics.bin@s boot@8000
+START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@x $(BINDIR)graphics.bin@s 
 
 all :  basic
 #
@@ -48,13 +48,6 @@ run : basic
 testbasic:prelim
 	64tass -D AUTORUN=1 $(AADDRESSES) $(ASMOPTS) _basic.asm -o $(APPNAME)
 	$(CCOPY) $(APPNAME) $(BINDIR)
-#
-#		Switch to Flash-Boot or RAM-Boot
-#	
-flashboot:
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --boot flash 
-ramboot:	
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --boot ram
 #
 #		Build & update Kernel & api.asm
 #
@@ -70,7 +63,7 @@ updatekernel:
 #
 #		Build RAM based kernel / ROM combo and boot.
 #
-ramkernel: ramboot
+ramkernel: 
 	cat build$(S)3f.bin build$(S)3e.bin build$(S)01.bin  >build$(S)kernel.ram 
 	cat build$(S)kernel.ram build$(S)basic.rom >build$(S)ramkernel.bin
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary build$(S)ramkernel.bin --address E000
@@ -81,7 +74,7 @@ rgo : ramkernel putcode
 #
 #		Run on real hardware (RAM operation)
 #
-go : ramboot
+go : 
 	python scripts$(S)checkload.py
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)lockout.rom --address $(LLOCKOUT)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)graphics.bin --address $(LSPRITES)
@@ -97,10 +90,10 @@ putcode:
 #
 #		Run on real hardware (Flash Operation)
 #
-fupload: flashboot basic
+fupload: basic
 	make -C build 
 
-fgo: flashboot
+fgo: 
 	python scripts$(S)checkload.py
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 28000
 #

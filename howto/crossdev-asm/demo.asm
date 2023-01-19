@@ -55,7 +55,7 @@ SlowMe:
 	dec 	a
 	bne 	SlowMe
 
-	dey 									; do a page
+	dey 									; do a page of 256 chars
 	bne 	FillTop 						
 
 	inc 	$21 							; next page

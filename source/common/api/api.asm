@@ -60,6 +60,7 @@ Close       .fill   4   ; Close a directory once finished reading.
             .fill   4   ; call gate
 
 Display     .namespace
+Reset       .fill   4   ; Re-init the display
 GetSize     .fill   4   ; Returns rows/cols in kernel args.
 DrawRow     .fill   4   ; Draw text/color buffers left-to-right
 DrawColumn  .fill   4   ; Draw text/color buffers top-to-bottom

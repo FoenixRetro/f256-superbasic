@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.58.2974? listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Wed Jan 18 19:52:09 2023
+; Thu Jan 19 10:14:44 2023
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -559,8 +559,8 @@
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->8130		09 09 31 38 2f 30 31 2f			.text 9,9,"18/01/23 31"
->8138		32 33 20 33 31
+>8130		09 09 31 39 2f 30 31 2f			.text 9,9,"19/01/23 32"
+>8138		32 33 20 33 32
 
 ;******  Return to file: ./common/aa.system/00start.asm
 
@@ -869,25 +869,26 @@
 >ff78						Read        .fill   4   ; Read a directory entry; may also return VOLUME and FREE events.
 >ff7c						Close       .fill   4   ; Close a directory once finished reading.
 >ff80						            .fill   4   ; call gate
->ff84						GetSize     .fill   4   ; Returns rows/cols in kernel args.
->ff88						DrawRow     .fill   4   ; Draw text/color buffers left-to-right
->ff8c						DrawColumn  .fill   4   ; Draw text/color buffers top-to-bottom
->ff90						GetIP       .fill   4   ; Get the local IP address.
->ff94						SetIP       .fill   4   ; Set the local IP address.
->ff98						GetDNS      .fill   4   ; Get the configured DNS IP address.
->ff9c						SetDNS      .fill   4   ; Set the configured DNS IP address.
->ffa0						GetTime     .fill   4
->ffa4						SetTime     .fill   4
->ffa8						GetSysInfo  .fill   4
->ffac						SetBPS      .fill   4   ; Set the serial BPS (should match the SLIP router's speed).
->ffb0						InitUDP     .fill   4
->ffb4						SendUDP     .fill   4
->ffb8						RecvUDP     .fill   4
->ffbc						InitTCP     .fill   4
->ffc0						SendTCP     .fill   4
->ffc4						RecvTCP     .fill   4
->ffc8						SendICMP    .fill   4
->ffcc						RecvICMP    .fill   4
+>ff84						Reset       .fill   4   ; Re-init the display
+>ff88						GetSize     .fill   4   ; Returns rows/cols in kernel args.
+>ff8c						DrawRow     .fill   4   ; Draw text/color buffers left-to-right
+>ff90						DrawColumn  .fill   4   ; Draw text/color buffers top-to-bottom
+>ff94						GetIP       .fill   4   ; Get the local IP address.
+>ff98						SetIP       .fill   4   ; Set the local IP address.
+>ff9c						GetDNS      .fill   4   ; Get the configured DNS IP address.
+>ffa0						SetDNS      .fill   4   ; Set the configured DNS IP address.
+>ffa4						GetTime     .fill   4
+>ffa8						SetTime     .fill   4
+>ffac						GetSysInfo  .fill   4
+>ffb0						SetBPS      .fill   4   ; Set the serial BPS (should match the SLIP router's speed).
+>ffb4						InitUDP     .fill   4
+>ffb8						SendUDP     .fill   4
+>ffbc						RecvUDP     .fill   4
+>ffc0						InitTCP     .fill   4
+>ffc4						SendTCP     .fill   4
+>ffc8						RecvTCP     .fill   4
+>ffcc						SendICMP    .fill   4
+>ffd0						RecvICMP    .fill   4
 .00f0						args
 .00f0						events
 >00f0						dest        .word       ?   ; GetNextEvent copies event data here
@@ -7742,8 +7743,8 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->dc77		09 09 31 38 2f 30 31 2f			.text 9,9,"18/01/23 31"
->dc7f		32 33 20 33 31
+>dc77		09 09 31 39 2f 30 31 2f			.text 9,9,"19/01/23 32"
+>dc7f		32 33 20 33 32
 
 ;******  Return to file: _basic.asm
 
