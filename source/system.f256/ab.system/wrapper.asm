@@ -250,25 +250,6 @@ KNLCloseFile:
 
 ; ************************************************************************************************
 ;
-;							Check to see if keystroke events pending
-;
-; ************************************************************************************************
-
-KNLCheckKeyPressed:
-		jsr 	KNLSetEventPointer
-		jsr     GetNextEvent 			; get next event
-		bcs 	_CKPNoEvent 				; no event
-		lda     KNLEvent.type
-		cmp     #kernel.event.key.PRESSED 	; must be a pressed event.
-		bne 	_CKPNoEvent
-		lda     KNLEvent.key.ascii		
-		rts
-_CKPNoEvent:
-		lda 	#0
-		rts		
-		
-; ************************************************************************************************
-;
 ;						Read Game Controller A -> A (Button1/Right/Left/Down/Up)
 ;
 ; ************************************************************************************************

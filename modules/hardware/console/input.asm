@@ -28,7 +28,7 @@ Export_EXTInputLine:
 		lda 	1 							; save I/O page
 		pha
 _EILLoop:		
-		jsr 	PagedInputSingleCharacter 
+		jsr 	KNLGetSingleCharacter 		; get one single character
 		cmp 	#13 						; scrape line if exit.		
 		beq 	_EILExit
 		cmp 	#4 							; Ctrl+D delete at cursor

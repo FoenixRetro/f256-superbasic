@@ -223,7 +223,7 @@ CPPVControl:
 		jmp 	EXTPrintCharacter
 
 CPInputVector:
-		jmp 	EXTInputSingleCharacter
+		jmp 	KNLGetSingleCharacter
 
 		.send code
 

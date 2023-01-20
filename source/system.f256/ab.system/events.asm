@@ -79,6 +79,32 @@ _PKQLoop:
 		pla 								; restore head of queue.
 _PKQExit:
 		rts
+
+; ************************************************************************************************
+;
+;							Check to see if keystroke events pending
+;
+; ************************************************************************************************
+
+KNLGetKeyPressed:
+		lda 	KeyboardQueueEntries 		; something in the queue
+		bne 	PopKeyboardQueue 			; if so, pop and return it
+		jsr 	ProcessEvents 				; process any outstanding events
+		lda 	#0
+		rts		
+
+; ************************************************************************************************
+;
+;								 Get a single character press
+;
+; ************************************************************************************************
+		
+KNLGetSingleCharacter:
+		jsr 	KNLGetKeyPressed
+		cmp 	#0
+		beq 	KNLGetSingleCharacter
+		rts
+
 		.send code
 
 		.section storage

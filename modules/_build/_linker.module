@@ -28,13 +28,6 @@ EXTInputLine:
 	dec 8+5
 	plp
 	rts
-EXTInputSingleCharacter:
-	inc 8+5
-	jsr	Export_EXTInputSingleCharacter
-	php
-	dec 8+5
-	plp
-	rts
 	.endif
 	.if graphicsIntegrated == 1
 GXGraphicDraw:
