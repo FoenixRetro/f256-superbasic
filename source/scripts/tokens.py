@@ -40,7 +40,7 @@ class TokenSource(object):
 				not(		random(	 	timer( 		event( 		joyx(		joyy(
 				joyb( 		min(		max( 		hit( 		playing(	gettime$(
 				peek( 		peekw( 		peekl(		peekd(		getdate$(	inkey$(
-				get$( 		inkey(		get( 		itemcount(	itemget$(
+				get$( 		inkey(		get( 		itemcount(	itemget$( 	keydown(
 
 			{0}							// Set 0
 				data 		dim 		let 		rem  		else 		to			
@@ -58,6 +58,7 @@ class TokenSource(object):
 				save		verify		drive 		dir 		bload
 				bsave		himem 		input 		cls 		gosub 		
 				return 		print 		cprint 		goto 		dos
+				mouse
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	

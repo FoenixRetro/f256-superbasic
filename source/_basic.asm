@@ -116,6 +116,7 @@
 	.include	"./system.f256/font_update/newfont.asm"
 	.include	"./system.f256/functions/getdatetime.asm"
 	.include	"./system.f256/functions/getinkey.asm"
+	.include	"./system.f256/functions/keydown.asm"
 	.include	"./system.f256/functions/rnd.asm"
 	.include	"./common/generated/asmcore.asm"
 	.include	"./common/generated/constants.asm"

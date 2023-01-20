@@ -177,3 +177,6 @@ Release 31 (18/01/23):
 
 	CHG: A fair amount of rearrangement of source.
 	CHG: Removed two input entry types, everything now uses the standard queue.
+	CHG: Added state table for raw keys, accessible by KEYDOWN()
+
+	
