@@ -26,3 +26,14 @@ Finally string memory occupies the top of this memory area and works down.
 
 This should be entirely transparent to the developer.
 
+\section{Memory usage elsewhere}
+
+SuperBasic uses memory locations outside the normal 6502 address space as well. \\
+
+If you use a bitmap, it will be placed at \$10000 in physical space and occupy 320x240 bytes.\\
+
+If you use sprites, they are loaded to \$30000 in physical space, and the size depends on how many you have.\\
+
+Finally, if you cross develop, the memory location from \$28000 onwards is used to store the BASIC code you have uploaded.\\
+
+If you do not use any of these features directly (you can set up your own bitmaps and sprites yourself, and enter programs through the keyboard, saving to the SDCard or IEC drive) then the memory is all yours.

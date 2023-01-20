@@ -2,6 +2,7 @@
 \contentsline {section}{\numberline {1.1}Introduction}{5}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Storage}{5}{section.1.2}%
 \contentsline {section}{\numberline {1.3}Memory usage}{5}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Memory usage elsewhere}{5}{section.1.4}%
 \contentsline {chapter}{\numberline {2}Writing Programs in SuperBASIC}{7}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Writing programs}{7}{section.2.1}%
 \contentsline {chapter}{\numberline {3}Structured Programming}{9}{chapter.3}%
