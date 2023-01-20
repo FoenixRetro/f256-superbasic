@@ -29,7 +29,7 @@ JoyMain:
 		jsr 	Evaluate8BitInteger 		; ignore the parameter
 		jsr 	CheckRightBracket
 		;
-		jsr 	EXTReadController 			; read the controller.
+		jsr 	KNLReadController 			; read the controller.
 		plp
 		bcs 	_JMNoShift 					; if X then shift bits 3,2 -> 1,0
 		lsr 	a
@@ -52,7 +52,7 @@ UnaryJoyB: ;; [joyb(]
 		plx 								; get pos
 		jsr 	Evaluate8BitInteger 		; ignore the parameter
 		jsr 	CheckRightBracket
-		jsr 	EXTReadController 			; read the controller.
+		jsr 	KNLReadController 			; read the controller.
 		and 	#$10
 		bne 	JMIsLeft
 		jsr 	NSMSetZero

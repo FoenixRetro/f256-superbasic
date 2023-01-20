@@ -1,7 +1,7 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		05wrapper.asm
+;		Name:		wrapper.asm
 ;		Purpose:	Kernel functionality wrapper
 ;		Created:	7th January 2023
 ;		Reviewed: 	No.
@@ -69,7 +69,7 @@ KNLOpenStart:
 		
 _loop
 		jsr     kernel.Yield    			; event wait		
-		jsr     kernel.NextEvent
+		jsr     GetNextEvent
 		bcs     _loop
 
 		lda 	KNLEvent.type 
@@ -146,7 +146,7 @@ KNLReadBlock:
 
 _KGRBEventLoop:
 		jsr     kernel.Yield    			; event wait		
-		jsr     kernel.NextEvent
+		jsr     GetNextEvent
 		bcs     _KGRBEventLoop
 
 		lda 	KNLEvent.type 				; get event		
@@ -213,7 +213,7 @@ KNLWriteBlock:
 
 _KNLWLoop:									; wait for an event.
 		jsr     kernel.Yield        
-		jsr     kernel.NextEvent
+		jsr     GetNextEvent
 		bcs     _KNLWLoop
 
 		lda     KNLEvent.type 				; various errors.
@@ -256,7 +256,7 @@ KNLCloseFile:
 
 KNLCheckKeyPressed:
 		jsr 	KNLSetEventPointer
-		jsr     kernel.NextEvent 			; get next event
+		jsr     GetNextEvent 			; get next event
 		bcs 	_CKPNoEvent 				; no event
 		lda     KNLEvent.type
 		cmp     #kernel.event.key.PRESSED 	; must be a pressed event.
@@ -273,11 +273,12 @@ _CKPNoEvent:
 ;
 ; ************************************************************************************************
 
-EXTReadController:
+KNLReadController:
 		phx
 		ldx 	1 							; save current I/O in X
 		stz 	1 							; switch to I/O 0
 		lda 	$DC00  						; read VIA register
+		eor 	#$FF 						; make active '1'
 		stx 	1 							; repair old I/O and exit
 		plx
 		rts

@@ -1,7 +1,7 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		05events.asm
+;		Name:		events.asm
 ;		Purpose:	Event processing
 ;		Created:	5th January 2023
 ;		Reviewed: 	No.
@@ -21,7 +21,7 @@
 ProcessEvents:
 		jsr 	KNLSetEventPointer
 		   
-		jsr     kernel.NextEvent 			; get next event
+		jsr     GetNextEvent 				; get next event
 		bcs 	_PEExitZ 					; nothing left to process.
 
 		lda 	KNLEvent.type 				; go back if event not key.pressed.
@@ -54,7 +54,7 @@ _PEExitZ:									; return with Z flag set, e.g. no more events, no Ctrl+C
 
 ; ************************************************************************************************
 ;
-;								Pop head of event queue
+;								Pop head of keyboard queue
 ;
 ; ************************************************************************************************
 

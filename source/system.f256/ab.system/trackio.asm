@@ -1,37 +1,34 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		macros.inc
-;		Purpose:	Standard Macros
-;		Created:	18th September 2022
-;		Reviewed: 	17th November 2022
+;		Name:		trackio.asm
+;		Purpose:	Wrapper for kernel.nextEvent
+;		Created:	20th January 2023
+;		Reviewed: 	No.
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
 
-; ************************************************************************************************
-;
-;							Insert an Emulator Breakpoint
-;
-; ************************************************************************************************
-
-debug 		.macro
-		.byte 	$DB 						; causes a break in the emulator
-		.endm
+		.section code
 
 ; ************************************************************************************************
 ;
-;								Set a 2 byte value in memory
+;			Effectively calls kernel.nextEvent but also updates keyboard state 
+;			and mouse events.
 ;
 ; ************************************************************************************************
 
-set16 		.macro
-		lda 	#((\2) & $FF)
-		sta 	0+\1
-		lda 	#((\2) >> 8)
-		sta 	1+\1
-		.endm
+GetNextEvent:
+		jmp 	kernel.NextEvent
+
+		.send code
+
+
+		.section storage
+
+
+		.send storage       
 
 ; ************************************************************************************************
 ;
@@ -41,7 +38,5 @@ set16 		.macro
 ;
 ;		Date			Notes
 ;		==== 			=====
-;		02/01/23 		Added break check macro
-;		20/01/23 		Moved break check to non-standard-hardware section.
 ;
 ; ************************************************************************************************

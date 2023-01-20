@@ -28,7 +28,7 @@ Command_Dir:	;; [dir]
 
 _CDEventLoop:
 		jsr     kernel.Yield        		; Polite, not actually needed.
-		jsr     kernel.NextEvent
+		jsr     GetNextEvent
 		bcs     _CDEventLoop
 
 		lda     KNLEvent.type  
