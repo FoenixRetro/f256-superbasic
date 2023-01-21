@@ -31,6 +31,10 @@ _RIOLoop:
 ;			Effectively calls kernel.nextEvent but also updates keyboard state 
 ;			and mouse events.
 ;
+;			This is not called from the emulator because it does not update the queue.
+;			However, the functions like keydown() do invoke it so they will still work.
+;			In the emulator keyboard joystick support is provided through $DC00 emulation
+;
 ; ************************************************************************************************
 
 GetNextEvent:
@@ -49,7 +53,8 @@ GetNextEvent:
 		cmp 	#kernel.event.key.RELEASED 
 		bne 	_GNECheckMouseEvent
 _GNEKeyEvent:
-		jsr 	ProcessKeyboardEvent
+		jsr 	ProcessKeyboardEvent 		; process keyboard up/down.
+		jsr 	UpdateKeyboardJoystick 		; update the keyboard-joystick.
 _GNECheckMouseEvent:		
 
 		ply 								; restore registers
@@ -66,7 +71,7 @@ _GNEExit:
 ; ************************************************************************************************
 
 ProcessKeyboardEvent:
-		lda 	KNLEvent.key.ascii 			; raw key code.
+		lda 	KNLEvent.key.raw 			; raw key code.
 		jsr 	KeyboardConvertXA  			; convert to index in X, mask in A
 		ldy 	KNLEvent.type
 		cpy 	#kernel.event.key.RELEASED 	; check if pressed/released
@@ -79,6 +84,34 @@ _PKERelease:
 		and 	KeyStatus,x
 		sta 	KeyStatus,x
 		rts
+
+; ************************************************************************************************
+;
+;							Update the keyboard-joystick byte (ZX KM L)
+;
+; ************************************************************************************************
+
+UpdateKeyboardJoystick:
+		stz 	KeyJoystick
+		ldx 	#0
+_UKJLoop:
+		lda 	_UKJKeys,x 					; which key
+		and 	#$1F
+		tay
+		lda 	KeyStatus,y 				; get status
+		and 	#$10 						; letters always bit 4 (actually ASCII of L/C)
+		clc  								; set C if bit set
+		adc 	#$FF
+		rol 	KeyJoystick 				; shift into place
+		inx
+		cpx 	#5 							; do all 5
+		bne 	_UKJLoop
+		rts
+;	
+;		This mapping may change if raw changes ?
+;
+_UKJKeys:
+		.byte	'L','X','Z','M','K'		
 
 ; ************************************************************************************************
 ;
@@ -110,6 +143,8 @@ KeyStatus: 									; 8 x 32 = 256 bits, keyboard status.
 		.fill 	32
 KeyMaskTemp:
 		.fill 	1
+KeyJoystick:
+		.fill 	1		
 GNEEnd:
 
 		.send storage       

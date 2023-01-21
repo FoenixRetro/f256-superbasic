@@ -426,14 +426,20 @@ The example will print 'lizzie', this being the third item.
 
 
 \section*{joyb()}
-Returns a value indicating the status of the fire buttons on a gamepad, with the main fire button being bit 0. Takes a single parameter, the number of the gamepad.
+Returns a value indicating the status of the fire buttons on a gamepad, with the main fire button being bit 0. Takes a single parameter, the number of the gamepad.\\
+
+The keyboard keys ZX KM L (left/right/up/down/fire) are also mapped onto this controller, so a Game Controller is not required.
+
 \example{}
 \begin{verbatim}
 	100 if joyb(0) & 1 then fire()
 \end{verbatim}
 
 \section*{joyx() joyy()}
-Returns the directional value of a gamepad in the x and y axes respectively as -1,0 or 1, with 1 being right and down. Each takes a single parameter which is the number of the pad.
+Returns the directional value of a gamepad in the x and y axes respectively as -1,0 or 1, with 1 being right and down. Each takes a single parameter which is the number of the pad.\\
+
+The keyboard keys ZX KM L (left/right/up/down/fire) are also mapped onto this controller, so a Game Controller is not required.
+
 \example{}
 \begin{verbatim}
 	100 x = x + joyx(0)

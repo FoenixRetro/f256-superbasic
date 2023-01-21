@@ -1,6 +1,4 @@
-100 cls
-110 for i = 0 to 255
-120 print abs(keydown(i));" ";
-130 next
-140 print chr$(13);chr$(16);chr$(16);chr$(16);chr$(16);chr$(16);chr$(16);chr$(16);chr$(16);chr$(16);:goto 110
+100 rem
+110 print joyx(0),joyy(0),joyb(0)
+120 goto 100
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ

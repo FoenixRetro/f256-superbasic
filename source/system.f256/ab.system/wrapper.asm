@@ -260,6 +260,7 @@ KNLReadController:
 		stz 	1 							; switch to I/O 0
 		lda 	$DC00  						; read VIA register
 		eor 	#$FF 						; make active '1'
+		ora 	KeyJoystick 				; use key joystick.
 		stx 	1 							; repair old I/O and exit
 		plx
 		rts
