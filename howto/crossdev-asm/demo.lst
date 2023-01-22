@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.58.2974? listing file
 ; 64tass -q -b -Wall -C -c -L demo.lst -o demo.bin demo.asm
-; Wed Jan 18 19:13:05 2023
+; Sun Jan 22 15:40:36 2023
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -30,7 +30,7 @@
 .2022					SlowMe:
 .2022	3a		dec a			dec 	a
 .2023	d0 fd		bne $2022		bne 	SlowMe
-.2025	88		dey			dey 									; do a page
+.2025	88		dey			dey 									; do a page of 256 chars
 .2026	d0 ea		bne $2012		bne 	FillTop
 .2028	e6 21		inc $21			inc 	$21 							; next page
 .202a	a5 21		lda $21			lda 	$21
