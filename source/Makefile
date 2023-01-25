@@ -29,7 +29,6 @@ EMULATOR = $(BINDIR)jr256$(APPSTEM)
 LANGUAGE = en
 
 EMU_REPO= ..$(S)..$(S)junior-emulator
-TNY_REPO= ..$(S)..$(S)junior-tinykernel
 LDR_FILE= ..$(S)..$(S)FoenixMgr
 KRN_REPO= ..$(S)..$(S)F256_Jr_Kernel_DOS
 
@@ -104,7 +103,7 @@ sprites:
 #
 #		Build and download tools
 #
-tools: emu monitor fnxmgr
+tools: emu fnxmgr
 
 shim:
 	64tass -q -b _shim.asm -o shim.bin
@@ -116,11 +115,6 @@ fnxmgr:
 	zip temp$(S)fnxmgr.zip -j temp$(S)__main__.py temp$(S)constants.py temp$(S)foenix_config.py temp$(S)intelhex.py \
 			temp$(S)pgx.py temp$(S)srec.py temp$(S)foenix.py temp$(S)pgz.py temp$(S)wdc.py
 	$(CCOPY) temp$(S)fnxmgr.zip $(BINDIR) 
-
-monitor:
-	make -B -C $(TNY_REPO)
-	$(CCOPY) $(TNY_REPO)$(S)monitor.rom $(BINDIR)
-	$(CCOPY) $(TNY_REPO)$(S)lockout.rom $(BINDIR)
 
 emu:
 	make -B -C $(EMU_REPO)

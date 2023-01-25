@@ -80,4 +80,18 @@ class PGXBinFile:
 
         elif (self.cpu == "65c02") or (self.cpu == "65C02"):
             # Point the reset vector to our reset routine
-            self.handler(0xfffc, bytes([addr & 0xff, (addr >> 8) & 0xff]))
+            # self.handler(0xfffc, bytes([addr & 0xff, (addr >> 8) & 0xff]))
+            # "CROSSDEV"
+            #self.handler(0x0100, bytes([0x43,0x52,0x4f,0x53,0x53,0x44,0x45,0x56]))
+            #self.handler(0x0108, bytes([addr & 0xff, (addr >> 8) & 0xff]))
+            # Micro Kernel XDev Launcher
+            # According to Gadget, just needs to be on an 8K boundary
+            # and a memory location our program doesn't need, by
+            # default will be mapped in at $A000, which is fine for
+            # programs starting at $200
+            self.handler(0x13E000, bytes([0xF2,0x56,0x01,0x05,0x0F, \
+                                          0xA0,0x00,0x00,0x00,0x00, \
+                                          0x58,0x44,0x45,0x56,0x00, \
+                                          0x9C,0x00,0xA0,           \
+                                          0x4C,addr&0xff,(addr>>8)&0xff]))
+

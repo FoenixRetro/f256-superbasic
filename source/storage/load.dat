@@ -1,4 +1,3 @@
-100 rem
-110 print joyx(0),joyy(0),joyb(0)
-120 goto 100
+10 bitmap on:circle outline from 10,10 to 100,100
+100 ?1 = 0:?$D001 = 6
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ
