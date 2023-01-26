@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.58.2974? listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$38000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Thu Jan 26 14:04:39 2023
+; Thu Jan 26 15:22:44 2023
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -502,24 +502,24 @@
 
 .809d		a2 ff		ldx #$ff	Start:	ldx 	#$FF 						; stack reset
 .809f		9a		txs				txs
-.80a0		a5 00		lda $00				lda 	0  							; turn on editing of MMU LUT
-.80a2		09 80		ora #$80			ora 	#$80
-.80a4		85 00		sta $00				sta 	0
-.80a6		ad 02 20	lda $2002			lda 	$2002 						; if $2002..5 is BT65 then jump to $2000
-.80a9		c9 42		cmp #$42			cmp 	#"B"
-.80ab		d0 18		bne $80c5			bne 	_NoMachineCode
-.80ad		ad 03 20	lda $2003			lda 	$2003
-.80b0		c9 54		cmp #$54			cmp 	#"T"
-.80b2		d0 11		bne $80c5			bne 	_NoMachineCode
-.80b4		ad 04 20	lda $2004			lda 	$2004
-.80b7		c9 36		cmp #$36			cmp 	#"6"
-.80b9		d0 0a		bne $80c5			bne 	_NoMachineCode
-.80bb		ad 05 20	lda $2005			lda 	$2005
-.80be		c9 35		cmp #$35			cmp 	#"5"
-.80c0		d0 03		bne $80c5			bne 	_NoMachineCode
-.80c2		4c 00 20	jmp $2000			jmp 	$2000
-.80c5						_NoMachineCode:
-.80c5		20 57 80	jsr $8057			jsr 	EXTInitialise 				; hardware initialise
+.80a0		20 57 80	jsr $8057			jsr 	EXTInitialise 				; hardware initialise
+.80a3		a5 00		lda $00				lda 	0  							; turn on editing of MMU LUT
+.80a5		09 80		ora #$80			ora 	#$80
+.80a7		85 00		sta $00				sta 	0
+.80a9		ad 02 20	lda $2002			lda 	$2002 						; if $2002..5 is BT65 then jump to $2000
+.80ac		c9 42		cmp #$42			cmp 	#"B"
+.80ae		d0 18		bne $80c8			bne 	_NoMachineCode
+.80b0		ad 03 20	lda $2003			lda 	$2003
+.80b3		c9 54		cmp #$54			cmp 	#"T"
+.80b5		d0 11		bne $80c8			bne 	_NoMachineCode
+.80b7		ad 04 20	lda $2004			lda 	$2004
+.80ba		c9 36		cmp #$36			cmp 	#"6"
+.80bc		d0 0a		bne $80c8			bne 	_NoMachineCode
+.80be		ad 05 20	lda $2005			lda 	$2005
+.80c1		c9 35		cmp #$35			cmp 	#"5"
+.80c3		d0 03		bne $80c8			bne 	_NoMachineCode
+.80c5		4c 00 20	jmp $2000			jmp 	$2000
+.80c8						_NoMachineCode:
 .80c8		a9 00		lda #$00			lda 	#0 							; zero the default drive.
 .80ca		20 58 82	jsr $8258			jsr 	KNLSetDrive
 .80cd		a9 00		lda #$00			lda 	#0 							; graphics system initialise.

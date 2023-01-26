@@ -41,6 +41,8 @@ Boot:	jmp 	Start
 Start:	ldx 	#$FF 						; stack reset
 		txs	
 
+		jsr 	EXTInitialise 				; hardware initialise
+
 		lda 	0  							; turn on editing of MMU LUT
 		ora 	#$80
 		sta 	0
@@ -60,7 +62,6 @@ Start:	ldx 	#$FF 						; stack reset
 		jmp 	$2000
 
 _NoMachineCode:		
-		jsr 	EXTInitialise 				; hardware initialise
 
 		lda 	#0 							; zero the default drive.
 		jsr 	KNLSetDrive
