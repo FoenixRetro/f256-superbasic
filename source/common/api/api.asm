@@ -229,7 +229,7 @@ buflen      = args.buflen
           ; Net calls
 net_t       .struct
 
-socket      .word       ?
+socket      = args.buf
 
             ; Arguments
             .union
@@ -241,12 +241,11 @@ dest_port   .word       ?
 dest_ip     .fill       4            
             .ends            
             
-           ; Send   ;TODO: replace
+           ; Send
             .struct
-buf         .word       ?
-buflen      .byte       ?
-ext         .word       ?
-extlen      .byte       ?
+accepted    .byte       ?            
+buf         = args.ext
+buflen      = args.extlen
             .ends
 
             .endu

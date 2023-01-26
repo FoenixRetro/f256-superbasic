@@ -19,13 +19,13 @@
 		.section code
 
 F256Header:
-        .text	$f2,$56         			; Signature
-        .byte   3               			; 3 blocks
-        .byte   4               			; mount at $8000
-        .word   Boot 	      				; Start here
-        .word   0 			               	; version
-        .word   0               			; kernel
-        .text   "SuperBASIC",0 				; name of program.
+		.text	$f2,$56         			; Signature
+		.byte   3               			; 3 blocks
+		.byte   4               			; mount at $8000
+		.word   Boot 	      				; Start here
+		.word   0 			               	; version
+		.word   0               			; kernel
+		.text   "SuperBASIC",0 				; name of program.
 
 ; ************************************************************************************************
 ;
@@ -45,8 +45,6 @@ Start:	ldx 	#$FF 						; stack reset
 		ora 	#$80
 		sta 	0
 		
-		jsr		UpdateFont 					; update font if between FPGA updates.
-
 		lda 	$2002 						; if $2002..5 is BT65 then jump to $2000
 		cmp 	#"B"
 		bne 	_NoMachineCode

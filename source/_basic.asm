@@ -113,7 +113,6 @@
 	.include	"./common/expressions/utility/exprhelper.asm"
 	.include	"./common/expressions/utility/mult8x8.asm"
 	.include	"./common/expressions/utility/utility.asm"
-	.include	"./system.f256/font_update/newfont.asm"
 	.include	"./system.f256/functions/getdatetime.asm"
 	.include	"./system.f256/functions/getinkey.asm"
 	.include	"./system.f256/functions/keydown.asm"
