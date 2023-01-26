@@ -55,14 +55,58 @@ GetNextEvent:
 _GNEKeyEvent:
 		jsr 	ProcessKeyboardEvent 		; process keyboard up/down.
 		jsr 	UpdateKeyboardJoystick 		; update the keyboard-joystick.
-_GNECheckMouseEvent:		
+		bra 	_GNEEventExit
 
+_GNECheckMouseEvent:		
+		cmp 	#kernel.event.mouse.DELTA 	; check for move events
+		bne 	_GNENotDelta
+		jsr 	ProcessMouseDeltaEvent 		; process them.
+		bra 	_GNEEventExit
+_GNENotDelta:
+		cmp 	#kernel.event.mouse.CLICKS 	; check for click events
+		bne 	_GNEEventExit
+		jsr 	ProcessMouseClickEvent 		; process them.
+_GNEEventExit:		
 		ply 								; restore registers
 		plx
 		pla
 _GNEExit:
 		plp
 		rts		
+
+; ************************************************************************************************
+;
+;								Process mouse DELTA event
+;
+; ************************************************************************************************
+
+ProcessMouseDeltaEvent:
+		lda 	KNLEvent.mouse.delta.x
+		jsr 	PrintHex
+		lda 	KNLEvent.mouse.delta.y
+		jsr 	PrintHex
+		lda 	KNLEvent.mouse.delta.z
+		jsr 	PrintHex
+		lda 	#' '
+		jsr 	EXTPrintCharacter
+		rts
+
+; ************************************************************************************************
+;
+;								Process mouse CLICK event
+;
+; ************************************************************************************************
+
+ProcessMouseClickEvent:
+		lda 	KNLEvent.mouse.clicks.inner
+		jsr 	PrintHex
+		lda 	KNLEvent.mouse.clicks.middle
+		jsr 	PrintHex
+		lda 	KNLEvent.mouse.clicks.outer
+		jsr 	PrintHex
+		lda 	#' '
+		jsr 	EXTPrintCharacter
+		rts
 
 ; ************************************************************************************************
 ;

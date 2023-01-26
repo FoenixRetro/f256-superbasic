@@ -91,7 +91,12 @@ putcode:
 #
 fupload: basic
 	make -C build 
-
+#
+#		Autorun on real hardware
+#
+fauto: testbasic fgo
+	make -C build
+	
 fgo: 
 	python scripts$(S)checkload.py
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 28000
