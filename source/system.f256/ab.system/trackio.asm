@@ -81,6 +81,7 @@ _GNEExit:
 ; ************************************************************************************************
 
 ProcessMouseDeltaEvent:
+		rts
 		lda 	KNLEvent.mouse.delta.x
 		jsr 	PrintHex
 		lda 	KNLEvent.mouse.delta.y
@@ -98,6 +99,7 @@ ProcessMouseDeltaEvent:
 ; ************************************************************************************************
 
 ProcessMouseClickEvent:
+		rts
 		lda 	KNLEvent.mouse.clicks.inner
 		jsr 	PrintHex
 		lda 	KNLEvent.mouse.clicks.middle
