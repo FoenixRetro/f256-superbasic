@@ -1,3 +1,4 @@
-10 print ?$E0,?$E1
+5 print "Hello"
+10 print peekw($681),peekw($683),peekw($685),peekw($687),peekw($689),peekw($68B)
 20 goto 10
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ

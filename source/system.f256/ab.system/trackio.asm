@@ -81,15 +81,13 @@ _GNEExit:
 ; ************************************************************************************************
 
 ProcessMouseDeltaEvent:
-		rts
+		ldx 	#MouseDeltaX-GNEBegin
 		lda 	KNLEvent.mouse.delta.x
-		jsr 	PrintHex
+		jsr 	PMKAddSubtract
 		lda 	KNLEvent.mouse.delta.y
-		jsr 	PrintHex
+		jsr 	PMKAddSubtract
 		lda 	KNLEvent.mouse.delta.z
-		jsr 	PrintHex
-		lda 	#' '
-		jsr 	EXTPrintCharacter
+		jsr 	PMKAddSubtract
 		rts
 
 ; ************************************************************************************************
@@ -99,15 +97,41 @@ ProcessMouseDeltaEvent:
 ; ************************************************************************************************
 
 ProcessMouseClickEvent:
-		rts
+		ldx 	#MouseCountInner-GNEBegin
 		lda 	KNLEvent.mouse.clicks.inner
-		jsr 	PrintHex
+		jsr 	PMKAdd
 		lda 	KNLEvent.mouse.clicks.middle
-		jsr 	PrintHex
+		jsr 	PMKAdd
 		lda 	KNLEvent.mouse.clicks.outer
-		jsr 	PrintHex
-		lda 	#' '
-		jsr 	EXTPrintCharacter
+		jsr 	PMKAdd
+		rts
+
+; ************************************************************************************************
+;
+;								Adjust value,X (2 bytes) by A
+;
+; ************************************************************************************************
+
+PMKAddSubtract:
+		cmp 	#0 							; subtracting ?
+		bmi 	PMKSubtract
+PMKAdd: 									; add A to Value.W,X
+		clc 
+		adc 	GNEBegin,x
+		sta 	GNEBegin,x
+		bcc 	PMKExit
+		inc 	GNEBegin+1,x
+		bra 	PMKExit
+PMKSubtract: 								; sub A from Value.W,X
+		sec
+		eor 	#$FF
+		adc 	GNEBegin,x
+		sta 	GNEBegin,x
+		bcs 	PMKExit
+		dec 	GNEBegin+1,x
+PMKExit:
+		inx 								; next slot ?		
+		inx		
 		rts
 
 ; ************************************************************************************************
@@ -130,6 +154,7 @@ _PKERelease:
 		and 	KeyStatus,x
 		sta 	KeyStatus,x
 		rts
+
 
 ; ************************************************************************************************
 ;
@@ -191,6 +216,18 @@ KeyMaskTemp:
 		.fill 	1
 KeyJoystick:
 		.fill 	1		
+MouseDeltaX: 								; mouse Deltas
+		.fill 	2
+MouseDeltaY:
+		.fill 	2				
+MouseDeltaZ:
+		.fill 	2				
+MouseCountInner: 							; mouse buttons (L M B)
+		.fill 	2 
+MouseCountMiddle:
+		.fill 	2		
+MouseCountOuter:
+		.fill 	2				
 GNEEnd:
 
 		.send storage       
