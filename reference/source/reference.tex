@@ -539,6 +539,13 @@ Returns a subsegment of a string, given the start position (first character is 1
 	110 print mid$(“another word”,2,99)
 \end{verbatim}
 
+\section*{mouse}
+Gets the current status of the PS/2 mouse. 6 reference parameters (normally integer variables) are provided. These provide the cumulative mouse changes in the x,y,z axes, and the number of times the left, middle and right buttons have been pressed.
+\example{}
+\begin{verbatim}
+	100 mouse dx,dy,dz,lmb,mmb,rmb
+\end{verbatim}
+
 \section*{new}
 Erases the current program
 \example{}

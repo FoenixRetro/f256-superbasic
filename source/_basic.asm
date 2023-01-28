@@ -56,6 +56,7 @@
 	.include	"./common/commands/list.asm"
 	.include	"./common/commands/local.asm"
 	.include	"./system.f256/commands/memcopy.asm"
+	.include	"./system.f256/commands/mouse.asm"
 	.include	"./common/commands/new.asm"
 	.include	"./common/commands/poke.asm"
 	.include	"./common/commands/procedure.asm"

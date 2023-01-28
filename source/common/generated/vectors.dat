@@ -182,7 +182,7 @@ VectorSet1:
 	.word	Command_Input                    ; $93 INPUT
 	.word	Command_List                     ; $94 LIST
 	.word	Command_Load                     ; $95 LOAD
-	.word	SyntaxError                      ; $96 MOUSE
+	.word	MouseStatus                      ; $96 MOUSE
 	.word	NewCommand                       ; $97 NEW
 	.word	PingCommand                      ; $98 PING
 	.word	Command_Print                    ; $99 PRINT

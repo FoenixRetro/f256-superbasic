@@ -184,6 +184,8 @@ Release 31 (18/01/23):
 	CHG: Basic now loads at $34000 in emulator (make room for extra page)	
 	CHG: Basic ROM is now 32k to fit the headers.
 	CHG: Prompt should now display appropriately for Junior/Header.
-	
+	CHG: Added MOUSE command.
+
+Release 32: (28/01/23):
 
 	
