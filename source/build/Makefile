@@ -23,9 +23,9 @@ all: build flash
 #		Split up into parts - requires the latest Gadget build of 01.bin, 3e.bin and 3f.bin
 #
 build:	
-	$(CDEL) 01.bin 02.bin 03.bin 04.bin
+	$(CDEL) 01.bin 02.bin 03.bin 04.bin 05.bin
 	$(CDEL) bulk.csv
-	64tass -q -b -c lockout.asm -o lockout.bin 
+	64tass -q -b -c lockout.as65 -o lockout.bin 
 	python splitrom.py 
 #
 #		Reflash.

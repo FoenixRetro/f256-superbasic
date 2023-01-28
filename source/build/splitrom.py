@@ -12,7 +12,7 @@
 import os,sys,re
 
 code = [x for x in open("basic.rom","rb").read(-1)]									# load ROM in
-pages = 2 if len(code) <= 16384 else 3  											# how many pages
+pages = int((len(code)+8191) / 8192)  												# how many pages
 while len(code) < 8192*pages: 														# pad out
 	code.append(0xFF)
 

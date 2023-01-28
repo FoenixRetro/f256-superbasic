@@ -78,4 +78,14 @@ for f in moduleFiles:
 		h.write('\t{0}\n'.format(f[1:]))
 	else:
 		h.write('\t.include\t"{0}"\n'.format(f.replace(os.sep,"/")))
+
+h.write(".section code\n")
+h.write("\t.if PagingEnabled==1\n")
+h.write("\t* = $A000\n")
+h.write("\t.offs $4000\n")
+h.write("\t.endif\n")
+h.write(".send code\n")
+
+h.write("\t.include\t\"../modules/hardware/header/headerdata.dat\"\n")
+
 h.close()

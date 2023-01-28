@@ -181,7 +181,9 @@ Release 31 (18/01/23):
 	CHG: Joystick functions now are emulated by ZXKML in hardware, so you don't need a physical joystick.
 	CHG: Latest FPGA load.
 	CHG: Removed Micah Font update from BASIC 
-	
+	CHG: Basic now loads at $34000 in emulator (make room for extra page)	
+	CHG: Basic ROM is now 32k to fit the headers.
+	CHG: Prompt should now display appropriately for Junior/Header.
 	
 
 	

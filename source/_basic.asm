@@ -121,7 +121,6 @@
 	.include	"./common/generated/constants.asm"
 	.include	"./common/generated/errors.asm"
 	.include	"./common/generated/timestamp.asm"
-	.include	"./build/lockout.asm"
 	.include	"./system.f256/memory/memory.flat/delete.asm"
 	.include	"./system.f256/memory/memory.flat/insert.asm"
 	.include	"./system.f256/memory/memory.flat/memory.asm"
@@ -154,3 +153,10 @@ StartModuleCode:
 	.include	"../modules/_build/_graphics.module"
 	.include	"../modules/_build/_tokeniser.module"
 	.include	"../modules/_build/_sound.module"
+.section code
+	.if PagingEnabled==1
+	* = $A000
+	.offs $4000
+	.endif
+.send code
+	.include	"../modules/hardware/header/headerdata.dat"

@@ -20,7 +20,7 @@
 
 F256Header:
 		.text	$f2,$56         			; Signature
-		.byte   3               			; 3 blocks
+		.byte   4               			; 4 blocks
 		.byte   4               			; mount at $8000
 		.word   Boot 	      				; Start here
 		.word   0 			               	; version

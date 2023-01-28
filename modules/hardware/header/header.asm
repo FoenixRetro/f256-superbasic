@@ -21,25 +21,51 @@
 EXTShowHeader:
 		lda 	1
 		pha
+		lda 	8+3
+		pha
+		lda 	8+4
+		clc
+		adc 	#3
+		sta 	8+3
 		;
-		lda 	#2
 		ldx 	#(Header_jchars & $FF)
-		ldy 	#(Header_jchars >> 8)
+		ldy 	#(Header_jchars >> 8)-$40
+
+		stz 	1
+		lda 	$D6A7
+		and 	#$10
+		beq 	_EXTSHNotK1
+
+		ldx 	#(Header_kchars & $FF)
+		ldy 	#(Header_kchars >> 8)-$40
+_EXTSHNotK1:		
+		lda 	#2
 		jsr 	_ESHCopyBlock
 		;
-		lda 	#3
 		ldx 	#(Header_jattrs & $FF)
-		ldy 	#(Header_jattrs >> 8)
+		ldy 	#(Header_jattrs >> 8)-$40
+
+		stz 	1
+		lda 	$D6A7
+		and 	#$10
+		beq 	_EXTSHNotK2
+
+		ldx 	#(Header_kattrs & $FF)
+		ldy 	#(Header_kattrs >> 8)-$40
+_EXTSHNotK2:		
+		lda 	#3
 		jsr 	_ESHCopyBlock
 		;
 		stz 	1
 		ldx 	#16*4-1
 _EXTCopyLUT:
-		lda 	Header_Palette,x
+		lda 	Header_Palette-$4000,x
 		sta 	$D800,x
 		sta 	$D840,x
 		dex
 		bpl 	_EXTCopyLUT		
+		pla
+		sta 	8+3
 		pla
 		rts
 
