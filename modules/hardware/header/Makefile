@@ -18,8 +18,10 @@ endif
 PROMPTDIR = ..$(S)..$(S)..$(S)..$(S)Foenix-F256JR-bootscreens$(S)
 
 all:
-	$(CCOPY) $(PROMPTDIR)f256jr_boot_attrs.bin attrs.bin
-	$(CCOPY) $(PROMPTDIR)f256jr_boot_chars.bin chars.bin	
+	$(CCOPY) $(PROMPTDIR)f256jr_boot_attrs.bin jattrs.bin
+	$(CCOPY) $(PROMPTDIR)f256jr_boot_chars.bin jchars.bin	
+	$(CCOPY) $(PROMPTDIR)f256k_boot_attrs.bin kattrs.bin
+	$(CCOPY) $(PROMPTDIR)f256k_boot_chars.bin kchars.bin	
 	$(CCOPY) $(PROMPTDIR)f256jr_std_text_palette.hex palette.hex
 
 	python process.py

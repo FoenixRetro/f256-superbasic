@@ -44,7 +44,7 @@ h.write("\t.section code\n\n")
 h.write("Header_Height = {0}\n\n".format(height))
 h.write("Header_RLE = {0}\n\n".format(compress))
 
-for parts in ["attrs","chars"]:
+for parts in ["jattrs","jchars"]:
 	h.write("Header_{0}:\n".format(parts))
 	src = [x for x in open(parts+".bin","rb").read(-1)][:height * 80]
 	src = rleCompress(src)
