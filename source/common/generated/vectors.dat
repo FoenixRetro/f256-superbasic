@@ -127,7 +127,7 @@ VectorSet0:
 	.word	SyntaxError                      ; $b9 BY
 	.word	CallCommand                      ; $ba CALL
 	.word	CircleCommand                    ; $bb CIRCLE
-	.word	ClearCommand                     ; $bc CLEAR
+	.word	SyntaxError                      ; $bc CLEAR
 	.word	SyntaxError                      ; $bd COLOR
 	.word	SyntaxError                      ; $be COLOUR
 	.word	Command_Data                     ; $bf DATA

@@ -1,25 +1,11 @@
 Progress:	
-
-	Mouse code.
-	32 / Upgrade model A.
+	(ECONTREASD bug)
+	Error trap SAVE/LOAD
+ 	Upgrade model A.
 	Display Kernel version
 	Consider STEP.
-
 	Should CR in PRINT clear to EOL.
-
 
 Ongoing:
 	Code reading.
 	Continue documentation.	
-
-2. Set up tracking variables for 'dx', 'dy', 'dz', and 'buttons' from the mouse_delta event.  Every time you get a new mouse.DELTA event in #1, add its dx,dy,dz 
-values to your cumulative values, and replace your buttons value with the new value from the event.   Whenever your tracking variables are read by the basic 
-program (perhaps assign one or more functions to read them), reset them to zero.
-3. Set up tracking variables for mouse button inner_count, middle_count, outer_count, and pending.  Every time you get a new mouse.CLICKS event in #1, 
-replace the values in these variables with the new values from the event (pending just gets set to something non-zero).  Whenever the variables are read by 
-the basic program, reset them to zero.
-
-
-Page0 ends $B182 : 
-Page1 ends $DC64 : superfluous data $0410 (display header) + code to decode/upload it (128 bytes approx)
-

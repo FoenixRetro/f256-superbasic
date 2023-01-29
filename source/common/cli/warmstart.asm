@@ -47,7 +47,7 @@ WarmStart:
 		;
 _WSEditCode:
 		jsr 	EditProgramCode 			; edit the program code 
-		jsr 	ClearCommand 				; clear all variables etc.
+		jsr 	ClearSystem 				; clear all variables etc.
 		bra 	WarmStart
 
 		.send code

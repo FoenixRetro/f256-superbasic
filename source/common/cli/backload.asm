@@ -28,6 +28,9 @@ BackloadProgram:
 		sta 	BackLoadPage
 		.set16 	BackLoadPointer,$6000 		; and load from there.
 
+		stz 	BackLoadLast 				; reset backload last.
+		stz 	BackLoadLast+1 
+
 		lda 	#$FF
 		sta 	$FFFA
 _BPLoop:		
@@ -58,8 +61,12 @@ _BPEndLine:
 
 		.if AUTORUN==1 						; if autorun do full insert/delete for testing
 		nop
+		nop
+		nop
+		nop
 		jsr 	EditProgramCode
 		.else
+		jsr 	BLCheckLast 				; check last backload okay.
 		sec 								; append not insert
 		jsr 	MemoryInsertLine 			; append to current program
 		.endif
@@ -69,10 +76,32 @@ _BPEndLine:
 		;
 _BPExit:
 		stz 	$FFFA
-		jsr 	ClearCommand 				; clear variables etc.
+		jsr 	ClearSystem 				; clear variables etc.
 		rts
 _BLLoad:
 		.text 	"Loading from Memory",13,0
+
+; ************************************************************************************************
+;
+;						Check line numbers are in order if doing APPEND
+;
+; ************************************************************************************************
+
+BLCheckLast:
+		lda 	BackLoadLast 				; check last < current
+		cmp 	tokenLineNumber
+		lda 	BackLoadLast+1
+		sbc 	tokenLineNumber+1
+		bcs 	_BLCheckFail
+
+		lda 	tokenLineNumber 			; update
+		sta 	BackLoadLast
+		lda 	tokenLineNumber+1
+		sta 	BackLoadLast+1
+		rts
+
+_BLCheckFail:
+		.error_syntax
 
 ; ************************************************************************************************
 ;
@@ -115,6 +144,8 @@ BackLoadPage:
 		.fill  	1		
 BackLoadPointer:
 		.fill 	2
+BackLoadLast:
+		.fill 	2		
 		.send storage
 
 ; ************************************************************************************************
@@ -130,5 +161,6 @@ BackLoadPointer:
 ; 		05/12/22 		Fixed so >8k files work properly, moving page switch to
 ;						BLReadByte
 ;		13/12/22 		Blank line in text doesn't create a line 0
+;		29/01/23 		Added Backload check on line numbers.
 ;
 ; ************************************************************************************************

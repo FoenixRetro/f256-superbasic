@@ -43,7 +43,7 @@ CommandRUNOptLoad:	;; [run]
 ; ************************************************************************************************
 
 RunCurrentProgram:
-		jsr 	ClearCommand 				; clear variable/stacks/etc.
+		jsr 	ClearSystem 				; clear variable/stacks/etc.
 		.cresetcodepointer 					; set code address to start
 
 		; ----------------------------------------------------------------------------------------

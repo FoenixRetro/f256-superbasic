@@ -188,4 +188,6 @@ Release 31 (18/01/23):
 
 Release 32: (28/01/23):
 
-	
+	CHG: CLEAR is no longer a seperate command.
+	CHG: XLOAD and XGO now check the line numbers are in order as they do an append not a normal edit
+		 (using normal edit doubles the load time)

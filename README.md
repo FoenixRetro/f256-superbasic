@@ -12,9 +12,9 @@ https://github.com/paulscottrobson/superbasic
 Command Line Foenix256 uploader 
 https://github.com/pweingar/FoenixMgr
 
+DOS / Kernel Interface
 https://github.com/ghackwrench/F256_Jr_Kernel_DOS
 
-(Only required for rebuilding the title screen and uploaded font)
-
+BootScreens.
 https://github.com/WartyMN/Foenix-F256JR-bootscreens
-https://github.com/WartyMN/Foenix-Fonts
+

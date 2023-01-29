@@ -2,7 +2,7 @@
 ; ************************************************************************************************
 ;
 ;		Name:		clear.asm
-;		Purpose:	CLEAR command
+;		Purpose:	Tidying up before Running code
 ;		Created:	18th September 2022
 ;		Reviewed: 	23rd November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
@@ -12,7 +12,13 @@
 
 		.section code
 
-ClearCommand: ;; [clear]
+; ************************************************************************************************
+;
+;									Clear variables prior to RUN.
+;
+; ************************************************************************************************
+
+ClearSystem:
 		;
 		;		Scan through all the variables resetting them to zero.
 		;
@@ -98,5 +104,6 @@ _ClearZeroEnd:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		29/01/23 		No longer a stand alone command.
 ;
 ; ************************************************************************************************

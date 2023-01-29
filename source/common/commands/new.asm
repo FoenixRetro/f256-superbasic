@@ -25,7 +25,7 @@ NewCommand: ;; [new]
 NewProgram:
 		jsr 	MemoryNew
 		stz 	VariableSpace 				; erase all variables.
-		jsr 	ClearCommand 				; clear everything.
+		jsr 	ClearSystem					; clear everything.
 		rts		
 
 		.send code

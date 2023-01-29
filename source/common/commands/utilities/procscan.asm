@@ -19,6 +19,7 @@
 ; ************************************************************************************************
 
 ProcedureScan:
+		jsr 	SwapDataCodePtrs 			; swap code and data
 		.cresetcodepointer 					; start of program
 _PSLoop:
 		.cget0 								; exit if at end
@@ -67,6 +68,7 @@ _PSNext:
 		.cnextline  						; next line and try again
 		bra 	_PSLoop				
 _PSExit:
+		jsr 	SwapDataCodePtrs 			; swap code and data
 		rts
 _PSSyntax:
 		jmp 	SyntaxError
