@@ -1,10 +1,10 @@
 Progress:	
-	(ECONTREASD bug)
 	Error trap SAVE/LOAD
  	Upgrade model A.
 	Display Kernel version
 	Consider STEP.
 	Should CR in PRINT clear to EOL.
+	Open Structure error (correct line #)
 
 Ongoing:
 	Code reading.

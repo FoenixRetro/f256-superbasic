@@ -18,7 +18,9 @@
 ;
 ; ************************************************************************************************
 
-ErrorHandler:		
+ErrorHandler:	
+		pha 								; save error #
+
 		tay 								; find the error text
 		beq 	_EHEnd
 		ldx 	#0
@@ -41,6 +43,10 @@ _EHFound:
 		ldx 	zTemp0+1
 		jsr 	PrintStringXA
 	
+		pla  								; check if error is 'open structure'
+		cmp 	#ERRID_STRUCT
+		beq 	_EHCREnd
+
 		ldy 	#1 							; if line number zero don't print it
 		.cget
 		bne 	_EHAtMsg
@@ -101,5 +107,6 @@ _PSXAExit:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		29/01/23 		No line # for open structure.
 ;
 ; ************************************************************************************************
