@@ -77,9 +77,14 @@ CLCloseError:
 		lda 	BasicFileStream
 		jsr 	KNLCloseFile
 		pla
-		;
-		;		Handle error, file never opened, file handling stuff.
-		;
+
+; ************************************************************************************************
+;
+;					Handle error A, file never opened, file handling stuff.
+;
+; ************************************************************************************************
+
+
 CLErrorHandler:
 		cmp 	#KERR_NOTFOUND
 		beq 	_CLEHNotFound

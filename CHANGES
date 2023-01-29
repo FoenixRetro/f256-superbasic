@@ -188,7 +188,8 @@ Release 31 (18/01/23):
 
 Release 32: (28/01/23):
 
-	CHG: CLEAR is no longer a seperate command.
+	CHG: CLEAR is no longer a seperate command (variables are still cleared etc on run and so on.)
 	CHG: XLOAD and XGO now check the line numbers are in order as they do an append not a normal edit
 		 (using normal edit doubles the load time)
-	CHG: OpenStructure error no longer displays weird line number.		
+	CHG: OpenStructure error no longer displays weird line number.
+	CHG: BSave and BLoad functionality now in their own subroutines for being trappable.

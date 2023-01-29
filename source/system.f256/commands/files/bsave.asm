@@ -19,6 +19,20 @@
 		.section code
 
 Command_BSave: ;; [BSAVE]
+		jsr 	BSaveHandler
+		cmp 	#0
+		bne 	_BSError
+		rts
+_BSError:		
+		jmp 	CLErrorHandler
+
+; ************************************************************************************************
+;
+;							BSAVE code ; returns A = 0 or error
+;
+; ************************************************************************************************
+
+BSaveHandler:
 		ldx 	#0
 		jsr 	EvaluateString 				; file name to load
 		jsr 	CheckComma 					; consume comma
@@ -34,7 +48,7 @@ Command_BSave: ;; [BSAVE]
 		lda 	NSMantissa0					; file name -> XA
 		ldx 	NSMantissa1
 		jsr 	KNLOpenFileWrite 			; open file for reading
-		bcs 	CBSErrorHandler 			; error, so fail.
+		bcs 	_BSErrorExit 				; error, so fail.
 		sta 	BasicFileStream 			; save the reading stream.
 
 		;
@@ -83,11 +97,22 @@ _BSFileComplete:
 		jsr 	BLClosePhysicalMemory 		; close the access.
 		lda 	BasicFileStream 			; close the file
 		jsr 	KNLCloseFile
+		lda 	#0
 		ply
 		rts
+		;
+		;		Handle error, file never opened, file handling stuff.
+		;
+_BSErrorExit:
+		ply
+		rts
+
+; ************************************************************************************************
 ;
-;		Flush Buffer to file.
+;									Flush Buffer to file.
 ;		
+; ************************************************************************************************
+
 BSFlushBuffer:
 		cpx 	#0 							; buffer empty ?
 		beq 	_BSFBExit 					; if so, exit.
@@ -99,22 +124,6 @@ BSFlushBuffer:
 		ldx 	#0 							; buffer is empty.
 _BSFBExit:		
 		rts
-
-		;
-		;		Close file and handle error
-		;
-CBSSCloseError:
-		pha
-		jsr 	BLClosePhysicalMemory 	
-		lda 	BasicFileStream
-		jsr 	KNLCloseFile
-		pla
-		;
-		;		Handle error, file never opened, file handling stuff.
-		;
-CBSErrorHandler:
-		jmp 	CLErrorHandler
-
 
 		.send code
 

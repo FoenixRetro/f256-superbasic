@@ -19,6 +19,20 @@
 		.section code
 
 Command_BLoad: ;; [BLOAD]
+		jsr 	BLOADHandler
+		cmp 	#0
+		bne 	_BLError
+		rts
+_BLError:		
+		jmp 	CLErrorHandler
+
+; ************************************************************************************************
+;
+;							BLOAD code ; returns A = 0 or error
+;
+; ************************************************************************************************
+
+BLOADHandler:
 		ldx 	#0
 		jsr 	EvaluateString 				; file name to load
 		jsr 	CheckComma 					; consume comma
@@ -31,7 +45,7 @@ Command_BLoad: ;; [BLOAD]
 		lda 	NSMantissa0					; file name -> XA
 		ldx 	NSMantissa1
 		jsr 	KNLOpenFileRead 			; open file for reading
-		bcs 	CBLErrorHandler 			; error, so fail.
+		bcs 	_BLErrorExit 				; error, so fail.
 		sta 	BasicFileStream 			; save the reading stream.
 		;
 		;		Open memory for access
@@ -50,7 +64,8 @@ _BLReadFile:
 		cmp 	#0 							; read nothing.
 		beq 	_BLReadFile
 		sta 	BLCopyCounter 				; counter.
-
+		;
+		;		Have a data chunk, copy to target
 		;
 		ldy 	BLYOffset 					; copy the buffer out here
 		ldx 	#0 							; offset in buffer.
@@ -66,29 +81,30 @@ _BLNoAdjust:
 		bne 	_BLCopyLoop
 		sty 	BLYOffset 					; update Y offset
 		bra 	_BLReadFile 				; go ask for more.
-
+		;
+		;		Error occurs. Check if EOF which means the file is loaded.
+		;
 _BLFileError:
 		cmp 	#KERR_EOF 					; End of file
-		bne 	CBLErrorHandler				; no, it's an actual error
+		bne 	_BLErrorHandler				; no, it's an actual error
 		jsr 	BLClosePhysicalMemory 		; close the access.
 		lda 	BasicFileStream 			; close the file
 		jsr 	KNLCloseFile
+		lda 	#0 							; and return zero.
 		ply
 		rts
 		;
 		;		Close file and handle error
 		;
-CBLCloseError:
-		pha
-		jsr 	BLClosePhysicalMemory 	
-		lda 	BasicFileStream
+_BLErrorHandler:
+		pha 								; save code
+		jsr 	BLClosePhysicalMemory 		; close access
+		lda 	BasicFileStream 			; close the open file
 		jsr 	KNLCloseFile
-		pla
-		;
-		;		Handle error, file never opened, file handling stuff.
-		;
-CBLErrorHandler:
-		jmp 	CLErrorHandler
+		pla 								; get error code
+_BLErrorExit:		
+		ply 								; restore position and exit.
+		rts
 
 ; ************************************************************************************************
 ;
@@ -171,5 +187,6 @@ BLCopyCounter: 								; count of bytes to output.
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		29/01/23 		BLOAD is now stand alone, returning A = 0 or error code.
 ;
 ; ************************************************************************************************
