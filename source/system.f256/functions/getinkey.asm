@@ -22,11 +22,7 @@ AscGet: ;; [get(]
 		plx 								; restore stack pos
 AscGet2:		
 		jsr 	CheckRightBracket
-_AGKey:	jsr 	ProcessEvents 				; any ongoing events.
-		bne 	_AGBreak
-		jsr 	PopKeyboardQueue 			; wait for key.
-		cmp 	#0
-		beq 	_AGKey
+		jsr 	KNLGetSingleCharacter	
 		jsr 	NSMSetByte 					
 		rts
 _AGBreak:
@@ -42,7 +38,7 @@ AscInkey: ;; [inkey(]
 		plx 								; restore stack pos
 AscInkey2:	
 		jsr 	CheckRightBracket
-		jsr 	PopKeyboardQueue 			; get key if any, non returns zero.
+		jsr 	KNLGetKeyPressed
 		jsr 	NSMSetByte 					
 		rts
 

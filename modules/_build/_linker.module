@@ -21,13 +21,6 @@ EXTInitialise:
 	dec 8+5
 	plp
 	rts
-EXTInputLine:
-	inc 8+5
-	jsr	Export_EXTInputLine
-	php
-	dec 8+5
-	plp
-	rts
 	.endif
 	.if graphicsIntegrated == 1
 GXGraphicDraw:

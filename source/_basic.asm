@@ -17,6 +17,7 @@
 
 	.include	"./common/aa.system/00start.asm"
 	.include	"./system.f256/ab.system/events.asm"
+	.include	"./system.f256/ab.system/input.asm"
 	.include	"./system.f256/ab.system/ticktask.asm"
 	.include	"./system.f256/ab.system/trackio.asm"
 	.include	"./system.f256/ab.system/wrapper.asm"

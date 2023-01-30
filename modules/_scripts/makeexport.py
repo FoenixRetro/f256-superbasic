@@ -14,7 +14,7 @@ import os,sys,re
 paging = True
 
 exports = {}
-exports["hardware"] = 	[ "EXTPrintCharacter","EXTPrintNoControl","EXTInitialise","EXTInputLine" ]
+exports["hardware"] = 	[ "EXTPrintCharacter","EXTPrintNoControl","EXTInitialise"]
 exports["graphics"] = 	[ "GXGraphicDraw" ]
 exports["sound"] = 		[ "SNDCommand","SNDUpdate"]
 exports["tokeniser"] = 	[ "TKListConvertLine","TKTokeniseLine" ]

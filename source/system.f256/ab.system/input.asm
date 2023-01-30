@@ -16,11 +16,9 @@
 ;
 ;									Input line into lineBuffer
 ;
-;		This can use ExtInputSingleCharacter *or* $FFCF, the screen editor or similar.
-;
 ; ************************************************************************************************
 
-Export_EXTInputLine:
+EXTInputLine:
 		pha
 		phx
 		phy
@@ -48,7 +46,7 @@ _EILLoop:
 		jsr 	EXTILInsert 				; insert in colour screen
 		pla 								; get character back.
 _EILPrintLoop:		
-		jsr 	PAGEDPrintCharacter
+		jsr 	EXTPrintCharacter
 		bra 	_EILLoop
 		rts
 		;
@@ -58,7 +56,7 @@ _EILBackspace:
 		lda 	EXTColumn					; can we backspace ?
 		beq 	_EILLoop
 		lda 	#2 							; move cursor left
-		jsr 	PAGEDPrintCharacter
+		jsr 	EXTPrintCharacter
 _EILDelete		
 		;
 		lda 	#2 							; text block
@@ -98,7 +96,7 @@ _EILEndTrim:
 		lda 	#0 							; trim here.
 		sta 	lineBuffer,y		
 		lda 	#13 						; echo the RETURN
-		jsr 	PAGEDPrintCharacter
+		jsr 	EXTPrintCharacter
 		pla 								; reset I/O page
 		sta 	1
 
@@ -156,5 +154,6 @@ _EXTIExit:
 ;		27/11/22 		Added Ctrl+D Delete at character
 ;		22/12/22 		When trimming if first character was non-space got erased so deleting
 ;						lines 1-9 did not work.
+;		30/01/23 		Moved out of hardware module into normal space.
 ;
 ; ************************************************************************************************

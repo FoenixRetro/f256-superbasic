@@ -9,3 +9,7 @@ Progress:
 Ongoing:
 	Code reading.
 	Continue documentation.	
+
+ROM1 (Normal)  	: $B316
+ROM2 (Modules) 	: $B7D4
+ROM3 (Data) 	: $A7F6

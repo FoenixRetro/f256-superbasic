@@ -193,3 +193,6 @@ Release 32: (28/01/23):
 		 (using normal edit doubles the load time)
 	CHG: OpenStructure error no longer displays weird line number.
 	CHG: BSave and BLoad functionality now in their own subroutines for being trappable.
+	CHG: EXTInputLine is now in the main code area.
+	BUG: Sound queue not processed on keyboard input in various forms.
+	

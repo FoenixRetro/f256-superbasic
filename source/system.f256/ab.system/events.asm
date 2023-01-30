@@ -87,6 +87,7 @@ _PKQExit:
 ; ************************************************************************************************
 
 KNLGetKeyPressed:
+		.tickcheck TickHandler  			; if time elapsed call the tick handler.
 		lda 	KeyboardQueueEntries 		; something in the queue
 		bne 	PopKeyboardQueue 			; if so, pop and return it
 		jsr 	ProcessEvents 				; process any outstanding events

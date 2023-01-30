@@ -19,11 +19,13 @@
 ; ************************************************************************************************
 
 TickHandler:
+		phx
 		phy 								; need to preserve Y
 		.if 	soundIntegrated==1 			; if F256 sound module
 		jsr 	SNDUpdate 					; update sound
 		.endif
 		ply
+		plx
 		rts
 
 		.send 		code
