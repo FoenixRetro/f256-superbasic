@@ -123,12 +123,12 @@ PMKAdd: 									; add A to Value.W,X
 		inc 	GNEBegin+1,x
 		bra 	PMKExit
 PMKSubtract: 								; sub A from Value.W,X
-		sec
-		eor 	#$FF
+		clc
 		adc 	GNEBegin,x
 		sta 	GNEBegin,x
-		bcs 	PMKExit
-		dec 	GNEBegin+1,x
+		lda 	GNEBegin+1,x
+		adc 	#$FF
+		sta 	GNEBegin+1,x
 PMKExit:
 		inx 								; next slot ?		
 		inx		
