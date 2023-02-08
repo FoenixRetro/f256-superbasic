@@ -58,7 +58,7 @@ class TokenSource(object):
 				save		verify		drive 		dir 		bload
 				bsave		himem 		input 		cls 		gosub 		
 				return 		print 		cprint 		goto 		dos
-				mouse
+				mouse 		mdelta
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	

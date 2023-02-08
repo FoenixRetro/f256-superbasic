@@ -1,1 +1,1 @@
-10 while 0 ÿÿÿÿ
+10 cls:bitmap on:bitmap clear 020 mouse x,y,z,a,b,c30 line 0,0 colour 255 to x,y40 goto 20ÿÿÿÿ

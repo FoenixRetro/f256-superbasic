@@ -512,6 +512,13 @@ Returns the largest or smallest of the parameters, there can be any number of th
 	100 print max(3,42,5)
 \end{verbatim}
 
+\section*{mdelta}
+Gets the current delta status of the PS/2 mouse. 6 reference parameters (normally integer variables) are provided. These provide the cumulative mouse changes in the x,y,z axes, and the number of times the left, middle and right buttons have been pressed.
+\example{}
+\begin{verbatim}
+	100 mdelta dx,dy,dz,lmb,mmb,rmb
+\end{verbatim}
+
 \section*{memcopy}
 This command is an interface to the F256 Junior's DMA hardware. A MEMCOPY command has several formats. 
 The first in line 100 is a straight linear copy of memory from \$10000 to \$18000 of length \$4000. The second in line 110 is a linear fill from \$10000 , to \$4000 bytes on, with the byte value \$F7
@@ -534,10 +541,10 @@ Returns a subsegment of a string, given the start position (first character is 1
 \end{verbatim}
 
 \section*{mouse}
-Gets the current status of the PS/2 mouse. 6 reference parameters (normally integer variables) are provided. These provide the cumulative mouse changes in the x,y,z axes, and the number of times the left, middle and right buttons have been pressed.
+Gets the current status of the PS/2 mouse. 6 reference parameters (normally integer variables) are provided. These provide the current mouse position in the x,y,z axes, and the status of times the left, middle and right buttons.
 \example{}
 \begin{verbatim}
-	100 mouse dx,dy,dz,lmb,mmb,rmb
+	100 mouse x,y,z,isx,isy,isz
 \end{verbatim}
 
 \section*{new}

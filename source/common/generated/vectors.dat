@@ -182,23 +182,24 @@ VectorSet1:
 	.word	Command_Input                    ; $93 INPUT
 	.word	Command_List                     ; $94 LIST
 	.word	Command_Load                     ; $95 LOAD
-	.word	MouseStatus                      ; $96 MOUSE
-	.word	NewCommand                       ; $97 NEW
-	.word	PingCommand                      ; $98 PING
-	.word	Command_Print                    ; $99 PRINT
-	.word	Command_Restore                  ; $9a RESTORE
-	.word	Command_RETURN                   ; $9b RETURN
-	.word	CommandRUNOptLoad                ; $9c RUN
-	.word	Command_Save                     ; $9d SAVE
-	.word	CommandSetDate                   ; $9e SETDATE
-	.word	CommandSetTime                   ; $9f SETTIME
-	.word	ShootCommand                     ; $a0 SHOOT
-	.word	SpritesCtrl                      ; $a1 SPRITES
-	.word	StopCommand                      ; $a2 STOP
-	.word	Command_VERIFY                   ; $a3 VERIFY
-	.word	XGoCommand                       ; $a4 XGO
-	.word	XLoadCommand                     ; $a5 XLOAD
-	.word	ZapCommand                       ; $a6 ZAP
+	.word	MouseDeltaStatus                 ; $96 MDELTA
+	.word	MouseStatus                      ; $97 MOUSE
+	.word	NewCommand                       ; $98 NEW
+	.word	PingCommand                      ; $99 PING
+	.word	Command_Print                    ; $9a PRINT
+	.word	Command_Restore                  ; $9b RESTORE
+	.word	Command_RETURN                   ; $9c RETURN
+	.word	CommandRUNOptLoad                ; $9d RUN
+	.word	Command_Save                     ; $9e SAVE
+	.word	CommandSetDate                   ; $9f SETDATE
+	.word	CommandSetTime                   ; $a0 SETTIME
+	.word	ShootCommand                     ; $a1 SHOOT
+	.word	SpritesCtrl                      ; $a2 SPRITES
+	.word	StopCommand                      ; $a3 STOP
+	.word	Command_VERIFY                   ; $a4 VERIFY
+	.word	XGoCommand                       ; $a5 XGO
+	.word	XLoadCommand                     ; $a6 XLOAD
+	.word	ZapCommand                       ; $a7 ZAP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

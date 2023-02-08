@@ -125,23 +125,24 @@ KeywordSet1:
 	.text	5,$90,"INPUT"          ; $93 INPUT
 	.text	4,$3c,"LIST"           ; $94 LIST
 	.text	4,$20,"LOAD"           ; $95 LOAD
-	.text	5,$89,"MOUSE"          ; $96 MOUSE
-	.text	3,$ea,"NEW"            ; $97 NEW
-	.text	4,$2e,"PING"           ; $98 PING
-	.text	5,$8d,"PRINT"          ; $99 PRINT
-	.text	7,$24,"RESTORE"        ; $9a RESTORE
-	.text	6,$e0,"RETURN"         ; $9b RETURN
-	.text	3,$f5,"RUN"            ; $9c RUN
-	.text	4,$2f,"SAVE"           ; $9d SAVE
-	.text	7,$0a,"SETDATE"        ; $9e SETDATE
-	.text	7,$1b,"SETTIME"        ; $9f SETTIME
-	.text	5,$8d,"SHOOT"          ; $a0 SHOOT
-	.text	7,$2a,"SPRITES"        ; $a1 SPRITES
-	.text	4,$46,"STOP"           ; $a2 STOP
-	.text	6,$d5,"VERIFY"         ; $a3 VERIFY
-	.text	3,$ee,"XGO"            ; $a4 XGO
-	.text	5,$78,"XLOAD"          ; $a5 XLOAD
-	.text	3,$eb,"ZAP"            ; $a6 ZAP
+	.text	6,$b7,"MDELTA"         ; $96 MDELTA
+	.text	5,$89,"MOUSE"          ; $97 MOUSE
+	.text	3,$ea,"NEW"            ; $98 NEW
+	.text	4,$2e,"PING"           ; $99 PING
+	.text	5,$8d,"PRINT"          ; $9a PRINT
+	.text	7,$24,"RESTORE"        ; $9b RESTORE
+	.text	6,$e0,"RETURN"         ; $9c RETURN
+	.text	3,$f5,"RUN"            ; $9d RUN
+	.text	4,$2f,"SAVE"           ; $9e SAVE
+	.text	7,$0a,"SETDATE"        ; $9f SETDATE
+	.text	7,$1b,"SETTIME"        ; $a0 SETTIME
+	.text	5,$8d,"SHOOT"          ; $a1 SHOOT
+	.text	7,$2a,"SPRITES"        ; $a2 SPRITES
+	.text	4,$46,"STOP"           ; $a3 STOP
+	.text	6,$d5,"VERIFY"         ; $a4 VERIFY
+	.text	3,$ee,"XGO"            ; $a5 XGO
+	.text	5,$78,"XLOAD"          ; $a6 XLOAD
+	.text	3,$eb,"ZAP"            ; $a7 ZAP
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF

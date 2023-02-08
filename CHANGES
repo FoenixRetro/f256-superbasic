@@ -196,3 +196,4 @@ Release 32: (28/01/23):
 	CHG: EXTInputLine is now in the main code area.
 	BUG: Sound queue not processed on keyboard input in various forms.
 	BUG: Fixed Mouse negatives counting.
+	CHG: MOUSE command changed to MDELTA, added new MOUSE command.

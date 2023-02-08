@@ -83,11 +83,22 @@ _GNEExit:
 ProcessMouseDeltaEvent:
 		ldx 	#MouseDeltaX-GNEBegin
 		lda 	KNLEvent.mouse.delta.x
+		jsr 	PMKAdjustTotal
 		jsr 	PMKAddSubtract
 		lda 	KNLEvent.mouse.delta.y
+		jsr 	PMKAdjustTotal
 		jsr 	PMKAddSubtract
 		lda 	KNLEvent.mouse.delta.z
+		jsr 	PMKAdjustTotal
 		jsr 	PMKAddSubtract
+
+		lda 	KNLEvent.mouse.delta.buttons
+		ldx 	#MouseStatusX-GNEBegin
+		jsr 	PMKOutputButton
+		jsr 	PMKOutputButton
+		jsr 	PMKOutputButton
+
+		jsr 	PMKClipMouseCoord
 		rts
 
 ; ************************************************************************************************
@@ -105,6 +116,82 @@ ProcessMouseClickEvent:
 		lda 	KNLEvent.mouse.clicks.outer
 		jsr 	PMKAdd
 		rts
+
+; ************************************************************************************************
+;
+;						 Output bit in LSB of A as button status
+;
+; ************************************************************************************************
+
+PMKOutputButton:
+		stz 	GNEBegin,x 					; button to zero
+		stz 	GNEBegin+1,x
+		ror 	a 							; shift LSB into carry
+		bcc 	_PMKOBExit
+		dec 	GNEBegin,x 					; if set then set to -1
+		dec 	GNEBegin+1,x
+_PMKOBExit:
+		inx  								; next button
+		inx
+		rts
+
+; ************************************************************************************************
+;
+;							Adjust the totals final position by A
+;
+; ************************************************************************************************
+
+PMKAdjustTotal:
+		pha 								; save offset A index X
+		phx
+
+		pha 								; point X to the position
+		txa
+		clc
+		adc 	#MousePosX-MouseDeltaX
+		tax
+		pla
+
+		jsr 	PMKAddSubtract 				; reuse the addition code.
+
+		plx 								; restore XA
+		pla
+		rts
+
+; ************************************************************************************************
+;
+;									Clip mouse position to screen
+;
+; ************************************************************************************************
+
+PMKClipMouseCoord:
+		ldx 	#0
+_PCMCLoop:
+		lda 	MousePosX+1,x 				; check if -ve
+		bpl 	_PCMCNotNeg
+		stz 	MousePosX,x 				; if so zero position.
+		stz 	MousePosX+1,x
+_PCMCNotNeg:
+		lda 	MousePosX,x 				; compare pos vs extent
+		cmp 	_PCMCExtent,x
+		lda 	MousePosX+1,x
+		sbc 	_PCMCExtent+1,x
+		bcc 	_PCMCNotOver 				; in range ?
+
+		lda 	_PCMCExtent,x 				; no, set to X limit.
+		sta 	MousePosX,x
+		lda 	_PCMCExtent+1,x
+		sta 	MousePosX+1,x
+_PCMCNotOver:
+
+		inx
+		inx
+		cpx 	#3*2
+		bne 	_PCMCLoop
+		rts		
+
+_PCMCExtent: 								; extents of the three
+		.word 	319,239,255
 
 ; ************************************************************************************************
 ;
@@ -210,24 +297,43 @@ _KCCADone:
 		.section storage
 GNEBegin:
 
+CMDMouseFlag: 								; $FF if mouse, $00 if mdelta.
+		.fill 	1
+
 KeyStatus: 									; 8 x 32 = 256 bits, keyboard status.
 		.fill 	32
 KeyMaskTemp:
 		.fill 	1
 KeyJoystick:
 		.fill 	1		
+
 MouseDeltaX: 								; mouse Deltas
 		.fill 	2
 MouseDeltaY:
 		.fill 	2				
 MouseDeltaZ:
-		.fill 	2				
-MouseCountInner: 							; mouse buttons (L M B)
+		.fill 	2	
+
+MouseCountInner: 							; mouse buttons (L M B) click count
 		.fill 	2 
 MouseCountMiddle:
 		.fill 	2		
 MouseCountOuter:
 		.fill 	2				
+
+MousePosX: 									; mouse positions.
+		.fill 	2	
+MousePosY:
+		.fill 	2	
+MousePosZ:
+		.fill 	2	
+
+MouseStatusX: 								; mouse (L M B) status.
+		.fill 	2	
+MouseStatusY:
+		.fill 	2	
+MouseStatusZ:
+		.fill 	2	
 GNEEnd:
 
 		.send storage       

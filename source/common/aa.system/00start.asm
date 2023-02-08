@@ -107,6 +107,8 @@ _NoMachineCode:
 		.tickinitialise 					; initialise tick handler
 											; (mandatory)
 
+		jsr 	ResetIOTracking 			; reset the I/O tracking.
+
 		jsr 	NewProgram 					; erase current program
 
 		.if 	AUTORUN==1 					; run straight off
