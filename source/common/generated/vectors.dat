@@ -196,10 +196,11 @@ VectorSet1:
 	.word	ShootCommand                     ; $a1 SHOOT
 	.word	SpritesCtrl                      ; $a2 SPRITES
 	.word	StopCommand                      ; $a3 STOP
-	.word	Command_VERIFY                   ; $a4 VERIFY
-	.word	XGoCommand                       ; $a5 XGO
-	.word	XLoadCommand                     ; $a6 XLOAD
-	.word	ZapCommand                       ; $a7 ZAP
+	.word	Command_Try                      ; $a4 TRY
+	.word	Command_VERIFY                   ; $a5 VERIFY
+	.word	XGoCommand                       ; $a6 XGO
+	.word	XLoadCommand                     ; $a7 XLOAD
+	.word	ZapCommand                       ; $a8 ZAP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

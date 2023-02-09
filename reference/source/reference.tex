@@ -775,6 +775,14 @@ Returns the current value of the 70Hz Frame timer, which will wrap round in a co
 	100 print timer()
 \end{verbatim}
 
+\section*{try}
+Tries to execute a command, usually involving the Kernel, returning an error code if it fails or 0 if successful. Currently supports BLOAD and BSAVE.
+\example{}
+\begin{verbatim}
+	100 try bload "myfile",$10000 to ec
+	110 print ec
+\end{verbatim}
+
 \section*{val()}
 Converts a number to a string. There must be some number there e.g. “-42xxx” works and returns 42 but “xxx” returns an error.  To make it useable use the function isval() which checks to see if it is valid.
 \example{}

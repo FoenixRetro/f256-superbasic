@@ -41,6 +41,7 @@ BSaveHandler:
 		jsr 	CheckComma 					; consume comma
 		inx 							
 		jsr 	EvaluateInteger 			; data length (3 bytes only)
+		
 		phy
 		;
 		;		Try to open the file.

@@ -2,6 +2,8 @@
 ;	This is automatically generated.
 ;
 KWC_EOL = $80
+KWC_SHIFT1 = $81
+KWC_SHIFT2 = $82
 KWC_STRING = $FF
 KWC_HEXCONST = $FE
 KWC_FIRST_STRUCTURE = $ad

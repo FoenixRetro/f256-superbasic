@@ -58,7 +58,7 @@ class TokenSource(object):
 				save		verify		drive 		dir 		bload
 				bsave		himem 		input 		cls 		gosub 		
 				return 		print 		cprint 		goto 		dos
-				mouse 		mdelta
+				mouse 		mdelta 		try
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	
@@ -237,7 +237,7 @@ class TokenCollection(object):
 			if t.getSet() == set:
 				name = "" if t.getName().startswith("!") else t.getName()
 				if (t.getID() >= 131 or t.getID() < 64) and t.getID() != 31 and t.getID() != 32:
-					h.write("KWD_{0:32} = ${1:02x}; ${1:02x} {2}\n".format(self.processName(t.getName()),t.getID(),t.getName()))
+					h.write("KWD{3}_{0:32} = ${1:02x}; ${1:02x} {2}\n".format(self.processName(t.getName()),t.getID(),t.getName(),"" if set <= 0 else set))
 	#
 	#		Dump precedence table
 	#
@@ -269,10 +269,12 @@ class TokenCollection(object):
 		#s = s.replace("","").replace("","").replace("","").replace("","").replace("","")
 		return s 
 	#
-	#		Dump group 0 info
+	#		Dump group info
 	#
 	def group0Info(self,h1):
 		h1.write("KWC_EOL = $80\n")
+		h1.write("KWC_SHIFT1 = $81\n")
+		h1.write("KWC_SHIFT2 = $82\n")
 		h1.write("KWC_STRING = $FF\n")
 		h1.write("KWC_HEXCONST = $FE\n")
 		lowInc = 999
@@ -327,7 +329,7 @@ if __name__ == "__main__":
 
 	h2 = open("common/generated/kwdconst.inc","w")
 	h2.write(note)
-	for i in range(-1,1):
+	for i in range(-1,2):
 		t.dumpGroupConstants(i,h2)
 	h2.close()
 

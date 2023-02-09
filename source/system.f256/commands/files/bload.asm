@@ -38,6 +38,7 @@ BLOADHandler:
 		jsr 	CheckComma 					; consume comma
 		inx 							
 		jsr 	EvaluateInteger 			; load address (full physical address)
+
 		phy
 		;
 		;		Try to open the file.

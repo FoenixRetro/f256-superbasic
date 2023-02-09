@@ -45,6 +45,7 @@
 	.include	"./system.f256/commands/files/drive.asm"
 	.include	"./system.f256/commands/files/load.asm"
 	.include	"./system.f256/commands/files/save.asm"
+	.include	"./system.f256/commands/files/try.asm"
 	.include	"./system.f256/commands/files/verify.asm"
 	.include	"./common/commands/for.asm"
 	.include	"./common/commands/gosub.asm"

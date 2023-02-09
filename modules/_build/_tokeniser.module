@@ -139,10 +139,11 @@ KeywordSet1:
 	.text	5,$8d,"SHOOT"          ; $a1 SHOOT
 	.text	7,$2a,"SPRITES"        ; $a2 SPRITES
 	.text	4,$46,"STOP"           ; $a3 STOP
-	.text	6,$d5,"VERIFY"         ; $a4 VERIFY
-	.text	3,$ee,"XGO"            ; $a5 XGO
-	.text	5,$78,"XLOAD"          ; $a6 XLOAD
-	.text	3,$eb,"ZAP"            ; $a7 ZAP
+	.text	3,$ff,"TRY"            ; $a4 TRY
+	.text	6,$d5,"VERIFY"         ; $a5 VERIFY
+	.text	3,$ee,"XGO"            ; $a6 XGO
+	.text	5,$78,"XLOAD"          ; $a7 XLOAD
+	.text	3,$eb,"ZAP"            ; $a8 ZAP
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF
