@@ -4,7 +4,7 @@
 ;		Name:		aa.data.asm
 ;		Purpose:	Data use for Graphics
 ;		Created:	6th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	9th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -14,7 +14,7 @@
 ;
 GXMappingPage = 3
 ;
-;		Address of that page
+;		Address of that page in 6502 space.
 ;
 GXMappingAddress = ($2000 * GXMappingPage)
 ;
@@ -38,6 +38,7 @@ gxzTemp2 = zTemp2
 gxzScreen = zsTemp
 ;
 ;		Buffer for pixel data. Needs to be 32 pixels minimum. (Reusing number conversion buffer)
+;		When rendering character or sprite, this is used to do a line at a time.
 ;
 gxPixelBuffer = numberBuffer
 .else
@@ -53,6 +54,17 @@ plotpixel .macro
 		and 	gxANDValue
 		eor 	gxEORValue
 		.endm
+
+; ************************************************************************************************
+;											DRAWING MODES
+; ************************************************************************************************
+;
+;		Mode 0: AND 0 EOR Colour 				Sets Colour
+;		Mode 1: AND $FF EOR Colour 				Exclusive Or Colour
+; 		Mode 2: And Colour:EOR 0 				AND with Colour.
+;		Mode 3: AND ~Colour EOR Colour 			Or Colour
+;
+; ************************************************************************************************
 
 		.section storage
 

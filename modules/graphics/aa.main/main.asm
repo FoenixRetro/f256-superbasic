@@ -4,7 +4,7 @@
 ;		Name:		main.asm
 ;		Purpose:	Graphics main entry point.
 ;		Created:	6th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	9th February 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -19,8 +19,8 @@
 ; ************************************************************************************************
 
 Export_GXGraphicDraw:
-		cmp 	#GCMD_Move					; low instructions don't use coordinates
-		bcs 	_GDCoordinate
+		cmp 	#GCMD_Move					; low value instructions don't use coordinates
+		bcs 	_GDCoordinate 				; (see graphics.txt)
 		;
 		;		Non coordinate functions
 		;
@@ -41,9 +41,13 @@ _GDCopy1:
 		dex
 		bpl 	_GDCopy1
 		;
-		pla 								; update Y
+		;		Update Y
+		;
+		pla 								
 		sta 	gxCurrentY
 		stz 	gxCurrentY+1
+		;
+		;		Update X, which uses a bit from A.
 		;
 		pla
 		sta 	gxCurrentX
@@ -51,6 +55,9 @@ _GDCopy1:
 		pha
 		and 	#1 							; put LSB as MSB of Current.X
 		sta 	gxCurrentX+1
+		;
+		;		Check if we are clipping X,Y (everything except sprite move)
+		;
 		pla 								; get command back
 		and 	#$FE 						; lose LSB, chuck the stray X bit
 		pha 								; push back.
@@ -73,7 +80,9 @@ _GDError1:
 _GDError2:
 		sec
 		rts
-
+		;
+		;		Copy the sprite current/last to the work area where we can manipulate it.
+		;
 _GDCopyToWorkArea:
 		;
 		ldx 	#7 							; copy current and last to gxXY/12 work area
@@ -87,9 +96,9 @@ _GDCopy2:
 		;
 		pla 								; get command
 _GDExecuteA:
-		cmp 	#GRFirstFreeCode*2 			; bad ?
+		cmp 	#GRFirstFreeCode*2 			; bad command ?
 		bcs 	_GDError2
-		tax
+		tax 								; go execute the command.
 		jmp 	(GRVectorTable,x)
 
 GXMove: ;; <32:Move>
@@ -121,4 +130,4 @@ GRUndefined:
 ;		Date			Notes
 ;		==== 			=====
 ;
-; ************************************************************************************************
+; ************************************************************************************************	

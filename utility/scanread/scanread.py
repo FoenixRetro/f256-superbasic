@@ -35,7 +35,7 @@ def getDate(file,stem):
 		date = date.replace("september","9").replace("october","10").replace("november","11").replace("december","12")
 		date = date.replace("th","").replace("st","").replace("nd","").replace("rd","")
 		m = re.match("^\\s*(\\d+)\\s*(\\d+)\\s*(\\d+)\\s*$",date.strip())
-		assert m is not None,"Bad date "+date
+		assert m is not None,"Bad date "+date+" "+file
 		return int("{0:04}{1:02}{2:02}".format(int(m.group(3)),int(m.group(2)),int(m.group(1))))
 	return 0
 

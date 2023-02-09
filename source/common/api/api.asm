@@ -17,7 +17,7 @@ ReadData    .fill   4   ; Copy primary bulk event data into user-space
 ReadExt     .fill   4   ; Copy secondary bolk event data into user-space
 Yield       .fill   4   ; Give unused time to the kernel.
 Putch       .fill   4   ; deprecated
-Basic       .fill   4   ; deprecated
+RunBlock    .fill   4   ; Chain to resident program by block ID.
 RunNamed    .fill   4   ; Chain to resident program by name.
             .fill   4   ; reserved
 
@@ -55,10 +55,37 @@ Directory   .namespace
 Open        .fill   4   ; Open a directory for reading.
 Read        .fill   4   ; Read a directory entry; may also return VOLUME and FREE events.
 Close       .fill   4   ; Close a directory once finished reading.
+MkDir       .fill   4
+RmDir       .fill   4
             .endn
             
             .fill   4   ; call gate
 
+Net         .namespace  ; These are changing!
+GetIP       .fill   4   ; Get the local IP address.
+SetIP       .fill   4   ; Set the local IP address.
+GetDNS      .fill   4   ; Get the configured DNS IP address.
+SetDNS      .fill   4   ; Set the configured DNS IP address.
+SendICMP    .fill   4
+
+UDP         .namespace
+Init        .fill   4
+Send        .fill   4
+Recv        .fill   4
+            .endn
+
+TCP         .namespace
+Open        .fill   4
+Match       .fill   4
+Accept      .fill   4
+Reject      .fill   4
+Send        .fill   4
+Recv        .fill   4
+Close       .fill   4
+            .endn
+
+            .endn
+            
 Display     .namespace
 Reset       .fill   4   ; Re-init the display
 GetSize     .fill   4   ; Returns rows/cols in kernel args.
@@ -67,27 +94,12 @@ DrawColumn  .fill   4   ; Draw text/color buffers top-to-bottom
             .endn
 
 Config      .namespace
-GetIP       .fill   4   ; Get the local IP address.
-SetIP       .fill   4   ; Set the local IP address.
-GetDNS      .fill   4   ; Get the configured DNS IP address.
-SetDNS      .fill   4   ; Set the configured DNS IP address.
 GetTime     .fill   4
 SetTime     .fill   4
 GetSysInfo  .fill   4
 SetBPS      .fill   4   ; Set the serial BPS (should match the SLIP router's speed).
             .endn
 
-Net         .namespace  ; These are changing!
-InitUDP     .fill   4
-SendUDP     .fill   4
-RecvUDP     .fill   4
-InitTCP     .fill   4
-SendTCP     .fill   4
-RecvTCP     .fill   4
-SendICMP    .fill   4
-RecvICMP    .fill   4
-            .endn
-            
             .endv            
 
 ; Kernel Call Arguments
@@ -103,6 +115,7 @@ args_t      .struct
 events      .dstruct    event_t ; The GetNextEvent dest address is globally reserved.
 
             .union
+run         .dstruct    run_t
 recv        .dstruct    recv_t
 fs          .dstruct    fs_t
 file        .dstruct    file_t
@@ -128,6 +141,11 @@ end         .ends
 recv_t      .struct
 buf         = args.buf
 buflen      = args.buflen
+            .ends
+
+          ; Run Calls
+run_t       .struct
+block_id    .byte   ?
             .ends
 
           ; FileSystem Calls
@@ -241,7 +259,7 @@ dest_port   .word       ?
 dest_ip     .fill       4            
             .ends            
             
-           ; Send
+           ; Send / Recv
             .struct
 accepted    .byte       ?            
 buf         = args.ext
@@ -330,6 +348,7 @@ key         .dstruct    kernel.event.key_t
 mouse       .dstruct    kernel.event.mouse_t
 joystick    .dstruct    kernel.event.joystick_t
 udp         .dstruct    kernel.event.udp_t
+tcp         .dstruct    kernel.event.tcp_t
 file        .dstruct    kernel.event.file_t
 directory   .dstruct    kernel.event.dir_t
             .endu
@@ -414,6 +433,10 @@ free        .fill   6   ; blocks used/free
           ; Data in net events (major changes coming)
 udp_t       .struct
 token       .byte   ?   ; TODO: break out into fields
+            .ends
+
+tcp_t       .struct
+len         .byte   ?   ; Raw packet length.
             .ends
 
             .endn

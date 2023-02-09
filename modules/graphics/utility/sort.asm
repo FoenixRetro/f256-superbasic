@@ -4,7 +4,7 @@
 ;		Name:		sort.asm
 ;		Purpose:	Coordinate sorting code
 ;		Created:	6th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	9th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -14,7 +14,7 @@
 
 ; ************************************************************************************************
 ;
-;					 Sort X and Y coordinates - topleft/bottom right
+;			Sort X and Y coordinates - topleft/bottom right - rectangles, circles etc.
 ;
 ; ************************************************************************************************
 
@@ -36,7 +36,7 @@ _GXSXYExit:
 
 ; ************************************************************************************************
 ;
-;							Sort coordinate pairs so Y1 >= Y0
+;			Sort coordinate pairs so Y1 >= Y0, swaps X as well keeping pairs together
 ;
 ; ************************************************************************************************
 
@@ -45,7 +45,7 @@ GXSortY:
 		cmp 	gxY1
 		bcc 	_GXSYSorted
 		;
-		ldx 	#3 							; swap 3-0
+		ldx 	#3 							; swap 3-0 - for lines we want to sort but keep lines together
 		ldy 	#7 							; with 4-7
 _GXSwap1:
 		jsr 	GXSwapXY

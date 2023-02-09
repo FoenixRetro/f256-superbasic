@@ -3,7 +3,7 @@
 ;
 ;		Name:		rnd.asm
 ;		Purpose:	Random number generator
-;		Created:	11th January 2023 (rewrite)
+;		Created:	11th January 2023 
 ;		Reviewed: 	No
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
@@ -117,6 +117,6 @@ URCopyToMantissa:
 ; 		22/11/22 		RND(n) was only generating 0..0.5
 ;		22/11/22 		When setting the exponent and status at the end, was not doing so at
 ;						the current evaluation level.
-;		11/01/23 		Set to use hardware RNG.
+;		11/01/23 		Set to use hardware RNG / almost complete rewrite.
 ;
 ; ************************************************************************************************

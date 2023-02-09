@@ -4,7 +4,7 @@
 ;		Name:		clear.asm
 ;		Purpose:	Clear Screen
 ;		Created:	6th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	9th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -22,14 +22,16 @@ ScreenSize240 = 320 * 240
 ; ************************************************************************************************
 
 GXClearBitmap: ;; <3:Clear>
-		lda 	gxBitmapsOn 				; check BMP running.
+		lda 	gxBitmapsOn 				; check BMP turned on.
 		beq 	_GXCBFail
 		jsr 	GXOpenBitmap 				; start access
-		ldy 	#ScreenSize200 / 8192 		; X is pages to clear
+		ldy 	#ScreenSize200 / 8192 		; X is pages to clear as 2 graphic heights.
 		lda 	gxHeight
 		cmp 	#200 						; 200 ?
-		ldy 	#ScreenSize240 / 8192
+		beq 	_GXCalcLastPage
+		ldy 	#ScreenSize240 / 8192		
 _GXCalcLastPage:
+
 		tya 								; add to base page
 		clc
 		adc 	gxBasePage
@@ -54,9 +56,9 @@ _GXClearBlock:
 ;
 		.set16 	gxzTemp1,GXMappingAddress
 _GXCB0:
-		lda 	gxzTemp0
+		lda 	gxzTemp0 					; clear colour
 		ldy 	#0
-_GXCB1:
+_GXCB1: 									; do 4 chunks at a time, really should DMA this.
 		sta 	(gxzTemp1),y
 		iny
 		sta 	(gxzTemp1),y
@@ -82,5 +84,6 @@ _GXCB1:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		9/2/23 			beq _GXCalcLastPage added as was clearing 240 rows irrespective of height
 ;
 ; ************************************************************************************************

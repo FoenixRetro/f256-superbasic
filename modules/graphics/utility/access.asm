@@ -4,7 +4,7 @@
 ;		Name:		access.asm
 ;		Purpose:	Lock/Unlock bitmap access
 ;		Created:	6th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	9th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************

@@ -82,7 +82,7 @@ GRVectorTable:
 ;		Name:		aa.data.asm
 ;		Purpose:	Data use for Graphics
 ;		Created:	6th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	9th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -92,7 +92,7 @@ GRVectorTable:
 ;
 GXMappingPage = 3
 ;
-;		Address of that page
+;		Address of that page in 6502 space.
 ;
 GXMappingAddress = ($2000 * GXMappingPage)
 ;
@@ -116,6 +116,7 @@ gxzTemp2 = zTemp2
 gxzScreen = zsTemp
 ;
 ;		Buffer for pixel data. Needs to be 32 pixels minimum. (Reusing number conversion buffer)
+;		When rendering character or sprite, this is used to do a line at a time.
 ;
 gxPixelBuffer = numberBuffer
 .else
@@ -131,6 +132,17 @@ plotpixel .macro
 		and 	gxANDValue
 		eor 	gxEORValue
 		.endm
+
+; ************************************************************************************************
+;											DRAWING MODES
+; ************************************************************************************************
+;
+;		Mode 0: AND 0 EOR Colour 				Sets Colour
+;		Mode 1: AND $FF EOR Colour 				Exclusive Or Colour
+; 		Mode 2: And Colour:EOR 0 				AND with Colour.
+;		Mode 3: AND ~Colour EOR Colour 			Or Colour
+;
+; ************************************************************************************************
 
 		.section storage
 
@@ -254,7 +266,7 @@ gxSpriteHigh:
 ;		Name:		main.asm
 ;		Purpose:	Graphics main entry point.
 ;		Created:	6th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	9th February 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -269,8 +281,8 @@ gxSpriteHigh:
 ; ************************************************************************************************
 
 Export_GXGraphicDraw:
-		cmp 	#GCMD_Move					; low instructions don't use coordinates
-		bcs 	_GDCoordinate
+		cmp 	#GCMD_Move					; low value instructions don't use coordinates
+		bcs 	_GDCoordinate 				; (see graphics.txt)
 		;
 		;		Non coordinate functions
 		;
@@ -291,9 +303,13 @@ _GDCopy1:
 		dex
 		bpl 	_GDCopy1
 		;
-		pla 								; update Y
+		;		Update Y
+		;
+		pla
 		sta 	gxCurrentY
 		stz 	gxCurrentY+1
+		;
+		;		Update X, which uses a bit from A.
 		;
 		pla
 		sta 	gxCurrentX
@@ -301,6 +317,9 @@ _GDCopy1:
 		pha
 		and 	#1 							; put LSB as MSB of Current.X
 		sta 	gxCurrentX+1
+		;
+		;		Check if we are clipping X,Y (everything except sprite move)
+		;
 		pla 								; get command back
 		and 	#$FE 						; lose LSB, chuck the stray X bit
 		pha 								; push back.
@@ -323,7 +342,9 @@ _GDError1:
 _GDError2:
 		sec
 		rts
-
+		;
+		;		Copy the sprite current/last to the work area where we can manipulate it.
+		;
 _GDCopyToWorkArea:
 		;
 		ldx 	#7 							; copy current and last to gxXY/12 work area
@@ -337,9 +358,9 @@ _GDCopy2:
 		;
 		pla 								; get command
 _GDExecuteA:
-		cmp 	#GRFirstFreeCode*2 			; bad ?
+		cmp 	#GRFirstFreeCode*2 			; bad command ?
 		bcs 	_GDError2
-		tax
+		tax 								; go execute the command.
 		jmp 	(GRVectorTable,x)
 
 GXMove: ;; <32:Move>
@@ -664,7 +685,7 @@ gxYChanged:
 ;		Name:		clear.asm
 ;		Purpose:	Clear Screen
 ;		Created:	6th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	9th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -682,14 +703,16 @@ ScreenSize240 = 320 * 240
 ; ************************************************************************************************
 
 GXClearBitmap: ;; <3:Clear>
-		lda 	gxBitmapsOn 				; check BMP running.
+		lda 	gxBitmapsOn 				; check BMP turned on.
 		beq 	_GXCBFail
 		jsr 	GXOpenBitmap 				; start access
-		ldy 	#ScreenSize200 / 8192 		; X is pages to clear
+		ldy 	#ScreenSize200 / 8192 		; X is pages to clear as 2 graphic heights.
 		lda 	gxHeight
 		cmp 	#200 						; 200 ?
+		beq 	_GXCalcLastPage
 		ldy 	#ScreenSize240 / 8192
 _GXCalcLastPage:
+
 		tya 								; add to base page
 		clc
 		adc 	gxBasePage
@@ -714,9 +737,9 @@ _GXClearBlock:
 ;
 		.set16 	gxzTemp1,GXMappingAddress
 _GXCB0:
-		lda 	gxzTemp0
+		lda 	gxzTemp0 					; clear colour
 		ldy 	#0
-_GXCB1:
+_GXCB1: 									; do 4 chunks at a time, really should DMA this.
 		sta 	(gxzTemp1),y
 		iny
 		sta 	(gxzTemp1),y
@@ -742,6 +765,7 @@ _GXCB1:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		9/2/23 			beq _GXCalcLastPage added as was clearing 240 rows irrespective of height
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
@@ -2069,7 +2093,7 @@ _GXMSOffset:
 ;		Name:		access.asm
 ;		Purpose:	Lock/Unlock bitmap access
 ;		Created:	6th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	9th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -2121,7 +2145,7 @@ GXCloseBitmap:
 ;		Name:		line.asm
 ;		Purpose:	Line drawing code
 ;		Created:	6th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	9th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -2139,12 +2163,12 @@ GXCloseBitmap:
 ;		The main calculation is gxY0*320 = gxY0 * 5 * 64
 ;
 gxPositionCalc:
-		lda 	gxzTemp0 					; save temp memory slot
+		lda 	gxzTemp0 						; save temp memory slot
 		pha
 		;
 		;		Calculate gxY0 * 5 => gxzScreen
 		;
-		lda 	gxY0 						; gxzScreen = Y0
+		lda 	gxY0 							; gxzScreen = Y0
 		sta 	gxzScreen
 		stz 	gxzScreen+1
 		;
@@ -2153,24 +2177,37 @@ gxPositionCalc:
 		asl 	gxzScreen
 		rol 	gxzScreen+1
 		;
-		clc 								; gxzScreen = Y0 * 5, as it's still in A
+		clc 									; gxzScreen = Y0 * 5, as it's still in A
 		adc 	gxzScreen
 		sta 	gxzScreen
 		bcc 	_GXPCNoCarry
 		inc 	gxzScreen+1
 _GXPCNoCarry:
-		asl 	gxzScreen 						; now Y0 * 10. Needs to be multiplied by another
-		rol 	gxzScreen+1 					; 32. At this point the MSB contains the offset
-		lda	 	gxzScreen+1 					; so save this in zTemp0 and zero it.
-		sta 	gxzTemp0
+		;
+		;		Calculate gxY0 * 10
+		;
+		asl 	gxzScreen 						; now Y0 * 10
+		rol 	gxzScreen+1
+		;
+		; 		Save MSB and zero it. Think of s+1.s+0 as a decimal fraction of 32nds. The LSB multiplied
+		;		by 32 gives range 0..8191 (255*32 so 8160 technically). The MSB would be multiplied by 32*256
+		;		to give an address, but then redivided by 32*256 to give the page offset.
+		;
+		lda	 	gxzScreen+1
+		sta 	gxzTemp0 						; the page offset.
 		stz 	gxzScreen+1
 		;
-		lda 	#5 							; now multiply by 32, this puts this in the range 0..8191
+		;		Multiply by 32 (e.g. 2^5)
+		;
+		lda 	#5 								; now multiply by 32, this puts this in the range 0..8191
 _GXPCMultiply32:
 		asl 	gxzScreen
 		rol 	gxzScreen+1
 		dec 	a
 		bne 	_GXPCMultiply32
+		;
+		;		Add gxX0 to this, then split it into the offset (LSB) and address (MSB) because when we are writing to (xx),y
+		;		xx.0 is always zero, to improve tracking of page changes.
 		;
 		clc
 		lda 	gxX0 						; add X to this value, put the result in gxOffset, gxzScreen has to be on a page boundary
@@ -2179,19 +2216,26 @@ _GXPCMultiply32:
 		lda 	gxX0+1
 		adc 	gxzScreen+1
 		;
+		;		Adding could shift into the next page, so if >$20 shift into range and adjust the page number.
+		;
 		cmp 	#$20 						; has it overflowed into the next one ?
 		bcc 	_GXPCNoOverflow
 		and 	#$1F 						; fix it up
 		inc 	gxzTemp0 					; add 1 to the page number
 _GXPCNoOverflow:
+		;
+		;		Make it a real address in zero page with the LSB,0, provideing page gxzTemp0 is selected.
+		;
 		ora 	#(GXMappingAddress >> 8) 	; make it the address mapped in.
 		sta 	gxzScreen+1
 		stz 	gxzScreen
 		;
+		;		Add the page offset to the base page and map it in.
+		;
 		clc
 		lda 	gxzTemp0 					; get the page number
 		adc 	gxBasePage 					; by adding the base page
-		sta 	GXEditSlot 				; and map it into memory.
+		sta 	GXEditSlot 					; and map it into memory.
 		;
 		pla
 		sta 	gxzTemp0
@@ -2211,12 +2255,12 @@ GXMovePositionDown:
 		lda 	gxzScreen+1
 		adc 	#1
 		sta 	gxzScreen+1
-		cmp 	#((GXMappingAddress+$2000) >> 8) ; on to the next page
+		cmp 	#((GXMappingAddress+$2000) >> 8) ; on to the next page ?
 		bcc 	_GXMPDExit
-		sec  								; next page
+		sec  								; next page, adjust address
 		sbc 	#$20
 		sta 	gxzScreen+1
-		inc 	GXEditSlot
+		inc 	GXEditSlot 					; bump page
 _GXMPDExit:
 		rts
 		.send 	code
@@ -2435,7 +2479,7 @@ gxSpriteOffset: 								; offset from base page.
 ;		Name:		sort.asm
 ;		Purpose:	Coordinate sorting code
 ;		Created:	6th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	9th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -2445,7 +2489,7 @@ gxSpriteOffset: 								; offset from base page.
 
 ; ************************************************************************************************
 ;
-;					 Sort X and Y coordinates - topleft/bottom right
+;			Sort X and Y coordinates - topleft/bottom right - rectangles, circles etc.
 ;
 ; ************************************************************************************************
 
@@ -2467,7 +2511,7 @@ _GXSXYExit:
 
 ; ************************************************************************************************
 ;
-;							Sort coordinate pairs so Y1 >= Y0
+;			Sort coordinate pairs so Y1 >= Y0, swaps X as well keeping pairs together
 ;
 ; ************************************************************************************************
 
@@ -2476,7 +2520,7 @@ GXSortY:
 		cmp 	gxY1
 		bcc 	_GXSYSorted
 		;
-		ldx 	#3 							; swap 3-0
+		ldx 	#3 							; swap 3-0 - for lines we want to sort but keep lines together
 		ldy 	#7 							; with 4-7
 _GXSwap1:
 		jsr 	GXSwapXY
