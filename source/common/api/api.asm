@@ -67,6 +67,7 @@ SetIP       .fill   4   ; Set the local IP address.
 GetDNS      .fill   4   ; Get the configured DNS IP address.
 SetDNS      .fill   4   ; Set the configured DNS IP address.
 SendICMP    .fill   4
+Match       .fill   4
 
 UDP         .namespace
 Init        .fill   4
@@ -76,7 +77,6 @@ Recv        .fill   4
 
 TCP         .namespace
 Open        .fill   4
-Match       .fill   4
 Accept      .fill   4
 Reject      .fill   4
 Send        .fill   4

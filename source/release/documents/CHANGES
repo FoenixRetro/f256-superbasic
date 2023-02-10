@@ -197,3 +197,4 @@ Release 32: (28/01/23):
 	BUG: Sound queue not processed on keyboard input in various forms.
 	BUG: Fixed Mouse negatives counting.
 	CHG: MOUSE command changed to MDELTA, added new MOUSE command.
+	CHG: Added TRY for BLOAD/BSAVE
