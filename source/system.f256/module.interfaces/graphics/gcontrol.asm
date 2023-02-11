@@ -15,12 +15,22 @@
 
 ; ************************************************************************************************
 ;
+;									Reset bitmap and sprites
+;
+; ************************************************************************************************
+
+ResetBitmapSprites:
+		stz 	BitmapPageNumber
+		stz 	SpritePageNumber
+		rts
+
+; ************************************************************************************************
+;
 ;									 Bitmap on/off/clear/at
 ;
 ; ************************************************************************************************
 
 BitmapCtrl: ;; [bitmap]
-		stz 	BitmapPageNumber
 BitmapCtrlLoop:
 		.cget 								; next keyword
 		iny
@@ -85,7 +95,6 @@ BitmapSwitch:
 ; ************************************************************************************************
 
 SpritesCtrl: ;; [sprites]
-		stz 	SpritePageNumber
 SpritesCtrlLoop:		
 		.cget 								; next keyword
 		iny

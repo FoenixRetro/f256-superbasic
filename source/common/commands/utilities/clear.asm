@@ -91,7 +91,13 @@ _ClearZeroEnd:
 		;
 		; 		Check we aren't out of memory already.
 		;
-		jsr 	CheckIdentifierStringSpace 	; check identifier/string space 		
+		jsr 	CheckIdentifierStringSpace 	; check identifier/string space 
+		;
+		;		Reset bitmap/sprites pages
+		;			
+		.if graphicsIntegrated==1
+		jsr 	ResetBitmapSprites
+		.endif
 		rts
 
 		.send code
