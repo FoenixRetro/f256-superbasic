@@ -85,6 +85,8 @@ BitmapSwitch:
 ; ************************************************************************************************
 
 SpritesCtrl: ;; [sprites]
+		stz 	SpritePageNumber
+SpritesCtrlLoop:		
 		.cget 								; next keyword
 		iny
 		ldx 	#1
@@ -93,14 +95,27 @@ SpritesCtrl: ;; [sprites]
 		dex
 		cmp 	#KWD_OFF
 		beq 	SpriteSwitch		
-		jmp 	SyntaxError
+		cmp 	#KWD_AT
+		beq 	SpriteSetAddress
+		dey
+		rts
+		;
+		;		AT xxxxxx		
+		;
+SpriteSetAddress:		
+		jsr 	GetPageNumber
+		sta 	SpritePageNumber
+		bra 	SpritesCtrlLoop
+		;
+		;		ON/OFF
+		;
 SpriteSwitch:
 		phy
-		ldy 	#0 							; gfx 2,on/off,0
+		ldy 	SpritePageNumber 			; gfx 2,on/off,0
 		lda 	#GCMD_SpriteCtl
 		jsr 	GXGraphicDraw
 		ply
-		rts
+		bra 	SpritesCtrlLoop
 
 ; ************************************************************************************************
 ;
@@ -134,6 +149,8 @@ _GPNError:
 		.section storage
 BitmapPageNumber:
 		.fill 	1
+SpritePageNumber:
+		.fill 	1
 		.send 	storage	
 
 ; ************************************************************************************************
@@ -144,6 +161,6 @@ BitmapPageNumber:
 ;
 ;		Date			Notes
 ;		==== 			=====
-;		11/02/23 		Chaining BITMAP command.
+;		11/02/23 		Chaining BITMAP and SPRITES command.
 ;
 ; ************************************************************************************************

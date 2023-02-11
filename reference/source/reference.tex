@@ -749,10 +749,10 @@ Manipulate a hardware sprite using the standard modifiers. Also supported are sp
 \end{verbatim}
 
 \section*{sprites}
-Enables and Disables all sprites. When turned on, all the sprite records are cleared to zero.
+Enables and Disables all sprites,optionally setting the location of the sprite data in memory which default to \$30000. When turned on, all the sprites are erased and their control values set to zero.
 \example{}
 \begin{verbatim}
-	100 sprites on
+	100 sprites at $18000 on
 \end{verbatim}
 
 \section*{stop}

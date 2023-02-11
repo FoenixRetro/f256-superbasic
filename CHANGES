@@ -202,3 +202,5 @@ Release 32: (28/01/23):
 Release 33: (11/02/23):	
 
 	CHG: Bitmap now chainable.
+	CHG: Sprites now chainable.
+	
