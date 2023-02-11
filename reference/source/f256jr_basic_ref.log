@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.2.5)  9 FEB 2023 17:57
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.2.5)  11 FEB 2023 15:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -982,23 +982,23 @@ ine 121.
 LaTeX Font Info:    Font shape `T1/NotoSerif-TLF/m/it' will be
 (Font)              scaled to size 8.99994pt on input line 121.
 [25] [26] [27] [28] [29] [30]
-Overfull \hbox (43.98083pt too wide) in paragraph at lines 349--352
+Overfull \hbox (43.98083pt too wide) in paragraph at lines 350--353
 \T1/NotoSerif-TLF/m/n/10 Tests if two sprites over-lap. This is done us-ing a b
 ox test based on the size of the sprite (e.g. 8x8,16x16,24x24,32x32)
  []
 
 [31] [32]
-Underfull \hbox (badness 10000) in paragraph at lines 423--424
+Underfull \hbox (badness 10000) in paragraph at lines 424--425
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 433--434
+Underfull \hbox (badness 10000) in paragraph at lines 434--435
 
  []
 
 [33] [34] [35]
-Overfull \hbox (42.90874pt too wide) in paragraph at lines 536--537
+Overfull \hbox (42.90874pt too wide) in paragraph at lines 537--538
 \T1/NotoSerif-TLF/m/n/10 Returns a sub-seg-ment of a string, given the start po
 -si-tion (first char-ac-ter is 1) and the length, so mid$(^^Pabcdef^^Q,3,2)
  []
@@ -1025,7 +1025,7 @@ f-Italic.pfb></usr/share/texmf-dist/fonts/type1/google/noto/NotoSerif-Regular.p
 fb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/share/
 texmf-dist/fonts/type1/public/newtx/txsys.pfb></usr/share/texmf-dist/fonts/type
 1/urw/zapfchan/uzcmi8a.pfb>
-Output written on f256jr_basic_ref.pdf (43 pages, 202399 bytes).
+Output written on f256jr_basic_ref.pdf (43 pages, 202569 bytes).
 PDF statistics:
  701 PDF objects out of 1000 (max. 8388607)
  633 compressed objects within 7 object streams

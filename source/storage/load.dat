@@ -1,3 +1,5 @@
-10 try bload "xxxx",100 to a
-15 print a
+10 bitmap at $18000 on:bitmap clear $03 
+20 memcopy $19800 rect 64,192 by 320 poke $7F
+30 sprites on
+40 sprite 1 image 0 to 200,100
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ

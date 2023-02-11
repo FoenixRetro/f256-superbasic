@@ -32,14 +32,14 @@ for s in sys.argv[1:]:
 	else:
 		moduleFiles.append("!{0}Integrated = 0".format(s[1:]))
 
-
 for root,dirs,files in os.walk("."): 														# scan for directories
 	for f in files: 																		# look for files that are .inc or .asm
 		if f.find("_") < 0:
 			fName = root + os.sep + f
 			reject = False
-			if root.find("module.interface") >= 0: 											# if module interface
-				interface = root.split(os.sep)[-1] 											# check we are using this module
+			pos = root.find("module.interface")
+			if pos >= 0: 																	# if module.interface.<something>
+				interface = root[pos:].split(os.sep)[1] 									# check we are using this module
 				reject = interface not in modulesIntegrated
 
 			if not reject:

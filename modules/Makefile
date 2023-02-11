@@ -29,5 +29,7 @@ all:
 
 	python _scripts$(S)makebuild.py sound >_build$(S)_sound.module		
 
+	python _scripts$(S)makebuild.py kernel >_build$(S)_kernel.module
+
 	python _scripts$(S)makeexport.py >_build$(S)_linker.module
 

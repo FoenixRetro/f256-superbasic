@@ -32,7 +32,7 @@ EMU_REPO= ..$(S)..$(S)junior-emulator
 LDR_FILE= ..$(S)..$(S)FoenixMgr
 KRN_REPO= ..$(S)..$(S)F256_Jr_Kernel_DOS
 
-MODULES= +hardware +graphics +tokeniser +sound
+MODULES= +hardware +graphics +tokeniser +sound +kernel
 
 START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@x $(BINDIR)graphics.bin@s 
 

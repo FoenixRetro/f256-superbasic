@@ -15,11 +15,13 @@
 
 ; ************************************************************************************************
 ;
-;									 Bitmap on/off/clear
+;									 Bitmap on/off/clear/at
 ;
 ; ************************************************************************************************
 
 BitmapCtrl: ;; [bitmap]
+		stz 	BitmapPageNumber
+BitmapCtrlLoop:
 		.cget 								; next keyword
 		iny
 		ldx 	#1
@@ -27,17 +29,37 @@ BitmapCtrl: ;; [bitmap]
 		beq 	BitmapSwitch
 		dex
 		cmp 	#KWD_OFF
-		beq 	BitmapSwitch		
+		beq 	BitmapSwitch
+		cmp 	#KWD_AT  					; set address
+		beq 	BitmapAddress
+		cmp 	#KWD_CLEAR
+		beq 	BitmapClear
+		dey
+		rts
+		;
+		;		Set colour
+		;		
+BitmapClear:		
 		jsr 	Evaluate8BitInteger 		; get the colour
 		phy
 		tax
 		lda 	#GCMD_Clear					; clear to that colour
 		jsr 	GXGraphicDraw
 		ply
-		rts
+		bra 	BitmapCtrlLoop
+		;
+		;		Set Address.
+		;
+BitmapAddress:
+		jsr 	GetPageNumber
+		sta 	BitmapPageNumber
+		bra 	BitmapCtrlLoop
+		;
+		;		Switch on/off
+		;
 BitmapSwitch:
 		phy
-		ldy 	#0 							; gfx 1,on/off,0
+		ldy 	BitmapPageNumber 			; gfx 1,on/off,0
 		lda 	#GCMD_BitmapCtl
 		jsr 	GXGraphicDraw
 		lda 	#GCMD_Colour				; set colour to $FF
@@ -54,7 +76,7 @@ BitmapSwitch:
 		ldy 	#0
 		jsr 	GXGraphicDraw
 		ply
-		rts
+		bra 	BitmapCtrlLoop
 
 ; ************************************************************************************************
 ;
@@ -80,7 +102,39 @@ SpriteSwitch:
 		ply
 		rts
 
+; ************************************************************************************************
+;
+;							Get a valid page number via its address
+;
+; ************************************************************************************************
+
+GetPageNumber:
+		ldx 	#0
+		jsr 	EvaluateUnsignedInteger 	; evaluate where to go.
+		;
+		lda 	NSMantissa1 				; check on page
+		and 	#$1F
+		ora 	NSMantissa0
+		bne 	_GPNError
+		;
+		lda 	NSMantissa2
+		asl 	NSMantissa1					; get page number
+		rol 	a
+		asl 	NSMantissa1		
+		rol 	a
+		asl 	NSMantissa1		
+		rol 	a
+		rts
+
+_GPNError:
+		.error_argument
+
 		.send code
+
+		.section storage
+BitmapPageNumber:
+		.fill 	1
+		.send 	storage	
 
 ; ************************************************************************************************
 ;
@@ -90,5 +144,6 @@ SpriteSwitch:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		11/02/23 		Chaining BITMAP command.
 ;
 ; ************************************************************************************************

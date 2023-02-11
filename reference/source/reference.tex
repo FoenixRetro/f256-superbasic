@@ -187,10 +187,11 @@ Every good programming language should have assert. It verifies contracts and de
 \end{verbatim}
 
 \section*{bitmap}
-Turns the bitmap on or off, or clears it. Only one bitmap is used, and it is located at \$10000 in F256 Memory Space. Can be postfixed with ON OFF or CLEAR with a colour.
+Turns the bitmap on or off, or clears it, or sets its address (the default address is \$10000). Only one bitmap is used in BASIC, but you can use others by accessing I/O. Keywords are ON OFF CLEAR <colour> AT <address> and can be chained like the example below, or not. On or Off without an at will reset the address.
 \example{}
 \begin{verbatim}
-	100 bitmap on:bitmap clear $1c
+	100 bitmap at $18000 on clear $03
+	110 bitmap at $18000 on:bitmap clear $03
 \end{verbatim}
 
 \section*{bload}
