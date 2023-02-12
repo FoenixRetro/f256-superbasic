@@ -29,11 +29,19 @@ ProcessEvents:
 		bne 	ProcessEvents
 
 		lda	 	KNLEvent.key.flags 			; is KNLEvent.key.flags = 0 ?
+		bmi 	_PEIsRaw
 		bne 	ProcessEvents
 		lda 	KNLEvent.key.ascii 			; is it Ctrl+C
 		cmp 	#3
 		beq 	_PEReturnBreak  			; no, keep going.
-
+		bra 	_PEQueueA
+_PEIsRaw:
+		lda 	KNLEvent.key.raw 			; return raw key if F1-F12
+		cmp 	#129
+		bcc		ProcessEvents
+		cmp 	#140+1
+		bcs 	ProcessEvents
+_PEQueueA:
 		phx
 		ldx 	KeyboardQueueEntries 		; get keyboard queue size into X
 		cpx 	#KBDQueueSize 				; if full, then ignore
@@ -127,5 +135,6 @@ KeyboardQueueEntries:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		12/02/23 		Returns function keys as chr$(128+fn)
 ;
 ; ************************************************************************************************

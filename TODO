@@ -13,8 +13,6 @@ ROMA: $B42E
 ROMB: $B7E3
 ROMC: $A800
 
-
-
 TILEMAP 
 	[ON <n>] 						Turn tilemap on/off and select current, defaults to 0. 
 	[OFF <n>] 
