@@ -133,7 +133,7 @@ done_lut:   stz MMU_IO_CTRL             ; Go back to I/O Page 0
             lda #`tile_map
             sta VKY_TM0_ADDR_H
 
-            lda #$08                    ; Set scrolling X = 8
+            lda #$0E                    ; Set scrolling X = 8
             sta VKY_TM0_POS_X_L
             lda #$00
             sta VKY_TM0_POS_X_H

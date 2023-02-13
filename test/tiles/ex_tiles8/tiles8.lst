@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.58.2974? listing file
 ; 64tass -q -b -Wall -c -C -L tiles8.lst -o tiles8.bin tiles8.asm
-; Mon Feb 13 16:54:20 2023
+; Mon Feb 13 17:53:18 2023
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -200,7 +200,7 @@
 .2099	8d 02 d2	sta $d202	            sta VKY_TM0_ADDR_M
 .209c	a9 00		lda #$00	            lda #`tile_map
 .209e	8d 03 d2	sta $d203	            sta VKY_TM0_ADDR_H
-.20a1	a9 08		lda #$08	            lda #$08                    ; Set scrolling X = 8
+.20a1	a9 0e		lda #$0e	            lda #$0E                    ; Set scrolling X = 8
 .20a3	8d 08 d2	sta $d208	            sta VKY_TM0_POS_X_L
 .20a6	a9 00		lda #$00	            lda #$00
 .20a8	8d 09 d2	sta $d209	            sta VKY_TM0_POS_X_H

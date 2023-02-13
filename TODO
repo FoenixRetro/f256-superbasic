@@ -16,12 +16,12 @@ ROMC: $A800
 TILEMAP 
 	[ON <n>] 						Turn tilemap on/off and select current, defaults to 0. 
 	[OFF <n>] 
-	[AT <data>] 					Tilemap data location, default $24000
-	[IMAGE <tiledata>] 				Tilemap images location, default $26000
+	[AT <data>] 					Tilemap data location, default $24000 (8192 bytes)
+	[IMAGE <tiledata>] 				Tilemap images location, default $26000 (8192 bytes, 128 8x8 tiles)
 	[DIM <x>,<y>] 					Size of the actual map in tiles (default 64x32 = 1 screen - must be powers of 2)
 	[TO <xtile>,<ytile>] 			Scroll by tile.
 	[SCROLL <xscroll>,<yscroll>] 	Scroll by offset e.g. pixel offset from top left.
-	[DIM <size>] 					16 can be 8. (may not support 8 - would be tiny tiles)
+	[DIM <size>] 					16 can be 8. (may not support 16 - would be tiny tiles)
 
 TILE <x>,<y>,<tile1>,<tile2> PLOT <count> .....
 
