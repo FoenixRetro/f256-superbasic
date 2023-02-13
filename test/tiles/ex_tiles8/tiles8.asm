@@ -48,7 +48,7 @@ boot:
             sta VKY_BKG_COL_R
             lda #$19
             sta VKY_BKG_COL_G
-            lda #$70
+            lda #$0
             sta VKY_BKG_COL_B
 
             ;

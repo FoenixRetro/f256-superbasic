@@ -1,3 +1,8 @@
+Tiles:
+	Get a second stacked tile and put a bitmap under it
+	bitmap over it ? consider this ?
+	patch this into BASIC so it uses their bitmap/sprites and the coded tiles ?
+
 Progress:	
  	Upgrade model A.
 	Display Kernel version

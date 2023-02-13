@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.58.2974? listing file
 ; 64tass -q -b -Wall -c -C -L tiles8.lst -o tiles8.bin tiles8.asm
-; Mon Feb 13 17:53:18 2023
+; Mon Feb 13 20:49:50 2023
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -142,7 +142,7 @@
 .201d	8d 0f d0	sta $d00f	            sta VKY_BKG_COL_R
 .2020	a9 19		lda #$19	            lda #$19
 .2022	8d 0e d0	sta $d00e	            sta VKY_BKG_COL_G
-.2025	a9 70		lda #$70	            lda #$70
+.2025	a9 00		lda #$00	            lda #$0
 .2027	8d 0d d0	sta $d00d	            sta VKY_BKG_COL_B
 .202a	a9 01		lda #$01	            lda #$01                    ; Switch to I/O Page #1
 .202c	85 01		sta $01		            sta MMU_IO_CTRL
