@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.58.2974? listing file
-; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$34000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Mon Feb 13 17:26:07 2023
+; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$34000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" "-D LTILEMAP_ADDRESS=\$24000" "-D LTILEIMAGES_ADDRESS=\$26000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
+; Tue Feb 14 08:52:57 2023
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -13,6 +13,8 @@
 =$34000						 BASIC_ADDRESS=$34000
 =$28000						 SOURCE_ADDRESS=$28000
 =$30000						 SPRITE_ADDRESS=$30000
+=$24000						 LTILEMAP_ADDRESS=$24000
+=$26000						 LTILEIMAGES_ADDRESS=$26000
 =0						HARDWARE=0
 
 ;******  Processing input file: _basic.asm
@@ -592,8 +594,8 @@
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->811c		09 09 31 33 2f 30 32 2f			.text 9,9,"13/02/23 34"
->8124		32 33 20 33 34
+>811c		09 09 31 34 2f 30 32 2f			.text 9,9,"14/02/23 35"
+>8124		32 33 20 33 35
 
 ;******  Return to file: ./common/aa.system/00start.asm
 
@@ -7203,8 +7205,8 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->e7fa		09 09 31 33 2f 30 32 2f			.text 9,9,"13/02/23 34"
->e802		32 33 20 33 34
+>e7fa		09 09 31 34 2f 30 32 2f			.text 9,9,"14/02/23 35"
+>e802		32 33 20 33 35
 
 ;******  Return to file: _basic.asm
 

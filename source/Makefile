@@ -17,7 +17,7 @@ endif
 #
 #		Current version.
 #
-VERSION = 34
+VERSION = 35
 
 #	System 0 = F256
 SYSTEM = 0 						
@@ -73,13 +73,20 @@ rgo : ramkernel putcode
 #
 #		Run on real hardware (RAM operation)
 #
-go : 
+go : graphics
 	python scripts$(S)checkload.py
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)lockout.rom --address $(LLOCKOUT)
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)graphics.bin --address $(LSPRITES)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address $(LSOURCE)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(APPNAME) --address $(LBASIC)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address $(LMONITOR)
+#
+#		Upload sprites, tiles, tileimages.
+#		
+graphics:
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)graphics.bin --address $(LSPRITES)
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)tile_map.bin --address $(LTILEMAP)
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)tile_images.bin --address $(LTILEIMAGES)
+
 #
 #		Store Basic code in upper RAM
 #

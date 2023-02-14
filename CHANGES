@@ -204,3 +204,6 @@ Release 33: (11/02/23):
 	CHG: Bitmap now chainable.
 	CHG: Sprites now chainable.
 	CHG: Keyboard function key7 return appropriate code (128+n)
+	BUG: Kernel SDCard fix
+	
+Release 34: (14/02/23)
