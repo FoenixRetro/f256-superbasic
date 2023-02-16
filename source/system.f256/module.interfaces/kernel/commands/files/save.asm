@@ -41,8 +41,8 @@ _CSLoop:
 _CSExit:
 		lda 	BasicFileStream 			; close file
 		jsr 	KNLCloseFile
-
-		jmp 	CLComplete 					; display complete message.
+		jsr 	CLComplete 					; display complete message.
+		jmp 	WarmStart 					; and warm start
 
 CSErrorHandler:
 		jmp 	CLErrorHandler
@@ -121,5 +121,7 @@ _CSDoneClean:
 ;
 ;		Date			Notes
 ;		==== 			=====
+; 		16/02/23 		Changed end to Jsr CLComplete / Jmp Warmstart as was returning to runner
+; 						after save.
 ;
 ; ************************************************************************************************

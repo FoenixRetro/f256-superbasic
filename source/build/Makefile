@@ -18,7 +18,14 @@ endif
 #
 #	Build parts and flash them.
 #	
-all: build flash
+all: downloads build flash
+#
+#		Download any other ROMs
+#
+downloads:
+	$(CDEL) pexec*.bin*
+	wget https://raw.githubusercontent.com/dwsJason/superbasic/pexec/howto/update/pexec.bin
+
 #
 #		Split up into parts - requires the latest Gadget build of 01.bin, 3e.bin and 3f.bin
 #

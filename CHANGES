@@ -207,3 +207,6 @@ Release 33: (11/02/23):
 	BUG: Kernel SDCard fix
 	
 Release 34: (14/02/23)
+
+	BUG: Fixed beethead bug (SAVE showing weird error message)
+	CHG: Added Jason Anderson's App.
