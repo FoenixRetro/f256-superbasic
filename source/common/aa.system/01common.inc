@@ -28,7 +28,7 @@ ZeroPagePreference = $50
 ;
 ;		Variables that can go anywhere
 ;
-MemoryStorage = $200
+MemoryStorage = $400
 ;
 ;		Where program memory starts and stops
 ;

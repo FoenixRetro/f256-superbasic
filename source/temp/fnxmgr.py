@@ -11,6 +11,7 @@ import os
 import pgz
 import pgx
 import csv
+import zlib
 
 from serial.tools import list_ports
 
@@ -211,6 +212,116 @@ def display(base_address, data):
 
     sys.stdout.write(' {}\n'.format(text_buff))
 
+#
+#define poly 0xEDB88320
+#/* Some compilers need
+#   #define poly 0xEDB88320uL
+# */
+#
+#/* On entry, addr=>start of data
+#             num = length of data
+#             crc = incoming CRC     */
+#int crc32(char *addr, int num, int crc)
+#{
+#int i;
+#
+#for (; num>0; num--)              /* Step through bytes in memory */
+#  {
+#  crc = crc ^ *addr++;            /* Fetch byte from memory, XOR into CRC */
+#  for (i=0; i<8; i++)             /* Prepare to rotate 8 bits */
+#  {
+#    if (crc & 1)                  /* b0 is set... */
+#      crc = (crc >> 1) ^ poly;    /* rotate and XOR with ZIP polynomic */
+#    else                          /* b0 is clear... */
+#      crc >>= 1;                  /* just rotate */
+#  /* Some compilers need:
+#    crc &= 0xFFFFFFFF;
+#   */
+#    }                             /* Loop for 8 bits */
+#  }                               /* Loop until num=0 */
+#  return(crc);                    /* Return updated CRC */
+#}
+def mycrc(data):
+    length = len(data)
+    crc = 0
+    index = 0
+    poly = 0xEDB88320 
+    while index < length:
+        crc = crc ^ data[ index ]
+        index+=1
+        for i in range(8):
+            if crc & 1:
+                crc = (crc >> 1) ^ poly
+            else:
+                crc >>= 1
+
+    return(crc)
+
+def copy_file(port, filename):
+    """Copy the data in 'filename' to the F256jr SDCard."""
+    with open(filename, "rb") as f:
+        filesize = os.path.getsize(filename);
+
+        if filesize < (8*65536)-1024:
+            c256 = foenix.FoenixDebugPort()
+            try:
+                blocks = f.read(filesize)
+                #crc32 = zlib.crc32(blocks)
+                crc32 = mycrc(blocks)
+
+
+                c256.open(port)
+                c256.enter_debug()
+                pcopy = pgx.PGXBinFile()
+
+                try:
+                    current_addr = 0x10000
+                    # Filename to char array
+                    filename_block = bytes(filename, "utf-8")
+                    # extend, zero terminate
+                    zero_block = bytes([ 0x00 ])
+
+                    # place the 0 terminated filename in RAM
+                    c256.write_block(current_addr, filename_block)
+                    current_addr += len(filename_block)
+                    c256.write_block(current_addr, zero_block)
+                    current_addr += len(zero_block)
+
+                    # follow with crc32
+                    crc_block = bytes([ crc32 & 0xff, (crc32>>8)&0xff, (crc32>>16)&0xff, (crc32>>24)&0xff])
+                    c256.write_block(current_addr, crc_block)
+                    current_addr += len(crc_block)
+                    # follow with 24 bit data length
+                    len_block = bytes([ filesize & 0xff, (filesize>>8)&0xff, (filesize>>16)&0xff])
+                    c256.write_block(current_addr, len_block)
+                    current_addr += len(len_block)
+
+                    block_size = config.chunk_size()
+
+                    # upload the file data
+                    total_length = len(blocks)
+                    chunk_offset = 0
+                    while total_length > 0:
+                        if total_length < block_size:
+                            block_size = total_length
+                        c256.write_block(current_addr, blocks[chunk_offset:chunk_offset+block_size])
+                        current_addr += block_size
+                        total_length -= block_size
+                        chunk_offset += block_size
+
+                    # load the pgx
+                    pcopy.open(os.path.expandvars('$FOENIXMGR/tools/pgx/pcopy.pgx'))
+                    pcopy.set_handler(lambda address, data: c256.write_block(address, data))
+                    pcopy.read_blocks()
+
+                finally:
+                    c256.exit_debug()
+            finally:
+                c256.close()
+        else:
+            print(f"File too large: {filename} {filesize}")
+
+
 def send_pgx(port, filename):
     """Send the data in the PGX file 'filename' to the C256 on the given serial port."""
     infile = pgx.PGXBinFile()
@@ -407,6 +518,9 @@ parser.add_argument("--flash-bulk", metavar="CSV FILE", dest="bulk_file",
 parser.add_argument("--binary", metavar="BINARY FILE", dest="binary_file",
                     help="Upload a binary file to the C256's RAM.")
 
+parser.add_argument("--copy", metavar="COPY FILE", dest="copy_file",
+                    help="Copy a file to F256jr SDCARD.")
+
 parser.add_argument("--address", metavar="ADDRESS", dest="address",
                     default=config.address(),
                     help="Provide the starting address of the memory block to use in flashing memory.")
@@ -443,7 +557,10 @@ try:
         if options.boot_source:
             source = options.boot_source.lower()
             set_boot_source(options.port, source)
-            
+        
+        elif options.copy_file:
+            copy_file(options.port, options.copy_file)
+                
         elif options.hex_file:
             send(options.port, options.hex_file)
 
