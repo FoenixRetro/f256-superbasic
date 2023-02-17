@@ -1,8 +1,10 @@
 \chapter{Cross Development of BASIC Programs}
 
-At present, Cross Development is the only practical way to develop BASIC on the F256 ; at the time of writing the IEC / SDCard is incomplete ao there are no options to LOAD and SAVE programs. 
+Cross development is an alternative to the classic way of programming a home computer, where the programmer types code directly into the machine. Cross development allows you to write the code on a Personal Computer, and upload it through the USB debug port in the F256. It is also possible to do this with machine code and graphic and other data.
 
-This should be available soon. However, this will still be available as a method of development, and it has much to commend it.
+\section{Assistance}
+
+In the SuperBasic git, https://github.com/paulscottrobson/superbasic, each release contains a file "howto-crossdev-basic.zip" which gives everything you need to cross develop in BASIC and some example programs.
 
 \section{Connection}
 
@@ -20,7 +22,7 @@ The input to the program is standard ASCII files, with line numbers. Line number
 
 I would start with something simple though.
 
-\example{Print to the screen}
+\example{Print to the screen and make silly sound effect}
 \begin{verbatim}
 	10 print "Hello, world !"
 	20 zap

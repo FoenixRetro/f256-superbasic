@@ -2,11 +2,25 @@
 
 \section{Introduction}
 
+Sprites are graphic images of differing sizes (8x8, 16x16, 24x24 or 32x32) which can appear on top of a bitmap but which don't affect that bitmap. It is a bit like a cartoon where you have a background and animated characters are placed on it.
+
+The sprite command adopts the same syntax as the graphics commands in the previous section. An example is:
+
+\begin{verbatim}
+	sprite 3 image 5 to 20,20
+\end{verbatim}
+
+This manipulates sprite number 3 (there are 64, numbered 0..63), using image number 5, centred on screen position 20,20. The image number comes from the data set - in the example set below it would be enemy.png rotated by 90 - the sixth entry as we count from 0. You can change the location and image independently.
+
+Most of the theoretical graphics options do not work ; you cannot colour, scale, flip etc. a sprite, the graphic is what it is. However, they are very fast compared with drawing an image on the screen using the IMAGE command.
+
+\section {Creating sprites}
+
 In SuperBASIC sprite data is loaded, with an index, to memory location \$30000. This chapter explains how to create that index.
 
 \section{Getting images}
 
-Sprite data is built from PNG images up to 32x32. There are some examples in the Solarfox directory in the github.
+Sprite data is built from PNG images up to 32x32. There are some examples in the Solarfox directory in the github https://github.com/paulscottrobson/superbasic.
 
 They can be created individually, or ripped from spritesheets - this is what ripgfx.py is doing in the Makefile in solarfox/graphics ; starting with the PNG file source .png it is informed where graphics are, and it tries to work out a bounding box for that graphic, and exports it to the various files.
 

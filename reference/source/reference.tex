@@ -45,7 +45,6 @@ Returns the ASCII value of the first character in the string, or zero if the str
 10 print asc(“*”)
 \end{verbatim}
 
-
 \section*{\# and \$}
 \# and \$ are used to type variables. \# is a floating point value, \$ is a string. The default type is integer. Variables are not stored internally by name but by reference. This means they are quick to access but means they are always in existence from the start of a program if used in it. Integers are 32 bit ; Floats have a 31 bit mantissa and byte exponent.
 So variables and arrays are as follows:
@@ -272,13 +271,16 @@ Ends the current program and returns to the command line
 \end{verbatim}
 
 \section*{event()}
-Event tracks time. It is normally used to activate object movement or events in a game or other events, and generates true at predictable rates. It takes two parameters ; a variable and an elapsed time.
-If that variable is zero, then this function doesn’t return true until after that many tenths of seconds has elapsed. If it is non-zero, it tracks repeated events, so if you have event(evt1,70) this will return true every second – the clock operates at the timer rate, 70Hz.
-Note that if a game pauses the event times will continue, so if you use it to have an event every 20 seconds, this will work – but if you pause the game, then it will think the game time has elapsed. One way out is to zero the event variables when leaving pause – this will cause it to fire after another 20 seconds. 
-If the event variable is set to -1 it will never fire, so this can be used to create one shots by setting it to -1 in the conditional part of the line
+Event tracks time. It is normally used to activate object movement or events in a game or other events, and generates true at predictable rates. It takes two parameters ; a variable and an elapsed time.\\
+If that variable is zero, then this function doesn’t return true until after that many tenths of seconds has elapsed. If it is non-zero, it tracks repeated events, so if you have event(evt1,70) this will return true every second – the clock operates at the timer rate, 70Hz.\\
+Note that if a game pauses the event times will continue, so if you use it to have an event every 20 seconds, this will work – but if you pause the game, then it will think the game time has elapsed. One way out is to zero the event variables when leaving pause – this will cause it to fire after another 20 seconds. \\
+If the event variable is set to -1 it will never fire, so this can be used to create one shots by setting it to -1 in the conditional part of the line\\
+An example is better, this prints Hello once a second.
 \example{}
 \begin{verbatim}
-	100 if event(event_move,10) then move()
+	100 repeat
+	110 if event(myevent1,70) then print "Hello"
+	120 until false
 \end{verbatim}
 
 \section*{false}
@@ -325,8 +327,8 @@ Reads the current time from the clock returning a string in the format "hh:mm:ss
 \end{verbatim}
 
 \section*{gfx}
-Sends three parameter command directly to the graphics subsystem. Often the last two parameters are coordinates (not always).  It is not advised to use this for general use as programs would be somewhat unreadable.
-This is a direct call to the graphics library.
+Sends three parameter command directly to the graphics subsystem. Often the last two parameters are coordinates (not always).  It is not advised to use this for general use as programs would be somewhat unreadable.\\
+This is a direct call to the graphics library. The parameters are described in graphics.txt in the documents directory in the github. Use of this is rare.
 \example{}
 \begin{verbatim}
 	100 gfx 22,130,100
@@ -375,17 +377,19 @@ Draws a possibly scaled or flipped sprite image on the bitmap, using the standar
 \end{verbatim}
 
 \section*{inkey() and inkey\$()}
-If there is a character key pressed, return either the character as a string, or as the ASCII character code. If no key is available return "" or 0.
+If a character key has been pressed, return either the character as a string, or as the ASCII character code. If no key is available return "" or 0.\\
+This uses key presses, it does not detect if a key has been pressed, merely that it has been in the past. If you want to check whether a key is up or down, use keydown()
 \example{}
 \begin{verbatim}
 	100 print inkey(),inkey$()
 \end{verbatim}
 
 \section*{input}
-Input uses the same syntax as print, except that where there is a variable a value is entered into that variable, rather than the variable being printed.
+Inputs numbers or strings from the keyboard. \\
+Input has always had a somewhat varying syntax historically. This version uses the same syntax as print, except that where there is a variable a value is entered into that variable, rather than the variable being printed.
 \example{}
 \begin{verbatim}
-	100 input a$
+	100 input "Your name is ?";a$
 \end{verbatim}
 
 \section*{int()}
@@ -521,9 +525,10 @@ Gets the current delta status of the PS/2 mouse. 6 reference parameters (normall
 \end{verbatim}
 
 \section*{memcopy}
-This command is an interface to the F256 Junior's DMA hardware. A MEMCOPY command has several formats. 
-The first in line 100 is a straight linear copy of memory from \$10000 to \$18000 of length \$4000. The second in line 110 is a linear fill from \$10000 , to \$4000 bytes on, with the byte value \$F7
-The third in line 120 is a rectangular area of memory, 64 x 48 pixels or bytes, from \$10000. The 320 is the characters per line, normally 320 for the Junior. This copies a 2D area of screen memory rather than a linear one. The fourth, line 130 is a window, as defined, being filled with the byte pattern \$18.
+This command is an interface to the F256 Junior's DMA hardware. A MEMCOPY command has several formats. \\
+The first in line 100 is a straight linear copy of memory from \$10000 to \$18000 of length \$4000.\\ The second in line 110 is a linear fill from \$10000 , to \$4000 bytes on, with the byte value \$F7 \\
+The third in line 120 is a rectangular area of memory, 64 x 48 pixels or bytes, from \$10000. The 320 is the characters per line, normally 320 for the Junior. This copies a 2D area of screen memory rather than a linear one. \\
+The fourth, line 130 is a window, as defined, being filled with the byte pattern \$18. \\
 The final shows an alternate way of showing addresses. This makes use of the knowledge that this normally video memory - it doesn't have to be of course - at 32,32 and at 128,128 later, convert to the addresses of those pixels in bitmap memory.
 \begin{verbatim}
 	100 memcopy $10000,$4000 to $18000
@@ -742,7 +747,7 @@ Return a string consisting of a given number of spaces
 \end{verbatim}
 
 \section*{sprite}
-Manipulate a hardware sprite using the standard modifiers. Also supported are sprite image <n> which turns a sprite on and selects image <n> to be used for it, and sprite off, which turns a sprite off. Sprite data is stored at \$30000 onwards, beginning with a 512 byte index. Sprites cannot be scaled and flipped as the hardware does not permit it. Sprites have their own section.
+Manipulate one of the 64 hardware sprites using the standard modifiers. Also supported are sprite image <n> which turns a sprite on and selects image <n> to be used for it, and sprite off, which turns a sprite off. Sprite data is stored at \$30000 onwards, beginning with a 512 byte index. Sprites cannot be scaled and flipped as the hardware does not permit it. Sprites have their own section. For Sprite .. To the sprite is centred on those coordinates.
 \example{}
 \begin{verbatim}
 	100 sprite 4 image 2 to 50,200
