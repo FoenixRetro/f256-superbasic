@@ -4,7 +4,7 @@
 ;		Name:		rect.asm
 ;		Purpose:	Rectangle/Solid Rectangle drawing code
 ;		Created:	8th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -19,12 +19,12 @@
 ; ************************************************************************************************
 
 GXFillRectangle: ;; <35:FillRect>
-		sec
+		sec 								; pass carry in for fill/frame
 		bra 	GXRectangle
 GXFrameRectangle: ;; <34:FrameRect>
 		clc
 GXRectangle:
-		lda 	gxBitmapsOn
+		lda 	gxBitmapsOn 				; exit if off.
 		beq 	_GXRFail
 		php 								; save Fill flag (CS)
 		jsr 	GXOpenBitmap 				; start drawing
@@ -37,7 +37,7 @@ GXRectangle:
 		jsr 	GXDrawLineX1X0 				; draw a line length X1-X0
 
 		lda 	gxY0 						; reached end of rectangle ?
-		cmp 	gxY1
+		cmp 	gxY1 						; e.g. 1 pixel high.
 		beq 	_GXRectangleExit
 _GXRectLoop:
 		jsr 	GXMovePositionDown 			; down one.
@@ -45,7 +45,7 @@ _GXRectLoop:
 		lda 	gxY0 						; reached last line
 		cmp 	gxY1
 		beq 	_GXLastLine
-		plp 								; get flag back
+		plp 								; get flag back for solid/edged
 		php
 		jsr 	GXDrawLineX1X0 				; draw horizontal line
 		bra 	_GXRectLoop
@@ -71,7 +71,7 @@ _GXRFail:
 
 GXDrawLineX1X0:
 		php 								; save solid/either-end
-		sec
+		sec 								; calculate x1-x0
 		lda		gxX1
 		sbc 	gxX0
 		sta 	gxzTemp0
@@ -88,7 +88,7 @@ GXDrawLineX1X0:
 
 GXDrawLineTemp0:
 
-		lda 	gxzScreen 						; push gxzScreen, gxOffset and GXEditSlot on stack
+		lda 	gxzScreen 					; push gxzScreen, gxOffset and GXEditSlot on stack
 		pha
 		lda 	gxzScreen+1
 		pha
@@ -102,7 +102,7 @@ GXDrawLineTemp0:
 		;		Draw solid line.
 		;
 _GXDLTLine:
-		lda 	(gxzScreen),y 					; set pixel
+		lda 	(gxzScreen),y 				; set pixel
 		.plotpixel
 		sta 	(gxzScreen),y
 		;
@@ -114,14 +114,14 @@ _GXDLTNoBorrow:
 		dec 	gxzTemp0
 		iny 								; next slot.
 		bne 	_GXDLTLine
-		inc 	gxzScreen+1 					; carry to next
+		inc 	gxzScreen+1 				; carry to next
 		jsr 	GXDLTCheckWrap				; check for new page.
 		bra 	_GXDLTLine
 		;
 		;		Draw end points only.
 		;
 _GXDLTEndPoints:
-		lda 	(gxzScreen),y 					; set pixel
+		lda 	(gxzScreen),y 				; set pixel
 		.plotpixel
 		sta 	(gxzScreen),y
 		;
@@ -132,9 +132,9 @@ _GXDLTEndPoints:
 		lda 	gxzScreen+1
 		adc 	gxzTemp0+1
 		sta 	gxzScreen+1
-		jsr 	GXDLTCheckWrap 			; fix up.
+		jsr 	GXDLTCheckWrap 				; fix up.
 
-		lda 	(gxzScreen),y 					; set pixel on the right
+		lda 	(gxzScreen),y 				; set pixel on the right
 		.plotpixel
 		sta 	(gxzScreen),y
 
@@ -152,12 +152,12 @@ _GXDLTExit: 								; restore screen position.
 ;		Check if gxzScreen needs wrapping round.
 ;
 GXDLTCheckWrap:
-		lda 	gxzScreen+1 					; check end of page
+		lda 	gxzScreen+1 				; check end of page
 		cmp 	#((GXMappingAddress+$2000) >> 8)
 		bcc 	_GXDLTCWExit
 		sbc 	#$20 						; fix up
 		sta 	gxzScreen+1
-		inc 	GXEditSlot
+		inc 	GXEditSlot 					; next bitmap vram page.
 _GXDLTCWExit:
 		rts
 

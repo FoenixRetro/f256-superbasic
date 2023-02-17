@@ -4,7 +4,7 @@
 ;		Name:		plot.asm
 ;		Purpose:	Plot point
 ;		Created:	11th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -22,7 +22,7 @@ GXPlotPoint: ;; <40:Plot>
 		jsr 	GXOpenBitmap 				; start drawing
 		jsr 	gxPositionCalc 				; setup gxzScreen, gxOffset and the position.
 		ldy 	gxOffset
-		lda 	(gxzScreen),y 					; set pixel on the right
+		lda 	(gxzScreen),y 				; set pixel on the right
 		.plotpixel
 		sta 	(gxzScreen),y
 		jsr 	GXCloseBitmap 				; stop drawing and exit

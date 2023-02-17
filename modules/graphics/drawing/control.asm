@@ -4,7 +4,7 @@
 ;		Name:		control.asm
 ;		Purpose:	Graphics test code.
 ;		Created:	11th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -19,18 +19,18 @@
 ; ************************************************************************************************
 
 GXInitialise: ;; <0:Initialise>
-		stz 	1
-		lda 	#1
+		stz 	1 							; access I/O
+		lda 	#1 							; reset bitmap address
 		sta 	$D000
 		clc
-		stz 	gxSpritesOn
+		stz 	gxSpritesOn					; sprites/bitmaps off.
 		stz 	gxBitmapsOn
-		ldx 	#15
+		ldx 	#15 						; erase work area
 _GXIClear:
 		stz 	gxCurrentX,x
 		dex
 		bpl 	_GXIClear
-		jsr 	GXClearSpriteStore
+		jsr 	GXClearSpriteStore 			; clear sprite backup space.
 		rts
 
 ; ************************************************************************************************
@@ -43,35 +43,35 @@ GXControlBitmap: ;; <1:BitmapCtl>
 		stz 	1
 
 		lda 	gxzTemp0 					; get control bits
-		and 	#1 							; set bitmap flag
+		and 	#1 							; get bitmap flag (is enabled)
 		sta 	gxBitmapsOn
 		lsr 	a 							; bit 0 into carry.
 		lda 	$D000 						; read Vicky MCR
 		ora 	#7 							; turn graphics, text, textoverlay on.
 		and 	#$F7 						; clear bitmap bit
-		bcc 	_CBNotOn
+		bcc 	_CBNotOn  		
 		ora 	#$08 						; bitmap on if 1 on 0 off
 _CBNotOn:
 		sta 	$D000 						; update Vicky MCR
-
+		;
 		lda 	gxzTemp0 					; get control settings (bits 0-2)
 		and 	#7
 		sta 	$D100 						; write in Vicky Bitmap Control Register #0
 
-		lda 	gxzTemp0+1 					; get the base page
+		lda 	gxzTemp0+1 					; get the base page requested
 		bne 	_CBNotDefault
-		lda 	#8  						; if zero, use 8 e.g. bitmap at $10000
+		lda 	#8  						; if zero, use default 8 e.g. bitmap at $10000
 _CBNotDefault:
-		sta 	gxBasePage
-		jsr 	GXCalculateBaseAddress 	 	; convert page# to address
+		sta 	gxBasePage 					; save as bitmap base page.
 
+		jsr 	GXCalculateBaseAddress 	 	; convert page# to address
 		lda 	gxzTemp0+1 					; copy address into Bitmap address registers
 		sta 	$D103
 		lda 	gxzTemp0
 		sta 	$D102
 		stz 	$D101
 
-		ldx 	#240 						; height is 240
+		ldx 	#240 						; height is 240 or 200 ?
 		lda 	$D001 						; read MCR bit 0
 		and 	#1
 		beq 	_CBHaveHeight
@@ -92,7 +92,8 @@ GXControlSprite: ;; <2:SpriteCtl>
 		lda 	gxzTemp0 					; get control bits
 		and 	#1 							; set sprites flag
 		sta 	gxSpritesOn
-		lsr 	a 							; bit 0 into carry.
+		lsr 	a 							; bit 0 into carry
+		
 		lda 	$D000 						; read Vicky MCR
 		ora 	#7 							; turn graphics, text, textoverlay on.
 		and 	#$DF 						; clear sprite bit
@@ -101,13 +102,15 @@ GXControlSprite: ;; <2:SpriteCtl>
 _CSNotOn:
 		sta 	$D000 						; update Vicky MCR
 
+
 		lda 	gxzTemp0+1 					; get the base page
 		bne 	_CSNotDefault
 		lda 	#24  						; if zero, use 24 e.g. sprites at $30000
 _CSNotDefault:
 		sta 	gxSpritePage
+
 		jsr 	GXCalculateBaseAddress 	 	; convert page# to address
-		lda 	gxzTemp0
+		lda 	gxzTemp0 					; save this so we know where the sprites are.
 		sta 	gxSpriteOffsetBase
 		lda 	gxzTemp0+1
 		sta 	gxSpriteOffsetBase+1

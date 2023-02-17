@@ -36,7 +36,7 @@ Returns CS error , CC okay
 *	40 PLOT point
 *	41 SPRMOVE to x,y (fix up sprite positioning)
 
-	10 TILECTL X=tiles, Y = images
+	10 TILECTL X=tiles page, Y = images page enable bit
 	11 TILESZ  X=width, Y = height
 	12 TILESCL X=XScroll, Y = YScroll
 	38 TILEPOS X,Y = Tile

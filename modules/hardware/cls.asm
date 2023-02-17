@@ -4,7 +4,7 @@
 ;		Name:		cls.asm
 ;		Purpose:	Clear Screen
 ;		Created:	14th November 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -27,7 +27,7 @@ EXTClearScreenCode:
 		inc 	1 							; select colour page
 		lda 	EXTTextColour
 		jsr 	_EXTCSFill
-		bra 	EXTHomeCursor
+		bra 	EXTHomeCursor				; home cursor
 		;
 		;		Fill all text memory C000-D2FF with A - page set by caller
 		;		
@@ -65,7 +65,7 @@ _EXTCSFill3:
 EXTHomeCursor:		
 		stz 	EXTRow 						; reset row & column
 		stz 	EXTColumn
-		lda 	#EXTMemory & $FF 			; set address
+		lda 	#EXTMemory & $FF 			; set address in I/O memory
 		sta 	EXTAddress
 		lda 	#EXTMemory >> 8
 		sta 	EXTAddress+1
@@ -80,7 +80,7 @@ EXTSetHardwareCursor:
 		stz 	1 							; I/O Page zero
 		lda 	#1+4 						; enable cursor
 		sta 	$D010 				
-		lda 	#214
+		lda 	#214 						; cursor character
 		sta 	$D012
 		lda 	EXTColumn
 		sta 	$D014 						; set cursor position

@@ -4,7 +4,7 @@
 ;		Name:		find.asm
 ;		Purpose:	Get address, size and LUT of sprite (address is offset from base)
 ;		Created:	10th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -15,7 +15,7 @@
 ; ************************************************************************************************
 ;
 ;					Get address, size and LUT of sprite A (assume already opened)
-;					Returns CS if bad sprite, CC if okay.
+;					in sprite data structure. Returns CS if bad sprite, CC if okay.
 ;
 ; ************************************************************************************************
 
@@ -39,7 +39,7 @@ GXFindSprite:
 		sta 	gxSizeBits 					; save raw (0-3)
 		tax
 		lda 	_GXFXSSTTable,x 			; read sprite size
-		sta 	gxSizePixels 					; save (8/16/24/32)
+		sta 	gxSizePixels 				; save (8/16/24/32)
 
 		pla 								; get LUT
 		lsr		a

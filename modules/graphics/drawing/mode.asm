@@ -4,7 +4,7 @@
 ;		Name:		mode.asm
 ;		Purpose:	Graphics set drawing mode
 ;		Created:	11th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -15,6 +15,8 @@
 ; ************************************************************************************************
 ;
 ;								Set colour, mode (bits 0 & 1)
+;
+;				  Sets AND value and EOR value to access mode (see below)
 ;
 ; ************************************************************************************************
 

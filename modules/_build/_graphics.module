@@ -399,7 +399,7 @@ GRUndefined:
 ;		Name:		circle.asm
 ;		Purpose:	Circle drawing code
 ;		Created:	9th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -414,12 +414,12 @@ GRUndefined:
 ; ************************************************************************************************
 
 GXFillCircle: ;; <37:FillCircle>
-		lda 	#255
+		lda 	#255 						; A determines fill or not
 		bra 	GXCircle
 GXFrameCircle: ;; <36:FrameCircle>
 		lda 	#0
 GXCircle:
-		sta 	gxIsFillMode					; save Fill flag
+		sta 	gxIsFillMode				; save Fill flag
 		lda 	gxBitmapsOn
 		beq 	_GXCFail
 		jsr 	GXSortXY 					; topleft/bottomright
@@ -430,7 +430,7 @@ _GXCircleDraw:
 		lda 	gxxCentre					; while x <= y
 		cmp 	gxYCentre
 		bcc 	_GXCircleContinue
-		bne 	_GXNoLast
+		bne 	_GXNoLast  					; fix up if x < y
 		jsr 	GXPlot1
 _GXNoLast:
 		jsr 	GXCloseBitmap 				; close the bitmap
@@ -445,6 +445,7 @@ _GXCircleContinue:
 _GXCFail:
 		sec
 		rts
+
 ; ************************************************************************************************
 ;
 ;									Plot line/points
@@ -774,7 +775,7 @@ _GXCB1: 									; do 4 chunks at a time, really should DMA this.
 ;		Name:		control.asm
 ;		Purpose:	Graphics test code.
 ;		Created:	11th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -789,18 +790,18 @@ _GXCB1: 									; do 4 chunks at a time, really should DMA this.
 ; ************************************************************************************************
 
 GXInitialise: ;; <0:Initialise>
-		stz 	1
-		lda 	#1
+		stz 	1 							; access I/O
+		lda 	#1 							; reset bitmap address
 		sta 	$D000
 		clc
-		stz 	gxSpritesOn
+		stz 	gxSpritesOn					; sprites/bitmaps off.
 		stz 	gxBitmapsOn
-		ldx 	#15
+		ldx 	#15 						; erase work area
 _GXIClear:
 		stz 	gxCurrentX,x
 		dex
 		bpl 	_GXIClear
-		jsr 	GXClearSpriteStore
+		jsr 	GXClearSpriteStore 			; clear sprite backup space.
 		rts
 
 ; ************************************************************************************************
@@ -813,7 +814,7 @@ GXControlBitmap: ;; <1:BitmapCtl>
 		stz 	1
 
 		lda 	gxzTemp0 					; get control bits
-		and 	#1 							; set bitmap flag
+		and 	#1 							; get bitmap flag (is enabled)
 		sta 	gxBitmapsOn
 		lsr 	a 							; bit 0 into carry.
 		lda 	$D000 						; read Vicky MCR
@@ -823,25 +824,25 @@ GXControlBitmap: ;; <1:BitmapCtl>
 		ora 	#$08 						; bitmap on if 1 on 0 off
 _CBNotOn:
 		sta 	$D000 						; update Vicky MCR
-
+		;
 		lda 	gxzTemp0 					; get control settings (bits 0-2)
 		and 	#7
 		sta 	$D100 						; write in Vicky Bitmap Control Register #0
 
-		lda 	gxzTemp0+1 					; get the base page
+		lda 	gxzTemp0+1 					; get the base page requested
 		bne 	_CBNotDefault
-		lda 	#8  						; if zero, use 8 e.g. bitmap at $10000
+		lda 	#8  						; if zero, use default 8 e.g. bitmap at $10000
 _CBNotDefault:
-		sta 	gxBasePage
-		jsr 	GXCalculateBaseAddress 	 	; convert page# to address
+		sta 	gxBasePage 					; save as bitmap base page.
 
+		jsr 	GXCalculateBaseAddress 	 	; convert page# to address
 		lda 	gxzTemp0+1 					; copy address into Bitmap address registers
 		sta 	$D103
 		lda 	gxzTemp0
 		sta 	$D102
 		stz 	$D101
 
-		ldx 	#240 						; height is 240
+		ldx 	#240 						; height is 240 or 200 ?
 		lda 	$D001 						; read MCR bit 0
 		and 	#1
 		beq 	_CBHaveHeight
@@ -862,7 +863,8 @@ GXControlSprite: ;; <2:SpriteCtl>
 		lda 	gxzTemp0 					; get control bits
 		and 	#1 							; set sprites flag
 		sta 	gxSpritesOn
-		lsr 	a 							; bit 0 into carry.
+		lsr 	a 							; bit 0 into carry
+
 		lda 	$D000 						; read Vicky MCR
 		ora 	#7 							; turn graphics, text, textoverlay on.
 		and 	#$DF 						; clear sprite bit
@@ -871,13 +873,15 @@ GXControlSprite: ;; <2:SpriteCtl>
 _CSNotOn:
 		sta 	$D000 						; update Vicky MCR
 
+
 		lda 	gxzTemp0+1 					; get the base page
 		bne 	_CSNotDefault
 		lda 	#24  						; if zero, use 24 e.g. sprites at $30000
 _CSNotDefault:
 		sta 	gxSpritePage
+
 		jsr 	GXCalculateBaseAddress 	 	; convert page# to address
-		lda 	gxzTemp0
+		lda 	gxzTemp0 					; save this so we know where the sprites are.
 		sta 	gxSpriteOffsetBase
 		lda 	gxzTemp0+1
 		sta 	gxSpriteOffsetBase+1
@@ -945,7 +949,7 @@ _GXCSSLoop:
 ;		Name:		line.asm
 ;		Purpose:	Line drawing code
 ;		Created:	6th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -960,9 +964,9 @@ _GXCSSLoop:
 ; ************************************************************************************************
 
 GXLine: ;; <33:Line>
-		lda 	gxBitmapsOn
+		lda 	gxBitmapsOn					; check bitmap on.
 		beq 	_GXLFail
-		jsr 	GXOpenBitmap
+		jsr 	GXOpenBitmap 				; access it.
 		jsr 	GXSortY						; sort pairs so Y1 >= Y0 e.g. top to bottom.
 		jsr 	GXLineSetup 				; the calculations in the linescanner constructor
 		jsr 	gxPositionCalc 				; calculate position/offset.
@@ -977,7 +981,7 @@ _GXDrawLoop:
 		jsr 	GXLineAdvance 				; code as per advance method
 		bra 	_GXDrawLoop
 _GXLExit:
-		jsr 	GXCloseBitmap
+		jsr 	GXCloseBitmap 				; restore and return success.
 		clc
 		rts
 _GXLFail:
@@ -992,7 +996,7 @@ _GXLFail:
 
 GXLineIsComplete:
 		lda 	gxIsDiffYLarger 			; is dy larger
-		bne 	_GXLICCompareY 				; if so compare Y1/Y0
+		bne 	_GXLICCompareY 				; if so compare Y1 versus Y0
 
 		lda 	gxX0 						; compare X, LSB and MSB
 		eor 	gxX1
@@ -1027,6 +1031,7 @@ _GXLAOverflow:
 		sec 								; subtract total and write back
 		sbc 	gxTotal
 		sta 	gxPosition
+		;
 _GXLANoExtra:
 		lda 	gxIsDiffYLarger
 		beq 	_GXDXLarger
@@ -1214,7 +1219,7 @@ gxAddSelect:
 ;		Name:		mode.asm
 ;		Purpose:	Graphics set drawing mode
 ;		Created:	11th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -1225,6 +1230,8 @@ gxAddSelect:
 ; ************************************************************************************************
 ;
 ;								Set colour, mode (bits 0 & 1)
+;
+;				  Sets AND value and EOR value to access mode (see below)
 ;
 ; ************************************************************************************************
 
@@ -1285,7 +1292,7 @@ _GXSDCNoFlip:
 ;		Name:		plot.asm
 ;		Purpose:	Plot point
 ;		Created:	11th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -1303,7 +1310,7 @@ GXPlotPoint: ;; <40:Plot>
 		jsr 	GXOpenBitmap 				; start drawing
 		jsr 	gxPositionCalc 				; setup gxzScreen, gxOffset and the position.
 		ldy 	gxOffset
-		lda 	(gxzScreen),y 					; set pixel on the right
+		lda 	(gxzScreen),y 				; set pixel on the right
 		.plotpixel
 		sta 	(gxzScreen),y
 		jsr 	GXCloseBitmap 				; stop drawing and exit
@@ -1328,7 +1335,7 @@ GXPlotPoint: ;; <40:Plot>
 ;		Name:		rect.asm
 ;		Purpose:	Rectangle/Solid Rectangle drawing code
 ;		Created:	8th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -1343,12 +1350,12 @@ GXPlotPoint: ;; <40:Plot>
 ; ************************************************************************************************
 
 GXFillRectangle: ;; <35:FillRect>
-		sec
+		sec 								; pass carry in for fill/frame
 		bra 	GXRectangle
 GXFrameRectangle: ;; <34:FrameRect>
 		clc
 GXRectangle:
-		lda 	gxBitmapsOn
+		lda 	gxBitmapsOn 				; exit if off.
 		beq 	_GXRFail
 		php 								; save Fill flag (CS)
 		jsr 	GXOpenBitmap 				; start drawing
@@ -1361,7 +1368,7 @@ GXRectangle:
 		jsr 	GXDrawLineX1X0 				; draw a line length X1-X0
 
 		lda 	gxY0 						; reached end of rectangle ?
-		cmp 	gxY1
+		cmp 	gxY1 						; e.g. 1 pixel high.
 		beq 	_GXRectangleExit
 _GXRectLoop:
 		jsr 	GXMovePositionDown 			; down one.
@@ -1369,7 +1376,7 @@ _GXRectLoop:
 		lda 	gxY0 						; reached last line
 		cmp 	gxY1
 		beq 	_GXLastLine
-		plp 								; get flag back
+		plp 								; get flag back for solid/edged
 		php
 		jsr 	GXDrawLineX1X0 				; draw horizontal line
 		bra 	_GXRectLoop
@@ -1395,7 +1402,7 @@ _GXRFail:
 
 GXDrawLineX1X0:
 		php 								; save solid/either-end
-		sec
+		sec 								; calculate x1-x0
 		lda		gxX1
 		sbc 	gxX0
 		sta 	gxzTemp0
@@ -1412,7 +1419,7 @@ GXDrawLineX1X0:
 
 GXDrawLineTemp0:
 
-		lda 	gxzScreen 						; push gxzScreen, gxOffset and GXEditSlot on stack
+		lda 	gxzScreen 					; push gxzScreen, gxOffset and GXEditSlot on stack
 		pha
 		lda 	gxzScreen+1
 		pha
@@ -1426,7 +1433,7 @@ GXDrawLineTemp0:
 		;		Draw solid line.
 		;
 _GXDLTLine:
-		lda 	(gxzScreen),y 					; set pixel
+		lda 	(gxzScreen),y 				; set pixel
 		.plotpixel
 		sta 	(gxzScreen),y
 		;
@@ -1438,14 +1445,14 @@ _GXDLTNoBorrow:
 		dec 	gxzTemp0
 		iny 								; next slot.
 		bne 	_GXDLTLine
-		inc 	gxzScreen+1 					; carry to next
+		inc 	gxzScreen+1 				; carry to next
 		jsr 	GXDLTCheckWrap				; check for new page.
 		bra 	_GXDLTLine
 		;
 		;		Draw end points only.
 		;
 _GXDLTEndPoints:
-		lda 	(gxzScreen),y 					; set pixel
+		lda 	(gxzScreen),y 				; set pixel
 		.plotpixel
 		sta 	(gxzScreen),y
 		;
@@ -1456,9 +1463,9 @@ _GXDLTEndPoints:
 		lda 	gxzScreen+1
 		adc 	gxzTemp0+1
 		sta 	gxzScreen+1
-		jsr 	GXDLTCheckWrap 			; fix up.
+		jsr 	GXDLTCheckWrap 				; fix up.
 
-		lda 	(gxzScreen),y 					; set pixel on the right
+		lda 	(gxzScreen),y 				; set pixel on the right
 		.plotpixel
 		sta 	(gxzScreen),y
 
@@ -1476,12 +1483,12 @@ _GXDLTExit: 								; restore screen position.
 ;		Check if gxzScreen needs wrapping round.
 ;
 GXDLTCheckWrap:
-		lda 	gxzScreen+1 					; check end of page
+		lda 	gxzScreen+1 				; check end of page
 		cmp 	#((GXMappingAddress+$2000) >> 8)
 		bcc 	_GXDLTCWExit
 		sbc 	#$20 						; fix up
 		sta 	gxzScreen+1
-		inc 	GXEditSlot
+		inc 	GXEditSlot 					; next bitmap vram page.
 _GXDLTCWExit:
 		rts
 
@@ -2387,7 +2394,7 @@ _GXCollideFail:
 ;		Name:		find.asm
 ;		Purpose:	Get address, size and LUT of sprite (address is offset from base)
 ;		Created:	10th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -2398,7 +2405,7 @@ _GXCollideFail:
 ; ************************************************************************************************
 ;
 ;					Get address, size and LUT of sprite A (assume already opened)
-;					Returns CS if bad sprite, CC if okay.
+;					in sprite data structure. Returns CS if bad sprite, CC if okay.
 ;
 ; ************************************************************************************************
 
@@ -2422,7 +2429,7 @@ GXFindSprite:
 		sta 	gxSizeBits 					; save raw (0-3)
 		tax
 		lda 	_GXFXSSTTable,x 			; read sprite size
-		sta 	gxSizePixels 					; save (8/16/24/32)
+		sta 	gxSizePixels 				; save (8/16/24/32)
 
 		pla 								; get LUT
 		lsr		a

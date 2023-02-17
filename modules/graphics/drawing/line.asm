@@ -4,7 +4,7 @@
 ;		Name:		line.asm
 ;		Purpose:	Line drawing code
 ;		Created:	6th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2023
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -19,9 +19,9 @@
 ; ************************************************************************************************
 
 GXLine: ;; <33:Line>
-		lda 	gxBitmapsOn
+		lda 	gxBitmapsOn					; check bitmap on.
 		beq 	_GXLFail
-		jsr 	GXOpenBitmap
+		jsr 	GXOpenBitmap 				; access it.
 		jsr 	GXSortY						; sort pairs so Y1 >= Y0 e.g. top to bottom.
 		jsr 	GXLineSetup 				; the calculations in the linescanner constructor
 		jsr 	gxPositionCalc 				; calculate position/offset.
@@ -36,7 +36,7 @@ _GXDrawLoop:
 		jsr 	GXLineAdvance 				; code as per advance method
 		bra 	_GXDrawLoop
 _GXLExit:
-		jsr 	GXCloseBitmap
+		jsr 	GXCloseBitmap 				; restore and return success.
 		clc
 		rts
 _GXLFail:
@@ -51,7 +51,7 @@ _GXLFail:
 
 GXLineIsComplete:
 		lda 	gxIsDiffYLarger 			; is dy larger
-		bne 	_GXLICCompareY 				; if so compare Y1/Y0
+		bne 	_GXLICCompareY 				; if so compare Y1 versus Y0
 
 		lda 	gxX0 						; compare X, LSB and MSB
 		eor 	gxX1
@@ -86,6 +86,7 @@ _GXLAOverflow:
 		sec 								; subtract total and write back
 		sbc 	gxTotal
 		sta 	gxPosition
+		;
 _GXLANoExtra:
 		lda 	gxIsDiffYLarger
 		beq 	_GXDXLarger

@@ -4,7 +4,7 @@
 ;		Name:		circle.asm
 ;		Purpose:	Circle drawing code
 ;		Created:	9th October 2022
-;		Reviewed: 	No
+;		Reviewed: 	17th February 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
@@ -19,12 +19,12 @@
 ; ************************************************************************************************
 
 GXFillCircle: ;; <37:FillCircle>
-		lda 	#255
+		lda 	#255 						; A determines fill or not
 		bra 	GXCircle
 GXFrameCircle: ;; <36:FrameCircle>
 		lda 	#0
 GXCircle:
-		sta 	gxIsFillMode					; save Fill flag
+		sta 	gxIsFillMode				; save Fill flag
 		lda 	gxBitmapsOn
 		beq 	_GXCFail
 		jsr 	GXSortXY 					; topleft/bottomright
@@ -35,8 +35,8 @@ _GXCircleDraw:
 		lda 	gxxCentre					; while x <= y
 		cmp 	gxYCentre
 		bcc 	_GXCircleContinue
-		bne 	_GXNoLast
-		jsr 	GXPlot1
+		bne 	_GXNoLast  					; fix up if x < y
+		jsr 	GXPlot1  
 _GXNoLast:
 		jsr 	GXCloseBitmap 				; close the bitmap
 		clc
@@ -50,6 +50,7 @@ _GXCircleContinue:
 _GXCFail:
 		sec
 		rts
+
 ; ************************************************************************************************
 ;
 ;									Plot line/points
