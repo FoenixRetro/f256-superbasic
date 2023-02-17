@@ -12,5 +12,8 @@ assemble:
 	cp tile_map.bin tile_images.bin ../../../bin
 	
 upload: assemble
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)tile_map.bin --address 24000
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)tile_images.bin --address 26000
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)graphics.bin --address 30000
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary tiles8.bin --address 2000
 

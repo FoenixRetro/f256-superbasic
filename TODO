@@ -1,8 +1,7 @@
 Tiles:
-	SAVE causing weird error.
-	Get a second stacked tile and put a bitmap under it
-	bitmap over it ? consider this ?
-	patch this into BASIC so it uses their bitmap/sprites and the coded tiles ?
+
+
+	Write Graphics Module routines.
 
 Progress:	
  	Upgrade model A.
