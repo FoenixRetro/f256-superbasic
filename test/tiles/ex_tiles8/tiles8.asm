@@ -187,8 +187,11 @@ done_lut:   stz MMU_IO_CTRL             ; Go back to I/O Page 0
 			sta VKY_TM0_POS_Y_L         ; Set scrolling Y = 0
 			stz VKY_TM0_POS_Y_H
 
-lock:       eor #1
+lock:       inc a
+			and #7
+			ora #16
 			sta VKY_TM0_POS_Y_L
+			sta VKY_TM0_POS_X_L
 delay:		dex
 			bne 	delay
 			dey			
