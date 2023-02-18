@@ -34,7 +34,8 @@ boot:
 			;
 			; Set up TinyVicky to display tiles
 			;
-			lda #$20+$10+$04+$08        ; Sprites , Bitmap, Graphics and Tile engines enabled
+			lda #$20+$10+$04+$08        ; Sprites , Tiles Graphics Bitmaps
+;			lda #$10+$04
 			sta VKY_MSTR_CTRL_0
 			stz VKY_MSTR_CTRL_1         ; 320x240 @ 60Hz
 
@@ -59,8 +60,10 @@ Fill1:		stz 	z0
 			lda 	#$60
 			sta 	z0+1
 Fill2:		lda 	z0
+			bmi 	Fill4
 			lsr 	a
 			bcc 	Fill3
+Fill4:			
 			lda 	#0
 Fill3:			
 			sta 	(z0)
@@ -176,10 +179,10 @@ done_lut:   stz MMU_IO_CTRL             ; Go back to I/O Page 0
 			lda #$02
 			sta VKY_TM0_ADDR_H
 
-			lda #$0E                    ; Set scrolling X = 8
+			lda #0                    ; Set scrolling X = 8
 			sta VKY_TM0_POS_X_L
 			lda #$00
-			sta VKY_TM0_POS_X_H
+			stz VKY_TM0_POS_X_H
 
 			stz VKY_TM0_POS_Y_L         ; Set scrolling Y = 0
 			stz VKY_TM0_POS_Y_H
