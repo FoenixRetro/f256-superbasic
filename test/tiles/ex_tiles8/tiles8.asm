@@ -29,13 +29,13 @@ start:
 
 z0 = $30
 boot:
-
+			sei
 
 			;
 			; Set up TinyVicky to display tiles
 			;
 			lda #$20+$10+$04+$08        ; Sprites , Tiles Graphics Bitmaps
-;			lda #$10+$04
+			lda #$10+$04
 			sta VKY_MSTR_CTRL_0
 			stz VKY_MSTR_CTRL_1         ; 320x240 @ 60Hz
 
@@ -46,7 +46,7 @@ boot:
 
 			stz VKY_BRDR_CTRL           ; No border
 
-			lda #1
+			lda #1 						; Bitmap.
 			sta 	$D100
 			stz     $D101
 			stz     $D102
@@ -84,7 +84,7 @@ Fill3:
 			lda #$0
 			sta VKY_BKG_COL_B
 
-			stz 	$D901
+			stz 	$D901 				; sprites.
 			lda 	#$0D
 			sta 	$D902
 			lda 	#$03
@@ -162,8 +162,7 @@ done_lut:   stz MMU_IO_CTRL             ; Go back to I/O Page 0
 			;
 
 			lda #$11                    ; 8x8 tiles, enable
-			sta VKY_TM0_CTRL
-
+			sta VKY_TM0_CTRL			
 			stz VKY_TM1_CTRL            ; Make sure the other tile maps are off
 			stz VKY_TM2_CTRL
 
@@ -179,6 +178,13 @@ done_lut:   stz MMU_IO_CTRL             ; Go back to I/O Page 0
 			lda #$02
 			sta VKY_TM0_ADDR_H
 
+			lda #tile_map & $FF       ; Point to the tile map
+			sta VKY_TM0_ADDR_L
+			lda #tile_map >> 8
+			sta VKY_TM0_ADDR_M
+			lda #$00
+			sta VKY_TM0_ADDR_H
+
 			lda #0                    ; Set scrolling X = 8
 			sta VKY_TM0_POS_X_L
 			stz VKY_TM0_POS_X_H
@@ -190,6 +196,7 @@ done_lut:   stz MMU_IO_CTRL             ; Go back to I/O Page 0
 lock:       inc a
 			and #7
 			ora #16
+			lda #0
 			sta VKY_TM0_POS_Y_L
 			sta VKY_TM0_POS_X_L
 delay:		dex
@@ -199,3 +206,4 @@ delay:		dex
 			bra 	lock
 
 .include "tiles_pal.asm"
+.include "tile_map.asm"
