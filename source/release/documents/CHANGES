@@ -209,4 +209,8 @@ Release 33: (11/02/23):
 Release 34: (14/02/23)
 
 	BUG: Fixed beethead bug (SAVE showing weird error message)
-	CHG: Added Jason Anderson's
+	CHG: Added Jason Anderson's App.
+
+Release 35: (16/02/23):
+
+	BUG: Fixed boot display :) cosmetic only.	

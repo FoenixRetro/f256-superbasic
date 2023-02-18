@@ -181,14 +181,18 @@ done_lut:   stz MMU_IO_CTRL             ; Go back to I/O Page 0
 
 			lda #0                    ; Set scrolling X = 8
 			sta VKY_TM0_POS_X_L
-			lda #$00
 			stz VKY_TM0_POS_X_H
 
-			stz VKY_TM0_POS_Y_L         ; Set scrolling Y = 0
+			lda #0
+			sta VKY_TM0_POS_Y_L         ; Set scrolling Y = 0
 			stz VKY_TM0_POS_Y_H
 
-lock:       nop
-			inc 	$40
-			bra lock
+lock:       eor #1
+			sta VKY_TM0_POS_Y_L
+delay:		dex
+			bne 	delay
+			dey			
+			bne 	delay
+			bra 	lock
 
 .include "tiles_pal.asm"
