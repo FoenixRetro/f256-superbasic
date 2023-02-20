@@ -34,7 +34,7 @@ KRN_REPO= ..$(S)..$(S)F256_Jr_Kernel_DOS
 
 MODULES= +hardware +graphics +tokeniser +sound +kernel
 
-START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@x $(BINDIR)graphics.bin@s 
+START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@x $(BINDIR)graphics.bin@s $(BINDIR)tile_map.bin@24000 $(BINDIR)tile_images.bin@26000
 
 all :  basic
 #
