@@ -100,12 +100,14 @@ gxX1:
 gxY1:
 		.fill 	2
 ;
-;		Sprites/Bitmaps on flags
+;		Sprites/Bitmaps/Tiles on flags
 ;
 gxSpritesOn:
 		.fill 	1
 gxBitmapsOn:
 		.fill 	1
+gxTilesOn:
+		.fill 	1		
 ;
 ;		Base page of bitmap
 ;
@@ -116,6 +118,23 @@ gxBasePage:
 ;
 gxSpritePage:
 		.fill 	1
+;
+;		Base page of tile image data
+;		
+gxTileImagePage:
+		.fill 	1
+;
+;		Base page of tile map data
+;		
+gxTileMapPage:
+		.fill 	1
+;
+;		Tile map size
+;		
+gxTileMapWidth:
+		.fill 	1
+gxTileMapHeight:
+		.fill 	1		
 ;
 ;		Height of screen
 ;

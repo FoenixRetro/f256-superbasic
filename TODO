@@ -1,7 +1,7 @@
 Tiles:
 
-
-	Write Graphics Module routines.
+	Implement the tilescl code.
+	Implement tilepos,tileread,tilewrite
 
 Progress:	
  	Upgrade model A.

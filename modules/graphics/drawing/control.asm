@@ -23,14 +23,20 @@ GXInitialise: ;; <0:Initialise>
 		lda 	#1 							; reset bitmap address
 		sta 	$D000
 		clc
-		stz 	gxSpritesOn					; sprites/bitmaps off.
+		stz 	gxSpritesOn					; sprites/bitmaps/tiles off.
 		stz 	gxBitmapsOn
+		stz 	gxTilesOn
 		ldx 	#15 						; erase work area
 _GXIClear:
 		stz 	gxCurrentX,x
 		dex
 		bpl 	_GXIClear
 		jsr 	GXClearSpriteStore 			; clear sprite backup space.
+
+		lda 	#$40                   		; Layer 0 = Bitmap 0, Layer 1 = Tile map 0
+		sta 	$D002
+		lda 	#$15                   		; Layer 2 = Tile Map 1
+		sta 	$D003
 		rts
 
 ; ************************************************************************************************
@@ -129,6 +135,101 @@ _CSClear:
 
 ; ************************************************************************************************
 ;
+;								Control the tile map
+;
+; ************************************************************************************************
+
+GXControlTilemap: ;; <10:TileCtl>
+		stz 	1 							; access I/O
+		lda 	gxzTemp0 					; get the Map Page/Enable
+		bmi 	_GXCTOn
+		;
+		lda 	$D000 						; turn off bitmap enable bit in MCR
+		and 	#$EF 						; clear bit 4
+		sta 	$D000
+		stz 	gxTilesOn 					; clear tiles on flag. 	
+		clc
+		rts
+		;
+_GXCTOn:
+		sta 	gxTilesOn 					; set tiles on flag.
+		;
+		lda 	$D000	 					; turn tilemap on
+		ora 	#$17
+		sta 	$D000
+		stz 	$D2C0 						; turn off tilemap#1 and tilemap#2
+		stz 	$D218
+		;
+		lda 	#64 						; default size of 64x32
+		sta 	gxTileMapWidth
+		lda		#32
+		sta 	gxTileMapHeight
+		;
+		lda 	gxTilesOn 					; set the tile map page
+		and 	#$7F
+		sta 	gxTileMapPage
+		;
+		lda 	gxzTemp0+1 					; set the tile image page
+		sta 	gxTileImagePage
+		;
+		lda 	#$11 						; set tilemap#0 on and 8x8
+		sta 	$D200
+		;
+		lda 	gxTileMapPage 				; put tile map address in.
+		jsr		GXCalculateBaseAddress
+		stz 	$D201
+		lda 	gxzTemp0
+		sta 	$D202
+		lda 	gxzTemp0+1
+		sta 	$D203
+		;
+		lda 	gxTileMapWidth	 			; set tilemap size.
+		sta 	$D204
+		lda 	gxTileMapHeight
+		sta 	$D206
+		;
+		stz 	$D208 						; clear scrolling register
+		stz 	$D209
+		stz 	$D20A
+		stz 	$D20B
+		;
+		lda 	gxTileImagePage 			; set the tile image address
+		jsr 	GXCalculateBaseAddress		
+		stz 	$D280
+		lda 	gxzTemp0
+		sta 	$D281
+		lda 	gxzTemp0+1
+		sta 	$D282
+		clc
+		rts
+
+; ************************************************************************************************
+;
+;								Control the tile map size
+;
+; ************************************************************************************************
+
+GXControlTileSize: ;; <11:TILESZ>
+		lda 	gxTilesOn
+		sec
+		beq 	_GXCTSExit
+
+		stz 	1
+		
+		lda 	gxzTemp0
+		sta 	gxTileMapWidth
+		sta 	$D204
+
+		lda 	gxzTemp0+1
+		sta 	gxTileMapHeight
+		sta 	$D206
+
+		clc
+_GXCTSExit:
+		rts
+
+; ************************************************************************************************
+;
 ;								Convert page number to an address
 ;
 ; ************************************************************************************************
@@ -170,5 +271,6 @@ _GXCSSLoop:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		20/02/23 		Added control functionality for tile on/off/location and size of map.
 ;
 ; ************************************************************************************************

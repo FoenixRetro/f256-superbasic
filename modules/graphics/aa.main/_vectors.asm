@@ -16,8 +16,8 @@ GRVectorTable:
 	.word	GXSelect                 ; $07 SpriteUse
 	.word	GXSelectImage            ; $08 SpriteImage
 	.word	GXCollide                ; $09 SpriteCollide
-	.word	GRUndefined              ; $0a
-	.word	GRUndefined              ; $0b
+	.word	GXControlTilemap         ; $0a TileCtl
+	.word	GXControlTileSize        ; $0b TILESZ
 	.word	GRUndefined              ; $0c
 	.word	GRUndefined              ; $0d
 	.word	GRUndefined              ; $0e

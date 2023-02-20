@@ -26,7 +26,9 @@ Returns CS error , CC okay
 *	6 DRAWS sprite ID xxxxxx (4+5 only support modes 0/1), 2nd byte eor with mode bits.
 *	7 SPRUSE X = sprite# select sprite
 *	8 SPRIMG X = set selected sprite image to X, Y = 0, hide, Y = 1
-	9 HIT    Check collision state X,Y. Returns $FF for miss,or max |c1-c0| << 2
+*	9 HIT    Check collision state X,Y. Returns $FF for miss,or max |c1-c0| << 2
+*	10 TILECTL X=tiles page, Y = images page enable bit, X bit 7 = on/off, size to 64x32
+*	11 TILESZ  X=width, Y = height
 *	32 MOVE 			
 *	33 LINE 	
 *	34 RECT
@@ -39,8 +41,6 @@ Returns CS error , CC okay
 
 
 Tile Interface (GFX)
-	10 TILECTL X=tiles page, Y = images page enable bit, X bit 7 = on/off
-	11 TILESZ  X=width, Y = height
 	12 TILESCL X=XScroll, Y = YScroll
 	38 TILEPOS X,Y = Tile
 	39 TILEWRT X = Tile, advance
