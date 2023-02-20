@@ -130,7 +130,7 @@ done_lut:   stz MMU_IO_CTRL             ; Go back to I/O Page 0
             lda #`tile_map
             sta VKY_TM0_ADDR_H
 
-            lda #$00                    ; Set scrolling X = 8
+            lda #$00                     ; Set scrolling X = 8
             sta VKY_TM0_POS_X_L
             lda #$00
             sta VKY_TM0_POS_X_H
@@ -148,7 +148,8 @@ lock:       nop
 ;       16-bit integers. The code is taking advantage of the fact that the tile map is using
 ;       tile set 0 and CLUT 0 to keep the text of the code short enough to fit on a page.
 ;
-            .align 2
+            .align 256
+
 tile_map:   .word $2, $1, $7, $1, $8, $0, $0, $0, $0, $0, $0, $0, $0, $0, $0, $0, $0, $0, $4, $0, $4
             .fill 42,0
             .word $0, $0, $1, $0, $0, $0, $0, $0, $0, $0, $0, $0, $0, $0, $0, $0, $0, $0, $0, $4, $0
