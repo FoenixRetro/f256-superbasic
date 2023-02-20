@@ -35,7 +35,7 @@ boot:
 			; Set up TinyVicky to display tiles
 			;
 			lda #$20+$10+$04+$08        ; Sprites , Tiles Graphics Bitmaps
-			lda #$10+$04
+			;lda #$10+$30
 			sta VKY_MSTR_CTRL_0
 			stz VKY_MSTR_CTRL_1         ; 320x240 @ 60Hz
 
@@ -84,14 +84,16 @@ Fill3:
 			lda #$0
 			sta VKY_BKG_COL_B
 
+			lda 	#$00
 			stz 	$D901 				; sprites.
-			lda 	#$0D
+			lda 	#$02
 			sta 	$D902
 			lda 	#$03
 			sta 	$D903
 
 			lda 	#1
 			sta 	$D900
+
 			lda 	#64
 			sta 	$D904
 			stz 	$D905
@@ -117,7 +119,7 @@ Fill3:
 			ldx #0                      ; X is a counter for the number of colors copied
 color_loop: ldy #0                      ; Y is a pointer to the component within a CLUT color
 comp_loop:  lda (ptr_src),y             ; Read a byte from the code
-			sta (ptr_dst),y             ; And write it to the CLUT
+;			sta (ptr_dst),y             ; And write it to the CLUT
 			iny                         ; Move to the next byte
 			cpy #4
 			bne comp_loop               ; Continue until we have copied 4 bytes
