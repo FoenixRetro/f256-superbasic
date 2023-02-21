@@ -1,5 +1,6 @@
 Tiles:
 
+	Default tilemap pages.
 	Implement tilepos,tileread,tilewrite
 	Implement BASIC interface and document asyou go.
 
