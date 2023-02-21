@@ -45,56 +45,57 @@ KeywordSet0:
 	.text	4,$10,"SGN("           ; $a7 SGN(
 	.text	4,$0e,"SPC("           ; $a8 SPC(
 	.text	5,$45,"STR$("          ; $a9 STR$(
-	.text	6,$a9,"TIMER("         ; $aa TIMER(
-	.text	4,$40,"TRUE"           ; $ab TRUE
-	.text	4,$0b,"VAL("           ; $ac VAL(
-	.text	3,$e7,"FOR"            ; $ad FOR
-	.text	2,$8f,"IF"             ; $ae IF
-	.text	4,$34,"PROC"           ; $af PROC
-	.text	6,$c1,"REPEAT"         ; $b0 REPEAT
-	.text	5,$79,"WHILE"          ; $b1 WHILE
-	.text	5,$66,"ENDIF"          ; $b2 ENDIF
-	.text	7,$0b,"ENDPROC"        ; $b3 ENDPROC
-	.text	4,$3f,"NEXT"           ; $b4 NEXT
-	.text	4,$2f,"THEN"           ; $b5 THEN
-	.text	5,$8c,"UNTIL"          ; $b6 UNTIL
-	.text	4,$2e,"WEND"           ; $b7 WEND
-	.text	2,$95,"AT"             ; $b8 AT
-	.text	2,$9b,"BY"             ; $b9 BY
-	.text	4,$1c,"CALL"           ; $ba CALL
-	.text	6,$b2,"CIRCLE"         ; $bb CIRCLE
-	.text	5,$67,"CLEAR"          ; $bc CLEAR
-	.text	5,$7f,"COLOR"          ; $bd COLOR
-	.text	6,$d4,"COLOUR"         ; $be COLOUR
-	.text	4,$1a,"DATA"           ; $bf DATA
-	.text	3,$da,"DIM"            ; $c0 DIM
-	.text	6,$db,"DOWNTO"         ; $c1 DOWNTO
-	.text	4,$29,"ELSE"           ; $c2 ELSE
-	.text	4,$34,"FROM"           ; $c3 FROM
-	.text	3,$e5,"GFX"            ; $c4 GFX
-	.text	4,$24,"HERE"           ; $c5 HERE
-	.text	5,$63,"IMAGE"          ; $c6 IMAGE
-	.text	3,$e5,"LET"            ; $c7 LET
-	.text	4,$28,"LINE"           ; $c8 LINE
-	.text	5,$6b,"LOCAL"          ; $c9 LOCAL
-	.text	7,$1a,"MEMCOPY"        ; $ca MEMCOPY
-	.text	3,$db,"OFF"            ; $cb OFF
-	.text	2,$9d,"ON"             ; $cc ON
-	.text	7,$20,"OUTLINE"        ; $cd OUTLINE
-	.text	7,$0f,"PALETTE"        ; $ce PALETTE
-	.text	4,$3f,"PLOT"           ; $cf PLOT
-	.text	4,$2f,"POKE"           ; $d0 POKE
-	.text	5,$73,"POKED"          ; $d1 POKED
-	.text	5,$7b,"POKEL"          ; $d2 POKEL
-	.text	5,$86,"POKEW"          ; $d3 POKEW
-	.text	4,$1c,"READ"           ; $d4 READ
-	.text	4,$2e,"RECT"           ; $d5 RECT
-	.text	3,$e4,"REM"            ; $d6 REM
-	.text	5,$7b,"SOLID"          ; $d7 SOLID
-	.text	5,$89,"SOUND"          ; $d8 SOUND
-	.text	6,$d7,"SPRITE"         ; $d9 SPRITE
-	.text	4,$45,"TEXT"           ; $da TEXT
-	.text	2,$a3,"TO"             ; $db TO
+	.text	5,$56,"TILE("          ; $aa TILE(
+	.text	6,$a9,"TIMER("         ; $ab TIMER(
+	.text	4,$40,"TRUE"           ; $ac TRUE
+	.text	4,$0b,"VAL("           ; $ad VAL(
+	.text	3,$e7,"FOR"            ; $ae FOR
+	.text	2,$8f,"IF"             ; $af IF
+	.text	4,$34,"PROC"           ; $b0 PROC
+	.text	6,$c1,"REPEAT"         ; $b1 REPEAT
+	.text	5,$79,"WHILE"          ; $b2 WHILE
+	.text	5,$66,"ENDIF"          ; $b3 ENDIF
+	.text	7,$0b,"ENDPROC"        ; $b4 ENDPROC
+	.text	4,$3f,"NEXT"           ; $b5 NEXT
+	.text	4,$2f,"THEN"           ; $b6 THEN
+	.text	5,$8c,"UNTIL"          ; $b7 UNTIL
+	.text	4,$2e,"WEND"           ; $b8 WEND
+	.text	2,$95,"AT"             ; $b9 AT
+	.text	2,$9b,"BY"             ; $ba BY
+	.text	4,$1c,"CALL"           ; $bb CALL
+	.text	6,$b2,"CIRCLE"         ; $bc CIRCLE
+	.text	5,$67,"CLEAR"          ; $bd CLEAR
+	.text	5,$7f,"COLOR"          ; $be COLOR
+	.text	6,$d4,"COLOUR"         ; $bf COLOUR
+	.text	4,$1a,"DATA"           ; $c0 DATA
+	.text	3,$da,"DIM"            ; $c1 DIM
+	.text	6,$db,"DOWNTO"         ; $c2 DOWNTO
+	.text	4,$29,"ELSE"           ; $c3 ELSE
+	.text	4,$34,"FROM"           ; $c4 FROM
+	.text	3,$e5,"GFX"            ; $c5 GFX
+	.text	4,$24,"HERE"           ; $c6 HERE
+	.text	5,$63,"IMAGE"          ; $c7 IMAGE
+	.text	3,$e5,"LET"            ; $c8 LET
+	.text	4,$28,"LINE"           ; $c9 LINE
+	.text	5,$6b,"LOCAL"          ; $ca LOCAL
+	.text	7,$1a,"MEMCOPY"        ; $cb MEMCOPY
+	.text	3,$db,"OFF"            ; $cc OFF
+	.text	2,$9d,"ON"             ; $cd ON
+	.text	7,$20,"OUTLINE"        ; $ce OUTLINE
+	.text	7,$0f,"PALETTE"        ; $cf PALETTE
+	.text	4,$3f,"PLOT"           ; $d0 PLOT
+	.text	4,$2f,"POKE"           ; $d1 POKE
+	.text	5,$73,"POKED"          ; $d2 POKED
+	.text	5,$7b,"POKEL"          ; $d3 POKEL
+	.text	5,$86,"POKEW"          ; $d4 POKEW
+	.text	4,$1c,"READ"           ; $d5 READ
+	.text	4,$2e,"RECT"           ; $d6 RECT
+	.text	3,$e4,"REM"            ; $d7 REM
+	.text	5,$7b,"SOLID"          ; $d8 SOLID
+	.text	5,$89,"SOUND"          ; $d9 SOUND
+	.text	6,$d7,"SPRITE"         ; $da SPRITE
+	.text	4,$45,"TEXT"           ; $db TEXT
+	.text	2,$a3,"TO"             ; $dc TO
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF
@@ -133,11 +134,13 @@ KeywordSet1:
 	.text	5,$8d,"SHOOT"          ; $a1 SHOOT
 	.text	7,$2a,"SPRITES"        ; $a2 SPRITES
 	.text	4,$46,"STOP"           ; $a3 STOP
-	.text	3,$ff,"TRY"            ; $a4 TRY
-	.text	6,$d5,"VERIFY"         ; $a5 VERIFY
-	.text	3,$ee,"XGO"            ; $a6 XGO
-	.text	5,$78,"XLOAD"          ; $a7 XLOAD
-	.text	3,$eb,"ZAP"            ; $a8 ZAP
+	.text	4,$2e,"TILE"           ; $a4 TILE
+	.text	5,$81,"TILES"          ; $a5 TILES
+	.text	3,$ff,"TRY"            ; $a6 TRY
+	.text	6,$d5,"VERIFY"         ; $a7 VERIFY
+	.text	3,$ee,"XGO"            ; $a8 XGO
+	.text	5,$78,"XLOAD"          ; $a9 XLOAD
+	.text	3,$eb,"ZAP"            ; $aa ZAP
 	.text	$FF
 KeywordSet2:
 	.text	0,$65,""               ; $80 !0:EOF

@@ -109,56 +109,57 @@ VectorSet0:
 	.word	SgnUnary                         ; $a7 SGN(
 	.word	SpcUnary                         ; $a8 SPC(
 	.word	Unary_Str                        ; $a9 STR$(
-	.word	UnaryTimer                       ; $aa TIMER(
-	.word	UnaryTrue                        ; $ab TRUE
-	.word	ValUnary                         ; $ac VAL(
-	.word	ForCommand                       ; $ad FOR
-	.word	IfCommand                        ; $ae IF
-	.word	Unused1                          ; $af PROC
-	.word	Command_REPEAT                   ; $b0 REPEAT
-	.word	Command_WHILE                    ; $b1 WHILE
-	.word	EndIf                            ; $b2 ENDIF
-	.word	Command_ENDPROC                  ; $b3 ENDPROC
-	.word	NextCommand                      ; $b4 NEXT
-	.word	Unused4                          ; $b5 THEN
-	.word	Command_UNTIL                    ; $b6 UNTIL
-	.word	Command_WEND                     ; $b7 WEND
-	.word	SyntaxError                      ; $b8 AT
-	.word	SyntaxError                      ; $b9 BY
-	.word	CallCommand                      ; $ba CALL
-	.word	CircleCommand                    ; $bb CIRCLE
-	.word	SyntaxError                      ; $bc CLEAR
-	.word	SyntaxError                      ; $bd COLOR
-	.word	SyntaxError                      ; $be COLOUR
-	.word	Command_Data                     ; $bf DATA
-	.word	DimCommand                       ; $c0 DIM
-	.word	Unused3                          ; $c1 DOWNTO
-	.word	ElseCode                         ; $c2 ELSE
-	.word	SyntaxError                      ; $c3 FROM
-	.word	GfxCommand                       ; $c4 GFX
-	.word	SyntaxError                      ; $c5 HERE
-	.word	ImageCommand                     ; $c6 IMAGE
-	.word	LetCommand                       ; $c7 LET
-	.word	LineCommand                      ; $c8 LINE
-	.word	Command_LOCAL                    ; $c9 LOCAL
-	.word	MCCommand                        ; $ca MEMCOPY
-	.word	SyntaxError                      ; $cb OFF
-	.word	SyntaxError                      ; $cc ON
-	.word	SyntaxError                      ; $cd OUTLINE
-	.word	PaletteCommand                   ; $ce PALETTE
-	.word	PlotCommand                      ; $cf PLOT
-	.word	PokeBCommand                     ; $d0 POKE
-	.word	PokeDCommand                     ; $d1 POKED
-	.word	PokeLCommand                     ; $d2 POKEL
-	.word	PokeWCommand                     ; $d3 POKEW
-	.word	Command_Read                     ; $d4 READ
-	.word	RectangleCommand                 ; $d5 RECT
-	.word	RemCommand                       ; $d6 REM
-	.word	SyntaxError                      ; $d7 SOLID
-	.word	SoundCommand                     ; $d8 SOUND
-	.word	SpriteCommand                    ; $d9 SPRITE
-	.word	TextCommand                      ; $da TEXT
-	.word	Unused2                          ; $db TO
+	.word	SyntaxError                      ; $aa TILE(
+	.word	UnaryTimer                       ; $ab TIMER(
+	.word	UnaryTrue                        ; $ac TRUE
+	.word	ValUnary                         ; $ad VAL(
+	.word	ForCommand                       ; $ae FOR
+	.word	IfCommand                        ; $af IF
+	.word	Unused1                          ; $b0 PROC
+	.word	Command_REPEAT                   ; $b1 REPEAT
+	.word	Command_WHILE                    ; $b2 WHILE
+	.word	EndIf                            ; $b3 ENDIF
+	.word	Command_ENDPROC                  ; $b4 ENDPROC
+	.word	NextCommand                      ; $b5 NEXT
+	.word	Unused4                          ; $b6 THEN
+	.word	Command_UNTIL                    ; $b7 UNTIL
+	.word	Command_WEND                     ; $b8 WEND
+	.word	SyntaxError                      ; $b9 AT
+	.word	SyntaxError                      ; $ba BY
+	.word	CallCommand                      ; $bb CALL
+	.word	CircleCommand                    ; $bc CIRCLE
+	.word	SyntaxError                      ; $bd CLEAR
+	.word	SyntaxError                      ; $be COLOR
+	.word	SyntaxError                      ; $bf COLOUR
+	.word	Command_Data                     ; $c0 DATA
+	.word	DimCommand                       ; $c1 DIM
+	.word	Unused3                          ; $c2 DOWNTO
+	.word	ElseCode                         ; $c3 ELSE
+	.word	SyntaxError                      ; $c4 FROM
+	.word	GfxCommand                       ; $c5 GFX
+	.word	SyntaxError                      ; $c6 HERE
+	.word	ImageCommand                     ; $c7 IMAGE
+	.word	LetCommand                       ; $c8 LET
+	.word	LineCommand                      ; $c9 LINE
+	.word	Command_LOCAL                    ; $ca LOCAL
+	.word	MCCommand                        ; $cb MEMCOPY
+	.word	SyntaxError                      ; $cc OFF
+	.word	SyntaxError                      ; $cd ON
+	.word	SyntaxError                      ; $ce OUTLINE
+	.word	PaletteCommand                   ; $cf PALETTE
+	.word	PlotCommand                      ; $d0 PLOT
+	.word	PokeBCommand                     ; $d1 POKE
+	.word	PokeDCommand                     ; $d2 POKED
+	.word	PokeLCommand                     ; $d3 POKEL
+	.word	PokeWCommand                     ; $d4 POKEW
+	.word	Command_Read                     ; $d5 READ
+	.word	RectangleCommand                 ; $d6 RECT
+	.word	RemCommand                       ; $d7 REM
+	.word	SyntaxError                      ; $d8 SOLID
+	.word	SoundCommand                     ; $d9 SOUND
+	.word	SpriteCommand                    ; $da SPRITE
+	.word	TextCommand                      ; $db TEXT
+	.word	Unused2                          ; $dc TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
@@ -196,11 +197,13 @@ VectorSet1:
 	.word	ShootCommand                     ; $a1 SHOOT
 	.word	SpritesCtrl                      ; $a2 SPRITES
 	.word	StopCommand                      ; $a3 STOP
-	.word	Command_Try                      ; $a4 TRY
-	.word	Command_VERIFY                   ; $a5 VERIFY
-	.word	XGoCommand                       ; $a6 XGO
-	.word	XLoadCommand                     ; $a7 XLOAD
-	.word	ZapCommand                       ; $a8 ZAP
+	.word	SyntaxError                      ; $a4 TILE
+	.word	SyntaxError                      ; $a5 TILES
+	.word	Command_Try                      ; $a6 TRY
+	.word	Command_VERIFY                   ; $a7 VERIFY
+	.word	XGoCommand                       ; $a8 XGO
+	.word	XLoadCommand                     ; $a9 XLOAD
+	.word	ZapCommand                       ; $aa ZAP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

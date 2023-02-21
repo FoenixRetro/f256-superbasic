@@ -41,6 +41,7 @@ class TokenSource(object):
 				joyb( 		min(		max( 		hit( 		playing(	gettime$(
 				peek( 		peekw( 		peekl(		peekd(		getdate$(	inkey$(
 				get$( 		inkey(		get( 		itemcount(	itemget$( 	keydown(
+				tile(
 
 			{0}							// Set 0
 				data 		dim 		let 		rem  		else 		to			
@@ -58,7 +59,7 @@ class TokenSource(object):
 				save		verify		drive 		dir 		bload
 				bsave		himem 		input 		cls 		gosub 		
 				return 		print 		cprint 		goto 		dos
-				mouse 		mdelta 		try
+				mouse 		mdelta 		try 		tile 		tiles
 
 			{2}							// Set 2 (Assembler Mnemonics)
 				adc	and	asl	bcc	bcs	beq	bit	bmi	bne	bpl	bra	brk	bvc	bvs	
