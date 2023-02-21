@@ -19,6 +19,8 @@ GCMD_SpriteImage = 8*2
 GCMD_SpriteCollide = 9*2
 GCMD_TileCtl = 10*2
 GCMD_TILESZ = 11*2
+GCMD_TILESCLX = 12*2
+GCMD_TILESCLY = 13*2
 GCMD_Move = 32*2
 GCMD_Line = 33*2
 GCMD_FrameRect = 34*2
@@ -47,8 +49,8 @@ GRVectorTable:
 	.word	GXCollide                ; $09 SpriteCollide
 	.word	GXControlTilemap         ; $0a TileCtl
 	.word	GXControlTileSize        ; $0b TILESZ
-	.word	GRUndefined              ; $0c
-	.word	GRUndefined              ; $0d
+	.word	GXControlTileScrollX     ; $0c TILESCLX
+	.word	GXControlTileScrollY     ; $0d TILESCLY
 	.word	GRUndefined              ; $0e
 	.word	GRUndefined              ; $0f
 	.word	GRUndefined              ; $10
@@ -389,7 +391,8 @@ GXMove: ;; <32:Move>
 		rts
 
 GRUndefined:
-		.debug
+		sec
+		rts
 
 ; ************************************************************************************************
 ;											DRAWING MODES
@@ -412,6 +415,7 @@ GRUndefined:
 ;
 ;		Date			Notes
 ;		==== 			=====
+; 		21/02/23 		Added exit code for bad GFX commands.
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
@@ -794,7 +798,7 @@ _GXCB1: 									; do 4 chunks at a time, really should DMA this.
 ; ************************************************************************************************
 ;
 ;		Name:		control.asm
-;		Purpose:	Graphics test code.
+;		Purpose:	Graphics control.
 ;		Created:	11th October 2022
 ;		Reviewed: 	17th February 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
@@ -1002,13 +1006,13 @@ _GXCTOn:
 ; ************************************************************************************************
 
 GXControlTileSize: ;; <11:TILESZ>
-		lda 	gxTilesOn
+		lda 	gxTilesOn 					; check on
 		sec
 		beq 	_GXCTSExit
 
-		stz 	1
+		stz 	1 							; access I/O 0
 
-		lda 	gxzTemp0
+		lda 	gxzTemp0 					; save parameter to registes
 		sta 	gxTileMapWidth
 		sta 	$D204
 
@@ -1066,6 +1070,7 @@ _GXCSSLoop:
 ;		20/02/23 		Added control functionality for tile on/off/location and size of map.
 ;
 ; ************************************************************************************************
+
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
@@ -1795,6 +1800,106 @@ gxUseMode:
 ;		==== 			=====
 ;
 ; ************************************************************************************************
+; ************************************************************************************************
+; ************************************************************************************************
+;
+;		Name:		scroll.asm
+;		Purpose:	Scroll tilemap code.
+;		Created:	21st February 2023
+;		Reviewed: 	No
+;		Author:		Paul Robson (paul@robsons.org.uk)
+;
+; ************************************************************************************************
+; ************************************************************************************************
+
+		.section code
+
+; ************************************************************************************************
+;
+;								Set the tilemap scroll.
+;
+; ************************************************************************************************
+
+GXControlTileScrollX: ;; <12:TILESCLX>
+		lda 	gxTileMapWidth 				; comparator value (max X tile)
+		jsr 	GXScrollProcessor 			; scroll processing.
+		bcs 	_GXCTSExit
+		stz 	1 							; write it out.
+		stx 	$D208
+		sty 	$D209
+_GXCTSExit:
+		rts
+
+GXControlTileScrollY: ;; <13:TILESCLY>
+		lda 	gxTileMapHeight 			; comparator value (max X tile)
+		jsr 	GXScrollProcessor 			; scroll processing.
+		bcs 	_GXCTSExit
+		stz 	1 							; write it out.
+		stx 	$D20A
+		sty 	$D20B
+_GXCTSExit:
+		rts
+
+; ************************************************************************************************
+;
+;		gxzTemp0 contains a scroll offset, A the max tile size. Check tilemap is on
+;		and scroll in range ; then calculate actual scrolling value and return in YX
+;		CS = Fail.
+;
+; ************************************************************************************************
+
+GXScrollProcessor:
+		sta 	gxzTemp1 					; save max tile value.
+		lda 	gxTilesOn 					; check tile map is on.
+		sec
+		beq 	_GXSPExit
+		;
+		stz 	gxzTemp1+1 					; convert tile size to a pixel scroll.
+		ldx 	#3
+_GXCalcMaxPixelScroll:
+		asl 	gxzTemp1
+		rol 	gxzTemp1+1
+		dex
+		bne 	_GXCalcMaxPixelScroll
+		;
+		lda 	gxzTemp0 					; check scroll in range.
+		cmp 	gxzTemp1
+		lda 	gxzTemp0+1
+		sbc 	gxzTemp1+1
+		bcs		_GXSPExit
+
+		lda 	gxzTemp0 	 				; save fine scroll.
+		and		#7
+		sta 	gxzTemp1
+
+		asl 	gxzTemp0 					; shift left one, as whole tiles are 8 pixels.
+		rol 	gxzTemp0+1
+		lda 	gxzTemp0+1 					; MSB is the upper byte.
+		and 	#$0F
+		tay
+		;
+		lda 	gxzTemp0 					; get coarse scroll
+		and 	#$F0
+		ora 	gxzTemp1 					; OR in fine scroll.
+		tax 								; return in X
+
+		clc
+_GXSPExit:
+		rts
+
+		.send code
+
+; ************************************************************************************************
+;
+;									Changes and Updates
+;
+; ************************************************************************************************
+;
+;		Date			Notes
+;		==== 			=====
+;
+; ************************************************************************************************
+
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;

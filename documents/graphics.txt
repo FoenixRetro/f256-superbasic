@@ -29,6 +29,8 @@ Returns CS error , CC okay
 *	9 HIT    Check collision state X,Y. Returns $FF for miss,or max |c1-c0| << 2
 *	10 TILECTL X=tiles page, Y = images page enable bit, X bit 7 = on/off, size to 64x32
 *	11 TILESZ  X=width, Y = height
+*	12 TILESCLX YX = X Scroll value.
+* 	13 TILESCLY YX = Y Scroll value.
 *	32 MOVE 			
 *	33 LINE 	
 *	34 RECT
@@ -38,13 +40,10 @@ Returns CS error , CC okay
 *	40 PLOT point
 *	41 SPRMOVE to x,y (fix up sprite positioning)
 
-
-
 Tile Interface (GFX)
-	12 TILESCL X=XScroll, Y = YScroll
-	38 TILEPOS X,Y = Tile
-	39 TILEWRT X = Tile, advance
-	40 TILERD  ->A advance
+	42 TILEPOS X,Y = Tile
+	43 TILEWRT X = Tile, advance
+	44 TILERD  ->A advance
 
 Tile Interface (BASIC)	
 	TILES ON|OFF|AT <image>,<map>|DIM <width>,<height>

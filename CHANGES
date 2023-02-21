@@ -218,3 +218,4 @@ Release 35: (16/02/23):
 Release 36: (18/02/23):
 	
 	CHG: Added tile functionality to the GFX subsystem	
+	BUG: GFX Commands not implemented do not crash the system.

@@ -18,8 +18,8 @@ GRVectorTable:
 	.word	GXCollide                ; $09 SpriteCollide
 	.word	GXControlTilemap         ; $0a TileCtl
 	.word	GXControlTileSize        ; $0b TILESZ
-	.word	GRUndefined              ; $0c
-	.word	GRUndefined              ; $0d
+	.word	GXControlTileScrollX     ; $0c TILESCLX
+	.word	GXControlTileScrollY     ; $0d TILESCLY
 	.word	GRUndefined              ; $0e
 	.word	GRUndefined              ; $0f
 	.word	GRUndefined              ; $10

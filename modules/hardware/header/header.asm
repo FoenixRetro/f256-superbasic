@@ -34,7 +34,7 @@ EXTShowHeader:
 		stz 	1
 		lda 	$D6A7
 		and 	#$10
-		;beq 	_EXTSHNotK1
+		beq 	_EXTSHNotK1
 
 		ldx 	#(Header_kchars & $FF)
 		ldy 	#(Header_kchars >> 8)-$40

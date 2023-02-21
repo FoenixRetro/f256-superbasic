@@ -2,7 +2,7 @@
 ; ************************************************************************************************
 ;
 ;		Name:		control.asm
-;		Purpose:	Graphics test code.
+;		Purpose:	Graphics control.
 ;		Created:	11th October 2022
 ;		Reviewed: 	17th February 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)
@@ -210,13 +210,13 @@ _GXCTOn:
 ; ************************************************************************************************
 
 GXControlTileSize: ;; <11:TILESZ>
-		lda 	gxTilesOn
+		lda 	gxTilesOn 					; check on
 		sec
 		beq 	_GXCTSExit
 
-		stz 	1
+		stz 	1 							; access I/O 0
 		
-		lda 	gxzTemp0
+		lda 	gxzTemp0 					; save parameter to registes
 		sta 	gxTileMapWidth
 		sta 	$D204
 
@@ -274,3 +274,4 @@ _GXCSSLoop:
 ;		20/02/23 		Added control functionality for tile on/off/location and size of map.
 ;
 ; ************************************************************************************************
+

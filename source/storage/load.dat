@@ -6,5 +6,12 @@
 140 for i = 0 to 31
 150 line 0,0 colour $03 to i*10,160
 160 next
-
+165 i = 0:d = 1
+170 repeat
+180 if event(e1,5)
+190 i = i + d:if i = 0 | i = 31 then d = -d
+200 gfx 13,i,0
+210 gfx 12,i,0
+215 endif
+220 until false
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ

@@ -1,14 +1,13 @@
 Tiles:
 
-	Implement the tilescl code.
 	Implement tilepos,tileread,tilewrite
+	Implement BASIC interface and document asyou go.
 
 Progress:	
  	Upgrade model A.
 	Display Kernel version
 	Consider STEP.
 	Should CR in PRINT clear to EOL.
-	Open Structure error (correct line #)
 
 Ongoing:
 	Code reading.
