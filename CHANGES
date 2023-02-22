@@ -222,3 +222,5 @@ Release 36: (18/02/23):
 	CHG: Modifications to support 40k kernel.
 	
 Release 37: (22/02/23)
+
+	BUG: Defaults for tilemap/image pages (e.g. gfx $10,$80,$00 works)

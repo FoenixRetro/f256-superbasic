@@ -186,7 +186,13 @@ gxSpriteLow:
 		.fill 	64
 gxSpriteHigh:
 		.fill 	64
-
+;
+;		Tile read/write address. Not accessible if page = 0
+;
+gxTileAccessPage:
+		.fill 	1
+gxTileAccessAddress:
+		.fill 	2		
 
 		.send storage
 

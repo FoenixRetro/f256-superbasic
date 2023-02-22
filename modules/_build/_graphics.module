@@ -268,7 +268,13 @@ gxSpriteLow:
 		.fill 	64
 gxSpriteHigh:
 		.fill 	64
-
+;
+;		Tile read/write address. Not accessible if page = 0
+;
+gxTileAccessPage:
+		.fill 	1
+gxTileAccessAddress:
+		.fill 	2
 
 		.send storage
 
@@ -963,9 +969,15 @@ _GXCTOn:
 		;
 		lda 	gxTilesOn 					; set the tile map page
 		and 	#$7F
+		bne	 	_GXCTNotMapDefault 			; check for default
+		lda 	#TILEMAP_ADDRESS >> 13
+_GXCTNotMapDefault:
 		sta 	gxTileMapPage
 		;
 		lda 	gxzTemp0+1 					; set the tile image page
+		bne 	_GXCTNotImgDefault 			; check for default
+		lda 	#TILEIMAGES_ADDRESS >> 13
+_GXCTNotImgDefault:
 		sta 	gxTileImagePage
 		;
 		lda 	#$11 						; set tilemap#0 on and 8x8

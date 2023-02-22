@@ -167,9 +167,15 @@ _GXCTOn:
 		;
 		lda 	gxTilesOn 					; set the tile map page
 		and 	#$7F
+		bne	 	_GXCTNotMapDefault 			; check for default
+		lda 	#TILEMAP_ADDRESS >> 13
+_GXCTNotMapDefault:		
 		sta 	gxTileMapPage
 		;
 		lda 	gxzTemp0+1 					; set the tile image page
+		bne 	_GXCTNotImgDefault 			; check for default
+		lda 	#TILEIMAGES_ADDRESS >> 13
+_GXCTNotImgDefault:		
 		sta 	gxTileImagePage
 		;
 		lda 	#$11 						; set tilemap#0 on and 8x8
@@ -272,6 +278,7 @@ _GXCSSLoop:
 ;		Date			Notes
 ;		==== 			=====
 ;		20/02/23 		Added control functionality for tile on/off/location and size of map.
+; 		22/02/23 		Fixed bug no defaults on setting tilemap page defaults.
 ;
 ; ************************************************************************************************
 
