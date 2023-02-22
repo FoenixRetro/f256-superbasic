@@ -33,6 +33,6 @@ for p in rompages:
 for n in range(0,len(extras)):
 	h.write("{0:02x},{1}\n".format(pages+n+1,extras[n])) 	
 
-for p in [0x3C,0x3D,0x3E,0x3F]:
+for p in [0x3B,0x3C,0x3D,0x3E,0x3F]:
 	h.write("{0:02x},{0:02x}.bin\n".format(p))	
 h.close()

@@ -214,3 +214,11 @@ Release 34: (14/02/23)
 Release 35: (16/02/23):
 
 	BUG: Fixed boot display :) cosmetic only.	
+
+Release 36: (18/02/23):
+	
+	CHG: Added tile functionality to the GFX subsystem	
+	BUG: GFX Commands not implemented do not crash the system.
+	CHG: Modifications to support 40k kernel.
+	
+Release 37: (22/02/23)

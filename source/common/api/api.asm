@@ -55,8 +55,8 @@ Directory   .namespace
 Open        .fill   4   ; Open a directory for reading.
 Read        .fill   4   ; Read a directory entry; may also return VOLUME and FREE events.
 Close       .fill   4   ; Close a directory once finished reading.
-MkDir       .fill   4
-RmDir       .fill   4
+MkDir       .fill   4   ; Create a directory
+RmDir       .fill   4   ; Delete a directory
             .endn
             
             .fill   4   ; call gate
@@ -330,6 +330,8 @@ FREE        .word   ?   ; A file-system free-space record was found.
 EOF         .word   ?   ; All data has been read.
 CLOSED      .word   ?   ; The directory file has been closed.
 ERROR       .word   ?   ; An error occured; user should close.
+CREATED     .word   ?   ; The directory has been created.
+DELETED     .word   ?   ; The directory has been deleted.
             .endn
 
 net         .namespace            
