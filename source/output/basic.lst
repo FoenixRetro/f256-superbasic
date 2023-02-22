@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.58.2974? listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$34000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" "-D TILEMAP_ADDRESS=\$24000" "-D TILEIMAGES_ADDRESS=\$26000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Wed Feb 22 12:15:47 2023
+; Wed Feb 22 13:39:30 2023
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -509,28 +509,28 @@
 .806a		60		rts			rts
 .806b						SNDCommand:
 .806b		e6 0d		inc $0d			inc 8+5
-.806d		20 72 b8	jsr $b872		jsr	Export_SNDCommand
+.806d		20 89 b8	jsr $b889		jsr	Export_SNDCommand
 .8070		08		php			php
 .8071		c6 0d		dec $0d			dec 8+5
 .8073		28		plp			plp
 .8074		60		rts			rts
 .8075						SNDUpdate:
 .8075		e6 0d		inc $0d			inc 8+5
-.8077		20 a5 b8	jsr $b8a5		jsr	Export_SNDUpdate
+.8077		20 bc b8	jsr $b8bc		jsr	Export_SNDUpdate
 .807a		08		php			php
 .807b		c6 0d		dec $0d			dec 8+5
 .807d		28		plp			plp
 .807e		60		rts			rts
 .807f						TKListConvertLine:
 .807f		e6 0d		inc $0d			inc 8+5
-.8081		20 23 b2	jsr $b223		jsr	Export_TKListConvertLine
+.8081		20 3a b2	jsr $b23a		jsr	Export_TKListConvertLine
 .8084		08		php			php
 .8085		c6 0d		dec $0d			dec 8+5
 .8087		28		plp			plp
 .8088		60		rts			rts
 .8089						TKTokeniseLine:
 .8089		e6 0d		inc $0d			inc 8+5
-.808b		20 b7 b4	jsr $b4b7		jsr	Export_TKTokeniseLine
+.808b		20 ce b4	jsr $b4ce		jsr	Export_TKTokeniseLine
 .808e		08		php			php
 .808f		c6 0d		dec $0d			dec 8+5
 .8091		28		plp			plp
@@ -10014,6 +10014,7 @@
 =22						GCMD_TILESZ = 11*2
 =24						GCMD_TILESCLX = 12*2
 =26						GCMD_TILESCLY = 13*2
+=28						GCMD_TilePos = 14*2
 =64						GCMD_Move = 32*2
 =66						GCMD_Line = 33*2
 =68						GCMD_FrameRect = 34*2
@@ -10033,12 +10034,12 @@
 >c2f3	a2f3	40 aa					.word	GXSpriteHandler          ; $06 DrawSprite
 >c2f5	a2f5	b1 aa					.word	GXSelect                 ; $07 SpriteUse
 >c2f7	a2f7	da aa					.word	GXSelectImage            ; $08 SpriteImage
->c2f9	a2f9	61 ac					.word	GXCollide                ; $09 SpriteCollide
+>c2f9	a2f9	78 ac					.word	GXCollide                ; $09 SpriteCollide
 >c2fb	a2fb	e9 a5					.word	GXControlTilemap         ; $0a TileCtl
 >c2fd	a2fd	71 a6					.word	GXControlTileSize        ; $0b TILESZ
 >c2ff	a2ff	a1 a9					.word	GXControlTileScrollX     ; $0c TILESCLX
 >c301	a301	b2 a9					.word	GXControlTileScrollY     ; $0d TILESCLY
->c303	a303	9a a3					.word	GRUndefined              ; $0e
+>c303	a303	e0 ab					.word	GXSelectTile             ; $0e TilePos
 >c305	a305	9a a3					.word	GRUndefined              ; $0f
 >c307	a307	9a a3					.word	GRUndefined              ; $10
 >c309	a309	9a a3					.word	GRUndefined              ; $11
@@ -10208,8 +10209,8 @@
 .c3a2	a3a2	8d 73 08	sta $0873			sta 	gxIsFillMode				; save Fill flag
 .c3a5	a3a5	ad d9 07	lda $07d9			lda 	gxBitmapsOn
 .c3a8	a3a8	f0 26		beq $a3d0			beq 	_GXCFail
-.c3aa	a3aa	20 08 ad	jsr $ad08			jsr 	GXSortXY 					; topleft/bottomright
-.c3ad	a3ad	20 e0 ab	jsr $abe0			jsr 	GXOpenBitmap 				; start drawing
+.c3aa	a3aa	20 1f ad	jsr $ad1f			jsr 	GXSortXY 					; topleft/bottomright
+.c3ad	a3ad	20 f7 ab	jsr $abf7			jsr 	GXOpenBitmap 				; start drawing
 .c3b0	a3b0	20 a2 a4	jsr $a4a2			jsr 	GXCircleSetup 				; set up for drawing
 .c3b3	a3b3	9c 74 08	stz $0874			stz 	gxYChanged
 .c3b6	a3b6					_GXCircleDraw:
@@ -10219,7 +10220,7 @@
 .c3be	a3be	d0 03		bne $a3c3			bne 	_GXNoLast  					; fix up if x < y
 .c3c0	a3c0	20 d5 a3	jsr $a3d5			jsr 	GXPlot1
 .c3c3	a3c3					_GXNoLast:
-.c3c3	a3c3	20 e8 ab	jsr $abe8			jsr 	GXCloseBitmap 				; close the bitmap
+.c3c3	a3c3	20 ff ab	jsr $abff			jsr 	GXCloseBitmap 				; close the bitmap
 .c3c6	a3c6	18		clc				clc
 .c3c7	a3c7	60		rts				rts
 .c3c8	a3c8					_GXCircleContinue:
@@ -10259,7 +10260,7 @@
 .c40d	a40d	ad 71 08	lda $0871			lda 	gxxCentre
 .c410	a410	20 31 a4	jsr $a431			jsr 	GXSubCopy
 .c413	a413	48		pha				pha 									; save last offset X
-.c414	a414	20 f0 ab	jsr $abf0			jsr 	gxPositionCalc 					; calculate position/offset.
+.c414	a414	20 07 ac	jsr $ac07			jsr 	gxPositionCalc 					; calculate position/offset.
 .c417	a417	68		pla				pla
 .c418	a418	0a		asl a				asl 	a 								; store 2 x last offset in gxzTemp0
 .c419	a419	85 36		sta $36				sta 	gxzTemp0
@@ -10384,7 +10385,7 @@
 .c4e9	a4e9					GXClearBitmap:
 .c4e9	a4e9	ad d9 07	lda $07d9			lda 	gxBitmapsOn 				; check BMP turned on.
 .c4ec	a4ec	f0 26		beq $a514			beq 	_GXCBFail
-.c4ee	a4ee	20 e0 ab	jsr $abe0			jsr 	GXOpenBitmap 				; start access
+.c4ee	a4ee	20 f7 ab	jsr $abf7			jsr 	GXOpenBitmap 				; start access
 .c4f1	a4f1	a0 07		ldy #$07			ldy 	#ScreenSize200 / 8192 		; X is pages to clear as 2 graphic heights.
 .c4f3	a4f3	ad e1 07	lda $07e1			lda 	gxHeight
 .c4f6	a4f6	c9 c8		cmp #$c8			cmp 	#200 						; 200 ?
@@ -10401,7 +10402,7 @@
 .c508	a508	a5 0b		lda $0b				lda 	GXEditSlot
 .c50a	a50a	cd db 07	cmp $07db			cmp 	gxBasePage 					; until before base page
 .c50d	a50d	b0 f4		bcs $a503			bcs 	_GXClearAll
-.c50f	a50f	20 e8 ab	jsr $abe8			jsr 	GXCloseBitmap	 			; stop access
+.c50f	a50f	20 ff ab	jsr $abff			jsr 	GXCloseBitmap	 			; stop access
 .c512	a512	18		clc				clc
 .c513	a513	60		rts				rts
 .c514	a514					_GXCBFail:
@@ -10612,10 +10613,10 @@
 .c6a7	a6a7					GXLine:
 .c6a7	a6a7	ad d9 07	lda $07d9			lda 	gxBitmapsOn					; check bitmap on.
 .c6aa	a6aa	f0 28		beq $a6d4			beq 	_GXLFail
-.c6ac	a6ac	20 e0 ab	jsr $abe0			jsr 	GXOpenBitmap 				; access it.
-.c6af	a6af	20 26 ad	jsr $ad26			jsr 	GXSortY						; sort pairs so Y1 >= Y0 e.g. top to bottom.
+.c6ac	a6ac	20 f7 ab	jsr $abf7			jsr 	GXOpenBitmap 				; access it.
+.c6af	a6af	20 3d ad	jsr $ad3d			jsr 	GXSortY						; sort pairs so Y1 >= Y0 e.g. top to bottom.
 .c6b2	a6b2	20 7a a7	jsr $a77a			jsr 	GXLineSetup 				; the calculations in the linescanner constructor
-.c6b5	a6b5	20 f0 ab	jsr $abf0			jsr 	gxPositionCalc 				; calculate position/offset.
+.c6b5	a6b5	20 07 ac	jsr $ac07			jsr 	gxPositionCalc 				; calculate position/offset.
 .c6b8	a6b8					_GXDrawLoop:
 .c6b8	a6b8	ac e7 07	ldy $07e7			ldy 	gxOffset 					; draw the pixel
 .c6bb	a6bb	b1 3c		lda ($3c),y			lda 	(gxzScreen),y
@@ -10627,7 +10628,7 @@
 .c6ca	a6ca	20 f1 a6	jsr $a6f1			jsr 	GXLineAdvance 				; code as per advance method
 .c6cd	a6cd	80 e9		bra $a6b8			bra 	_GXDrawLoop
 .c6cf	a6cf					_GXLExit:
-.c6cf	a6cf	20 e8 ab	jsr $abe8			jsr 	GXCloseBitmap 				; restore and return success.
+.c6cf	a6cf	20 ff ab	jsr $abff			jsr 	GXCloseBitmap 				; restore and return success.
 .c6d2	a6d2	18		clc				clc
 .c6d3	a6d3	60		rts				rts
 .c6d4	a6d4					_GXLFail:
@@ -10716,7 +10717,7 @@
 .c772	a772	60		rts				rts
 .c773	a773					GXIncrementY:
 .c773	a773	ee d2 07	inc $07d2			inc 	gxY0
-.c776	a776	20 46 ac	jsr $ac46			jsr 	GXMovePositionDown
+.c776	a776	20 5d ac	jsr $ac5d			jsr 	GXMovePositionDown
 .c779	a779	60		rts				rts
 .c77a	a77a					GXLineSetup:
 .c77a	a77a	ad d6 07	lda $07d6			lda 	gxY1
@@ -10800,14 +10801,14 @@
 .c805	a805	18		clc				clc
 .c806	a806	60		rts				rts
 .c807	a807					GXPlotPoint:
-.c807	a807	20 e0 ab	jsr $abe0			jsr 	GXOpenBitmap 				; start drawing
-.c80a	a80a	20 f0 ab	jsr $abf0			jsr 	gxPositionCalc 				; setup gxzScreen, gxOffset and the position.
+.c807	a807	20 f7 ab	jsr $abf7			jsr 	GXOpenBitmap 				; start drawing
+.c80a	a80a	20 07 ac	jsr $ac07			jsr 	gxPositionCalc 				; setup gxzScreen, gxOffset and the position.
 .c80d	a80d	ac e7 07	ldy $07e7			ldy 	gxOffset
 .c810	a810	b1 3c		lda ($3c),y			lda 	(gxzScreen),y 				; set pixel on the right
 .c812	a812	2d e5 07	and $07e5			and 	gxANDValue
 .c815	a815	4d e4 07	eor $07e4			eor 	gxEORValue
 .c818	a818	91 3c		sta ($3c),y			sta 	(gxzScreen),y
-.c81a	a81a	20 e8 ab	jsr $abe8			jsr 	GXCloseBitmap 				; stop drawing and exit
+.c81a	a81a	20 ff ab	jsr $abff			jsr 	GXCloseBitmap 				; stop drawing and exit
 .c81d	a81d	18		clc				clc
 .c81e	a81e	60		rts				rts
 .c81f	a81f					GXFillRectangle:
@@ -10819,16 +10820,16 @@
 .c823	a823	ad d9 07	lda $07d9			lda 	gxBitmapsOn 				; exit if off.
 .c826	a826	f0 35		beq $a85d			beq 	_GXRFail
 .c828	a828	08		php				php 								; save Fill flag (CS)
-.c829	a829	20 e0 ab	jsr $abe0			jsr 	GXOpenBitmap 				; start drawing
-.c82c	a82c	20 08 ad	jsr $ad08			jsr 	GXSortXY 					; sort both X and Y so top left/bottom right
-.c82f	a82f	20 f0 ab	jsr $abf0			jsr 	gxPositionCalc 				; setup gxzScreen, gxOffset and the position.
+.c829	a829	20 f7 ab	jsr $abf7			jsr 	GXOpenBitmap 				; start drawing
+.c82c	a82c	20 1f ad	jsr $ad1f			jsr 	GXSortXY 					; sort both X and Y so top left/bottom right
+.c82f	a82f	20 07 ac	jsr $ac07			jsr 	gxPositionCalc 				; setup gxzScreen, gxOffset and the position.
 .c832	a832	38		sec				sec 								; sec = Draw line
 .c833	a833	20 5f a8	jsr $a85f			jsr 	GXDrawLineX1X0 				; draw a line length X1-X0
 .c836	a836	ad d2 07	lda $07d2			lda 	gxY0 						; reached end of rectangle ?
 .c839	a839	cd d6 07	cmp $07d6			cmp 	gxY1 						; e.g. 1 pixel high.
 .c83c	a83c	f0 19		beq $a857			beq 	_GXRectangleExit
 .c83e	a83e					_GXRectLoop:
-.c83e	a83e	20 46 ac	jsr $ac46			jsr 	GXMovePositionDown 			; down one.
+.c83e	a83e	20 5d ac	jsr $ac5d			jsr 	GXMovePositionDown 			; down one.
 .c841	a841	ee d2 07	inc $07d2			inc 	gxY0 						; change Y pos
 .c844	a844	ad d2 07	lda $07d2			lda 	gxY0 						; reached last line
 .c847	a847	cd d6 07	cmp $07d6			cmp 	gxY1
@@ -10842,7 +10843,7 @@
 .c854	a854	20 5f a8	jsr $a85f			jsr 	GXDrawLineX1X0
 .c857	a857					_GXRectangleExit:
 .c857	a857	68		pla				pla 								; throw fill flag.
-.c858	a858	20 e8 ab	jsr $abe8			jsr 	GXCloseBitmap 				; stop drawing and exit
+.c858	a858	20 ff ab	jsr $abff			jsr 	GXCloseBitmap 				; stop drawing and exit
 .c85b	a85b	18		clc				clc
 .c85c	a85c	60		rts				rts
 .c85d	a85d					_GXRFail:
@@ -10931,7 +10932,7 @@
 .c8ee	a8ee	48		pha				pha
 .c8ef	a8ef	8c 80 08	sty $0880			sty 	gxAcquireVector+1 			; and acquisition vector
 .c8f2	a8f2	8e 7f 08	stx $087f			stx 	gxAcquireVector
-.c8f5	a8f5	20 e0 ab	jsr $abe0			jsr 	GXOpenBitmap 				; open the bitmap.
+.c8f5	a8f5	20 f7 ab	jsr $abf7			jsr 	GXOpenBitmap 				; open the bitmap.
 .c8f8	a8f8	ad 82 08	lda $0882			lda 	gxUseMode 					; scale bits
 .c8fb	a8fb	4a		lsr a				lsr 	a
 .c8fc	a8fc	4a		lsr a				lsr 	a
@@ -10977,7 +10978,7 @@
 .c94a	a94a					_GXSLNoCarry:
 .c94a	a94a	ca		dex				dex
 .c94b	a94b	d0 ee		bne $a93b			bne 	_GXShiftLeft
-.c94d	a94d	20 e8 ab	jsr $abe8			jsr 	GXCloseBitmap
+.c94d	a94d	20 ff ab	jsr $abff			jsr 	GXCloseBitmap
 .c950	a950	18		clc				clc
 .c951	a951	60		rts				rts
 .c952	a952					_GXSLFail:
@@ -10986,7 +10987,7 @@
 .c954	a954					_GXCallAcquire:
 .c954	a954	6c 7f 08	jmp ($087f)			jmp 	(gxAcquireVector)
 .c957	a957					GXRenderOneLine:
-.c957	a957	20 f0 ab	jsr $abf0			jsr 	gxPositionCalc 				; calculate position/offset.
+.c957	a957	20 07 ac	jsr $ac07			jsr 	gxPositionCalc 				; calculate position/offset.
 .c95a	a95a	ac e7 07	ldy $07e7			ldy 	gxOffset 					; Y contains position.
 .c95d	a95d	64 3a		stz $3a				stz 	gxzTemp2 					; do size pixels
 .c95f	a95f					_GXROLLoop1:
@@ -11134,11 +11135,11 @@
 .ca4a	aa4a	8d 82 08	sta $0882			sta 	gxUseMode
 .ca4d	aa4d	a6 36		ldx $36				ldx 	gxzTemp0 					; sprite #
 .ca4f	aa4f	da		phx				phx
-.ca50	aa50	20 e0 ab	jsr $abe0			jsr 	GXOpenBitmap 				; can access sprite information
+.ca50	aa50	20 f7 ab	jsr $abf7			jsr 	GXOpenBitmap 				; can access sprite information
 .ca53	aa53	68		pla				pla
-.ca54	aa54	20 c1 ac	jsr $acc1			jsr 	GXFindSprite 				; get the sprite address
+.ca54	aa54	20 d8 ac	jsr $acd8			jsr 	GXFindSprite 				; get the sprite address
 .ca57	aa57	08		php				php
-.ca58	aa58	20 e8 ab	jsr $abe8			jsr 	GXCloseBitmap
+.ca58	aa58	20 ff ab	jsr $abff			jsr 	GXCloseBitmap
 .ca5b	aa5b	28		plp				plp
 .ca5c	aa5c	b0 0a		bcs $aa68			bcs		_GXSHExit 					; exit if find failed.
 .ca5e	aa5e	ad 83 08	lda $0883			lda 	gxSizePixels 				; return size
@@ -11222,9 +11223,9 @@
 .cae8	aae8	d0 6b		bne $ab55			bne 	_GXSIHide
 .caea	aaea	a5 36		lda $36				lda 	gxzTemp0 					; sprite image
 .caec	aaec	48		pha				pha
-.caed	aaed	20 e0 ab	jsr $abe0			jsr 	GXOpenBitmap
+.caed	aaed	20 f7 ab	jsr $abf7			jsr 	GXOpenBitmap
 .caf0	aaf0	68		pla				pla
-.caf1	aaf1	20 c1 ac	jsr $acc1			jsr 	GXFindSprite
+.caf1	aaf1	20 d8 ac	jsr $acd8			jsr 	GXFindSprite
 .caf4	aaf4	b0 5a		bcs $ab50			bcs 	_GXSICloseFail 				; no image
 .caf6	aaf6	a0 01		ldy #$01			ldy 	#1
 .caf8	aaf8	ad e9 07	lda $07e9			lda 	GSCurrentSpriteAddr
@@ -11252,7 +11253,7 @@
 .cb25	ab25	0a		asl a				asl 	a 							; 1 shift
 .cb26	ab26	09 01		ora #$01			ora 	#1 							; enable sprite.
 .cb28	ab28	92 36		sta ($36)			sta 	(gxzTemp0) 					; and write back
-.cb2a	ab2a	20 e8 ab	jsr $abe8			jsr 	GXCloseBitmap
+.cb2a	ab2a	20 ff ab	jsr $abff			jsr 	GXCloseBitmap
 .cb2d	ab2d	ae e8 07	ldx $07e8			ldx 	GSCurrentSpriteID 			; point to sprite entries.
 .cb30	ab30	bd 2d 08	lda $082d,x			lda 	gxSpriteHigh,x 				; clear upper two bits of size
 .cb33	ab33	29 3f		and #$3f			and 	#$3F
@@ -11270,7 +11271,7 @@
 .cb4e	ab4e	18		clc				clc
 .cb4f	ab4f	60		rts				rts
 .cb50	ab50					_GXSICloseFail:
-.cb50	ab50	20 e8 ab	jsr $abe8			jsr 	GXCloseBitmap
+.cb50	ab50	20 ff ab	jsr $abff			jsr 	GXCloseBitmap
 .cb53	ab53					_GXSIFail:
 .cb53	ab53	38		sec				sec
 .cb54	ab54	60		rts				rts
@@ -11345,178 +11346,192 @@
 >cbdd	abdd	18						.byte 	32-16/2
 >cbde	abde	14						.byte 	32-24/2
 >cbdf	abdf	10						.byte 	32-32/2
-.cbe0	abe0					GXOpenBitmap:
-.cbe0	abe0	78		sei				sei 								; no interrupts here
-.cbe1	abe1	a5 0b		lda $0b				lda 	GXEditSlot 					; Save the original LUT slot value
-.cbe3	abe3	8d e6 07	sta $07e6			sta 	gxOriginalLUTValue
-.cbe6	abe6	58		cli				cli
-.cbe7	abe7	60		rts				rts
-.cbe8	abe8					GXCloseBitmap:
-.cbe8	abe8	78		sei				sei
-.cbe9	abe9	ad e6 07	lda $07e6			lda 	gxOriginalLUTValue 			; restore LUT slot value
-.cbec	abec	85 0b		sta $0b				sta 	GXEditSlot
-.cbee	abee	58		cli				cli
-.cbef	abef	60		rts				rts
-.cbf0	abf0					gxPositionCalc:
-.cbf0	abf0	a5 36		lda $36				lda 	gxzTemp0 						; save temp memory slot
-.cbf2	abf2	48		pha				pha
-.cbf3	abf3	ad d2 07	lda $07d2			lda 	gxY0 							; gxzScreen = Y0
-.cbf6	abf6	85 3c		sta $3c				sta 	gxzScreen
-.cbf8	abf8	64 3d		stz $3d				stz 	gxzScreen+1
-.cbfa	abfa	06 3c		asl $3c				asl 	gxzScreen 						; gxzScreen = Y0 * 4
-.cbfc	abfc	26 3d		rol $3d				rol 	gxzScreen+1
-.cbfe	abfe	06 3c		asl $3c				asl 	gxzScreen
-.cc00	ac00	26 3d		rol $3d				rol 	gxzScreen+1
-.cc02	ac02	18		clc				clc 									; gxzScreen = Y0 * 5, as it's still in A
-.cc03	ac03	65 3c		adc $3c				adc 	gxzScreen
-.cc05	ac05	85 3c		sta $3c				sta 	gxzScreen
-.cc07	ac07	90 02		bcc $ac0b			bcc 	_GXPCNoCarry
-.cc09	ac09	e6 3d		inc $3d				inc 	gxzScreen+1
-.cc0b	ac0b					_GXPCNoCarry:
-.cc0b	ac0b	06 3c		asl $3c				asl 	gxzScreen 						; now Y0 * 10
-.cc0d	ac0d	26 3d		rol $3d				rol 	gxzScreen+1
-.cc0f	ac0f	a5 3d		lda $3d				lda	 	gxzScreen+1
-.cc11	ac11	85 36		sta $36				sta 	gxzTemp0 						; the page offset.
-.cc13	ac13	64 3d		stz $3d				stz 	gxzScreen+1
-.cc15	ac15	a9 05		lda #$05			lda 	#5 								; now multiply by 32, this puts this in the range 0..8191
-.cc17	ac17					_GXPCMultiply32:
-.cc17	ac17	06 3c		asl $3c				asl 	gxzScreen
-.cc19	ac19	26 3d		rol $3d				rol 	gxzScreen+1
-.cc1b	ac1b	3a		dec a				dec 	a
-.cc1c	ac1c	d0 f9		bne $ac17			bne 	_GXPCMultiply32
-.cc1e	ac1e	18		clc				clc
-.cc1f	ac1f	ad d0 07	lda $07d0			lda 	gxX0 						; add X to this value, put the result in gxOffset, gxzScreen has to be on a page boundary
-.cc22	ac22	65 3c		adc $3c				adc 	gxzScreen
-.cc24	ac24	8d e7 07	sta $07e7			sta 	gxOffset
-.cc27	ac27	ad d1 07	lda $07d1			lda 	gxX0+1
-.cc2a	ac2a	65 3d		adc $3d				adc 	gxzScreen+1
-.cc2c	ac2c	c9 20		cmp #$20			cmp 	#$20 						; has it overflowed into the next one ?
-.cc2e	ac2e	90 04		bcc $ac34			bcc 	_GXPCNoOverflow
-.cc30	ac30	29 1f		and #$1f			and 	#$1F 						; fix it up
-.cc32	ac32	e6 36		inc $36				inc 	gxzTemp0 					; add 1 to the page number
-.cc34	ac34					_GXPCNoOverflow:
-.cc34	ac34	09 60		ora #$60			ora 	#(GXMappingAddress >> 8) 	; make it the address mapped in.
-.cc36	ac36	85 3d		sta $3d				sta 	gxzScreen+1
-.cc38	ac38	64 3c		stz $3c				stz 	gxzScreen
-.cc3a	ac3a	18		clc				clc
-.cc3b	ac3b	a5 36		lda $36				lda 	gxzTemp0 					; get the page number
-.cc3d	ac3d	6d db 07	adc $07db			adc 	gxBasePage 					; by adding the base page
-.cc40	ac40	85 0b		sta $0b				sta 	GXEditSlot 					; and map it into memory.
-.cc42	ac42	68		pla				pla
-.cc43	ac43	85 36		sta $36				sta 	gxzTemp0
-.cc45	ac45	60		rts				rts
-.cc46	ac46					GXMovePositionDown:
-.cc46	ac46	18		clc				clc 								; add 320 to offset/temp+1
-.cc47	ac47	ad e7 07	lda $07e7			lda 	gxOffset
-.cc4a	ac4a	69 40		adc #$40			adc 	#64
-.cc4c	ac4c	8d e7 07	sta $07e7			sta 	gxOffset
-.cc4f	ac4f	a5 3d		lda $3d				lda 	gxzScreen+1
-.cc51	ac51	69 01		adc #$01			adc 	#1
-.cc53	ac53	85 3d		sta $3d				sta 	gxzScreen+1
-.cc55	ac55	c9 80		cmp #$80			cmp 	#((GXMappingAddress+$2000) >> 8) ; on to the next page ?
-.cc57	ac57	90 07		bcc $ac60			bcc 	_GXMPDExit
-.cc59	ac59	38		sec				sec  								; next page, adjust address
-.cc5a	ac5a	e9 20		sbc #$20			sbc 	#$20
-.cc5c	ac5c	85 3d		sta $3d				sta 	gxzScreen+1
-.cc5e	ac5e	e6 0b		inc $0b				inc 	GXEditSlot 					; bump page
-.cc60	ac60					_GXMPDExit:
-.cc60	ac60	60		rts				rts
-.cc61	ac61					GXCollide:
-.cc61	ac61	a5 36		lda $36				lda 	gxzTemp0 					; check if sprite numbers are legal.
-.cc63	ac63	aa		tax				tax
-.cc64	ac64	05 37		ora $37				ora 	gxzTemp0+1
-.cc66	ac66	29 c0		and #$c0			and 	#$C0
-.cc68	ac68	38		sec				sec
-.cc69	ac69	d0 53		bne $acbe			bne 	_GXCollideFail 				; if either >= 64, fail.
-.cc6b	ac6b	a4 37		ldy $37				ldy 	gxzTemp0+1 					; at this point X is 1st sprite and Y is 2nd sprite.
-.cc6d	ac6d	b9 ed 07	lda $07ed,y			lda 	gxSpriteLow,y 				; check if either hidden bit is set
-.cc70	ac70	1d ed 07	ora $07ed,x			ora 	gxSpriteLow,x
-.cc73	ac73	30 48		bmi $acbd			bmi 	_GXOkayFail 				; if either hidden, then they cannot collide.
-.cc75	ac75	18		clc				clc 								; need to calculate sum of sizes.
-.cc76	ac76	b9 2d 08	lda $082d,y			lda 	gxSpriteHigh,y
-.cc79	ac79	7d 2d 08	adc $082d,x			adc 	gxSpriteHigh,x 				; at this point, CS, Bit 6 and 7 contain that sum.
-.cc7c	ac7c	29 c0		and #$c0			and 	#$C0 					 	; mask off
-.cc7e	ac7e	6a		ror a				ror 	a 							; 5/6/7
-.cc7f	ac7f	4a		lsr a				lsr 	a 							; 4/5/6
-.cc80	ac80	4a		lsr a				lsr 	a 							; 3/4/5
-.cc81	ac81	4a		lsr a				lsr 	a 							; 2/3/4
-.cc82	ac82	18		clc				clc
-.cc83	ac83	69 08		adc #$08			adc 	#$08
-.cc85	ac85	4a		lsr a				lsr 	a 							; adjust because all coordinates are divided by 4 to store.
-.cc86	ac86	4a		lsr a				lsr 	a
-.cc87	ac87	85 38		sta $38				sta 	gxzTemp1 					; so the difference between the centres has to be less than this.
-.cc89	ac89	b9 2d 08	lda $082d,y			lda 	gxSpriteHigh,y 				; calculate y1-y0
-.cc8c	ac8c	29 3f		and #$3f			and 	#$3F
-.cc8e	ac8e	85 39		sta $39				sta 	gxzTemp1+1
-.cc90	ac90	38		sec				sec
-.cc91	ac91	bd 2d 08	lda $082d,x			lda 	gxSpriteHigh,x
-.cc94	ac94	29 3f		and #$3f			and 	#$3F
-.cc96	ac96	e5 39		sbc $39				sbc 	gxzTemp1+1
-.cc98	ac98	b0 03		bcs $ac9d			bcs 	_GXCAbs1 					; calculate |y1-y0|
-.cc9a	ac9a	49 ff		eor #$ff			eor 	#$FF
-.cc9c	ac9c	1a		inc a				inc 	a
-.cc9d	ac9d					_GXCAbs1:
-.cc9d	ac9d	c5 38		cmp $38				cmp 	gxzTemp1 					; if >= difference then no overlap
-.cc9f	ac9f	b0 1c		bcs $acbd			bcs 	_GXOkayFail
-.cca1	aca1	85 39		sta $39				sta 	gxzTemp1+1 					; save |y1-y0|
-.cca3	aca3	38		sec				sec 								; calculate |x1-x0|
-.cca4	aca4	b9 ed 07	lda $07ed,y			lda 	gxSpriteLow,y
-.cca7	aca7	fd ed 07	sbc $07ed,x			sbc 	gxSpriteLow,x
-.ccaa	acaa	b0 03		bcs $acaf			bcs 	_GXCAbs2
-.ccac	acac	49 ff		eor #$ff			eor 	#$FF
-.ccae	acae	1a		inc a				inc 	a
-.ccaf	acaf					_GXCAbs2:
-.ccaf	acaf	c5 38		cmp $38				cmp 	gxzTemp1 					; if >= difference then no overlap
-.ccb1	acb1	b0 0a		bcs $acbd			bcs 	_GXOkayFail
-.ccb3	acb3	c5 39		cmp $39				cmp 	gxzTemp1+1 					; is it less than the previous one.
-.ccb5	acb5	90 02		bcc $acb9			bcc 	_GXCHaveLowest
-.ccb7	acb7	a5 39		lda $39				lda 	gxzTemp1+1 					; if not, that's the smallest difference.
-.ccb9	acb9					_GXCHaveLowest:
-.ccb9	acb9	0a		asl a				asl 	a 							; scale to allow for >> 2
-.ccba	acba	0a		asl a				asl 	a
-.ccbb	acbb	18		clc				clc
-.ccbc	acbc	60		rts				rts
-.ccbd	acbd					_GXOkayFail:
-.ccbd	acbd	18		clc				clc
-.ccbe	acbe					_GXCollideFail:
-.ccbe	acbe	a9 ff		lda #$ff			lda 	#$FF
-.ccc0	acc0	60		rts				rts
-.ccc1	acc1					GXFindSprite:
-.ccc1	acc1	aa		tax				tax
-.ccc2	acc2	ad dc 07	lda $07dc			lda 	gxSpritePage 				; access the base page of the sprite
-.ccc5	acc5	85 0b		sta $0b				sta 	GXEditSlot
-.ccc7	acc7	bd 00 61	lda $6100,x			lda 	GXMappingAddress+256,x 		; check a valid sprite
-.ccca	acca	1d 00 60	ora $6000,x			ora 	GXMappingAddress,x
-.cccd	accd	f0 33		beq $ad02			beq 	_GXFSFail
-.cccf	accf	bd 00 61	lda $6100,x			lda 	GXMappingAddress+256,x 		; MSB
-.ccd2	acd2	8d 87 08	sta $0887			sta 	gxSpriteOffset+1
-.ccd5	acd5	bd 00 60	lda $6000,x			lda 	GXMappingAddress,x 			; LSB
-.ccd8	acd8	48		pha				pha 								; save twice
-.ccd9	acd9	48		pha				pha
-.ccda	acda	29 03		and #$03			and 	#3 							; get sprite size
-.ccdc	acdc	8d 84 08	sta $0884			sta 	gxSizeBits 					; save raw (0-3)
-.ccdf	acdf	aa		tax				tax
-.cce0	ace0	bd 04 ad	lda $ad04,x			lda 	_GXFXSSTTable,x 			; read sprite size
-.cce3	ace3	8d 83 08	sta $0883			sta 	gxSizePixels 				; save (8/16/24/32)
-.cce6	ace6	68		pla				pla 								; get LUT
-.cce7	ace7	4a		lsr a				lsr		a
-.cce8	ace8	4a		lsr a				lsr		a
-.cce9	ace9	29 03		and #$03			and 	#3
-.cceb	aceb	8d 85 08	sta $0885			sta 	gxSpriteLUT
-.ccee	acee	68		pla				pla 								; address, neeeds to be x 4
-.ccef	acef	29 f0		and #$f0			and 	#$F0
-.ccf1	acf1	8d 86 08	sta $0886			sta 	gxSpriteOffset
-.ccf4	acf4	0e 86 08	asl $0886			asl 	gxSpriteOffset
-.ccf7	acf7	2e 87 08	rol $0887			rol 	gxSpriteOffset+1
-.ccfa	acfa	0e 86 08	asl $0886			asl 	gxSpriteOffset
-.ccfd	acfd	2e 87 08	rol $0887			rol 	gxSpriteOffset+1
-.cd00	ad00	18		clc				clc
-.cd01	ad01	60		rts				rts
-.cd02	ad02					_GXFSFail:
-.cd02	ad02	38		sec				sec
-.cd03	ad03	60		rts				rts
-.cd04	ad04					_GXFXSSTTable:
->cd04	ad04	08 10 18 20					.byte 	8,16,24,32
+.cbe0	abe0					GXSelectTile:
+.cbe0	abe0	ad da 07	lda $07da			lda 	gxTilesOn 					; check tilemap in use
+.cbe3	abe3	f0 10		beq $abf5			beq 	_GXSFail
+>cbe5	abe5	db						.byte 	$DB 						; causes a break in the emulator
+.cbe6	abe6	a5 36		lda $36				lda 	gxzTemp0 					; check X and Y in range
+.cbe8	abe8	cd df 07	cmp $07df			cmp 	gxTileMapWidth
+.cbeb	abeb	b0 08		bcs $abf5			bcs 	_GXSFail
+.cbed	abed	a5 37		lda $37				lda 	gxzTemp0+1
+.cbef	abef	cd e0 07	cmp $07e0			cmp 	gxTileMapHeight
+.cbf2	abf2	b0 01		bcs $abf5			bcs 	_GXSFail
+.cbf4	abf4	18		clc				clc
+.cbf5	abf5					_GXSFail:
+.cbf5	abf5	38		sec				sec
+.cbf6	abf6	60		rts				rts
+.cbf7	abf7					GXOpenBitmap:
+.cbf7	abf7	78		sei				sei 								; no interrupts here
+.cbf8	abf8	a5 0b		lda $0b				lda 	GXEditSlot 					; Save the original LUT slot value
+.cbfa	abfa	8d e6 07	sta $07e6			sta 	gxOriginalLUTValue
+.cbfd	abfd	58		cli				cli
+.cbfe	abfe	60		rts				rts
+.cbff	abff					GXCloseBitmap:
+.cbff	abff	78		sei				sei
+.cc00	ac00	ad e6 07	lda $07e6			lda 	gxOriginalLUTValue 			; restore LUT slot value
+.cc03	ac03	85 0b		sta $0b				sta 	GXEditSlot
+.cc05	ac05	58		cli				cli
+.cc06	ac06	60		rts				rts
+.cc07	ac07					gxPositionCalc:
+.cc07	ac07	a5 36		lda $36				lda 	gxzTemp0 						; save temp memory slot
+.cc09	ac09	48		pha				pha
+.cc0a	ac0a	ad d2 07	lda $07d2			lda 	gxY0 							; gxzScreen = Y0
+.cc0d	ac0d	85 3c		sta $3c				sta 	gxzScreen
+.cc0f	ac0f	64 3d		stz $3d				stz 	gxzScreen+1
+.cc11	ac11	06 3c		asl $3c				asl 	gxzScreen 						; gxzScreen = Y0 * 4
+.cc13	ac13	26 3d		rol $3d				rol 	gxzScreen+1
+.cc15	ac15	06 3c		asl $3c				asl 	gxzScreen
+.cc17	ac17	26 3d		rol $3d				rol 	gxzScreen+1
+.cc19	ac19	18		clc				clc 									; gxzScreen = Y0 * 5, as it's still in A
+.cc1a	ac1a	65 3c		adc $3c				adc 	gxzScreen
+.cc1c	ac1c	85 3c		sta $3c				sta 	gxzScreen
+.cc1e	ac1e	90 02		bcc $ac22			bcc 	_GXPCNoCarry
+.cc20	ac20	e6 3d		inc $3d				inc 	gxzScreen+1
+.cc22	ac22					_GXPCNoCarry:
+.cc22	ac22	06 3c		asl $3c				asl 	gxzScreen 						; now Y0 * 10
+.cc24	ac24	26 3d		rol $3d				rol 	gxzScreen+1
+.cc26	ac26	a5 3d		lda $3d				lda	 	gxzScreen+1
+.cc28	ac28	85 36		sta $36				sta 	gxzTemp0 						; the page offset.
+.cc2a	ac2a	64 3d		stz $3d				stz 	gxzScreen+1
+.cc2c	ac2c	a9 05		lda #$05			lda 	#5 								; now multiply by 32, this puts this in the range 0..8191
+.cc2e	ac2e					_GXPCMultiply32:
+.cc2e	ac2e	06 3c		asl $3c				asl 	gxzScreen
+.cc30	ac30	26 3d		rol $3d				rol 	gxzScreen+1
+.cc32	ac32	3a		dec a				dec 	a
+.cc33	ac33	d0 f9		bne $ac2e			bne 	_GXPCMultiply32
+.cc35	ac35	18		clc				clc
+.cc36	ac36	ad d0 07	lda $07d0			lda 	gxX0 						; add X to this value, put the result in gxOffset, gxzScreen has to be on a page boundary
+.cc39	ac39	65 3c		adc $3c				adc 	gxzScreen
+.cc3b	ac3b	8d e7 07	sta $07e7			sta 	gxOffset
+.cc3e	ac3e	ad d1 07	lda $07d1			lda 	gxX0+1
+.cc41	ac41	65 3d		adc $3d				adc 	gxzScreen+1
+.cc43	ac43	c9 20		cmp #$20			cmp 	#$20 						; has it overflowed into the next one ?
+.cc45	ac45	90 04		bcc $ac4b			bcc 	_GXPCNoOverflow
+.cc47	ac47	29 1f		and #$1f			and 	#$1F 						; fix it up
+.cc49	ac49	e6 36		inc $36				inc 	gxzTemp0 					; add 1 to the page number
+.cc4b	ac4b					_GXPCNoOverflow:
+.cc4b	ac4b	09 60		ora #$60			ora 	#(GXMappingAddress >> 8) 	; make it the address mapped in.
+.cc4d	ac4d	85 3d		sta $3d				sta 	gxzScreen+1
+.cc4f	ac4f	64 3c		stz $3c				stz 	gxzScreen
+.cc51	ac51	18		clc				clc
+.cc52	ac52	a5 36		lda $36				lda 	gxzTemp0 					; get the page number
+.cc54	ac54	6d db 07	adc $07db			adc 	gxBasePage 					; by adding the base page
+.cc57	ac57	85 0b		sta $0b				sta 	GXEditSlot 					; and map it into memory.
+.cc59	ac59	68		pla				pla
+.cc5a	ac5a	85 36		sta $36				sta 	gxzTemp0
+.cc5c	ac5c	60		rts				rts
+.cc5d	ac5d					GXMovePositionDown:
+.cc5d	ac5d	18		clc				clc 								; add 320 to offset/temp+1
+.cc5e	ac5e	ad e7 07	lda $07e7			lda 	gxOffset
+.cc61	ac61	69 40		adc #$40			adc 	#64
+.cc63	ac63	8d e7 07	sta $07e7			sta 	gxOffset
+.cc66	ac66	a5 3d		lda $3d				lda 	gxzScreen+1
+.cc68	ac68	69 01		adc #$01			adc 	#1
+.cc6a	ac6a	85 3d		sta $3d				sta 	gxzScreen+1
+.cc6c	ac6c	c9 80		cmp #$80			cmp 	#((GXMappingAddress+$2000) >> 8) ; on to the next page ?
+.cc6e	ac6e	90 07		bcc $ac77			bcc 	_GXMPDExit
+.cc70	ac70	38		sec				sec  								; next page, adjust address
+.cc71	ac71	e9 20		sbc #$20			sbc 	#$20
+.cc73	ac73	85 3d		sta $3d				sta 	gxzScreen+1
+.cc75	ac75	e6 0b		inc $0b				inc 	GXEditSlot 					; bump page
+.cc77	ac77					_GXMPDExit:
+.cc77	ac77	60		rts				rts
+.cc78	ac78					GXCollide:
+.cc78	ac78	a5 36		lda $36				lda 	gxzTemp0 					; check if sprite numbers are legal.
+.cc7a	ac7a	aa		tax				tax
+.cc7b	ac7b	05 37		ora $37				ora 	gxzTemp0+1
+.cc7d	ac7d	29 c0		and #$c0			and 	#$C0
+.cc7f	ac7f	38		sec				sec
+.cc80	ac80	d0 53		bne $acd5			bne 	_GXCollideFail 				; if either >= 64, fail.
+.cc82	ac82	a4 37		ldy $37				ldy 	gxzTemp0+1 					; at this point X is 1st sprite and Y is 2nd sprite.
+.cc84	ac84	b9 ed 07	lda $07ed,y			lda 	gxSpriteLow,y 				; check if either hidden bit is set
+.cc87	ac87	1d ed 07	ora $07ed,x			ora 	gxSpriteLow,x
+.cc8a	ac8a	30 48		bmi $acd4			bmi 	_GXOkayFail 				; if either hidden, then they cannot collide.
+.cc8c	ac8c	18		clc				clc 								; need to calculate sum of sizes.
+.cc8d	ac8d	b9 2d 08	lda $082d,y			lda 	gxSpriteHigh,y
+.cc90	ac90	7d 2d 08	adc $082d,x			adc 	gxSpriteHigh,x 				; at this point, CS, Bit 6 and 7 contain that sum.
+.cc93	ac93	29 c0		and #$c0			and 	#$C0 					 	; mask off
+.cc95	ac95	6a		ror a				ror 	a 							; 5/6/7
+.cc96	ac96	4a		lsr a				lsr 	a 							; 4/5/6
+.cc97	ac97	4a		lsr a				lsr 	a 							; 3/4/5
+.cc98	ac98	4a		lsr a				lsr 	a 							; 2/3/4
+.cc99	ac99	18		clc				clc
+.cc9a	ac9a	69 08		adc #$08			adc 	#$08
+.cc9c	ac9c	4a		lsr a				lsr 	a 							; adjust because all coordinates are divided by 4 to store.
+.cc9d	ac9d	4a		lsr a				lsr 	a
+.cc9e	ac9e	85 38		sta $38				sta 	gxzTemp1 					; so the difference between the centres has to be less than this.
+.cca0	aca0	b9 2d 08	lda $082d,y			lda 	gxSpriteHigh,y 				; calculate y1-y0
+.cca3	aca3	29 3f		and #$3f			and 	#$3F
+.cca5	aca5	85 39		sta $39				sta 	gxzTemp1+1
+.cca7	aca7	38		sec				sec
+.cca8	aca8	bd 2d 08	lda $082d,x			lda 	gxSpriteHigh,x
+.ccab	acab	29 3f		and #$3f			and 	#$3F
+.ccad	acad	e5 39		sbc $39				sbc 	gxzTemp1+1
+.ccaf	acaf	b0 03		bcs $acb4			bcs 	_GXCAbs1 					; calculate |y1-y0|
+.ccb1	acb1	49 ff		eor #$ff			eor 	#$FF
+.ccb3	acb3	1a		inc a				inc 	a
+.ccb4	acb4					_GXCAbs1:
+.ccb4	acb4	c5 38		cmp $38				cmp 	gxzTemp1 					; if >= difference then no overlap
+.ccb6	acb6	b0 1c		bcs $acd4			bcs 	_GXOkayFail
+.ccb8	acb8	85 39		sta $39				sta 	gxzTemp1+1 					; save |y1-y0|
+.ccba	acba	38		sec				sec 								; calculate |x1-x0|
+.ccbb	acbb	b9 ed 07	lda $07ed,y			lda 	gxSpriteLow,y
+.ccbe	acbe	fd ed 07	sbc $07ed,x			sbc 	gxSpriteLow,x
+.ccc1	acc1	b0 03		bcs $acc6			bcs 	_GXCAbs2
+.ccc3	acc3	49 ff		eor #$ff			eor 	#$FF
+.ccc5	acc5	1a		inc a				inc 	a
+.ccc6	acc6					_GXCAbs2:
+.ccc6	acc6	c5 38		cmp $38				cmp 	gxzTemp1 					; if >= difference then no overlap
+.ccc8	acc8	b0 0a		bcs $acd4			bcs 	_GXOkayFail
+.ccca	acca	c5 39		cmp $39				cmp 	gxzTemp1+1 					; is it less than the previous one.
+.cccc	accc	90 02		bcc $acd0			bcc 	_GXCHaveLowest
+.ccce	acce	a5 39		lda $39				lda 	gxzTemp1+1 					; if not, that's the smallest difference.
+.ccd0	acd0					_GXCHaveLowest:
+.ccd0	acd0	0a		asl a				asl 	a 							; scale to allow for >> 2
+.ccd1	acd1	0a		asl a				asl 	a
+.ccd2	acd2	18		clc				clc
+.ccd3	acd3	60		rts				rts
+.ccd4	acd4					_GXOkayFail:
+.ccd4	acd4	18		clc				clc
+.ccd5	acd5					_GXCollideFail:
+.ccd5	acd5	a9 ff		lda #$ff			lda 	#$FF
+.ccd7	acd7	60		rts				rts
+.ccd8	acd8					GXFindSprite:
+.ccd8	acd8	aa		tax				tax
+.ccd9	acd9	ad dc 07	lda $07dc			lda 	gxSpritePage 				; access the base page of the sprite
+.ccdc	acdc	85 0b		sta $0b				sta 	GXEditSlot
+.ccde	acde	bd 00 61	lda $6100,x			lda 	GXMappingAddress+256,x 		; check a valid sprite
+.cce1	ace1	1d 00 60	ora $6000,x			ora 	GXMappingAddress,x
+.cce4	ace4	f0 33		beq $ad19			beq 	_GXFSFail
+.cce6	ace6	bd 00 61	lda $6100,x			lda 	GXMappingAddress+256,x 		; MSB
+.cce9	ace9	8d 87 08	sta $0887			sta 	gxSpriteOffset+1
+.ccec	acec	bd 00 60	lda $6000,x			lda 	GXMappingAddress,x 			; LSB
+.ccef	acef	48		pha				pha 								; save twice
+.ccf0	acf0	48		pha				pha
+.ccf1	acf1	29 03		and #$03			and 	#3 							; get sprite size
+.ccf3	acf3	8d 84 08	sta $0884			sta 	gxSizeBits 					; save raw (0-3)
+.ccf6	acf6	aa		tax				tax
+.ccf7	acf7	bd 1b ad	lda $ad1b,x			lda 	_GXFXSSTTable,x 			; read sprite size
+.ccfa	acfa	8d 83 08	sta $0883			sta 	gxSizePixels 				; save (8/16/24/32)
+.ccfd	acfd	68		pla				pla 								; get LUT
+.ccfe	acfe	4a		lsr a				lsr		a
+.ccff	acff	4a		lsr a				lsr		a
+.cd00	ad00	29 03		and #$03			and 	#3
+.cd02	ad02	8d 85 08	sta $0885			sta 	gxSpriteLUT
+.cd05	ad05	68		pla				pla 								; address, neeeds to be x 4
+.cd06	ad06	29 f0		and #$f0			and 	#$F0
+.cd08	ad08	8d 86 08	sta $0886			sta 	gxSpriteOffset
+.cd0b	ad0b	0e 86 08	asl $0886			asl 	gxSpriteOffset
+.cd0e	ad0e	2e 87 08	rol $0887			rol 	gxSpriteOffset+1
+.cd11	ad11	0e 86 08	asl $0886			asl 	gxSpriteOffset
+.cd14	ad14	2e 87 08	rol $0887			rol 	gxSpriteOffset+1
+.cd17	ad17	18		clc				clc
+.cd18	ad18	60		rts				rts
+.cd19	ad19					_GXFSFail:
+.cd19	ad19	38		sec				sec
+.cd1a	ad1a	60		rts				rts
+.cd1b	ad1b					_GXFXSSTTable:
+>cd1b	ad1b	08 10 18 20					.byte 	8,16,24,32
 .0883						gxSizePixels:
 >0883								.fill 	1
 .0884						gxSizeBits:
@@ -11525,42 +11540,42 @@
 >0885								.fill 	1
 .0886						gxSpriteOffset:
 >0886								.fill 	2
-.cd08	ad08					GXSortXY:
-.cd08	ad08	20 26 ad	jsr $ad26			jsr 	GXSortY 					; will be sorted on Y now
-.cd0b	ad0b	ad d0 07	lda $07d0			lda 	gxX0 						; compare X0 v X1
-.cd0e	ad0e	cd d4 07	cmp $07d4			cmp 	gxX1
-.cd11	ad11	ad d1 07	lda $07d1			lda 	gxX0+1
-.cd14	ad14	ed d5 07	sbc $07d5			sbc 	gxX1+1
-.cd17	ad17	90 0c		bcc $ad25			bcc 	_GXSXYExit 					; X0 < X1 exit
-.cd19	ad19	a2 00		ldx #$00			ldx 	#0 							; swap them over
-.cd1b	ad1b	a0 04		ldy #$04			ldy 	#4
-.cd1d	ad1d	20 3a ad	jsr $ad3a			jsr 	GXSwapXY
-.cd20	ad20	e8		inx				inx
-.cd21	ad21	c8		iny				iny
-.cd22	ad22	20 3a ad	jsr $ad3a			jsr 	GXSwapXY
-.cd25	ad25					_GXSXYExit:
-.cd25	ad25	60		rts				rts
-.cd26	ad26					GXSortY:
-.cd26	ad26	ad d2 07	lda $07d2			lda 	gxY0 						; if Y0 >= Y1
-.cd29	ad29	cd d6 07	cmp $07d6			cmp 	gxY1
-.cd2c	ad2c	90 0b		bcc $ad39			bcc 	_GXSYSorted
-.cd2e	ad2e	a2 03		ldx #$03			ldx 	#3 							; swap 3-0 - for lines we want to sort but keep lines together
-.cd30	ad30	a0 07		ldy #$07			ldy 	#7 							; with 4-7
-.cd32	ad32					_GXSwap1:
-.cd32	ad32	20 3a ad	jsr $ad3a			jsr 	GXSwapXY
-.cd35	ad35	88		dey				dey
-.cd36	ad36	ca		dex				dex
-.cd37	ad37	10 f9		bpl $ad32			bpl 	_GXSwap1
-.cd39	ad39					_GXSYSorted:
-.cd39	ad39	60		rts				rts
-.cd3a	ad3a					GXSwapXY:
-.cd3a	ad3a	bd d0 07	lda $07d0,x			lda 	gxX0,x
-.cd3d	ad3d	48		pha				pha
-.cd3e	ad3e	b9 d0 07	lda $07d0,y			lda 	gxX0,y
-.cd41	ad41	9d d0 07	sta $07d0,x			sta 	gxX0,x
-.cd44	ad44	68		pla				pla
-.cd45	ad45	99 d0 07	sta $07d0,y			sta 	gxX0,y
-.cd48	ad48	60		rts				rts
+.cd1f	ad1f					GXSortXY:
+.cd1f	ad1f	20 3d ad	jsr $ad3d			jsr 	GXSortY 					; will be sorted on Y now
+.cd22	ad22	ad d0 07	lda $07d0			lda 	gxX0 						; compare X0 v X1
+.cd25	ad25	cd d4 07	cmp $07d4			cmp 	gxX1
+.cd28	ad28	ad d1 07	lda $07d1			lda 	gxX0+1
+.cd2b	ad2b	ed d5 07	sbc $07d5			sbc 	gxX1+1
+.cd2e	ad2e	90 0c		bcc $ad3c			bcc 	_GXSXYExit 					; X0 < X1 exit
+.cd30	ad30	a2 00		ldx #$00			ldx 	#0 							; swap them over
+.cd32	ad32	a0 04		ldy #$04			ldy 	#4
+.cd34	ad34	20 51 ad	jsr $ad51			jsr 	GXSwapXY
+.cd37	ad37	e8		inx				inx
+.cd38	ad38	c8		iny				iny
+.cd39	ad39	20 51 ad	jsr $ad51			jsr 	GXSwapXY
+.cd3c	ad3c					_GXSXYExit:
+.cd3c	ad3c	60		rts				rts
+.cd3d	ad3d					GXSortY:
+.cd3d	ad3d	ad d2 07	lda $07d2			lda 	gxY0 						; if Y0 >= Y1
+.cd40	ad40	cd d6 07	cmp $07d6			cmp 	gxY1
+.cd43	ad43	90 0b		bcc $ad50			bcc 	_GXSYSorted
+.cd45	ad45	a2 03		ldx #$03			ldx 	#3 							; swap 3-0 - for lines we want to sort but keep lines together
+.cd47	ad47	a0 07		ldy #$07			ldy 	#7 							; with 4-7
+.cd49	ad49					_GXSwap1:
+.cd49	ad49	20 51 ad	jsr $ad51			jsr 	GXSwapXY
+.cd4c	ad4c	88		dey				dey
+.cd4d	ad4d	ca		dex				dex
+.cd4e	ad4e	10 f9		bpl $ad49			bpl 	_GXSwap1
+.cd50	ad50					_GXSYSorted:
+.cd50	ad50	60		rts				rts
+.cd51	ad51					GXSwapXY:
+.cd51	ad51	bd d0 07	lda $07d0,x			lda 	gxX0,x
+.cd54	ad54	48		pha				pha
+.cd55	ad55	b9 d0 07	lda $07d0,y			lda 	gxX0,y
+.cd58	ad58	9d d0 07	sta $07d0,x			sta 	gxX0,x
+.cd5b	ad5b	68		pla				pla
+.cd5c	ad5c	99 d0 07	sta $07d0,y			sta 	gxX0,y
+.cd5f	ad5f	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
@@ -11568,1035 +11583,1035 @@
 ;******  Processing file: ../modules/_build/_tokeniser.module
 
 =1						tokeniserIntegrated=1
-.cd49	ad49					KeywordSet0:
->cd49	ad49	00 65					.text	0,$65,""               ; $80 !0:EOF
->cd4b	ad4b	00 58					.text	0,$58,""               ; $81 !1:SH1
->cd4d	ad4d	00 5a					.text	0,$5a,""               ; $82 !2:SH2
->cd4f	ad4f	04 fe 41 42 53 28			.text	4,$fe,"ABS("           ; $83 ABS(
->cd55	ad55	06 93 41 4c 4c 4f 43 28			.text	6,$93,"ALLOC("         ; $84 ALLOC(
->cd5d	ad5d	04 ff 41 53 43 28			.text	4,$ff,"ASC("           ; $85 ASC(
->cd63	ad63	05 29 43 48 52 24 28			.text	5,$29,"CHR$("          ; $86 CHR$(
->cd6a	ad6a	06 aa 45 56 45 4e 54 28			.text	6,$aa,"EVENT("         ; $87 EVENT(
->cd72	ad72	05 6b 46 41 4c 53 45			.text	5,$6b,"FALSE"          ; $88 FALSE
->cd79	ad79	05 44 46 52 41 43 28			.text	5,$44,"FRAC("          ; $89 FRAC(
->cd80	ad80	05 2c 47 45 54 24 28			.text	5,$2c,"GET$("          ; $8a GET$(
->cd87	ad87	04 08 47 45 54 28			.text	4,$08,"GET("           ; $8b GET(
->cd8d	ad8d	09 4a 47 45 54 44 41 54			.text	9,$4a,"GETDATE$("      ; $8c GETDATE$(
->cd95	ad95	45 24 28
->cd98	ad98	09 5b 47 45 54 54 49 4d			.text	9,$5b,"GETTIME$("      ; $8d GETTIME$(
->cda0	ada0	45 24 28
->cda3	ada3	04 0d 48 49 54 28			.text	4,$0d,"HIT("           ; $8e HIT(
->cda9	ada9	07 cc 49 4e 4b 45 59 24			.text	7,$cc,"INKEY$("        ; $8f INKEY$(
->cdb1	adb1	28
->cdb2	adb2	06 a8 49 4e 4b 45 59 28			.text	6,$a8,"INKEY("         ; $90 INKEY(
->cdba	adba	04 13 49 4e 54 28			.text	4,$13,"INT("           ; $91 INT(
->cdc0	adc0	06 a7 49 53 56 41 4c 28			.text	6,$a7,"ISVAL("         ; $92 ISVAL(
->cdc8	adc8	0a e0 49 54 45 4d 43 4f			.text	10,$e0,"ITEMCOUNT("     ; $93 ITEMCOUNT(
->cdd0	add0	55 4e 54 28
->cdd4	add4	09 5b 49 54 45 4d 47 45			.text	9,$5b,"ITEMGET$("      ; $94 ITEMGET$(
->cddc	addc	54 24 28
->cddf	addf	05 5c 4a 4f 59 42 28			.text	5,$5c,"JOYB("          ; $95 JOYB(
->cde6	ade6	05 72 4a 4f 59 58 28			.text	5,$72,"JOYX("          ; $96 JOYX(
->cded	aded	05 73 4a 4f 59 59 28			.text	5,$73,"JOYY("          ; $97 JOYY(
->cdf4	adf4	08 49 4b 45 59 44 4f 57			.text	8,$49,"KEYDOWN("       ; $98 KEYDOWN(
->cdfc	adfc	4e 28
->cdfe	adfe	06 77 4c 45 46 54 24 28			.text	6,$77,"LEFT$("         ; $99 LEFT$(
->ce06	ae06	04 07 4c 45 4e 28			.text	4,$07,"LEN("           ; $9a LEN(
->ce0c	ae0c	04 0e 4d 41 58 28			.text	4,$0e,"MAX("           ; $9b MAX(
->ce12	ae12	05 26 4d 49 44 24 28			.text	5,$26,"MID$("          ; $9c MID$(
->ce19	ae19	04 0c 4d 49 4e 28			.text	4,$0c,"MIN("           ; $9d MIN(
->ce1f	ae1f	04 19 4e 4f 54 28			.text	4,$19,"NOT("           ; $9e NOT(
->ce25	ae25	05 4d 50 45 45 4b 28			.text	5,$4d,"PEEK("          ; $9f PEEK(
->ce2c	ae2c	06 91 50 45 45 4b 44 28			.text	6,$91,"PEEKD("         ; $a0 PEEKD(
->ce34	ae34	06 99 50 45 45 4b 4c 28			.text	6,$99,"PEEKL("         ; $a1 PEEKL(
->ce3c	ae3c	06 a4 50 45 45 4b 57 28			.text	6,$a4,"PEEKW("         ; $a2 PEEKW(
->ce44	ae44	08 3c 50 4c 41 59 49 4e			.text	8,$3c,"PLAYING("       ; $a3 PLAYING(
->ce4c	ae4c	47 28
->ce4e	ae4e	07 e9 52 41 4e 44 4f 4d			.text	7,$e9,"RANDOM("        ; $a4 RANDOM(
->ce56	ae56	28
->ce57	ae57	07 ca 52 49 47 48 54 24			.text	7,$ca,"RIGHT$("        ; $a5 RIGHT$(
->ce5f	ae5f	28
->ce60	ae60	04 0c 52 4e 44 28			.text	4,$0c,"RND("           ; $a6 RND(
->ce66	ae66	04 10 53 47 4e 28			.text	4,$10,"SGN("           ; $a7 SGN(
->ce6c	ae6c	04 0e 53 50 43 28			.text	4,$0e,"SPC("           ; $a8 SPC(
->ce72	ae72	05 45 53 54 52 24 28			.text	5,$45,"STR$("          ; $a9 STR$(
->ce79	ae79	05 56 54 49 4c 45 28			.text	5,$56,"TILE("          ; $aa TILE(
->ce80	ae80	06 a9 54 49 4d 45 52 28			.text	6,$a9,"TIMER("         ; $ab TIMER(
->ce88	ae88	04 40 54 52 55 45			.text	4,$40,"TRUE"           ; $ac TRUE
->ce8e	ae8e	04 0b 56 41 4c 28			.text	4,$0b,"VAL("           ; $ad VAL(
->ce94	ae94	03 e7 46 4f 52				.text	3,$e7,"FOR"            ; $ae FOR
->ce99	ae99	02 8f 49 46				.text	2,$8f,"IF"             ; $af IF
->ce9d	ae9d	04 34 50 52 4f 43			.text	4,$34,"PROC"           ; $b0 PROC
->cea3	aea3	06 c1 52 45 50 45 41 54			.text	6,$c1,"REPEAT"         ; $b1 REPEAT
->ceab	aeab	05 79 57 48 49 4c 45			.text	5,$79,"WHILE"          ; $b2 WHILE
->ceb2	aeb2	05 66 45 4e 44 49 46			.text	5,$66,"ENDIF"          ; $b3 ENDIF
->ceb9	aeb9	07 0b 45 4e 44 50 52 4f			.text	7,$0b,"ENDPROC"        ; $b4 ENDPROC
->cec1	aec1	43
->cec2	aec2	04 3f 4e 45 58 54			.text	4,$3f,"NEXT"           ; $b5 NEXT
->cec8	aec8	04 2f 54 48 45 4e			.text	4,$2f,"THEN"           ; $b6 THEN
->cece	aece	05 8c 55 4e 54 49 4c			.text	5,$8c,"UNTIL"          ; $b7 UNTIL
->ced5	aed5	04 2e 57 45 4e 44			.text	4,$2e,"WEND"           ; $b8 WEND
->cedb	aedb	02 95 41 54				.text	2,$95,"AT"             ; $b9 AT
->cedf	aedf	02 9b 42 59				.text	2,$9b,"BY"             ; $ba BY
->cee3	aee3	04 1c 43 41 4c 4c			.text	4,$1c,"CALL"           ; $bb CALL
->cee9	aee9	06 b2 43 49 52 43 4c 45			.text	6,$b2,"CIRCLE"         ; $bc CIRCLE
->cef1	aef1	05 67 43 4c 45 41 52			.text	5,$67,"CLEAR"          ; $bd CLEAR
->cef8	aef8	05 7f 43 4f 4c 4f 52			.text	5,$7f,"COLOR"          ; $be COLOR
->ceff	aeff	06 d4 43 4f 4c 4f 55 52			.text	6,$d4,"COLOUR"         ; $bf COLOUR
->cf07	af07	04 1a 44 41 54 41			.text	4,$1a,"DATA"           ; $c0 DATA
->cf0d	af0d	03 da 44 49 4d				.text	3,$da,"DIM"            ; $c1 DIM
->cf12	af12	06 db 44 4f 57 4e 54 4f			.text	6,$db,"DOWNTO"         ; $c2 DOWNTO
->cf1a	af1a	04 29 45 4c 53 45			.text	4,$29,"ELSE"           ; $c3 ELSE
->cf20	af20	04 34 46 52 4f 4d			.text	4,$34,"FROM"           ; $c4 FROM
->cf26	af26	03 e5 47 46 58				.text	3,$e5,"GFX"            ; $c5 GFX
->cf2b	af2b	04 24 48 45 52 45			.text	4,$24,"HERE"           ; $c6 HERE
->cf31	af31	05 63 49 4d 41 47 45			.text	5,$63,"IMAGE"          ; $c7 IMAGE
->cf38	af38	03 e5 4c 45 54				.text	3,$e5,"LET"            ; $c8 LET
->cf3d	af3d	04 28 4c 49 4e 45			.text	4,$28,"LINE"           ; $c9 LINE
->cf43	af43	05 6b 4c 4f 43 41 4c			.text	5,$6b,"LOCAL"          ; $ca LOCAL
->cf4a	af4a	07 1a 4d 45 4d 43 4f 50			.text	7,$1a,"MEMCOPY"        ; $cb MEMCOPY
->cf52	af52	59
->cf53	af53	03 db 4f 46 46				.text	3,$db,"OFF"            ; $cc OFF
->cf58	af58	02 9d 4f 4e				.text	2,$9d,"ON"             ; $cd ON
->cf5c	af5c	07 20 4f 55 54 4c 49 4e			.text	7,$20,"OUTLINE"        ; $ce OUTLINE
->cf64	af64	45
->cf65	af65	07 0f 50 41 4c 45 54 54			.text	7,$0f,"PALETTE"        ; $cf PALETTE
->cf6d	af6d	45
->cf6e	af6e	04 3f 50 4c 4f 54			.text	4,$3f,"PLOT"           ; $d0 PLOT
->cf74	af74	04 2f 50 4f 4b 45			.text	4,$2f,"POKE"           ; $d1 POKE
->cf7a	af7a	05 73 50 4f 4b 45 44			.text	5,$73,"POKED"          ; $d2 POKED
->cf81	af81	05 7b 50 4f 4b 45 4c			.text	5,$7b,"POKEL"          ; $d3 POKEL
->cf88	af88	05 86 50 4f 4b 45 57			.text	5,$86,"POKEW"          ; $d4 POKEW
->cf8f	af8f	04 1c 52 45 41 44			.text	4,$1c,"READ"           ; $d5 READ
->cf95	af95	04 2e 52 45 43 54			.text	4,$2e,"RECT"           ; $d6 RECT
->cf9b	af9b	03 e4 52 45 4d				.text	3,$e4,"REM"            ; $d7 REM
->cfa0	afa0	05 7b 53 4f 4c 49 44			.text	5,$7b,"SOLID"          ; $d8 SOLID
->cfa7	afa7	05 89 53 4f 55 4e 44			.text	5,$89,"SOUND"          ; $d9 SOUND
->cfae	afae	06 d7 53 50 52 49 54 45			.text	6,$d7,"SPRITE"         ; $da SPRITE
->cfb6	afb6	04 45 54 45 58 54			.text	4,$45,"TEXT"           ; $db TEXT
->cfbc	afbc	02 a3 54 4f				.text	2,$a3,"TO"             ; $dc TO
->cfc0	afc0	ff					.text	$FF
-.cfc1	afc1					KeywordSet1:
->cfc1	afc1	00 65					.text	0,$65,""               ; $80 !0:EOF
->cfc3	afc3	00 58					.text	0,$58,""               ; $81 !1:SH1
->cfc5	afc5	00 5a					.text	0,$5a,""               ; $82 !2:SH2
->cfc7	afc7	08 4c 41 53 53 45 4d 42			.text	8,$4c,"ASSEMBLE"       ; $83 ASSEMBLE
->cfcf	afcf	4c 45
->cfd1	afd1	06 d2 41 53 53 45 52 54			.text	6,$d2,"ASSERT"         ; $84 ASSERT
->cfd9	afd9	06 bd 42 49 54 4d 41 50			.text	6,$bd,"BITMAP"         ; $85 BITMAP
->cfe1	afe1	05 62 42 4c 4f 41 44			.text	5,$62,"BLOAD"          ; $86 BLOAD
->cfe8	afe8	05 71 42 53 41 56 45			.text	5,$71,"BSAVE"          ; $87 BSAVE
->cfef	afef	03 e2 43 4c 53				.text	3,$e2,"CLS"            ; $88 CLS
->cff4	aff4	06 d0 43 50 52 49 4e 54			.text	6,$d0,"CPRINT"         ; $89 CPRINT
->cffc	affc	03 df 44 49 52				.text	3,$df,"DIR"            ; $8a DIR
->d001	b001	03 e6 44 4f 53				.text	3,$e6,"DOS"            ; $8b DOS
->d006	b006	05 7a 44 52 49 56 45			.text	5,$7a,"DRIVE"          ; $8c DRIVE
->d00d	b00d	03 d7 45 4e 44				.text	3,$d7,"END"            ; $8d END
->d012	b012	07 11 45 58 50 4c 4f 44			.text	7,$11,"EXPLODE"        ; $8e EXPLODE
->d01a	b01a	45
->d01b	b01b	02 96 47 4f				.text	2,$96,"GO"             ; $8f GO
->d01f	b01f	05 80 47 4f 53 55 42			.text	5,$80,"GOSUB"          ; $90 GOSUB
->d026	b026	04 39 47 4f 54 4f			.text	4,$39,"GOTO"           ; $91 GOTO
->d02c	b02c	05 70 48 49 4d 45 4d			.text	5,$70,"HIMEM"          ; $92 HIMEM
->d033	b033	05 90 49 4e 50 55 54			.text	5,$90,"INPUT"          ; $93 INPUT
->d03a	b03a	04 3c 4c 49 53 54			.text	4,$3c,"LIST"           ; $94 LIST
->d040	b040	04 20 4c 4f 41 44			.text	4,$20,"LOAD"           ; $95 LOAD
->d046	b046	06 b7 4d 44 45 4c 54 41			.text	6,$b7,"MDELTA"         ; $96 MDELTA
->d04e	b04e	05 89 4d 4f 55 53 45			.text	5,$89,"MOUSE"          ; $97 MOUSE
->d055	b055	03 ea 4e 45 57				.text	3,$ea,"NEW"            ; $98 NEW
->d05a	b05a	04 2e 50 49 4e 47			.text	4,$2e,"PING"           ; $99 PING
->d060	b060	05 8d 50 52 49 4e 54			.text	5,$8d,"PRINT"          ; $9a PRINT
->d067	b067	07 24 52 45 53 54 4f 52			.text	7,$24,"RESTORE"        ; $9b RESTORE
->d06f	b06f	45
->d070	b070	06 e0 52 45 54 55 52 4e			.text	6,$e0,"RETURN"         ; $9c RETURN
->d078	b078	03 f5 52 55 4e				.text	3,$f5,"RUN"            ; $9d RUN
->d07d	b07d	04 2f 53 41 56 45			.text	4,$2f,"SAVE"           ; $9e SAVE
->d083	b083	07 0a 53 45 54 44 41 54			.text	7,$0a,"SETDATE"        ; $9f SETDATE
->d08b	b08b	45
->d08c	b08c	07 1b 53 45 54 54 49 4d			.text	7,$1b,"SETTIME"        ; $a0 SETTIME
->d094	b094	45
->d095	b095	05 8d 53 48 4f 4f 54			.text	5,$8d,"SHOOT"          ; $a1 SHOOT
->d09c	b09c	07 2a 53 50 52 49 54 45			.text	7,$2a,"SPRITES"        ; $a2 SPRITES
->d0a4	b0a4	53
->d0a5	b0a5	04 46 53 54 4f 50			.text	4,$46,"STOP"           ; $a3 STOP
->d0ab	b0ab	04 2e 54 49 4c 45			.text	4,$2e,"TILE"           ; $a4 TILE
->d0b1	b0b1	05 81 54 49 4c 45 53			.text	5,$81,"TILES"          ; $a5 TILES
->d0b8	b0b8	03 ff 54 52 59				.text	3,$ff,"TRY"            ; $a6 TRY
->d0bd	b0bd	06 d5 56 45 52 49 46 59			.text	6,$d5,"VERIFY"         ; $a7 VERIFY
->d0c5	b0c5	03 ee 58 47 4f				.text	3,$ee,"XGO"            ; $a8 XGO
->d0ca	b0ca	05 78 58 4c 4f 41 44			.text	5,$78,"XLOAD"          ; $a9 XLOAD
->d0d1	b0d1	03 eb 5a 41 50				.text	3,$eb,"ZAP"            ; $aa ZAP
->d0d6	b0d6	ff					.text	$FF
-.d0d7	b0d7					KeywordSet2:
->d0d7	b0d7	00 65					.text	0,$65,""               ; $80 !0:EOF
->d0d9	b0d9	00 58					.text	0,$58,""               ; $81 !1:SH1
->d0db	b0db	00 5a					.text	0,$5a,""               ; $82 !2:SH2
->d0dd	b0dd	03 c8 41 44 43				.text	3,$c8,"ADC"            ; $83 ADC
->d0e2	b0e2	03 d3 41 4e 44				.text	3,$d3,"AND"            ; $84 AND
->d0e7	b0e7	03 e0 41 53 4c				.text	3,$e0,"ASL"            ; $85 ASL
->d0ec	b0ec	03 c8 42 43 43				.text	3,$c8,"BCC"            ; $86 BCC
->d0f1	b0f1	03 d8 42 43 53				.text	3,$d8,"BCS"            ; $87 BCS
->d0f6	b0f6	03 d8 42 45 51				.text	3,$d8,"BEQ"            ; $88 BEQ
->d0fb	b0fb	03 df 42 49 54				.text	3,$df,"BIT"            ; $89 BIT
->d100	b100	03 d8 42 4d 49				.text	3,$d8,"BMI"            ; $8a BMI
->d105	b105	03 d5 42 4e 45				.text	3,$d5,"BNE"            ; $8b BNE
->d10a	b10a	03 de 42 50 4c				.text	3,$de,"BPL"            ; $8c BPL
->d10f	b10f	03 d5 42 52 41				.text	3,$d5,"BRA"            ; $8d BRA
->d114	b114	03 df 42 52 4b				.text	3,$df,"BRK"            ; $8e BRK
->d119	b119	03 db 42 56 43				.text	3,$db,"BVC"            ; $8f BVC
->d11e	b11e	03 eb 42 56 53				.text	3,$eb,"BVS"            ; $90 BVS
->d123	b123	03 d2 43 4c 43				.text	3,$d2,"CLC"            ; $91 CLC
->d128	b128	03 d3 43 4c 44				.text	3,$d3,"CLD"            ; $92 CLD
->d12d	b12d	03 d8 43 4c 49				.text	3,$d8,"CLI"            ; $93 CLI
->d132	b132	03 e5 43 4c 56				.text	3,$e5,"CLV"            ; $94 CLV
->d137	b137	03 e0 43 4d 50				.text	3,$e0,"CMP"            ; $95 CMP
->d13c	b13c	03 eb 43 50 58				.text	3,$eb,"CPX"            ; $96 CPX
->d141	b141	03 ec 43 50 59				.text	3,$ec,"CPY"            ; $97 CPY
->d146	b146	03 cc 44 45 43				.text	3,$cc,"DEC"            ; $98 DEC
->d14b	b14b	03 e1 44 45 58				.text	3,$e1,"DEX"            ; $99 DEX
->d150	b150	03 e2 44 45 59				.text	3,$e2,"DEY"            ; $9a DEY
->d155	b155	03 e6 45 4f 52				.text	3,$e6,"EOR"            ; $9b EOR
->d15a	b15a	03 da 49 4e 43				.text	3,$da,"INC"            ; $9c INC
->d15f	b15f	03 ef 49 4e 58				.text	3,$ef,"INX"            ; $9d INX
->d164	b164	03 f0 49 4e 59				.text	3,$f0,"INY"            ; $9e INY
->d169	b169	03 e7 4a 4d 50				.text	3,$e7,"JMP"            ; $9f JMP
->d16e	b16e	03 ef 4a 53 52				.text	3,$ef,"JSR"            ; $a0 JSR
->d173	b173	03 d1 4c 44 41				.text	3,$d1,"LDA"            ; $a1 LDA
->d178	b178	03 e8 4c 44 58				.text	3,$e8,"LDX"            ; $a2 LDX
->d17d	b17d	03 e9 4c 44 59				.text	3,$e9,"LDY"            ; $a3 LDY
->d182	b182	03 f1 4c 53 52				.text	3,$f1,"LSR"            ; $a4 LSR
->d187	b187	03 ed 4e 4f 50				.text	3,$ed,"NOP"            ; $a5 NOP
->d18c	b18c	03 e2 4f 52 41				.text	3,$e2,"ORA"            ; $a6 ORA
->d191	b191	03 d9 50 48 41				.text	3,$d9,"PHA"            ; $a7 PHA
->d196	b196	03 e8 50 48 50				.text	3,$e8,"PHP"            ; $a8 PHP
->d19b	b19b	03 f0 50 48 58				.text	3,$f0,"PHX"            ; $a9 PHX
->d1a0	b1a0	03 f1 50 48 59				.text	3,$f1,"PHY"            ; $aa PHY
->d1a5	b1a5	03 dd 50 4c 41				.text	3,$dd,"PLA"            ; $ab PLA
->d1aa	b1aa	03 ec 50 4c 50				.text	3,$ec,"PLP"            ; $ac PLP
->d1af	b1af	03 f4 50 4c 58				.text	3,$f4,"PLX"            ; $ad PLX
->d1b4	b1b4	03 f5 50 4c 59				.text	3,$f5,"PLY"            ; $ae PLY
->d1b9	b1b9	03 ed 52 4f 4c				.text	3,$ed,"ROL"            ; $af ROL
->d1be	b1be	03 f3 52 4f 52				.text	3,$f3,"ROR"            ; $b0 ROR
->d1c3	b1c3	03 ef 52 54 49				.text	3,$ef,"RTI"            ; $b1 RTI
->d1c8	b1c8	03 f9 52 54 53				.text	3,$f9,"RTS"            ; $b2 RTS
->d1cd	b1cd	03 d8 53 42 43				.text	3,$d8,"SBC"            ; $b3 SBC
->d1d2	b1d2	03 db 53 45 43				.text	3,$db,"SEC"            ; $b4 SEC
->d1d7	b1d7	03 dc 53 45 44				.text	3,$dc,"SED"            ; $b5 SED
->d1dc	b1dc	03 e1 53 45 49				.text	3,$e1,"SEI"            ; $b6 SEI
->d1e1	b1e1	03 e8 53 54 41				.text	3,$e8,"STA"            ; $b7 STA
->d1e6	b1e6	03 f7 53 54 50				.text	3,$f7,"STP"            ; $b8 STP
->d1eb	b1eb	03 ff 53 54 58				.text	3,$ff,"STX"            ; $b9 STX
->d1f0	b1f0	03 00 53 54 59				.text	3,$00,"STY"            ; $ba STY
->d1f5	b1f5	03 01 53 54 5a				.text	3,$01,"STZ"            ; $bb STZ
->d1fa	b1fa	03 ed 54 41 58				.text	3,$ed,"TAX"            ; $bc TAX
->d1ff	b1ff	03 ee 54 41 59				.text	3,$ee,"TAY"            ; $bd TAY
->d204	b204	03 e8 54 52 42				.text	3,$e8,"TRB"            ; $be TRB
->d209	b209	03 e9 54 53 42				.text	3,$e9,"TSB"            ; $bf TSB
->d20e	b20e	03 ff 54 53 58				.text	3,$ff,"TSX"            ; $c0 TSX
->d213	b213	03 ed 54 58 41				.text	3,$ed,"TXA"            ; $c1 TXA
->d218	b218	03 ff 54 58 53				.text	3,$ff,"TXS"            ; $c2 TXS
->d21d	b21d	03 ee 54 59 41				.text	3,$ee,"TYA"            ; $c3 TYA
->d222	b222	ff					.text	$FF
-.d223	b223					Export_TKListConvertLine:
-.d223	b223	48		pha				pha 								; save indent on the stack
-.d224	b224	9c 19 04	stz $0419			stz 	tbOffset
-.d227	b227	9c 29 04	stz $0429			stz 	tokenBuffer
-.d22a	b22a	9c 25 04	stz $0425			stz 	currentListColour
-.d22d	b22d	a9 8d		lda #$8d			lda 	#CLILineNumber+$80
-.d22f	b22f	20 ac b3	jsr $b3ac			jsr 	LCLWriteColour
-.d232	b232	a0 02		ldy #$02			ldy 	#2 							; convert line number to string
-.d234	b234	b1 30		lda ($30),y			lda 	(codePtr),y
-.d236	b236	aa		tax				tax
-.d237	b237	88		dey				dey
-.d238	b238	b1 30		lda ($30),y			lda 	(codePtr),y
-.d23a	b23a	20 1d b4	jsr $b41d			jsr 	LCLWriteNumberXA
-.d23d	b23d	68		pla				pla 								; adjustment to indent
-.d23e	b23e	48		pha				pha 								; save on stack
-.d23f	b23f	10 0c		bpl $b24d			bpl 	_LCNoAdjust 				; don't adjust indent if +ve, do after.
-.d241	b241	18		clc				clc 								; add to list indent and make 0 if goes -ve.
-.d242	b242	6d 22 04	adc $0422			adc 	listIndent
-.d245	b245	8d 22 04	sta $0422			sta 	listIndent
-.d248	b248	10 03		bpl $b24d			bpl 	_LCNoAdjust
-.d24a	b24a	9c 22 04	stz $0422			stz 	listIndent
-.d24d	b24d					_LCNoAdjust:
-.d24d	b24d	18		clc				clc		 							; work out actual indent.
-.d24e	b24e	ad 22 04	lda $0422			lda 	listIndent
-.d251	b251	0a		asl a				asl 	a
-.d252	b252	69 07		adc #$07			adc 	#7
-.d254	b254	85 36		sta $36				sta 	zTemp0
-.d256	b256					_LCPadOut:
-.d256	b256	a9 20		lda #$20			lda 	#' '						; pad out to 6+indent characters
-.d258	b258	20 b5 b3	jsr $b3b5			jsr 	LCLWrite
-.d25b	b25b	ad 19 04	lda $0419			lda 	tbOffset
-.d25e	b25e	c5 36		cmp $36				cmp 	zTemp0
-.d260	b260	d0 f4		bne $b256			bne 	_LCPadOut
-.d262	b262	a0 03		ldy #$03			ldy 	#3 							; start position.
-.d264	b264					_LCMainLoop:
-.d264	b264	a9 8c		lda #$8c			lda 	#CLIPunctuation+$80
-.d266	b266	20 ac b3	jsr $b3ac			jsr 	LCLWriteColour
-.d269	b269	b1 30		lda ($30),y			lda 	(codePtr),y
-.d26b	b26b	c9 80		cmp #$80			cmp 	#KWC_EOL 					; end of line ?
-.d26d	b26d	f0 17		beq $b286			beq 	_LCExit
-.d26f	b26f	c9 10		cmp #$10			cmp 	#16 						; 0-5 are the double punctuations
-.d271	b271	90 1e		bcc $b291			bcc 	_LCDoubles
-.d273	b273	c9 20		cmp #$20			cmp 	#32 						; 16-31 are shifted punctuation from 64-91
-.d275	b275	90 2a		bcc $b2a1			bcc 	_LCShiftPunc
-.d277	b277	c9 40		cmp #$40			cmp 	#64 						; 32-64 are as stored, punc and digits
-.d279	b279	90 35		bcc $b2b0			bcc 	_LCPunctuation
-.d27b	b27b	c9 80		cmp #$80			cmp 	#128 						; 64-127 are variable identifiers.
-.d27d	b27d	90 51		bcc $b2d0			bcc 	_LCIdentifiers
-.d27f	b27f	c9 fe		cmp #$fe			cmp 	#254 						; 128-253 are tokenised words
-.d281	b281	90 73		bcc $b2f6			bcc 	_LCTokens
-.d283	b283	4c 56 b3	jmp $b356			jmp 	_LCData 					; 254-5 are data objects
-.d286	b286					_LCExit:
-.d286	b286	68		pla				pla 								; get old indent adjust
-.d287	b287	30 07		bmi $b290			bmi 	_LCExit2
-.d289	b289	18		clc				clc 								; add to indent if +ve
-.d28a	b28a	6d 22 04	adc $0422			adc 	listIndent
-.d28d	b28d	8d 22 04	sta $0422			sta 	listIndent
-.d290	b290					_LCExit2:
-.d290	b290	60		rts				rts
-.d291	b291					_LCDoubles:
-.d291	b291	48		pha				pha
-.d292	b292	4a		lsr a				lsr 	a 							; put bit 2 into bit 1
-.d293	b293	29 02		and #$02			and 	#2
-.d295	b295	09 3c		ora #$3c			ora 	#60 						; make < >
-.d297	b297	20 b5 b3	jsr $b3b5			jsr 	LCLWrite
-.d29a	b29a	68		pla				pla 								; restore, do lower bit
-.d29b	b29b	29 03		and #$03			and 	#3
-.d29d	b29d	09 3c		ora #$3c			ora 	#60
-.d29f	b29f	80 0f		bra $b2b0			bra		_LCPunctuation 				; print, increment, loop
-.d2a1	b2a1					_LCShiftPunc:
-.d2a1	b2a1	aa		tax				tax 								; save in X
-.d2a2	b2a2	29 07		and #$07			and 	#7 							; lower 3 bits
-.d2a4	b2a4	f0 02		beq $b2a8			beq 	_LCNoAdd
-.d2a6	b2a6	09 18		ora #$18			ora 	#24 						; adds $18 to it.
-.d2a8	b2a8					_LCNoAdd:
-.d2a8	b2a8	e0 18		cpx #$18			cpx 	#24 						; if >= 24 add $20
-.d2aa	b2aa	90 02		bcc $b2ae			bcc 	_LCNoAdd2
-.d2ac	b2ac	09 20		ora #$20			ora 	#32 						; adds $20
-.d2ae	b2ae					_LCNoAdd2:
-.d2ae	b2ae	09 40		ora #$40			ora 	#$40 						; shift into 64-127 range and fall through.
-.d2b0	b2b0					_LCPunctuation:
-.d2b0	b2b0	c9 3a		cmp #$3a			cmp 	#':' 						; check if :
-.d2b2	b2b2	d0 03		bne $b2b7			bne 	_LCPContinue
-.d2b4	b2b4	20 cb b3	jsr $b3cb			jsr 	LCLDeleteLastSpace 			; if so delete any preceding spaces
-.d2b7	b2b7					_LCPContinue:
-.d2b7	b2b7	c9 2e		cmp #$2e			cmp 	#'.'
-.d2b9	b2b9	f0 08		beq $b2c3			beq 	_LCPIsConstant
-.d2bb	b2bb	c9 30		cmp #$30			cmp 	#'0'
-.d2bd	b2bd	90 0b		bcc $b2ca			bcc 	_LCPNotConstant
-.d2bf	b2bf	c9 3a		cmp #$3a			cmp 	#'9'+1
-.d2c1	b2c1	b0 07		bcs $b2ca			bcs 	_LCPNotConstant
-.d2c3	b2c3					_LCPIsConstant:
-.d2c3	b2c3	48		pha				pha
-.d2c4	b2c4	a9 87		lda #$87			lda 	#CLIConstant+$80
-.d2c6	b2c6	20 ac b3	jsr $b3ac			jsr 	LCLWriteColour
-.d2c9	b2c9	68		pla				pla
-.d2ca	b2ca					_LCPNotConstant:
-.d2ca	b2ca	c8		iny				iny 								; consume character
-.d2cb	b2cb	20 b5 b3	jsr $b3b5			jsr 	LCLWrite 					; write it out.
-.d2ce	b2ce	80 94		bra $b264			bra 	_LCMainLoop 				; go round again.
-.d2d0	b2d0					_LCIdentifiers:
-.d2d0	b2d0	18		clc				clc 								; convert to physical address
-.d2d1	b2d1	69 d0		adc #$d0			adc 	#((VariableSpace >> 8) - $40) & $FF
-.d2d3	b2d3	85 37		sta $37				sta 	zTemp0+1
-.d2d5	b2d5	c8		iny				iny
-.d2d6	b2d6	b1 30		lda ($30),y			lda 	(codePtr),y
-.d2d8	b2d8	85 36		sta $36				sta 	zTemp0
-.d2da	b2da	c8		iny				iny
-.d2db	b2db	5a		phy				phy 								; save position
-.d2dc	b2dc	a9 8e		lda #$8e			lda 	#CLIIdentifier+$80
-.d2de	b2de	20 ac b3	jsr $b3ac			jsr 	LCLWriteColour
-.d2e1	b2e1	a0 07		ldy #$07			ldy 	#7 							; output the identifier at +8
-.d2e3	b2e3					_LCOutIdentifier:
-.d2e3	b2e3	c8		iny				iny
-.d2e4	b2e4	b1 36		lda ($36),y			lda 	(zTemp0),y					; bit 7 set = end.
-.d2e6	b2e6	29 7f		and #$7f			and 	#$7F
-.d2e8	b2e8	20 07 b4	jsr $b407			jsr 	LCLLowerCase
-.d2eb	b2eb	20 b5 b3	jsr $b3b5			jsr 	LCLWrite
-.d2ee	b2ee	b1 36		lda ($36),y			lda 	(zTemp0),y				 	; ends when bit 7 set.
-.d2f0	b2f0	10 f1		bpl $b2e3			bpl 	_LCOutIdentifier
-.d2f2	b2f2	7a		ply				ply 								; restore position
-.d2f3	b2f3	4c 64 b2	jmp $b264			jmp 	_LCMainLoop
-.d2f6	b2f6					_LCTokens:
-.d2f6	b2f6	aa		tax				tax 								; token in X
-.d2f7	b2f7	a9 d7		lda #$d7			lda 	#((KeywordSet2) & $FF)
-.d2f9	b2f9	85 36		sta $36				sta 	0+zTemp0
-.d2fb	b2fb	a9 b0		lda #$b0			lda 	#((KeywordSet2) >> 8)
-.d2fd	b2fd	85 37		sta $37				sta 	1+zTemp0
-.d2ff	b2ff	e0 82		cpx #$82			cpx 	#$82
-.d301	b301	f0 16		beq $b319			beq 	_LCUseShift
-.d303	b303	a9 c1		lda #$c1			lda 	#((KeywordSet1) & $FF)
-.d305	b305	85 36		sta $36				sta 	0+zTemp0
-.d307	b307	a9 af		lda #$af			lda 	#((KeywordSet1) >> 8)
-.d309	b309	85 37		sta $37				sta 	1+zTemp0
-.d30b	b30b	e0 81		cpx #$81			cpx 	#$81
-.d30d	b30d	f0 0a		beq $b319			beq 	_LCUseShift
-.d30f	b30f	a9 49		lda #$49			lda 	#((KeywordSet0) & $FF)
-.d311	b311	85 36		sta $36				sta 	0+zTemp0
-.d313	b313	a9 ad		lda #$ad			lda 	#((KeywordSet0) >> 8)
-.d315	b315	85 37		sta $37				sta 	1+zTemp0
-.d317	b317	80 01		bra $b31a			bra 	_LCNoShift
-.d319	b319					_LCUseShift:
-.d319	b319	c8		iny				iny
-.d31a	b31a					_LCNoShift:
-.d31a	b31a	20 df b3	jsr $b3df			jsr 	LCLCheckSpaceRequired 		; do we need a space ?
-.d31d	b31d	b1 30		lda ($30),y			lda 	(codePtr),y
-.d31f	b31f	aa		tax				tax 								; into X
-.d320	b320					_LCFindText:
-.d320	b320	ca		dex				dex
-.d321	b321	10 0e		bpl $b331			bpl 	_LCFoundText 				; found text.
-.d323	b323	b2 36		lda ($36)			lda 	(zTemp0) 					; length of text
-.d325	b325	1a		inc a				inc 	a 							; one extra for size
-.d326	b326	38		sec				sec 								; one extra for checksum
-.d327	b327	65 36		adc $36				adc 	zTemp0 						; go to next token
-.d329	b329	85 36		sta $36				sta 	zTemp0
-.d32b	b32b	90 f3		bcc $b320			bcc 	_LCFindText
-.d32d	b32d	e6 37		inc $37				inc 	zTemp0+1
-.d32f	b32f	80 ef		bra $b320			bra 	_LCFindText
-.d331	b331					_LCFoundText:
-.d331	b331	5a		phy				phy 								; save List position
-.d332	b332	b2 36		lda ($36)			lda 	(zTemp0)					; count to print
-.d334	b334	aa		tax				tax
-.d335	b335	a9 86		lda #$86			lda 	#CLIToken+$80
-.d337	b337	20 ac b3	jsr $b3ac			jsr 	LCLWriteColour
-.d33a	b33a	a0 02		ldy #$02			ldy 	#2
-.d33c	b33c					_LCCopyToken:
-.d33c	b33c	b1 36		lda ($36),y			lda 	(zTemp0),y
-.d33e	b33e	20 07 b4	jsr $b407			jsr 	LCLLowerCase
-.d341	b341	20 b5 b3	jsr $b3b5			jsr 	LCLWrite
-.d344	b344	c8		iny				iny
-.d345	b345	ca		dex				dex
-.d346	b346	d0 f4		bne $b33c			bne 	_LCCopyToken
-.d348	b348	c9 28		cmp #$28			cmp 	#"(" 						; if last char not ( print a space
-.d34a	b34a	f0 05		beq $b351			beq 	_LCNoSpace
-.d34c	b34c	a9 20		lda #$20			lda 	#' '
-.d34e	b34e	20 b5 b3	jsr $b3b5			jsr 	LCLWrite
-.d351	b351					_LCNoSpace:
-.d351	b351	7a		ply				ply 								; restore position.
-.d352	b352	c8		iny				iny 								; consume token
-.d353	b353	4c 64 b2	jmp $b264			jmp 	_LCMainLoop 				; and go around again.
-.d356	b356					_LCData:
-.d356	b356	48		pha				pha 								; save type $FE/$FF
-.d357	b357	a2 24		ldx #$24			ldx 	#'$' 						; figure out $ or "
-.d359	b359	c9 fe		cmp #$fe			cmp 	#$FE
-.d35b	b35b	f0 22		beq $b37f			beq 	_LCHaveOpener
-.d35d	b35d	a2 22		ldx #$22			ldx 	#'"'
-.d35f	b35f	a9 8f		lda #$8f			lda 	#CLIData+$80
-.d361	b361	20 ac b3	jsr $b3ac			jsr 	LCLWriteColour
-.d364	b364	c0 04		cpy #$04			cpy 	#4 							; must be 2nd thing on line
-.d366	b366	d0 17		bne $b37f			bne 	_LCHaveOpener
-.d368	b368	88		dey				dey 								; what precedes it ?
-.d369	b369	b1 30		lda ($30),y			lda 	(codePtr),y
-.d36b	b36b	c8		iny				iny
-.d36c	b36c	c9 27		cmp #$27			cmp 	#KWD_QUOTE 					; if quote
-.d36e	b36e	d0 0f		bne $b37f			bne 	_LCHaveOpener
-.d370	b370	a9 09		lda #$09			lda 	#9 							; tab
-.d372	b372	20 b5 b3	jsr $b3b5			jsr 	LCLWrite
-.d375	b375	a9 9e		lda #$9e			lda 	#$90+CLIBComment
-.d377	b377	20 b5 b3	jsr $b3b5			jsr 	LCLWrite
-.d37a	b37a	a9 85		lda #$85			lda 	#CLIFComment+$80
-.d37c	b37c	20 ac b3	jsr $b3ac			jsr 	LCLWriteColour
-.d37f	b37f					_LCHaveOpener:
-.d37f	b37f	8a		txa				txa 								; output prefix (# or ")
-.d380	b380	20 b5 b3	jsr $b3b5			jsr 	LCLWrite
-.d383	b383	c8		iny				iny 								; get count
-.d384	b384	b1 30		lda ($30),y			lda 	(codePtr),y
-.d386	b386	aa		tax				tax
-.d387	b387	c8		iny				iny 								; point at first character
-.d388	b388					_LCOutData:
-.d388	b388	b1 30		lda ($30),y			lda 	(codePtr),y
-.d38a	b38a	c9 00		cmp #$00			cmp 	#0
-.d38c	b38c	f0 03		beq $b391			beq 	_LCNoPrint
-.d38e	b38e	20 b5 b3	jsr $b3b5			jsr 	LCLWrite
-.d391	b391					_LCNoPrint:
-.d391	b391	c8		iny				iny
-.d392	b392	ca		dex				dex
-.d393	b393	d0 f3		bne $b388			bne 	_LCOutData
-.d395	b395	68		pla				pla 								; closing " required ?
-.d396	b396	c9 ff		cmp #$ff			cmp 	#$FF 						; not required for hex constant.
-.d398	b398	d0 0f		bne $b3a9			bne 	_LCNoQuote
-.d39a	b39a	a9 22		lda #$22			lda 	#'"'
-.d39c	b39c	20 b5 b3	jsr $b3b5			jsr 	LCLWrite
-.d39f	b39f	ad c5 07	lda $07c5			lda 	EXTTextColour
-.d3a2	b3a2	29 0f		and #$0f			and 	#$0F
-.d3a4	b3a4	09 90		ora #$90			ora 	#$90
-.d3a6	b3a6	20 b5 b3	jsr $b3b5			jsr 	LCLWrite
-.d3a9	b3a9					_LCNoQuote:
-.d3a9	b3a9	4c 64 b2	jmp $b264			jmp 	_LCMainLoop
-.d3ac	b3ac					LCLWriteColour:
-.d3ac	b3ac	cd 25 04	cmp $0425			cmp 	currentListColour 			; has the colour changed
-.d3af	b3af	8d 25 04	sta $0425			sta 	currentListColour 			; (update it anyway)
-.d3b2	b3b2	d0 01		bne $b3b5			bne 	LCLWrite 					; if different, output it
-.d3b4	b3b4	60		rts				rts
-.d3b5	b3b5					LCLWrite:
-.d3b5	b3b5	da		phx				phx
-.d3b6	b3b6	ae 19 04	ldx $0419			ldx 	tbOffset 					; write out make ASCIIZ
-.d3b9	b3b9	9d 29 04	sta $0429,x			sta 	tokenBuffer,x
-.d3bc	b3bc	9e 2a 04	stz $042a,x			stz 	tokenBuffer+1,x
-.d3bf	b3bf	ee 19 04	inc $0419			inc 	tbOffset 					; bump the position
-.d3c2	b3c2	09 00		ora #$00			ora 	#0 							; don't update last character if colour data
-.d3c4	b3c4	30 03		bmi $b3c9			bmi 	_LCLNoColour
-.d3c6	b3c6	8d 23 04	sta $0423			sta 	lcLastCharacter
-.d3c9	b3c9					_LCLNoColour:
-.d3c9	b3c9	fa		plx				plx
-.d3ca	b3ca	60		rts				rts
-.d3cb	b3cb					LCLDeleteLastSpace:
-.d3cb	b3cb	48		pha				pha
+.cd60	ad60					KeywordSet0:
+>cd60	ad60	00 65					.text	0,$65,""               ; $80 !0:EOF
+>cd62	ad62	00 58					.text	0,$58,""               ; $81 !1:SH1
+>cd64	ad64	00 5a					.text	0,$5a,""               ; $82 !2:SH2
+>cd66	ad66	04 fe 41 42 53 28			.text	4,$fe,"ABS("           ; $83 ABS(
+>cd6c	ad6c	06 93 41 4c 4c 4f 43 28			.text	6,$93,"ALLOC("         ; $84 ALLOC(
+>cd74	ad74	04 ff 41 53 43 28			.text	4,$ff,"ASC("           ; $85 ASC(
+>cd7a	ad7a	05 29 43 48 52 24 28			.text	5,$29,"CHR$("          ; $86 CHR$(
+>cd81	ad81	06 aa 45 56 45 4e 54 28			.text	6,$aa,"EVENT("         ; $87 EVENT(
+>cd89	ad89	05 6b 46 41 4c 53 45			.text	5,$6b,"FALSE"          ; $88 FALSE
+>cd90	ad90	05 44 46 52 41 43 28			.text	5,$44,"FRAC("          ; $89 FRAC(
+>cd97	ad97	05 2c 47 45 54 24 28			.text	5,$2c,"GET$("          ; $8a GET$(
+>cd9e	ad9e	04 08 47 45 54 28			.text	4,$08,"GET("           ; $8b GET(
+>cda4	ada4	09 4a 47 45 54 44 41 54			.text	9,$4a,"GETDATE$("      ; $8c GETDATE$(
+>cdac	adac	45 24 28
+>cdaf	adaf	09 5b 47 45 54 54 49 4d			.text	9,$5b,"GETTIME$("      ; $8d GETTIME$(
+>cdb7	adb7	45 24 28
+>cdba	adba	04 0d 48 49 54 28			.text	4,$0d,"HIT("           ; $8e HIT(
+>cdc0	adc0	07 cc 49 4e 4b 45 59 24			.text	7,$cc,"INKEY$("        ; $8f INKEY$(
+>cdc8	adc8	28
+>cdc9	adc9	06 a8 49 4e 4b 45 59 28			.text	6,$a8,"INKEY("         ; $90 INKEY(
+>cdd1	add1	04 13 49 4e 54 28			.text	4,$13,"INT("           ; $91 INT(
+>cdd7	add7	06 a7 49 53 56 41 4c 28			.text	6,$a7,"ISVAL("         ; $92 ISVAL(
+>cddf	addf	0a e0 49 54 45 4d 43 4f			.text	10,$e0,"ITEMCOUNT("     ; $93 ITEMCOUNT(
+>cde7	ade7	55 4e 54 28
+>cdeb	adeb	09 5b 49 54 45 4d 47 45			.text	9,$5b,"ITEMGET$("      ; $94 ITEMGET$(
+>cdf3	adf3	54 24 28
+>cdf6	adf6	05 5c 4a 4f 59 42 28			.text	5,$5c,"JOYB("          ; $95 JOYB(
+>cdfd	adfd	05 72 4a 4f 59 58 28			.text	5,$72,"JOYX("          ; $96 JOYX(
+>ce04	ae04	05 73 4a 4f 59 59 28			.text	5,$73,"JOYY("          ; $97 JOYY(
+>ce0b	ae0b	08 49 4b 45 59 44 4f 57			.text	8,$49,"KEYDOWN("       ; $98 KEYDOWN(
+>ce13	ae13	4e 28
+>ce15	ae15	06 77 4c 45 46 54 24 28			.text	6,$77,"LEFT$("         ; $99 LEFT$(
+>ce1d	ae1d	04 07 4c 45 4e 28			.text	4,$07,"LEN("           ; $9a LEN(
+>ce23	ae23	04 0e 4d 41 58 28			.text	4,$0e,"MAX("           ; $9b MAX(
+>ce29	ae29	05 26 4d 49 44 24 28			.text	5,$26,"MID$("          ; $9c MID$(
+>ce30	ae30	04 0c 4d 49 4e 28			.text	4,$0c,"MIN("           ; $9d MIN(
+>ce36	ae36	04 19 4e 4f 54 28			.text	4,$19,"NOT("           ; $9e NOT(
+>ce3c	ae3c	05 4d 50 45 45 4b 28			.text	5,$4d,"PEEK("          ; $9f PEEK(
+>ce43	ae43	06 91 50 45 45 4b 44 28			.text	6,$91,"PEEKD("         ; $a0 PEEKD(
+>ce4b	ae4b	06 99 50 45 45 4b 4c 28			.text	6,$99,"PEEKL("         ; $a1 PEEKL(
+>ce53	ae53	06 a4 50 45 45 4b 57 28			.text	6,$a4,"PEEKW("         ; $a2 PEEKW(
+>ce5b	ae5b	08 3c 50 4c 41 59 49 4e			.text	8,$3c,"PLAYING("       ; $a3 PLAYING(
+>ce63	ae63	47 28
+>ce65	ae65	07 e9 52 41 4e 44 4f 4d			.text	7,$e9,"RANDOM("        ; $a4 RANDOM(
+>ce6d	ae6d	28
+>ce6e	ae6e	07 ca 52 49 47 48 54 24			.text	7,$ca,"RIGHT$("        ; $a5 RIGHT$(
+>ce76	ae76	28
+>ce77	ae77	04 0c 52 4e 44 28			.text	4,$0c,"RND("           ; $a6 RND(
+>ce7d	ae7d	04 10 53 47 4e 28			.text	4,$10,"SGN("           ; $a7 SGN(
+>ce83	ae83	04 0e 53 50 43 28			.text	4,$0e,"SPC("           ; $a8 SPC(
+>ce89	ae89	05 45 53 54 52 24 28			.text	5,$45,"STR$("          ; $a9 STR$(
+>ce90	ae90	05 56 54 49 4c 45 28			.text	5,$56,"TILE("          ; $aa TILE(
+>ce97	ae97	06 a9 54 49 4d 45 52 28			.text	6,$a9,"TIMER("         ; $ab TIMER(
+>ce9f	ae9f	04 40 54 52 55 45			.text	4,$40,"TRUE"           ; $ac TRUE
+>cea5	aea5	04 0b 56 41 4c 28			.text	4,$0b,"VAL("           ; $ad VAL(
+>ceab	aeab	03 e7 46 4f 52				.text	3,$e7,"FOR"            ; $ae FOR
+>ceb0	aeb0	02 8f 49 46				.text	2,$8f,"IF"             ; $af IF
+>ceb4	aeb4	04 34 50 52 4f 43			.text	4,$34,"PROC"           ; $b0 PROC
+>ceba	aeba	06 c1 52 45 50 45 41 54			.text	6,$c1,"REPEAT"         ; $b1 REPEAT
+>cec2	aec2	05 79 57 48 49 4c 45			.text	5,$79,"WHILE"          ; $b2 WHILE
+>cec9	aec9	05 66 45 4e 44 49 46			.text	5,$66,"ENDIF"          ; $b3 ENDIF
+>ced0	aed0	07 0b 45 4e 44 50 52 4f			.text	7,$0b,"ENDPROC"        ; $b4 ENDPROC
+>ced8	aed8	43
+>ced9	aed9	04 3f 4e 45 58 54			.text	4,$3f,"NEXT"           ; $b5 NEXT
+>cedf	aedf	04 2f 54 48 45 4e			.text	4,$2f,"THEN"           ; $b6 THEN
+>cee5	aee5	05 8c 55 4e 54 49 4c			.text	5,$8c,"UNTIL"          ; $b7 UNTIL
+>ceec	aeec	04 2e 57 45 4e 44			.text	4,$2e,"WEND"           ; $b8 WEND
+>cef2	aef2	02 95 41 54				.text	2,$95,"AT"             ; $b9 AT
+>cef6	aef6	02 9b 42 59				.text	2,$9b,"BY"             ; $ba BY
+>cefa	aefa	04 1c 43 41 4c 4c			.text	4,$1c,"CALL"           ; $bb CALL
+>cf00	af00	06 b2 43 49 52 43 4c 45			.text	6,$b2,"CIRCLE"         ; $bc CIRCLE
+>cf08	af08	05 67 43 4c 45 41 52			.text	5,$67,"CLEAR"          ; $bd CLEAR
+>cf0f	af0f	05 7f 43 4f 4c 4f 52			.text	5,$7f,"COLOR"          ; $be COLOR
+>cf16	af16	06 d4 43 4f 4c 4f 55 52			.text	6,$d4,"COLOUR"         ; $bf COLOUR
+>cf1e	af1e	04 1a 44 41 54 41			.text	4,$1a,"DATA"           ; $c0 DATA
+>cf24	af24	03 da 44 49 4d				.text	3,$da,"DIM"            ; $c1 DIM
+>cf29	af29	06 db 44 4f 57 4e 54 4f			.text	6,$db,"DOWNTO"         ; $c2 DOWNTO
+>cf31	af31	04 29 45 4c 53 45			.text	4,$29,"ELSE"           ; $c3 ELSE
+>cf37	af37	04 34 46 52 4f 4d			.text	4,$34,"FROM"           ; $c4 FROM
+>cf3d	af3d	03 e5 47 46 58				.text	3,$e5,"GFX"            ; $c5 GFX
+>cf42	af42	04 24 48 45 52 45			.text	4,$24,"HERE"           ; $c6 HERE
+>cf48	af48	05 63 49 4d 41 47 45			.text	5,$63,"IMAGE"          ; $c7 IMAGE
+>cf4f	af4f	03 e5 4c 45 54				.text	3,$e5,"LET"            ; $c8 LET
+>cf54	af54	04 28 4c 49 4e 45			.text	4,$28,"LINE"           ; $c9 LINE
+>cf5a	af5a	05 6b 4c 4f 43 41 4c			.text	5,$6b,"LOCAL"          ; $ca LOCAL
+>cf61	af61	07 1a 4d 45 4d 43 4f 50			.text	7,$1a,"MEMCOPY"        ; $cb MEMCOPY
+>cf69	af69	59
+>cf6a	af6a	03 db 4f 46 46				.text	3,$db,"OFF"            ; $cc OFF
+>cf6f	af6f	02 9d 4f 4e				.text	2,$9d,"ON"             ; $cd ON
+>cf73	af73	07 20 4f 55 54 4c 49 4e			.text	7,$20,"OUTLINE"        ; $ce OUTLINE
+>cf7b	af7b	45
+>cf7c	af7c	07 0f 50 41 4c 45 54 54			.text	7,$0f,"PALETTE"        ; $cf PALETTE
+>cf84	af84	45
+>cf85	af85	04 3f 50 4c 4f 54			.text	4,$3f,"PLOT"           ; $d0 PLOT
+>cf8b	af8b	04 2f 50 4f 4b 45			.text	4,$2f,"POKE"           ; $d1 POKE
+>cf91	af91	05 73 50 4f 4b 45 44			.text	5,$73,"POKED"          ; $d2 POKED
+>cf98	af98	05 7b 50 4f 4b 45 4c			.text	5,$7b,"POKEL"          ; $d3 POKEL
+>cf9f	af9f	05 86 50 4f 4b 45 57			.text	5,$86,"POKEW"          ; $d4 POKEW
+>cfa6	afa6	04 1c 52 45 41 44			.text	4,$1c,"READ"           ; $d5 READ
+>cfac	afac	04 2e 52 45 43 54			.text	4,$2e,"RECT"           ; $d6 RECT
+>cfb2	afb2	03 e4 52 45 4d				.text	3,$e4,"REM"            ; $d7 REM
+>cfb7	afb7	05 7b 53 4f 4c 49 44			.text	5,$7b,"SOLID"          ; $d8 SOLID
+>cfbe	afbe	05 89 53 4f 55 4e 44			.text	5,$89,"SOUND"          ; $d9 SOUND
+>cfc5	afc5	06 d7 53 50 52 49 54 45			.text	6,$d7,"SPRITE"         ; $da SPRITE
+>cfcd	afcd	04 45 54 45 58 54			.text	4,$45,"TEXT"           ; $db TEXT
+>cfd3	afd3	02 a3 54 4f				.text	2,$a3,"TO"             ; $dc TO
+>cfd7	afd7	ff					.text	$FF
+.cfd8	afd8					KeywordSet1:
+>cfd8	afd8	00 65					.text	0,$65,""               ; $80 !0:EOF
+>cfda	afda	00 58					.text	0,$58,""               ; $81 !1:SH1
+>cfdc	afdc	00 5a					.text	0,$5a,""               ; $82 !2:SH2
+>cfde	afde	08 4c 41 53 53 45 4d 42			.text	8,$4c,"ASSEMBLE"       ; $83 ASSEMBLE
+>cfe6	afe6	4c 45
+>cfe8	afe8	06 d2 41 53 53 45 52 54			.text	6,$d2,"ASSERT"         ; $84 ASSERT
+>cff0	aff0	06 bd 42 49 54 4d 41 50			.text	6,$bd,"BITMAP"         ; $85 BITMAP
+>cff8	aff8	05 62 42 4c 4f 41 44			.text	5,$62,"BLOAD"          ; $86 BLOAD
+>cfff	afff	05 71 42 53 41 56 45			.text	5,$71,"BSAVE"          ; $87 BSAVE
+>d006	b006	03 e2 43 4c 53				.text	3,$e2,"CLS"            ; $88 CLS
+>d00b	b00b	06 d0 43 50 52 49 4e 54			.text	6,$d0,"CPRINT"         ; $89 CPRINT
+>d013	b013	03 df 44 49 52				.text	3,$df,"DIR"            ; $8a DIR
+>d018	b018	03 e6 44 4f 53				.text	3,$e6,"DOS"            ; $8b DOS
+>d01d	b01d	05 7a 44 52 49 56 45			.text	5,$7a,"DRIVE"          ; $8c DRIVE
+>d024	b024	03 d7 45 4e 44				.text	3,$d7,"END"            ; $8d END
+>d029	b029	07 11 45 58 50 4c 4f 44			.text	7,$11,"EXPLODE"        ; $8e EXPLODE
+>d031	b031	45
+>d032	b032	02 96 47 4f				.text	2,$96,"GO"             ; $8f GO
+>d036	b036	05 80 47 4f 53 55 42			.text	5,$80,"GOSUB"          ; $90 GOSUB
+>d03d	b03d	04 39 47 4f 54 4f			.text	4,$39,"GOTO"           ; $91 GOTO
+>d043	b043	05 70 48 49 4d 45 4d			.text	5,$70,"HIMEM"          ; $92 HIMEM
+>d04a	b04a	05 90 49 4e 50 55 54			.text	5,$90,"INPUT"          ; $93 INPUT
+>d051	b051	04 3c 4c 49 53 54			.text	4,$3c,"LIST"           ; $94 LIST
+>d057	b057	04 20 4c 4f 41 44			.text	4,$20,"LOAD"           ; $95 LOAD
+>d05d	b05d	06 b7 4d 44 45 4c 54 41			.text	6,$b7,"MDELTA"         ; $96 MDELTA
+>d065	b065	05 89 4d 4f 55 53 45			.text	5,$89,"MOUSE"          ; $97 MOUSE
+>d06c	b06c	03 ea 4e 45 57				.text	3,$ea,"NEW"            ; $98 NEW
+>d071	b071	04 2e 50 49 4e 47			.text	4,$2e,"PING"           ; $99 PING
+>d077	b077	05 8d 50 52 49 4e 54			.text	5,$8d,"PRINT"          ; $9a PRINT
+>d07e	b07e	07 24 52 45 53 54 4f 52			.text	7,$24,"RESTORE"        ; $9b RESTORE
+>d086	b086	45
+>d087	b087	06 e0 52 45 54 55 52 4e			.text	6,$e0,"RETURN"         ; $9c RETURN
+>d08f	b08f	03 f5 52 55 4e				.text	3,$f5,"RUN"            ; $9d RUN
+>d094	b094	04 2f 53 41 56 45			.text	4,$2f,"SAVE"           ; $9e SAVE
+>d09a	b09a	07 0a 53 45 54 44 41 54			.text	7,$0a,"SETDATE"        ; $9f SETDATE
+>d0a2	b0a2	45
+>d0a3	b0a3	07 1b 53 45 54 54 49 4d			.text	7,$1b,"SETTIME"        ; $a0 SETTIME
+>d0ab	b0ab	45
+>d0ac	b0ac	05 8d 53 48 4f 4f 54			.text	5,$8d,"SHOOT"          ; $a1 SHOOT
+>d0b3	b0b3	07 2a 53 50 52 49 54 45			.text	7,$2a,"SPRITES"        ; $a2 SPRITES
+>d0bb	b0bb	53
+>d0bc	b0bc	04 46 53 54 4f 50			.text	4,$46,"STOP"           ; $a3 STOP
+>d0c2	b0c2	04 2e 54 49 4c 45			.text	4,$2e,"TILE"           ; $a4 TILE
+>d0c8	b0c8	05 81 54 49 4c 45 53			.text	5,$81,"TILES"          ; $a5 TILES
+>d0cf	b0cf	03 ff 54 52 59				.text	3,$ff,"TRY"            ; $a6 TRY
+>d0d4	b0d4	06 d5 56 45 52 49 46 59			.text	6,$d5,"VERIFY"         ; $a7 VERIFY
+>d0dc	b0dc	03 ee 58 47 4f				.text	3,$ee,"XGO"            ; $a8 XGO
+>d0e1	b0e1	05 78 58 4c 4f 41 44			.text	5,$78,"XLOAD"          ; $a9 XLOAD
+>d0e8	b0e8	03 eb 5a 41 50				.text	3,$eb,"ZAP"            ; $aa ZAP
+>d0ed	b0ed	ff					.text	$FF
+.d0ee	b0ee					KeywordSet2:
+>d0ee	b0ee	00 65					.text	0,$65,""               ; $80 !0:EOF
+>d0f0	b0f0	00 58					.text	0,$58,""               ; $81 !1:SH1
+>d0f2	b0f2	00 5a					.text	0,$5a,""               ; $82 !2:SH2
+>d0f4	b0f4	03 c8 41 44 43				.text	3,$c8,"ADC"            ; $83 ADC
+>d0f9	b0f9	03 d3 41 4e 44				.text	3,$d3,"AND"            ; $84 AND
+>d0fe	b0fe	03 e0 41 53 4c				.text	3,$e0,"ASL"            ; $85 ASL
+>d103	b103	03 c8 42 43 43				.text	3,$c8,"BCC"            ; $86 BCC
+>d108	b108	03 d8 42 43 53				.text	3,$d8,"BCS"            ; $87 BCS
+>d10d	b10d	03 d8 42 45 51				.text	3,$d8,"BEQ"            ; $88 BEQ
+>d112	b112	03 df 42 49 54				.text	3,$df,"BIT"            ; $89 BIT
+>d117	b117	03 d8 42 4d 49				.text	3,$d8,"BMI"            ; $8a BMI
+>d11c	b11c	03 d5 42 4e 45				.text	3,$d5,"BNE"            ; $8b BNE
+>d121	b121	03 de 42 50 4c				.text	3,$de,"BPL"            ; $8c BPL
+>d126	b126	03 d5 42 52 41				.text	3,$d5,"BRA"            ; $8d BRA
+>d12b	b12b	03 df 42 52 4b				.text	3,$df,"BRK"            ; $8e BRK
+>d130	b130	03 db 42 56 43				.text	3,$db,"BVC"            ; $8f BVC
+>d135	b135	03 eb 42 56 53				.text	3,$eb,"BVS"            ; $90 BVS
+>d13a	b13a	03 d2 43 4c 43				.text	3,$d2,"CLC"            ; $91 CLC
+>d13f	b13f	03 d3 43 4c 44				.text	3,$d3,"CLD"            ; $92 CLD
+>d144	b144	03 d8 43 4c 49				.text	3,$d8,"CLI"            ; $93 CLI
+>d149	b149	03 e5 43 4c 56				.text	3,$e5,"CLV"            ; $94 CLV
+>d14e	b14e	03 e0 43 4d 50				.text	3,$e0,"CMP"            ; $95 CMP
+>d153	b153	03 eb 43 50 58				.text	3,$eb,"CPX"            ; $96 CPX
+>d158	b158	03 ec 43 50 59				.text	3,$ec,"CPY"            ; $97 CPY
+>d15d	b15d	03 cc 44 45 43				.text	3,$cc,"DEC"            ; $98 DEC
+>d162	b162	03 e1 44 45 58				.text	3,$e1,"DEX"            ; $99 DEX
+>d167	b167	03 e2 44 45 59				.text	3,$e2,"DEY"            ; $9a DEY
+>d16c	b16c	03 e6 45 4f 52				.text	3,$e6,"EOR"            ; $9b EOR
+>d171	b171	03 da 49 4e 43				.text	3,$da,"INC"            ; $9c INC
+>d176	b176	03 ef 49 4e 58				.text	3,$ef,"INX"            ; $9d INX
+>d17b	b17b	03 f0 49 4e 59				.text	3,$f0,"INY"            ; $9e INY
+>d180	b180	03 e7 4a 4d 50				.text	3,$e7,"JMP"            ; $9f JMP
+>d185	b185	03 ef 4a 53 52				.text	3,$ef,"JSR"            ; $a0 JSR
+>d18a	b18a	03 d1 4c 44 41				.text	3,$d1,"LDA"            ; $a1 LDA
+>d18f	b18f	03 e8 4c 44 58				.text	3,$e8,"LDX"            ; $a2 LDX
+>d194	b194	03 e9 4c 44 59				.text	3,$e9,"LDY"            ; $a3 LDY
+>d199	b199	03 f1 4c 53 52				.text	3,$f1,"LSR"            ; $a4 LSR
+>d19e	b19e	03 ed 4e 4f 50				.text	3,$ed,"NOP"            ; $a5 NOP
+>d1a3	b1a3	03 e2 4f 52 41				.text	3,$e2,"ORA"            ; $a6 ORA
+>d1a8	b1a8	03 d9 50 48 41				.text	3,$d9,"PHA"            ; $a7 PHA
+>d1ad	b1ad	03 e8 50 48 50				.text	3,$e8,"PHP"            ; $a8 PHP
+>d1b2	b1b2	03 f0 50 48 58				.text	3,$f0,"PHX"            ; $a9 PHX
+>d1b7	b1b7	03 f1 50 48 59				.text	3,$f1,"PHY"            ; $aa PHY
+>d1bc	b1bc	03 dd 50 4c 41				.text	3,$dd,"PLA"            ; $ab PLA
+>d1c1	b1c1	03 ec 50 4c 50				.text	3,$ec,"PLP"            ; $ac PLP
+>d1c6	b1c6	03 f4 50 4c 58				.text	3,$f4,"PLX"            ; $ad PLX
+>d1cb	b1cb	03 f5 50 4c 59				.text	3,$f5,"PLY"            ; $ae PLY
+>d1d0	b1d0	03 ed 52 4f 4c				.text	3,$ed,"ROL"            ; $af ROL
+>d1d5	b1d5	03 f3 52 4f 52				.text	3,$f3,"ROR"            ; $b0 ROR
+>d1da	b1da	03 ef 52 54 49				.text	3,$ef,"RTI"            ; $b1 RTI
+>d1df	b1df	03 f9 52 54 53				.text	3,$f9,"RTS"            ; $b2 RTS
+>d1e4	b1e4	03 d8 53 42 43				.text	3,$d8,"SBC"            ; $b3 SBC
+>d1e9	b1e9	03 db 53 45 43				.text	3,$db,"SEC"            ; $b4 SEC
+>d1ee	b1ee	03 dc 53 45 44				.text	3,$dc,"SED"            ; $b5 SED
+>d1f3	b1f3	03 e1 53 45 49				.text	3,$e1,"SEI"            ; $b6 SEI
+>d1f8	b1f8	03 e8 53 54 41				.text	3,$e8,"STA"            ; $b7 STA
+>d1fd	b1fd	03 f7 53 54 50				.text	3,$f7,"STP"            ; $b8 STP
+>d202	b202	03 ff 53 54 58				.text	3,$ff,"STX"            ; $b9 STX
+>d207	b207	03 00 53 54 59				.text	3,$00,"STY"            ; $ba STY
+>d20c	b20c	03 01 53 54 5a				.text	3,$01,"STZ"            ; $bb STZ
+>d211	b211	03 ed 54 41 58				.text	3,$ed,"TAX"            ; $bc TAX
+>d216	b216	03 ee 54 41 59				.text	3,$ee,"TAY"            ; $bd TAY
+>d21b	b21b	03 e8 54 52 42				.text	3,$e8,"TRB"            ; $be TRB
+>d220	b220	03 e9 54 53 42				.text	3,$e9,"TSB"            ; $bf TSB
+>d225	b225	03 ff 54 53 58				.text	3,$ff,"TSX"            ; $c0 TSX
+>d22a	b22a	03 ed 54 58 41				.text	3,$ed,"TXA"            ; $c1 TXA
+>d22f	b22f	03 ff 54 58 53				.text	3,$ff,"TXS"            ; $c2 TXS
+>d234	b234	03 ee 54 59 41				.text	3,$ee,"TYA"            ; $c3 TYA
+>d239	b239	ff					.text	$FF
+.d23a	b23a					Export_TKListConvertLine:
+.d23a	b23a	48		pha				pha 								; save indent on the stack
+.d23b	b23b	9c 19 04	stz $0419			stz 	tbOffset
+.d23e	b23e	9c 29 04	stz $0429			stz 	tokenBuffer
+.d241	b241	9c 25 04	stz $0425			stz 	currentListColour
+.d244	b244	a9 8d		lda #$8d			lda 	#CLILineNumber+$80
+.d246	b246	20 c3 b3	jsr $b3c3			jsr 	LCLWriteColour
+.d249	b249	a0 02		ldy #$02			ldy 	#2 							; convert line number to string
+.d24b	b24b	b1 30		lda ($30),y			lda 	(codePtr),y
+.d24d	b24d	aa		tax				tax
+.d24e	b24e	88		dey				dey
+.d24f	b24f	b1 30		lda ($30),y			lda 	(codePtr),y
+.d251	b251	20 34 b4	jsr $b434			jsr 	LCLWriteNumberXA
+.d254	b254	68		pla				pla 								; adjustment to indent
+.d255	b255	48		pha				pha 								; save on stack
+.d256	b256	10 0c		bpl $b264			bpl 	_LCNoAdjust 				; don't adjust indent if +ve, do after.
+.d258	b258	18		clc				clc 								; add to list indent and make 0 if goes -ve.
+.d259	b259	6d 22 04	adc $0422			adc 	listIndent
+.d25c	b25c	8d 22 04	sta $0422			sta 	listIndent
+.d25f	b25f	10 03		bpl $b264			bpl 	_LCNoAdjust
+.d261	b261	9c 22 04	stz $0422			stz 	listIndent
+.d264	b264					_LCNoAdjust:
+.d264	b264	18		clc				clc		 							; work out actual indent.
+.d265	b265	ad 22 04	lda $0422			lda 	listIndent
+.d268	b268	0a		asl a				asl 	a
+.d269	b269	69 07		adc #$07			adc 	#7
+.d26b	b26b	85 36		sta $36				sta 	zTemp0
+.d26d	b26d					_LCPadOut:
+.d26d	b26d	a9 20		lda #$20			lda 	#' '						; pad out to 6+indent characters
+.d26f	b26f	20 cc b3	jsr $b3cc			jsr 	LCLWrite
+.d272	b272	ad 19 04	lda $0419			lda 	tbOffset
+.d275	b275	c5 36		cmp $36				cmp 	zTemp0
+.d277	b277	d0 f4		bne $b26d			bne 	_LCPadOut
+.d279	b279	a0 03		ldy #$03			ldy 	#3 							; start position.
+.d27b	b27b					_LCMainLoop:
+.d27b	b27b	a9 8c		lda #$8c			lda 	#CLIPunctuation+$80
+.d27d	b27d	20 c3 b3	jsr $b3c3			jsr 	LCLWriteColour
+.d280	b280	b1 30		lda ($30),y			lda 	(codePtr),y
+.d282	b282	c9 80		cmp #$80			cmp 	#KWC_EOL 					; end of line ?
+.d284	b284	f0 17		beq $b29d			beq 	_LCExit
+.d286	b286	c9 10		cmp #$10			cmp 	#16 						; 0-5 are the double punctuations
+.d288	b288	90 1e		bcc $b2a8			bcc 	_LCDoubles
+.d28a	b28a	c9 20		cmp #$20			cmp 	#32 						; 16-31 are shifted punctuation from 64-91
+.d28c	b28c	90 2a		bcc $b2b8			bcc 	_LCShiftPunc
+.d28e	b28e	c9 40		cmp #$40			cmp 	#64 						; 32-64 are as stored, punc and digits
+.d290	b290	90 35		bcc $b2c7			bcc 	_LCPunctuation
+.d292	b292	c9 80		cmp #$80			cmp 	#128 						; 64-127 are variable identifiers.
+.d294	b294	90 51		bcc $b2e7			bcc 	_LCIdentifiers
+.d296	b296	c9 fe		cmp #$fe			cmp 	#254 						; 128-253 are tokenised words
+.d298	b298	90 73		bcc $b30d			bcc 	_LCTokens
+.d29a	b29a	4c 6d b3	jmp $b36d			jmp 	_LCData 					; 254-5 are data objects
+.d29d	b29d					_LCExit:
+.d29d	b29d	68		pla				pla 								; get old indent adjust
+.d29e	b29e	30 07		bmi $b2a7			bmi 	_LCExit2
+.d2a0	b2a0	18		clc				clc 								; add to indent if +ve
+.d2a1	b2a1	6d 22 04	adc $0422			adc 	listIndent
+.d2a4	b2a4	8d 22 04	sta $0422			sta 	listIndent
+.d2a7	b2a7					_LCExit2:
+.d2a7	b2a7	60		rts				rts
+.d2a8	b2a8					_LCDoubles:
+.d2a8	b2a8	48		pha				pha
+.d2a9	b2a9	4a		lsr a				lsr 	a 							; put bit 2 into bit 1
+.d2aa	b2aa	29 02		and #$02			and 	#2
+.d2ac	b2ac	09 3c		ora #$3c			ora 	#60 						; make < >
+.d2ae	b2ae	20 cc b3	jsr $b3cc			jsr 	LCLWrite
+.d2b1	b2b1	68		pla				pla 								; restore, do lower bit
+.d2b2	b2b2	29 03		and #$03			and 	#3
+.d2b4	b2b4	09 3c		ora #$3c			ora 	#60
+.d2b6	b2b6	80 0f		bra $b2c7			bra		_LCPunctuation 				; print, increment, loop
+.d2b8	b2b8					_LCShiftPunc:
+.d2b8	b2b8	aa		tax				tax 								; save in X
+.d2b9	b2b9	29 07		and #$07			and 	#7 							; lower 3 bits
+.d2bb	b2bb	f0 02		beq $b2bf			beq 	_LCNoAdd
+.d2bd	b2bd	09 18		ora #$18			ora 	#24 						; adds $18 to it.
+.d2bf	b2bf					_LCNoAdd:
+.d2bf	b2bf	e0 18		cpx #$18			cpx 	#24 						; if >= 24 add $20
+.d2c1	b2c1	90 02		bcc $b2c5			bcc 	_LCNoAdd2
+.d2c3	b2c3	09 20		ora #$20			ora 	#32 						; adds $20
+.d2c5	b2c5					_LCNoAdd2:
+.d2c5	b2c5	09 40		ora #$40			ora 	#$40 						; shift into 64-127 range and fall through.
+.d2c7	b2c7					_LCPunctuation:
+.d2c7	b2c7	c9 3a		cmp #$3a			cmp 	#':' 						; check if :
+.d2c9	b2c9	d0 03		bne $b2ce			bne 	_LCPContinue
+.d2cb	b2cb	20 e2 b3	jsr $b3e2			jsr 	LCLDeleteLastSpace 			; if so delete any preceding spaces
+.d2ce	b2ce					_LCPContinue:
+.d2ce	b2ce	c9 2e		cmp #$2e			cmp 	#'.'
+.d2d0	b2d0	f0 08		beq $b2da			beq 	_LCPIsConstant
+.d2d2	b2d2	c9 30		cmp #$30			cmp 	#'0'
+.d2d4	b2d4	90 0b		bcc $b2e1			bcc 	_LCPNotConstant
+.d2d6	b2d6	c9 3a		cmp #$3a			cmp 	#'9'+1
+.d2d8	b2d8	b0 07		bcs $b2e1			bcs 	_LCPNotConstant
+.d2da	b2da					_LCPIsConstant:
+.d2da	b2da	48		pha				pha
+.d2db	b2db	a9 87		lda #$87			lda 	#CLIConstant+$80
+.d2dd	b2dd	20 c3 b3	jsr $b3c3			jsr 	LCLWriteColour
+.d2e0	b2e0	68		pla				pla
+.d2e1	b2e1					_LCPNotConstant:
+.d2e1	b2e1	c8		iny				iny 								; consume character
+.d2e2	b2e2	20 cc b3	jsr $b3cc			jsr 	LCLWrite 					; write it out.
+.d2e5	b2e5	80 94		bra $b27b			bra 	_LCMainLoop 				; go round again.
+.d2e7	b2e7					_LCIdentifiers:
+.d2e7	b2e7	18		clc				clc 								; convert to physical address
+.d2e8	b2e8	69 d0		adc #$d0			adc 	#((VariableSpace >> 8) - $40) & $FF
+.d2ea	b2ea	85 37		sta $37				sta 	zTemp0+1
+.d2ec	b2ec	c8		iny				iny
+.d2ed	b2ed	b1 30		lda ($30),y			lda 	(codePtr),y
+.d2ef	b2ef	85 36		sta $36				sta 	zTemp0
+.d2f1	b2f1	c8		iny				iny
+.d2f2	b2f2	5a		phy				phy 								; save position
+.d2f3	b2f3	a9 8e		lda #$8e			lda 	#CLIIdentifier+$80
+.d2f5	b2f5	20 c3 b3	jsr $b3c3			jsr 	LCLWriteColour
+.d2f8	b2f8	a0 07		ldy #$07			ldy 	#7 							; output the identifier at +8
+.d2fa	b2fa					_LCOutIdentifier:
+.d2fa	b2fa	c8		iny				iny
+.d2fb	b2fb	b1 36		lda ($36),y			lda 	(zTemp0),y					; bit 7 set = end.
+.d2fd	b2fd	29 7f		and #$7f			and 	#$7F
+.d2ff	b2ff	20 1e b4	jsr $b41e			jsr 	LCLLowerCase
+.d302	b302	20 cc b3	jsr $b3cc			jsr 	LCLWrite
+.d305	b305	b1 36		lda ($36),y			lda 	(zTemp0),y				 	; ends when bit 7 set.
+.d307	b307	10 f1		bpl $b2fa			bpl 	_LCOutIdentifier
+.d309	b309	7a		ply				ply 								; restore position
+.d30a	b30a	4c 7b b2	jmp $b27b			jmp 	_LCMainLoop
+.d30d	b30d					_LCTokens:
+.d30d	b30d	aa		tax				tax 								; token in X
+.d30e	b30e	a9 ee		lda #$ee			lda 	#((KeywordSet2) & $FF)
+.d310	b310	85 36		sta $36				sta 	0+zTemp0
+.d312	b312	a9 b0		lda #$b0			lda 	#((KeywordSet2) >> 8)
+.d314	b314	85 37		sta $37				sta 	1+zTemp0
+.d316	b316	e0 82		cpx #$82			cpx 	#$82
+.d318	b318	f0 16		beq $b330			beq 	_LCUseShift
+.d31a	b31a	a9 d8		lda #$d8			lda 	#((KeywordSet1) & $FF)
+.d31c	b31c	85 36		sta $36				sta 	0+zTemp0
+.d31e	b31e	a9 af		lda #$af			lda 	#((KeywordSet1) >> 8)
+.d320	b320	85 37		sta $37				sta 	1+zTemp0
+.d322	b322	e0 81		cpx #$81			cpx 	#$81
+.d324	b324	f0 0a		beq $b330			beq 	_LCUseShift
+.d326	b326	a9 60		lda #$60			lda 	#((KeywordSet0) & $FF)
+.d328	b328	85 36		sta $36				sta 	0+zTemp0
+.d32a	b32a	a9 ad		lda #$ad			lda 	#((KeywordSet0) >> 8)
+.d32c	b32c	85 37		sta $37				sta 	1+zTemp0
+.d32e	b32e	80 01		bra $b331			bra 	_LCNoShift
+.d330	b330					_LCUseShift:
+.d330	b330	c8		iny				iny
+.d331	b331					_LCNoShift:
+.d331	b331	20 f6 b3	jsr $b3f6			jsr 	LCLCheckSpaceRequired 		; do we need a space ?
+.d334	b334	b1 30		lda ($30),y			lda 	(codePtr),y
+.d336	b336	aa		tax				tax 								; into X
+.d337	b337					_LCFindText:
+.d337	b337	ca		dex				dex
+.d338	b338	10 0e		bpl $b348			bpl 	_LCFoundText 				; found text.
+.d33a	b33a	b2 36		lda ($36)			lda 	(zTemp0) 					; length of text
+.d33c	b33c	1a		inc a				inc 	a 							; one extra for size
+.d33d	b33d	38		sec				sec 								; one extra for checksum
+.d33e	b33e	65 36		adc $36				adc 	zTemp0 						; go to next token
+.d340	b340	85 36		sta $36				sta 	zTemp0
+.d342	b342	90 f3		bcc $b337			bcc 	_LCFindText
+.d344	b344	e6 37		inc $37				inc 	zTemp0+1
+.d346	b346	80 ef		bra $b337			bra 	_LCFindText
+.d348	b348					_LCFoundText:
+.d348	b348	5a		phy				phy 								; save List position
+.d349	b349	b2 36		lda ($36)			lda 	(zTemp0)					; count to print
+.d34b	b34b	aa		tax				tax
+.d34c	b34c	a9 86		lda #$86			lda 	#CLIToken+$80
+.d34e	b34e	20 c3 b3	jsr $b3c3			jsr 	LCLWriteColour
+.d351	b351	a0 02		ldy #$02			ldy 	#2
+.d353	b353					_LCCopyToken:
+.d353	b353	b1 36		lda ($36),y			lda 	(zTemp0),y
+.d355	b355	20 1e b4	jsr $b41e			jsr 	LCLLowerCase
+.d358	b358	20 cc b3	jsr $b3cc			jsr 	LCLWrite
+.d35b	b35b	c8		iny				iny
+.d35c	b35c	ca		dex				dex
+.d35d	b35d	d0 f4		bne $b353			bne 	_LCCopyToken
+.d35f	b35f	c9 28		cmp #$28			cmp 	#"(" 						; if last char not ( print a space
+.d361	b361	f0 05		beq $b368			beq 	_LCNoSpace
+.d363	b363	a9 20		lda #$20			lda 	#' '
+.d365	b365	20 cc b3	jsr $b3cc			jsr 	LCLWrite
+.d368	b368					_LCNoSpace:
+.d368	b368	7a		ply				ply 								; restore position.
+.d369	b369	c8		iny				iny 								; consume token
+.d36a	b36a	4c 7b b2	jmp $b27b			jmp 	_LCMainLoop 				; and go around again.
+.d36d	b36d					_LCData:
+.d36d	b36d	48		pha				pha 								; save type $FE/$FF
+.d36e	b36e	a2 24		ldx #$24			ldx 	#'$' 						; figure out $ or "
+.d370	b370	c9 fe		cmp #$fe			cmp 	#$FE
+.d372	b372	f0 22		beq $b396			beq 	_LCHaveOpener
+.d374	b374	a2 22		ldx #$22			ldx 	#'"'
+.d376	b376	a9 8f		lda #$8f			lda 	#CLIData+$80
+.d378	b378	20 c3 b3	jsr $b3c3			jsr 	LCLWriteColour
+.d37b	b37b	c0 04		cpy #$04			cpy 	#4 							; must be 2nd thing on line
+.d37d	b37d	d0 17		bne $b396			bne 	_LCHaveOpener
+.d37f	b37f	88		dey				dey 								; what precedes it ?
+.d380	b380	b1 30		lda ($30),y			lda 	(codePtr),y
+.d382	b382	c8		iny				iny
+.d383	b383	c9 27		cmp #$27			cmp 	#KWD_QUOTE 					; if quote
+.d385	b385	d0 0f		bne $b396			bne 	_LCHaveOpener
+.d387	b387	a9 09		lda #$09			lda 	#9 							; tab
+.d389	b389	20 cc b3	jsr $b3cc			jsr 	LCLWrite
+.d38c	b38c	a9 9e		lda #$9e			lda 	#$90+CLIBComment
+.d38e	b38e	20 cc b3	jsr $b3cc			jsr 	LCLWrite
+.d391	b391	a9 85		lda #$85			lda 	#CLIFComment+$80
+.d393	b393	20 c3 b3	jsr $b3c3			jsr 	LCLWriteColour
+.d396	b396					_LCHaveOpener:
+.d396	b396	8a		txa				txa 								; output prefix (# or ")
+.d397	b397	20 cc b3	jsr $b3cc			jsr 	LCLWrite
+.d39a	b39a	c8		iny				iny 								; get count
+.d39b	b39b	b1 30		lda ($30),y			lda 	(codePtr),y
+.d39d	b39d	aa		tax				tax
+.d39e	b39e	c8		iny				iny 								; point at first character
+.d39f	b39f					_LCOutData:
+.d39f	b39f	b1 30		lda ($30),y			lda 	(codePtr),y
+.d3a1	b3a1	c9 00		cmp #$00			cmp 	#0
+.d3a3	b3a3	f0 03		beq $b3a8			beq 	_LCNoPrint
+.d3a5	b3a5	20 cc b3	jsr $b3cc			jsr 	LCLWrite
+.d3a8	b3a8					_LCNoPrint:
+.d3a8	b3a8	c8		iny				iny
+.d3a9	b3a9	ca		dex				dex
+.d3aa	b3aa	d0 f3		bne $b39f			bne 	_LCOutData
+.d3ac	b3ac	68		pla				pla 								; closing " required ?
+.d3ad	b3ad	c9 ff		cmp #$ff			cmp 	#$FF 						; not required for hex constant.
+.d3af	b3af	d0 0f		bne $b3c0			bne 	_LCNoQuote
+.d3b1	b3b1	a9 22		lda #$22			lda 	#'"'
+.d3b3	b3b3	20 cc b3	jsr $b3cc			jsr 	LCLWrite
+.d3b6	b3b6	ad c5 07	lda $07c5			lda 	EXTTextColour
+.d3b9	b3b9	29 0f		and #$0f			and 	#$0F
+.d3bb	b3bb	09 90		ora #$90			ora 	#$90
+.d3bd	b3bd	20 cc b3	jsr $b3cc			jsr 	LCLWrite
+.d3c0	b3c0					_LCNoQuote:
+.d3c0	b3c0	4c 7b b2	jmp $b27b			jmp 	_LCMainLoop
+.d3c3	b3c3					LCLWriteColour:
+.d3c3	b3c3	cd 25 04	cmp $0425			cmp 	currentListColour 			; has the colour changed
+.d3c6	b3c6	8d 25 04	sta $0425			sta 	currentListColour 			; (update it anyway)
+.d3c9	b3c9	d0 01		bne $b3cc			bne 	LCLWrite 					; if different, output it
+.d3cb	b3cb	60		rts				rts
+.d3cc	b3cc					LCLWrite:
 .d3cc	b3cc	da		phx				phx
-.d3cd	b3cd	ae 19 04	ldx $0419			ldx 	tbOffset
-.d3d0	b3d0	f0 0a		beq $b3dc			beq 	_LCDLSExit
-.d3d2	b3d2	bd 28 04	lda $0428,x			lda 	tokenBuffer-1,x
-.d3d5	b3d5	c9 20		cmp #$20			cmp 	#' '
-.d3d7	b3d7	d0 03		bne $b3dc			bne 	_LCDLSExit
-.d3d9	b3d9	ce 19 04	dec $0419			dec 	tbOffset
-.d3dc	b3dc					_LCDLSExit:
-.d3dc	b3dc	fa		plx				plx
-.d3dd	b3dd	68		pla				pla
-.d3de	b3de	60		rts				rts
-.d3df	b3df					LCLCheckSpaceRequired:
-.d3df	b3df	ad 23 04	lda $0423			lda 	lcLastCharacter 			; check last character
-.d3e2	b3e2	c9 24		cmp #$24			cmp 	#'$' 						; $ # and ) require that token space.
-.d3e4	b3e4	f0 1b		beq $b401			beq 	_LCCSRSpace
-.d3e6	b3e6	c9 29		cmp #$29			cmp 	#')'
-.d3e8	b3e8	f0 17		beq $b401			beq 	_LCCSRSpace
-.d3ea	b3ea	c9 23		cmp #$23			cmp 	#'#'
-.d3ec	b3ec	f0 13		beq $b401			beq 	_LCCSRSpace
-.d3ee	b3ee	20 07 b4	jsr $b407			jsr 	LCLLowerCase 				; saves a little effort
-.d3f1	b3f1	c9 30		cmp #$30			cmp 	#"0" 						; check if it was 0-9 A-Z a-z if so need space.
-.d3f3	b3f3	90 11		bcc $b406			bcc 	_LCCSRExit
-.d3f5	b3f5	c9 3a		cmp #$3a			cmp 	#"9"+1
-.d3f7	b3f7	90 08		bcc $b401			bcc 	_LCCSRSpace
-.d3f9	b3f9	c9 61		cmp #$61			cmp 	#"a"
-.d3fb	b3fb	90 09		bcc $b406			bcc 	_LCCSRExit
-.d3fd	b3fd	c9 7b		cmp #$7b			cmp 	#"z"+1
-.d3ff	b3ff	b0 05		bcs $b406			bcs 	_LCCSRExit
-.d401	b401					_LCCSRSpace:
-.d401	b401	a9 20		lda #$20			lda 	#' '
-.d403	b403	20 b5 b3	jsr $b3b5			jsr 	LCLWrite
-.d406	b406					_LCCSRExit:
-.d406	b406	60		rts				rts
-.d407	b407					LCLLowerCase:
-.d407	b407	c9 41		cmp #$41			cmp 	#"A"
-.d409	b409	90 06		bcc $b411			bcc 	_LCLLCOut
-.d40b	b40b	c9 5b		cmp #$5b			cmp 	#"Z"+1
-.d40d	b40d	b0 02		bcs $b411			bcs 	_LCLLCOut
-.d40f	b40f	69 20		adc #$20			adc 	#$20
-.d411	b411					_LCLLCOut:
-.d411	b411	60		rts				rts
-.d412	b412					LCLUpperCase:
-.d412	b412	c9 61		cmp #$61			cmp 	#"a"
-.d414	b414	90 06		bcc $b41c			bcc 	_LCLUCOut
-.d416	b416	c9 7b		cmp #$7b			cmp 	#"z"+1
-.d418	b418	b0 02		bcs $b41c			bcs 	_LCLUCOut
-.d41a	b41a	e9 1f		sbc #$1f			sbc 	#$1F
-.d41c	b41c					_LCLUCOut:
-.d41c	b41c	60		rts				rts
-.d41d	b41d					LCLWriteNumberXA:
-.d41d	b41d	64 37		stz $37				stz 	zTemp0+1 					; index into digit table.
-.d41f	b41f					_LCLWNLoop1:
-.d41f	b41f	64 36		stz $36				stz 	zTemp0 						; subtraction count.
-.d421	b421					_LCLWNLoop2:
-.d421	b421	48		pha				pha 								; save initial LSB
-.d422	b422	38		sec				sec
-.d423	b423	a4 37		ldy $37				ldy 	zTemp0+1 					; position in table.
-.d425	b425	f9 56 b4	sbc $b456,y			sbc 	_LCLWNTable,y
-.d428	b428	48		pha				pha
-.d429	b429	8a		txa				txa
-.d42a	b42a	f9 57 b4	sbc $b457,y			sbc 	_LCLWNTable+1,y
-.d42d	b42d	90 07		bcc $b436			bcc 	_LCLWNUnderflow
-.d42f	b42f	e6 36		inc $36				inc 	zTemp0  					; subtracted one without borrow.
-.d431	b431	aa		tax				tax 								; update X
-.d432	b432	68		pla				pla 								; restore A
-.d433	b433	7a		ply				ply 								; throw original
-.d434	b434	80 eb		bra $b421			bra 	_LCLWNLoop2 				; try again.
-.d436	b436					_LCLWNUnderflow:
-.d436	b436	a4 36		ldy $36				ldy 	zTemp0 						; count of subtractions.
-.d438	b438	d0 06		bne $b440			bne 	_LCLWNOut
-.d43a	b43a	ad 19 04	lda $0419			lda 	tbOffset 					; suppress leading zeroes
-.d43d	b43d	3a		dec a				dec 	a
-.d43e	b43e	f0 04		beq $b444			beq 	_LCLWNNext
-.d440	b440					_LCLWNOut:
-.d440	b440	98		tya				tya
-.d441	b441	20 50 b4	jsr $b450			jsr 	_LCLWNOutDigit
-.d444	b444					_LCLWNNext:
-.d444	b444	7a		ply				ply 							 	; restore original value.
-.d445	b445	68		pla				pla
-.d446	b446	a4 37		ldy $37				ldy 	zTemp0+1  					; bump the index
-.d448	b448	c8		iny				iny
-.d449	b449	c8		iny				iny
-.d44a	b44a	84 37		sty $37				sty 	zTemp0+1
-.d44c	b44c	c0 08		cpy #$08			cpy 	#8 							; done all 4
-.d44e	b44e	d0 cf		bne $b41f			bne 	_LCLWNLoop1
-.d450	b450					_LCLWNOutDigit:
-.d450	b450	09 30		ora #$30			ora 	#'0'
-.d452	b452	20 b5 b3	jsr $b3b5			jsr 	LCLWrite
-.d455	b455	60		rts				rts
-.d456	b456					_LCLWNTable:
->d456	b456	10 27						.word 	10000
->d458	b458	e8 03						.word 	1000
->d45a	b45a	64 00						.word 	100
->d45c	b45c	0a 00						.word 	10
-.d45e	b45e					TOKSearchTable:
-.d45e	b45e	84 37		sty $37				sty 	zTemp0+1 					; (zTemp0),y points to current token being tested.
-.d460	b460	85 36		sta $36				sta 	zTemp0
-.d462	b462	a0 00		ldy #$00			ldy 	#0
-.d464	b464	a9 80		lda #$80			lda 	#$80 						; token # so we know which one we are looking at
-.d466	b466	85 38		sta $38				sta 	zTemp1
-.d468	b468					_TSTLoop:
-.d468	b468	b1 36		lda ($36),y			lda 	(zTemp0),y 					; length, 0 (skip) -ve (end)
-.d46a	b46a	30 49		bmi $b4b5			bmi 	_TSTFail 					; -ve = end of table, so fail.
-.d46c	b46c	f0 2e		beq $b49c			beq 	_TSTNext 					; zero, check next as it's a dummy (e.g. EOL, SHIFT)
-.d46e	b46e	c8		iny				iny 								; get the hash
-.d46f	b46f	b1 36		lda ($36),y			lda 	(zTemp0),y
-.d471	b471	88		dey				dey
-.d472	b472	cd 03 04	cmp $0403			cmp 	identHash 					; check they match with the identifier hash, if not go to next
-.d475	b475	d0 25		bne $b49c			bne 	_TSTNext
-.d477	b477	ad 02 04	lda $0402			lda 	identTypeEnd 				; get length of identifier from end-start
-.d47a	b47a	38		sec				sec
-.d47b	b47b	ed 00 04	sbc $0400			sbc 	identStart
-.d47e	b47e	d1 36		cmp ($36),y			cmp 	(zTemp0),y 					; compare against the length in the table, no match, then return.
-.d480	b480	d0 1a		bne $b49c			bne 	_TSTNext
-.d482	b482	5a		phy				phy 								; save Y , we might fail to match.
-.d483	b483	c8		iny				iny 								; point to text
-.d484	b484	c8		iny				iny
-.d485	b485	ae 00 04	ldx $0400			ldx 	identStart 					; offset in line buffer in X
-.d488	b488					_TSTCompareName:
-.d488	b488	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; compare text.
-.d48b	b48b	d1 36		cmp ($36),y			cmp 	(zTemp0),y
-.d48d	b48d	d0 0c		bne $b49b			bne 	_TSTNextPullY 				; fail, pullY and do next
-.d48f	b48f	e8		inx				inx
-.d490	b490	c8		iny				iny
-.d491	b491	ec 02 04	cpx $0402			cpx 	identTypeEnd 				; complete match.
-.d494	b494	d0 f2		bne $b488			bne 	_TSTCompareName
-.d496	b496	7a		ply				ply 								; throw Y
-.d497	b497	a5 38		lda $38				lda 	zTemp1 						; get token #
-.d499	b499	38		sec				sec 								; return with CS = passed.
-.d49a	b49a	60		rts				rts
-.d49b	b49b					_TSTNextPullY:
-.d49b	b49b	7a		ply				ply 								; restore current, fall through.
-.d49c	b49c					_TSTNext:
-.d49c	b49c	e6 38		inc $38				inc 	zTemp1 						; token counter
-.d49e	b49e	98		tya				tya
-.d49f	b49f	18		clc				clc
-.d4a0	b4a0	71 36		adc ($36),y			adc 	(zTemp0),y 					; add [Length] + 2 to Y
-.d4a2	b4a2	1a		inc a				inc 	a 							; +1
-.d4a3	b4a3	1a		inc a				inc 	a 							; +2
-.d4a4	b4a4	a8		tay				tay
-.d4a5	b4a5	10 c1		bpl $b468			bpl 	_TSTLoop 					; if Y < $80 loop back
-.d4a7	b4a7	98		tya				tya 								; add Y to zTemp0 and reset Y
-.d4a8	b4a8	a0 00		ldy #$00			ldy 	#0   						; so we can use Y to search fast
-.d4aa	b4aa	18		clc				clc  								; but have tables > 255 bytes
-.d4ab	b4ab	65 36		adc $36				adc 	zTemp0 						; when Y gets >= 128 we reset Y
-.d4ad	b4ad	85 36		sta $36				sta 	zTemp0 						; and adjust the table pointer/
-.d4af	b4af	90 b7		bcc $b468			bcc 	_TSTLoop
-.d4b1	b4b1	e6 37		inc $37				inc 	zTemp0+1
-.d4b3	b4b3	80 b3		bra $b468			bra 	_TSTLoop
-.d4b5	b4b5					_TSTFail:
-.d4b5	b4b5	18		clc				clc
-.d4b6	b4b6	60		rts				rts
-.d4b7	b4b7					Export_TKTokeniseLine:
-.d4b7	b4b7	20 84 b6	jsr $b684			jsr 	LCLFixLineBufferCase 		; fix line case
-.d4ba	b4ba	a9 03		lda #$03			lda 	#3 							; reset the token buffer to empty
-.d4bc	b4bc	8d 26 04	sta $0426			sta 	tokenOffset 				; (3 bytes for line number & offset)
-.d4bf	b4bf	9c 27 04	stz $0427			stz 	tokenLineNumber
-.d4c2	b4c2	9c 28 04	stz $0428			stz 	tokenLineNumber+1
-.d4c5	b4c5	a2 ff		ldx #$ff			ldx 	#$FF
-.d4c7	b4c7					_TKFindFirst:
-.d4c7	b4c7	e8		inx				inx
-.d4c8	b4c8	bd 26 05	lda $0526,x			lda 	lineBuffer,x
-.d4cb	b4cb	f0 62		beq $b52f			beq 	_TKExit
-.d4cd	b4cd	c9 20		cmp #$20			cmp 	#' '
-.d4cf	b4cf	90 f6		bcc $b4c7			bcc 	_TKFindFirst
-.d4d1	b4d1	c9 30		cmp #$30			cmp 	#'0'
-.d4d3	b4d3	90 07		bcc $b4dc			bcc 	_TKNoLineNumber
-.d4d5	b4d5	c9 3a		cmp #$3a			cmp 	#'9'+1
-.d4d7	b4d7	b0 03		bcs $b4dc			bcs 	_TKNoLineNumber
-.d4d9	b4d9	20 ae b6	jsr $b6ae			jsr 	TOKExtractLineNumber
-.d4dc	b4dc					_TKNoLineNumber:
-.d4dc	b4dc					_TKTokeniseLoop:
-.d4dc	b4dc	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; next character, exit if zero EOL.
-.d4df	b4df	f0 4e		beq $b52f			beq 	_TKExit
-.d4e1	b4e1	e8		inx				inx
-.d4e2	b4e2	c9 20		cmp #$20			cmp 	#' '
-.d4e4	b4e4	f0 f6		beq $b4dc			beq 	_TKTokeniseLoop 			; keep looping if space found.
-.d4e6	b4e6	ca		dex				dex 								; undo last get, A contains character, X is position.
-.d4e7	b4e7	c9 5f		cmp #$5f			cmp 	#'_'						; _ A-Z is identifier *or* token
-.d4e9	b4e9	f0 68		beq $b553			beq 	_TKTokeniseIdentifier 		; (already case converted outside string constants)
-.d4eb	b4eb	c9 41		cmp #$41			cmp 	#'A'
-.d4ed	b4ed	90 04		bcc $b4f3			bcc 	_TKTokenisePunctuation
-.d4ef	b4ef	c9 5b		cmp #$5b			cmp 	#'Z'+1
-.d4f1	b4f1	90 60		bcc $b553			bcc 	_TKTokeniseIdentifier
-.d4f3	b4f3					_TKTokenisePunctuation:
-.d4f3	b4f3	c9 22		cmp #$22			cmp 	#'"'						; quoted string ?
-.d4f5	b4f5	f0 2e		beq $b525			beq 	_TKString
-.d4f7	b4f7	c9 24		cmp #$24			cmp 	#'$'						; hexadecimal constant ($ only appears at end of identifiers)
-.d4f9	b4f9	f0 2f		beq $b52a			beq 	_TKHexConstant
-.d4fb	b4fb	c9 3c		cmp #$3c			cmp 	#'<' 						; check for < > handlers - these are for <> <= >= >> <<
-.d4fd	b4fd	f0 36		beq $b535			beq 	_TKCheckDouble
-.d4ff	b4ff	c9 3e		cmp #$3e			cmp 	#'>'
-.d501	b501	f0 32		beq $b535			beq 	_TKCheckDouble
-.d503	b503					_TKStandardPunctuation:
-.d503	b503	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; get the punctuation token back.
-.d506	b506	c9 40		cmp #$40			cmp 	#64 						; are we >= 64
-.d508	b508	90 0e		bcc $b518			bcc 	_TKNoShift
-.d50a	b50a	48		pha				pha 								; save. we are about to convert this punctuation token from
-.d50b	b50b	29 07		and #$07			and 	#7 							; lower 3 bits in zTemp0
-.d50d	b50d	85 36		sta $36				sta 	zTemp0
-.d50f	b50f	68		pla				pla
-.d510	b510	29 20		and #$20			and 	#32 						; bit 5
-.d512	b512	4a		lsr a				lsr 	a 							; shift into bit 3
-.d513	b513	4a		lsr a				lsr 	a
-.d514	b514	05 36		ora $36				ora 	zTemp0
-.d516	b516	09 10		ora #$10			ora 	#$10						; now in the range 16-31
-.d518	b518					_TKNoShift:
-.d518	b518	20 f3 b6	jsr $b6f3			jsr 	TOKWriteByte 				; write the punctuation character
-.d51b	b51b	e8		inx				inx 								; consume the character
-.d51c	b51c	c9 27		cmp #$27			cmp 	#KWD_QUOTE 					; quote found ?
-.d51e	b51e	d0 bc		bne $b4dc			bne 	_TKTokeniseLoop 			; and loop round again.
-.d520	b520	20 e6 b5	jsr $b5e6			jsr 	TOKCheckComment 			; comment checl
-.d523	b523	80 b7		bra $b4dc			bra 	_TKTokeniseLoop
-.d525	b525					_TKString:
-.d525	b525	20 13 b6	jsr $b613			jsr 	TOKTokenString
-.d528	b528	80 b2		bra $b4dc			bra 	_TKTokeniseLoop
-.d52a	b52a					_TKHexConstant:
-.d52a	b52a	20 4e b6	jsr $b64e			jsr 	TOKHexConstant
-.d52d	b52d	80 ad		bra $b4dc			bra 	_TKTokeniseLoop
-.d52f	b52f	a9 80		lda #$80	_TKExit:lda 	#KWC_EOL 					; write end of line byte
-.d531	b531	20 f3 b6	jsr $b6f3			jsr 	TOKWriteByte
-.d534	b534	60		rts				rts
-.d535	b535					_TKCheckDouble:
-.d535	b535	bd 27 05	lda $0527,x			lda 	lineBuffer+1,x 				; get next character
-.d538	b538	c9 3c		cmp #$3c			cmp 	#'<'						; if not < = > which are ASCII consecutive go back
-.d53a	b53a	90 c7		bcc $b503			bcc 	_TKStandardPunctuation 		; and do the normal punctuation handler.
-.d53c	b53c	c9 3f		cmp #$3f			cmp 	#'>'+1
-.d53e	b53e	b0 c3		bcs $b503			bcs 	_TKStandardPunctuation
-.d540	b540	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; this is < (60) or > (62)
-.d543	b543	29 02		and #$02			and 	#2 							; now < (0) or > (2)
-.d545	b545	0a		asl a				asl 	a 							; now < (0) or > (4), CC also
-.d546	b546	7d 27 05	adc $0527,x			adc 	lineBuffer+1,x 				; add < = > codes - < code
-.d549	b549	38		sec				sec
-.d54a	b54a	e9 3c		sbc #$3c			sbc 	#'<'
-.d54c	b54c	20 f3 b6	jsr $b6f3			jsr 	TOKWriteByte 				; this is in the range 0-7
-.d54f	b54f	e8		inx				inx 								; consume both
-.d550	b550	e8		inx				inx
-.d551	b551	80 89		bra $b4dc			bra 	_TKTokeniseLoop
-.d553	b553					_TKTokeniseIdentifier:
-.d553	b553	8e 00 04	stx $0400			stx 	identStart 					; save start
-.d556	b556	9c 04 04	stz $0404			stz 	identTypeByte 				; zero the type byte
-.d559	b559					_TKCheckLoop:
-.d559	b559	e8		inx				inx 								; look at next, we know first is identifier already.
-.d55a	b55a	bd 26 05	lda $0526,x			lda  	lineBuffer,x
-.d55d	b55d	c9 5f		cmp #$5f			cmp 	#"_" 						; legal char _ 0-9 A-Z
-.d55f	b55f	f0 f8		beq $b559			beq 	_TKCheckLoop
-.d561	b561	c9 30		cmp #$30			cmp	 	#"0"
-.d563	b563	90 0c		bcc $b571			bcc 	_TKEndIdentifier
-.d565	b565	c9 3a		cmp #$3a			cmp 	#"9"+1
-.d567	b567	90 f0		bcc $b559			bcc 	_TKCheckLoop
-.d569	b569	c9 41		cmp #$41			cmp	 	#"A"
-.d56b	b56b	90 04		bcc $b571			bcc 	_TKEndIdentifier
-.d56d	b56d	c9 5b		cmp #$5b			cmp 	#"Z"+1
-.d56f	b56f	90 e8		bcc $b559			bcc 	_TKCheckLoop
-.d571	b571					_TKEndIdentifier:
-.d571	b571	8e 01 04	stx $0401			stx 	identTypeStart 				; save start of type text (if any !)
-.d574	b574	a0 08		ldy #$08			ldy 	#$08 						; this is the identifier type byte for #
-.d576	b576	c9 23		cmp #$23			cmp 	#"#"						; followed by #
-.d578	b578	f0 06		beq $b580			beq 	_TKHasTypeCharacter
-.d57a	b57a	a0 10		ldy #$10			ldy 	#$10 						; this is the identifier type byte for $
-.d57c	b57c	c9 24		cmp #$24			cmp 	#"$"						; followed by $ or #
-.d57e	b57e	d0 07		bne $b587			bne 	_TKNoTypeCharacter
-.d580	b580					_TKHasTypeCharacter:
-.d580	b580	8c 04 04	sty $0404			sty 	identTypeByte 				; has # or $, save the type
-.d583	b583	e8		inx				inx 								; consume the type character
-.d584	b584	bd 26 05	lda $0526,x			lda 	lineBuffer,x
-.d587	b587					_TKNoTypeCharacter:
-.d587	b587	c9 28		cmp #$28			cmp 	#"("						; is it open parenthesis (e.g. array)
-.d589	b589	d0 09		bne $b594			bne 	_TKNoArray
-.d58b	b58b	e8		inx				inx 								; skip the (
-.d58c	b58c	ad 04 04	lda $0404			lda 	identTypeByte 				; set bit 2 (e.g. array) in type byte
-.d58f	b58f	09 04		ora #$04			ora 	#$04
-.d591	b591	8d 04 04	sta $0404			sta 	identTypeByte
-.d594	b594					_TKNoArray:
-.d594	b594	8e 02 04	stx $0402			stx 	identTypeEnd 				; save end marker, e.g. continue from here.
-.d597	b597	20 6f b6	jsr $b66f			jsr 	TOKCalculateHash 			; calculate the has for those tokens
-.d59a	b59a	a0 ad		ldy #$ad			ldy 	#(KeywordSet0) >> 8
-.d59c	b59c	a9 49		lda #$49			lda 	#(KeywordSet0) & $FF
-.d59e	b59e	20 5e b4	jsr $b45e			jsr 	TOKSearchTable
-.d5a1	b5a1	a2 00		ldx #$00			ldx 	#0
-.d5a3	b5a3	b0 1f		bcs $b5c4			bcs 	_TKFoundToken
-.d5a5	b5a5	a0 af		ldy #$af			ldy 	#(KeywordSet1) >> 8
-.d5a7	b5a7	a9 c1		lda #$c1			lda 	#(KeywordSet1) & $FF
-.d5a9	b5a9	20 5e b4	jsr $b45e			jsr 	TOKSearchTable
-.d5ac	b5ac	a2 81		ldx #$81			ldx 	#$81
-.d5ae	b5ae	b0 14		bcs $b5c4			bcs 	_TKFoundToken
-.d5b0	b5b0	a0 b0		ldy #$b0			ldy 	#(KeywordSet2) >> 8
-.d5b2	b5b2	a9 d7		lda #$d7			lda 	#(KeywordSet2) & $FF
-.d5b4	b5b4	20 5e b4	jsr $b45e			jsr 	TOKSearchTable
-.d5b7	b5b7	a2 82		ldx #$82			ldx 	#$82
-.d5b9	b5b9	b0 09		bcs $b5c4			bcs 	_TKFoundToken
-.d5bb	b5bb	20 ff b6	jsr $b6ff			jsr 	TOKCheckCreateVariableRecord ; failed all, it's a variable, create record if does not exist.
-.d5be	b5be	ae 02 04	ldx $0402			ldx 	identTypeEnd 				; X points to following byte
-.d5c1	b5c1	4c dc b4	jmp $b4dc			jmp 	_TKTokeniseLoop 			; and go round again.
-.d5c4	b5c4					_TKFoundToken:
-.d5c4	b5c4	48		pha				pha 								; save token
-.d5c5	b5c5	8a		txa				txa 								; shift in X, is there one ?
-.d5c6	b5c6	f0 03		beq $b5cb			beq 	_TKNoTShift
-.d5c8	b5c8	20 f3 b6	jsr $b6f3			jsr 	TOKWriteByte 				; if so, write it out
-.d5cb	b5cb					_TKNoTShift:
-.d5cb	b5cb	68		pla				pla 								; restore and write token
-.d5cc	b5cc	20 f3 b6	jsr $b6f3			jsr 	TOKWriteByte
-.d5cf	b5cf	e0 00		cpx #$00			cpx 	#0 							; check for REM and '
-.d5d1	b5d1	d0 0d		bne $b5e0			bne 	_TKNotRem 			 		; not shifted ?
-.d5d3	b5d3	c9 d7		cmp #$d7			cmp 	#KWD_REM
-.d5d5	b5d5	d0 09		bne $b5e0			bne 	_TKNotRem
-.d5d7	b5d7	ae 02 04	ldx $0402			ldx 	identTypeEnd 				; check if comment follows.
-.d5da	b5da	20 e6 b5	jsr $b5e6			jsr 	TOKCheckComment
-.d5dd	b5dd	4c dc b4	jmp $b4dc			jmp 	_TKTokeniseLoop
-.d5e0	b5e0					_TKNotRem:
-.d5e0	b5e0	ae 02 04	ldx $0402			ldx 	identTypeEnd 				; X points to following byte
-.d5e3	b5e3	4c dc b4	jmp $b4dc			jmp 	_TKTokeniseLoop 			; and go round again.
-.d5e6	b5e6					TOKCheckComment:
-.d5e6	b5e6	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; skip over space
-.d5e9	b5e9	e8		inx				inx
-.d5ea	b5ea	c9 20		cmp #$20			cmp 	#' '
-.d5ec	b5ec	f0 f8		beq $b5e6			beq 	TOKCheckComment
-.d5ee	b5ee	ca		dex				dex 								; first non space character
-.d5ef	b5ef	c9 22		cmp #$22			cmp 	#'"'						; quote mark
-.d5f1	b5f1	f0 1f		beq $b612			beq 	_TOKCCExit 					; then we are okay
-.d5f3	b5f3	c9 00		cmp #$00			cmp 	#0 							; EOL
-.d5f5	b5f5	f0 1b		beq $b612			beq 	_TOKCCExit 					; then we are okay
-.d5f7	b5f7	da		phx				phx
-.d5f8	b5f8					_TOKCCLowerCase:
-.d5f8	b5f8	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; about making it lower case it all, but I thought
-.d5fb	b5fb	c9 41		cmp #$41			cmp 	#"A"		 				; that was a bit risky. So it's converted to L/C here.
-.d5fd	b5fd	90 09		bcc $b608			bcc 	_TOKKCNotUC
-.d5ff	b5ff	c9 5b		cmp #$5b			cmp 	#"Z"+1
-.d601	b601	b0 05		bcs $b608			bcs 	_TOKKCNotUC
-.d603	b603	49 20		eor #$20			eor 	#$20
-.d605	b605	9d 26 05	sta $0526,x			sta 	lineBuffer,x
-.d608	b608					_TOKKCNotUC:
-.d608	b608	e8		inx				inx
-.d609	b609	c9 00		cmp #$00			cmp 	#0
-.d60b	b60b	d0 eb		bne $b5f8			bne 	_TOKCCLowerCase
-.d60d	b60d	fa		plx				plx
-.d60e	b60e	ca		dex				dex 								; tokenise string expects initial skip.
-.d60f	b60f	20 13 b6	jsr $b613			jsr 	TOKTokenString 				; tokenise rest of line as a string.
-.d612	b612					_TOKCCExit:
-.d612	b612	60		rts				rts
-.d613	b613					TOKTokenString:
-.d613	b613	a9 ff		lda #$ff			lda 	#KWC_STRING 				; string token.
-.d615	b615	20 f3 b6	jsr $b6f3			jsr 	TOKWriteByte
-.d618	b618	e8		inx				inx									; start of quoted string.
-.d619	b619	da		phx				phx 								; push start of string on top
-.d61a	b61a	ca		dex				dex 								; because we pre-increment
-.d61b	b61b					_TSFindEnd:
-.d61b	b61b	e8		inx				inx
-.d61c	b61c	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; next character
-.d61f	b61f	f0 04		beq $b625			beq 	_TSEndOfString 				; no matching quote, we don't mind.
-.d621	b621	c9 22		cmp #$22			cmp 	#'"' 						; go back if quote not found
-.d623	b623	d0 f6		bne $b61b			bne 	_TSFindEnd
-.d625	b625					_TSEndOfString:
-.d625	b625	7a		ply				ply  								; so now Y is first character, X is character after end.
-.d626	b626	48		pha				pha 								; save terminating character
-.d627	b627	20 2f b6	jsr $b62f			jsr 	TOKWriteBlockXY 			; write X to Y as a data block
-.d62a	b62a	68		pla				pla 								; terminating character
-.d62b	b62b	f0 01		beq $b62e			beq 	_TSNotQuote					; if it wasn't EOS skip it
-.d62d	b62d	e8		inx				inx
-.d62e	b62e					_TSNotQuote:
-.d62e	b62e	60		rts				rts
-.d62f	b62f					TOKWriteBlockXY:
-.d62f	b62f	86 36		stx $36				stx 	zTemp0 						; save end character
-.d631	b631	98		tya				tya 								; use 2's complement to work out the byte size
-.d632	b632	49 ff		eor #$ff			eor 	#$FF
-.d634	b634	38		sec				sec
-.d635	b635	65 36		adc $36				adc 	zTemp0
-.d637	b637	1a		inc a				inc 	a 							; one extra for NULL
-.d638	b638	20 f3 b6	jsr $b6f3			jsr 	TOKWriteByte
-.d63b	b63b					_TOBlockLoop:
-.d63b	b63b	c4 36		cpy $36				cpy 	zTemp0 						; exit if reached the end
-.d63d	b63d	f0 09		beq $b648			beq 	_TOBlockExit
-.d63f	b63f	b9 26 05	lda $0526,y			lda 	lineBuffer,y 				; write byte out.
-.d642	b642	20 f3 b6	jsr $b6f3			jsr 	TOKWriteByte
-.d645	b645	c8		iny				iny
-.d646	b646	80 f3		bra $b63b			bra 	_TOBlockLoop
-.d648	b648					_TOBlockExit:
-.d648	b648	a9 00		lda #$00			lda 	#0 							; add NULL.
-.d64a	b64a	20 f3 b6	jsr $b6f3			jsr 	TOKWriteByte
-.d64d	b64d	60		rts				rts
-.d64e	b64e					TOKHexConstant:
-.d64e	b64e	a9 fe		lda #$fe			lda 	#KWC_HEXCONST 				; hex constant token.
-.d650	b650	20 f3 b6	jsr $b6f3			jsr 	TOKWriteByte
-.d653	b653	e8		inx				inx									; start of quoted string.
-.d654	b654	da		phx				phx 								; push start of constant on top
-.d655	b655	ca		dex				dex
-.d656	b656					_THFindLoop:
-.d656	b656	e8		inx				inx 	 							; this is stored in a block, so find out how long
-.d657	b657	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; the hex constant is.
-.d65a	b65a	c9 30		cmp #$30			cmp 	#"0"
-.d65c	b65c	90 0c		bcc $b66a			bcc 	_THFoundEnd
-.d65e	b65e	c9 3a		cmp #$3a			cmp 	#"9"+1
-.d660	b660	90 f4		bcc $b656			bcc 	_THFindLoop
-.d662	b662	c9 41		cmp #$41			cmp 	#"A"
-.d664	b664	90 04		bcc $b66a			bcc 	_THFoundEnd
-.d666	b666	c9 47		cmp #$47			cmp 	#"F"+1
-.d668	b668	90 ec		bcc $b656			bcc 	_THFindLoop
-.d66a	b66a					_THFoundEnd:
-.d66a	b66a	7a		ply				ply 								; restore start
-.d66b	b66b	20 2f b6	jsr $b62f			jsr 	TOKWriteBlockXY 			; output the block
-.d66e	b66e	60		rts				rts
-.d66f	b66f					TOKCalculateHash:
-.d66f	b66f	da		phx				phx
-.d670	b670	ae 00 04	ldx $0400			ldx 	identStart 					; needs to be same as in tokens.py - simple sum at present.
-.d673	b673	a9 00		lda #$00			lda 	#0
-.d675	b675					_TCHLoop:
-.d675	b675	18		clc				clc
-.d676	b676	7d 26 05	adc $0526,x			adc 	lineBuffer,x
-.d679	b679	e8		inx				inx
-.d67a	b67a	ec 02 04	cpx $0402			cpx 	identTypeEnd 				; do the whole thing including type and array markers.
-.d67d	b67d	d0 f6		bne $b675			bne 	_TCHLoop
-.d67f	b67f	8d 03 04	sta $0403			sta 	identHash 					; save the hash
-.d682	b682	fa		plx				plx
-.d683	b683	60		rts				rts
-.d684	b684					LCLFixLineBufferCase:
-.d684	b684	a2 00		ldx #$00			ldx 	#0
-.d686	b686					_FLBCLoop:
-.d686	b686	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; get next character
-.d689	b689	f0 22		beq $b6ad			beq 	_FLBCExit 					; end of string.
-.d68b	b68b	c9 22		cmp #$22			cmp 	#'"'						; quote, go to in quotes
-.d68d	b68d	f0 11		beq $b6a0			beq 	_FLBCInQuotes
-.d68f	b68f	e8		inx				inx
-.d690	b690	c9 61		cmp #$61			cmp 	#'a'						; needs capitalising ?
-.d692	b692	90 f2		bcc $b686			bcc 	_FLBCLoop
-.d694	b694	c9 7b		cmp #$7b			cmp 	#'z'+1
-.d696	b696	b0 ee		bcs $b686			bcs 	_FLBCLoop
-.d698	b698	38		sec				sec 								; make U/C
-.d699	b699	e9 20		sbc #$20			sbc 	#32
-.d69b	b69b	9d 25 05	sta $0525,x			sta	 	lineBuffer-1,x 				; write back
-.d69e	b69e	80 e6		bra $b686			bra 	_FLBCLoop
-.d6a0	b6a0					_FLBCInQuotes:
-.d6a0	b6a0	e8		inx				inx 								; advance
-.d6a1	b6a1	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; get next
-.d6a4	b6a4	f0 07		beq $b6ad			beq 	_FLBCExit 					; exit on EOS
-.d6a6	b6a6	c9 22		cmp #$22			cmp 	#'"' 				 		; until " found
-.d6a8	b6a8	d0 f6		bne $b6a0			bne 	_FLBCInQuotes
-.d6aa	b6aa	e8		inx				inx 								; skip over it
-.d6ab	b6ab	80 d9		bra $b686			bra 	_FLBCLoop
-.d6ad	b6ad					_FLBCExit:
-.d6ad	b6ad	60		rts				rts
-.d6ae	b6ae					TOKExtractLineNumber:
-.d6ae	b6ae	ad 28 04	lda $0428			lda 	tokenLineNumber+1 			; push current value on stack
-.d6b1	b6b1	48		pha				pha
-.d6b2	b6b2	ad 27 04	lda $0427			lda 	tokenLineNumber
-.d6b5	b6b5	48		pha				pha
-.d6b6	b6b6	20 ec b6	jsr $b6ec			jsr 	_LCLNTimes2 				; line # x 2
-.d6b9	b6b9	20 ec b6	jsr $b6ec			jsr 	_LCLNTimes2 				; line # x 4
-.d6bc	b6bc	18		clc				clc 								; add stacked value
-.d6bd	b6bd	68		pla				pla
-.d6be	b6be	6d 27 04	adc $0427			adc 	tokenLineNumber
-.d6c1	b6c1	8d 27 04	sta $0427			sta 	tokenLineNumber
-.d6c4	b6c4	68		pla				pla
-.d6c5	b6c5	6d 28 04	adc $0428			adc 	tokenLineNumber+1
-.d6c8	b6c8	8d 28 04	sta $0428			sta 	tokenLineNumber+1 			; line # x 5
-.d6cb	b6cb	20 ec b6	jsr $b6ec			jsr 	_LCLNTimes2 				; line # x 10
-.d6ce	b6ce	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; get and consume character
-.d6d1	b6d1	e8		inx				inx
-.d6d2	b6d2	29 0f		and #$0f			and 	#15 						; add to line #
-.d6d4	b6d4	18		clc				clc
+.d3cd	b3cd	ae 19 04	ldx $0419			ldx 	tbOffset 					; write out make ASCIIZ
+.d3d0	b3d0	9d 29 04	sta $0429,x			sta 	tokenBuffer,x
+.d3d3	b3d3	9e 2a 04	stz $042a,x			stz 	tokenBuffer+1,x
+.d3d6	b3d6	ee 19 04	inc $0419			inc 	tbOffset 					; bump the position
+.d3d9	b3d9	09 00		ora #$00			ora 	#0 							; don't update last character if colour data
+.d3db	b3db	30 03		bmi $b3e0			bmi 	_LCLNoColour
+.d3dd	b3dd	8d 23 04	sta $0423			sta 	lcLastCharacter
+.d3e0	b3e0					_LCLNoColour:
+.d3e0	b3e0	fa		plx				plx
+.d3e1	b3e1	60		rts				rts
+.d3e2	b3e2					LCLDeleteLastSpace:
+.d3e2	b3e2	48		pha				pha
+.d3e3	b3e3	da		phx				phx
+.d3e4	b3e4	ae 19 04	ldx $0419			ldx 	tbOffset
+.d3e7	b3e7	f0 0a		beq $b3f3			beq 	_LCDLSExit
+.d3e9	b3e9	bd 28 04	lda $0428,x			lda 	tokenBuffer-1,x
+.d3ec	b3ec	c9 20		cmp #$20			cmp 	#' '
+.d3ee	b3ee	d0 03		bne $b3f3			bne 	_LCDLSExit
+.d3f0	b3f0	ce 19 04	dec $0419			dec 	tbOffset
+.d3f3	b3f3					_LCDLSExit:
+.d3f3	b3f3	fa		plx				plx
+.d3f4	b3f4	68		pla				pla
+.d3f5	b3f5	60		rts				rts
+.d3f6	b3f6					LCLCheckSpaceRequired:
+.d3f6	b3f6	ad 23 04	lda $0423			lda 	lcLastCharacter 			; check last character
+.d3f9	b3f9	c9 24		cmp #$24			cmp 	#'$' 						; $ # and ) require that token space.
+.d3fb	b3fb	f0 1b		beq $b418			beq 	_LCCSRSpace
+.d3fd	b3fd	c9 29		cmp #$29			cmp 	#')'
+.d3ff	b3ff	f0 17		beq $b418			beq 	_LCCSRSpace
+.d401	b401	c9 23		cmp #$23			cmp 	#'#'
+.d403	b403	f0 13		beq $b418			beq 	_LCCSRSpace
+.d405	b405	20 1e b4	jsr $b41e			jsr 	LCLLowerCase 				; saves a little effort
+.d408	b408	c9 30		cmp #$30			cmp 	#"0" 						; check if it was 0-9 A-Z a-z if so need space.
+.d40a	b40a	90 11		bcc $b41d			bcc 	_LCCSRExit
+.d40c	b40c	c9 3a		cmp #$3a			cmp 	#"9"+1
+.d40e	b40e	90 08		bcc $b418			bcc 	_LCCSRSpace
+.d410	b410	c9 61		cmp #$61			cmp 	#"a"
+.d412	b412	90 09		bcc $b41d			bcc 	_LCCSRExit
+.d414	b414	c9 7b		cmp #$7b			cmp 	#"z"+1
+.d416	b416	b0 05		bcs $b41d			bcs 	_LCCSRExit
+.d418	b418					_LCCSRSpace:
+.d418	b418	a9 20		lda #$20			lda 	#' '
+.d41a	b41a	20 cc b3	jsr $b3cc			jsr 	LCLWrite
+.d41d	b41d					_LCCSRExit:
+.d41d	b41d	60		rts				rts
+.d41e	b41e					LCLLowerCase:
+.d41e	b41e	c9 41		cmp #$41			cmp 	#"A"
+.d420	b420	90 06		bcc $b428			bcc 	_LCLLCOut
+.d422	b422	c9 5b		cmp #$5b			cmp 	#"Z"+1
+.d424	b424	b0 02		bcs $b428			bcs 	_LCLLCOut
+.d426	b426	69 20		adc #$20			adc 	#$20
+.d428	b428					_LCLLCOut:
+.d428	b428	60		rts				rts
+.d429	b429					LCLUpperCase:
+.d429	b429	c9 61		cmp #$61			cmp 	#"a"
+.d42b	b42b	90 06		bcc $b433			bcc 	_LCLUCOut
+.d42d	b42d	c9 7b		cmp #$7b			cmp 	#"z"+1
+.d42f	b42f	b0 02		bcs $b433			bcs 	_LCLUCOut
+.d431	b431	e9 1f		sbc #$1f			sbc 	#$1F
+.d433	b433					_LCLUCOut:
+.d433	b433	60		rts				rts
+.d434	b434					LCLWriteNumberXA:
+.d434	b434	64 37		stz $37				stz 	zTemp0+1 					; index into digit table.
+.d436	b436					_LCLWNLoop1:
+.d436	b436	64 36		stz $36				stz 	zTemp0 						; subtraction count.
+.d438	b438					_LCLWNLoop2:
+.d438	b438	48		pha				pha 								; save initial LSB
+.d439	b439	38		sec				sec
+.d43a	b43a	a4 37		ldy $37				ldy 	zTemp0+1 					; position in table.
+.d43c	b43c	f9 6d b4	sbc $b46d,y			sbc 	_LCLWNTable,y
+.d43f	b43f	48		pha				pha
+.d440	b440	8a		txa				txa
+.d441	b441	f9 6e b4	sbc $b46e,y			sbc 	_LCLWNTable+1,y
+.d444	b444	90 07		bcc $b44d			bcc 	_LCLWNUnderflow
+.d446	b446	e6 36		inc $36				inc 	zTemp0  					; subtracted one without borrow.
+.d448	b448	aa		tax				tax 								; update X
+.d449	b449	68		pla				pla 								; restore A
+.d44a	b44a	7a		ply				ply 								; throw original
+.d44b	b44b	80 eb		bra $b438			bra 	_LCLWNLoop2 				; try again.
+.d44d	b44d					_LCLWNUnderflow:
+.d44d	b44d	a4 36		ldy $36				ldy 	zTemp0 						; count of subtractions.
+.d44f	b44f	d0 06		bne $b457			bne 	_LCLWNOut
+.d451	b451	ad 19 04	lda $0419			lda 	tbOffset 					; suppress leading zeroes
+.d454	b454	3a		dec a				dec 	a
+.d455	b455	f0 04		beq $b45b			beq 	_LCLWNNext
+.d457	b457					_LCLWNOut:
+.d457	b457	98		tya				tya
+.d458	b458	20 67 b4	jsr $b467			jsr 	_LCLWNOutDigit
+.d45b	b45b					_LCLWNNext:
+.d45b	b45b	7a		ply				ply 							 	; restore original value.
+.d45c	b45c	68		pla				pla
+.d45d	b45d	a4 37		ldy $37				ldy 	zTemp0+1  					; bump the index
+.d45f	b45f	c8		iny				iny
+.d460	b460	c8		iny				iny
+.d461	b461	84 37		sty $37				sty 	zTemp0+1
+.d463	b463	c0 08		cpy #$08			cpy 	#8 							; done all 4
+.d465	b465	d0 cf		bne $b436			bne 	_LCLWNLoop1
+.d467	b467					_LCLWNOutDigit:
+.d467	b467	09 30		ora #$30			ora 	#'0'
+.d469	b469	20 cc b3	jsr $b3cc			jsr 	LCLWrite
+.d46c	b46c	60		rts				rts
+.d46d	b46d					_LCLWNTable:
+>d46d	b46d	10 27						.word 	10000
+>d46f	b46f	e8 03						.word 	1000
+>d471	b471	64 00						.word 	100
+>d473	b473	0a 00						.word 	10
+.d475	b475					TOKSearchTable:
+.d475	b475	84 37		sty $37				sty 	zTemp0+1 					; (zTemp0),y points to current token being tested.
+.d477	b477	85 36		sta $36				sta 	zTemp0
+.d479	b479	a0 00		ldy #$00			ldy 	#0
+.d47b	b47b	a9 80		lda #$80			lda 	#$80 						; token # so we know which one we are looking at
+.d47d	b47d	85 38		sta $38				sta 	zTemp1
+.d47f	b47f					_TSTLoop:
+.d47f	b47f	b1 36		lda ($36),y			lda 	(zTemp0),y 					; length, 0 (skip) -ve (end)
+.d481	b481	30 49		bmi $b4cc			bmi 	_TSTFail 					; -ve = end of table, so fail.
+.d483	b483	f0 2e		beq $b4b3			beq 	_TSTNext 					; zero, check next as it's a dummy (e.g. EOL, SHIFT)
+.d485	b485	c8		iny				iny 								; get the hash
+.d486	b486	b1 36		lda ($36),y			lda 	(zTemp0),y
+.d488	b488	88		dey				dey
+.d489	b489	cd 03 04	cmp $0403			cmp 	identHash 					; check they match with the identifier hash, if not go to next
+.d48c	b48c	d0 25		bne $b4b3			bne 	_TSTNext
+.d48e	b48e	ad 02 04	lda $0402			lda 	identTypeEnd 				; get length of identifier from end-start
+.d491	b491	38		sec				sec
+.d492	b492	ed 00 04	sbc $0400			sbc 	identStart
+.d495	b495	d1 36		cmp ($36),y			cmp 	(zTemp0),y 					; compare against the length in the table, no match, then return.
+.d497	b497	d0 1a		bne $b4b3			bne 	_TSTNext
+.d499	b499	5a		phy				phy 								; save Y , we might fail to match.
+.d49a	b49a	c8		iny				iny 								; point to text
+.d49b	b49b	c8		iny				iny
+.d49c	b49c	ae 00 04	ldx $0400			ldx 	identStart 					; offset in line buffer in X
+.d49f	b49f					_TSTCompareName:
+.d49f	b49f	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; compare text.
+.d4a2	b4a2	d1 36		cmp ($36),y			cmp 	(zTemp0),y
+.d4a4	b4a4	d0 0c		bne $b4b2			bne 	_TSTNextPullY 				; fail, pullY and do next
+.d4a6	b4a6	e8		inx				inx
+.d4a7	b4a7	c8		iny				iny
+.d4a8	b4a8	ec 02 04	cpx $0402			cpx 	identTypeEnd 				; complete match.
+.d4ab	b4ab	d0 f2		bne $b49f			bne 	_TSTCompareName
+.d4ad	b4ad	7a		ply				ply 								; throw Y
+.d4ae	b4ae	a5 38		lda $38				lda 	zTemp1 						; get token #
+.d4b0	b4b0	38		sec				sec 								; return with CS = passed.
+.d4b1	b4b1	60		rts				rts
+.d4b2	b4b2					_TSTNextPullY:
+.d4b2	b4b2	7a		ply				ply 								; restore current, fall through.
+.d4b3	b4b3					_TSTNext:
+.d4b3	b4b3	e6 38		inc $38				inc 	zTemp1 						; token counter
+.d4b5	b4b5	98		tya				tya
+.d4b6	b4b6	18		clc				clc
+.d4b7	b4b7	71 36		adc ($36),y			adc 	(zTemp0),y 					; add [Length] + 2 to Y
+.d4b9	b4b9	1a		inc a				inc 	a 							; +1
+.d4ba	b4ba	1a		inc a				inc 	a 							; +2
+.d4bb	b4bb	a8		tay				tay
+.d4bc	b4bc	10 c1		bpl $b47f			bpl 	_TSTLoop 					; if Y < $80 loop back
+.d4be	b4be	98		tya				tya 								; add Y to zTemp0 and reset Y
+.d4bf	b4bf	a0 00		ldy #$00			ldy 	#0   						; so we can use Y to search fast
+.d4c1	b4c1	18		clc				clc  								; but have tables > 255 bytes
+.d4c2	b4c2	65 36		adc $36				adc 	zTemp0 						; when Y gets >= 128 we reset Y
+.d4c4	b4c4	85 36		sta $36				sta 	zTemp0 						; and adjust the table pointer/
+.d4c6	b4c6	90 b7		bcc $b47f			bcc 	_TSTLoop
+.d4c8	b4c8	e6 37		inc $37				inc 	zTemp0+1
+.d4ca	b4ca	80 b3		bra $b47f			bra 	_TSTLoop
+.d4cc	b4cc					_TSTFail:
+.d4cc	b4cc	18		clc				clc
+.d4cd	b4cd	60		rts				rts
+.d4ce	b4ce					Export_TKTokeniseLine:
+.d4ce	b4ce	20 9b b6	jsr $b69b			jsr 	LCLFixLineBufferCase 		; fix line case
+.d4d1	b4d1	a9 03		lda #$03			lda 	#3 							; reset the token buffer to empty
+.d4d3	b4d3	8d 26 04	sta $0426			sta 	tokenOffset 				; (3 bytes for line number & offset)
+.d4d6	b4d6	9c 27 04	stz $0427			stz 	tokenLineNumber
+.d4d9	b4d9	9c 28 04	stz $0428			stz 	tokenLineNumber+1
+.d4dc	b4dc	a2 ff		ldx #$ff			ldx 	#$FF
+.d4de	b4de					_TKFindFirst:
+.d4de	b4de	e8		inx				inx
+.d4df	b4df	bd 26 05	lda $0526,x			lda 	lineBuffer,x
+.d4e2	b4e2	f0 62		beq $b546			beq 	_TKExit
+.d4e4	b4e4	c9 20		cmp #$20			cmp 	#' '
+.d4e6	b4e6	90 f6		bcc $b4de			bcc 	_TKFindFirst
+.d4e8	b4e8	c9 30		cmp #$30			cmp 	#'0'
+.d4ea	b4ea	90 07		bcc $b4f3			bcc 	_TKNoLineNumber
+.d4ec	b4ec	c9 3a		cmp #$3a			cmp 	#'9'+1
+.d4ee	b4ee	b0 03		bcs $b4f3			bcs 	_TKNoLineNumber
+.d4f0	b4f0	20 c5 b6	jsr $b6c5			jsr 	TOKExtractLineNumber
+.d4f3	b4f3					_TKNoLineNumber:
+.d4f3	b4f3					_TKTokeniseLoop:
+.d4f3	b4f3	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; next character, exit if zero EOL.
+.d4f6	b4f6	f0 4e		beq $b546			beq 	_TKExit
+.d4f8	b4f8	e8		inx				inx
+.d4f9	b4f9	c9 20		cmp #$20			cmp 	#' '
+.d4fb	b4fb	f0 f6		beq $b4f3			beq 	_TKTokeniseLoop 			; keep looping if space found.
+.d4fd	b4fd	ca		dex				dex 								; undo last get, A contains character, X is position.
+.d4fe	b4fe	c9 5f		cmp #$5f			cmp 	#'_'						; _ A-Z is identifier *or* token
+.d500	b500	f0 68		beq $b56a			beq 	_TKTokeniseIdentifier 		; (already case converted outside string constants)
+.d502	b502	c9 41		cmp #$41			cmp 	#'A'
+.d504	b504	90 04		bcc $b50a			bcc 	_TKTokenisePunctuation
+.d506	b506	c9 5b		cmp #$5b			cmp 	#'Z'+1
+.d508	b508	90 60		bcc $b56a			bcc 	_TKTokeniseIdentifier
+.d50a	b50a					_TKTokenisePunctuation:
+.d50a	b50a	c9 22		cmp #$22			cmp 	#'"'						; quoted string ?
+.d50c	b50c	f0 2e		beq $b53c			beq 	_TKString
+.d50e	b50e	c9 24		cmp #$24			cmp 	#'$'						; hexadecimal constant ($ only appears at end of identifiers)
+.d510	b510	f0 2f		beq $b541			beq 	_TKHexConstant
+.d512	b512	c9 3c		cmp #$3c			cmp 	#'<' 						; check for < > handlers - these are for <> <= >= >> <<
+.d514	b514	f0 36		beq $b54c			beq 	_TKCheckDouble
+.d516	b516	c9 3e		cmp #$3e			cmp 	#'>'
+.d518	b518	f0 32		beq $b54c			beq 	_TKCheckDouble
+.d51a	b51a					_TKStandardPunctuation:
+.d51a	b51a	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; get the punctuation token back.
+.d51d	b51d	c9 40		cmp #$40			cmp 	#64 						; are we >= 64
+.d51f	b51f	90 0e		bcc $b52f			bcc 	_TKNoShift
+.d521	b521	48		pha				pha 								; save. we are about to convert this punctuation token from
+.d522	b522	29 07		and #$07			and 	#7 							; lower 3 bits in zTemp0
+.d524	b524	85 36		sta $36				sta 	zTemp0
+.d526	b526	68		pla				pla
+.d527	b527	29 20		and #$20			and 	#32 						; bit 5
+.d529	b529	4a		lsr a				lsr 	a 							; shift into bit 3
+.d52a	b52a	4a		lsr a				lsr 	a
+.d52b	b52b	05 36		ora $36				ora 	zTemp0
+.d52d	b52d	09 10		ora #$10			ora 	#$10						; now in the range 16-31
+.d52f	b52f					_TKNoShift:
+.d52f	b52f	20 0a b7	jsr $b70a			jsr 	TOKWriteByte 				; write the punctuation character
+.d532	b532	e8		inx				inx 								; consume the character
+.d533	b533	c9 27		cmp #$27			cmp 	#KWD_QUOTE 					; quote found ?
+.d535	b535	d0 bc		bne $b4f3			bne 	_TKTokeniseLoop 			; and loop round again.
+.d537	b537	20 fd b5	jsr $b5fd			jsr 	TOKCheckComment 			; comment checl
+.d53a	b53a	80 b7		bra $b4f3			bra 	_TKTokeniseLoop
+.d53c	b53c					_TKString:
+.d53c	b53c	20 2a b6	jsr $b62a			jsr 	TOKTokenString
+.d53f	b53f	80 b2		bra $b4f3			bra 	_TKTokeniseLoop
+.d541	b541					_TKHexConstant:
+.d541	b541	20 65 b6	jsr $b665			jsr 	TOKHexConstant
+.d544	b544	80 ad		bra $b4f3			bra 	_TKTokeniseLoop
+.d546	b546	a9 80		lda #$80	_TKExit:lda 	#KWC_EOL 					; write end of line byte
+.d548	b548	20 0a b7	jsr $b70a			jsr 	TOKWriteByte
+.d54b	b54b	60		rts				rts
+.d54c	b54c					_TKCheckDouble:
+.d54c	b54c	bd 27 05	lda $0527,x			lda 	lineBuffer+1,x 				; get next character
+.d54f	b54f	c9 3c		cmp #$3c			cmp 	#'<'						; if not < = > which are ASCII consecutive go back
+.d551	b551	90 c7		bcc $b51a			bcc 	_TKStandardPunctuation 		; and do the normal punctuation handler.
+.d553	b553	c9 3f		cmp #$3f			cmp 	#'>'+1
+.d555	b555	b0 c3		bcs $b51a			bcs 	_TKStandardPunctuation
+.d557	b557	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; this is < (60) or > (62)
+.d55a	b55a	29 02		and #$02			and 	#2 							; now < (0) or > (2)
+.d55c	b55c	0a		asl a				asl 	a 							; now < (0) or > (4), CC also
+.d55d	b55d	7d 27 05	adc $0527,x			adc 	lineBuffer+1,x 				; add < = > codes - < code
+.d560	b560	38		sec				sec
+.d561	b561	e9 3c		sbc #$3c			sbc 	#'<'
+.d563	b563	20 0a b7	jsr $b70a			jsr 	TOKWriteByte 				; this is in the range 0-7
+.d566	b566	e8		inx				inx 								; consume both
+.d567	b567	e8		inx				inx
+.d568	b568	80 89		bra $b4f3			bra 	_TKTokeniseLoop
+.d56a	b56a					_TKTokeniseIdentifier:
+.d56a	b56a	8e 00 04	stx $0400			stx 	identStart 					; save start
+.d56d	b56d	9c 04 04	stz $0404			stz 	identTypeByte 				; zero the type byte
+.d570	b570					_TKCheckLoop:
+.d570	b570	e8		inx				inx 								; look at next, we know first is identifier already.
+.d571	b571	bd 26 05	lda $0526,x			lda  	lineBuffer,x
+.d574	b574	c9 5f		cmp #$5f			cmp 	#"_" 						; legal char _ 0-9 A-Z
+.d576	b576	f0 f8		beq $b570			beq 	_TKCheckLoop
+.d578	b578	c9 30		cmp #$30			cmp	 	#"0"
+.d57a	b57a	90 0c		bcc $b588			bcc 	_TKEndIdentifier
+.d57c	b57c	c9 3a		cmp #$3a			cmp 	#"9"+1
+.d57e	b57e	90 f0		bcc $b570			bcc 	_TKCheckLoop
+.d580	b580	c9 41		cmp #$41			cmp	 	#"A"
+.d582	b582	90 04		bcc $b588			bcc 	_TKEndIdentifier
+.d584	b584	c9 5b		cmp #$5b			cmp 	#"Z"+1
+.d586	b586	90 e8		bcc $b570			bcc 	_TKCheckLoop
+.d588	b588					_TKEndIdentifier:
+.d588	b588	8e 01 04	stx $0401			stx 	identTypeStart 				; save start of type text (if any !)
+.d58b	b58b	a0 08		ldy #$08			ldy 	#$08 						; this is the identifier type byte for #
+.d58d	b58d	c9 23		cmp #$23			cmp 	#"#"						; followed by #
+.d58f	b58f	f0 06		beq $b597			beq 	_TKHasTypeCharacter
+.d591	b591	a0 10		ldy #$10			ldy 	#$10 						; this is the identifier type byte for $
+.d593	b593	c9 24		cmp #$24			cmp 	#"$"						; followed by $ or #
+.d595	b595	d0 07		bne $b59e			bne 	_TKNoTypeCharacter
+.d597	b597					_TKHasTypeCharacter:
+.d597	b597	8c 04 04	sty $0404			sty 	identTypeByte 				; has # or $, save the type
+.d59a	b59a	e8		inx				inx 								; consume the type character
+.d59b	b59b	bd 26 05	lda $0526,x			lda 	lineBuffer,x
+.d59e	b59e					_TKNoTypeCharacter:
+.d59e	b59e	c9 28		cmp #$28			cmp 	#"("						; is it open parenthesis (e.g. array)
+.d5a0	b5a0	d0 09		bne $b5ab			bne 	_TKNoArray
+.d5a2	b5a2	e8		inx				inx 								; skip the (
+.d5a3	b5a3	ad 04 04	lda $0404			lda 	identTypeByte 				; set bit 2 (e.g. array) in type byte
+.d5a6	b5a6	09 04		ora #$04			ora 	#$04
+.d5a8	b5a8	8d 04 04	sta $0404			sta 	identTypeByte
+.d5ab	b5ab					_TKNoArray:
+.d5ab	b5ab	8e 02 04	stx $0402			stx 	identTypeEnd 				; save end marker, e.g. continue from here.
+.d5ae	b5ae	20 86 b6	jsr $b686			jsr 	TOKCalculateHash 			; calculate the has for those tokens
+.d5b1	b5b1	a0 ad		ldy #$ad			ldy 	#(KeywordSet0) >> 8
+.d5b3	b5b3	a9 60		lda #$60			lda 	#(KeywordSet0) & $FF
+.d5b5	b5b5	20 75 b4	jsr $b475			jsr 	TOKSearchTable
+.d5b8	b5b8	a2 00		ldx #$00			ldx 	#0
+.d5ba	b5ba	b0 1f		bcs $b5db			bcs 	_TKFoundToken
+.d5bc	b5bc	a0 af		ldy #$af			ldy 	#(KeywordSet1) >> 8
+.d5be	b5be	a9 d8		lda #$d8			lda 	#(KeywordSet1) & $FF
+.d5c0	b5c0	20 75 b4	jsr $b475			jsr 	TOKSearchTable
+.d5c3	b5c3	a2 81		ldx #$81			ldx 	#$81
+.d5c5	b5c5	b0 14		bcs $b5db			bcs 	_TKFoundToken
+.d5c7	b5c7	a0 b0		ldy #$b0			ldy 	#(KeywordSet2) >> 8
+.d5c9	b5c9	a9 ee		lda #$ee			lda 	#(KeywordSet2) & $FF
+.d5cb	b5cb	20 75 b4	jsr $b475			jsr 	TOKSearchTable
+.d5ce	b5ce	a2 82		ldx #$82			ldx 	#$82
+.d5d0	b5d0	b0 09		bcs $b5db			bcs 	_TKFoundToken
+.d5d2	b5d2	20 16 b7	jsr $b716			jsr 	TOKCheckCreateVariableRecord ; failed all, it's a variable, create record if does not exist.
+.d5d5	b5d5	ae 02 04	ldx $0402			ldx 	identTypeEnd 				; X points to following byte
+.d5d8	b5d8	4c f3 b4	jmp $b4f3			jmp 	_TKTokeniseLoop 			; and go round again.
+.d5db	b5db					_TKFoundToken:
+.d5db	b5db	48		pha				pha 								; save token
+.d5dc	b5dc	8a		txa				txa 								; shift in X, is there one ?
+.d5dd	b5dd	f0 03		beq $b5e2			beq 	_TKNoTShift
+.d5df	b5df	20 0a b7	jsr $b70a			jsr 	TOKWriteByte 				; if so, write it out
+.d5e2	b5e2					_TKNoTShift:
+.d5e2	b5e2	68		pla				pla 								; restore and write token
+.d5e3	b5e3	20 0a b7	jsr $b70a			jsr 	TOKWriteByte
+.d5e6	b5e6	e0 00		cpx #$00			cpx 	#0 							; check for REM and '
+.d5e8	b5e8	d0 0d		bne $b5f7			bne 	_TKNotRem 			 		; not shifted ?
+.d5ea	b5ea	c9 d7		cmp #$d7			cmp 	#KWD_REM
+.d5ec	b5ec	d0 09		bne $b5f7			bne 	_TKNotRem
+.d5ee	b5ee	ae 02 04	ldx $0402			ldx 	identTypeEnd 				; check if comment follows.
+.d5f1	b5f1	20 fd b5	jsr $b5fd			jsr 	TOKCheckComment
+.d5f4	b5f4	4c f3 b4	jmp $b4f3			jmp 	_TKTokeniseLoop
+.d5f7	b5f7					_TKNotRem:
+.d5f7	b5f7	ae 02 04	ldx $0402			ldx 	identTypeEnd 				; X points to following byte
+.d5fa	b5fa	4c f3 b4	jmp $b4f3			jmp 	_TKTokeniseLoop 			; and go round again.
+.d5fd	b5fd					TOKCheckComment:
+.d5fd	b5fd	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; skip over space
+.d600	b600	e8		inx				inx
+.d601	b601	c9 20		cmp #$20			cmp 	#' '
+.d603	b603	f0 f8		beq $b5fd			beq 	TOKCheckComment
+.d605	b605	ca		dex				dex 								; first non space character
+.d606	b606	c9 22		cmp #$22			cmp 	#'"'						; quote mark
+.d608	b608	f0 1f		beq $b629			beq 	_TOKCCExit 					; then we are okay
+.d60a	b60a	c9 00		cmp #$00			cmp 	#0 							; EOL
+.d60c	b60c	f0 1b		beq $b629			beq 	_TOKCCExit 					; then we are okay
+.d60e	b60e	da		phx				phx
+.d60f	b60f					_TOKCCLowerCase:
+.d60f	b60f	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; about making it lower case it all, but I thought
+.d612	b612	c9 41		cmp #$41			cmp 	#"A"		 				; that was a bit risky. So it's converted to L/C here.
+.d614	b614	90 09		bcc $b61f			bcc 	_TOKKCNotUC
+.d616	b616	c9 5b		cmp #$5b			cmp 	#"Z"+1
+.d618	b618	b0 05		bcs $b61f			bcs 	_TOKKCNotUC
+.d61a	b61a	49 20		eor #$20			eor 	#$20
+.d61c	b61c	9d 26 05	sta $0526,x			sta 	lineBuffer,x
+.d61f	b61f					_TOKKCNotUC:
+.d61f	b61f	e8		inx				inx
+.d620	b620	c9 00		cmp #$00			cmp 	#0
+.d622	b622	d0 eb		bne $b60f			bne 	_TOKCCLowerCase
+.d624	b624	fa		plx				plx
+.d625	b625	ca		dex				dex 								; tokenise string expects initial skip.
+.d626	b626	20 2a b6	jsr $b62a			jsr 	TOKTokenString 				; tokenise rest of line as a string.
+.d629	b629					_TOKCCExit:
+.d629	b629	60		rts				rts
+.d62a	b62a					TOKTokenString:
+.d62a	b62a	a9 ff		lda #$ff			lda 	#KWC_STRING 				; string token.
+.d62c	b62c	20 0a b7	jsr $b70a			jsr 	TOKWriteByte
+.d62f	b62f	e8		inx				inx									; start of quoted string.
+.d630	b630	da		phx				phx 								; push start of string on top
+.d631	b631	ca		dex				dex 								; because we pre-increment
+.d632	b632					_TSFindEnd:
+.d632	b632	e8		inx				inx
+.d633	b633	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; next character
+.d636	b636	f0 04		beq $b63c			beq 	_TSEndOfString 				; no matching quote, we don't mind.
+.d638	b638	c9 22		cmp #$22			cmp 	#'"' 						; go back if quote not found
+.d63a	b63a	d0 f6		bne $b632			bne 	_TSFindEnd
+.d63c	b63c					_TSEndOfString:
+.d63c	b63c	7a		ply				ply  								; so now Y is first character, X is character after end.
+.d63d	b63d	48		pha				pha 								; save terminating character
+.d63e	b63e	20 46 b6	jsr $b646			jsr 	TOKWriteBlockXY 			; write X to Y as a data block
+.d641	b641	68		pla				pla 								; terminating character
+.d642	b642	f0 01		beq $b645			beq 	_TSNotQuote					; if it wasn't EOS skip it
+.d644	b644	e8		inx				inx
+.d645	b645					_TSNotQuote:
+.d645	b645	60		rts				rts
+.d646	b646					TOKWriteBlockXY:
+.d646	b646	86 36		stx $36				stx 	zTemp0 						; save end character
+.d648	b648	98		tya				tya 								; use 2's complement to work out the byte size
+.d649	b649	49 ff		eor #$ff			eor 	#$FF
+.d64b	b64b	38		sec				sec
+.d64c	b64c	65 36		adc $36				adc 	zTemp0
+.d64e	b64e	1a		inc a				inc 	a 							; one extra for NULL
+.d64f	b64f	20 0a b7	jsr $b70a			jsr 	TOKWriteByte
+.d652	b652					_TOBlockLoop:
+.d652	b652	c4 36		cpy $36				cpy 	zTemp0 						; exit if reached the end
+.d654	b654	f0 09		beq $b65f			beq 	_TOBlockExit
+.d656	b656	b9 26 05	lda $0526,y			lda 	lineBuffer,y 				; write byte out.
+.d659	b659	20 0a b7	jsr $b70a			jsr 	TOKWriteByte
+.d65c	b65c	c8		iny				iny
+.d65d	b65d	80 f3		bra $b652			bra 	_TOBlockLoop
+.d65f	b65f					_TOBlockExit:
+.d65f	b65f	a9 00		lda #$00			lda 	#0 							; add NULL.
+.d661	b661	20 0a b7	jsr $b70a			jsr 	TOKWriteByte
+.d664	b664	60		rts				rts
+.d665	b665					TOKHexConstant:
+.d665	b665	a9 fe		lda #$fe			lda 	#KWC_HEXCONST 				; hex constant token.
+.d667	b667	20 0a b7	jsr $b70a			jsr 	TOKWriteByte
+.d66a	b66a	e8		inx				inx									; start of quoted string.
+.d66b	b66b	da		phx				phx 								; push start of constant on top
+.d66c	b66c	ca		dex				dex
+.d66d	b66d					_THFindLoop:
+.d66d	b66d	e8		inx				inx 	 							; this is stored in a block, so find out how long
+.d66e	b66e	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; the hex constant is.
+.d671	b671	c9 30		cmp #$30			cmp 	#"0"
+.d673	b673	90 0c		bcc $b681			bcc 	_THFoundEnd
+.d675	b675	c9 3a		cmp #$3a			cmp 	#"9"+1
+.d677	b677	90 f4		bcc $b66d			bcc 	_THFindLoop
+.d679	b679	c9 41		cmp #$41			cmp 	#"A"
+.d67b	b67b	90 04		bcc $b681			bcc 	_THFoundEnd
+.d67d	b67d	c9 47		cmp #$47			cmp 	#"F"+1
+.d67f	b67f	90 ec		bcc $b66d			bcc 	_THFindLoop
+.d681	b681					_THFoundEnd:
+.d681	b681	7a		ply				ply 								; restore start
+.d682	b682	20 46 b6	jsr $b646			jsr 	TOKWriteBlockXY 			; output the block
+.d685	b685	60		rts				rts
+.d686	b686					TOKCalculateHash:
+.d686	b686	da		phx				phx
+.d687	b687	ae 00 04	ldx $0400			ldx 	identStart 					; needs to be same as in tokens.py - simple sum at present.
+.d68a	b68a	a9 00		lda #$00			lda 	#0
+.d68c	b68c					_TCHLoop:
+.d68c	b68c	18		clc				clc
+.d68d	b68d	7d 26 05	adc $0526,x			adc 	lineBuffer,x
+.d690	b690	e8		inx				inx
+.d691	b691	ec 02 04	cpx $0402			cpx 	identTypeEnd 				; do the whole thing including type and array markers.
+.d694	b694	d0 f6		bne $b68c			bne 	_TCHLoop
+.d696	b696	8d 03 04	sta $0403			sta 	identHash 					; save the hash
+.d699	b699	fa		plx				plx
+.d69a	b69a	60		rts				rts
+.d69b	b69b					LCLFixLineBufferCase:
+.d69b	b69b	a2 00		ldx #$00			ldx 	#0
+.d69d	b69d					_FLBCLoop:
+.d69d	b69d	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; get next character
+.d6a0	b6a0	f0 22		beq $b6c4			beq 	_FLBCExit 					; end of string.
+.d6a2	b6a2	c9 22		cmp #$22			cmp 	#'"'						; quote, go to in quotes
+.d6a4	b6a4	f0 11		beq $b6b7			beq 	_FLBCInQuotes
+.d6a6	b6a6	e8		inx				inx
+.d6a7	b6a7	c9 61		cmp #$61			cmp 	#'a'						; needs capitalising ?
+.d6a9	b6a9	90 f2		bcc $b69d			bcc 	_FLBCLoop
+.d6ab	b6ab	c9 7b		cmp #$7b			cmp 	#'z'+1
+.d6ad	b6ad	b0 ee		bcs $b69d			bcs 	_FLBCLoop
+.d6af	b6af	38		sec				sec 								; make U/C
+.d6b0	b6b0	e9 20		sbc #$20			sbc 	#32
+.d6b2	b6b2	9d 25 05	sta $0525,x			sta	 	lineBuffer-1,x 				; write back
+.d6b5	b6b5	80 e6		bra $b69d			bra 	_FLBCLoop
+.d6b7	b6b7					_FLBCInQuotes:
+.d6b7	b6b7	e8		inx				inx 								; advance
+.d6b8	b6b8	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; get next
+.d6bb	b6bb	f0 07		beq $b6c4			beq 	_FLBCExit 					; exit on EOS
+.d6bd	b6bd	c9 22		cmp #$22			cmp 	#'"' 				 		; until " found
+.d6bf	b6bf	d0 f6		bne $b6b7			bne 	_FLBCInQuotes
+.d6c1	b6c1	e8		inx				inx 								; skip over it
+.d6c2	b6c2	80 d9		bra $b69d			bra 	_FLBCLoop
+.d6c4	b6c4					_FLBCExit:
+.d6c4	b6c4	60		rts				rts
+.d6c5	b6c5					TOKExtractLineNumber:
+.d6c5	b6c5	ad 28 04	lda $0428			lda 	tokenLineNumber+1 			; push current value on stack
+.d6c8	b6c8	48		pha				pha
+.d6c9	b6c9	ad 27 04	lda $0427			lda 	tokenLineNumber
+.d6cc	b6cc	48		pha				pha
+.d6cd	b6cd	20 03 b7	jsr $b703			jsr 	_LCLNTimes2 				; line # x 2
+.d6d0	b6d0	20 03 b7	jsr $b703			jsr 	_LCLNTimes2 				; line # x 4
+.d6d3	b6d3	18		clc				clc 								; add stacked value
+.d6d4	b6d4	68		pla				pla
 .d6d5	b6d5	6d 27 04	adc $0427			adc 	tokenLineNumber
 .d6d8	b6d8	8d 27 04	sta $0427			sta 	tokenLineNumber
-.d6db	b6db	90 03		bcc $b6e0			bcc 	_TLENNoCarry
-.d6dd	b6dd	ee 28 04	inc $0428			inc 	tokenLineNumber+1
-.d6e0	b6e0					_TLENNoCarry:
-.d6e0	b6e0	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; more digits ?
-.d6e3	b6e3	c9 30		cmp #$30			cmp 	#'0'
-.d6e5	b6e5	90 04		bcc $b6eb			bcc 	_TLENExit
-.d6e7	b6e7	c9 3a		cmp #$3a			cmp 	#'9'+1
-.d6e9	b6e9	90 c3		bcc $b6ae			bcc 	TOKExtractLineNumber
-.d6eb	b6eb					_TLENExit:
-.d6eb	b6eb	60		rts				rts
-.d6ec	b6ec					_LCLNTimes2:
-.d6ec	b6ec	0e 27 04	asl $0427			asl 	tokenLineNumber 			; doubles tokenLineNumber.
-.d6ef	b6ef	2e 28 04	rol $0428			rol 	tokenLineNumber+1
-.d6f2	b6f2	60		rts				rts
-.d6f3	b6f3					TOKWriteByte:
-.d6f3	b6f3	da		phx				phx
-.d6f4	b6f4	ae 26 04	ldx $0426			ldx 	tokenOffset 				; next slot to write to
-.d6f7	b6f7	9d 26 04	sta $0426,x			sta 	tokenOffset,x 				; write byte out
-.d6fa	b6fa	ee 26 04	inc $0426			inc 	tokenOffset 				; advance slot.
-.d6fd	b6fd	fa		plx				plx
-.d6fe	b6fe	60		rts				rts
-.d6ff	b6ff					TOKCheckCreateVariableRecord:
-.d6ff	b6ff	a9 00		lda #$00			lda 	#((VariableSpace) & $FF)
-.d701	b701	85 36		sta $36				sta 	0+zTemp0
-.d703	b703	a9 10		lda #$10			lda 	#((VariableSpace) >> 8)
-.d705	b705	85 37		sta $37				sta 	1+zTemp0
-.d707	b707					_CCVSearch:
-.d707	b707	b2 36		lda ($36)			lda 	(zTemp0) 					; end of list
-.d709	b709	f0 2c		beq $b737			beq 	_CCVFail
-.d70b	b70b	a0 01		ldy #$01			ldy 	#1 							; read the hash
-.d70d	b70d	b1 36		lda ($36),y			lda 	(zTemp0),y 					; does it match ?
-.d70f	b70f	cd 03 04	cmp $0403			cmp 	identHash 	  				; if not, try the next.
-.d712	b712	d0 16		bne $b72a			bne 	_CCVNext
-.d714	b714	a0 08		ldy #$08			ldy 	#8 							; name in variable record
-.d716	b716	ae 00 04	ldx $0400			ldx 	identStart
-.d719	b719					_CCVCompare:
-.d719	b719	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; xor them. zero if the same, except
-.d71c	b71c	51 36		eor ($36),y			eor 	(zTemp0),y 					; bit 7 is used for EOS.
-.d71e	b71e	e8		inx				inx 								; advance pointers
-.d71f	b71f	c8		iny				iny
-.d720	b720	0a		asl a				asl 	a 							; A = 0 if they match, CS if end.
-.d721	b721	d0 07		bne $b72a			bne 	_CCVNext  					; didn't match go to next.
-.d723	b723	90 f4		bcc $b719			bcc 	_CCVCompare 				; not finished yet.
-.d725	b725	ec 02 04	cpx $0402			cpx 	identTypeEnd 				; matched whole thing ?
-.d728	b728	f0 41		beq $b76b			beq 	_CCVFound 					; yes, we were successful
-.d72a	b72a					_CCVNext:
-.d72a	b72a	18		clc				clc 								; go to next record.
-.d72b	b72b	b2 36		lda ($36)			lda 	(zTemp0) 					; add offset to pointer
-.d72d	b72d	65 36		adc $36				adc 	zTemp0
-.d72f	b72f	85 36		sta $36				sta 	zTemp0
-.d731	b731	90 d4		bcc $b707			bcc 	_CCVSearch
-.d733	b733	e6 37		inc $37				inc 	zTemp0+1
-.d735	b735	80 d0		bra $b707			bra 	_CCVSearch
-.d737	b737					_CCVFail:
-.d737	b737	a0 01		ldy #$01			ldy 	#1 							; create the new record. Offset 1 is hash
-.d739	b739	ad 03 04	lda $0403			lda 	identHash
-.d73c	b73c	91 36		sta ($36),y			sta 	(zTemp0),y
-.d73e	b73e	c8		iny				iny 								; offset 2 is the type byte
-.d73f	b73f	ad 04 04	lda $0404			lda 	identTypeByte
-.d742	b742	91 36		sta ($36),y			sta 	(zTemp0),y
-.d744	b744	c8		iny				iny
-.d745	b745					_CCVData:
-.d745	b745	a9 00		lda #$00			lda 	#0 							; erase data 3-7 (the 5 value bytes)
-.d747	b747	91 36		sta ($36),y			sta 	(zTemp0),y
-.d749	b749	c8		iny				iny
-.d74a	b74a	c0 08		cpy #$08			cpy 	#8
-.d74c	b74c	90 f7		bcc $b745			bcc 	_CCVData
-.d74e	b74e	ae 00 04	ldx $0400			ldx 	identStart 					; copy name into 8 on.
-.d751	b751					_CCVCopyName:
-.d751	b751	bd 26 05	lda $0526,x			lda 	lineBuffer,x
-.d754	b754	91 36		sta ($36),y			sta 	(zTemp0),y
-.d756	b756	e8		inx				inx
-.d757	b757	c8		iny				iny
-.d758	b758	ec 02 04	cpx $0402			cpx 	identTypeEnd
-.d75b	b75b	d0 f4		bne $b751			bne 	_CCVCopyName
-.d75d	b75d	98		tya				tya 								; patch offset
-.d75e	b75e	92 36		sta ($36)			sta 	(zTemp0)
-.d760	b760	a9 00		lda #$00			lda 	#0 							; offset for next is zero.
-.d762	b762	91 36		sta ($36),y			sta 	(zTemp0),y
-.d764	b764	88		dey				dey
-.d765	b765	b1 36		lda ($36),y			lda 	(zTemp0),y 					; set bit 7 of last bit
-.d767	b767	09 80		ora #$80			ora 	#$80
-.d769	b769	91 36		sta ($36),y			sta 	(zTemp0),y
-.d76b	b76b					_CCVFound:
-.d76b	b76b	a5 37		lda $37				lda 	zTemp0+1 					; write out MSB
-.d76d	b76d	38		sec				sec
-.d76e	b76e	e9 10		sbc #$10			sbc 	#(VariableSpace >> 8) 		; offset from the start of the variable token
-.d770	b770	09 40		ora #$40			ora 	#$40 						; make it a writeable token $4000-$7FFF
-.d772	b772	20 f3 b6	jsr $b6f3			jsr 	TOKWriteByte
-.d775	b775	a5 36		lda $36				lda 	zTemp0 						; write out LSB
-.d777	b777	20 f3 b6	jsr $b6f3			jsr 	TOKWriteByte
-.d77a	b77a	60		rts				rts
+.d6db	b6db	68		pla				pla
+.d6dc	b6dc	6d 28 04	adc $0428			adc 	tokenLineNumber+1
+.d6df	b6df	8d 28 04	sta $0428			sta 	tokenLineNumber+1 			; line # x 5
+.d6e2	b6e2	20 03 b7	jsr $b703			jsr 	_LCLNTimes2 				; line # x 10
+.d6e5	b6e5	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; get and consume character
+.d6e8	b6e8	e8		inx				inx
+.d6e9	b6e9	29 0f		and #$0f			and 	#15 						; add to line #
+.d6eb	b6eb	18		clc				clc
+.d6ec	b6ec	6d 27 04	adc $0427			adc 	tokenLineNumber
+.d6ef	b6ef	8d 27 04	sta $0427			sta 	tokenLineNumber
+.d6f2	b6f2	90 03		bcc $b6f7			bcc 	_TLENNoCarry
+.d6f4	b6f4	ee 28 04	inc $0428			inc 	tokenLineNumber+1
+.d6f7	b6f7					_TLENNoCarry:
+.d6f7	b6f7	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; more digits ?
+.d6fa	b6fa	c9 30		cmp #$30			cmp 	#'0'
+.d6fc	b6fc	90 04		bcc $b702			bcc 	_TLENExit
+.d6fe	b6fe	c9 3a		cmp #$3a			cmp 	#'9'+1
+.d700	b700	90 c3		bcc $b6c5			bcc 	TOKExtractLineNumber
+.d702	b702					_TLENExit:
+.d702	b702	60		rts				rts
+.d703	b703					_LCLNTimes2:
+.d703	b703	0e 27 04	asl $0427			asl 	tokenLineNumber 			; doubles tokenLineNumber.
+.d706	b706	2e 28 04	rol $0428			rol 	tokenLineNumber+1
+.d709	b709	60		rts				rts
+.d70a	b70a					TOKWriteByte:
+.d70a	b70a	da		phx				phx
+.d70b	b70b	ae 26 04	ldx $0426			ldx 	tokenOffset 				; next slot to write to
+.d70e	b70e	9d 26 04	sta $0426,x			sta 	tokenOffset,x 				; write byte out
+.d711	b711	ee 26 04	inc $0426			inc 	tokenOffset 				; advance slot.
+.d714	b714	fa		plx				plx
+.d715	b715	60		rts				rts
+.d716	b716					TOKCheckCreateVariableRecord:
+.d716	b716	a9 00		lda #$00			lda 	#((VariableSpace) & $FF)
+.d718	b718	85 36		sta $36				sta 	0+zTemp0
+.d71a	b71a	a9 10		lda #$10			lda 	#((VariableSpace) >> 8)
+.d71c	b71c	85 37		sta $37				sta 	1+zTemp0
+.d71e	b71e					_CCVSearch:
+.d71e	b71e	b2 36		lda ($36)			lda 	(zTemp0) 					; end of list
+.d720	b720	f0 2c		beq $b74e			beq 	_CCVFail
+.d722	b722	a0 01		ldy #$01			ldy 	#1 							; read the hash
+.d724	b724	b1 36		lda ($36),y			lda 	(zTemp0),y 					; does it match ?
+.d726	b726	cd 03 04	cmp $0403			cmp 	identHash 	  				; if not, try the next.
+.d729	b729	d0 16		bne $b741			bne 	_CCVNext
+.d72b	b72b	a0 08		ldy #$08			ldy 	#8 							; name in variable record
+.d72d	b72d	ae 00 04	ldx $0400			ldx 	identStart
+.d730	b730					_CCVCompare:
+.d730	b730	bd 26 05	lda $0526,x			lda 	lineBuffer,x 				; xor them. zero if the same, except
+.d733	b733	51 36		eor ($36),y			eor 	(zTemp0),y 					; bit 7 is used for EOS.
+.d735	b735	e8		inx				inx 								; advance pointers
+.d736	b736	c8		iny				iny
+.d737	b737	0a		asl a				asl 	a 							; A = 0 if they match, CS if end.
+.d738	b738	d0 07		bne $b741			bne 	_CCVNext  					; didn't match go to next.
+.d73a	b73a	90 f4		bcc $b730			bcc 	_CCVCompare 				; not finished yet.
+.d73c	b73c	ec 02 04	cpx $0402			cpx 	identTypeEnd 				; matched whole thing ?
+.d73f	b73f	f0 41		beq $b782			beq 	_CCVFound 					; yes, we were successful
+.d741	b741					_CCVNext:
+.d741	b741	18		clc				clc 								; go to next record.
+.d742	b742	b2 36		lda ($36)			lda 	(zTemp0) 					; add offset to pointer
+.d744	b744	65 36		adc $36				adc 	zTemp0
+.d746	b746	85 36		sta $36				sta 	zTemp0
+.d748	b748	90 d4		bcc $b71e			bcc 	_CCVSearch
+.d74a	b74a	e6 37		inc $37				inc 	zTemp0+1
+.d74c	b74c	80 d0		bra $b71e			bra 	_CCVSearch
+.d74e	b74e					_CCVFail:
+.d74e	b74e	a0 01		ldy #$01			ldy 	#1 							; create the new record. Offset 1 is hash
+.d750	b750	ad 03 04	lda $0403			lda 	identHash
+.d753	b753	91 36		sta ($36),y			sta 	(zTemp0),y
+.d755	b755	c8		iny				iny 								; offset 2 is the type byte
+.d756	b756	ad 04 04	lda $0404			lda 	identTypeByte
+.d759	b759	91 36		sta ($36),y			sta 	(zTemp0),y
+.d75b	b75b	c8		iny				iny
+.d75c	b75c					_CCVData:
+.d75c	b75c	a9 00		lda #$00			lda 	#0 							; erase data 3-7 (the 5 value bytes)
+.d75e	b75e	91 36		sta ($36),y			sta 	(zTemp0),y
+.d760	b760	c8		iny				iny
+.d761	b761	c0 08		cpy #$08			cpy 	#8
+.d763	b763	90 f7		bcc $b75c			bcc 	_CCVData
+.d765	b765	ae 00 04	ldx $0400			ldx 	identStart 					; copy name into 8 on.
+.d768	b768					_CCVCopyName:
+.d768	b768	bd 26 05	lda $0526,x			lda 	lineBuffer,x
+.d76b	b76b	91 36		sta ($36),y			sta 	(zTemp0),y
+.d76d	b76d	e8		inx				inx
+.d76e	b76e	c8		iny				iny
+.d76f	b76f	ec 02 04	cpx $0402			cpx 	identTypeEnd
+.d772	b772	d0 f4		bne $b768			bne 	_CCVCopyName
+.d774	b774	98		tya				tya 								; patch offset
+.d775	b775	92 36		sta ($36)			sta 	(zTemp0)
+.d777	b777	a9 00		lda #$00			lda 	#0 							; offset for next is zero.
+.d779	b779	91 36		sta ($36),y			sta 	(zTemp0),y
+.d77b	b77b	88		dey				dey
+.d77c	b77c	b1 36		lda ($36),y			lda 	(zTemp0),y 					; set bit 7 of last bit
+.d77e	b77e	09 80		ora #$80			ora 	#$80
+.d780	b780	91 36		sta ($36),y			sta 	(zTemp0),y
+.d782	b782					_CCVFound:
+.d782	b782	a5 37		lda $37				lda 	zTemp0+1 					; write out MSB
+.d784	b784	38		sec				sec
+.d785	b785	e9 10		sbc #$10			sbc 	#(VariableSpace >> 8) 		; offset from the start of the variable token
+.d787	b787	09 40		ora #$40			ora 	#$40 						; make it a writeable token $4000-$7FFF
+.d789	b789	20 0a b7	jsr $b70a			jsr 	TOKWriteByte
+.d78c	b78c	a5 36		lda $36				lda 	zTemp0 						; write out LSB
+.d78e	b78e	20 0a b7	jsr $b70a			jsr 	TOKWriteByte
+.d791	b791	60		rts				rts
 
 ;******  Return to file: _basic.asm
 
@@ -12604,187 +12619,187 @@
 ;******  Processing file: ../modules/_build/_sound.module
 
 =1						soundIntegrated=1
-.d77b	b77b					SNDCheckChannel:
-.d77b	b77b	aa		tax				tax
-.d77c	b77c	bd 96 09	lda $0996,x			lda 	SNDTimeLeft,x 				; currently playing a note
-.d77f	b77f	d0 38		bne $b7b9			bne 	_SNDCCExit
-.d781	b781	da		phx				phx 								; save current channel
-.d782	b782	8a		txa				txa 								; put in A
-.d783	b783	20 ff b7	jsr $b7ff			jsr 	SNDFindNextNoteForA 		; is there a note for A in the queue ?
-.d786	b786	68		pla				pla 								; channel # in A
-.d787	b787	90 30		bcc $b7b9			bcc 	_SNDCCExit  				; nothing in the queue for this channel, exit.
-.d789	b789	a8		tay				tay 								; Y is the channel #
-.d78a	b78a	bd 8b 08	lda $088b,x			lda 	SNDQueue+1,x 				; copy data into the slot.
-.d78d	b78d	99 8a 09	sta $098a,y			sta 	SNDPitchLow,y
-.d790	b790	bd 8c 08	lda $088c,x			lda 	SNDQueue+2,x
-.d793	b793	99 8e 09	sta $098e,y			sta 	SNDPitchHigh,y
-.d796	b796	bd 8d 08	lda $088d,x			lda 	SNDQueue+3,x
-.d799	b799	99 92 09	sta $0992,y			sta 	SNDVolume,y
-.d79c	b79c	bd 8e 08	lda $088e,x			lda 	SNDQueue+4,x
-.d79f	b79f	99 96 09	sta $0996,y			sta 	SNDTimeLeft,y
-.d7a2	b7a2	bd 8f 08	lda $088f,x			lda 	SNDQueue+5,x
-.d7a5	b7a5	99 9a 09	sta $099a,y			sta 	SNDAdjustLow,y
-.d7a8	b7a8	bd 90 08	lda $0890,x			lda 	SNDQueue+6,x
-.d7ab	b7ab	99 9e 09	sta $099e,y			sta 	SNDAdjustHigh,y
-.d7ae	b7ae	5a		phy				phy 								; save channel #
-.d7af	b7af	20 19 b8	jsr $b819			jsr 	SNDDeleteXFromQueue 		; delete record at X from queue
-.d7b2	b7b2	ce 89 08	dec $0889			dec 	SNDLength 					; reduce the queue length.
-.d7b5	b7b5	68		pla				pla
-.d7b6	b7b6	20 ba b7	jsr $b7ba			jsr 	SNDUpdateNote 				; update channel A
-.d7b9	b7b9					_SNDCCExit:
-.d7b9	b7b9	60		rts				rts
-.d7ba	b7ba					SNDUpdateNote:
-.d7ba	b7ba	aa		tax				tax 								; so we can access records
-.d7bb	b7bb	0a		asl a				asl 	a 							; convert it to a channel bit pair in 5,6
-.d7bc	b7bc	0a		asl a				asl 	a
-.d7bd	b7bd	0a		asl a				asl 	a
-.d7be	b7be	0a		asl a				asl 	a
-.d7bf	b7bf	0a		asl a				asl 	a
-.d7c0	b7c0	8d 88 08	sta $0888			sta 	SNDChannelBits
-.d7c3	b7c3	bd 96 09	lda $0996,x			lda 	SNDTimeLeft,x 				; are we silent
-.d7c6	b7c6	f0 2e		beq $b7f6			beq 	_SNDUNIsSilent
-.d7c8	b7c8	ad 88 08	lda $0888			lda 	SNDChannelBits 				; push channel bits on stack
-.d7cb	b7cb	48		pha				pha
-.d7cc	b7cc	bd 8a 09	lda $098a,x			lda 	SNDPitchLow,x 				; get 4 lowest bits of pitch.
-.d7cf	b7cf	29 0f		and #$0f			and 	#$0F
-.d7d1	b7d1	0d 88 08	ora $0888			ora 	SNDChannelBits 				; set channel bits
-.d7d4	b7d4	09 80		ora #$80			ora 	#$80 						; write to pitch register
-.d7d6	b7d6	20 63 b8	jsr $b863			jsr 	SNDWritePorts
-.d7d9	b7d9	bd 8e 09	lda $098e,x			lda 	SNDPitchHigh,x 				; pitch high => channel temp.
-.d7dc	b7dc	8d 88 08	sta $0888			sta 	SNDChannelBits
-.d7df	b7df	bd 8a 09	lda $098a,x			lda 	SNDPitchLow,x
-.d7e2	b7e2	4e 88 08	lsr $0888			lsr 	SNDChannelBits 				; shift 2 LSBs into MSB of A
-.d7e5	b7e5	6a		ror a				ror 	a
-.d7e6	b7e6	4e 88 08	lsr $0888			lsr 	SNDChannelBits
-.d7e9	b7e9	6a		ror a				ror 	a
-.d7ea	b7ea	4a		lsr a				lsr 	a 							; put in bits 0-5
-.d7eb	b7eb	4a		lsr a				lsr 	a
-.d7ec	b7ec	20 63 b8	jsr $b863			jsr 	SNDWritePorts 				; write as rest of pitch register
-.d7ef	b7ef	68		pla				pla
-.d7f0	b7f0	09 90		ora #$90			ora 	#$90 						; set to write minimum attentuation.
-.d7f2	b7f2	20 63 b8	jsr $b863			jsr 	SNDWritePorts
-.d7f5	b7f5	60		rts				rts
-.d7f6	b7f6					_SNDUNIsSilent:
-.d7f6	b7f6	ad 88 08	lda $0888			lda 	SNDChannelBits 				; channel bits
-.d7f9	b7f9	09 9f		ora #$9f			ora 	#$9F 						; maximum attenuation
-.d7fb	b7fb	20 63 b8	jsr $b863			jsr 	SNDWritePorts 				; write to the ports
-.d7fe	b7fe	60		rts				rts
-.d7ff	b7ff					SNDFindNextNoteForA:
-.d7ff	b7ff	ac 89 08	ldy $0889			ldy 	SNDLength 					; queue size into Y
-.d802	b802	f0 13		beq $b817			beq 	_SNDFNNFail 				; queue empty.
-.d804	b804	a2 00		ldx #$00			ldx 	#0
-.d806	b806					_SNDFNNSearch:
-.d806	b806	dd 8a 08	cmp $088a,x			cmp 	SNDQueue,x 					; does it match the channel
-.d809	b809	38		sec				sec
-.d80a	b80a	f0 0c		beq $b818			beq 	_SNDFNNExit 				; if so exit with CS.
-.d80c	b80c	e8		inx				inx 								; next queue slot.
-.d80d	b80d	e8		inx				inx
-.d80e	b80e	e8		inx				inx
-.d80f	b80f	e8		inx				inx
-.d810	b810	e8		inx				inx
-.d811	b811	e8		inx				inx
-.d812	b812	e8		inx				inx
-.d813	b813	e8		inx				inx
-.d814	b814	88		dey				dey 								; done the whole queue
-.d815	b815	d0 ef		bne $b806			bne 	_SNDFNNSearch 				; no, go back.
-.d817	b817					_SNDFNNFail:
-.d817	b817	18		clc				clc
-.d818	b818					_SNDFNNExit:
-.d818	b818	60		rts				rts
-.d819	b819					SNDDeleteXFromQueue:
-.d819	b819	e0 f8		cpx #$f8			cpx 	#SNDQueueSize*8-8 			; reached the end.
-.d81b	b81b	f0 09		beq $b826			beq 	_SNDDXExit
-.d81d	b81d	bd 92 08	lda $0892,x			lda 	SNDQueue+8,x
-.d820	b820	9d 8a 08	sta $088a,x			sta 	SNDQueue,x
-.d823	b823	e8		inx				inx
-.d824	b824	80 f3		bra $b819			bra 	SNDDeleteXFromQueue
-.d826	b826					_SNDDXExit:
-.d826	b826	60		rts				rts
+.d792	b792					SNDCheckChannel:
+.d792	b792	aa		tax				tax
+.d793	b793	bd 96 09	lda $0996,x			lda 	SNDTimeLeft,x 				; currently playing a note
+.d796	b796	d0 38		bne $b7d0			bne 	_SNDCCExit
+.d798	b798	da		phx				phx 								; save current channel
+.d799	b799	8a		txa				txa 								; put in A
+.d79a	b79a	20 16 b8	jsr $b816			jsr 	SNDFindNextNoteForA 		; is there a note for A in the queue ?
+.d79d	b79d	68		pla				pla 								; channel # in A
+.d79e	b79e	90 30		bcc $b7d0			bcc 	_SNDCCExit  				; nothing in the queue for this channel, exit.
+.d7a0	b7a0	a8		tay				tay 								; Y is the channel #
+.d7a1	b7a1	bd 8b 08	lda $088b,x			lda 	SNDQueue+1,x 				; copy data into the slot.
+.d7a4	b7a4	99 8a 09	sta $098a,y			sta 	SNDPitchLow,y
+.d7a7	b7a7	bd 8c 08	lda $088c,x			lda 	SNDQueue+2,x
+.d7aa	b7aa	99 8e 09	sta $098e,y			sta 	SNDPitchHigh,y
+.d7ad	b7ad	bd 8d 08	lda $088d,x			lda 	SNDQueue+3,x
+.d7b0	b7b0	99 92 09	sta $0992,y			sta 	SNDVolume,y
+.d7b3	b7b3	bd 8e 08	lda $088e,x			lda 	SNDQueue+4,x
+.d7b6	b7b6	99 96 09	sta $0996,y			sta 	SNDTimeLeft,y
+.d7b9	b7b9	bd 8f 08	lda $088f,x			lda 	SNDQueue+5,x
+.d7bc	b7bc	99 9a 09	sta $099a,y			sta 	SNDAdjustLow,y
+.d7bf	b7bf	bd 90 08	lda $0890,x			lda 	SNDQueue+6,x
+.d7c2	b7c2	99 9e 09	sta $099e,y			sta 	SNDAdjustHigh,y
+.d7c5	b7c5	5a		phy				phy 								; save channel #
+.d7c6	b7c6	20 30 b8	jsr $b830			jsr 	SNDDeleteXFromQueue 		; delete record at X from queue
+.d7c9	b7c9	ce 89 08	dec $0889			dec 	SNDLength 					; reduce the queue length.
+.d7cc	b7cc	68		pla				pla
+.d7cd	b7cd	20 d1 b7	jsr $b7d1			jsr 	SNDUpdateNote 				; update channel A
+.d7d0	b7d0					_SNDCCExit:
+.d7d0	b7d0	60		rts				rts
+.d7d1	b7d1					SNDUpdateNote:
+.d7d1	b7d1	aa		tax				tax 								; so we can access records
+.d7d2	b7d2	0a		asl a				asl 	a 							; convert it to a channel bit pair in 5,6
+.d7d3	b7d3	0a		asl a				asl 	a
+.d7d4	b7d4	0a		asl a				asl 	a
+.d7d5	b7d5	0a		asl a				asl 	a
+.d7d6	b7d6	0a		asl a				asl 	a
+.d7d7	b7d7	8d 88 08	sta $0888			sta 	SNDChannelBits
+.d7da	b7da	bd 96 09	lda $0996,x			lda 	SNDTimeLeft,x 				; are we silent
+.d7dd	b7dd	f0 2e		beq $b80d			beq 	_SNDUNIsSilent
+.d7df	b7df	ad 88 08	lda $0888			lda 	SNDChannelBits 				; push channel bits on stack
+.d7e2	b7e2	48		pha				pha
+.d7e3	b7e3	bd 8a 09	lda $098a,x			lda 	SNDPitchLow,x 				; get 4 lowest bits of pitch.
+.d7e6	b7e6	29 0f		and #$0f			and 	#$0F
+.d7e8	b7e8	0d 88 08	ora $0888			ora 	SNDChannelBits 				; set channel bits
+.d7eb	b7eb	09 80		ora #$80			ora 	#$80 						; write to pitch register
+.d7ed	b7ed	20 7a b8	jsr $b87a			jsr 	SNDWritePorts
+.d7f0	b7f0	bd 8e 09	lda $098e,x			lda 	SNDPitchHigh,x 				; pitch high => channel temp.
+.d7f3	b7f3	8d 88 08	sta $0888			sta 	SNDChannelBits
+.d7f6	b7f6	bd 8a 09	lda $098a,x			lda 	SNDPitchLow,x
+.d7f9	b7f9	4e 88 08	lsr $0888			lsr 	SNDChannelBits 				; shift 2 LSBs into MSB of A
+.d7fc	b7fc	6a		ror a				ror 	a
+.d7fd	b7fd	4e 88 08	lsr $0888			lsr 	SNDChannelBits
+.d800	b800	6a		ror a				ror 	a
+.d801	b801	4a		lsr a				lsr 	a 							; put in bits 0-5
+.d802	b802	4a		lsr a				lsr 	a
+.d803	b803	20 7a b8	jsr $b87a			jsr 	SNDWritePorts 				; write as rest of pitch register
+.d806	b806	68		pla				pla
+.d807	b807	09 90		ora #$90			ora 	#$90 						; set to write minimum attentuation.
+.d809	b809	20 7a b8	jsr $b87a			jsr 	SNDWritePorts
+.d80c	b80c	60		rts				rts
+.d80d	b80d					_SNDUNIsSilent:
+.d80d	b80d	ad 88 08	lda $0888			lda 	SNDChannelBits 				; channel bits
+.d810	b810	09 9f		ora #$9f			ora 	#$9F 						; maximum attenuation
+.d812	b812	20 7a b8	jsr $b87a			jsr 	SNDWritePorts 				; write to the ports
+.d815	b815	60		rts				rts
+.d816	b816					SNDFindNextNoteForA:
+.d816	b816	ac 89 08	ldy $0889			ldy 	SNDLength 					; queue size into Y
+.d819	b819	f0 13		beq $b82e			beq 	_SNDFNNFail 				; queue empty.
+.d81b	b81b	a2 00		ldx #$00			ldx 	#0
+.d81d	b81d					_SNDFNNSearch:
+.d81d	b81d	dd 8a 08	cmp $088a,x			cmp 	SNDQueue,x 					; does it match the channel
+.d820	b820	38		sec				sec
+.d821	b821	f0 0c		beq $b82f			beq 	_SNDFNNExit 				; if so exit with CS.
+.d823	b823	e8		inx				inx 								; next queue slot.
+.d824	b824	e8		inx				inx
+.d825	b825	e8		inx				inx
+.d826	b826	e8		inx				inx
+.d827	b827	e8		inx				inx
+.d828	b828	e8		inx				inx
+.d829	b829	e8		inx				inx
+.d82a	b82a	e8		inx				inx
+.d82b	b82b	88		dey				dey 								; done the whole queue
+.d82c	b82c	d0 ef		bne $b81d			bne 	_SNDFNNSearch 				; no, go back.
+.d82e	b82e					_SNDFNNFail:
+.d82e	b82e	18		clc				clc
+.d82f	b82f					_SNDFNNExit:
+.d82f	b82f	60		rts				rts
+.d830	b830					SNDDeleteXFromQueue:
+.d830	b830	e0 f8		cpx #$f8			cpx 	#SNDQueueSize*8-8 			; reached the end.
+.d832	b832	f0 09		beq $b83d			beq 	_SNDDXExit
+.d834	b834	bd 92 08	lda $0892,x			lda 	SNDQueue+8,x
+.d837	b837	9d 8a 08	sta $088a,x			sta 	SNDQueue,x
+.d83a	b83a	e8		inx				inx
+.d83b	b83b	80 f3		bra $b830			bra 	SNDDeleteXFromQueue
+.d83d	b83d					_SNDDXExit:
+.d83d	b83d	60		rts				rts
 .0888						SNDChannelBits:
 >0888								.fill 	1
-.d827	b827					SNDQueueRequest:
-.d827	b827	86 36		stx $36				stx 	zTemp0						; save queue address
-.d829	b829	84 37		sty $37				sty 	zTemp0+1
-.d82b	b82b	ae 89 08	ldx $0889			ldx 	SNDLength 					; queue is full, can't take any more.
-.d82e	b82e	e0 20		cpx #$20			cpx 	#SNDQueueSize
-.d830	b830	f0 21		beq $b853			beq 	_SNDQRExit
-.d832	b832	29 03		and #$03			and 	#3	 						; channel # and push on stack
-.d834	b834	48		pha				pha
-.d835	b835	8a		txa				txa  								; get offset in queue buffer/
-.d836	b836	0a		asl a				asl 	a
-.d837	b837	0a		asl a				asl 	a
-.d838	b838	0a		asl a				asl 	a
-.d839	b839	aa		tax				tax
-.d83a	b83a	68		pla				pla 								; get back and push again
-.d83b	b83b	48		pha				pha
-.d83c	b83c	9d 8a 08	sta $088a,x			sta 	SNDQueue+0,x 				; save the channel #
-.d83f	b83f	a0 00		ldy #$00			ldy 	#0 							; copy the rest in.
-.d841	b841					_SNDQCopy:
-.d841	b841	b1 36		lda ($36),y			lda 	(zTemp0),y
-.d843	b843	e8		inx				inx
-.d844	b844	c8		iny				iny
-.d845	b845	9d 8a 08	sta $088a,x			sta 	SNDQueue,x
-.d848	b848	c0 06		cpy #$06			cpy 	#6
-.d84a	b84a	d0 f5		bne $b841			bne 	_SNDQCopy
-.d84c	b84c	ee 89 08	inc $0889			inc 	SNDLength 					; bump queue length.
-.d84f	b84f	68		pla				pla 								; get channel # back
-.d850	b850	20 7b b7	jsr $b77b			jsr 	SNDCheckChannel 			; check if channel needs refreshing.
-.d853	b853					_SNDQRExit:
-.d853	b853	60		rts				rts
-.d854	b854					SNDSilenceChannel:
-.d854	b854	aa		tax				tax 								; zero time left.
-.d855	b855	9e 96 09	stz $0996,x			stz 	SNDTimeLeft,x
-.d858	b858	0a		asl a				asl 	a 							; shift into position
-.d859	b859	0a		asl a				asl 	a
-.d85a	b85a	0a		asl a				asl 	a
-.d85b	b85b	0a		asl a				asl 	a
-.d85c	b85c	0a		asl a				asl 	a
-.d85d	b85d	09 9f		ora #$9f			ora 	#$9F 						; write register attenuation $F
-.d85f	b85f	20 63 b8	jsr $b863			jsr 	SNDWritePorts
-.d862	b862	60		rts				rts
-.d863	b863					SNDWritePorts:
-.d863	b863	da		phx				phx 								; save X
-.d864	b864	a6 01		ldx $01				ldx 	1 							; save I/O status
-.d866	b866	64 01		stz $01				stz 	1 							; access I/O page 0
-.d868	b868	8d 00 d6	sta $d600			sta 	$D600 						; write to both
-.d86b	b86b	8d 10 d6	sta $d610			sta 	$D610
-.d86e	b86e	86 01		stx $01				stx 	1 							; restore I/O
-.d870	b870	fa		plx				plx 								; restore X
-.d871	b871	60		rts				rts
-.d872	b872					Export_SNDCommand:
-.d872	b872	da		phx				phx 								; save XY
-.d873	b873	5a		phy				phy
-.d874	b874	c9 0f		cmp #$0f			cmp 	#$0F 						; $0F is initialise
-.d876	b876	f0 1d		beq $b895			beq 	_SNDInitialise
-.d878	b878	90 28		bcc $b8a2			bcc 	_SNDExit
-.d87a	b87a	c9 3f		cmp #$3f			cmp 	#$3F 						; $3F is silence all
-.d87c	b87c	f0 17		beq $b895			beq 	_SNDSilence
-.d87e	b87e	b0 22		bcs $b8a2			bcs 	_SNDExit
-.d880	b880	c9 20		cmp #$20			cmp 	#$20 						; $2x is check playing => A
-.d882	b882	b0 09		bcs $b88d			bcs 	_SNDQueryPlay
-.d884	b884	c9 14		cmp #$14			cmp 	#$14 						; $10-$13 is queue sound
-.d886	b886	b0 1a		bcs $b8a2			bcs 	_SNDExit
-.d888	b888	20 27 b8	jsr $b827			jsr 	SNDQueueRequest
-.d88b	b88b	80 15		bra $b8a2			bra 	_SNDExit
-.d88d	b88d					_SNDQueryPlay:
-.d88d	b88d	29 03		and #$03			and 	#3 							; get channel #
-.d88f	b88f	aa		tax				tax
-.d890	b890	bd 96 09	lda $0996,x			lda 	SNDTimeLeft,x 				; read time left, if zero then silent
-.d893	b893	80 0d		bra $b8a2			bra 	_SNDExit
-.d895	b895					_SNDInitialise:
-.d895	b895					_SNDSilence:
-.d895	b895	9c 89 08	stz $0889			stz 	SNDLength 					; empty the queue.
-.d898	b898	a9 03		lda #$03			lda 	#$3 						; silence channel 0-3.
-.d89a	b89a					_SNDSilenceLoop:
-.d89a	b89a	48		pha				pha
-.d89b	b89b	20 54 b8	jsr $b854			jsr 	SNDSilenceChannel
-.d89e	b89e	68		pla				pla
-.d89f	b89f	3a		dec a				dec 	a
-.d8a0	b8a0	10 f8		bpl $b89a			bpl 	_SNDSilenceLoop
-.d8a2	b8a2					_SNDExit:
-.d8a2	b8a2	7a		ply				ply
-.d8a3	b8a3	fa		plx				plx
-.d8a4	b8a4	60		rts				rts
+.d83e	b83e					SNDQueueRequest:
+.d83e	b83e	86 36		stx $36				stx 	zTemp0						; save queue address
+.d840	b840	84 37		sty $37				sty 	zTemp0+1
+.d842	b842	ae 89 08	ldx $0889			ldx 	SNDLength 					; queue is full, can't take any more.
+.d845	b845	e0 20		cpx #$20			cpx 	#SNDQueueSize
+.d847	b847	f0 21		beq $b86a			beq 	_SNDQRExit
+.d849	b849	29 03		and #$03			and 	#3	 						; channel # and push on stack
+.d84b	b84b	48		pha				pha
+.d84c	b84c	8a		txa				txa  								; get offset in queue buffer/
+.d84d	b84d	0a		asl a				asl 	a
+.d84e	b84e	0a		asl a				asl 	a
+.d84f	b84f	0a		asl a				asl 	a
+.d850	b850	aa		tax				tax
+.d851	b851	68		pla				pla 								; get back and push again
+.d852	b852	48		pha				pha
+.d853	b853	9d 8a 08	sta $088a,x			sta 	SNDQueue+0,x 				; save the channel #
+.d856	b856	a0 00		ldy #$00			ldy 	#0 							; copy the rest in.
+.d858	b858					_SNDQCopy:
+.d858	b858	b1 36		lda ($36),y			lda 	(zTemp0),y
+.d85a	b85a	e8		inx				inx
+.d85b	b85b	c8		iny				iny
+.d85c	b85c	9d 8a 08	sta $088a,x			sta 	SNDQueue,x
+.d85f	b85f	c0 06		cpy #$06			cpy 	#6
+.d861	b861	d0 f5		bne $b858			bne 	_SNDQCopy
+.d863	b863	ee 89 08	inc $0889			inc 	SNDLength 					; bump queue length.
+.d866	b866	68		pla				pla 								; get channel # back
+.d867	b867	20 92 b7	jsr $b792			jsr 	SNDCheckChannel 			; check if channel needs refreshing.
+.d86a	b86a					_SNDQRExit:
+.d86a	b86a	60		rts				rts
+.d86b	b86b					SNDSilenceChannel:
+.d86b	b86b	aa		tax				tax 								; zero time left.
+.d86c	b86c	9e 96 09	stz $0996,x			stz 	SNDTimeLeft,x
+.d86f	b86f	0a		asl a				asl 	a 							; shift into position
+.d870	b870	0a		asl a				asl 	a
+.d871	b871	0a		asl a				asl 	a
+.d872	b872	0a		asl a				asl 	a
+.d873	b873	0a		asl a				asl 	a
+.d874	b874	09 9f		ora #$9f			ora 	#$9F 						; write register attenuation $F
+.d876	b876	20 7a b8	jsr $b87a			jsr 	SNDWritePorts
+.d879	b879	60		rts				rts
+.d87a	b87a					SNDWritePorts:
+.d87a	b87a	da		phx				phx 								; save X
+.d87b	b87b	a6 01		ldx $01				ldx 	1 							; save I/O status
+.d87d	b87d	64 01		stz $01				stz 	1 							; access I/O page 0
+.d87f	b87f	8d 00 d6	sta $d600			sta 	$D600 						; write to both
+.d882	b882	8d 10 d6	sta $d610			sta 	$D610
+.d885	b885	86 01		stx $01				stx 	1 							; restore I/O
+.d887	b887	fa		plx				plx 								; restore X
+.d888	b888	60		rts				rts
+.d889	b889					Export_SNDCommand:
+.d889	b889	da		phx				phx 								; save XY
+.d88a	b88a	5a		phy				phy
+.d88b	b88b	c9 0f		cmp #$0f			cmp 	#$0F 						; $0F is initialise
+.d88d	b88d	f0 1d		beq $b8ac			beq 	_SNDInitialise
+.d88f	b88f	90 28		bcc $b8b9			bcc 	_SNDExit
+.d891	b891	c9 3f		cmp #$3f			cmp 	#$3F 						; $3F is silence all
+.d893	b893	f0 17		beq $b8ac			beq 	_SNDSilence
+.d895	b895	b0 22		bcs $b8b9			bcs 	_SNDExit
+.d897	b897	c9 20		cmp #$20			cmp 	#$20 						; $2x is check playing => A
+.d899	b899	b0 09		bcs $b8a4			bcs 	_SNDQueryPlay
+.d89b	b89b	c9 14		cmp #$14			cmp 	#$14 						; $10-$13 is queue sound
+.d89d	b89d	b0 1a		bcs $b8b9			bcs 	_SNDExit
+.d89f	b89f	20 3e b8	jsr $b83e			jsr 	SNDQueueRequest
+.d8a2	b8a2	80 15		bra $b8b9			bra 	_SNDExit
+.d8a4	b8a4					_SNDQueryPlay:
+.d8a4	b8a4	29 03		and #$03			and 	#3 							; get channel #
+.d8a6	b8a6	aa		tax				tax
+.d8a7	b8a7	bd 96 09	lda $0996,x			lda 	SNDTimeLeft,x 				; read time left, if zero then silent
+.d8aa	b8aa	80 0d		bra $b8b9			bra 	_SNDExit
+.d8ac	b8ac					_SNDInitialise:
+.d8ac	b8ac					_SNDSilence:
+.d8ac	b8ac	9c 89 08	stz $0889			stz 	SNDLength 					; empty the queue.
+.d8af	b8af	a9 03		lda #$03			lda 	#$3 						; silence channel 0-3.
+.d8b1	b8b1					_SNDSilenceLoop:
+.d8b1	b8b1	48		pha				pha
+.d8b2	b8b2	20 6b b8	jsr $b86b			jsr 	SNDSilenceChannel
+.d8b5	b8b5	68		pla				pla
+.d8b6	b8b6	3a		dec a				dec 	a
+.d8b7	b8b7	10 f8		bpl $b8b1			bpl 	_SNDSilenceLoop
+.d8b9	b8b9					_SNDExit:
+.d8b9	b8b9	7a		ply				ply
+.d8ba	b8ba	fa		plx				plx
+.d8bb	b8bb	60		rts				rts
 =32						SNDQueueSize = 32 							; number of queue entries
 .0889						SNDLength:
 >0889								.fill 	1
@@ -12802,54 +12817,54 @@
 >099a								.fill 	4
 .099e						SNDAdjustHigh:
 >099e								.fill 	4
-.d8a5	b8a5					Export_SNDUpdate:
-.d8a5	b8a5					PagedSNDUpdate:
-.d8a5	b8a5	ad 96 09	lda $0996			lda 	SNDTimeLeft+0 				; look at time remaining
-.d8a8	b8a8	f0 05		beq $b8af			beq 	_SNDUNot0 					; not playing
-.d8aa	b8aa	a2 00		ldx #$00			ldx 	#0 							; so we know which channel to update
-.d8ac	b8ac	20 ce b8	jsr $b8ce			jsr 	SNDUpdateChannel 			; update it.
-.d8af	b8af					_SNDUNot0:
-.d8af	b8af	ad 97 09	lda $0997			lda 	SNDTimeLeft+1
-.d8b2	b8b2	f0 05		beq $b8b9			beq 	_SNDUNot1
-.d8b4	b8b4	a2 01		ldx #$01			ldx 	#1
-.d8b6	b8b6	20 ce b8	jsr $b8ce			jsr 	SNDUpdateChannel
-.d8b9	b8b9					_SNDUNot1:
-.d8b9	b8b9	ad 98 09	lda $0998			lda 	SNDTimeLeft+2
-.d8bc	b8bc	f0 05		beq $b8c3			beq 	_SNDUNot2
-.d8be	b8be	a2 02		ldx #$02			ldx 	#2
-.d8c0	b8c0	20 ce b8	jsr $b8ce			jsr 	SNDUpdateChannel
-.d8c3	b8c3					_SNDUNot2:
-.d8c3	b8c3	ad 99 09	lda $0999			lda 	SNDTimeLeft+3
-.d8c6	b8c6	f0 05		beq $b8cd			beq 	_SNDUNot3
-.d8c8	b8c8	a2 03		ldx #$03			ldx 	#3
-.d8ca	b8ca	20 ce b8	jsr $b8ce			jsr 	SNDUpdateChannel
-.d8cd	b8cd					_SNDUNot3:
-.d8cd	b8cd	60		rts				rts
-.d8ce	b8ce					SNDUpdateChannel:
-.d8ce	b8ce	c9 ff		cmp #$ff			cmp 	#$FF 						; sound $FF play forever until turned off manually
-.d8d0	b8d0	f0 2c		beq $b8fe			beq 	_SNDUCExit
-.d8d2	b8d2	3a		dec a				dec 	a 							; decrement and update timer
-.d8d3	b8d3	9d 96 09	sta $0996,x			sta 	SNDTimeLeft,x
-.d8d6	b8d6	f0 1d		beq $b8f5			beq 	_SNDUCUpdate 				; if zero, silence channel
-.d8d8	b8d8	bd 9a 09	lda $099a,x			lda 	SNDAdjustLow,x 				; adjust ?
-.d8db	b8db	1d 9e 09	ora $099e,x			ora 	SNDAdjustHigh,x
-.d8de	b8de	f0 1e		beq $b8fe			beq 	_SNDUCExit 					; if zero carry on at current tone.
-.d8e0	b8e0	18		clc				clc 								; add adjust, forcing into a 10 bit range
-.d8e1	b8e1	bd 8a 09	lda $098a,x			lda 	SNDPitchLow,x
-.d8e4	b8e4	7d 9a 09	adc $099a,x			adc 	SNDAdjustLow,x
-.d8e7	b8e7	9d 8a 09	sta $098a,x			sta 	SNDPitchLow,x
-.d8ea	b8ea	bd 8e 09	lda $098e,x			lda 	SNDPitchHigh,x
-.d8ed	b8ed	7d 9e 09	adc $099e,x			adc 	SNDAdjustHigh,x
-.d8f0	b8f0	29 03		and #$03			and 	#3
-.d8f2	b8f2	9d 8e 09	sta $098e,x			sta 	SNDPitchHigh,x
-.d8f5	b8f5					_SNDUCUpdate:
-.d8f5	b8f5	8a		txa				txa 								; which channel.
-.d8f6	b8f6	48		pha				pha
-.d8f7	b8f7	20 ba b7	jsr $b7ba			jsr 	SNDUpdateNote 				; update the current note
-.d8fa	b8fa	68		pla				pla
-.d8fb	b8fb	20 7b b7	jsr $b77b			jsr 	SNDCheckChannel 			; more to do ?
-.d8fe	b8fe					_SNDUCExit:
-.d8fe	b8fe	60		rts				rts
+.d8bc	b8bc					Export_SNDUpdate:
+.d8bc	b8bc					PagedSNDUpdate:
+.d8bc	b8bc	ad 96 09	lda $0996			lda 	SNDTimeLeft+0 				; look at time remaining
+.d8bf	b8bf	f0 05		beq $b8c6			beq 	_SNDUNot0 					; not playing
+.d8c1	b8c1	a2 00		ldx #$00			ldx 	#0 							; so we know which channel to update
+.d8c3	b8c3	20 e5 b8	jsr $b8e5			jsr 	SNDUpdateChannel 			; update it.
+.d8c6	b8c6					_SNDUNot0:
+.d8c6	b8c6	ad 97 09	lda $0997			lda 	SNDTimeLeft+1
+.d8c9	b8c9	f0 05		beq $b8d0			beq 	_SNDUNot1
+.d8cb	b8cb	a2 01		ldx #$01			ldx 	#1
+.d8cd	b8cd	20 e5 b8	jsr $b8e5			jsr 	SNDUpdateChannel
+.d8d0	b8d0					_SNDUNot1:
+.d8d0	b8d0	ad 98 09	lda $0998			lda 	SNDTimeLeft+2
+.d8d3	b8d3	f0 05		beq $b8da			beq 	_SNDUNot2
+.d8d5	b8d5	a2 02		ldx #$02			ldx 	#2
+.d8d7	b8d7	20 e5 b8	jsr $b8e5			jsr 	SNDUpdateChannel
+.d8da	b8da					_SNDUNot2:
+.d8da	b8da	ad 99 09	lda $0999			lda 	SNDTimeLeft+3
+.d8dd	b8dd	f0 05		beq $b8e4			beq 	_SNDUNot3
+.d8df	b8df	a2 03		ldx #$03			ldx 	#3
+.d8e1	b8e1	20 e5 b8	jsr $b8e5			jsr 	SNDUpdateChannel
+.d8e4	b8e4					_SNDUNot3:
+.d8e4	b8e4	60		rts				rts
+.d8e5	b8e5					SNDUpdateChannel:
+.d8e5	b8e5	c9 ff		cmp #$ff			cmp 	#$FF 						; sound $FF play forever until turned off manually
+.d8e7	b8e7	f0 2c		beq $b915			beq 	_SNDUCExit
+.d8e9	b8e9	3a		dec a				dec 	a 							; decrement and update timer
+.d8ea	b8ea	9d 96 09	sta $0996,x			sta 	SNDTimeLeft,x
+.d8ed	b8ed	f0 1d		beq $b90c			beq 	_SNDUCUpdate 				; if zero, silence channel
+.d8ef	b8ef	bd 9a 09	lda $099a,x			lda 	SNDAdjustLow,x 				; adjust ?
+.d8f2	b8f2	1d 9e 09	ora $099e,x			ora 	SNDAdjustHigh,x
+.d8f5	b8f5	f0 1e		beq $b915			beq 	_SNDUCExit 					; if zero carry on at current tone.
+.d8f7	b8f7	18		clc				clc 								; add adjust, forcing into a 10 bit range
+.d8f8	b8f8	bd 8a 09	lda $098a,x			lda 	SNDPitchLow,x
+.d8fb	b8fb	7d 9a 09	adc $099a,x			adc 	SNDAdjustLow,x
+.d8fe	b8fe	9d 8a 09	sta $098a,x			sta 	SNDPitchLow,x
+.d901	b901	bd 8e 09	lda $098e,x			lda 	SNDPitchHigh,x
+.d904	b904	7d 9e 09	adc $099e,x			adc 	SNDAdjustHigh,x
+.d907	b907	29 03		and #$03			and 	#3
+.d909	b909	9d 8e 09	sta $098e,x			sta 	SNDPitchHigh,x
+.d90c	b90c					_SNDUCUpdate:
+.d90c	b90c	8a		txa				txa 								; which channel.
+.d90d	b90d	48		pha				pha
+.d90e	b90e	20 d1 b7	jsr $b7d1			jsr 	SNDUpdateNote 				; update the current note
+.d911	b911	68		pla				pla
+.d912	b912	20 92 b7	jsr $b792			jsr 	SNDCheckChannel 			; more to do ?
+.d915	b915					_SNDUCExit:
+.d915	b915	60		rts				rts
 
 ;******  Return to file: _basic.asm
 

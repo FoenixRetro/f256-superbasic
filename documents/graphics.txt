@@ -41,9 +41,9 @@ Returns CS error , CC okay
 *	41 SPRMOVE to x,y (fix up sprite positioning)
 
 Tile Interface (GFX)
-	42 TILEPOS X,Y = Tile
-	43 TILEWRT X = Tile, advance
-	44 TILERD  ->A advance
+	14 TILEPOS X,Y = Tile
+	15 TILEWRT X = Tile, advance
+	16 TILERD  ->A advance
 
 Tile Interface (BASIC)	
 	TILES ON|OFF|AT <image>,<map>|DIM <width>,<height>

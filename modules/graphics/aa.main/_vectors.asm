@@ -20,7 +20,7 @@ GRVectorTable:
 	.word	GXControlTileSize        ; $0b TILESZ
 	.word	GXControlTileScrollX     ; $0c TILESCLX
 	.word	GXControlTileScrollY     ; $0d TILESCLY
-	.word	GRUndefined              ; $0e
+	.word	GXSelectTile             ; $0e TilePos
 	.word	GRUndefined              ; $0f
 	.word	GRUndefined              ; $10
 	.word	GRUndefined              ; $11

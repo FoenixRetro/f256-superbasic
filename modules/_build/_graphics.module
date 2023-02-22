@@ -21,6 +21,7 @@ GCMD_TileCtl = 10*2
 GCMD_TILESZ = 11*2
 GCMD_TILESCLX = 12*2
 GCMD_TILESCLY = 13*2
+GCMD_TilePos = 14*2
 GCMD_Move = 32*2
 GCMD_Line = 33*2
 GCMD_FrameRect = 34*2
@@ -51,7 +52,7 @@ GRVectorTable:
 	.word	GXControlTileSize        ; $0b TILESZ
 	.word	GXControlTileScrollX     ; $0c TILESCLX
 	.word	GXControlTileScrollY     ; $0d TILESCLY
-	.word	GRUndefined              ; $0e
+	.word	GXSelectTile             ; $0e TilePos
 	.word	GRUndefined              ; $0f
 	.word	GRUndefined              ; $10
 	.word	GRUndefined              ; $11
@@ -1080,6 +1081,7 @@ _GXCSSLoop:
 ;		Date			Notes
 ;		==== 			=====
 ;		20/02/23 		Added control functionality for tile on/off/location and size of map.
+; 		22/02/23 		Fixed bug no defaults on setting tilemap page defaults.
 ;
 ; ************************************************************************************************
 
@@ -2322,6 +2324,57 @@ _GXMSOffset:
 		.byte 	32-16/2
 		.byte 	32-24/2
 		.byte 	32-32/2
+		.send code
+
+; ************************************************************************************************
+;
+;									Changes and Updates
+;
+; ************************************************************************************************
+;
+;		Date			Notes
+;		==== 			=====
+;
+; ************************************************************************************************
+; ************************************************************************************************
+; ************************************************************************************************
+;
+;		Name:		tiles.asm
+;		Purpose:	Tile update Functions
+;		Created:	22nd February 2022
+;		Reviewed: 	No
+;		Author:		Paul Robson (paul@robsons.org.uk)
+;
+; ************************************************************************************************
+; ************************************************************************************************
+
+		.section code
+
+; ************************************************************************************************
+;
+;											Select tile
+;
+; ************************************************************************************************
+
+GXSelectTile: ;; <14:TilePos>
+		lda 	gxTilesOn 					; check tilemap in use
+		beq 	_GXSFail
+
+		.debug
+
+		lda 	gxzTemp0 					; check X and Y in range
+		cmp 	gxTileMapWidth
+		bcs 	_GXSFail
+		lda 	gxzTemp0+1
+		cmp 	gxTileMapHeight
+		bcs 	_GXSFail
+
+
+		clc
+_GXSFail:
+		sec
+		rts
+
 		.send code
 
 ; ************************************************************************************************
