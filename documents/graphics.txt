@@ -47,7 +47,7 @@ Tile Interface (GFX)
 
 Tile Interface (BASIC)	
 	TILES ON|OFF|AT <image>,<map>|DIM <width>,<height>
-	TILE TO xScroll,yScroll|AT <xTile>,<yTile>|PLOT <nn>,<mm>,<nn>
+	TILE TO xScroll,yScroll|AT <xTile>,<yTile>|PLOT <nn> [FOR <nn>]
 	=TILE(x,y)
 
 	LINE

@@ -17,21 +17,4 @@ ROMA: $B42E
 ROMB: $B7E3
 ROMC: $A800
 
-TILEMAP 
-	[ON <n>] 						Turn tilemap on/off and select current, defaults to 0. 
-	[OFF <n>] 
-	[AT <data>] 					Tilemap data location, default $24000 (8192 bytes)
-	[IMAGE <tiledata>] 				Tilemap images location, default $26000 (8192 bytes, 128 8x8 tiles)
-	[DIM <x>,<y>] 					Size of the actual map in tiles (default 64x32 = 1 screen - must be powers of 2)
-	[TO <xtile>,<ytile>] 			Scroll by tile.
-	[SCROLL <xscroll>,<yscroll>] 	Scroll by offset e.g. pixel offset from top left.
-	[DIM <size>] 					8x8 tiles
 
-TILE <x>,<y>,<tile1>,<tile2> PLOT <count> .....
-
-	Output a sequence of tiles at <x>,<y>, can write multiple horizontal tiles with one instruction, and multiple copies
-	of a single tile.
-
-=TILE(<x>,<y>)
-
-	Read the tile at <x>,<y> of the currently selected tilemap.
