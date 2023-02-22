@@ -1,6 +1,5 @@
 Tiles:
 
-	Default tilemap pages.
 	Implement tilepos,tileread,tilewrite
 	Implement BASIC interface and document asyou go.
 
@@ -26,7 +25,7 @@ TILEMAP
 	[DIM <x>,<y>] 					Size of the actual map in tiles (default 64x32 = 1 screen - must be powers of 2)
 	[TO <xtile>,<ytile>] 			Scroll by tile.
 	[SCROLL <xscroll>,<yscroll>] 	Scroll by offset e.g. pixel offset from top left.
-	[DIM <size>] 					16 can be 8. (may not support 16 - would be tiny tiles)
+	[DIM <size>] 					8x8 tiles
 
 TILE <x>,<y>,<tile1>,<tile2> PLOT <count> .....
 
