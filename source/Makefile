@@ -47,6 +47,11 @@ run : basic
 testbasic:prelim
 	64tass -D AUTORUN=1 $(AADDRESSES) $(ASMOPTS) _basic.asm -o $(APPNAME)
 	$(CCOPY) $(APPNAME) $(BINDIR)
+
+trun: testbasic
+	python scripts$(S)checkload.py
+	$(START)
+
 #
 #		Build & update Kernel & api.asm
 #

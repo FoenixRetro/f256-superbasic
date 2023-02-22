@@ -1,7 +1,6 @@
 Tiles:
 
-	Implement tilepos,tileread,tilewrite
-	Implement BASIC interface and document asyou go.
+	Implement BASIC interface and document as you go.
 
 Progress:	
  	Upgrade model A.

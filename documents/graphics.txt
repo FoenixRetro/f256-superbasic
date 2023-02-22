@@ -31,6 +31,9 @@ Returns CS error , CC okay
 *	11 TILESZ  X=width, Y = height
 *	12 TILESCLX YX = X Scroll value.
 * 	13 TILESCLY YX = Y Scroll value.
+*	14 TILEPOS X,Y = Tile
+*	15 TILEWRT X = Tile, advance
+*	16 TILERD  ->A advance
 *	32 MOVE 			
 *	33 LINE 	
 *	34 RECT
@@ -41,9 +44,6 @@ Returns CS error , CC okay
 *	41 SPRMOVE to x,y (fix up sprite positioning)
 
 Tile Interface (GFX)
-	14 TILEPOS X,Y = Tile
-	15 TILEWRT X = Tile, advance
-	16 TILERD  ->A advance
 
 Tile Interface (BASIC)	
 	TILES ON|OFF|AT <image>,<map>|DIM <width>,<height>
