@@ -1,5 +1,6 @@
 Tiles:
 
+	LOAD/SAVE errors don't have a line number.
 	Implement BASIC interface and document as you go.
 
 Progress:	
