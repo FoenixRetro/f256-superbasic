@@ -221,6 +221,11 @@ Release 36: (18/02/23):
 	BUG: GFX Commands not implemented do not crash the system.
 	CHG: Modifications to support 40k kernel.
 	
-Release 37: (22/02/23)
+Release 37: (22/02/23) BINNED
 
 	BUG: Defaults for tilemap/image pages (e.g. gfx $10,$80,$00 works)
+	CHG: Tile R/W functionality added to GFX.
+	BUG: Fixes for Kernel
+	CHG: Kernel ID -> Boot Screen.
+
+Release 38: (23/02/23)

@@ -87,7 +87,7 @@ class FoenixDebugPort:
             return self.transfer(constants.CMD_BOOT_FLASH, 0, 0, 0)
 
     def readbyte(self):
-        b = self.connection.read(1,timeout=None)
+        b = self.connection.read(1)
         return b[0]
 
     def transfer(self, command, address, data, read_length):

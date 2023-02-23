@@ -99,6 +99,15 @@ _NoMachineCode:
 		lda 	$D6A9
 		jsr 	EXTPrintCharacter
 
+		lda 	#13 						; display Kernel information
+		jsr 	EXTPrintCharacter
+		lda 	#9
+		jsr 	EXTPrintCharacter
+		jsr 	EXTPrintCharacter
+		lda 	#$08
+		ldx 	#$E0
+		jsr 	PrintStringXA
+
 		ldx 	#Prompt >> 8 				; display prompt
 		lda 	#Prompt & $FF
 		jsr 	PrintStringXA
@@ -119,7 +128,7 @@ _NoMachineCode:
 		jmp 	WarmStart
 		.endif
 
-Prompt:	.text 	13,13
+Prompt:	.text 	13
 		.include "../generated/timestamp.asm"
 		.text 	13,13,13,0
 
