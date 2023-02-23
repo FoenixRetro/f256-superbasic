@@ -1,4 +1,3 @@
-
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
@@ -15,13 +14,19 @@
 
 ; ************************************************************************************************
 ;
-;									Reset bitmap and sprites
+;								Reset bitmap, tiles and sprites
 ;
 ; ************************************************************************************************
 
-ResetBitmapSprites:
+ResetBitmapSpritesTiles:
 		stz 	BitmapPageNumber
 		stz 	SpritePageNumber
+		stz 	TileMapPageNumber
+		stz 	TileImagePageNumber
+		lda 	#64
+		sta 	TileMapWidth
+		lda 	#32
+		sta 	TileMapHeight
 		rts
 
 ; ************************************************************************************************
@@ -128,6 +133,81 @@ SpriteSwitch:
 
 ; ************************************************************************************************
 ;
+;									 Tiles On/Off
+;
+; ***********************************************************************************************
+
+TilesCtrl: ;; [tiles]
+TilesCtrlLoop:		
+		.cget 								; next keyword
+		iny
+		ldx 	#$80
+		cmp 	#KWD_ON
+		beq 	TileSwitch
+		ldx 	#$00
+		cmp 	#KWD_OFF
+		beq 	TileSwitch		
+		cmp 	#KWD_AT
+		beq 	TileSetAddress
+		cmp 	#KWD_DIM
+		beq 	TileSetSize
+		dey
+		rts
+		;
+		;		DIM x,y
+		;
+TileSetSize:
+		ldx 	#0
+		jsr 	Evaluate8BitInteger 		
+		sta 	TileMapWidth		
+		jsr 	CheckComma
+		jsr 	Evaluate8BitInteger 		
+		sta 	TileMapHeight
+		bra 	TilesCtrlLoop
+		;
+		;		AT xx,xx
+		;
+TileSetAddress:		
+		jsr 	GetPageNumber 				; map page
+		sta 	TileMapPageNumber
+		jsr 	CheckComma
+		jsr 	GetPageNumber 				; image page
+		sta 	TileImagePageNumber
+		bra 	TilesCtrlLoop
+		;
+		;		ON/OFF and seet up.
+		;
+TileSwitch:
+		phy
+
+		phx 								; set the on/off state and the pages.
+		txa
+		ora 	TileMapPageNumber
+		tax
+		ldy 	TileImagePageNumber
+		lda 	#GCMD_TileCtl
+		jsr 	GXGraphicDraw
+		plx
+		bpl 	TilesCtrlLoop 				; nothing else.
+
+		lda 	#GCMD_TileSize 				; set size of tile map.
+		ldx 	TileMapWidth
+		ldy 	TileMapHeight
+		jsr 	GXGraphicDraw
+
+		lda 	#GCMD_TileScrollX 			; reset scroll
+		jsr 	_TileResetScroll
+		lda 	#GCMD_TileScrollY
+		jsr 	_TileResetScroll
+		ply
+		jmp 	TilesCtrlLoop
+
+_TileResetScroll:
+		ldx 	#0
+		ldy 	#0
+		jmp 	GXGraphicDraw
+; ************************************************************************************************
+;
 ;							Get a valid page number via its address
 ;
 ; ************************************************************************************************
@@ -156,10 +236,20 @@ _GPNError:
 		.send code
 
 		.section storage
+
 BitmapPageNumber:
 		.fill 	1
 SpritePageNumber:
 		.fill 	1
+TileMapPageNumber:
+		.fill 	1
+TileImagePageNumber:		
+		.fill 	1
+TileMapWidth:
+		.fill 	1
+TileMapHeight:
+		.fill 	1
+
 		.send 	storage	
 
 ; ************************************************************************************************

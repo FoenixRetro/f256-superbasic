@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.2.14)  17 FEB 2023 08:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.2.23)  23 FEB 2023 16:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1028,8 +1028,8 @@ Package rerunfilecheck Info: File `f256jr_basic_ref.out' has not changed.
 (rerunfilecheck)             Checksum: F15CED353609DAB3835A1C0B00D4B169;5579.
  ) 
 Here is how much of TeX's memory you used:
- 19312 strings out of 478238
- 354820 string characters out of 5850456
+ 19314 strings out of 478238
+ 354844 string characters out of 5850456
  546710 words of memory out of 5000000
  36944 multiletter control sequences out of 15000+600000
  535708 words of font info for 84 fonts, out of 8000000 for 9000
@@ -1045,10 +1045,10 @@ f-Italic.pfb></usr/share/texmf-dist/fonts/type1/google/noto/NotoSerif-Regular.p
 fb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/share/
 texmf-dist/fonts/type1/public/newtx/txsys.pfb></usr/share/texmf-dist/fonts/type
 1/urw/zapfchan/uzcmi8a.pfb>
-Output written on f256jr_basic_ref.pdf (45 pages, 206922 bytes).
+Output written on f256jr_basic_ref.pdf (45 pages, 207312 bytes).
 PDF statistics:
- 750 PDF objects out of 1000 (max. 8388607)
- 680 compressed objects within 7 object streams
- 306 named destinations out of 1000 (max. 500000)
+ 753 PDF objects out of 1000 (max. 8388607)
+ 683 compressed objects within 7 object streams
+ 308 named destinations out of 1000 (max. 500000)
  353 words of extra memory for PDF output out of 10000 (max. 10000000)
 

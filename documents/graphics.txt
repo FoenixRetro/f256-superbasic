@@ -27,7 +27,7 @@ Returns CS error , CC okay
 *	7 SPRUSE X = sprite# select sprite
 *	8 SPRIMG X = set selected sprite image to X, Y = 0, hide, Y = 1
 *	9 HIT    Check collision state X,Y. Returns $FF for miss,or max |c1-c0| << 2
-*	10 TILECTL X=tiles page, Y = images page enable bit, X bit 7 = on/off, size to 64x32
+*	10 TILECTL X=tiles map page, Y = images page enable bit, X bit 7 = on/off, size to 64x32
 *	11 TILESZ  X=width, Y = height
 *	12 TILESCLX YX = X Scroll value.
 * 	13 TILESCLY YX = Y Scroll value.

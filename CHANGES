@@ -229,3 +229,5 @@ Release 37: (22/02/23) BINNED
 	CHG: Kernel ID -> Boot Screen.
 
 Release 38: (23/02/23)
+
+	CHG: TILES command added and documented.

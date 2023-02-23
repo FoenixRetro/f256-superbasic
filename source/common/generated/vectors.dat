@@ -198,7 +198,7 @@ VectorSet1:
 	.word	SpritesCtrl                      ; $a2 SPRITES
 	.word	StopCommand                      ; $a3 STOP
 	.word	SyntaxError                      ; $a4 TILE
-	.word	SyntaxError                      ; $a5 TILES
+	.word	TilesCtrl                        ; $a5 TILES
 	.word	Command_Try                      ; $a6 TRY
 	.word	Command_VERIFY                   ; $a7 VERIFY
 	.word	XGoCommand                       ; $a8 XGO

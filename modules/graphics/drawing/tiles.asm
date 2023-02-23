@@ -98,10 +98,10 @@ _GXSTFAExit:
 ;
 ; ************************************************************************************************
 
-GXSTWriteTile: ;; <15:TILEWRT>
+GXSTWriteTile: ;; <15:TileWrite>
 		sec 								; CS = update flag
 		bra 	GXSTTileAccess
-GXSTReadTile: ;; <16:TILERD>
+GXSTReadTile: ;; <16:TileRead>
 		clc
 GXSTTileAccess:				
 		lda 	GXEditSlot 					; save oroginal page

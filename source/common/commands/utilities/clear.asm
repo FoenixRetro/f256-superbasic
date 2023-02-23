@@ -93,10 +93,10 @@ _ClearZeroEnd:
 		;
 		jsr 	CheckIdentifierStringSpace 	; check identifier/string space 
 		;
-		;		Reset bitmap/sprites pages
+		;		Reset bitmap/sprites/tiles pages
 		;			
 		.if graphicsIntegrated==1
-		jsr 	ResetBitmapSprites
+		jsr 	ResetBitmapSpritesTiles
 		.endif
 		rts
 

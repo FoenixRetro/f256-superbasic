@@ -17,12 +17,12 @@ GRVectorTable:
 	.word	GXSelectImage            ; $08 SpriteImage
 	.word	GXCollide                ; $09 SpriteCollide
 	.word	GXControlTilemap         ; $0a TileCtl
-	.word	GXControlTileSize        ; $0b TILESZ
-	.word	GXControlTileScrollX     ; $0c TILESCLX
-	.word	GXControlTileScrollY     ; $0d TILESCLY
+	.word	GXControlTileSize        ; $0b TileSize
+	.word	GXControlTileScrollX     ; $0c TileScrollX
+	.word	GXControlTileScrollY     ; $0d TileScrollY
 	.word	GXSelectTile             ; $0e TilePos
-	.word	GXSTWriteTile            ; $0f TILEWRT
-	.word	GXSTReadTile             ; $10 TILERD
+	.word	GXSTWriteTile            ; $0f TileWrite
+	.word	GXSTReadTile             ; $10 TileRead
 	.word	GRUndefined              ; $11
 	.word	GRUndefined              ; $12
 	.word	GRUndefined              ; $13

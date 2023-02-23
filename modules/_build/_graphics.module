@@ -18,12 +18,12 @@ GCMD_SpriteUse = 7*2
 GCMD_SpriteImage = 8*2
 GCMD_SpriteCollide = 9*2
 GCMD_TileCtl = 10*2
-GCMD_TILESZ = 11*2
-GCMD_TILESCLX = 12*2
-GCMD_TILESCLY = 13*2
+GCMD_TileSize = 11*2
+GCMD_TileScrollX = 12*2
+GCMD_TileScrollY = 13*2
 GCMD_TilePos = 14*2
-GCMD_TILEWRT = 15*2
-GCMD_TILERD = 16*2
+GCMD_TileWrite = 15*2
+GCMD_TileRead = 16*2
 GCMD_Move = 32*2
 GCMD_Line = 33*2
 GCMD_FrameRect = 34*2
@@ -51,12 +51,12 @@ GRVectorTable:
 	.word	GXSelectImage            ; $08 SpriteImage
 	.word	GXCollide                ; $09 SpriteCollide
 	.word	GXControlTilemap         ; $0a TileCtl
-	.word	GXControlTileSize        ; $0b TILESZ
-	.word	GXControlTileScrollX     ; $0c TILESCLX
-	.word	GXControlTileScrollY     ; $0d TILESCLY
+	.word	GXControlTileSize        ; $0b TileSize
+	.word	GXControlTileScrollX     ; $0c TileScrollX
+	.word	GXControlTileScrollY     ; $0d TileScrollY
 	.word	GXSelectTile             ; $0e TilePos
-	.word	GXSTWriteTile            ; $0f TILEWRT
-	.word	GXSTReadTile             ; $10 TILERD
+	.word	GXSTWriteTile            ; $0f TileWrite
+	.word	GXSTReadTile             ; $10 TileRead
 	.word	GRUndefined              ; $11
 	.word	GRUndefined              ; $12
 	.word	GRUndefined              ; $13
@@ -1020,7 +1020,7 @@ _GXCTNotImgDefault:
 ;
 ; ************************************************************************************************
 
-GXControlTileSize: ;; <11:TILESZ>
+GXControlTileSize: ;; <11:TileSize>
 		lda 	gxTilesOn 					; check on
 		sec
 		beq 	_GXCTSExit
@@ -1836,7 +1836,7 @@ gxUseMode:
 ;
 ; ************************************************************************************************
 
-GXControlTileScrollX: ;; <12:TILESCLX>
+GXControlTileScrollX: ;; <12:TileScrollX>
 		lda 	gxTileMapWidth 				; comparator value (max X tile)
 		jsr 	GXScrollProcessor 			; scroll processing.
 		bcs 	_GXCTSExit
@@ -1846,7 +1846,7 @@ GXControlTileScrollX: ;; <12:TILESCLX>
 _GXCTSExit:
 		rts
 
-GXControlTileScrollY: ;; <13:TILESCLY>
+GXControlTileScrollY: ;; <13:TileScrollY>
 		lda 	gxTileMapHeight 			; comparator value (max X tile)
 		jsr 	GXScrollProcessor 			; scroll processing.
 		bcs 	_GXCTSExit
@@ -2438,10 +2438,10 @@ _GXSTFAExit:
 ;
 ; ************************************************************************************************
 
-GXSTWriteTile: ;; <15:TILEWRT>
+GXSTWriteTile: ;; <15:TileWrite>
 		sec 								; CS = update flag
 		bra 	GXSTTileAccess
-GXSTReadTile: ;; <16:TILERD>
+GXSTReadTile: ;; <16:TileRead>
 		clc
 GXSTTileAccess:
 		lda 	GXEditSlot 					; save oroginal page

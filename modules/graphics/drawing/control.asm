@@ -215,7 +215,7 @@ _GXCTNotImgDefault:
 ;
 ; ************************************************************************************************
 
-GXControlTileSize: ;; <11:TILESZ>
+GXControlTileSize: ;; <11:TileSize>
 		lda 	gxTilesOn 					; check on
 		sec
 		beq 	_GXCTSExit

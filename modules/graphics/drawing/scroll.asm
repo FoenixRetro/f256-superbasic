@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-GXControlTileScrollX: ;; <12:TILESCLX>
+GXControlTileScrollX: ;; <12:TileScrollX>
 		lda 	gxTileMapWidth 				; comparator value (max X tile)
 		jsr 	GXScrollProcessor 			; scroll processing.
 		bcs 	_GXCTSExit
@@ -28,7 +28,7 @@ GXControlTileScrollX: ;; <12:TILESCLX>
 _GXCTSExit:
 		rts
 
-GXControlTileScrollY: ;; <13:TILESCLY>
+GXControlTileScrollY: ;; <13:TileScrollY>
 		lda 	gxTileMapHeight 			; comparator value (max X tile)
 		jsr 	GXScrollProcessor 			; scroll processing.
 		bcs 	_GXCTSExit
