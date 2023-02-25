@@ -2811,44 +2811,58 @@ _GXCollideFail:
 ; ************************************************************************************************
 
 GXFindSprite:
-		tax
-
-		lda 	gxSpritePage 				; access the base page of the sprite
-		sta 	GXEditSlot
-		;
-		lda 	GXMappingAddress+256,x 		; check a valid sprite
-		ora 	GXMappingAddress,x
-		beq 	_GXFSFail
-		;
-		lda 	GXMappingAddress+256,x 		; MSB
-		sta 	gxSpriteOffset+1
-		;
-		lda 	GXMappingAddress,x 			; LSB
-		pha 								; save twice
-		pha
-		and 	#3 							; get sprite size
-		sta 	gxSizeBits 					; save raw (0-3)
-		tax
-		lda 	_GXFXSSTTable,x 			; read sprite size
-		sta 	gxSizePixels 				; save (8/16/24/32)
-
-		pla 								; get LUT
-		lsr		a
-		lsr		a
-		and 	#3
-		sta 	gxSpriteLUT
-		;
-		pla 								; address, neeeds to be x 4
-		and 	#$F0
+		lda 	#3
 		sta 	gxSpriteOffset
+		stz 	gxSpriteOffset+1
 
-		asl 	gxSpriteOffset
-		rol 	gxSpriteOffset+1
-		asl 	gxSpriteOffset
-		rol 	gxSpriteOffset+1
+		lda 	#0
+		sta 	gxSizeBits
+		lda 	#8
+		sta 	gxSizePixels
+
+		stz 	gxSpriteLUT
 
 		clc
 		rts
+
+;		tax
+;
+;		lda 	gxSpritePage 				; access the base page of the sprite
+;		sta 	GXEditSlot
+;		;
+;		lda 	GXMappingAddress+256,x 		; check a valid sprite
+;		ora 	GXMappingAddress,x
+;		beq 	_GXFSFail
+;		;
+;		lda 	GXMappingAddress+256,x 		; MSB
+;		sta 	gxSpriteOffset+1
+;		;
+;		lda 	GXMappingAddress,x 			; LSB
+;		pha 								; save twice
+;		pha
+;		and 	#3 							; get sprite size
+;		sta 	gxSizeBits 					; save raw (0-3)
+;		tax
+;		lda 	_GXFXSSTTable,x 			; read sprite size
+;		sta 	gxSizePixels 				; save (8/16/24/32)
+;
+;		pla 								; get LUT
+;		lsr		a
+;		lsr		a
+;		and 	#3
+;		sta 	gxSpriteLUT
+;		;
+;		pla 								; address, neeeds to be x 4
+;		and 	#$F0
+;		sta 	gxSpriteOffset
+;
+;		asl 	gxSpriteOffset
+;		rol 	gxSpriteOffset+1
+;		asl 	gxSpriteOffset
+;		rol 	gxSpriteOffset+1
+;
+;		clc
+;		rts
 _GXFSFail:
 		sec
 		rts

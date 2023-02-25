@@ -2,8 +2,8 @@
 # *******************************************************************************************
 #
 #		Name : 		spritebuild.py
-#		Purpose :	Composite Sprite Builder Application
-#		Date :		13th October 2022
+#		Purpose :	Composite Sprite Builder Application (Sprite Format II)
+#		Date :		Revised 25th February 2023 for Sprite format 2.
 #		Author : 	Paul Robson (paul@robsons.org.uk)
 #
 # *******************************************************************************************
@@ -180,34 +180,24 @@ class SpriteCollection(object):
 	def add(self,sprite):
 		self.spriteList.append(sprite)
 	#
-	#		Output the sprite graphics object. This has a 512 byte index preceding it containing
-	#		256 low bytes first, then 256 high bytes.
-	#	
-	#		The bytes have the formula 00aaaaaa aaaallss
+	#		Output the sprite graphics object. 
 	#
-	# 		aaaaaaaaaaa is the offset shifted 6 right (e.g. / 64) from the start
-	#		ll  		is the LUT to use (0 at present)
-	#		ss 			is the size of the sprite (0-3 are 8,16,24,32)
+	#		+00 	$11 Header format
+	#		+01 	Sprite 0 (size 0-3) or $80 for end of sprite data, 00 is 8x8 11 is 32x32, backwards from F256 but more logical.
+	#		+02 	LUT of sprite 0.
+	#		+03 	First byte of sprite 0 ....
 	#
 	def outputSprite(self,file = "graphics.bin"):
-			spriteIndex = [ 0 ] * 256 			
-			position = 0x200 
-			for i in range(0,len(self.spriteList)):
-				s = self.spriteList[i]
-				offset = (position >> 6) 									
-				size = (s.getSize() >> 3)-1
-				lut = 0 
-				spriteIndex[i] = (offset << 4) + (lut << 2) + (size << 0)
-				position += s.getDataSize()
-			#
 			h = open(file,"wb")
-			for i in range(0,256):
-				h.write(bytes([spriteIndex[i] & 0xFF]))
-			for i in range(0,256):
-				h.write(bytes([spriteIndex[i] >> 8]))
-			for s in self.spriteList:
-				h.write(bytes(s.getData()))
+			h.write(bytes([0x11]))							
 
+			for i in range(0,len(self.spriteList)):										# For each sprite
+				s = self.spriteList[i] 							 						
+				size = (s.getSize() >> 3)-1 											# Size 0-3.
+				h.write(bytes([size,0]))												# Output size and LUT 0
+				h.write(bytes(s.getData()))												# and the data
+
+			h.write(bytes([0x80])) 														# end of list marker.
 			h.close()
 
 sc = SpriteCollection()
