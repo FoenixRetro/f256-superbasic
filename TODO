@@ -1,19 +1,12 @@
-Tiles:
-
-	LOAD/SAVE errors don't have a line number.
-
 Progress:	
- 	Upgrade model A.
-	Display Kernel version
-	Consider STEP.
-	Should CR in PRINT clear to EOL.
+ 	Upgrade model A & Find a home for it.
 
 Ongoing:
-	Code reading.
+	Continue code reading.
 	Continue documentation.	
 
-ROMA: $B42E
-ROMB: $B7E3
-ROMC: $A800
+ROMA: $B576
+ROMB: $B997
+ROMC: $A76B
 
 

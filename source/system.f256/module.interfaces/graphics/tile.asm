@@ -42,7 +42,7 @@ _TileSetPos:
 		ply
 		bra 	TileCommand 				; loop round
 		;
-		;		Handle PLOT n [FOR x], ....
+		;		Handle PLOT n [LINE x], ....
 		;
 _TilePlot:
 		ldx 	#0
@@ -50,10 +50,10 @@ _TilePlot:
 		lda 	#1
 		sta 	NSMantissa0+1 				; default repeat count.
 		ldx 	#1
-		.cget 								; is it FOR x
-		cmp 	#KWD_FOR
+		.cget 								; is it LINE x
+		cmp 	#KWD_LINE
 		bne 	_TileNoRepeat
-		iny 								; skip FOR
+		iny 								; skip LINE
 		jsr 	Evaluate8BitInteger 		; evaluate count
 _TileNoRepeat:
 		;

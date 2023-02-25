@@ -3,7 +3,7 @@
 110 sprite 0 image 0 to 100,70
 112 tiles dim 42,32 at $24000,$26000 on
 134 for i = 0 to 15
-135 tile at 20,i plot i for 10
+135 tile at 20,i plot i line 10
 136 next
 140 for i = 0 to 31
 150 line 0,0 colour $03 to i*10,160

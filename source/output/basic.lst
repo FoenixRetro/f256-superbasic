@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.58.2974? listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$34000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" "-D TILEMAP_ADDRESS=\$24000" "-D TILEIMAGES_ADDRESS=\$26000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Sat Feb 25 14:16:09 2023
+; Sat Feb 25 14:26:38 2023
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -7995,9 +7995,9 @@
 .aaed		85 59		sta $59				sta 	NSMantissa0+1 				; default repeat count.
 .aaef		a2 01		ldx #$01			ldx 	#1
 .aaf1		b1 30		lda ($30),y			lda 	(codePtr),y
-.aaf3		c9 ae		cmp #$ae			cmp 	#KWD_FOR
+.aaf3		c9 c9		cmp #$c9			cmp 	#KWD_LINE
 .aaf5		d0 04		bne $aafb			bne 	_TileNoRepeat
-.aaf7		c8		iny				iny 								; skip FOR
+.aaf7		c8		iny				iny 								; skip LINE
 .aaf8		20 a4 a2	jsr $a2a4			jsr 	Evaluate8BitInteger 		; evaluate count
 .aafb						_TileNoRepeat:
 .aafb						_TileOutLoop:
