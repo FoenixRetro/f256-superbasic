@@ -2811,67 +2811,108 @@ _GXCollideFail:
 ; ************************************************************************************************
 
 GXFindSprite:
-		lda 	#3
-		sta 	gxSpriteOffset
+		tax  								; sprite index in X
+
+		stz 	gxSpriteOffset 				; sprite offset is the offset in the sprite list.
 		stz 	gxSpriteOffset+1
 
-		lda 	#0
+		stz 	gxzTemp1 					; zTemp1 is the address in memory, given the current selected page.
+		lda 	#GXMappingAddress >> 8
+		sta 	gxzTemp1+1
+
+		lda 	gxSpritePage 				; and point to the sprite page.
+		sta 	GXEditSlot
+
+		lda 	(gxzTemp1) 					; get the first sprite record header, identifying the format.
+		cmp 	#$11						; should be $11
+		bne 	_GXFSFail 					; if not, fail
+
+		jsr 	_GXFSIncrement 				; increment pointers.
+		;
+		;		Main search loop
+		;
+_GXFindLoop:
+		lda 	(gxzTemp1) 					; reached the end, if so then failed.
+		cmp 	#$80
+		beq 	_GXFSFail
+		cpx 	#0 							; if zero, then found.
+		beq 	_GXFSFound
+		dex 								; decrement count.
+
+		asl 	a 							; index into table
+		tay 								; so we can look it up.
+
+		clc 								; add LSB
+		lda 	gxSpriteOffset
+		adc 	_GXFSSizeTable,y
+		sta 	gxSpriteOffset 				; these two should move in lock step.
+		sta 	gxzTemp1
+		bcc 	_GXNextNoCarry 				; adjust for carry as we add the MSB seperately.
+		inc 	gxSpriteOffset+1
+		inc 	gxzTemp1+1
+_GXNextNoCarry:
+		clc
+		lda 	gxzTemp1+1 					; add MSB
+		adc 	_GXFSSizeTable+1,y
+		sta 	gxzTemp1+1
+		lda 	gxSpriteOffset+1
+		adc 	_GXFSSizeTable+1,y
+		sta 	gxSpriteOffset+1
+		jsr 	_GXFSNormalise 				; and normalise the page address.
+		bra 	_GXFindLoop 				; and go round again.
+		;
+		;		Found the sprite, copy the data out.
+		;
+_GXFSFound:
+		lda 	(gxzTemp1)					; get the bit size (e.g. 0-3)
 		sta 	gxSizeBits
-		lda 	#8
+		inc 	a 							; 1,2,3,4 - calculating pixel size
+		asl 	a 							; 2,4,6,8
+		asl 	a 							; 4,8,12,16
+		asl 	a 							; 8,16,24,32
 		sta 	gxSizePixels
 
-		stz 	gxSpriteLUT
+		jsr 	_GXFSIncrement 				; and to the LUT
+		lda 	(gxzTemp1) 					; copy that out.
+		sta 	gxSpriteLUT
 
+		jsr 	_GXFSIncrement 				; and it now points to the first graphic data byte
 		clc
 		rts
+;
+;		Advance offset/address by 1.
+;
+_GXFSIncrement:
+		inc 	gxSpriteOffset 				; these two should move in sync
+		inc 	gxzTemp1
+		bne 	_GXFSNormalise
+		inc 	gxSpriteOffset+1
+		inc 	gxzTemp1+1
+;
+;		If overflow, adjust back.
+;
+_GXFSNormalise:
+		lda 	gxzTemp1+1 					; are we out of range.
+		cmp 	#(GXMappingAddress >> 8)+$20
+		bcc 	_GXFSOkay
+		inc 	GXEditSlot 					; next 8k page
+		sec 								; adjust page address back
+		sbc 	#$20
+		sta 	gxzTemp1+1
+_GXFSOkay:
+		rts
 
-;		tax
-;
-;		lda 	gxSpritePage 				; access the base page of the sprite
-;		sta 	GXEditSlot
-;		;
-;		lda 	GXMappingAddress+256,x 		; check a valid sprite
-;		ora 	GXMappingAddress,x
-;		beq 	_GXFSFail
-;		;
-;		lda 	GXMappingAddress+256,x 		; MSB
-;		sta 	gxSpriteOffset+1
-;		;
-;		lda 	GXMappingAddress,x 			; LSB
-;		pha 								; save twice
-;		pha
-;		and 	#3 							; get sprite size
-;		sta 	gxSizeBits 					; save raw (0-3)
-;		tax
-;		lda 	_GXFXSSTTable,x 			; read sprite size
-;		sta 	gxSizePixels 				; save (8/16/24/32)
-;
-;		pla 								; get LUT
-;		lsr		a
-;		lsr		a
-;		and 	#3
-;		sta 	gxSpriteLUT
-;		;
-;		pla 								; address, neeeds to be x 4
-;		and 	#$F0
-;		sta 	gxSpriteOffset
-;
-;		asl 	gxSpriteOffset
-;		rol 	gxSpriteOffset+1
-;		asl 	gxSpriteOffset
-;		rol 	gxSpriteOffset+1
-;
-;		clc
-;		rts
 _GXFSFail:
 		sec
 		rts
-	;
-
-_GXFXSSTTable:
-		.byte 	8,16,24,32
+;
+;		Total size of each sprite entry (pixel size^2 + lut + size)
+;
+_GXFSSizeTable:
+		.word 	8*8+2,16*16+2,24*24+2,32*32+2
 
 		.send code
+
 		.section storage
 
 gxSizePixels: 									; sprite size (in pixels)

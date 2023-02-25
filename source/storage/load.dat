@@ -1,3 +1,5 @@
-100 sprites on
-110 sprite 0 image 0 to 100,70
+100 sprites on:cls:bitmap clear 1
+110 for i = 0 to 11
+120 sprite i image i to i*20,i*20
+130 next
 ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ

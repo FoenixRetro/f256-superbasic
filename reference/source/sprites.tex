@@ -26,7 +26,7 @@ They can be created individually, or ripped from spritesheets - this is what rip
 
 \section{Building a sprite data set}
 	
-Sprite data sets are built using the spritebuild.py python script. Again there is an example of this in the Solarfox directory.
+Sprite data sets are built using the spritebuild.py python script (in the utilities subdirectory). Again there is an example of this in the Solarfox directory.
 
 Sprite set building is done using the spritebuild.py script which takes a file of sprite definitions. This is a simple text list of files, which can be either png files as is, or postfixed by a rotate angle (only 0,90,180 and 270) or v or h for vertical and horizontal mirroring.
 
@@ -50,12 +50,15 @@ When building the sprite it strips it as much as possible and centres it in the 
 
 \section{Data format}
 
-At present there is a very simple data format. The first 512 bytes are 2 256 byte records, the low byte in the first 256 bytes, the high byte in the second 256 bytes.
+At present there is a very simple data format. \
 
-That byte has the following format:
+\begin{verbatim}
++00 is the format code ($11) 
++01 is the sprite size  (0-3, representing 8,16,24 and 32 pixel size) 
++02 the LUT to use (normally zero) 
++03 the first byte of sprite data 
+\end{verbatim}
 
-00aaaaaa aaaallss
+the size, LUT and data are then repeated for every sprite in the sprite set. The file should end with a sprite size of \$80 (128) to indicate the end of the set.
 
-aaaaaaaaaa is the offset from the start of the file divided by 64 (e.g. shifted 6 right)
-ll is the LUT to use (currently only LUT 0 is available)
-ss is the size of the sprite (0:8x8, 1:16x16 2:24x24 3:32x323)
+

@@ -234,4 +234,7 @@ Release 38: (23/02/23)
 	CHG: TILE and TILE() command/function added and documented
 	CHG: /<command> added to command line interface.
 
-	
+Release 39: (25/02/23)
+
+	CHG: New Sprite Format.
+		

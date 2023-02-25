@@ -187,6 +187,8 @@ class SpriteCollection(object):
 	#		+02 	LUT of sprite 0.
 	#		+03 	First byte of sprite 0 ....
 	#
+	#		Then 1,2,3 repeat for each sprite in the list, numbered sequentially.
+	#
 	def outputSprite(self,file = "graphics.bin"):
 			h = open(file,"wb")
 			h.write(bytes([0x11]))							
