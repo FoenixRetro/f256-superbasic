@@ -172,38 +172,37 @@ VectorSet1:
 	.word	ClearScreen                      ; $88 CLS
 	.word	Command_CPrint                   ; $89 CPRINT
 	.word	Command_Dir                      ; $8a DIR
-	.word	BootDOS                          ; $8b DOS
-	.word	Command_Drive                    ; $8c DRIVE
-	.word	EndCommand                       ; $8d END
-	.word	Explode                          ; $8e EXPLODE
-	.word	SyntaxError                      ; $8f GO
-	.word	Command_GOSUB                    ; $90 GOSUB
-	.word	GotoCommand                      ; $91 GOTO
-	.word	SyntaxError                      ; $92 HIMEM
-	.word	Command_Input                    ; $93 INPUT
-	.word	Command_List                     ; $94 LIST
-	.word	Command_Load                     ; $95 LOAD
-	.word	MouseDeltaStatus                 ; $96 MDELTA
-	.word	MouseStatus                      ; $97 MOUSE
-	.word	NewCommand                       ; $98 NEW
-	.word	PingCommand                      ; $99 PING
-	.word	Command_Print                    ; $9a PRINT
-	.word	Command_Restore                  ; $9b RESTORE
-	.word	Command_RETURN                   ; $9c RETURN
-	.word	CommandRUNOptLoad                ; $9d RUN
-	.word	Command_Save                     ; $9e SAVE
-	.word	CommandSetDate                   ; $9f SETDATE
-	.word	CommandSetTime                   ; $a0 SETTIME
-	.word	ShootCommand                     ; $a1 SHOOT
-	.word	SpritesCtrl                      ; $a2 SPRITES
-	.word	StopCommand                      ; $a3 STOP
-	.word	SyntaxError                      ; $a4 TILE
-	.word	TilesCtrl                        ; $a5 TILES
-	.word	Command_Try                      ; $a6 TRY
-	.word	Command_VERIFY                   ; $a7 VERIFY
-	.word	XGoCommand                       ; $a8 XGO
-	.word	XLoadCommand                     ; $a9 XLOAD
-	.word	ZapCommand                       ; $aa ZAP
+	.word	Command_Drive                    ; $8b DRIVE
+	.word	EndCommand                       ; $8c END
+	.word	Explode                          ; $8d EXPLODE
+	.word	SyntaxError                      ; $8e GO
+	.word	Command_GOSUB                    ; $8f GOSUB
+	.word	GotoCommand                      ; $90 GOTO
+	.word	SyntaxError                      ; $91 HIMEM
+	.word	Command_Input                    ; $92 INPUT
+	.word	Command_List                     ; $93 LIST
+	.word	Command_Load                     ; $94 LOAD
+	.word	MouseDeltaStatus                 ; $95 MDELTA
+	.word	MouseStatus                      ; $96 MOUSE
+	.word	NewCommand                       ; $97 NEW
+	.word	PingCommand                      ; $98 PING
+	.word	Command_Print                    ; $99 PRINT
+	.word	Command_Restore                  ; $9a RESTORE
+	.word	Command_RETURN                   ; $9b RETURN
+	.word	CommandRUNOptLoad                ; $9c RUN
+	.word	Command_Save                     ; $9d SAVE
+	.word	CommandSetDate                   ; $9e SETDATE
+	.word	CommandSetTime                   ; $9f SETTIME
+	.word	ShootCommand                     ; $a0 SHOOT
+	.word	SpritesCtrl                      ; $a1 SPRITES
+	.word	StopCommand                      ; $a2 STOP
+	.word	SyntaxError                      ; $a3 TILE
+	.word	TilesCtrl                        ; $a4 TILES
+	.word	Command_Try                      ; $a5 TRY
+	.word	Command_VERIFY                   ; $a6 VERIFY
+	.word	XGoCommand                       ; $a7 XGO
+	.word	XLoadCommand                     ; $a8 XLOAD
+	.word	ZapCommand                       ; $a9 ZAP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

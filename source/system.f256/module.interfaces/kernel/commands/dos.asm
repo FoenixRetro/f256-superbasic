@@ -12,11 +12,9 @@
 
 		.section code
 
-BootDOS:	;; [dos]
-            lda     #dosName & $FF
+BootXA:            
             sta     kernel.args.buf+0
-            lda     #dosName >> 8
-            sta     kernel.args.buf+1
+            stx     kernel.args.buf+1
             jsr     kernel.RunNamed
             jmp 	WarmStart
 
@@ -32,5 +30,6 @@ dosName:	.text 	"DOS",0
 ;
 ;		Date			Notes
 ;		==== 			=====
+;       25/02/23        Tweaked to allow general usage. Actual "dos" command no longer supported.
 ;
 ; ************************************************************************************************

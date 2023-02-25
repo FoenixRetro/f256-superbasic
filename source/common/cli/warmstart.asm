@@ -24,6 +24,17 @@ WarmStart:
 		lda 	#CLICommandLine+$80 		; set console colour whatever the current colour is.
 		jsr 	EXTPrintCharacter
 		jsr 	EXTInputLine 				; get line to lineBuffer
+		;
+		;		Check for /x
+		;
+		lda 	lineBuffer 					; first character is slash
+		cmp 	#"/"
+		bne 	_WSNotSlash
+		ldx 	#(lineBuffer+1) >> 8 		; boot rest of line.
+		lda 	#(lineBuffer+1) & $FF
+		jmp 	BootXA
+
+_WSNotSlash:			
 		jsr 	TKTokeniseLine 				; tokenise the line
 		;
 		;		Decide whether editing or running
@@ -60,5 +71,6 @@ _WSEditCode:
 ;		Date			Notes
 ;		==== 			=====
 ;		26/11/22 		Added code to set console colour when typing in commands.
+;		25/02/23		Support for /<command>
 ;
 ; ***************************************************************************************
