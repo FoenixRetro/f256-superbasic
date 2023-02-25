@@ -113,6 +113,7 @@
 	.include	"./system.f256/module.interfaces/graphics/gfx.asm"
 	.include	"./system.f256/module.interfaces/graphics/hit.asm"
 	.include	"./system.f256/module.interfaces/graphics/palette.asm"
+	.include	"./system.f256/module.interfaces/graphics/tile.asm"
 	.include	"./system.f256/module.interfaces/hardware/cls.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/crossdev.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/dos.asm"

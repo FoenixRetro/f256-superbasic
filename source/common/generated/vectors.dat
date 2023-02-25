@@ -109,7 +109,7 @@ VectorSet0:
 	.word	SgnUnary                         ; $a7 SGN(
 	.word	SpcUnary                         ; $a8 SPC(
 	.word	Unary_Str                        ; $a9 STR$(
-	.word	SyntaxError                      ; $aa TILE(
+	.word	TileRead                         ; $aa TILE(
 	.word	UnaryTimer                       ; $ab TIMER(
 	.word	UnaryTrue                        ; $ac TRUE
 	.word	ValUnary                         ; $ad VAL(
@@ -196,7 +196,7 @@ VectorSet1:
 	.word	ShootCommand                     ; $a0 SHOOT
 	.word	SpritesCtrl                      ; $a1 SPRITES
 	.word	StopCommand                      ; $a2 STOP
-	.word	SyntaxError                      ; $a3 TILE
+	.word	TileCommand                      ; $a3 TILE
 	.word	TilesCtrl                        ; $a4 TILES
 	.word	Command_Try                      ; $a5 TRY
 	.word	Command_VERIFY                   ; $a6 VERIFY

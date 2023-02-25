@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.2.23)  23 FEB 2023 16:26
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.2.23)  25 FEB 2023 14:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1002,23 +1002,23 @@ ine 120.
 LaTeX Font Info:    Font shape `T1/NotoSerif-TLF/m/it' will be
 (Font)              scaled to size 8.99994pt on input line 120.
 [27] [28] [29] [30] [31] [32]
-Overfull \hbox (43.98083pt too wide) in paragraph at lines 352--355
+Overfull \hbox (43.98083pt too wide) in paragraph at lines 345--348
 \T1/NotoSerif-TLF/m/n/10 Tests if two sprites over-lap. This is done us-ing a b
 ox test based on the size of the sprite (e.g. 8x8,16x16,24x24,32x32)
  []
 
 [33] [34]
-Underfull \hbox (badness 10000) in paragraph at lines 428--429
+Underfull \hbox (badness 10000) in paragraph at lines 421--422
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 438--439
+Underfull \hbox (badness 10000) in paragraph at lines 431--432
 
  []
 
 [35] [36] [37]
-Overfull \hbox (42.90874pt too wide) in paragraph at lines 542--543
+Overfull \hbox (42.90874pt too wide) in paragraph at lines 535--536
 \T1/NotoSerif-TLF/m/n/10 Returns a sub-seg-ment of a string, given the start po
 -si-tion (first char-ac-ter is 1) and the length, so mid$(^^Pabcdef^^Q,3,2)
  []
@@ -1028,8 +1028,8 @@ Package rerunfilecheck Info: File `f256jr_basic_ref.out' has not changed.
 (rerunfilecheck)             Checksum: F15CED353609DAB3835A1C0B00D4B169;5579.
  ) 
 Here is how much of TeX's memory you used:
- 19314 strings out of 478238
- 354844 string characters out of 5850456
+ 19316 strings out of 478238
+ 354868 string characters out of 5850456
  546710 words of memory out of 5000000
  36944 multiletter control sequences out of 15000+600000
  535708 words of font info for 84 fonts, out of 8000000 for 9000
@@ -1045,10 +1045,10 @@ f-Italic.pfb></usr/share/texmf-dist/fonts/type1/google/noto/NotoSerif-Regular.p
 fb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/share/
 texmf-dist/fonts/type1/public/newtx/txsys.pfb></usr/share/texmf-dist/fonts/type
 1/urw/zapfchan/uzcmi8a.pfb>
-Output written on f256jr_basic_ref.pdf (45 pages, 207312 bytes).
+Output written on f256jr_basic_ref.pdf (45 pages, 207712 bytes).
 PDF statistics:
- 753 PDF objects out of 1000 (max. 8388607)
- 683 compressed objects within 7 object streams
- 308 named destinations out of 1000 (max. 500000)
+ 755 PDF objects out of 1000 (max. 8388607)
+ 685 compressed objects within 7 object streams
+ 310 named destinations out of 1000 (max. 500000)
  353 words of extra memory for PDF output out of 10000 (max. 10000000)
 

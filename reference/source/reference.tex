@@ -249,13 +249,6 @@ Dimension number or string arrays with up to two dimensions, with a maximum of 2
 	110 dim name$(10,2)
 \end{verbatim}
 
-\section*{dos}
-Switches to the F256 DOS Shell. This can also be done by the more general /<command> from the command line. I'm not quite sure why it would be used in a program but ....
-\example{}
-\begin{verbatim}
-	100 dos
-\end{verbatim}
-
 \section*{drive}
 Sets the current drive for load save. The default drive is zero.
 \example{}
@@ -772,6 +765,22 @@ Draws a possibly scaled or flipped string from the standard font on the bitmap, 
 \example{}
 \begin{verbatim}
 	100 text “hello” dim 2 colour 3 to 100,100
+\end{verbatim}
+
+\section*{tile}
+Manipulates the tile map. This allows you to set the scroll offset (with TO xscroll,yscroll) and draw on the time map using AT x,y to set the position and PLOT followed by a list of tiles, with a repeat option using FOR to draw on it. (In the examples, lines 110 and 120 do the same thing)
+\example{}
+\begin{verbatim}
+	100 tile to 12,0
+	110 tile at 4,5 draw 10,11,11,11,10
+	120 tile at 4,5 draw 10,11 for 3,10
+\end{verbatim}
+
+\section*{tile()}
+Returns the tile at the given tile map position (not screen position)
+\example{}
+\begin{verbatim}
+	100 print tile(2,3)
 \end{verbatim}
 
 \section*{tiles}
