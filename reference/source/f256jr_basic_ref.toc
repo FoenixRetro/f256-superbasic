@@ -2,43 +2,43 @@
 \contentsline {section}{\numberline {1.1}Introduction}{5}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Storage}{5}{section.1.2}%
 \contentsline {section}{\numberline {1.3}Memory usage}{5}{section.1.3}%
-\contentsline {section}{\numberline {1.4}Memory usage elsewhere}{5}{section.1.4}%
+\contentsline {section}{\numberline {1.4}Memory usage elsewhere}{6}{section.1.4}%
 \contentsline {chapter}{\numberline {2}Writing Programs in SuperBASIC}{7}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Writing programs}{7}{section.2.1}%
-\contentsline {chapter}{\numberline {3}Structured Programming}{9}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Named procedures}{9}{section.3.1}%
-\contentsline {section}{\numberline {3.2}While and Repeat}{9}{section.3.2}%
-\contentsline {section}{\numberline {3.3}For loops }{9}{section.3.3}%
-\contentsline {section}{\numberline {3.4}If ... Else ... Endif}{9}{section.3.4}%
-\contentsline {chapter}{\numberline {4}Variables, arrays and typing}{11}{chapter.4}%
-\contentsline {section}{\numberline {4.1}variable naming}{11}{section.4.1}%
-\contentsline {section}{\numberline {4.2}types}{11}{section.4.2}%
-\contentsline {section}{\numberline {4.3}arrays}{11}{section.4.3}%
-\contentsline {chapter}{\numberline {5}Graphics}{13}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Introduction}{13}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Graphics Modifiers and Actions}{13}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Some useful examples}{13}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Ranges}{14}{section.5.4}%
-\contentsline {chapter}{\numberline {6}Tiles and Tilemaps}{15}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Sprites}{17}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Introduction}{17}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Creating sprites}{17}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Getting images}{17}{section.7.3}%
-\contentsline {section}{\numberline {7.4}Building a sprite data set}{17}{section.7.4}%
-\contentsline {section}{\numberline {7.5}Data format}{18}{section.7.5}%
-\contentsline {chapter}{\numberline {8}Sound}{19}{chapter.8}%
-\contentsline {section}{\numberline {8.1}Introduction}{19}{section.8.1}%
-\contentsline {section}{\numberline {8.2}Channels}{19}{section.8.2}%
-\contentsline {section}{\numberline {8.3}Easy commands}{19}{section.8.3}%
-\contentsline {chapter}{\numberline {9}Inline Assembly}{21}{chapter.9}%
-\contentsline {section}{\numberline {9.1}How it works}{21}{section.9.1}%
-\contentsline {section}{\numberline {9.2}Limitations}{21}{section.9.2}%
-\contentsline {chapter}{\numberline {10}Cross Development of BASIC Programs}{23}{chapter.10}%
-\contentsline {section}{\numberline {10.1}Assistance}{23}{section.10.1}%
-\contentsline {section}{\numberline {10.2}Connection}{23}{section.10.2}%
-\contentsline {section}{\numberline {10.3}Software}{23}{section.10.3}%
-\contentsline {section}{\numberline {10.4}BASIC}{23}{section.10.4}%
-\contentsline {section}{\numberline {10.5}Uploading and running}{24}{section.10.5}%
-\contentsline {section}{\numberline {10.6}Versions}{24}{section.10.6}%
-\contentsline {section}{\numberline {10.7}Sprites}{24}{section.10.7}%
-\contentsline {chapter}{\numberline {11}Keyword Reference}{25}{chapter.11}%
+\contentsline {chapter}{\numberline {3}Variables, arrays and typing}{9}{chapter.3}%
+\contentsline {section}{\numberline {3.1}variable naming}{9}{section.3.1}%
+\contentsline {section}{\numberline {3.2}types}{9}{section.3.2}%
+\contentsline {section}{\numberline {3.3}arrays}{9}{section.3.3}%
+\contentsline {chapter}{\numberline {4}Structured Programming}{11}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Named procedures}{11}{section.4.1}%
+\contentsline {section}{\numberline {4.2}While and Repeat}{12}{section.4.2}%
+\contentsline {section}{\numberline {4.3}For loops }{12}{section.4.3}%
+\contentsline {section}{\numberline {4.4}If ... Else ... Endif}{13}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Graphics}{15}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Introduction}{15}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Graphics Modifiers and Actions}{15}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Some useful examples}{15}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Ranges}{16}{section.5.4}%
+\contentsline {chapter}{\numberline {6}Tiles and Tilemaps}{17}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Sprites}{19}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Introduction}{19}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Creating sprites}{19}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Getting images}{19}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Building a sprite data set}{19}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Data format}{20}{section.7.5}%
+\contentsline {chapter}{\numberline {8}Sound}{21}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Introduction}{21}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Channels}{21}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Easy commands}{21}{section.8.3}%
+\contentsline {chapter}{\numberline {9}Inline Assembly}{23}{chapter.9}%
+\contentsline {section}{\numberline {9.1}How it works}{23}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Limitations}{23}{section.9.2}%
+\contentsline {chapter}{\numberline {10}Cross Development of BASIC Programs}{25}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Assistance}{25}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Connection}{25}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Software}{25}{section.10.3}%
+\contentsline {section}{\numberline {10.4}BASIC}{25}{section.10.4}%
+\contentsline {section}{\numberline {10.5}Uploading and running}{26}{section.10.5}%
+\contentsline {section}{\numberline {10.6}Versions}{26}{section.10.6}%
+\contentsline {section}{\numberline {10.7}Sprites}{26}{section.10.7}%
+\contentsline {chapter}{\numberline {11}Keyword Reference}{27}{chapter.11}%
