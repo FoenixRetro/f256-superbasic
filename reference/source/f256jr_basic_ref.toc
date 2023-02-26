@@ -33,7 +33,9 @@
 \contentsline {section}{\numberline {8.3}Easy commands}{21}{section.8.3}%
 \contentsline {chapter}{\numberline {9}Inline Assembly}{23}{chapter.9}%
 \contentsline {section}{\numberline {9.1}How it works}{23}{section.9.1}%
-\contentsline {section}{\numberline {9.2}Limitations}{23}{section.9.2}%
+\contentsline {section}{\numberline {9.2}The Assemble command}{23}{section.9.2}%
+\contentsline {section}{\numberline {9.3}Two pass Assembly}{23}{section.9.3}%
+\contentsline {section}{\numberline {9.4}Limitations}{24}{section.9.4}%
 \contentsline {chapter}{\numberline {10}Cross Development of BASIC Programs}{25}{chapter.10}%
 \contentsline {section}{\numberline {10.1}Assistance}{25}{section.10.1}%
 \contentsline {section}{\numberline {10.2}Connection}{25}{section.10.2}%
