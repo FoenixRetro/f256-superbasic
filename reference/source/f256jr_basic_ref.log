@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.2.26)  26 FEB 2023 15:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.2.26)  26 FEB 2023 16:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -844,7 +844,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 21--22
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 33--34
+Underfull \hbox (badness 10000) in paragraph at lines 23--24
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--26
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--28
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--30
 
  []
 
@@ -867,6 +882,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 39--40
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 41--42
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--44
 
  []
 
@@ -912,7 +932,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 16--17
 
  []
 
-) (./variables.tex [7
+) (./variables.tex
+Underfull \hbox (badness 10000) in paragraph at lines 18--1
+
+ []
+
+[7
 
 ] [8
 
@@ -966,6 +991,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 3--4
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 5--6
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 11--12
 
  []
 
@@ -1082,18 +1112,38 @@ Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
 [][][][][][][][][][]  
  []
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 17--18
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 19--20
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 21--22
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 33--34
+
+ []
+
 ) (./sprites.tex [17
 
-] [18
-
-]
+] [18]
 Chapter 7.
 
 Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
 [][][][][][][][][][]  
  []
 
-[19]) (./sound.tex [20]
+[19
+
+]) (./sound.tex [20]
 Chapter 8.
 
 Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
@@ -1200,13 +1250,13 @@ Overfull \hbox (42.90874pt too wide) in paragraph at lines 535--536
 
 [40] [41] [42] [43] [44] [45] [46]) [47] (./f256jr_basic_ref.aux)
 Package rerunfilecheck Info: File `f256jr_basic_ref.out' has not changed.
-(rerunfilecheck)             Checksum: 4CF1AC2EF8749B15E067C3213E86377C;6120.
+(rerunfilecheck)             Checksum: 02603E404EDCFF9B5B7C5E3F47040AE8;6712.
  ) 
 Here is how much of TeX's memory you used:
- 19324 strings out of 478238
- 354954 string characters out of 5850456
- 547710 words of memory out of 5000000
- 36947 multiletter control sequences out of 15000+600000
+ 19332 strings out of 478238
+ 355050 string characters out of 5850456
+ 547713 words of memory out of 5000000
+ 36951 multiletter control sequences out of 15000+600000
  535708 words of font info for 84 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  84i,8n,90p,597b,1007s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1220,10 +1270,10 @@ f-Italic.pfb></usr/share/texmf-dist/fonts/type1/google/noto/NotoSerif-Regular.p
 fb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/share/
 texmf-dist/fonts/type1/public/newtx/txsys.pfb></usr/share/texmf-dist/fonts/type
 1/urw/zapfchan/uzcmi8a.pfb>
-Output written on f256jr_basic_ref.pdf (47 pages, 218470 bytes).
+Output written on f256jr_basic_ref.pdf (47 pages, 221020 bytes).
 PDF statistics:
- 780 PDF objects out of 1000 (max. 8388607)
- 707 compressed objects within 8 object streams
- 315 named destinations out of 1000 (max. 500000)
- 377 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 801 PDF objects out of 1000 (max. 8388607)
+ 728 compressed objects within 8 object streams
+ 319 named destinations out of 1000 (max. 500000)
+ 409 words of extra memory for PDF output out of 10000 (max. 10000000)
 

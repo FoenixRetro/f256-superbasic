@@ -20,7 +20,11 @@
 \contentsline {section}{\numberline {5.3}Graphics Modifiers and Actions}{15}{section.5.3}%
 \contentsline {section}{\numberline {5.4}Some useful examples}{16}{section.5.4}%
 \contentsline {section}{\numberline {5.5}Ranges}{16}{section.5.5}%
-\contentsline {chapter}{\numberline {6}Tiles and Tilemaps}{17}{chapter.6}%
+\contentsline {chapter}{\numberline {6}Tiles and Tile Maps}{17}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Introduction}{17}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Setting up a Tile Map}{17}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Manipulating a Tile Map}{17}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Data formats}{17}{section.6.4}%
 \contentsline {chapter}{\numberline {7}Sprites}{19}{chapter.7}%
 \contentsline {section}{\numberline {7.1}Introduction}{19}{section.7.1}%
 \contentsline {section}{\numberline {7.2}Creating sprites}{19}{section.7.2}%
