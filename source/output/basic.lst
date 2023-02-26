@@ -1,13 +1,13 @@
 
 ; 64tass Turbo Assembler Macro V1.58.2974? listing file
-; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$34000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" "-D TILEMAP_ADDRESS=\$24000" "-D TILEIMAGES_ADDRESS=\$26000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Sun Feb 26 09:26:51 2023
+; 64tass -D AUTORUN=1 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$34000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" "-D TILEMAP_ADDRESS=\$24000" "-D TILEIMAGES_ADDRESS=\$26000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
+; Sun Feb 26 10:08:43 2023
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
 ;******  Command line definitions
 
-=0						AUTORUN=0
+=1						AUTORUN=1
 =$e000						 MONITOR_ADDRESS=$E000
 =$f000						 LOCKOUT_ADDRESS=$F000
 =$34000						 BASIC_ADDRESS=$34000
@@ -598,8 +598,8 @@
 .811f		20 08 94	jsr $9408			jsr 	PrintStringXA
 .8122		20 77 82	jsr $8277			jsr 	ResetIOTracking 			; reset the I/O tracking.
 .8125		20 f5 8d	jsr $8df5			jsr 	NewProgram 					; erase current program
-.8128		4c 01 88	jmp $8801			jmp 	WarmStart					; make same size.
-.812b		4c 01 88	jmp $8801			jmp 	WarmStart
+.8128		20 19 87	jsr $8719			jsr 	BackloadProgram
+.812b		4c 80 8f	jmp $8f80			jmp 	RunCurrentProgram
 >812e		0d				Prompt:	.text 	13
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
@@ -2200,9 +2200,11 @@
 .8761		ad 27 04	lda $0427			lda 	tokenLineNumber 			; line number = 0
 .8764		0d 28 04	ora $0428			ora 	tokenLineNumber+1
 .8767		f0 d4		beq $873d			beq 	_BPLoop 					; not legal code, blank line or maybe a comment.
-.8769		20 8e 87	jsr $878e			jsr 	BLCheckLast 				; check last backload okay.
-.876c		38		sec				sec 								; append not insert
-.876d		20 75 a6	jsr $a675			jsr 	MemoryInsertLine 			; append to current program
+.8769		ea		nop				nop
+.876a		ea		nop				nop
+.876b		ea		nop				nop
+.876c		ea		nop				nop
+.876d		20 dc 87	jsr $87dc			jsr 	EditProgramCode
 .8770		80 cb		bra $873d			bra 	_BPLoop
 .8772						_BPExit:
 .8772		9c fa ff	stz $fffa			stz 	$FFFA

@@ -16,9 +16,10 @@
 \contentsline {section}{\numberline {4.4}If ... Else ... Endif}{13}{section.4.4}%
 \contentsline {chapter}{\numberline {5}Graphics}{15}{chapter.5}%
 \contentsline {section}{\numberline {5.1}Introduction}{15}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Graphics Modifiers and Actions}{15}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Some useful examples}{15}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Ranges}{16}{section.5.4}%
+\contentsline {section}{\numberline {5.2}Bitmap Graphics}{15}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Graphics Modifiers and Actions}{15}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Some useful examples}{16}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Ranges}{16}{section.5.5}%
 \contentsline {chapter}{\numberline {6}Tiles and Tilemaps}{17}{chapter.6}%
 \contentsline {chapter}{\numberline {7}Sprites}{19}{chapter.7}%
 \contentsline {section}{\numberline {7.1}Introduction}{19}{section.7.1}%

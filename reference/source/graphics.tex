@@ -2,7 +2,19 @@
 
 \section{Introduction}
 
-Graphics can be done in one of three ways. 
+The graphics subsystem consists of three components, which is a subset of the full capabilities of the F256 machines.\\
+
+Firstly there is an 8x8 pixel tile grid of up to 256x256 tiles, which can be scrolled about.\\
+
+Secondly, on top of that is a 320x240 bitmap screen, which can have anything drawn on it.\\
+
+Thirdly, on top of that, are the sprites.\\
+
+The graphics are much more complex than this ; the system allows up to three tile maps for example. Those can be done in BASIC if you wish, by directly accessing the system registers, as covered in the hardware reference guide.\\
+
+\section{Bitmap Graphics}
+
+Bitmap Graphics can be done in one of three ways. 
 
 \begin{itemize}
 \item Firstly, they can be done using BASIC commands like LINE, PLOT and TEXT. These are the easiest.
