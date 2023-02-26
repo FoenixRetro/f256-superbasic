@@ -5,10 +5,10 @@
 \contentsline {section}{\numberline {1.4}Memory usage elsewhere}{6}{section.1.4}%
 \contentsline {chapter}{\numberline {2}Writing Programs in SuperBASIC}{7}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Writing programs}{7}{section.2.1}%
-\contentsline {chapter}{\numberline {3}Variables, arrays and typing}{9}{chapter.3}%
-\contentsline {section}{\numberline {3.1}variable naming}{9}{section.3.1}%
-\contentsline {section}{\numberline {3.2}types}{9}{section.3.2}%
-\contentsline {section}{\numberline {3.3}arrays}{9}{section.3.3}%
+\contentsline {chapter}{\numberline {3}Identifiers, Variables and typing}{9}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Procedure and variable naming}{9}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Types}{9}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Arrays}{10}{section.3.3}%
 \contentsline {chapter}{\numberline {4}Structured Programming}{11}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Named procedures}{11}{section.4.1}%
 \contentsline {section}{\numberline {4.2}While and Repeat}{12}{section.4.2}%

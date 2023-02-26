@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.2.26)  26 FEB 2023 09:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.2.26)  26 FEB 2023 09:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -818,14 +818,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 7--8
  []
 
 
-Overfull \hbox (60.40598pt too wide) in paragraph at lines 9--10
-\T1/NotoSerif-TLF/m/n/10 line num-bers, there are some ex-am-ples of such at th
-e pri-mary github at http://github.com/paulscottrobson/superbasic
+Underfull \hbox (badness 10000) in paragraph at lines 9--10
+
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 9--10
-
+Overfull \hbox (60.40598pt too wide) in paragraph at lines 11--12
+\T1/NotoSerif-TLF/m/n/10 line num-bers, there are some ex-am-ples of such at th
+e pri-mary github at http://github.com/paulscottrobson/superbasic
  []
 
 
@@ -834,23 +834,23 @@ Underfull \hbox (badness 10000) in paragraph at lines 11--12
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 19--20
+Underfull \hbox (badness 10000) in paragraph at lines 13--14
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 31--32
+Underfull \hbox (badness 10000) in paragraph at lines 21--22
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 33--34
 
  []
 
 [5
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 33--34
-
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 35--36
 
  []
@@ -862,6 +862,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 37--38
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 39--40
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--42
 
  []
 
@@ -918,9 +923,36 @@ Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
 [][][][][][][][][][]  
  []
 
-) (./procedures.tex [9] [10
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 8
+.
+(/usr/share/texmf-dist/tex/latex/base/t1cmtt.fd
+File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+)
+Underfull \hbox (badness 10000) in paragraph at lines 17--18
 
-]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--24
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--26
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--28
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--30
+
+ []
+
+[9]) (./procedures.tex [10]
 Chapter 4.
 
 Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
@@ -942,11 +974,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 13--14
 
  []
 
-LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 1
-5.
-(/usr/share/texmf-dist/tex/latex/base/t1cmtt.fd
-File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
-)
+
 Underfull \hbox (badness 10000) in paragraph at lines 23--24
 
  []
@@ -956,7 +984,9 @@ Underfull \hbox (badness 10000) in paragraph at lines 37--38
 
  []
 
-[11]
+[11
+
+]
 Underfull \hbox (badness 10000) in paragraph at lines 110--111
 
  []
@@ -1114,7 +1144,7 @@ Overfull \hbox (42.90874pt too wide) in paragraph at lines 535--536
 
 [40] [41] [42] [43] [44] [45] [46]) [47] (./f256jr_basic_ref.aux)
 Package rerunfilecheck Info: File `f256jr_basic_ref.out' has not changed.
-(rerunfilecheck)             Checksum: AD65263E9DB962B44D46361C5B4CF80D;5579.
+(rerunfilecheck)             Checksum: 2879BB31BAC1E477A12CB18EB3493ED7;5680.
  ) 
 Here is how much of TeX's memory you used:
  19318 strings out of 478238
@@ -1134,7 +1164,7 @@ f-Italic.pfb></usr/share/texmf-dist/fonts/type1/google/noto/NotoSerif-Regular.p
 fb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/share/
 texmf-dist/fonts/type1/public/newtx/txsys.pfb></usr/share/texmf-dist/fonts/type
 1/urw/zapfchan/uzcmi8a.pfb>
-Output written on f256jr_basic_ref.pdf (47 pages, 213498 bytes).
+Output written on f256jr_basic_ref.pdf (47 pages, 215365 bytes).
 PDF statistics:
  763 PDF objects out of 1000 (max. 8388607)
  691 compressed objects within 7 object streams

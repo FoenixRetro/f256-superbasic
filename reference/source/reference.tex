@@ -228,7 +228,7 @@ Draws a circle, using the standard syntax. The vertical height defines the radiu
 \end{verbatim}
 
 \section*{cprint}
-Operates the same as the print command, but control characters (e.g. 00-1F,80-FF) are printed using the characters from the FONT rom, not as control characters. The example below prints a horizontal upper bar character, not a new line.
+Operates the same as the print command, but control characters (e.g. 00-1F,80-FF) are printed using the characters from the FONT memory, not as control characters. The example below prints a horizontal upper bar character, not a new line.
 \example{}
 \begin{verbatim}
 	100 cprint chr$(13);
@@ -401,15 +401,15 @@ This is a support for val and takes the same parameter, a string  This deals wit
 \end{verbatim}
 
 \section*{itemcount()}
-Together , itemcount and itemget provide a way of encoding multiple data items in strings. A multiple-element string has a seperating character, which can be any ASCII character, often a comma. 
-itemcount() takes a string and a seperator and returns the number of items in the string if seperated by that seperator. The example prints '2' as there are two elements seperated by a comma, the strins hello and world.
+Together , itemcount and itemget provide a way of encoding multiple data items in strings. A multiple-element string has a separating character, which can be any ASCII character, often a comma. 
+itemcount() takes a string and a separator and returns the number of items in the string if separated by that separator. The example prints '2' as there are two elements separated by a comma, the strings hello and world.
 \example{}
 \begin{verbatim}
 	100 print itemcount("hello,world",",")
 \end{verbatim}
 
 \section*{itemget\$()}
-Together , itemcount and itemget provide a way of encoding multiple data items in strings. A multiple-element string has a seperating character, which can be any ASCII character, often a comma.  itemget\$() takes three parameters, the string, the index of the substring required, which starts at '1' and the seperator. A bad index will generate a range error.
+Together , itemcount and itemget provide a way of encoding multiple data items in strings. A multiple-element string has a separating character, which can be any ASCII character, often a comma.  itemget\$() takes three parameters, the string, the index of the substring required, which starts at '1' and the separator. A bad index will generate a range error.
 The example will print 'lizzie', this being the third item.
 \example{}
 \begin{verbatim}
@@ -614,7 +614,7 @@ Simple procedures. These should be used rather than gosub. Or else.  The empty b
 \end{verbatim}
 
 \section*{rnd() random()}
-Generates random numbers. this has two forms, which is still many fewer than odo. rnd() behaves like microsoft basic, negative numbers set the seed,  0 repeats the last value, and positive numbers return an integer 0 <= n < 1. random(n) returns a number from 0 to n-1
+Generates random numbers. this has two forms, which is still many fewer than odo. rnd() behaves like Microsoft basic, negative numbers set the seed,  0 repeats the last value, and positive numbers return an integer 0 <= n < 1. random(n) returns a number from 0 to n-1
 \example{}
 \begin{verbatim}
 	100 print rnd(1),random(6)
@@ -784,8 +784,8 @@ Returns the tile at the given tile map position (not screen position)
 \end{verbatim}
 
 \section*{tiles}
-Sets up the tile map. Allows the setting of the size of the tilemap with DIM <width>,<height> and the location of the data with AT <map address>,<image address>, all addresses must be at the start of an 8k page.\
-The defaults are 64 x 32 for the tilemap and \$24000 for the map - an array of words and \$26000 for the images - an array of 8x8 byte graphics.\
+Sets up the tile map. Allows the setting of the size of the tile map with DIM <width>,<height> and the location of the data with AT <map address>,<image address>, all addresses must be at the start of an 8k page.\
+The defaults are 64 x 32 for the tile map and \$24000 for the map - an array of words and \$26000 for the images - an array of 8x8 byte graphics.\
 Currently only 8x8 tiles are supported. 
 \example{}
 \begin{verbatim}
