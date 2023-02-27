@@ -46,6 +46,6 @@
 \contentsline {section}{\numberline {10.3}Software}{25}{section.10.3}%
 \contentsline {section}{\numberline {10.4}BASIC}{25}{section.10.4}%
 \contentsline {section}{\numberline {10.5}Uploading and running}{26}{section.10.5}%
-\contentsline {section}{\numberline {10.6}Versions}{26}{section.10.6}%
+\contentsline {section}{\numberline {10.6}Memory Use}{26}{section.10.6}%
 \contentsline {section}{\numberline {10.7}Sprites}{26}{section.10.7}%
 \contentsline {chapter}{\numberline {11}Keyword Reference}{27}{chapter.11}%

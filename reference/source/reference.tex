@@ -99,7 +99,7 @@ Subtract
 Binary modulus operator. The second value must be non-zero.
 \example{}
 \begin{verbatim}
-	100 print 42 \% 5
+	100 print 42 % 5
 \end{verbatim}
 
 \section*{.}
@@ -113,8 +113,8 @@ Sets the following label to the current assembler address. So the example below 
 Signed division. An error occurs if the divisor is zero. Backslash is integer division, forwar slash returns a floating point value.
 \example{}
 \begin{verbatim}
-	100 print 22//7
-	110 print 22\\7
+	100 print 22/7
+	110 print 22\7
 \end{verbatim}
 
 \section*{< <= <> = > >=}
@@ -136,7 +136,7 @@ Returns the address of a l-expr, normally this is a variable of some sort, but i
 Binary and operator. This is a binary operator not a logical, e.g. it is the binary and not a logical and so it can return values other than true and false
 \example{}
 \begin{verbatim}
-	100 print count \& 7
+	100 print count & 7
 \end{verbatim}
 
 \section*{<Hat Character>}
@@ -170,7 +170,7 @@ Normally these are wrapped in a loop for the two passes for forward references.
 \example{}
 \begin{verbatim}
 	100 for pass = 0 to 1
-	110 assemble $6000,pass *2
+	110 assemble $6000,pass
 	120 bra forward
 	130 <some code>
 	140 .forward:rts

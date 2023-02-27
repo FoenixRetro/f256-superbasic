@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.2.26)  26 FEB 2023 16:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.2.26)  27 FEB 2023 08:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -995,11 +995,6 @@ Underfull \hbox (badness 10000) in paragraph at lines 5--6
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 11--12
-
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 13--14
 
  []
@@ -1187,7 +1182,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 25--26
  []
 
 [23]
-Underfull \hbox (badness 10000) in paragraph at lines 40--41
+Underfull \hbox (badness 10000) in paragraph at lines 42--43
 
  []
 
@@ -1250,7 +1245,7 @@ Overfull \hbox (42.90874pt too wide) in paragraph at lines 535--536
 
 [40] [41] [42] [43] [44] [45] [46]) [47] (./f256jr_basic_ref.aux)
 Package rerunfilecheck Info: File `f256jr_basic_ref.out' has not changed.
-(rerunfilecheck)             Checksum: 02603E404EDCFF9B5B7C5E3F47040AE8;6712.
+(rerunfilecheck)             Checksum: 3DE352CCEC7108ABB13E77EB4F42EE29;6725.
  ) 
 Here is how much of TeX's memory you used:
  19332 strings out of 478238
@@ -1270,7 +1265,7 @@ f-Italic.pfb></usr/share/texmf-dist/fonts/type1/google/noto/NotoSerif-Regular.p
 fb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/share/
 texmf-dist/fonts/type1/public/newtx/txsys.pfb></usr/share/texmf-dist/fonts/type
 1/urw/zapfchan/uzcmi8a.pfb>
-Output written on f256jr_basic_ref.pdf (47 pages, 221020 bytes).
+Output written on f256jr_basic_ref.pdf (47 pages, 221124 bytes).
 PDF statistics:
  801 PDF objects out of 1000 (max. 8388607)
  728 compressed objects within 8 object streams
