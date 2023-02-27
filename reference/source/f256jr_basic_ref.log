@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.2.26)  27 FEB 2023 08:13
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.2.26)  27 FEB 2023 15:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -823,9 +823,9 @@ Underfull \hbox (badness 10000) in paragraph at lines 9--10
  []
 
 
-Overfull \hbox (60.40598pt too wide) in paragraph at lines 11--12
-\T1/NotoSerif-TLF/m/n/10 line num-bers, there are some ex-am-ples of such at th
-e pri-mary github at http://github.com/paulscottrobson/superbasic
+Overfull \hbox (68.16174pt too wide) in paragraph at lines 11--12
+\T1/NotoSerif-TLF/m/n/10 line num-bers. There are some ex-am-ples of such at th
+e pri-mary github at http://github.com/paulscottrobson/SuperBASIC
  []
 
 
@@ -1194,8 +1194,8 @@ Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
  []
 
 
-Overfull \hbox (5.39339pt too wide) in paragraph at lines 7--8
-\T1/NotoSerif-TLF/m/n/10 In the Su-per-Ba-sic git, https://github.com/paulscott
+Overfull \hbox (8.84857pt too wide) in paragraph at lines 7--8
+\T1/NotoSerif-TLF/m/n/10 In the Su-per-BA-SIC git, https://github.com/paulscott
 robson/superbasic, each re-lease con-tains a file "howto-
  []
 
@@ -1265,7 +1265,7 @@ f-Italic.pfb></usr/share/texmf-dist/fonts/type1/google/noto/NotoSerif-Regular.p
 fb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/share/
 texmf-dist/fonts/type1/public/newtx/txsys.pfb></usr/share/texmf-dist/fonts/type
 1/urw/zapfchan/uzcmi8a.pfb>
-Output written on f256jr_basic_ref.pdf (47 pages, 221124 bytes).
+Output written on f256jr_basic_ref.pdf (47 pages, 221130 bytes).
 PDF statistics:
  801 PDF objects out of 1000 (max. 8388607)
  728 compressed objects within 8 object streams

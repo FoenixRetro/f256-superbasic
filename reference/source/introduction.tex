@@ -4,11 +4,11 @@
 
 This document is not a tutorial and assumes the reader has some knowledge of programming in general and BASIC in particular. \\
 
-If you want to learn programming, I would advise you try learning using one of the numerous courses available. The course in the Vic20 manual is highly regarded and can be used with an emulator such as Vice, and much of the knowledge will transfer directly.\\
+If you want to learn programming, I would advise you try learning using one of the numerous courses available. The course in the Vic20 manual is highly regarded and can be used with an emulator such as "Vice", and much of the knowledge will transfer directly.\\
 
-F256's SuperBASIC is a modernised BASIC interpreter for the 65C02 processor. It currently occupies 4 pages (32k) of Flash, mapped into 2 pages (16k) of the 65C02 memory space. At present, this is from $8000-$BFFF.\\
+F256's SuperBASIC is a modernised BASIC interpreter for the 65C02 processor. It currently occupies 4 pages (32k) of Flash mapped into 2 pages (16k) of the 65C02 memory space. At present, this is from $8000-$BFFF.\\
 
-Currently editing is still done using line numbers, however it is possible to cross-develop without line numbers, there are some examples of such at the primary github at http://github.com/paulscottrobson/superbasic under the 'games' directory.\\
+Currently editing is still done using line numbers, however it is possible to cross-develop without line numbers. There are some examples of such at the primary github at http://github.com/paulscottrobson/SuperBASIC under the 'games' directory.\\
 
 However, there is no requirement to actually use them in programs. GOTO, GOSUB and RETURN are supported but this is more for backwards compatibility with older programs. It is advised to use Procedures, For/Next, While, Repeat and If/Else/Endif commands for better programming and clarity.\\
 
@@ -32,7 +32,7 @@ This should be entirely transparent to the developer.
 
 \section{Memory usage elsewhere}
 
-SuperBasic uses memory locations outside the normal 6502 address space as well. \\
+SuperBASIC uses memory locations outside the normal 6502 address space as well. \\
 
 If you use a bitmap, it will be placed at \$10000 in physical space and occupy 320x240 bytes.\\
 

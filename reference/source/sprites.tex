@@ -16,7 +16,7 @@ Most of the theoretical graphics options do not work ; you cannot colour, scale,
 
 \section {Creating sprites}
 
-In SuperBASIC sprite data is loaded, with an index, to memory location \$30000. This chapter explains how to create that index.
+SuperBASIC by default loads sprite data to memory location \$30000. This chapter explains how to create that data file.  This can be done by the developer, or via a python script.
 
 \section{Getting images}
 
@@ -59,6 +59,6 @@ At present there is a very simple data format. \
 +03 the first byte of sprite data 
 \end{verbatim}
 
-the size, LUT and data are then repeated for every sprite in the sprite set. The file should end with a sprite size of \$80 (128) to indicate the end of the set.
+The size, LUT and data are then repeated for every sprite in the sprite set. The file should end with a sprite size of \$80 (128) to indicate the end of the set.
 
 
