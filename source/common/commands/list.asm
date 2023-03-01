@@ -116,6 +116,7 @@ _CLLPSearch:
 		.cget0 								; get offset
 		cmp 	#0 							; if zero, end
 		beq 	_CLExit		
+
 		ldy 	#3 							; check if PROC something
 		.cget
 		cmp 	#KWD_PROC
@@ -137,6 +138,10 @@ _CLLPNext:
 _CLLPFound:
 		.cget0 								; reached end
 		beq 	_CLExit
+
+		.breakcheck 		 				; break check
+		bne 	_CLBreak
+
 		ldy 	#3 							; get first keyword
 		.cget
 		pha
@@ -210,5 +215,6 @@ _CLIDExitFalse:
 ;		05/12/22 		LIST break reports.
 ;		15/12/22 		LIST silences sound.
 ;		02/01/23 		Break check call now a macro.
+;		01/03/23 		LIST procedure checks break.
 ;
 ; ************************************************************************************************

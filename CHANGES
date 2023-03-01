@@ -240,4 +240,12 @@ Release 39: (25/02/23)
 	CHG: Code complete (initial)
 	CHG: First draft of documentation completed.
 
-Release 40:
+Release 40: (01/03/23)
+
+Beta Code
+=========
+
+	BUG: Cannot break list procedure
+	
+Release 1:
+

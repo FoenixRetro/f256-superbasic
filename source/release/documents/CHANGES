@@ -237,4 +237,15 @@ Release 38: (23/02/23)
 Release 39: (25/02/23)
 
 	CHG: New Sprite Format.
-		
+	CHG: Code complete (initial)
+	CHG: First draft of documentation completed.
+
+Release 40: (01/03/23)
+
+Beta Code
+=========
+
+	BUG: Cannot break list procedure
+	
+Release 1:
+

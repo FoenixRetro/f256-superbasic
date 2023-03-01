@@ -15,9 +15,9 @@ else
 include ../documents/common.make
 endif
 #
-#		Current version.
+#		Current version. (In Beta from 01/03/23)
 #
-VERSION = 40
+VERSION = 1
 
 #	System 0 = F256
 SYSTEM = 0 						

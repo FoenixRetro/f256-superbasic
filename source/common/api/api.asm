@@ -49,6 +49,7 @@ Write       .fill   4   ; Write bytes to a file opened for create or append.
 Close       .fill   4   ; Close an open file.
 Rename      .fill   4   ; Rename a closed file.
 Delete      .fill   4   ; Delete a closed file.
+Seek        .fill   4   ; Seek to a specific position in a file.
             .endn
 
 Directory   .namespace
@@ -122,6 +123,7 @@ file        .dstruct    file_t
 directory   .dstruct    dir_t
 display     .dstruct    display_t
 net         .dstruct    net_t
+config      .dstruct    config_t
             .endu
 
 ext         = $f8
@@ -168,6 +170,7 @@ file_t      .struct
 open        .dstruct    fs_open_t
 read        .dstruct    fs_read_t
 write       .dstruct    fs_write_t
+seek        .dstruct    fs_seek_t
 close       .dstruct    fs_close_t
 rename      .dstruct    fs_rename_t
 delete      .dstruct    fs_open_t
@@ -191,6 +194,10 @@ fs_write_t  .struct
 stream      .byte       ?
 buf         = args.buf
 buflen      = args.buflen
+            .ends
+fs_seek_t  .struct
+stream      .byte       ?
+position    .dword      ?
             .ends
 fs_close_t  .struct
 stream      .byte       ?
@@ -217,6 +224,8 @@ dir_t       .struct
 open        .dstruct    dir_open_t
 read        .dstruct    dir_read_t
 close       .dstruct    dir_close_t
+mkdir       .dstruct    dir_open_t
+rmdir       .dstruct    dir_open_t
             .endu
             .ends            
 dir_open_t  .struct
@@ -269,6 +278,22 @@ buflen      = args.extlen
             .endu
             .ends
 
+config_t    .struct
+            .union
+            .endu
+            .ends
+                     
+time_t      .struct
+century     .byte       ?
+year        .byte       ?
+month       .byte       ?
+day         .byte       ?
+hours       .byte       ?
+minutes     .byte       ?
+seconds     .byte       ?
+millis      .byte       ?
+size        .ends
+
 ; Events
 ; The vast majority of kernel operations communicate with userland
 ; by sending events; the data contained in the various events are
@@ -320,6 +345,7 @@ CLOSED      .word   ?   ; The close request has completed.
 RENAMED     .word   ?   ; The rename request has completed.
 DELETED     .word   ?   ; The delete request has completed.
 ERROR       .word   ?   ; An error occured; close the file if opened.
+SEEK        .word   ?   ; The seek request has completed.
             .endn
 
 directory   .namespace
@@ -338,6 +364,11 @@ net         .namespace
 TCP         .word   ?
 UDP         .word   ?
             .endn
+
+clock       .namespace
+TICK        .word   ?
+            .endn
+
 
             .endv
 
