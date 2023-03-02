@@ -115,6 +115,7 @@
 	.include	"./system.f256/module.interfaces/graphics/palette.asm"
 	.include	"./system.f256/module.interfaces/graphics/tile.asm"
 	.include	"./system.f256/module.interfaces/hardware/cls.asm"
+	.include	"./system.f256/module.interfaces/hardware/cursor.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/crossdev.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/dos.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/event.asm"

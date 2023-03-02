@@ -58,7 +58,7 @@ class TokenSource(object):
 				shoot 		explode 	xload 		xgo 		settime
 				save		verify		drive 		dir 		bload
 				bsave		himem 		input 		cls 		gosub 		
-				return 		print 		cprint 		goto 	
+				return 		print 		cprint 		goto 		cursor
 				mouse 		mdelta 		try 		tile 		tiles
 
 			{2}							// Set 2 (Assembler Mnemonics)

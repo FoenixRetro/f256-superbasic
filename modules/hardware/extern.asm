@@ -34,6 +34,11 @@ Export_EXTInitialise:
 		lda 	#60
 		sta 	EXTScreenHeight
 
+		lda 	#1+4 						; enable cursor
+		sta 	$D010 				
+		lda 	#214 						; cursor character
+		sta 	$D012
+
 		jsr 	EXTClearScreenCode 			; clear the screen
 
 _EXMoveDown: 								; move down past prompt 
@@ -60,5 +65,6 @@ _EXMoveDown: 								; move down past prompt
 ;		==== 			=====
 ;		27/11/22 		Rather than clearing screen, it now goes to line 6 after initialising.
 ; 		20/12/22 		Joystick data now read from $DC00
+;		02/03/23 		Cursor on/character moved here.
 ;
 ; ************************************************************************************************

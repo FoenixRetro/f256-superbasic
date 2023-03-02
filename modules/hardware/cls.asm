@@ -78,10 +78,6 @@ EXTHomeCursor:
 
 EXTSetHardwareCursor:
 		stz 	1 							; I/O Page zero
-		lda 	#1+4 						; enable cursor
-		sta 	$D010 				
-		lda 	#214 						; cursor character
-		sta 	$D012
 		lda 	EXTColumn
 		sta 	$D014 						; set cursor position
 		stz 	$D015
@@ -100,5 +96,6 @@ EXTSetHardwareCursor:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		02/03/23 		Cursor being set up moved to initialise.
 ;
 ; ************************************************************************************************
