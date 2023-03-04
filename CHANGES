@@ -249,7 +249,7 @@ Beta Code
 	CHG: Cursor On/Off added
 	CHG: Cursor initialisation code moved to initialise rather than the positioning code.
 	CHG: Added OPTION and ability to change list colours.
-	CHG: Stop overflow of code on line editing.
+	BUG: Stop overflow of code on line editing.
 
 Release 1:
 
