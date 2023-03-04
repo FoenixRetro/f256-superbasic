@@ -23,7 +23,7 @@ WarmStart:
 		txs
 		lda 	#CLICommandLine+$80 		; set console colour whatever the current colour is.
 		jsr 	EXTPrintCharacter
-		jsr 	EXTInputLine 				; get line to lineBuffer
+		jsr 	InputLine 					; get line to lineBuffer
 		;
 		;		Check for /x
 		;

@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-EXTInputLine:
+InputLine:
 		pha
 		phx
 		phy
@@ -38,7 +38,16 @@ _EILLoop:
 		cmp 	#$7F 						; if -ve print it
 		bcs 	_EILPrintLoop
 		;
-		pha 								; save character
+		tax 								; save character in X
+		lda	 	#2 							; screen character memory
+		sta 	1
+		ldy 	EXTScreenWidth 				; read the last character.
+		dey
+		lda 	(EXTAddress),y 				
+		cmp 	#' ' 						; if not space then reject.
+		bne 	_EILLoop 					
+		;
+		phx 								; save character on stack
 		lda 	#2  						; insert a space
 		sta 	1
 		jsr 	EXTILInsert 				; insert in text screen
@@ -155,5 +164,6 @@ _EXTIExit:
 ;		22/12/22 		When trimming if first character was non-space got erased so deleting
 ;						lines 1-9 did not work.
 ;		30/01/23 		Moved out of hardware module into normal space.
+;		04/03/23 		Code at _EILLoop when inserting pre-checks for space.
 ;
 ; ************************************************************************************************
