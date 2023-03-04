@@ -66,6 +66,8 @@ _NoMachineCode:
 		lda 	#0 							; zero the default drive.
 		jsr 	KNLSetDrive
 
+		jsr 	TKInitialise 				; initialise tokeniser.
+		
 		.if 	graphicsIntegrated==1 		; if installed
 		lda 	#0 							; graphics system initialise.
 		tax

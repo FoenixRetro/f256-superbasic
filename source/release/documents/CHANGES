@@ -247,6 +247,8 @@ Beta Code
 
 	BUG: Cannot break list procedure
 	CHG: Cursor On/Off added
+	CHG: Cursor initialisation code moved to initialise rather than the positioning code.
+	CHG: Added OPTION and ability to change list colours.
 	
 Release 1:
 

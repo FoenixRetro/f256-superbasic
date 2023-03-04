@@ -26,9 +26,13 @@ ZeroPageMandatory = $30
 ;
 ZeroPagePreference = $50
 ;
+;		Control Variables - low usage control variables.	
+;
+ControlStorage = $400
+;
 ;		Variables that can go anywhere
 ;
-MemoryStorage = $400
+MemoryStorage = $420
 ;
 ;		Where program memory starts and stops
 ;

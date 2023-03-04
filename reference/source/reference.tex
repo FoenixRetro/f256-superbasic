@@ -567,6 +567,14 @@ Unary operator returning the logical not of its parameter, e.g. 0 if non-zero -1
 	100 print not(42)
 \end{verbatim}
 
+\section*{option}
+Option is used for general control functions which are not common enough to justify their own keyword.\\
+Option 0-7 set highlighting colours for Comment Foreground, Comment Background, Line Number, Token, Constant, Identifier, Punctuation, Data respectively, the lower 4 bits setting the colour. Setting the upper bit 7 will disable the background change. (The example sets the listing to all white)\\
+\example{}
+\begin{verbatim}
+	100 for i = 0 to 7:option i,128+15:next
+\end{verbatim}
+
 \section*{palette}
 Sets the graphics palette. The parameters are the colour id and the red, green and blue graphics component. On start up, the palette is rrrgggbb
 \example{}

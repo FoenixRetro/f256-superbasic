@@ -17,7 +17,7 @@ exports = {}
 exports["hardware"] = 	[ "EXTPrintCharacter","EXTPrintNoControl","EXTInitialise"]
 exports["graphics"] = 	[ "GXGraphicDraw" ]
 exports["sound"] = 		[ "SNDCommand","SNDUpdate"]
-exports["tokeniser"] = 	[ "TKListConvertLine","TKTokeniseLine" ]
+exports["tokeniser"] = 	[ "TKListConvertLine","TKTokeniseLine","TKInitialise" ]
 
 print("PagingEnabled = {0}".format(1 if paging else 0))
 

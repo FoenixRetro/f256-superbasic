@@ -13,9 +13,25 @@
 		.section code
 
 setcolour .macro
-		lda 	#\1+$80
+		lda 	\1
 		jsr 	LCLWriteColour
 		.endm
+
+; ************************************************************************************************
+;
+;									Reset tokeniser/detokeniser
+;
+; ************************************************************************************************
+
+Export_TKInitialise:
+		ldx 	#7
+_ETKISetDefault:
+		lda 	CLIDefault,x
+		sta 	CLIFComment,x
+		dex
+		bpl 	_ETKISetDefault
+		rts
+
 
 ; ************************************************************************************************
 ;
@@ -266,7 +282,9 @@ _LCData:
 		bne 	_LCHaveOpener
 		lda 	#9 							; tab
 		jsr 	LCLWrite 				
-		lda 	#$90+CLIBComment
+		lda 	CLIBComment
+		bmi 	_LCHaveOpener
+		ora 	#$90
 		jsr 	LCLWrite
 		.setcolour CLIFComment
 _LCHaveOpener:
@@ -304,6 +322,8 @@ _LCNoQuote:
 ; ************************************************************************************************
 
 LCLWriteColour:
+		and 	#$0F
+		ora 	#$80
 		cmp 	currentListColour 			; has the colour changed
 		sta 	currentListColour 			; (update it anyway)
 		bne 	LCLWrite 					; if different, output it
@@ -456,8 +476,32 @@ _LCLWNTable:
 		.word 	100
 		.word 	10		
 
+; ************************************************************************************************
+;
+;								   LIST syntax colouring
+;
+; ************************************************************************************************
+
+CLIDefault:
+		.byte	CONBrown, CONYellow, CONRed, CONOrange, CONCyan, CONYellow, CONPink, CONWhite		
+
 		.send code
-		
+
+; ************************************************************************************************
+;
+;								  LIST syntax values (in control storage)
+;
+; ************************************************************************************************
+
+CLIFComment = ControlStorage + 0
+CLIBComment = ControlStorage + 1
+CLILineNumber = ControlStorage + 2 
+CLIToken = ControlStorage + 3
+CLIConstant = ControlStorage + 4  
+CLIIdentifier = ControlStorage + 5  
+CLIPunctuation = ControlStorage + 6 
+CLIData = ControlStorage + 7
+
 ; ************************************************************************************************
 ;
 ;									Changes and Updates

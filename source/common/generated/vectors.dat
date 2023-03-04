@@ -186,24 +186,25 @@ VectorSet1:
 	.word	MouseDeltaStatus                 ; $96 MDELTA
 	.word	MouseStatus                      ; $97 MOUSE
 	.word	NewCommand                       ; $98 NEW
-	.word	PingCommand                      ; $99 PING
-	.word	Command_Print                    ; $9a PRINT
-	.word	Command_Restore                  ; $9b RESTORE
-	.word	Command_RETURN                   ; $9c RETURN
-	.word	CommandRUNOptLoad                ; $9d RUN
-	.word	Command_Save                     ; $9e SAVE
-	.word	CommandSetDate                   ; $9f SETDATE
-	.word	CommandSetTime                   ; $a0 SETTIME
-	.word	ShootCommand                     ; $a1 SHOOT
-	.word	SpritesCtrl                      ; $a2 SPRITES
-	.word	StopCommand                      ; $a3 STOP
-	.word	TileCommand                      ; $a4 TILE
-	.word	TilesCtrl                        ; $a5 TILES
-	.word	Command_Try                      ; $a6 TRY
-	.word	Command_VERIFY                   ; $a7 VERIFY
-	.word	XGoCommand                       ; $a8 XGO
-	.word	XLoadCommand                     ; $a9 XLOAD
-	.word	ZapCommand                       ; $aa ZAP
+	.word	OptionCommand                    ; $99 OPTION
+	.word	PingCommand                      ; $9a PING
+	.word	Command_Print                    ; $9b PRINT
+	.word	Command_Restore                  ; $9c RESTORE
+	.word	Command_RETURN                   ; $9d RETURN
+	.word	CommandRUNOptLoad                ; $9e RUN
+	.word	Command_Save                     ; $9f SAVE
+	.word	CommandSetDate                   ; $a0 SETDATE
+	.word	CommandSetTime                   ; $a1 SETTIME
+	.word	ShootCommand                     ; $a2 SHOOT
+	.word	SpritesCtrl                      ; $a3 SPRITES
+	.word	StopCommand                      ; $a4 STOP
+	.word	TileCommand                      ; $a5 TILE
+	.word	TilesCtrl                        ; $a6 TILES
+	.word	Command_Try                      ; $a7 TRY
+	.word	Command_VERIFY                   ; $a8 VERIFY
+	.word	XGoCommand                       ; $a9 XGO
+	.word	XLoadCommand                     ; $aa XLOAD
+	.word	ZapCommand                       ; $ab ZAP
 VectorSet2:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

@@ -44,20 +44,7 @@ CONBackground = CONDarkBlue
 
 CLICommandLine = CONLightGrey
 
-; ************************************************************************************************
-;
-;								   LIST syntax colouring
-;
-; ************************************************************************************************
 
-CLIFComment = CONBrown
-CLIBComment = CONYellow
-CLILineNumber = CONRed	
-CLIToken = CONOrange
-CLIConstant = CONCyan
-CLIIdentifier = CONYellow
-CLIPunctuation = CONPink
-CLIData = CONWhite
 
 ; ************************************************************************************************
 ;

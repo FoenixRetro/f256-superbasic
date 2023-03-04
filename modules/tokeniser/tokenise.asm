@@ -12,6 +12,7 @@
 
 		.section code
 
+
 ; ************************************************************************************************
 ;
 ;								Tokenise ASCIIZ line in lineBuffer
@@ -399,5 +400,6 @@ _THFoundEnd:
 ;						2 positions are checks - end of tokenising and end of punctuation processing.
 ; 		30/12/22 		dex before call to tokenise just before _TOKCCExit - rem abcd was tokenising
 ;						as rem "bcd" e.g. missing the first character.
+; 		04/03/23 		Changed to allow modification to colourising of listings.
 ;
 ; ************************************************************************************************

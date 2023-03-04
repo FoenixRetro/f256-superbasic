@@ -45,6 +45,7 @@
 	.include	"./common/commands/list.asm"
 	.include	"./common/commands/local.asm"
 	.include	"./common/commands/new.asm"
+	.include	"./common/commands/option.asm"
 	.include	"./common/commands/poke.asm"
 	.include	"./common/commands/procedure.asm"
 	.include	"./common/commands/read.asm"
