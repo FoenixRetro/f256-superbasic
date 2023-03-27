@@ -250,6 +250,6 @@ Beta Code
 	CHG: Cursor initialisation code moved to initialise rather than the positioning code.
 	CHG: Added OPTION and ability to change list colours.
 	BUG: Stop overflow of code on line editing.
-
 Release b1:
 
+	CHG: MEMCOPY range doubled.

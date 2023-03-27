@@ -140,7 +140,7 @@ _MCWaitBUSD:
 
 MCCopyAddress:
 		lda 	NSMantissa2 				; check valid vlaue
-		and 	#$FC
+		and 	#$F8
 		ora 	NSMantissa3
 		bne 	_MCRange
 		lda 	NSMantissa0
@@ -241,5 +241,6 @@ DMAControlByte:
 ;
 ;		Date			Notes
 ;		==== 			=====
+; 		27/03/23 		Extended range to 7FFFF (MCCopyAddress)
 ;
 ; ************************************************************************************************

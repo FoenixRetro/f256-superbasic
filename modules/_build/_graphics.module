@@ -962,7 +962,7 @@ _GXCTOn:
 		lda 	$D000	 					; turn tilemap on
 		ora 	#$17
 		sta 	$D000
-		stz 	$D2C0 						; turn off tilemap#1 and tilemap#2
+		stz 	$D20C 						; turn off tilemap#1 and tilemap#2
 		stz 	$D218
 		;
 		lda 	#64 						; default size of 64x32
@@ -1084,6 +1084,7 @@ _GXCSSLoop:
 ;		==== 			=====
 ;		20/02/23 		Added control functionality for tile on/off/location and size of map.
 ; 		22/02/23 		Fixed bug no defaults on setting tilemap page defaults.
+;		23/03/23 		Tilemap disable was $D2C0 not $D20C
 ;
 ; ************************************************************************************************
 

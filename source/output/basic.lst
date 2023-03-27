@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.58.2974? listing file
 ; 64tass -D AUTORUN=0 "-D MONITOR_ADDRESS=\$E000" "-D LOCKOUT_ADDRESS=\$F000" "-D BASIC_ADDRESS=\$34000" "-D SOURCE_ADDRESS=\$28000" "-D SPRITE_ADDRESS=\$30000" "-D TILEMAP_ADDRESS=\$24000" "-D TILEIMAGES_ADDRESS=\$26000" -q -b -Wall -c -C -D "HARDWARE=0 $'\x9'$'\x9'$'\x9'$'\x9'$'\x9'$'\x9'" -L output/basic.lst -l output/basic.lbl -Wall -o build/basic.rom _basic.asm
-; Wed Mar  8 17:29:04 2023
+; Mon Mar 27 18:57:03 2023
 
 ;Offset	;PC	;Hex		;Monitor	;Source
 
@@ -615,7 +615,7 @@
 
 ;******  Processing file: ./common/aa.system/../generated/timestamp.asm
 
->813c		09 09 30 38 2f 30 33 2f			.text 9,9,"08/03/23 01b"
+>813c		09 09 32 37 2f 30 33 2f			.text 9,9,"27/03/23 01b"
 >8144		32 33 20 30 31 62
 
 ;******  Return to file: ./common/aa.system/00start.asm
@@ -7326,7 +7326,7 @@
 
 ;******  Processing file: ./common/generated/timestamp.asm
 
->e76b		09 09 30 38 2f 30 33 2f			.text 9,9,"08/03/23 01b"
+>e76b		09 09 32 37 2f 30 33 2f			.text 9,9,"27/03/23 01b"
 >e773		32 33 20 30 31 62
 
 ;******  Return to file: _basic.asm
@@ -9005,7 +9005,7 @@
 .b0fd		60		rts				rts
 .b0fe						MCCopyAddress:
 .b0fe		a5 68		lda $68				lda 	NSMantissa2 				; check valid vlaue
-.b100		29 fc		and #$fc			and 	#$FC
+.b100		29 f8		and #$f8			and 	#$F8
 .b102		05 70		ora $70				ora 	NSMantissa3
 .b104		d0 10		bne $b116			bne 	_MCRange
 .b106		a5 58		lda $58				lda 	NSMantissa0
@@ -10832,7 +10832,7 @@
 .c5ff	a5ff	ad 00 d0	lda $d000			lda 	$D000	 					; turn tilemap on
 .c602	a602	09 17		ora #$17			ora 	#$17
 .c604	a604	8d 00 d0	sta $d000			sta 	$D000
-.c607	a607	9c c0 d2	stz $d2c0			stz 	$D2C0 						; turn off tilemap#1 and tilemap#2
+.c607	a607	9c 0c d2	stz $d20c			stz 	$D20C 						; turn off tilemap#1 and tilemap#2
 .c60a	a60a	9c 18 d2	stz $d218			stz 	$D218
 .c60d	a60d	a9 40		lda #$40			lda 	#64 						; default size of 64x32
 .c60f	a60f	8d 03 08	sta $0803			sta 	gxTileMapWidth
