@@ -253,3 +253,5 @@ Beta Code
 Release b1:
 
 	CHG: MEMCOPY range doubled.
+	CHG: TAB now works correctly (was bunching EOL)
+	

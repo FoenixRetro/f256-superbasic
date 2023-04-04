@@ -195,9 +195,9 @@ EXPCTab:
 		clc 	
 		adc 	#8
 		sta 	EXTColumn
-		cmp 	EXTScreenWidth 				; too far, stick end of line.
+		cmp 	EXTScreenWidth 				; too far, new line.
 		bcc 	EXPCExit
-		bra 	EXPCEnd
+		jmp 	EXPCCRLF
 		;
 		;		Backspace
 		;	
@@ -338,5 +338,6 @@ _PPHOut:adc 	#48
 ;		27/11/22 		Changed End so to end of text line, e.g. after last non space
 ;						Added Ctrl+K delete to EOL suggested by Jessie O.
 ;		01/01/23 		Added routine to print using only font characters.
+;		04/04/23 		TAB was doing END if past screen width rather than CRLF.
 ;
 ; ************************************************************************************************

@@ -259,9 +259,9 @@ EXPCTab:
 		clc
 		adc 	#8
 		sta 	EXTColumn
-		cmp 	EXTScreenWidth 				; too far, stick end of line.
+		cmp 	EXTScreenWidth 				; too far, new line.
 		bcc 	EXPCExit
-		bra 	EXPCEnd
+		jmp 	EXPCCRLF
 		;
 		;		Backspace
 		;
