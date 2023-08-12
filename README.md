@@ -1,7 +1,13 @@
-# superbasic
+# F256 SuperBASIC
 Improved BASIC for F256 Junior
 
-To build everything you need the following 4 repositories.
+### Usage
+
+SuperBASIC Reference Manual PDF:
+[reference/source/f256jr_basic_ref.pdf](reference/source/f256jr_basic_ref.pdf)
+
+### Developing
+To build everything you need the following repositories:
 
 The emulator
 https://github.com/paulscottrobson/junior-emulator
