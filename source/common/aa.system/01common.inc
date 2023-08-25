@@ -26,6 +26,11 @@ ZeroPageMandatory = $30
 ;
 ZeroPagePreference = $50
 ;
+;		Command line arguments for pexec - page aligned, and by convention these should reside
+;       at $200 for maximum compatibility
+;
+ArgumentStorage = $200
+;
 ;		Control Variables - low usage control variables.	
 ;
 ControlStorage = $400
@@ -75,6 +80,9 @@ MaxLineSize = 80
 
 		* = ZeroPagePreference 				; not required to be in zero page, but preferable
 		.dsection zeropref
+
+		* = ArgumentStorage 				; not required to be in zero page, but preferable
+		.dsection arguments
 
 		* = MemoryStorage 					; doesn't matter if zero page or not 
 		.dsection storage

@@ -136,3 +136,8 @@ error_verify .macro
 	lda	#27
 	jmp	ErrorHandler
 	.endm
+ERRID_NOPROGRAM = 28
+error_noprogram .macro
+	lda	#28
+	jmp	ErrorHandler
+	.endm
