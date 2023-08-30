@@ -20,6 +20,16 @@ BootXA:
 		sta		zTemp0+0
 		stx		zTemp0+1
 
+		lda		programChanged
+		beq		_program_not_changed
+
+		jsr		ResetTokenBuffer
+		.error_programchg
+
+		jmp		WarmStart
+
+_program_not_changed
+
 		ldx		#0
 		ldy		#0
 
@@ -74,15 +84,10 @@ _copy_done
 
 		jsr		kernel.RunNamed
 
-		lda		#3					; reset the token buffer to empty
-		sta		tokenOffset			; (3 bytes for line number & offset)
-		stz		tokenLineNumber
-		stz		tokenLineNumber+1
-		.csetcodepointer tokenOffset
-
+		jsr		ResetTokenBuffer
 		.error_noprogram
-		jmp		WarmStart
 
+		jmp		WarmStart
 
 		.send code
 

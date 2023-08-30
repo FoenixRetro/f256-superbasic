@@ -42,6 +42,7 @@ _CSExit:
 		lda 	BasicFileStream 			; close file
 		jsr 	KNLCloseFile
 		jsr 	CLComplete 					; display complete message.
+		stz		programChanged				; mark program not changed since save
 		jmp 	WarmStart 					; and warm start
 
 CSErrorHandler:

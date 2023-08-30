@@ -12,8 +12,6 @@ ArgumentError:
 	.error_argument
 NotDoneError:
 	.error_notdone
-NoProgramError:
-	.error_noprogram
 ErrorText:
 	.text	"Break",0
 	.text	"Syntax error",0
@@ -43,4 +41,5 @@ ErrorText:
 	.text	"Storage error",0
 	.text	"Verify failed",0
 	.text	"Program not found",0
+	.text	"Program has unsaved changes",0
 .send code

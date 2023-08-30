@@ -42,9 +42,26 @@ _EPCNoDelete:
 		clc 								; insert at this point.
 		jsr 	MemoryInsertLine 			; insert the line
 _EPCNoInsert:
+		lda		#1
+		sta		programChanged				; mark program changed
 		rts
 	
+; ***************************************************************************************
+;
+;			Reset the token buffer so it appears empty
+;
+; ***************************************************************************************
+
+ResetTokenBuffer:
+		lda		#3					; reset the token buffer to empty
+		sta		tokenOffset			; (3 bytes for line number & offset)
+		stz		tokenLineNumber
+		stz		tokenLineNumber+1
+		.csetcodepointer tokenOffset
+		rts
+
 		.send code
+
 
 ; ***************************************************************************************
 ;

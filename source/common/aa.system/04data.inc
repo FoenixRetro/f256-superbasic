@@ -171,7 +171,9 @@ numberBuffer:								; buffer for numbers (32 bit binary + sign + ASCIIZ)
 decimalBuffer: 								; buffer for number -> string conversion.
 		.fill 	16		
 
-
+programChanged:
+		.fill	1							; tracks whether program has been changed since last save
+		
 		.send 	storage
 
 ; ************************************************************************************************

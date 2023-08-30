@@ -19,6 +19,15 @@
 		.section code
 
 Command_Load: ;; [LOAD]
+		lda		programChanged
+		beq		_program_not_changed
+
+		jsr		ResetTokenBuffer
+		.error_programchg
+
+		jmp		WarmStart
+
+_program_not_changed
 		jsr 	LoadFile
 		jmp 	WarmStart
 
