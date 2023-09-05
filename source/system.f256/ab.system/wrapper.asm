@@ -52,20 +52,21 @@ KNLOpenFileWrite:
 KNLOpenFileRead:
 		pha
 		lda     #kernel.args.file.open.READ ; set READ mode.
-KNLOpenStart:        
+KNLOpenStart:   
 		sta     kernel.args.file.open.mode
 		pla
 
+		phy
+
 		jsr 	KNLSetupFileName
 		jsr 	KNLSetEventPointer
-
 
 		lda 	KNLDefaultDrive 			; currently drive zero only.
 		sta 	kernel.args.file.open.drive
 
 		jsr     kernel.File.Open 			; open the file and exit.
-		lda     #kernel.event.file.ERROR 
-		bcs     _out
+		bcs     _kernel_error
+		tay
 		
 _loop
 		jsr     kernel.Yield    			; event wait		
@@ -76,15 +77,25 @@ _loop
 		cmp     #kernel.event.file.OPENED
 		beq 	_success
 		cmp     #kernel.event.file.NOT_FOUND 
-		beq 	_out
+		beq 	_exit
 		cmp     #kernel.event.file.ERROR 
-		beq 	_out
-		bra     _loop
+		bne 	_loop
+
+		;
+		;	The FAT32 driver returns ERROR when opening a non-existent file, we map the error to NOT_FOUND
+		;
+		lda		#kernel.event.file.NOT_FOUND
+		bra		_exit
+
+_kernel_error
+		lda     #kernel.event.file.ERROR 
+		bra		_exit
 
 _success
-		lda     KNLEvent.file.stream
+		tya
 		clc
-_out
+_exit
+		ply
 		rts
 
 ; ************************************************************************************************
