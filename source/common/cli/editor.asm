@@ -45,7 +45,7 @@ _EPCNoInsert:
 		lda		#1
 		sta		programChanged				; mark program changed
 		rts
-	
+
 ; ***************************************************************************************
 ;
 ;			Reset the token buffer so it appears empty
@@ -59,6 +59,59 @@ ResetTokenBuffer:
 		stz		tokenLineNumber+1
 		.csetcodepointer tokenOffset
 		rts
+
+; ***************************************************************************************
+;
+;			Determine if it is safe to continue with a destructive action
+;
+; ***************************************************************************************
+
+IsDestructiveActionOK:
+		lda		programChanged
+		beq		_ok_exit
+
+		ldx 	#_continue >> 8 	; print confirmation prompt
+		lda 	#_continue & $FF
+		jsr 	PrintStringXA
+
+_next_char
+		jsr		KNLGetSingleCharacter
+		cmp		#'y'
+		beq		_ok
+		cmp		#'Y'
+		beq		_ok
+		cmp		#27
+		beq		_not_ok
+		cmp		#'n'
+		beq		_not_ok
+		cmp		#'N'
+		beq		_not_ok
+		cmp		#13
+		beq		_not_ok
+		bra		_next_char
+
+_ok:
+		lda		#'Y'
+		jsr		EXTPrintCharacter
+		lda		#13
+		jsr		EXTPrintCharacter
+
+		stz		programChanged
+_ok_exit:
+		clc
+		rts
+
+_not_ok:
+		lda		#'N'
+		jsr		EXTPrintCharacter
+		lda		#13
+		jsr		EXTPrintCharacter
+
+		sec
+		rts
+
+_continue:
+		.text	"Program has unsaved changes, continue (y/N)? ",0
 
 		.send code
 

@@ -41,4 +41,3 @@ NotFound:	File not found
 DriveIO:	Storage error		
 Verify: 	Verify failed
 NoProgram:  Program not found
-ProgramChg: Program has unsaved changes

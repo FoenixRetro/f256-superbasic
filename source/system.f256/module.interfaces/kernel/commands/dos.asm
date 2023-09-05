@@ -17,23 +17,22 @@ ArgumentArray   .fill (8+1)*2		; DOS provides a maximum of 8 tokens
 
 		.section code
 BootXA:
-		sta		zTemp0+0
-		stx		zTemp0+1
-
-		lda		programChanged
-		beq		_program_not_changed
-
-		jsr		ResetTokenBuffer
-		.error_programchg
-
+		pha
+		phx
+		jsr		IsDestructiveActionOK
+		plx
+		pla
+		bcc		_action_ok
 		jmp		WarmStart
 
-_program_not_changed
+_action_ok:
+		sta		zTemp0+0
+		stx		zTemp0+1
 
 		ldx		#0
 		ldy		#0
 
-_copy_next_string
+_copy_next_string:
 		tya
 		clc
 		adc		#<ArgumentStrings
@@ -44,7 +43,7 @@ _copy_next_string
 		sta		ArgumentArray,x
 		inx
 
-_copy_string
+_copy_string:
 		lda		(zTemp0),y
 		beq		_copy_done
 		cmp		#' '
@@ -53,7 +52,7 @@ _copy_string
 		iny
 		bra		_copy_string
 
-_skip_spaces
+_skip_spaces:
 		lda		#0
 		sta		ArgumentStrings,y
 		iny
@@ -63,7 +62,7 @@ _skip_spaces
 		beq		_skip_spaces
 		bra		_copy_next_string
 
-_copy_done
+_copy_done:
 		lda		#0
 		sta		ArgumentStrings,y
 

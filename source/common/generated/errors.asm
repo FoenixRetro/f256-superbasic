@@ -41,5 +41,4 @@ ErrorText:
 	.text	"Storage error",0
 	.text	"Verify failed",0
 	.text	"Program not found",0
-	.text	"Program has unsaved changes",0
 .send code

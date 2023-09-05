@@ -13,7 +13,10 @@
 		.section code
 
 NewCommand: ;; [new]
+		jsr		IsDestructiveActionOK
+		bcs		_not_ok
 		jsr 	NewProgram 					; does the actual NEW.
+_not_ok:
 		jmp 	WarmStart 					; and warm starts straight away.
 
 ; ************************************************************************************************

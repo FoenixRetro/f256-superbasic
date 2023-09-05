@@ -141,8 +141,3 @@ error_noprogram .macro
 	lda	#28
 	jmp	ErrorHandler
 	.endm
-ERRID_PROGRAMCHG = 29
-error_programchg .macro
-	lda	#29
-	jmp	ErrorHandler
-	.endm
