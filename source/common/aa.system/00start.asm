@@ -23,9 +23,14 @@ F256Header:
 		.byte   4               			; 4 blocks
 		.byte   4               			; mount at $8000
 		.word   Boot 	      				; Start here
-		.word   0 			               	; version
-		.word   0               			; kernel
-		.text   "SuperBASIC",0 				; name of program.
+		.byte   1 			               	; version
+		.byte   0               			; reserved
+		.byte   0               			; reserved
+		.byte   0               			; reserved
+		.text   "basic",0 					; name of program.
+		.text   0							; arguments
+		.text	"The SuperBASIC environment.",0	; description
+
 
 ; ************************************************************************************************
 ;
