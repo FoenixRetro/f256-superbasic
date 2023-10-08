@@ -41,3 +41,5 @@ NotFound:	File not found
 DriveIO:	Storage error		
 Verify: 	Verify failed
 NoProgram:  Program not found
+Parameters: Too many parameters
+TooComplex: Formula too complex

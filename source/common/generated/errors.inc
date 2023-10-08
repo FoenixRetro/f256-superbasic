@@ -141,3 +141,13 @@ error_noprogram .macro
 	lda	#28
 	jmp	ErrorHandler
 	.endm
+ERRID_PARAMETERS = 29
+error_parameters .macro
+	lda	#29
+	jmp	ErrorHandler
+	.endm
+ERRID_TOOCOMPLEX = 30
+error_toocomplex .macro
+	lda	#30
+	jmp	ErrorHandler
+	.endm

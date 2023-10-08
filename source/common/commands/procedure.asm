@@ -31,6 +31,8 @@ CallProcedure:
 _CPParamLoop:				
 		jsr 	EvaluateValue 				; get parameter onto stack
 		inx 								; bump next stack
+		cpx		#MathStackSize				; check if parameters overflow stack
+		bge		_TooManyParam
 		.cget 								; get next character and consume
 		iny
 		cmp 	#KWD_COMMA 					; if comma, go back and try again.
@@ -88,6 +90,10 @@ _ParamExtract:
 _ParamExit:				
 		jsr 	CheckRightBracket 			; check )
 		rts 								; and continue from here
+
+_TooManyParam:
+		error	.error_parameters
+
 
 ; ************************************************************************************************
 ;

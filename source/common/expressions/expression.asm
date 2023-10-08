@@ -90,10 +90,16 @@ _EXPRExit:
 		; ----------------------------------------------------------------------------------------
 
 _EXPRCaller:
+		cpx		#MathStackSize
+		bge		_EXPRTooComplex
+
 		phx 								; save on stack, first thing is to restore it
 		asl 	a 							; double so can use vectors into X
 		tax
 		jmp 	(VectorSetPunc,x) 			; and go to the code.
+
+_EXPRTooComplex:
+		.error_toocomplex
 
 		.send code
 

@@ -41,4 +41,6 @@ ErrorText:
 	.text	"Storage error",0
 	.text	"Verify failed",0
 	.text	"Program not found",0
+	.text	"Too many parameters",0
+	.text	"Formula too complex",0
 .send code

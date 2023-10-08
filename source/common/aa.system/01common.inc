@@ -58,7 +58,7 @@ EndVariableSpace = $2000
 ;
 ;		Basic Math Stack Size
 ;
-MathStackSize = 8
+MathStackSize = 16
 ;
 ;		Basic Position and Return Stack Size
 ;
