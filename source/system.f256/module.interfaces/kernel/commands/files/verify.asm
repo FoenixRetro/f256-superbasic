@@ -55,9 +55,11 @@ _CVCompareLoop:
 _CVExit:			
 		lda 	BasicFileStream
 		jsr 	KNLCloseFile
-		jmp 	CLComplete
+		jsr 	CLComplete
+		jmp		WarmStart
 
 _CVCompareError:
+		jsr		ResetTokenBuffer
 		.error_verify
 
 _CVErrorHandler:
