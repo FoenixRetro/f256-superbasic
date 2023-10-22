@@ -166,7 +166,7 @@ Initialises an assembler pass. Apart from the simplest bits of code, the assembl
 \begin{verbatim}
 	100 assemble $6000,1:lda #42:sta count:rts
 \end{verbatim}
-Normally these are wrapped in a loop for the two passes for forward references.
+Normally these are wrapped in a loop for the two passes for forward references. The call statement can be used to execute the assembled source code. 
 \example{}
 \begin{verbatim}
 	100 for pass = 0 to 1
@@ -211,6 +211,14 @@ In the default set up, for the RAM area (0000-7FFF) this will however be the sam
 \example{}
 \begin{verbatim}
 	100 bsave "memory.space",$0800,$7800
+\end{verbatim}
+
+\section*{call}
+Calls an assembly subroutine which is located at the address specified by the parameter. In order to return to Basic the assembly routine has to end with an rts instruction.
+
+\example{}
+\begin{verbatim}
+	100 call $4500
 \end{verbatim}
 
 \section*{chr\$()}
