@@ -1,8 +1,10 @@
-; This file is part of the TinyCore 6502 MicroKernel,
-; Copyright 2022 Jessie Oberreuter <joberreu@moselle.com>.
+; This file is part of the TinyCore MicroKernel for the Foenix F256.
+; Copyright 2022, 2023 Jessie Oberreuter <Gadget@HackwrenchLabs.com>.
+; SPDX-License-Identifier: GPL-3.0-only
+
 ; As with the Linux Kernel Exception to the GPL3, programs
 ; built to run on the MicroKernel are expected to include
-; this file.  Doing so does not effect their license status.
+; this file.  Doing so does not affect their license status.
 
 ; Kernel Calls
 ; Populate the kernel.arg.* variables appropriately, and
@@ -94,11 +96,11 @@ DrawRow     .fill   4   ; Draw text/color buffers left-to-right
 DrawColumn  .fill   4   ; Draw text/color buffers top-to-bottom
             .endn
 
-Config      .namespace
+Clock       .namespace
 GetTime     .fill   4
 SetTime     .fill   4
-GetSysInfo  .fill   4
-SetBPS      .fill   4   ; Set the serial BPS (should match the SLIP router's speed).
+            .fill   12  ; 65816 vectors
+SetTimer    .fill   4
             .endn
 
             .endv            
@@ -124,6 +126,7 @@ directory   .dstruct    dir_t
 display     .dstruct    display_t
 net         .dstruct    net_t
 config      .dstruct    config_t
+timer       .dstruct    timer_t
             .endu
 
 ext         = $f8
@@ -282,7 +285,16 @@ config_t    .struct
             .union
             .endu
             .ends
-                     
+
+timer_t     .struct
+units       .byte       ?
+FRAMES      = 0
+SECONDS     = 1
+QUERY       = 128
+absolute    .byte       ?
+cookie      .byte       ?
+            .ends
+                                      
 time_t      .struct
 century     .byte       ?
 year        .byte       ?
@@ -291,7 +303,7 @@ day         .byte       ?
 hours       .byte       ?
 minutes     .byte       ?
 seconds     .byte       ?
-millis      .byte       ?
+centis      .byte       ?
 size        .ends
 
 ; Events
@@ -365,10 +377,13 @@ TCP         .word   ?
 UDP         .word   ?
             .endn
 
+timer       .namespace
+EXPIRED     .word   ?
+            .endn
+
 clock       .namespace
 TICK        .word   ?
             .endn
-
 
             .endv
 
@@ -384,6 +399,7 @@ udp         .dstruct    kernel.event.udp_t
 tcp         .dstruct    kernel.event.tcp_t
 file        .dstruct    kernel.event.file_t
 directory   .dstruct    kernel.event.dir_t
+timer       .dstruct    kernel.event.timer_t
             .endu
             .ends
                  
@@ -470,6 +486,11 @@ token       .byte   ?   ; TODO: break out into fields
 
 tcp_t       .struct
 len         .byte   ?   ; Raw packet length.
+            .ends
+
+timer_t     .struct
+value       .byte   ?
+cookie      .byte   ?
             .ends
 
             .endn

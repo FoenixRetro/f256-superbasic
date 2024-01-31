@@ -6,6 +6,7 @@
 ;		Created:	5th January 2023
 ;		Reviewed: 	No.
 ;		Author:		Paul Robson (paul@robsons.org.uk)
+;		Author:		Jessie Oberreuter <gadget@moselle.com> (key repeat)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
@@ -20,21 +21,59 @@
 
 ProcessEvents:
 		jsr 	KNLSetEventPointer
-		   
+
 		jsr     GetNextEvent 				; get next event
 		bcs 	_PEExitZ 					; nothing left to process.
 
 		lda 	KNLEvent.type 				; go back if event not key.pressed.
+                cmp     #kernel.event.timer.EXPIRED
+                beq     _PEIsTimer
+		cmp     #kernel.event.key.RELEASED
+		beq     _PEIsRelease
 		cmp 	#kernel.event.key.PRESSED
 		bne 	ProcessEvents
 
-		lda	 	KNLEvent.key.flags 			; is KNLEvent.key.flags = 0 ?
+		lda	KNLEvent.key.flags 			; is KNLEvent.key.flags = 0 ?
 		bmi 	_PEIsRaw
 		bne 	ProcessEvents
 		lda 	KNLEvent.key.ascii 			; is it Ctrl+C
 		cmp 	#3
 		beq 	_PEReturnBreak  			; no, keep going.
+
+              ; Schedule repeats for keys from CBM/K keyboards.
+		phx
+                ldx     KNLEvent.key.keyboard
+                bne     +
+                tax
+                jsr     StartRepeatTimerForKey
+                txa
++               plx
+
 		bra 	_PEQueueA
+_PEIsTimer:
+                jsr     HandleRepeatTimerEvent
+                bcs     ProcessEvents
+                bra     _PEQueueA
+_PEIsRelease:
+              ; We would normally "jsr StopRepeat" here, but 
+              ; this function is no longer the central place
+              ; where events are pulled from the kernel queue;
+              ; that functionality has been moved to trackio.asm,
+              ; and all calls to get events now call GetNextEvent
+              ; in that file.  The key code decoding is here, so
+              ; we must request repeats here, but this code might
+              ; not see the matching key release, as it can occur
+              ; during, say, disk operations.  Alas, this means
+              ; that the release processing must be handled in
+              ; trackio.asm rather than here.
+              ;
+              ; These two different types of key processing should
+              ; not have been split into two different files, but
+              ; here we are.  Until  someone chooses to improve
+              ; the factoring, the call to StopRepeat must move to
+              ; trackio.asm.
+              
+                bra     ProcessEvents
 _PEIsRaw:
 		lda 	KNLEvent.key.raw 			; return raw key if F1-F12
 		cmp 	#129
@@ -114,9 +153,81 @@ KNLGetSingleCharacter:
 		beq 	KNLGetSingleCharacter
 		rts
 
+; ************************************************************************************************
+;
+;								 Key Repeat structs and functions
+;
+; ************************************************************************************************
+
+repeat_t        .struct
+key             .byte   ?   ; Key-code to repeat.
+cookie          .byte   ?   ; Timer ID.
+                .ends
+
+
+StartRepeatTimerForKey
+    ; IN: key code in A.
+
+              ; Key to repeat.
+                sta     repeat.key
+
+              ; New timer ID.
+                inc     repeat.cookie
+
+              ; Get the current frame counter.
+                lda     #kernel.args.timer.FRAMES | kernel.args.timer.QUERY
+                sta     kernel.args.timer.units
+                jsr     kernel.Clock.SetTimer
+
+              ; Schedule a timer approx 0.5s in the future (repeat delay).
+                adc     #30
+                bra     ScheduleRepeatEvent
+
+StopRepeat
+                inc     repeat.cookie
+                rts
+
+ScheduleRepeatEvent
+    ; IN:   A = abs frame count of requested next event.
+
+                sta     kernel.args.timer.absolute
+
+                lda     #kernel.args.timer.FRAMES
+                sta     kernel.args.timer.units
+
+                lda     repeat.cookie
+                sta     kernel.args.timer.cookie
+
+                jmp     kernel.Clock.SetTimer
+
+
+HandleRepeatTimerEvent
+    ; OUT:  Carry Set if event has been silently handled.
+    ;       Carry Clear and A = key code if event resulted in a repeat.
+
+              ; Ignore retired timers.
+                lda     KNLEvent.timer.cookie
+                cmp     repeat.cookie
+                beq     _repeat
+                sec
+                rts
+_repeat
+              ; Schedule the next repeat for ~0.05s from now.
+                lda     KNLEvent.timer.value
+                clc
+                adc     #3
+                jsr     ScheduleRepeatEvent
+
+              ; Return the key being repeated.
+                lda     repeat.key
+                clc
+                rts
+
 		.send code
 
 		.section storage
+
+repeat:         .dstruct    repeat_t
 
 KBDQueueSize = 8
 
@@ -136,5 +247,6 @@ KeyboardQueueEntries:
 ;		Date			Notes
 ;		==== 			=====
 ;		12/02/23 		Returns function keys as chr$(128+fn)
+;               12/27/23                Adds last key repeat.
 ;
 ; ************************************************************************************************

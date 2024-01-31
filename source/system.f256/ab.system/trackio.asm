@@ -240,7 +240,7 @@ _PKERelease:
 		eor 	#$FF						; clear bit
 		and 	KeyStatus,x
 		sta 	KeyStatus,x
-		rts
+		jmp     StopRepeat      ; See events.asm.
 
 
 ; ************************************************************************************************
