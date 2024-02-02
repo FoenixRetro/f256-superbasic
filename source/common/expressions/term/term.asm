@@ -154,7 +154,7 @@ _ETPuncUnary:
 		iny 								; consume the unary character
 		cmp 	#KWD_MINUS 					; unary minus
 		beq 	_ETUnaryNegate
-		cmp 	#KWD_AT 					; @ reference -> constant
+		cmp 	#KWD_ATCH 					; @ reference -> constant
 		beq 	_ETDereference
 		cmp 	#KWD_LPAREN 				; parenthesis
 		beq 	_ETParenthesis

@@ -15,7 +15,7 @@
 LetCommand: ;; [let]
 		ldx 	#0
 		.cget 								; check for @<let>
-		cmp 	#KWD_AT
+		cmp 	#KWD_ATCH
 		bne 	_LCStandard
 		;
 		;		Handle let @value which is integer indirection.
