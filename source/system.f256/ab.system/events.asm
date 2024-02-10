@@ -34,8 +34,7 @@ ProcessEvents:
 		bne 	ProcessEvents
 
 		lda	KNLEvent.key.flags 			; is KNLEvent.key.flags = 0 ?
-    ; Just report the pseudo-ascii values for meta keys
-		;bmi 	_PEIsRaw
+		bmi 	_PEIsRaw
 		bne 	ProcessEvents
 		lda 	KNLEvent.key.ascii 			; is it Ctrl+C
 		cmp 	#3
