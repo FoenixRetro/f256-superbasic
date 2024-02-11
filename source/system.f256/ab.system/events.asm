@@ -75,7 +75,7 @@ _PEIsRelease:
               
                 bra     ProcessEvents
 _PEIsRaw:
-		lda 	KNLEvent.key.raw 			; return raw key if F1-F12
+		lda 	KNLEvent.key.ascii 			; return pseudo ascii value if F1-F12
 		cmp 	#129
 		bcc		ProcessEvents
 		cmp 	#140+1
