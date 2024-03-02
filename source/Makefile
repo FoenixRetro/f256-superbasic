@@ -20,7 +20,7 @@ endif
 VERSION = 1
 
 #	System 0 = F256
-SYSTEM = 0 						
+SYSTEM = 0
 BINDIR = $(ROOTDIR)bin$(S)
 ASMOPTS = -q -b -Wall -c -C -D HARDWARE="$(SYSTEM)" -L output$(S)basic.lst -l output$(S)basic.lbl -Wall 
 APPNAME = build$(S)basic.rom
