@@ -213,6 +213,14 @@ In the default set up, for the RAM area (0000-7FFF) this will however be the sam
 	100 bsave "memory.space",$0800,$7800
 \end{verbatim}
 
+\section*{call}
+Calls an assembly subroutine at the specified address. The address has to be given as the first parameter and can be specified in decimal or hex.
+
+\example{}
+\begin{verbatim}
+	100 call $4000
+\end{verbatim}
+
 \section*{chr\$()}
 Convert an ASCII integer to a single character string.
 \example{}
