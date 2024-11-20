@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.3.15)  17 MAR 2024 17:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.3.15)  20 NOV 2024 20:56
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1088,12 +1088,7 @@ Overfull \hbox (10.0pt too wide) in paragraph at lines 1--1
 
 [27
 
-] [28]
-Underfull \hbox (badness 10000) in paragraph at lines 112--112
-
- []
-
-[29] [30] [31] [32] [33] [34]
+] [28] [29] [30] [31] [32] [33] [34]
 Overfull \hbox (43.98083pt too wide) in paragraph at lines 360--363
 \T1/NotoSerif-TLF/m/n/10 Tests if two sprites over-lap. This is done us-ing a box test based on the size of the sprite (e.g. 8x8,16x16,24x24,32x32)
  []
@@ -1125,13 +1120,13 @@ Package rerunfilecheck Info: File `f256jr_basic_ref.out' has not changed.
 Here is how much of TeX's memory you used:
  19363 strings out of 479600
  357093 string characters out of 5876614
- 543714 words of memory out of 5000000
+ 543713 words of memory out of 5000000
  36728 multiletter control sequences out of 15000+600000
  535708 words of font info for 84 fonts, out of 8000000 for 9000
  350 hyphenation exceptions out of 8191
  84i,8n,90p,654b,1007s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/noto/a_honops.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/noto/a_mz6bs5.enc} </home/martin/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk>{/usr/share/texlive/texmf-dist/fonts/enc/dvips/noto/a_wcjgjy.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/google/noto/NotoSans-Bold.pfb></usr/share/texlive/texmf-dist/fonts/type1/google/noto/NotoSerif-Bold.pfb></usr/share/texlive/texmf-dist/fonts/type1/google/noto/NotoSerif-Italic.pfb></usr/share/texlive/texmf-dist/fonts/type1/google/noto/NotoSerif-Regular.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/txsys.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
-Output written on f256jr_basic_ref.pdf (48 pages, 203663 bytes).
+Output written on f256jr_basic_ref.pdf (48 pages, 203700 bytes).
 PDF statistics:
  894 PDF objects out of 1000 (max. 8388607)
  739 compressed objects within 8 object streams
