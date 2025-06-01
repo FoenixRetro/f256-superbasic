@@ -155,15 +155,15 @@ StartModuleCode:
 	.offs $2000
 	.endif
 .send code
-	.include	"../modules/_build/_hardware.module"
-	.include	"../modules/_build/_graphics.module"
-	.include	"../modules/_build/_tokeniser.module"
-	.include	"../modules/_build/_sound.module"
-	.include	"../modules/_build/_kernel.module"
+	.include	"../modules/.build/hardware.module.asm"
+	.include	"../modules/.build/graphics.module.asm"
+	.include	"../modules/.build/tokeniser.module.asm"
+	.include	"../modules/.build/sound.module.asm"
+	.include	"../modules/.build/kernel.module.asm"
 .section code
 	.if PagingEnabled==1
 	* = $A000
 	.offs $4000
 	.endif
 .send code
-	.include	"../modules/hardware/header/headerdata.dat"
+	.include	"../modules/hardware/header/.build/headerdata.dat"
