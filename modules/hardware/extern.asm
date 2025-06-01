@@ -1,23 +1,29 @@
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		extern.asm
-;		Purpose:	External functions
-;		Created:	29th September 2022
-;		Reviewed: 	27th November 2022
-;		Author : 	Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
+;;
+; External hardware functions
+;;
 
 		.section code
 
-; ************************************************************************************************
+;;
+; Initialize hardware display system.
 ;
-;									Any required initialisation
+; Performs initialization of the F256 display hardware and text console
+; system. Sets up screen dimensions, cursor, colors, and clears the display.
+; This function must be called before using any other display functions.
 ;
-; ************************************************************************************************
-
+; \out EXTTextColour    0x52
+; \out EXTScreenWidth   80
+; \out EXTScreenHeight  60
+;
+; \sideeffects  - Sets `EXTTextColour` to $52 (default color).
+;               - Sets screen dimensions to 80×60 characters.
+;               - Enables hardware cursor with character 214.
+;               - Clears screen and positions cursor below header.
+;               - Modifies hardware registers $D004, $D008, $D009, $D010, $D012, and $D658.
+;               - Calls `EXTClearScreenCode` and `EXTShowHeader`.
+;
+; \see          EXTClearScreenCode, EXTShowHeader, EXTScreenWidth, EXTScreenHeight
+;;
 Export_EXTInitialise:
 		stz 	1 							; Access I/O page 0
 		stz 	$D004 						; Disable border
@@ -54,17 +60,3 @@ _EXMoveDown: 								; move down past prompt
 
 
 		.send code
-		
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;		27/11/22 		Rather than clearing screen, it now goes to line 6 after initialising.
-; 		20/12/22 		Joystick data now read from $DC00
-;		02/03/23 		Cursor on/character moved here.
-;
-; ************************************************************************************************

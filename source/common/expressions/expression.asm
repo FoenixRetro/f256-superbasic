@@ -1,35 +1,63 @@
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		expression.asm
-;		Purpose:	Evaluate an expression
-;		Created:	21st September 2022
-;		Reviewed: 	27th November 2922
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
+;;
+; Expression evaluation
+;;
 
 		.section code
 
-; ************************************************************************************************
-;
-;						Punctuation operator -> Precedence level table
-;
-; ************************************************************************************************
-
+;;
+; Punctuation operator -> Precedence level table
+;;
 		.include "../generated/precedence.dat"
 
-; ************************************************************************************************
+;;
+; Evaluate an expression at stack level 0.
 ;
-;									Evaluate an expression 
+; Evaluates a mathematical or string expression starting at the lowest stack level (0)
+; with the lowest precedence level. This is the main entry point for expression evaluation.
 ;
-; ************************************************************************************************
-
+; \in Y         Relative offset to the start of the expression.
+; \out A        Current precedence level after evaluation.
+; \sideeffects  - Clears registers `X` and `A`.
+;               - See `EvaluateExpressionAtPrecedence`
+; \see     		EvaluateExpression, EvaluateExpressionAtPrecedence, EvaluateTerm
+;;
 EvaluateExpressionAt0:
 		ldx 	#0 							; bottom stack level
+
+;;
+; Evaluate an expression at stack level `X`.
+;
+; Evaluates a mathematical or string expression starting at the specified stack level (`X`)
+; with the lowest precedence level. This function is used when evaluating expressions
+; at different stack depths during recursive expression parsing.
+;
+; \in Y         Relative offset to the start of the expression.
+; \in X   		Stack level to use for evaluation.
+; \out A        Current precedence level after evaluation.
+; \sideeffects  - Modifies register `A`.
+;               - See `EvaluateExpressionAtPrecedence`
+; \see     		EvaluateExpressionAt0, EvaluateExpressionAtPrecedence, EvaluateTerm
+;;
 EvaluateExpression:
 		lda 	#0 							; lowest precedence level
+
+;;
+; Evaluate an expression at a specific stack and precedence level.
+;
+; Evaluates a mathematical or string expression starting at the specified stack level (`X`)
+; and precedence level (`A`). This is the core expression evaluation function that handles
+; operator precedence and recursive evaluation of sub-expressions.
+;
+; \in Y         Relative offset to the start of the expression.
+; \in  X        Stack level to use for evaluation.
+; \in  A        Precedence level for this evaluation.
+; \out A        Current precedence level after evaluation.
+; \sideeffects  - Modifies registers `A`, `X`, `Y` and `zTemp0`, `zTemp0+1`.
+;               - Uses math stack levels X and X+1 for operand storage.
+;               - Advances code pointer past the expression.
+;               - May throw "too complex" error if stack depth exceeded.
+; \see          EvaluateExpressionAt0, EvaluateExpression, EvaluateTerm, VectorSetPunc
+;;
 EvaluateExpressionAtPrecedence:
 
 		pha 								; save precedence level
@@ -39,7 +67,7 @@ EvaluateExpressionAtPrecedence:
 		; ----------------------------------------------------------------------------------------
 		;
 		;								Main Evaluation Loop
-		;		
+		;
 		; ----------------------------------------------------------------------------------------
 
 _EXPRLoop:
@@ -51,11 +79,11 @@ _EXPRLoop:
 		;
 		phx 								; read the operator precedence
 		tax
-		lda 	PrecedenceLevel,x 			
+		lda 	PrecedenceLevel,x
 		plx
 		;
 		cmp 	#0							; if zero exit (not an operator)
-		beq 	_EXPRExit 	
+		beq 	_EXPRExit
 		sta 	zTemp0+1 					; save operator precedence level.
 		;
 		lda 	zTemp0 						; compare current precedence vs. operator precedence
@@ -66,11 +94,11 @@ _EXPRLoop:
 		;
 		.cget 								; get, consume and save binary operator
 		iny
-		pha 
+		pha
 		;
 		lda 	zTemp0+1 					; get operator precedence level
 		inx 								; work out the right hand side.
-		jsr 	EvaluateExpressionAtPrecedence 
+		jsr 	EvaluateExpressionAtPrecedence
 		dex
 		;
 		pla 								; get operator, call the code.
@@ -86,7 +114,7 @@ _EXPRExit:
 		; ----------------------------------------------------------------------------------------
 		;
 		;						Call binary function handler - note initial PHX
-		;		
+		;
 		; ----------------------------------------------------------------------------------------
 
 _EXPRCaller:
@@ -102,14 +130,3 @@ _EXPRTooComplex:
 		.error_toocomplex
 
 		.send code
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
