@@ -17,3 +17,8 @@ endif
 
 all:
 	python scripts$(S)scancodes.py
+
+clean:
+	$(CDEL) aa.main$(S)_*.*
+
+.PHONY: all clean
