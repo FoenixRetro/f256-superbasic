@@ -1,15 +1,12 @@
 ;;
 ; Console data definitions
 ;;
+
+EXTMemory 		= $C000
+EXTTextPage 	= $02
+EXTColourPage 	= $03
+
 		.section storage
-
-EXTMemory = $C000
-EXTTextPage = $02
-EXTColourPage = $03
-
-EXTDummySpace = 1 							; fake-space for CR character.
-EXTCBlack = 0
-
 ;;
 ; Current cursor row position.
 ;
@@ -20,8 +17,7 @@ EXTCBlack = 0
 ; \size    1 byte
 ; \see     EXTColumn, EXTAddress, EXTScreenHeight, EXTHomeCursor
 ;;
-EXTRow: 									; current row
-		.fill 	1
+EXTRow				.fill 	1
 
 ;;
 ; Current cursor column position.
@@ -33,8 +29,7 @@ EXTRow: 									; current row
 ; \size    1 byte
 ; \see     EXTRow, EXTAddress, EXTScreenWidth, EXTHomeCursor
 ;;
-EXTColumn: 									; current column
-		.fill 	1
+EXTColumn			.fill 	1
 
 ;;
 ; Current text color.
@@ -45,8 +40,7 @@ EXTColumn: 									; current column
 ; \size    1 byte
 ; \see     EXTColourPage, EXTRow, EXTColumn, EXTAddress
 ;;
-EXTTextColour: 								; current color
-		.fill 	1
+EXTTextColour		.fill 	1
 
 ;;
 ; Screen width in characters.
@@ -58,8 +52,7 @@ EXTTextColour: 								; current color
 ; \size    1 byte
 ; \see     EXTScreenHeight, EXTColumn, EXTScreenRowOffsets
 ;;
-EXTScreenWidth:	 							; screen width
-		.fill 	1
+EXTScreenWidth		.fill 	1
 
 ;;
 ; Screen height in characters.
@@ -71,8 +64,21 @@ EXTScreenWidth:	 							; screen width
 ; \note    Typical values: 25, 30, or 50 rows
 ; \see     EXTScreenWidth, EXTRow, EXTScreenRowOffsets
 ;;
-EXTScreenHeight:	 						; screen height
-		.fill 	1
+EXTScreenHeight		.fill 	1
+
+		.align 2
+;;
+; Precomputed row offset table.
+;
+; Contains precomputed memory offsets for each screen row to enable fast row
+; address calculation. Each entry is a 16-bit offset from the screen base
+; address (`EXTMemory`) to the start of that row. The table is filled during
+; initialization by `EXTInitialise`.
+;
+; \size    128 entries × 2 bytes = 256 bytes total
+; \see     EXTInitialise, EXTMemory, EXTAddress
+;;
+EXTScreenRowOffsets	.fill 	128 * 2
 
 		.send storage
 
@@ -89,7 +95,6 @@ EXTScreenHeight:	 						; screen height
 ; \note    Located in zero page for efficient indirect addressing.
 ; \see     EXTMemory, EXTRow, EXTColumn, EXTScreenRowOffsets
 ;;
-EXTAddress:
-		.fill 	2					 	 	; start of the current line
+EXTAddress			.fill 	2
 
 		.send zeropage

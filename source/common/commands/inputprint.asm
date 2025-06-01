@@ -95,13 +95,15 @@ _CPLoop:
 		beq 	_CPTab
 		cmp 	#KWD_QUOTE 					; apostrophe (new line)
 		beq 	_CPNewLine
-		dey 								; undo the get.
+		cmp 	#KWD_AT 					; `at` modifier
+		beq 	_CPAtModifier
+		dey 								; undo the get
 		jsr 	EvaluateExpressionAt0 		; evaluate expression at 0.
 		lda 	NSStatus,x 					; read the status
 		and 	#NSBIsReference 			; is it a reference
-		beq 	_CPIsValue 					; no, display it.
+		beq 	_CPIsValue 					; no, display it
 		;
-		lda 	isPrintFlag 				; if print, dereference and print.
+		lda 	isPrintFlag 				; if print, dereference and print
 		bne 	_CPIsPrint 					; otherwise display.
 		jsr 	CIInputValue 				; input a value to the reference
 		bra 	_CPNewLine
@@ -127,6 +129,12 @@ _CPNumber:
 		lda 	#decimalBuffer & $FF
 		jsr 	CPPrintStringXA 			; print it.
 		bra 	Command_IP_Main				; loop round clearing carry so NL if end
+		;
+		;		`at row, column` modifier
+		;
+_CPAtModifier:
+		jsr 	CPPrintAt			        ; subroutine to keep `_CPLoop` within branch range
+		bra 	Command_IP_Main
 		;
 		;		New line
 		;
@@ -303,5 +311,45 @@ CPPVControl:
 ;;
 CPInputVector:
 		jmp 	KNLGetSingleCharacter
+
+;;
+; Handle the `at row,column` modifier for print/input statements.
+;
+; Parses row and column coordinates from the statement and positions the
+; cursor at the specified screen location. Both coordinates are range-checked
+; against screen dimensions.
+;
+; \in Y             Current parsing position in the statement.
+; \out Y            Updated parsing position after consuming row,column arguments.
+; \out EXTRow       Set to the specified row coordinate.
+; \out EXTColumn    Set to the specified column coordinate.
+; \out EXTAddress   Updated to point to the start of the specified row.
+; \sideeffects      - Modifies registers `A` and `X`.
+; \see              Evaluate8BitInteger, CheckComma, EXTSetCurrentLine,
+;                   EXTScreenHeight, EXTScreenWidth, RangeError
+;;
+CPPrintAt:
+		ldx		#0 							; bottom stack level
+		jsr		Evaluate8BitInteger         ; parse row into `A`
+		cmp		EXTScreenHeight				; check if row is within valid range
+		bcs		_range_error
+		pha									; save it on the stack
+		jsr		CheckComma					; ensure the next character is a comma
+		jsr		Evaluate8BitInteger			; parse column into `A`
+		cmp		EXTScreenWidth				; check if column is within valid range
+		bcs		_range_error
+
+		; successfully parsed row and column, can set the cursor position now
+		sta     EXTColumn					; save column into `EXTColumn`
+		pla                                 ; restore row into `A`
+		sta     EXTRow						; save row into `EXTRow`
+
+		phy
+		jsr 	EXTSetCurrentLine         	; set current line address to `EXTRow`
+        ply
+		rts
+
+_range_error:
+		jmp 	RangeError 					; branch to range error handler
 
 		.send code

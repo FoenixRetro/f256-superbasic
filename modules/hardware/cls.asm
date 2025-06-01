@@ -77,9 +77,9 @@ _EXTCSFill3:
 EXTHomeCursor:
 		stz 	EXTRow 						; reset row & column
 		stz 	EXTColumn
-		lda 	#EXTMemory & $FF 			; set address in I/O memory
+		lda 	#<EXTMemory					; set address in I/O memory
 		sta 	EXTAddress
-		lda 	#EXTMemory >> 8
+		lda 	#>EXTMemory
 		sta 	EXTAddress+1
 		; fall through to set hardware cursor
 
@@ -103,6 +103,38 @@ EXTSetHardwareCursor:
         lda 	EXTRow
         sta 	$D016
         stz 	$D017
+        rts
+
+
+;;
+; Set current line address based on row position.
+;
+; Calculates and sets the `EXTAddress` pointer to the start of the line
+; specified by `EXTRow`. Uses the precomputed row offset table for fast
+; address calculation.
+;
+; \in 	EXTRow      The row number to set as current line (0-based).
+; \out  EXTAddress	Pointer to the start of the specified row.
+; \sideeffects      - Modifies registers `A` and `Y`.
+;                   - Updates `EXTAddress` with calculated line address.
+; \see     			EXTScreenRowOffsets, EXTMemory, EXTRow, EXTAddress, EXTColumn
+;;
+Export_EXTSetCurrentLine:
+		lda     EXTRow						; `A` holds the current row
+
+		; lookup the corresponding row offset
+		asl 	a							; multiply row index by 2 to get byte index
+		tay									; `Y` holds the byte index of the row offset
+
+		; add row offset to address
+		clc
+		lda 	#<EXTMemory					; `A` = low byte of screen memory
+		adc 	EXTScreenRowOffsets,y		; add the row offset
+		sta 	EXTAddress					; store low byte of the line address
+
+		lda 	#>EXTMemory					; `A` = high byte of screen memory
+		adc 	EXTScreenRowOffsets+1,y		; add the row offset
+		sta 	EXTAddress+1				; store high byte of the line address
         rts
 
 		.send code
