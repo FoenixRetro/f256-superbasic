@@ -1,31 +1,31 @@
-; ************************************************************************************************
-; ************************************************************************************************
-;
-;		Name:		term.asm
-;		Purpose:	Evaluate a term
-;		Created:	20th September 2022
-;		Reviewed: 	27th November 2022
-;		Author:		Paul Robson (paul@robsons.org.uk)
-;
-; ************************************************************************************************
-; ************************************************************************************************
+;;
+; Term evaluation
+;;
 
 		.section code
 
-; ************************************************************************************************
+;;
+; Evaluate a term at stack level `X`.
 ;
-;					   			Evaluate a term on the stack at X
+; Evaluates a single term (operand) in an expression and stores the result at the specified
+; stack level. A term can be a number, quoted string, hex constant, variable reference,
+; unary function, or punctuation unary operator:
 ;
-;		This can be:
-;			a number (in ASCII)			$30-$39 	(0-9)
-;			a quoted string 			$FF <data>	
-;			a hex constant 				$FE <data>	
-;			a variable 					$40-$7F
-; 			a text unary function 		defined by constants
-;			a punctuation unary 		@ ? ! ( -
+;   number (in ASCII)		$30-$39 (0-9)
+;	quoted string 			$FF <data>
+;	hex constant 			$FE <data>
+;	variable 				$40-$7F
+; 	text unary function 	defined by constants
+;	punctuation unary 		@ ? ! ( -
 ;
-; ************************************************************************************************
-
+; \in Y         Relative offset to the beginning of the term.
+; \in X         Stack level to use for evaluation.
+; \sideeffects  - Modifies registers `A`, `Y` and `zTemp0`.
+;               - Advances code pointer past the term.
+;               - Updates `NSStatus`, `NSMantissa*` at stack level X.
+;               - May call various handlers based on term type.
+; \see          EvaluateExpression, VariableHandler, EncodeNumberStart, Dereference
+;;
 EvaluateTerm:
 		.cget 								; look at first character
 		bmi 	_ETCheckUnary 				; unary function ? (text ones)
@@ -33,7 +33,7 @@ EvaluateTerm:
 		bcs 	_ETVariable
 		cmp 	#'0' 						; is it a number
 		bcc 	_ETPuncUnary 				; if not it might be a punctuation unary.
-		cmp 	#'9'+1 	
+		cmp 	#'9'+1
 		bcs 	_ETPuncUnary
 
 		; ----------------------------------------------------------------------------------------
@@ -57,8 +57,8 @@ _ETNumber:
 		;
 		; ----------------------------------------------------------------------------------------
 
-_ETCheckUnary:		
-		cmp 	#KWC_STRING 				; string token 
+_ETCheckUnary:
+		cmp 	#KWC_STRING 				; string token
 		beq 	_ETString
 		cmp 	#KWC_HEXCONST 				; hex constant.
 		beq 	_ETHexConstant
@@ -80,7 +80,7 @@ _ETSyntaxError:
 		; ----------------------------------------------------------------------------------------
 		;
 		;		String $FE <total length> <ASCII digits> $0
-		;		
+		;
 		; ----------------------------------------------------------------------------------------
 
 _ETHexConstant:
@@ -104,7 +104,7 @@ _ETHLoop:
 _ETHNotChar:
 		and 	#15 						; digit now
 		ora 	NSMantissa0,x 				; put in LS Nibble
-		sta 	NSMantissa0,x		
+		sta 	NSMantissa0,x
 		bra 	_ETHLoop 					; go round.
 _ETHExit:
 		rts
@@ -112,7 +112,7 @@ _ETHExit:
 		; ----------------------------------------------------------------------------------------
 		;
 		;		String $FF <total length> <text> $00
-		;		
+		;
 		; ----------------------------------------------------------------------------------------
 
 _ETString:
@@ -123,7 +123,7 @@ _ETString:
 		jsr 	MemoryInline 				; put address of string at (code-Ptr),y on stack
 											; (may have to duplicate into soft memory)
 		pla 								; restore count and save
-		sta 	zTemp0 
+		sta 	zTemp0
 
 		tya 								; add length to Y to skip it.
 		clc
@@ -181,10 +181,10 @@ _ETIndirection:
 		bne 	_ETTypeMismatch
 		pla 								; indirection 1-2
 		ora 	#NSBIsReference 			; make it a reference.
-		sta 	NSStatus,x 
+		sta 	NSStatus,x
 		rts
 _ETTypeMismatch:
-		jmp 	TypeError		
+		jmp 	TypeError
 
 		; ----------------------------------------------------------------------------------------
 		;
@@ -196,7 +196,7 @@ _ETUnaryNegate:
 		jsr 	EvaluateTerm				; evaluate the term
 		jsr 	Dereference 				; dereference it.
 		lda 	NSStatus,x 					; must be a number
-		and 	#NSTString 	
+		and 	#NSTString
 		bne 	_ETTypeMismatch
 		jmp 	NSMNegate  					; just toggles the sign bit.
 
@@ -226,14 +226,3 @@ _ETParenthesis:
 		rts
 
 		.send code
-
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
