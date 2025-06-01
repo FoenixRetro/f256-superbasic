@@ -39,19 +39,19 @@ F256Header:
 ; ************************************************************************************************
 
 		* = F256Header + 64
-		
+
 Boot:	jmp 	Start
-		.include "../../../modules/_build/_linker.module"
+		.include "../../../modules/.build/_exports.module.asm"
 
 Start:	ldx 	#$FF 						; stack reset
-		txs	
+		txs
 
 		jsr 	EXTInitialise 				; hardware initialise
 
 		lda 	0  							; turn on editing of MMU LUT
 		ora 	#$80
 		sta 	0
-		
+
 		lda 	$2002 						; if $2002..5 is BT65 then jump to $2000
 		cmp 	#"B"
 		bne 	_NoMachineCode
@@ -66,20 +66,20 @@ Start:	ldx 	#$FF 						; stack reset
 		bne 	_NoMachineCode
 		jmp 	$2000
 
-_NoMachineCode:		
+_NoMachineCode:
 
 		lda 	#0 							; zero the default drive.
 		jsr 	KNLSetDrive
 
 		jsr 	TKInitialise 				; initialise tokeniser.
-		
+
 		.if 	graphicsIntegrated==1 		; if installed
 		lda 	#0 							; graphics system initialise.
 		tax
 		tay
 		jsr 	GXGraphicDraw
 		.endif
-		
+
 		.if 	soundIntegrated==1 			; if installed
 		lda 	#$0F 						; initialise sound system
 		jsr 	SNDCommand
@@ -130,7 +130,7 @@ _NoMachineCode:
 		.if 	AUTORUN==1 					; run straight off
 		jsr 	BackloadProgram
 		jmp 	RunCurrentProgram
-		.else		
+		.else
 		jmp 	WarmStart					; make same size.
 		jmp 	WarmStart
 		.endif
