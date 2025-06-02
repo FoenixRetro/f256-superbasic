@@ -151,3 +151,8 @@ error_toocomplex .macro
 	lda	#30
 	jmp	ErrorHandler
 	.endm
+ERRID_INITERROR = 31
+error_initerror .macro
+	lda	#31
+	jmp	ErrorHandler
+	.endm
