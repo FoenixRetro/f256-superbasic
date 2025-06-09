@@ -1,13 +1,12 @@
-# ************************************************************************************************
-# ************************************************************************************************
+# This makefile orchestrates the build process for all SuperBASIC modules:
+# 1. Builds individual module components, if needed (graphics, hardware headers)
+# 2. Copies required data files (keyword text for tokeniser)
+# 3. Generates combined assembly files for each module (.module.asm)
+# 4. Creates module interface code with bank switching support (_exports.module.asm)
 #
-#		Name:		Makefile
-#		Purpose:	Main module make file
-#		Created:	14th November 2022
-#		Author:		Paul Robson (paul@robsons.org.uk)
-#
-# ************************************************************************************************
-# ************************************************************************************************
+# Each module is built into a single assembly file that can be loaded into
+# a separate memory bank on the F256 system, enabling modular functionality
+# within the interpreter's memory constraints.
 
 ifeq ($(OS),Windows_NT)
 include ..\documents\common.make
@@ -15,21 +14,26 @@ else
 include ../documents/common.make
 endif
 
+BUILD_DIR = .build
+
 all:
 	make -B -C graphics
-
 	make -B -C hardware$(S)header
-	
-	python _scripts$(S)makebuild.py graphics >_build$(S)_graphics.module
 
 	$(CCOPY) ..$(S)source$(S)common$(S)generated$(S)kwdtext.dat tokeniser$(S)__kwdtext.asm
-	python _scripts$(S)makebuild.py tokeniser >_build$(S)_tokeniser.module
+	python _scripts$(S)makebuild.py tokeniser
 
-	python _scripts$(S)makebuild.py hardware >_build$(S)_hardware.module	
+	python _scripts$(S)makebuild.py graphics $(BUILD_DIR)
+	python _scripts$(S)makebuild.py hardware $(BUILD_DIR)
+	python _scripts$(S)makebuild.py kernel $(BUILD_DIR)
+	python _scripts$(S)makebuild.py sound $(BUILD_DIR)
 
-	python _scripts$(S)makebuild.py sound >_build$(S)_sound.module		
+	python _scripts$(S)makeexport.py >$(BUILD_DIR)$(S)_exports.module.asm
 
-	python _scripts$(S)makebuild.py kernel >_build$(S)_kernel.module
+clean:
+	make -C graphics clean
+	make -C hardware$(S)header clean
 
-	python _scripts$(S)makeexport.py >_build$(S)_linker.module
+	$(CDEL) $(BUILD_DIR)$(S)*.*
 
+.PHONY: all clean
