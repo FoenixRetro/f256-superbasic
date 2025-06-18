@@ -1,0 +1,6 @@
+*           text=auto
+*.asm       text
+*.inc       text
+*.bin       binary
+*.pdf       binary
+*.rom       binary
