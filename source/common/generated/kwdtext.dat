@@ -94,8 +94,9 @@ KeywordSet0:
 	.text	5,$7b,"SOLID"          ; $d8 SOLID
 	.text	5,$89,"SOUND"          ; $d9 SOUND
 	.text	6,$d7,"SPRITE"         ; $da SPRITE
-	.text	4,$45,"TEXT"           ; $db TEXT
-	.text	2,$a3,"TO"             ; $dc TO
+	.text	4,$3c,"STEP"           ; $db STEP
+	.text	4,$45,"TEXT"           ; $dc TEXT
+	.text	2,$a3,"TO"             ; $dd TO
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF

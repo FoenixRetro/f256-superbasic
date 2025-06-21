@@ -158,8 +158,9 @@ VectorSet0:
 	.word	SyntaxError                      ; $d8 SOLID
 	.word	SoundCommand                     ; $d9 SOUND
 	.word	SpriteCommand                    ; $da SPRITE
-	.word	TextCommand                      ; $db TEXT
-	.word	Unused2                          ; $dc TO
+	.word	Unused5                          ; $db STEP
+	.word	TextCommand                      ; $dc TEXT
+	.word	Unused2                          ; $dd TO
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1

@@ -50,6 +50,7 @@ class TokenSource(object):
 				colour 		solid 		outline 	gfx			image 		at
 				from		plot 		on 			off 		palette 	sound 		
 				poke 		pokew 		pokel 		poked 		memcopy 	clear
+				step
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop			
