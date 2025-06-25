@@ -19,14 +19,25 @@ ASSETS_SRC_DIR = ..$(S)..$(S)..$(S)..$(S)Foenix-F256JR-bootscreens
 ASSETS_DIR = assets
 BUILD_DIR = .build
 
-all: jattrs.bin jchars.bin kattrs.bin kchars.bin palette.hex
+all:	jattrs.bin jchars.bin \
+		j2attrs.bin j2chars.bin \
+		kattrs.bin kchars.bin \
+		k2attrs.bin k2chars.bin \
+		palette.hex
 	python process.py $(BUILD_DIR) $(ASSETS_DIR)
 
 # F256Jr boot screen assets
 jattrs.bin: $(ASSETS_SRC_DIR)$(S)f256jr_boot_attrs.bin
 	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
 
-jchars.bin: $(ASSETS_SRC_DIR)$(S)f256jr_boot_chars.bin
+jchars.bin: $(ASSETS_SRC_DIR)$(S)f256jr2_boot_chars.bin
+	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
+
+# F256Jr2 boot screen assets
+j2attrs.bin: $(ASSETS_SRC_DIR)$(S)f256jr2_boot_attrs.bin
+	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
+
+j2chars.bin: $(ASSETS_SRC_DIR)$(S)f256jr2_boot_chars.bin
 	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
 
 # F256K boot screen assets
@@ -34,6 +45,13 @@ kattrs.bin: $(ASSETS_SRC_DIR)$(S)f256k_boot_attrs.bin
 	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
 
 kchars.bin: $(ASSETS_SRC_DIR)$(S)f256k_boot_chars.bin
+	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
+
+# F256K2 boot screen assets
+k2attrs.bin: $(ASSETS_SRC_DIR)$(S)f256k2_boot_attrs.bin
+	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
+
+k2chars.bin: $(ASSETS_SRC_DIR)$(S)f256k2_boot_chars.bin
 	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
 
 # Standard text palette
