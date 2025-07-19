@@ -26,6 +26,10 @@ make -B pullkernel updatekernel build release
 make -B basic release
 ```
 
+# build w/ support for Gen 2 features
+make -B basic release HARDWARE_GEN=2
+```
+
 This will output a set of binary files in the `release/` folder
 and a file called `release/bulk.csv` that shows where those files
 get flashed in memory.

@@ -31,17 +31,37 @@ def main(*, build_dir: Path, assets_dir: Path) -> None:
         out.write(f"Header_Height = {height}\n\n")
         out.write(f"Header_RLE = {rle_marker}\n\n")
 
-        # Process binary assets
-        for asset in ["jattrs", "jchars", "kattrs", "kchars"]:
-            out.write(f"Header_{asset}:\n")
-            data = process_binary_file(
-                assets_dir / f"{asset}.bin",
-                height=height,
-                width=width,
-                rle_marker=rle_marker,
-            )
+        asset_types = ["attrs", "chars"]
 
-            out.write("\t.byte\t{0}\n\n".format(",".join([str(x) for x in data])))  # noqa: UP030
+        def asset_name(machine: str, asset_type: str) -> str:
+            return f"{machine}{asset_type}"
+
+        # Process binary assets
+        for machine in ["j", "k", "j2", "k2"]:
+            for asset_type in asset_types:
+                asset = asset_name(machine, asset_type)
+                out.write(f"Asset_{asset}:\n")
+                data = process_binary_file(
+                    assets_dir / f"{asset}.bin",
+                    height=height,
+                    width=width,
+                    rle_marker=rle_marker,
+                )
+
+                out.write("\t.byte\t{0}\n\n".format(",".join([str(x) for x in data])))  # noqa: UP030
+
+        def write_asset_aliases(*, machines: list[str]):
+            for machine in machines:
+                for asset_type in asset_types:
+                    alias = asset_name(machine[0:1], asset_type)
+                    asset = asset_name(machine, asset_type)
+                    out.write(f"\tHeader_{alias} = Asset_{asset}\n")
+
+        out.write(".if HARDWARE_GEN == 1\n")
+        write_asset_aliases(machines=["j", "k"])
+        out.write(".else\n")
+        write_asset_aliases(machines=["j2", "k2"])
+        out.write(".endif\n\n")
 
         # Process palette
         out.write("Header_Palette:\n")
