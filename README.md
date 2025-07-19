@@ -24,7 +24,6 @@ make -B pullkernel updatekernel build release
 
 # or just build basic
 make -B basic release
-```
 
 # build w/ support for Gen 2 features
 make -B basic release HARDWARE_GEN=2
