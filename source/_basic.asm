@@ -137,6 +137,7 @@
 	.include	"./system.f256/module.interfaces/kernel/functions/getinkey.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/keydown.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/rnd.asm"
+	.include	"./system.f256/module.interfaces/kernel/functions/screen.asm"
 	.include	"./system.f256/module.interfaces/sound/effects.asm"
 	.include	"./system.f256/module.interfaces/sound/playing.asm"
 	.include	"./system.f256/module.interfaces/sound/sound.asm"

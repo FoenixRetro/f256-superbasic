@@ -18,28 +18,28 @@
 ;
 ; ************************************************************************************************
 
-AscGet: ;; [get(]	
+AscGet: ;; [get(]
 		plx 								; restore stack pos
-AscGet2:		
+AscGet2:
 		jsr 	CheckRightBracket
-		jsr 	KNLGetSingleCharacter	
-		jsr 	NSMSetByte 					
+		jsr 	KNLGetSingleCharacter
+		jsr 	NSMSetByte
 		rts
 _AGBreak:
 		.error_break
-		
+
 ; ************************************************************************************************
 ;
 ; 										INKEY()
 ;
 ; ************************************************************************************************
 
-AscInkey: ;; [inkey(]	
+AscInkey: ;; [inkey(]
 		plx 								; restore stack pos
-AscInkey2:	
+AscInkey2:
 		jsr 	CheckRightBracket
 		jsr 	KNLGetKeyPressed
-		jsr 	NSMSetByte 					
+		jsr 	NSMSetByte
 		rts
 
 ; ************************************************************************************************
@@ -51,15 +51,15 @@ AscInkey2:
 ChrGet:	 ;; [get$(]
 		plx
 		jsr 	AscGet2
-		jmp 	GetInkeyToString
+		jmp 	ChrToString
 
-ChrInkey: ;; [inkey$(]	
-		plx	
+ChrInkey: ;; [inkey$(]
+		plx
 		jsr 	AscInkey2
 		;
 		;		Convert A to string.
 		;
-GetInkeyToString:
+ChrToString:
 		cmp 	#0 							; if zero, return ""
 		beq 	_GKISNull
 
@@ -72,7 +72,7 @@ GetInkeyToString:
 
 _GKISNull:
 		lda 	#0
-		jsr 	StringTempAllocate		
+		jsr 	StringTempAllocate
 		rts
 
 		.send code

@@ -85,15 +85,15 @@ EXTScreenRowOffsets	.fill 	128 * 2
 		.section zeropage
 
 ;;
-; Current screen line address pointer.
+; Current screen line address for write operations.
 ;
 ; 16-bit pointer to the screen address marking the start of the current line.
 ; This address is calculated from `EXTMemory` + row offset and is used for
-; fast character positioning and screen operations.
+; fast character positioning in screen write operations.
 ;
 ; \size    2 bytes
 ; \note    Located in zero page for efficient indirect addressing.
-; \see     EXTMemory, EXTRow, EXTColumn, EXTScreenRowOffsets
+; \see     EXTMemory, EXTRow, EXTColumn, EXTScreenRowOffsets, EXTReadAddress
 ;;
 EXTAddress			.fill 	2
 
