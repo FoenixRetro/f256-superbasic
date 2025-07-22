@@ -15,9 +15,6 @@ else
 include ../../documents/common.make
 endif
 
-BINDIR = ..$(S)..$(S)bin$(S)
-EMULATOR = $(BINDIR)jr256$(APPSTEM)
-TTYPORT = /dev/ttyUSB0
 LANGUAGE = en
 
 START = $(EMULATOR) $(BINDIR)basic.rom@b storage$(S)load.dat@x graphics.bin@s
@@ -42,4 +39,4 @@ program:
 #		Run program (if built autorunning BASIC)
 #
 run: sprites program
-	$(START)	
+	$(START)

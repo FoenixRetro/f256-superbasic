@@ -7,15 +7,14 @@ endif
 
 all : ramkernel
 
-BINDIR = ..$(S)..$(S)bin$(S)
-ASMOPTS = -q -b -Wall -c -L output$(S)testcode.lst -l output$(S)testcode.lbl -Wall 
-KRN_REPO= ..$(S)..$(S)..$(S)F256_Jr_Kernel_DOS
+ASMOPTS = -q -b -Wall -c -L output$(S)testcode.lst -l output$(S)testcode.lbl -Wall
+
 #
 #		Switch to Flash-Boot or RAM-Boot
-#	
+#
 flashboot:
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --boot flash 
-ramboot:	
+	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --boot flash
+ramboot:
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --boot ram
 #
 #		Build & update Kernel & api.asm
@@ -28,8 +27,8 @@ updatekernel:
 #
 #		Build RAM based kernel / test ROM combo and boot.
 #
-ramkernel: 
+ramkernel:
 	64tass $(ASMOPTS) readfile.asm  -o testcode.bin
-	cat 3f.bin 3e.bin 01.bin testcode.bin  >kernel.ram 
+	cat 3f.bin 3e.bin 01.bin testcode.bin  >kernel.ram
 	cat kernel.ram $(BINDIR)$(S)basic.rom >ramkernel.bin
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary ramkernel.bin --address E000
