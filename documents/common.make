@@ -1,6 +1,6 @@
 # ***********************************************************************************
 #
-#										Common Build 
+#										Common Build
 #
 # ***********************************************************************************
 #
@@ -15,7 +15,7 @@ APPSTEM = .exe
 S = \\
 SDLDIR = C:\\sdl2
 CXXFLAGS = -I$(SDLDIR)$(S)include$(S)SDL2 -I . -fno-stack-protector -w -Wl,-subsystem,windows -DSDL_MAIN_HANDLED
-LDFLAGS = -lmingw32 
+LDFLAGS = -lmingw32
 SDL_LDFLAGS = -L$(SDLDIR)$(S)lib -lSDL2 -lSDL2main -static-libstdc++ -static-libgcc
 OSNAME = windows
 EXTRAFILES = libwinpthread-1.dll  SDL2.dll
@@ -23,25 +23,41 @@ PYTHON = python
 else
 CCOPY = cp
 CDEL = rm -f
-CDELQ = 
+CDELQ =
 CMAKE = make
 APPSTEM =
 S = /
 SDL_CFLAGS = $(shell sdl2-config --cflags)
 SDL_LDFLAGS = $(shell sdl2-config --libs)
-CXXFLAGS = $(SDL_CFLAGS) -O2 -DLINUX  -fmax-errors=5 -I.  
-LDFLAGS = 
+CXXFLAGS = $(SDL_CFLAGS) -O2 -DLINUX  -fmax-errors=5 -I.
+LDFLAGS =
 OSNAME = linux
-EXTRAFILES = 
+EXTRAFILES =
 PYTHON = python3
 endif
 #
-#		Root directory
+#		Root and parent dirs
 #
-ROOTDIR = ..$(S)
+SELFDIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+ROOTDIR := $(abspath $(SELFDIR)..$(S))$(S)
+PARENTDIR := $(abspath $(ROOTDIR)..$(S))$(S)
+#
+#		External repositories
+#
+KRN_REPO = $(PARENTDIR)f256-microkernel
+EMU_REPO = $(PARENTDIR)junior-emulator
+LDR_REPO = $(PARENTDIR)FoenixMgr
+#
+#		Binaries dir
+#
+BINDIR = $(ROOTDIR)bin$(S)
+#
+#		Emulator executable
+#
+EMULATOR = $(BINDIR)jr256$(APPSTEM)
 #
 #		Current assembler
-# 
+#
 ASM = 64tass
 #
 #		Load Addresses
