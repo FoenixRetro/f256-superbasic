@@ -15,8 +15,6 @@ else
 include ../../documents/common.make
 endif
 
-BINDIR = ..$(S)..$(S)bin$(S)
-EMULATOR = $(BINDIR)jr256$(APPSTEM)
 LANGUAGE = en
 SOURCE = main.bas levels.bas ..$(S)common$(S)title.bas
 
@@ -47,12 +45,12 @@ program:
 #		Run program (if built autorunning BASIC)
 #
 run: sprites program
-	$(START)	
+	$(START)
 #
 #		Run on kernel hardware
 #
-fgo: sprites program 
-	$(CCOPY) $(BINDIR)foenixmgr.ini .	
+fgo: sprites program
+	$(CCOPY) $(BINDIR)foenixmgr.ini .
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary graphics.bin --address $(LSPRITES)
 	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address $(LSOURCE)
 #
@@ -64,4 +62,3 @@ sdcard:
 	make -n -s fgo >upload$(S)files.lst
 	make -C upload
 
-	

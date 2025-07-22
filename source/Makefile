@@ -21,16 +21,10 @@ VERSION = 1
 
 HARDWARE = 0        # 0 = F256
 HARDWARE_GEN ?= 1   # 1 = J/K, 2 = J2/K2
-BINDIR = $(ROOTDIR)bin$(S)
 ASMOPTS = -q -b -Wall -c -C -D HARDWARE="$(HARDWARE)" -D HARDWARE_GEN=$(HARDWARE_GEN) -L output$(S)basic.lst -l output$(S)basic.lbl -Wall
 APPNAME = build$(S)basic.rom
 SCRIPTDIR = scripts$(S)
-EMULATOR = $(BINDIR)jr256$(APPSTEM)
 LANGUAGE = en
-
-EMU_REPO= ..$(S)..$(S)junior-emulator
-LDR_FILE= ..$(S)..$(S)FoenixMgr
-KRN_REPO= ..$(S)..$(S)F256_Jr_Kernel_DOS
 
 MODULES= +hardware +graphics +tokeniser +sound +kernel
 
@@ -53,15 +47,16 @@ trun: testbasic
 	$(START)
 
 #
-#		Build & update Kernel & api.asm
+#		Pull & update Kernel & api.asm
 #
 pullkernel:
-	cd $(KRN_REPO) && git reset --hard
+	cd $(KRN_REPO) && git diff --quiet || (echo "Error: MicroKernel repository has uncommitted changes" && exit 1)
+	cd $(KRN_REPO) && git diff --cached --quiet || (echo "Error: MicroKernel repository has staged changes" && exit 1)
+	cd $(KRN_REPO) && git switch master
 	cd $(KRN_REPO) && git pull
 
 updatekernel:
-	make -B -C $(KRN_REPO)
-	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)*.bin build
+	$(CCOPY) $(KRN_REPO)$(S)bin$(S)*.bin build
 	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)api.asm  common$(S)api
 
 #
@@ -127,7 +122,7 @@ shim:
 
 fnxmgr:
 	$(CDEL) temp$(S)*.*
-	$(CCOPY) $(LDR_FILE)$(S)FoenixMgr$(S)*.* temp
+	$(CCOPY) $(LDR_REPO)$(S)FoenixMgr$(S)*.* temp
 	$(CCOPY) temp$(S)fnxmgr.py temp$(S)__main__.py
 	zip temp$(S)fnxmgr.zip -j temp$(S)__main__.py temp$(S)constants.py temp$(S)foenix_config.py temp$(S)intelhex.py \
 			temp$(S)pgx.py temp$(S)srec.py temp$(S)foenix.py temp$(S)pgz.py temp$(S)wdc.py

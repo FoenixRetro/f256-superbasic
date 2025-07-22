@@ -16,7 +16,8 @@ SuperBASIC is fully intended to work with the _latest_ Kernel/DOS.
 ```
 git clone git@github.com:FoenixRetro/f256-superbasic.git
 git clone git@github.com:WartyMN/Foenix-F256JR-bootscreens.git
-git clone git@github.com:ghackwrench/F256_Jr_Kernel_DOS.git
+git clone git@github.com:FoenixRetro/f256-microkernel
+git clone git@github.com:FoenixRetro/FoenixMgr
 cd f256-superbasic/source
 
 # this will build everything against/including latest kernel
@@ -92,7 +93,6 @@ Attempting to program sector 0x01 with sb01.bin
 - [F256 Documentation Wiki](https://wiki.f256foenix.com)
 - [More information on flashing SuperBASIC to your machine](https://wiki.f256foenix.com/index.php?title=Kernel_%26_SuperBASIC_Updates)
 - [More information on MAME for F256](https://wiki.f256foenix.com/index.php?title=Emulation#MAME)
-- [F256 emulator](https://github.com/FoenixRetro/junior-emulator)
-- [F256 Kernel and DOS](https://github.com/ghackwrench/F256_Jr_Kernel_DOS)
+- [F256 MicroKernel](https://github.com/FoenixRetro/f256-microkernel)
+- [F256 Boot Screens](https://github.com/WartyMN/Foenix-F256JR-bootscreens)
 - [F256 Command Line USB upload tool](https://github.com/pweingar/FoenixMgr)
-- [Foenix BootScreens](https://github.com/WartyMN/Foenix-F256JR-bootscreens)
