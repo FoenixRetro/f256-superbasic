@@ -385,6 +385,10 @@ clock       .namespace
 TICK        .word   ?
             .endn
 
+irq         .namespace
+IRQ         .word   ?
+            .endn
+
             .endv
 
 event_t     .struct
@@ -400,6 +404,7 @@ tcp         .dstruct    kernel.event.tcp_t
 file        .dstruct    kernel.event.file_t
 directory   .dstruct    kernel.event.dir_t
 timer       .dstruct    kernel.event.timer_t
+irq         .dstruct    kernel.event.irq_t
             .endu
             .ends
                  
@@ -491,6 +496,11 @@ len         .byte   ?   ; Raw packet length.
 timer_t     .struct
 value       .byte   ?
 cookie      .byte   ?
+            .ends
+
+irq_t       .struct
+group       .byte   ?
+bitval      .byte   ?
             .ends
 
             .endn

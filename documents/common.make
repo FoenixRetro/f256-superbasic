@@ -36,25 +36,19 @@ EXTRAFILES =
 PYTHON = python3
 endif
 #
-#		Root and parent dirs
+#		Root dir
 #
 SELFDIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 ROOTDIR := $(abspath $(SELFDIR)..$(S))$(S)
-PARENTDIR := $(abspath $(ROOTDIR)..$(S))$(S)
 #
 #		External repositories
 #
-KRN_REPO = $(PARENTDIR)f256-microkernel
-EMU_REPO = $(PARENTDIR)junior-emulator
-LDR_REPO = $(PARENTDIR)FoenixMgr
+KRN_REPO = https://github.com/FoenixRetro/f256-microkernel
+LDR_REPO = https://github.com/pweingar/FoenixMgr
 #
 #		Binaries dir
 #
 BINDIR = $(ROOTDIR)bin$(S)
-#
-#		Emulator executable
-#
-EMULATOR = $(BINDIR)jr256$(APPSTEM)
 #
 #		Current assembler
 #
