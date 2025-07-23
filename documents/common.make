@@ -1,64 +1,46 @@
-# ***********************************************************************************
-#
-#										Common Build
-#
-# ***********************************************************************************
-#
-#	NB: Windows SDL2 is hard coded.
+#		Common command/variable definitions
 #
 ifeq ($(OS),Windows_NT)
 CCOPY = copy
-CMAKE = make
 CDEL = del /Q
-CDELQ = >NUL
 APPSTEM = .exe
 S = \\
-SDLDIR = C:\\sdl2
-CXXFLAGS = -I$(SDLDIR)$(S)include$(S)SDL2 -I . -fno-stack-protector -w -Wl,-subsystem,windows -DSDL_MAIN_HANDLED
-LDFLAGS = -lmingw32
-SDL_LDFLAGS = -L$(SDLDIR)$(S)lib -lSDL2 -lSDL2main -static-libstdc++ -static-libgcc
-OSNAME = windows
-EXTRAFILES = libwinpthread-1.dll  SDL2.dll
-PYTHON = python
+define mkdir
+	@if not exist "$(1)" mkdir "$(1)"
+endef
 else
 CCOPY = cp
 CDEL = rm -f
-CDELQ =
-CMAKE = make
 APPSTEM =
 S = /
-SDL_CFLAGS = $(shell sdl2-config --cflags)
-SDL_LDFLAGS = $(shell sdl2-config --libs)
-CXXFLAGS = $(SDL_CFLAGS) -O2 -DLINUX  -fmax-errors=5 -I.
-LDFLAGS =
-OSNAME = linux
-EXTRAFILES =
-PYTHON = python3
+define mkdir
+	mkdir -p "$(1)"
+endef
 endif
 #
-#		Root and parent dirs
+#		Root dir
 #
 SELFDIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 ROOTDIR := $(abspath $(SELFDIR)..$(S))$(S)
-PARENTDIR := $(abspath $(ROOTDIR)..$(S))$(S)
 #
 #		External repositories
 #
-KRN_REPO = $(PARENTDIR)f256-microkernel
-EMU_REPO = $(PARENTDIR)junior-emulator
-LDR_REPO = $(PARENTDIR)FoenixMgr
+KRN_REPO = https://github.com/FoenixRetro/f256-microkernel
+ASSETS_REPO = https://github.com/FoenixRetro/f256-bootscreens
+LDR_REPO = https://github.com/pweingar/FoenixMgr
 #
-#		Binaries dir
+#		Dirs
 #
 BINDIR = $(ROOTDIR)bin$(S)
+BUILDDIR = $(ROOTDIR).build$(S)
+RELEASEDIR = $(ROOTDIR).release$(S)
 #
-#		Emulator executable
+#		Tools
 #
-EMULATOR = $(BINDIR)jr256$(APPSTEM)
-#
-#		Current assembler
-#
-ASM = 64tass
+ASM ?= 64tass
+ASFLAGS ?= -q -b -Wall -c -C
+PYTHON ?= python
+GIT ?= git
 #
 #		Load Addresses
 #
@@ -70,15 +52,33 @@ LSOURCE = 28000
 LSPRITES = 30000
 LBASIC = 34000
 #
-#		Expanded for command lines / makefiles.
-#
-DOLLAR = $$
-CADDRESSES = -D MONITOR_ADDRESS=0x$(LMONITOR) -D LOCKOUT_ADDRESS=0x$(LLOCKOUT) -D BASIC_ADDRESS=0x$(LBASIC) -D SOURCE_ADDRESS=0x$(LSOURCE) -D SPRITE_ADDRESS=0x$(LSPRITES) \
-			 -D TILEMAP_ADDRESS=0x$(LTILEMAP) -D TILEIMAGES_ADDRESS=0x$(LTILEIMAGES)
-AADDRESSES = '-D MONITOR_ADDRESS=$(DOLLAR)$(LMONITOR)' '-D LOCKOUT_ADDRESS=$(DOLLAR)$(LLOCKOUT)' '-D BASIC_ADDRESS=$(DOLLAR)$(LBASIC)' \
-			 '-D SOURCE_ADDRESS=$(DOLLAR)$(LSOURCE)' '-D SPRITE_ADDRESS=$(DOLLAR)$(LSPRITES)' \
-			 '-D TILEMAP_ADDRESS=$(DOLLAR)$(LTILEMAP)' '-D TILEIMAGES_ADDRESS=$(DOLLAR)$(LTILEIMAGES)'
-#
 #		Serial port
 #
 TTYPORT = /dev/ttyUSB0
+#
+#		Base curl command: follow redirects, show errors only
+#
+CURL = curl -L -sS
+#
+# 		Verbose mode support
+#
+V ?= 0
+ifeq ($(V),1)
+    Q =
+else
+    Q = @
+endif
+#
+#		Download the kernel's latest `api.asm` into the specified dir
+#
+define updatekernel
+	$(Q)$(CURL) -o $(1)$(S)api.asm $(KRN_REPO)/raw/refs/heads/master/kernel/api.asm
+	$(Q)$(GIT) add --renormalize $(1)$(S)api.asm
+endef
+#
+#		Make sure the directory exists and is empty
+#
+define cleandir
+	$(Q)$(call mkdir,$(1))
+	$(Q)$(CDEL) "$(1)"*.*
+endef
