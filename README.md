@@ -1,38 +1,29 @@
 # F256 SuperBASIC
-Improved BASIC for F256 Junior
+Improved BASIC for the F256 computers.
 
-### Usage
-
+## Usage
 SuperBASIC Reference Manual PDF:
 [reference/source/f256jr_basic_ref.pdf](reference/source/f256jr_basic_ref.pdf)
 
-### Developing
+## Local development
 You need Make, Python and 64tass assembler on your machine.
-
-You will also need a few repos besides SuperBASIC.
-SuperBASIC is fully intended to work with the _latest_ Kernel/DOS.
 
 ### Building
 ```
-git clone git@github.com:FoenixRetro/f256-superbasic.git
-git clone git@github.com:WartyMN/Foenix-F256JR-bootscreens.git
-git clone git@github.com:FoenixRetro/f256-microkernel
-git clone git@github.com:FoenixRetro/FoenixMgr
-cd f256-superbasic/source
+# all the builds are done from the `source` directory
+cd source
 
-# this will build everything against/including latest kernel
-make -B pullkernel updatekernel build release
+# full rebuild, pulls latest kernel and bootscreens
+make -B updatekernel updateassets build
 
-# or just build basic
-make -B basic release
+# standard development build
+make -B build
 
-# build w/ support for Gen 2 features
-make -B basic release HARDWARE_GEN=2
+# development build for F256Jr2/K2 hardware
+make -B build HARDWARE_GEN=2
 ```
 
-This will output a set of binary files in the `release/` folder
-and a file called `release/bulk.csv` that shows where those files
-get flashed in memory.
+The build output is stored in the `.build` directory at the repository root.
 
 ### Testing
 
@@ -47,8 +38,8 @@ you can run the following commands to test your build in MAME F256K:
 
 ```
 cd mame
-cp -f ../f256-superbasic/source/release/sb*.bin roms/f256k/    # copy over SuperBASIC ROMs
-./f256 f256 -window -resolution 1280x960                       # run the emulator
+cp -f ../f256-superbasic/.build/sb*.bin roms/f256k/    # copy over SuperBASIC ROMs
+./f256 f256 -window -resolution 1280x960               # run the emulator
 ```
 
 Note that because MAME embeds CRC checksums for all ROMs, you'll see warnings similar to
@@ -77,7 +68,7 @@ try out your build using the `--flash-bulk` command.
 
 Example on Mac:
 ```
-❯ cd release
+❯ cd .build
 ❯ python3 ~/FoenixMgr/fnxmgr.py --port /dev/cu.usbmodemR23963534611 --flash-bulk bulk.csv
 Attempting to program sector 0x3F with lockout.bin
 Binary file uploaded...
@@ -87,6 +78,12 @@ Attempting to program sector 0x01 with sb01.bin
      ...
 ```
 
+### Releasing a new version
+To ensure quality and reproducibility, official releases are handled through GitHub workflows.
+
+The [release PR preparation](/.github/workflows/prepare-release-pr.yml) workflow monitors pushes to `main` and automatically creates or updates [a release PR](https://github.com/FoenixRetro/f256-superbasic/pulls?q=is%3Apr+is%3Aopen+label%3Arelease) that includes all unreleased changes. This PR includes a log of contributions and is assigned a version based on the major and minor numbers in [`source/Makefile`](/source/Makefile), with the patch number determined by the date of the latest contribution.
+
+Merging the release PR updates the [`VERSION`](/VERSION) and [`CHANGESET.md`](/CHANGESET.md) files, then triggers the [final release](/.github/workflows/release.yml) workflow, which publishes the GitHub release.
 
 ### Additional References
 
@@ -94,5 +91,5 @@ Attempting to program sector 0x01 with sb01.bin
 - [More information on flashing SuperBASIC to your machine](https://wiki.f256foenix.com/index.php?title=Kernel_%26_SuperBASIC_Updates)
 - [More information on MAME for F256](https://wiki.f256foenix.com/index.php?title=Emulation#MAME)
 - [F256 MicroKernel](https://github.com/FoenixRetro/f256-microkernel)
-- [F256 Boot Screens](https://github.com/WartyMN/Foenix-F256JR-bootscreens)
+- [F256 Boot Screens](https://github.com/FoenixRetro/f256-bootscreens)
 - [F256 Command Line USB upload tool](https://github.com/pweingar/FoenixMgr)

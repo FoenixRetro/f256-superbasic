@@ -13,7 +13,8 @@ jobs:
   prepare-release-pr:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out sources
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Need full history for changelog
 
@@ -50,11 +51,11 @@ jobs:
             --tag ${{ steps.version.outputs.version }} \
             --output CHANGELOG.md
 
-      - name: Generate changelog preview
-        id: changelog_preview
+      - name: Generate release notes preview
+        id: release_notes_preview
         run: |
           {
-            echo 'output<<EOF'
+            echo 'release_notes<<EOF'
             git cliff --config .github/cliff.toml \
               --tag ${{ steps.version.outputs.version }} \
               --unreleased
@@ -80,6 +81,6 @@ jobs:
 
             # Release notes
 
-            ${{ steps.changelog_preview.outputs.output }}
+            ${{ steps.release_notes_preview.outputs.release_notes }}
           labels: release
           token: ${{ secrets.GITHUB_TOKEN }}
