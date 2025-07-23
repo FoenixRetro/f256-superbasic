@@ -1,0 +1,79 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - VERSION
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            make 64tass \
+            python3 python3-pip
+
+      - name: Read the release version
+        id: read_version
+        run: |
+          VERSION="$(cat VERSION | tr -d '\r\n')"
+          if [ -z "$VERSION" ]; then
+            echo "VERSION file is empty."
+            exit 1
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version is $VERSION"
+
+      - name: Build the release
+        run: |
+          make -C source -B release V=1
+
+      - name: Create release archive
+        id: release_archive
+        run: |
+          VERSION="${{ steps.read_version.outputs.version }}"
+          PKG="superbasic-v${VERSION}"
+          mkdir -p dist/"$PKG"
+          cp -a .release/. dist/"$PKG"/
+          cd dist && zip -r "$PKG.zip" "$PKG"
+          echo "archive=dist/$PKG.zip" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          {
+            echo 'release_notes<<EOF'
+            git cliff --config .github/cliff.toml \
+              --tag ${{ steps.read_version.outputs.version }} \
+              --unreleased
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.read_version.outputs.version }}
+          name: v${{ steps.read_version.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          body: ${{ steps.release_notes.outputs.release_notes }}
+          draft: true
+          fail_on_unmatched_files: true
+          files: |
+            ${{ steps.release_archive.outputs.archive }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

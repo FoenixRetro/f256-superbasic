@@ -1,13 +1,4 @@
-# ************************************************************************************************
-# ************************************************************************************************
-#
-#		Name:		Makefile
-#		Purpose:	Main make file
-#		Created:	18th September 2022
-#		Author:		Paul Robson (paul@robsons.org.uk)
-#
-# ************************************************************************************************
-# ************************************************************************************************
+# Makefile for F256 SuperBASIC
 
 ifeq ($(OS),Windows_NT)
 include ..\documents\common.make
@@ -19,224 +10,167 @@ endif
 #
 MAJOR_VERSION = 1
 MINOR_VERSION = 1
+VERSION ?= $(MAJOR_VERSION).$(MINOR_VERSION)
 
-HARDWARE = 0        # 0 = F256
-HARDWARE_GEN ?= 1   # 1 = J/K, 2 = J2/K2
-ASMOPTS = -q -b -Wall -c -C -D HARDWARE="$(HARDWARE)" -D HARDWARE_GEN=$(HARDWARE_GEN) -L output$(S)basic.lst -l output$(S)basic.lbl -Wall
-APPNAME = build$(S)basic.rom
-SCRIPTDIR = scripts$(S)
+# Hardware platform: 0 = F256
+HARDWARE = 0
+# Hardware generation: 1 = J/K, 2 = J2/K2
+HARDWARE_GEN ?= 1
 LANGUAGE = en
+DOLLAR = $$
+ASFLAGS += -D HARDWARE=$(HARDWARE) -D HARDWARE_GEN=$(HARDWARE_GEN) \
+			'-D MONITOR_ADDRESS=$(DOLLAR)$(LMONITOR)' '-D LOCKOUT_ADDRESS=$(DOLLAR)$(LLOCKOUT)' \
+			'-D BASIC_ADDRESS=$(DOLLAR)$(LBASIC)' '-D SOURCE_ADDRESS=$(DOLLAR)$(LSOURCE)' \
+			'-D SPRITE_ADDRESS=$(DOLLAR)$(LSPRITES)' '-D TILEMAP_ADDRESS=$(DOLLAR)$(LTILEMAP)' \
+			'-D TILEIMAGES_ADDRESS=$(DOLLAR)$(LTILEIMAGES)' \
+			-L $(BUILDDIR)debug$(S)basic.lst -l $(BUILDDIR)debug$(S)basic.lbl
 
-MODULES= +hardware +graphics +tokeniser +sound +kernel
+MODULES = +hardware +graphics +tokeniser +sound +kernel
+BUILD_OUT = $(BUILDDIR)basic.rom
+SCRIPTDIR = scripts$(S)
 
-START = $(EMULATOR) $(APPNAME)@b storage$(S)load.dat@x $(BINDIR)graphics.bin@s $(BINDIR)tile_map.bin@24000 $(BINDIR)tile_images.bin@26000
-
-all :  basic
-#
-#		Run on emulator with/without autorun
-#
-run : basic
-	python scripts$(S)checkload.py
-	$(START)
-
-testbasic:prelim
-	64tass -D AUTORUN=1 $(AADDRESSES) $(ASMOPTS) _basic.asm -o $(APPNAME)
-	$(CCOPY) $(APPNAME) $(BINDIR)
-
-trun: testbasic
-	python scripts$(S)checkload.py
-	$(START)
+all:  build
 
 #
-#		Pull & update Kernel & api.asm
+#		Update api.asm
 #
-pullkernel:
-	cd $(KRN_REPO) && git diff --quiet || (echo "Error: MicroKernel repository has uncommitted changes" && exit 1)
-	cd $(KRN_REPO) && git diff --cached --quiet || (echo "Error: MicroKernel repository has staged changes" && exit 1)
-	cd $(KRN_REPO) && git switch master
-	cd $(KRN_REPO) && git pull
-
 updatekernel:
-	$(CCOPY) $(KRN_REPO)$(S)bin$(S)*.bin build
-	$(CCOPY) $(KRN_REPO)$(S)kernel$(S)api.asm  common$(S)api
+	$(call updatekernel,common$(S)api)
+	@echo "Updated kernel"
 
 #
-#		Build RAM based kernel / ROM combo and boot.
+#		Update bootscreen assets
 #
-ramkernel:
-	cat build$(S)3f.bin build$(S)3e.bin build$(S)01.bin  >build$(S)kernel.ram
-	cat build$(S)kernel.ram build$(S)basic.rom >build$(S)ramkernel.bin
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary build$(S)ramkernel.bin --address E000
-#
-#		Run on real hardware (Flash RAM operation)
-#
-rgo : ramkernel putcode
-#
-#		Run on real hardware (RAM operation)
-#
-go : graphics
-	python scripts$(S)checkload.py
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)lockout.rom --address $(LLOCKOUT)
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address $(LSOURCE)
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(APPNAME) --address $(LBASIC)
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)monitor.rom --address $(LMONITOR)
-#
-#		Upload sprites, tiles, tileimages.
-#
-graphics:
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)graphics.bin --address $(LSPRITES)
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)tile_map.bin --address $(LTILEMAP)
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary $(BINDIR)$(S)tile_images.bin --address $(LTILEIMAGES)
+updateassets:
+	$(Q)$(MAKE) -B -C ..$(S)modules$(S)hardware$(S)header updateassets
+	@echo "Updated bootscreen assets"
 
-#
-#		Store Basic code in upper RAM
-#
-putcode:
-	python scripts$(S)checkload.py
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address $(LSOURCE)
-#
-#		Run on real hardware (Flash Operation)
-#
-fupload: basic
-	make -C build
-#
-#		Autorun on real hardware
-#
-fauto: testbasic fgo
-	make -C build
-
-fgo:
-	python scripts$(S)checkload.py
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary storage$(S)load.dat --address 28000
 #
 #		Create sprites
 #
 sprites:
-	make -B -C ..$(S)spritebuild
+	$(Q)$(MAKE) -B -C ..$(S)spritebuild
 #
 #		Build and download tools
 #
-tools: emu fnxmgr
+tools: fnxmgr
 
-shim:
-	64tass -q -b _shim.asm -o shim.bin
-
+#
+#		Update FoenixMgr "binary"
+#
 fnxmgr:
-	$(CDEL) temp$(S)*.*
-	$(CCOPY) $(LDR_REPO)$(S)FoenixMgr$(S)*.* temp
-	$(CCOPY) temp$(S)fnxmgr.py temp$(S)__main__.py
-	zip temp$(S)fnxmgr.zip -j temp$(S)__main__.py temp$(S)constants.py temp$(S)foenix_config.py temp$(S)intelhex.py \
-			temp$(S)pgx.py temp$(S)srec.py temp$(S)foenix.py temp$(S)pgz.py temp$(S)wdc.py
-	$(CCOPY) temp$(S)fnxmgr.zip $(BINDIR)
+	$(Q)$(CURL) -o $(BINDIR)fnxmgr.zip $(LDR_REPO)/raw/refs/heads/master/FoenixMgr.zip
 
-emu:
-	make -B -C $(EMU_REPO)
-	$(CCOPY) $(EMU_REPO)$(S)bin$(S)jr256$(APPSTEM) $(BINDIR)
 #
 #		Show various things
 #
 stack:
-	python $(SCRIPTDIR)showstack.py
+	$(Q)$(PYTHON) $(SCRIPTDIR)showstack.py
 
 strings:
-	python $(SCRIPTDIR)showstring.py
+	$(Q)$(PYTHON) $(SCRIPTDIR)showstring.py
 
 vars:
-	python $(SCRIPTDIR)showvar.py
-#
-#		Builds with/without autorun
-#
-basic : prelim
-	64tass -D AUTORUN=0 $(AADDRESSES) $(ASMOPTS) _basic.asm -o $(APPNAME)
-	$(CCOPY) $(APPNAME) $(BINDIR)
+	$(Q)$(PYTHON) $(SCRIPTDIR)showvar.py
 
-autorun:
-	python scripts$(S)checkload.py
-	$(START)
+#
+#		Regular build
+#
+build: ASFLAGS += -D AUTORUN=0
+build: prelim
+	$(call cleandir,$(BUILDDIR))
+	$(call cleandir,$(BUILDDIR)debug$(S))
+
+	@echo "Compiling assembly"
+	$(Q)$(ASM) $(ASFLAGS) _basic.asm -o $(BUILD_OUT)
+
+	@echo "Splitting ROM"
+	$(Q)$(PYTHON) $(SCRIPTDIR)splitrom.py $(BUILDDIR)
+
 #
 #		Scripts run in advance generating tables etc.
 #
 prelim:
-	make -B -C ..$(S)modules
-	python $(SCRIPTDIR)errors.py $(LANGUAGE)
-	python $(SCRIPTDIR)opcodes.py >common$(S)generated$(S)asmcore.asm
-	python $(SCRIPTDIR)makebuild.py $(MODULES)
-	python $(SCRIPTDIR)tokens.py
-	python $(SCRIPTDIR)constants.py
-	python $(SCRIPTDIR)timestamp.py $(MAJOR_VERSION)
+	@echo "Building submodules"
+	$(Q)$(MAKE) -B -C ..$(S)modules
+
+	@echo "Generating assembly sources"
+	$(Q)$(PYTHON) $(SCRIPTDIR)errors.py $(LANGUAGE)
+	$(Q)$(PYTHON) $(SCRIPTDIR)opcodes.py >common$(S)generated$(S)asmcore.asm
+	$(Q)$(PYTHON) $(SCRIPTDIR)makebuild.py $(MODULES)
+	$(Q)$(PYTHON) $(SCRIPTDIR)tokens.py
+	$(Q)$(PYTHON) $(SCRIPTDIR)constants.py
+	$(Q)$(PYTHON) $(SCRIPTDIR)version.py $(VERSION)
 
 #
 #		Print base version to console
 #
 baseversion:
-	@echo $(MAJOR_VERSION).$(MINOR_VERSION)
+	@: $(info $(MAJOR_VERSION).$(MINOR_VERSION))
 
 #
-#		Create a working release.
+#		Make sure a release with the current version does not already exist
 #
-release:
-	make -C . testbasic
-	$(CCOPY) $(APPNAME) release$(S)$(S)roms$(S)basic_autoload.rom
-	make -C . basic
-	$(CCOPY) $(APPNAME) release$(S)roms$(S)basic.rom
+versioncheck:
+	@$(GIT) fetch --tags --quiet
+	$(if $(strip $(shell $(GIT) rev-parse -q --verify refs/tags/v$(VERSION))), \
+        $(error Release tag v$(VERSION) already exists. See README for how to prepare a new release),)
 
-	make -C build build
-	$(CCOPY) build$(S)*.bin release
-	$(CCOPY) build$(S)bulk.csv release
 
-	$(CCOPY) ..$(S)CHANGES release$(S)documents
-	$(CCOPY) ..$(S)reference$(S)source$(S)*.pdf release$(S)documents
-	$(CCOPY) ..$(S)documents$(S)C256_Foenix_JR_UM_Rev002.pdf release$(S)documents
-	$(CCOPY) ..$(S)documents$(S)superbasic.sublime-syntax release$(S)documents
+log_step = @echo "> $1"
 
-	$(CDEL) release$(S)VERSION*
-	echo "" >release$(S)VERSION_${VERSION}
+#
+#		Build gen-specific release, copy to the corresponding release dir
+#
+build_release: OUTPUTDIR := $(RELEASEDIR)gen$(HARDWARE_GEN)$(S)
+build_release:
+	$(call log_step, "Building gen $(HARDWARE_GEN) release")
+	$(Q)$(MAKE) -C . build VERSION=$(VERSION) HARDWARE_GEN=$(HARDWARE_GEN)
+	$(call cleandir,$(OUTPUTDIR))
+	$(call cleandir,$(OUTPUTDIR)debug$(S))
 
-	make -B -C ..$(S)howto
-	cp ..$(S)howto$(S)howto*.zip release
+	@echo "Copying build artifacts"
+	$(Q)$(CCOPY) $(BUILDDIR)*.* $(OUTPUTDIR)
+	$(Q)$(CCOPY) $(BUILDDIR)debug$(S)*.* $(OUTPUTDIR)debug
 
-	$(CDEL) release$(S)superbasic.zip
-	zip -r release$(S)superbasic.zip release$(S)*
+#
+#		Create a versioned release
+#
+release: VERSION := $(shell $(PYTHON) $(SCRIPTDIR)version.py)
+release: versioncheck
+	$(call log_step, "Creating v$(VERSION) release binaries")
+	$(Q)$(MAKE) -C . build_release VERSION=$(VERSION) HARDWARE_GEN=1
+	$(Q)$(MAKE) -C . build_release VERSION=$(VERSION) HARDWARE_GEN=2
+
+	$(call cleandir,$(RELEASEDIR))
+	$(call cleandir,$(RELEASEDIR)syntax$(S))
+	$(call cleandir,$(RELEASEDIR)manual$(S))
+
+	$(call log_step, "Copying common release artifacts")
+	$(Q)$(CCOPY) ..$(S)reference$(S)source$(S)*.pdf $(RELEASEDIR)manual
+	$(Q)$(CCOPY) ..$(S)documents$(S)superbasic.sublime-syntax $(RELEASEDIR)syntax
+
+	$(Q)$(PYTHON) -c "with open('$(RELEASEDIR)VERSION', 'w') as f: f.write('$(VERSION)')"
+
+	$(call log_step, "Done")
+
 #
 #		Run various tests.
 #
 test:
-	python $(SCRIPTDIR)simpletests.py
+	$(PYTHON) $(SCRIPTDIR)simpletests.py
 
 astest:
-	python $(SCRIPTDIR)assign.py
+	$(PYTHON) $(SCRIPTDIR)assign.py
 
 sastest:
-	python $(SCRIPTDIR)assign.py all
+	$(PYTHON) $(SCRIPTDIR)assign.py all
 
 artest:
-	python $(SCRIPTDIR)array.py
+	$(PYTHON) $(SCRIPTDIR)array.py
 
 benchmark:
-	cp ..$(S)documents$(S)benchmarks$(S)bm$(ID).bas storage$(S)load.dat
-
-assembler:
-	python $(SCRIPTDIR)asmtest.py
-	64tass -q -b -c common$(S)generated$(S)asmtest.tass -L output$(S)asmtest.lst -o output$(S)asmtest.bin
-	$(EMULATOR) $(APPNAME)@b storage$(S)load.dat@x
-	python $(SCRIPTDIR)asmcheck.py
-
-lineedit:
-	python $(SCRIPTDIR)linetest.py
-	64tass -D AUTORUN=1 $(AADDRESSES) $(ASMOPTS) _basic.asm -o $(APPNAME)
-	$(START)
-	python $(SCRIPTDIR)linecheck.py
+	$(CCOPY) ..$(S)documents$(S)benchmarks$(S)bm$(ID).bas storage$(S)load.dat
 
 paging:
-	python $(SCRIPTDIR)checkpaging.py
-#
-#		Machine code boot test.
-#
-mcboot:
-	64tass -q -b -Wall -C -c storage$(S)mcboot.as -L output$(S)mcboot.lst -o output$(S)mcboot.bin
-
-mctest:mcboot
-	$(START) output$(S)mcboot.bin@2000
-
-mcflash:mcboot
-	python $(BINDIR)fnxmgr.zip --port $(TTYPORT) --binary output$(S)mcboot.bin --address 2000
+	$(PYTHON) $(SCRIPTDIR)checkpaging.py
