@@ -10,18 +10,12 @@ SuperBASIC Reference Manual PDF:
 You need Make, Python and 64tass assembler on your machine.
 
 You will also need a few repos besides SuperBASIC.
-SuperBASIC is fully intended to work with the _latest_ Kernel/DOS.
+SuperBASIC is fully intended to work with the _latest_ kernel.
 
 ### Building
 ```
-git clone git@github.com:FoenixRetro/f256-superbasic.git
-git clone git@github.com:WartyMN/Foenix-F256JR-bootscreens.git
-git clone git@github.com:FoenixRetro/f256-microkernel
-git clone git@github.com:FoenixRetro/FoenixMgr
-cd f256-superbasic/source
-
-# this will build everything against/including latest kernel
-make -B pullkernel updatekernel build release
+# this will build everything against the latest kernel
+make -B updatekernel build
 
 # or just build basic
 make -B basic release
