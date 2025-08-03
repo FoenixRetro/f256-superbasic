@@ -1,0 +1,88 @@
+name: Prepare release PR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  prepare-release-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Need full history for changelog
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            make \
+            python3 python3-pip
+
+      - name: Install git-cliff
+        run: pip install git-cliff
+
+      - name: Determine release version
+        id: version
+        run: |
+          BASE_VERSION=$(cd source && make -B baseversion)
+          DATE=$(TZ="America/Chicago" date +'%Y-%m-%d')
+
+          git fetch --tags
+          COUNT=$(git tag --list "${BASE_VERSION}.${DATE}*" | wc -l)
+          if [ "$COUNT" -gt 0 ]; then
+            VERSION="${BASE_VERSION}.${DATE}.$((COUNT+1))"
+          else
+            VERSION="${BASE_VERSION}.${DATE}"
+          fi
+
+          echo "$VERSION" > VERSION
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog preview
+        id: changelog
+        run: |
+          git cliff --config .github/cliff.toml \
+            --tag ${{ steps.version.outputs.version }} \
+            --output CHANGELOG.md
+
+      - name: Generate changelog
+        run: |
+          git cliff --config .github/cliff.toml \
+            --tag ${{ steps.version.outputs.version }} \
+            --output CHANGELOG.md
+
+      - name: Generate changelog preview
+        id: changelog_preview
+        run: |
+          {
+            echo 'output<<EOF'
+            git cliff --config .github/cliff.toml \
+              --tag ${{ steps.version.outputs.version }} \
+              --unreleased
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
+
+      - name: Create or update release PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: release/next
+          delete-branch: true
+          commit-message: 'chore(release): v${{ steps.version.outputs.version }}'
+          title: 'chore(release): v${{ steps.version.outputs.version }}'
+          body: >
+            This PR was created by the [prepare-release-pr](/${{ github.repository }}/blob/main/.github/workflows/prepare-release-pr.yml)
+            GitHub action. When you're ready to release, simply merge it — the corresponding GitHub release will be
+            published automatically.
+
+
+            If you're not ready yet, no problem. This PR will continue to update as you push changes to `main`,
+            and you can merge it whenever you're ready.
+
+
+            # Release notes
+
+            ${{ steps.changelog_preview.outputs.output }}
+          labels: release
+          token: ${{ secrets.GITHUB_TOKEN }}
