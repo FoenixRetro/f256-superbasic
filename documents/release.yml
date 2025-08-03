@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow}}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out git repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            64tass \
+            make \
+            python3 python3-pip
+
+      - name: Create release pull request or publish to NPM
+        uses: changesets/action@v1
+        with:
+          publish: pnpm exec changeset publish
+          commit: 'chore: version packages'
+          title: 'Version and publish packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Get current branch
+        run: echo "CURRENT_BRANCH=$(git branch --show-current)" >> $GITHUB_ENV
+
+      - name: Update lock file
+        if: env.CURRENT_BRANCH == 'changeset-release/main'
+        run: pnpm install --lockfile-only
+
+      - name: Commit lock file
+        if: env.CURRENT_BRANCH == 'changeset-release/main'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: update lock file'
+          branch: changeset-release/main
