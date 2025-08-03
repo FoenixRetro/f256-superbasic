@@ -15,9 +15,10 @@ else
 include ../documents/common.make
 endif
 #
-#		Current version. (In Beta from 01/03/23)
+#		Current version
 #
-VERSION = 1
+MAJOR_VERSION = 1
+MINOR_VERSION = 1
 
 HARDWARE = 0        # 0 = F256
 HARDWARE_GEN ?= 1   # 1 = J/K, 2 = J2/K2
@@ -162,7 +163,14 @@ prelim:
 	python $(SCRIPTDIR)makebuild.py $(MODULES)
 	python $(SCRIPTDIR)tokens.py
 	python $(SCRIPTDIR)constants.py
-	python $(SCRIPTDIR)timestamp.py $(VERSION)
+	python $(SCRIPTDIR)timestamp.py $(MAJOR_VERSION)
+
+#
+#		Print base version to console
+#
+baseversion:
+	@echo $(MAJOR_VERSION).$(MINOR_VERSION)
+
 #
 #		Create a working release.
 #
