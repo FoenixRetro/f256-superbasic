@@ -1,13 +1,11 @@
 # F256 Header Data Generator
 #
-# This makefile copies boot screen assets from the Foenix F256 bootscreens
-# repository and processes them into header data for the SuperBASIC interpreter.
-# The generated data includes character sets, color attributes, and palettes
-# for both F256Jr and F256K systems.
+# This makefile manages boot screen assets for the SuperBASIC interpreter.
+# Use the `updateassets` target to download the latest assets from the Foenix
+# F256 bootscreens repository, and `all` to process them into header data.
 #
-# Dependencies:
-#   - https://github.com/WartyMN/Foenix-F256JR-bootscreens repository,
-#     assumed to be cloned side-by-side with the `f256-superbasic` repo
+# Generated data includes character sets, color attributes, and palettes
+# for F256Jr, F256Jr2, F256K, and F256K2 systems.
 
 ifeq ($(OS),Windows_NT)
 include ..\..\..\documents\common.make
@@ -15,51 +13,52 @@ else
 include ../../../documents/common.make
 endif
 
-ASSETS_SRC_DIR = ..$(S)..$(S)..$(S)..$(S)Foenix-F256JR-bootscreens
+ASSETS_BASE_URL = $(ASSETS_REPO)/raw/refs/heads/main/
 ASSETS_DIR = assets
 BUILD_DIR = .build
 
-all:	jattrs.bin jchars.bin \
-		j2attrs.bin j2chars.bin \
-		kattrs.bin kchars.bin \
-		k2attrs.bin k2chars.bin \
-		palette.hex
-	python process.py $(BUILD_DIR) $(ASSETS_DIR)
+all:
+	$(Q)$(PYTHON) process.py $(BUILD_DIR) $(ASSETS_DIR)
+
+updateassets:	jattrs.bin jchars.bin \
+				j2attrs.bin j2chars.bin \
+				kattrs.bin kchars.bin \
+				k2attrs.bin k2chars.bin \
+				palette.hex
 
 # F256Jr boot screen assets
-jattrs.bin: $(ASSETS_SRC_DIR)$(S)f256jr_boot_attrs.bin
-	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
+jattrs.bin:
+	$(Q)$(CURL) -o $(ASSETS_DIR)$(S)$@ $(ASSETS_BASE_URL)f256jr_boot_attrs.bin
 
-jchars.bin: $(ASSETS_SRC_DIR)$(S)f256jr2_boot_chars.bin
-	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
+jchars.bin:
+	$(Q)$(CURL) -o $(ASSETS_DIR)$(S)$@ $(ASSETS_BASE_URL)f256jr_boot_chars.bin
 
 # F256Jr2 boot screen assets
-j2attrs.bin: $(ASSETS_SRC_DIR)$(S)f256jr2_boot_attrs.bin
-	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
+j2attrs.bin:
+	$(Q)$(CURL) -o $(ASSETS_DIR)$(S)$@ $(ASSETS_BASE_URL)f256jr2_boot_attrs.bin
 
-j2chars.bin: $(ASSETS_SRC_DIR)$(S)f256jr2_boot_chars.bin
-	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
+j2chars.bin:
+	$(Q)$(CURL) -o $(ASSETS_DIR)$(S)$@ $(ASSETS_BASE_URL)f256jr2_boot_chars.bin
 
 # F256K boot screen assets
-kattrs.bin: $(ASSETS_SRC_DIR)$(S)f256k_boot_attrs.bin
-	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
+kattrs.bin:
+	$(Q)$(CURL) -o $(ASSETS_DIR)$(S)$@ $(ASSETS_BASE_URL)f256k_boot_attrs.bin
 
-kchars.bin: $(ASSETS_SRC_DIR)$(S)f256k_boot_chars.bin
-	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
+kchars.bin:
+	$(Q)$(CURL) -o $(ASSETS_DIR)$(S)$@ $(ASSETS_BASE_URL)f256k_boot_chars.bin
 
 # F256K2 boot screen assets
-k2attrs.bin: $(ASSETS_SRC_DIR)$(S)f256k2_boot_attrs.bin
-	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
+k2attrs.bin:
+	$(Q)$(CURL) -o $(ASSETS_DIR)$(S)$@ $(ASSETS_BASE_URL)f256k2_boot_attrs.bin
 
-k2chars.bin: $(ASSETS_SRC_DIR)$(S)f256k2_boot_chars.bin
-	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
+k2chars.bin:
+	$(Q)$(CURL) -o $(ASSETS_DIR)$(S)$@ $(ASSETS_BASE_URL)f256k2_boot_chars.bin
 
 # Standard text palette
-palette.hex: $(ASSETS_SRC_DIR)$(S)f256jr_std_text_palette.hex
-	$(CCOPY) $^ $(ASSETS_DIR)$(S)$@
+palette.hex:
+	$(Q)$(CURL) -o $(ASSETS_DIR)$(S)$@ $(ASSETS_BASE_URL)f256jr_std_text_palette.hex
 
 clean:
-	$(CDEL) $(ASSETS_DIR)$(S)*.*
-	$(CDEL) $(BUILD_DIR)$(S)*.*
+	$(Q)$(CDEL) $(BUILD_DIR)$(S)*.*
 
 .PHONY: all clean

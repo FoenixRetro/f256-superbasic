@@ -1,5 +1,5 @@
 # F256 SuperBASIC
-Improved BASIC for F256 Junior
+Improved BASIC for the F256 computers.
 
 ### Usage
 
@@ -10,29 +10,25 @@ SuperBASIC Reference Manual PDF:
 You need Make, Python and 64tass assembler on your machine.
 
 You will also need a few repos besides SuperBASIC.
-SuperBASIC is fully intended to work with the _latest_ Kernel/DOS.
+SuperBASIC is fully intended to work with the _latest_ kernel.
 
 ### Building
 ```
-git clone git@github.com:FoenixRetro/f256-superbasic.git
-git clone git@github.com:WartyMN/Foenix-F256JR-bootscreens.git
-git clone git@github.com:FoenixRetro/f256-microkernel
-git clone git@github.com:FoenixRetro/FoenixMgr
-cd f256-superbasic/source
+# all the builds are done from the `source` directory
+cd source
 
-# this will build everything against/including latest kernel
-make -B pullkernel updatekernel build release
+# full rebuild, pulls latest kernel and bootscreens
+make -B updatekernel updateassets build
 
-# or just build basic
-make -B basic release
+# standard development build
+make -B build
 
-# build w/ support for Gen 2 features
-make -B basic release HARDWARE_GEN=2
+# build for release/distribution
+make -B release
+
+# release build for F256Jr2/K2 hardware
+make -B release HARDWARE_GEN=2
 ```
-
-This will output a set of binary files in the `release/` folder
-and a file called `release/bulk.csv` that shows where those files
-get flashed in memory.
 
 ### Testing
 
