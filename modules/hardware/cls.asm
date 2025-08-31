@@ -77,6 +77,7 @@ _EXTCSFill3:
 EXTHomeCursor:
 		stz 	EXTRow 						; reset row & column
 		stz 	EXTColumn
+		stz 	EXTPendingWrap				; clear pending wrap
 		lda 	#<EXTMemory					; set address in I/O memory
 		sta 	EXTAddress
 		lda 	#>EXTMemory

@@ -178,7 +178,15 @@ _CPExit2:
 ; \see          CPInputVector, EXTPrintCharacter, AssignVariable, ValEvaluateZTemp0
 ;;
 CIInputValue:
-		ldx 	#0 							; input a line.
+		lda		EXTPendingWrap				; check for pending wrap before input
+		beq 	_input
+		phy
+		jsr 	EXTApplyPendingWrap			; apply pending wrap if needed
+		ply
+
+	_input:
+		stz		EXTPendingWrapEnabled		; disable pending wrap for user input
+		ldx 	#0 							; input a line
 _CIInputLine:
 		jsr 	CPInputVector 				; get key
 		cmp 	#13 						; 13 = End
@@ -218,9 +226,7 @@ _CIHaveValue:
 		stz 	NSMantissa3,x
 		lda 	#NSBIsString 				; so it becomes a string value
 		sta  	NSStatus,x
-		dex 								; X = 0
-		jsr 	AssignVariable
-		rts
+		bra 	_assign_and_exit
 		;
 		;		Assign number
 		;
@@ -231,14 +237,17 @@ _CIAssignNumber:
 		sta 	zTemp0+1
 		ldx 	#1 							; put in slot 1
 		jsr 	ValEvaluateZTemp0 			; use the VAL() code
-		bcc 	_CIIsOkay
+		bcc 	_assign_and_exit
 		lda 	#"?" 						; error ?
 		jsr 	CPPrintVector
 		bra 	CIInputValue
 
-_CIIsOkay:
+	_assign_and_exit:
 		dex 								; X = 0
 		jsr 	AssignVariable
+
+		lda		#1
+		sta 	EXTPendingWrapEnabled		; re-enable pending wrap
 		rts
 
 ;;
@@ -330,7 +339,7 @@ CPInputVector:
 ;;
 CPPrintAt:
 		ldx		#0 							; bottom stack level
-		jsr		Evaluate8BitInteger         ; parse row into `A`
+		jsr		Evaluate8BitInteger			; parse row into `A`
 		cmp		EXTScreenHeight				; check if row is within valid range
 		bcs		_range_error
 		pha									; save it on the stack
@@ -340,13 +349,14 @@ CPPrintAt:
 		bcs		_range_error
 
 		; successfully parsed row and column, can set the cursor position now
-		sta     EXTColumn					; save column into `EXTColumn`
-		pla                                 ; restore row into `A`
-		sta     EXTRow						; save row into `EXTRow`
+		sta		EXTColumn					; save column into `EXTColumn`
+		pla 								; restore row into `A`
+		sta 	EXTRow						; save row into `EXTRow`
+		stz 	EXTPendingWrap				; clear pending wrap, if any
 
 		phy
-		jsr 	EXTSetCurrentLine         	; set current line address to `EXTRow`
-        ply
+		jsr 	EXTSetCurrentLine			; set current line address to `EXTRow`
+		ply
 		rts
 
 _range_error:

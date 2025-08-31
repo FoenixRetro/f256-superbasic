@@ -47,6 +47,11 @@ Export_EXTInitialise:
 		lda 	#60							; number of rows
 		sta 	EXTScreenHeight
 
+		; initial pending wrap state
+		stz 	EXTPendingWrap				;
+		lda 	#1							;
+		sta 	EXTPendingWrapEnabled		;
+
 		;
 		; Precompute the screen row offsets
 		;
