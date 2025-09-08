@@ -27,10 +27,12 @@ Command_Dir:	;; [dir]
 		bcs     _CDExit
 
 _CDEventLoop:
-		jsr     kernel.Yield        		; Polite, not actually needed.
 		jsr     GetNextEvent
-		bcs     _CDEventLoop
+		bcc     _CDProcessEvent
+		jsr     kernel.Yield        		; Polite, not actually needed.
+		bra     _CDEventLoop
 
+_CDProcessEvent
 		lda     KNLEvent.type  
 		cmp     #kernel.event.directory.CLOSED
 		beq    	_CDExit
