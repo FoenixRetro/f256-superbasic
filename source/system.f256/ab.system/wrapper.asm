@@ -69,10 +69,12 @@ KNLOpenStart:
 		tay
 		
 _loop
-		jsr     kernel.Yield    			; event wait		
 		jsr     GetNextEvent
-		bcs     _loop
+		bcc     _process_event				; only yield when no events available
+		jsr     kernel.Yield    			; event wait
+		bra     _loop
 
+_process_event:
 		lda 	KNLEvent.type 
 		cmp     #kernel.event.file.OPENED
 		beq 	_success
@@ -156,10 +158,12 @@ KNLReadBlock:
 		bcs     _KGNBExitFail               ; report as general error
 
 _KGRBEventLoop:
-		jsr     kernel.Yield    			; event wait		
 		jsr     GetNextEvent
-		bcs     _KGRBEventLoop
+		bcc     _KNLRBProcessEvent			; only yield when no events available
+		jsr     kernel.Yield    			; event wait
+		bra     _KGRBEventLoop
 
+_KNLRBProcessEvent:
 		lda 	KNLEvent.type 				; get event		
 
 		cmp     #kernel.event.file.DATA 	; data, return data
@@ -223,10 +227,12 @@ KNLWriteBlock:
 		bcs 	_KWBFailed
 
 _KNLWLoop:									; wait for an event.
-		jsr     kernel.Yield        
 		jsr     GetNextEvent
-		bcs     _KNLWLoop
+		bcc     _KNLWProcessEvent			; only yield when no events available
+		jsr     kernel.Yield    			; event wait
+		bra     _KNLWLoop
 
+_KNLWProcessEvent:
 		lda     KNLEvent.type 				; various errors.
 		cmp     #kernel.event.file.CLOSED
 		beq 	_KWBFailed
@@ -238,7 +244,7 @@ _KNLWLoop:									; wait for an event.
 		cmp     #kernel.event.file.WROTE 	; wait until block write succeeds
 		bne 	_KNLWLoop      
 		clc
-		lda    KNLEvent.file.wrote.wrote 	; get bytes written.
+		lda     KNLEvent.file.wrote.wrote 	; get bytes written.
 		bra 	_KWBExit
 
 _KWBFailed:
