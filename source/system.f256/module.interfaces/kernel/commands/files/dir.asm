@@ -20,6 +20,7 @@
 ; ************************************************************************************************
 
 Command_Dir:	;; [dir]
+		phy
 		lda     KNLDefaultDrive				; set drive to list.
 		sta     kernel.args.directory.open.drive
 		stz     kernel.args.directory.open.path_len
@@ -33,15 +34,29 @@ _CDEventLoop:
 		bra     _CDEventLoop
 
 _CDProcessEvent
-		lda     KNLEvent.type  
+		lda     KNLEvent.type
 		cmp     #kernel.event.directory.CLOSED
-		beq    	_CDExit
+		beq    	_CDSuccess
 
 		jsr     _CDMessages 				; handle various messages
 		bra     _CDEventLoop
+_CDSuccess:
+		ply
+		lda     #0
+		clc
+		rts
+_CDExit:
+		ply
+		jmp 	WarmStart
+
 ;
 ;		Dispatch messages
-;		
+;
+_CDEVErr:
+		lda     KNLEvent.directory.stream
+		sta     kernel.args.directory.close.stream
+		jmp     kernel.Directory.Close
+
 
 _CDMessages:
 		cmp     #kernel.event.directory.OPENED
@@ -55,8 +70,9 @@ _CDMessages:
 		cmp     #kernel.event.directory.EOF
 		beq     _CDEVEOF
 		cmp     #kernel.event.directory.ERROR
-		beq     _CDEVEOF
+		beq     _CDEVErr
 		rts
+
 
 _CDEVRead:
 		lda     KNLEvent.directory.stream
@@ -75,8 +91,11 @@ _CDEVVolume:
 		jsr 	EXTPrintCharacter
 		bra     _CDEVRead
 
-_CDExit:
-		jmp 	WarmStart
+_CDEVEOF:
+		lda     KNLEvent.directory.stream
+		sta     kernel.args.directory.close.stream
+		jsr     kernel.Directory.Close
+		rts
 
 
 _CDEVFile:
@@ -91,12 +110,12 @@ _CDEVFile:
 		sec
 		adc 	#16
 		tax
-_CDEVTab:		
+_CDEVTab:
 		lda 	#32
 		jsr 	EXTPrintCharacter
 		dex
 		bpl 	_CDEVTab
-		jsr 	_CDReadExtended		
+		jsr 	_CDReadExtended
 		lda 	lineBuffer
 		ldx 	lineBuffer+1
 		jsr 	ConvertInt16
@@ -109,17 +128,22 @@ _CDEVTab:
 _CDEVFMessage:
 		.text 	" block(s).",13,0
 _CDEVFree:
+		jsr     _CDReadExtended
+		lda 	lineBuffer
+		ldx 	lineBuffer+1
+		jsr 	ConvertInt16
+		jsr 	PrintStringXA
+		ldx 	#_CDEVFreeMessage >> 8
+		lda 	#_CDEVFreeMessage & $FF
+		jsr 	PrintStringXA
 		bra     _CDEVEOF
 
-_CDEVEOF:
-		lda     KNLEvent.directory.stream
-		sta     kernel.args.directory.close.stream
-		jmp     kernel.Directory.Close
-
+_CDEVFreeMessage:
+		.text 	" blocks free.",13,0
 
 ;
 ; 		IN: A = # of bytes to read
-;		
+;
 _CDReadData:
 
 		sta     kernel.args.recv.buflen
@@ -151,8 +175,8 @@ _CDReadExtended:
 	.send code
 
 	.section storage
-	.send storage		
-	
+	.send storage
+
 ; ************************************************************************************************
 ;
 ;									Changes and Updates
