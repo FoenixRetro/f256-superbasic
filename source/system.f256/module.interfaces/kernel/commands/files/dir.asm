@@ -34,7 +34,7 @@ _CDEventLoop:
 		bra     _CDEventLoop
     
 _CDProcessEvent
-		lda     KNLEvent.type  
+		lda     KNLEvent.type
 		cmp     #kernel.event.directory.CLOSED
 		beq    	_CDSuccess
 
@@ -110,12 +110,12 @@ _CDEVFile:
 		sec
 		adc 	#16
 		tax
-_CDEVTab:		
+_CDEVTab:
 		lda 	#32
 		jsr 	EXTPrintCharacter
 		dex
 		bpl 	_CDEVTab
-		jsr 	_CDReadExtended		
+		jsr 	_CDReadExtended
 		lda 	lineBuffer
 		ldx 	lineBuffer+1
 		jsr 	ConvertInt16
@@ -143,7 +143,7 @@ _CDEVFreeMessage:
 
 ;
 ; 		IN: A = # of bytes to read
-;		
+;
 _CDReadData:
 
 		sta     kernel.args.recv.buflen
@@ -175,8 +175,8 @@ _CDReadExtended:
 	.send code
 
 	.section storage
-	.send storage		
-	
+	.send storage
+
 ; ************************************************************************************************
 ;
 ;									Changes and Updates
