@@ -5,6 +5,28 @@ Improved BASIC for the F256 computers.
 SuperBASIC Reference Manual PDF:
 [reference/source/f256jr_basic_ref.pdf](reference/source/f256jr_basic_ref.pdf)
 
+## Contributing
+
+We’d love your help in making SuperBASIC the best BASIC interpreter out there!
+
+Whether you’re fixing a bug, improving performance, or simply correcting a typo in the manual, your contribution is greatly appreciated. By contributing, you agree that your work will be licensed under the [MIT License](./LICENSE).
+
+To keep our history clean and make it easier to automate [releases](#releasing-a-new-version), we follow the [Conventional Commits](https://www.conventionalcommits.org/) style for commit messages. Here are some examples:
+
+```
+git log --oneline
+
+5bd1cf7 feat: add `at` modifier for `print`
+63b442a fix: `print at 59, 79; "*";` causes the screen to scroll
+089f839 perf: improve `load` performance
+9278ca9 refmanual: add `call` statement docs
+1c43a28 docs: README fixes, MAME testing instructions
+78e6ad2 build: support for gen 2 builds
+c21ae79 chore: enable line ending normalization
+```
+
+When we generate release notes, the first four categories (`feat`, `fix`, `perf`, and `refmanual`) appear in their own sections, while everything else is grouped under _Internal_.
+
 ## Local development
 You need Make, Python and 64tass assembler on your machine.
 
@@ -78,7 +100,7 @@ Attempting to program sector 0x01 with sb01.bin
      ...
 ```
 
-### Releasing a new version
+## Releasing a new version
 To ensure quality and reproducibility, official releases are handled through GitHub workflows.
 
 The [release PR preparation](/.github/workflows/prepare-release-pr.yml) workflow monitors pushes to `main` and automatically creates or updates [a release PR](https://github.com/FoenixRetro/f256-superbasic/pulls?q=is%3Apr+is%3Aopen+label%3Arelease) that includes all unreleased changes. This PR includes a log of contributions and is assigned a version based on the major and minor numbers in [`source/Makefile`](/source/Makefile), with the patch number determined by the date of the latest contribution.
