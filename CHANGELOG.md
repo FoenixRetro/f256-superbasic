@@ -1,0 +1,24 @@
+## 1.1.2025-09-09
+
+### Features
+
+- `at` modifier for `print` ([`5bd1cf7`](https://github.com/FoenixRetro/f256-superbasic/commit/5bd1cf7a900e8717b1adb75df3ccea221976698b))
+- `screen`/`screen$` support ([`b72c90a`](https://github.com/FoenixRetro/f256-superbasic/commit/b72c90a9b576bd7e2d0456eb1d7f6069c4f278d7))
+
+### Performance
+
+- Speedup disc operations ([`ae3b0dc`](https://github.com/FoenixRetro/f256-superbasic/commit/ae3b0dc77c50d5713d2fc0479a1a57e4c61853af))
+
+### Internal
+
+- README fixes, MAME testing instructions ([`1c43a28`](https://github.com/FoenixRetro/f256-superbasic/commit/1c43a289f675d8a896b1d961d731d6f13ceed8da))
+- Automate module exports, remove temp build artifacts ([`730a55f`](https://github.com/FoenixRetro/f256-superbasic/commit/730a55f3b17e3353a8fa3afa3ec4b007473c336f))
+- Comment up various `print`-related routines ([`142d33d`](https://github.com/FoenixRetro/f256-superbasic/commit/142d33d3ad277f68ae3653433737a8492c15f48e))
+- Enable line ending normalization ([`c21ae79`](https://github.com/FoenixRetro/f256-superbasic/commit/c21ae7969b28cedaec8b829a5d52aa3ae68a9dac))
+- Support for gen 2 builds ([`78e6ad2`](https://github.com/FoenixRetro/f256-superbasic/commit/78e6ad2b920ea65d6d69f91e4f6a7bf4c6cb51e0))
+- Bring build/release Makefiles up-to-date with repo changes etc. ([`55b78c5`](https://github.com/FoenixRetro/f256-superbasic/commit/55b78c51e5299f1774b46cb5b7b8114b257a89ba))
+- "Prepare release PR" Github workflow ([`1d5cd79`](https://github.com/FoenixRetro/f256-superbasic/commit/1d5cd796d6b9375e894d5f83e2785300ff86b275))
+- Rework build & release procedure + repository cleanup ([`f6736ca`](https://github.com/FoenixRetro/f256-superbasic/commit/f6736ca1b0cc4a1e38b8da406cd38a3eeedd30d4))
+- Add Contributing section ([`f2d07a7`](https://github.com/FoenixRetro/f256-superbasic/commit/f2d07a7979be463bfc383b07cb93b811a33a19c9))
+
+
