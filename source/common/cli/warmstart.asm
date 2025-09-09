@@ -21,8 +21,15 @@
 WarmStart:
 		ldx 	#$FF
 		txs
+
+		lda		EXTPendingWrap				; check for a pending wrap state
+		beq 	_set_color					; no pending wrap, jump to set color
+		jsr		EXTApplyPendingWrap			; apply pending wrap
+
+	_set_color:
 		lda 	#CLICommandLine+$80 		; set console colour whatever the current colour is.
 		jsr 	EXTPrintCharacter
+
 		jsr 	InputLine 					; get line to lineBuffer
 		;
 		;		Check for /x
@@ -34,7 +41,7 @@ WarmStart:
 		lda 	#(lineBuffer+1) & $FF
 		jmp 	BootXA
 
-_WSNotSlash:			
+_WSNotSlash:
 		jsr 	TKTokeniseLine 				; tokenise the line
 		;
 		;		Decide whether editing or running
@@ -44,7 +51,7 @@ _WSNotSlash:
 		bne 	_WSEditCode 				; if so,edit code.
 		;
 		;		Run code in token buffer
-		;		
+		;
 		stz 	tokenOffset 				; zero the "offset", meaning it only runs one line.
 		.csetcodepointer tokenOffset		; set up the code pointer.
 		lda 	tokenBuffer 				; nothing to run
@@ -56,7 +63,7 @@ _WSNotSlash:
 		;		Editing code in token buffer.
 		;
 _WSEditCode:
-		jsr 	EditProgramCode 			; edit the program code 
+		jsr 	EditProgramCode 			; edit the program code
 		jsr 	ClearSystem 				; clear all variables etc.
 		bra 	WarmStart
 
