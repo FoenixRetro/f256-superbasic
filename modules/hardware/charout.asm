@@ -47,7 +47,7 @@ Export_EXTPrintNoControl:
 ;					  $9x 	set foreground
 ;
 ; ************************************************************************************************
-	
+
 Export_EXTPrintCharacter:
 PAGEDPrintCharacter:
 		pha
@@ -57,7 +57,7 @@ PAGEDPrintCharacter:
 		ldx 	1
 		phx
 
-		ldy 	EXTColumn 					; Y = Row, e.g. points to character.
+		ldy 	EXTColumn 					; Y = current column
 
 		ora 	#$00 						; check $80-$FF
 		bmi 	EXPCColour
@@ -66,7 +66,14 @@ PAGEDPrintCharacter:
 		;
 		;		Handle character.
 		;
-PrintCharacterOnly:		
+PrintCharacterOnly:
+		pha
+		lda		EXTPendingWrap				; check for a pending wrap state
+		beq 	_print_char					; no pending wrap, jump to print
+		jsr 	ApplyPendingWrap			; apply pending wrap, then print
+
+	_print_char:
+		pla
 		ldx 	#2 							; select char memory
 		stx 	1
 		sta 	(EXTAddress),y
@@ -75,15 +82,33 @@ PrintCharacterOnly:
 		sta 	(EXTAddress),y
 		;
 		iny 								; advance horizontal position
-		sty 	EXTColumn		
-		cpy 	EXTScreenWidth 				; reached RHS ?
-		bcc 	EXPCExit 					; no, then exit.
+		cpy 	EXTScreenWidth 				; past the right-most character?
+		beq		_line_wrap					; yes, handle line wrap
+		sty 	EXTColumn					; store new column position and exit
+		bra 	EXPCExit					;
+		;
+	_line_wrap:
+		lda 	EXTRow 						; check if we're on the last line
+		inc		a							;
+		cmp 	EXTScreenHeight 			;
+		bcc 	EXPCCRLF 					; if no, then wrap to next line
+
+		; we're in the bottom-right corner
+		lda		EXTPendingWrapEnabled		; check if pending wrap is enabled
+		beq 	EXPCCRLF 					; if not, then wrap immediately
+
+		lda 	#1
+		sta 	EXTPendingWrap 				; set pending wrap flag
+		bra 	EXPCExit 					; exit with hardware cursor set
+											; to current position
+
 		;
 		;		Carriage return.
 		;
-EXPCCRLF:		
-		inc 	EXTRow  					; bump row 		
+EXPCCRLF:
+		inc 	EXTRow  					; bump row
 		stz 	EXTColumn 					; back to column 0
+		stz 	EXTPendingWrap 				; clear pending wrap, if any
 		lda 	EXTRow 						; check if reached the bottom ?
 		cmp 	EXTScreenHeight 			; if so, then scroll.
 		beq 	EXPCScroll
@@ -100,24 +125,26 @@ EXPCCRLF:
 		;
 EXPCLeft:
 		dec 	EXTColumn
+		stz 	EXTPendingWrap
 		bpl 	EXPCExit
 EXPCBegin:
 		stz 	EXTColumn
-		bra 	EXPCExit		
+		stz 	EXTPendingWrap
+		bra 	EXPCExit
 		;
 		;		Scroll screen up, blank line.
 		;
 EXPCScroll:
 		dec 	EXTRow 						; the height-1 th line.
 		jsr 	EXTScreenScroll 			; scroll the screen
-		bra 	EXPCExit		
+		bra 	EXPCExit
 		;
 		;		Set FGR/BGR colour
 		;
 EXPCColour:
 		cmp 	#$A0						; 80-9F set foreground/background
 		bcs 	EXPCExit
-		jsr 	EXPCHandleColour 
+		jsr 	EXPCHandleColour
 		bra 	EXPCExit
 		;
 		;		Handle control characters 00-1F 80-FF
@@ -133,7 +160,7 @@ EXPCControl:
 		;
 EXPCUp:
 		lda 	EXTRow 						; already at top ?
-		beq 	EXPCExit		
+		beq 	EXPCExit
 		dec 	EXTRow 						; up one in position/address
 		sec
 		lda 	EXTAddress
@@ -142,21 +169,11 @@ EXPCUp:
 		bcs 	EXPCExit
 		dec 	EXTAddress+1
 		bra 	EXPCExit
-		;
-		;		Right/End of line
-		;
-EXPCRight:
-		iny 	
-		sty 	EXTColumn
-		cpy 	EXTScreenWidth		
-		bne 	EXPCExit
-		dey
-EXPCSetColumnY: 							; set column to Y
-		sty 	EXTColumn		
+
 		;
 		;		Exit
 		;
-EXPCExit:		
+EXPCExit:
 		jsr 	EXTSetHardwareCursor 		; place the physical cursor.
 		pla
 		sta 	1
@@ -164,16 +181,29 @@ EXPCExit:
 		plx
 		pla
 		rts
+
+		;
+		;		Right/End of line
+		;
+EXPCRight:
+		iny
+		sty 	EXTColumn
+		cpy 	EXTScreenWidth
+		bne 	EXPCExit
+		dey
+EXPCSetColumnY: 							; set column to Y
+		sty 	EXTColumn
+		bra 	EXPCExit
 		;
 		;		Clear
 		;
 EXPCClearScreen:
-		jsr		EXTClearScreenCode	
+		jsr		EXTClearScreenCode
 		bra 	EXPCExit
 		;
 		;		Down
 		;
-EXPCDown:		
+EXPCDown:
 		lda 	EXTScreenHeight 			; at the bottom
 		dec 	a
 		cmp 	EXTRow
@@ -192,7 +222,7 @@ EXPCDown:
 EXPCTab:
 		lda 	EXTColumn 					; next tab stop
 		and 	#$F8
-		clc 	
+		clc
 		adc 	#8
 		sta 	EXTColumn
 		cmp 	EXTScreenWidth 				; too far, new line.
@@ -200,11 +230,12 @@ EXPCTab:
 		jmp 	EXPCCRLF
 		;
 		;		Backspace
-		;	
+		;
 EXPCBackSpace:
 		dey
 		bmi 	EXPCExit
 		dec 	EXTColumn
+		stz 	EXTPendingWrap
 		lda 	#2
 		sta 	1
 		lda 	#32
@@ -218,15 +249,15 @@ EXPCEnd:
 		sta 	1
 		ldy 	EXTScreenWidth 				; point to last character
 		dey
-EXPCEndSearch:		
+EXPCEndSearch:
 		dey 								; if past start, move to col 0.
 		bmi 	EXPCFound
 		lda 	(EXTAddress),y 				; keep going back till non space found
 		cmp 	#' '
 		beq 	EXPCEndSearch
-EXPCFound: 								
+EXPCFound:
 		iny 								; move to following cell.
-		bra 	EXPCSetColumnY		
+		bra 	EXPCSetColumnY
 		;
 		;		Clear to end of line
 		;
@@ -235,31 +266,31 @@ EXPCClearEOL:
 		sta 	1
 		lda 	#' ' 						; write space
 		sta 	(EXTAddress),y
-		iny 
+		iny
 		cpy 	EXTScreenWidth 				; until RHS of screen.
 		bcc 	EXPCClearEOL
-		bra 	EXPCExit					
+		jmp 	EXPCExit
 		;
 		;		Vector table for CTRL+A to CTRL+P
-		;			
+		;
 EXPCActionTable:
-		.word 	EXPCExit 					; 00 
+		.word 	EXPCExit 					; 00
 		.word 	EXPCBegin 					; 01 A Start of Line
 		.word 	EXPCLeft 					; 02 B Left
-		.word 	EXPCExit 					; 03 <Break>
-		.word 	EXPCExit 					; 04 
+		.word 	EXPCExit 					; 03 C <Break>
+		.word 	EXPCExit 					; 04
 		.word 	EXPCEnd 					; 05 E End of Line
 		.word 	EXPCRight 					; 06 F Right
-		.word 	EXPCExit 					; 07 
+		.word 	EXPCExit 					; 07
 		.word 	EXPCBackSpace 				; 08 H Backspace
 		.word 	EXPCTab 					; 09 I Tab
-		.word 	EXPCExit 					; 0A 
+		.word 	EXPCExit 					; 0A
 		.word 	EXPCClearEOL 				; 0B K Clear to EOL
-		.word 	EXPCClearScreen			; 0C L CLS
+		.word 	EXPCClearScreen				; 0C L CLS
 		.word 	EXPCCRLF 					; 0D M CR/LF
 		.word 	EXPCDown 					; 0E N Down
-		.word 	EXPCExit 					; 0F 
-		.word 	EXPCUp 					; 10 P Up
+		.word 	EXPCExit 					; 0F
+		.word 	EXPCUp 						; 10 P Up
 ;
 ;		Handle colour change (80-9F)
 ;
@@ -284,7 +315,7 @@ EXPCUpdate:
 EXPCBackground:
 		and 	#$0F 						; get the colour
 		ldx 	#$F0 						; mask
-		bra 	EXPCUpdate		
+		bra 	EXPCUpdate
 
 EXTScreenScroll:
 		lda 	#2 							; select text page
@@ -296,10 +327,19 @@ EXTScreenScroll:
 		jsr 	EXTScrollFill
 		rts
 
+Export_EXTApplyPendingWrap:
+ApplyPendingWrap:
+		stz		EXTPendingWrap				; clear pending wrap flag
+		stz 	EXTColumn 					; reset column to 0
+		jsr 	EXTScreenScroll 			; scroll the screen
+		jsr 	EXTSetHardwareCursor 		; place the physical cursor
+		ldy 	EXTColumn 					; re-point Y to column 0
+		rts
+
 ; ************************************************************************************************
 ;
 ;										Print Hex in space
-;	
+;
 ; ************************************************************************************************
 
 PAGEDPrintHex:
@@ -321,7 +361,7 @@ _PPHNibble:
 		bcc 	_PPHOut
 		adc 	#6
 _PPHOut:adc 	#48
-		jsr		PAGEDPrintCharacter 			
+		jsr		PAGEDPrintCharacter
 		pla
 		rts
 

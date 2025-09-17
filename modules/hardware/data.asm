@@ -45,7 +45,7 @@ EXTTextColour		.fill 	1
 ;;
 ; Screen width in characters.
 ;
-; Stores the number of character columns available on the screen . Used for
+; Stores the number of character columns available on the screen. Used for
 ; line wrapping, cursor positioning, and screen memory calculations. Typically
 ; set to 40 or 80 characters.
 ;
@@ -53,6 +53,25 @@ EXTTextColour		.fill 	1
 ; \see     EXTScreenHeight, EXTColumn, EXTScreenRowOffsets
 ;;
 EXTScreenWidth		.fill 	1
+
+;;
+; Pending wrap state for the text output.
+;
+; Determines whether there is a pending line wrap that needs to be applied
+; before the next character is printed.
+;
+; \size    1 byte
+; \see     EXTPendingWrapEnabled, EXTScreenWidth, EXTColumn, EXTRow
+;;
+EXTPendingWrap		.fill 	1
+
+;;
+; Is pending wrap enabled?
+;
+; \size    1 byte
+; \see     EXTPendingWrap
+;;
+EXTPendingWrapEnabled	.fill 	1
 
 ;;
 ; Screen height in characters.
