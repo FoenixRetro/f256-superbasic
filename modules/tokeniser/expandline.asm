@@ -49,7 +49,7 @@ Export_TKListConvertLine:
 		;		Do the line number
 		;
 		ldy 	#2 							; convert line number to string
-		.cget		
+		.cget
 		tax
 		dey
 		.cget
@@ -62,9 +62,9 @@ Export_TKListConvertLine:
 		bpl 	_LCNoAdjust 				; don't adjust indent if +ve, do after.
 		clc 								; add to list indent and make 0 if goes -ve.
 		adc 	listIndent
-		sta 	listIndent 
+		sta 	listIndent
 		bpl 	_LCNoAdjust
-		stz 	listIndent 
+		stz 	listIndent
 _LCNoAdjust:
 		clc		 							; work out actual indent.
 		lda 	listIndent
@@ -98,14 +98,14 @@ _LCMainLoop:
 		cmp 	#64 						; 32-64 are as stored, punc and digits
 		bcc 	_LCPunctuation
 		cmp 	#128 						; 64-127 are variable identifiers.
-		bcc 	_LCIdentifiers 
+		bcc 	_LCIdentifiers
 		cmp 	#254 						; 128-253 are tokenised words
 		bcc 	_LCTokens
 		jmp 	_LCData 					; 254-5 are data objects
 		;
 		;		Exit - do +ve indent here.
 		;
-_LCExit:		
+_LCExit:
 		pla 								; get old indent adjust
 		bmi 	_LCExit2
 		clc 								; add to indent if +ve
@@ -141,12 +141,12 @@ _LCShiftPunc:
 		and 	#7 							; lower 3 bits
 		beq 	_LCNoAdd
 		ora 	#24 						; adds $18 to it.
-_LCNoAdd:		
+_LCNoAdd:
 		cpx 	#24 						; if >= 24 add $20
 		bcc 	_LCNoAdd2
 		ora 	#32 						; adds $20
 _LCNoAdd2:
-		ora 	#$40 						; shift into 64-127 range and fall through.				
+		ora 	#$40 						; shift into 64-127 range and fall through.
 
 		;	-------------------------------------------------------------------
 		;
@@ -158,7 +158,7 @@ _LCPunctuation:
 		cmp 	#':' 						; check if :
 		bne 	_LCPContinue
 		jsr 	LCLDeleteLastSpace 			; if so delete any preceding spaces
-_LCPContinue:		
+_LCPContinue:
 		cmp 	#'.'
 		beq 	_LCPIsConstant
 		cmp 	#'0'
@@ -169,7 +169,11 @@ _LCPIsConstant:
 		pha
 		.setcolour CLIConstant
 		pla
-_LCPNotConstant:		
+_LCPNotConstant:
+        cmp     #KWD_QUOTE                  ; apostrophe (comment to end of line)
+        bne     _LCPWrite
+        jsr     LCLAddSpaceIfNeeded
+_LCPWrite:
 		iny 								; consume character
 		jsr 	LCLWrite 					; write it out.
 		bra 	_LCMainLoop 				; go round again.
@@ -182,7 +186,7 @@ _LCPNotConstant:
 
 _LCIdentifiers:
 		clc 								; convert to physical address
-		adc 	#((VariableSpace >> 8) - $40) & $FF		
+		adc 	#((VariableSpace >> 8) - $40) & $FF
 		sta 	zTemp0+1
 		iny
 		.cget
@@ -197,7 +201,7 @@ _LCOutIdentifier:
 		and 	#$7F
 		jsr 	LCLLowerCase
 		jsr 	LCLWrite
-		lda 	(zTemp0),y				 	; ends when bit 7 set.	
+		lda 	(zTemp0),y				 	; ends when bit 7 set.
 		bpl 	_LCOutIdentifier
 		ply 								; restore position
 		jmp 	_LCMainLoop
@@ -224,7 +228,7 @@ _LCNoShift:
 		jsr 	LCLCheckSpaceRequired 		; do we need a space ?
 		.cget 								; get the token again
 		tax 								; into X
-_LCFindText:		
+_LCFindText:
 		dex
 		bpl 	_LCFoundText 				; found text.
 		lda 	(zTemp0) 					; length of text
@@ -235,7 +239,7 @@ _LCFindText:
 		bcc 	_LCFindText
 		inc 	zTemp0+1
 		bra 	_LCFindText
-_LCFoundText:				
+_LCFoundText:
 		phy 								; save List position
 		lda 	(zTemp0)					; count to print
 		tax
@@ -255,7 +259,7 @@ _LCCopyToken:								; copy token out.
 _LCNoSpace:
 		ply 								; restore position.
 		iny 								; consume token
-		jmp 	_LCMainLoop 				; and go around again.			
+		jmp 	_LCMainLoop 				; and go around again.
 
 		;	-------------------------------------------------------------------
 		;
@@ -269,19 +273,17 @@ _LCData:
 		cmp 	#$FE
 		beq 	_LCHaveOpener
 		ldx 	#'"'
-		.setcolour CLIData	
+		.setcolour CLIData
 		;
-		;		Check for comment on line by itself.
+		;		Check for apostrophe comment
 		;
-		cpy 	#4 							; must be 2nd thing on line
-		bne 	_LCHaveOpener
 		dey 								; what precedes it ?
 		.cget
 		iny
-		cmp 	#KWD_QUOTE 					; if quote
+		cmp 	#KWD_QUOTE 					; if apostrophe
 		bne 	_LCHaveOpener
-		lda 	#9 							; tab
-		jsr 	LCLWrite 				
+		lda 	#' ' 						; add space before comment
+		jsr 	LCLWrite
 		lda 	CLIBComment
 		bmi 	_LCHaveOpener
 		ora 	#$90
@@ -293,7 +295,7 @@ _LCHaveOpener:
 		iny 								; get count
 		.cget
 		tax
-		iny 								; point at first character				
+		iny 								; point at first character
 _LCOutData:
 		.cget 								; get next
 		cmp 	#0
@@ -311,9 +313,21 @@ _LCNoPrint:
 		lda 	EXTTextColour
 		and 	#$0F
 		ora 	#$90
-		jsr 	LCLWrite		
-_LCNoQuote:		
+		jsr 	LCLWrite
+_LCNoQuote:
 		jmp 	_LCMainLoop
+
+
+LCLAddSpaceIfNeeded:
+		cpy 	#3 							; don't add space if it's the first token on the line
+		beq 	_exit
+		pha
+        lda     #' '                        ; add space before the next token
+        jsr     LCLWrite
+		pla
+	_exit:
+		rts
+
 
 ; ************************************************************************************************
 ;
@@ -342,9 +356,9 @@ LCLWrite:
 		stz 	tokenBuffer+1,x
 		inc 	tbOffset 					; bump the position
 		ora 	#0 							; don't update last character if colour data
-		bmi 	_LCLNoColour		
+		bmi 	_LCLNoColour
 		sta 	lcLastCharacter
-_LCLNoColour:		
+_LCLNoColour:
 		plx
 		rts
 
@@ -366,7 +380,7 @@ LCLDeleteLastSpace:
 _LCDLSExit:
 		plx
 		pla
-		rts		
+		rts
 
 ; ************************************************************************************************
 ;
@@ -396,7 +410,7 @@ _LCCSRSpace: 								; output the space
 		jsr 	LCLWrite
 
 _LCCSRExit:
-		rts		
+		rts
 
 ; ************************************************************************************************
 ;
@@ -432,7 +446,7 @@ LCLWriteNumberXA:
 		stz 	zTemp0+1 					; index into digit table.
 _LCLWNLoop1:
 		stz 	zTemp0 						; subtraction count.
-_LCLWNLoop2:		
+_LCLWNLoop2:
 		pha 								; save initial LSB
 		sec
 		ldy 	zTemp0+1 					; position in table.
@@ -450,15 +464,15 @@ _LCLWNLoop2:
 _LCLWNUnderflow:
 		ldy 	zTemp0 						; count of subtractions.
 		bne 	_LCLWNOut
-		lda 	tbOffset 					; suppress leading zeroes		
+		lda 	tbOffset 					; suppress leading zeroes
 		dec 	a
 		beq 	_LCLWNNext
 _LCLWNOut:
 		tya
-		jsr 	_LCLWNOutDigit 		
+		jsr 	_LCLWNOutDigit
 _LCLWNNext:
 		ply 							 	; restore original value.
-		pla		
+		pla
 		ldy 	zTemp0+1  					; bump the index
 		iny
 		iny
@@ -467,14 +481,14 @@ _LCLWNNext:
 		bne 	_LCLWNLoop1
 _LCLWNOutDigit:
 		ora 	#'0'
-		jsr 	LCLWrite		
+		jsr 	LCLWrite
 		rts
 
 _LCLWNTable:
 		.word 	10000
 		.word 	1000
 		.word 	100
-		.word 	10		
+		.word 	10
 
 ; ************************************************************************************************
 ;
@@ -483,7 +497,7 @@ _LCLWNTable:
 ; ************************************************************************************************
 
 CLIDefault:
-		.byte	CONBrown, CONYellow, CONRed, CONOrange, CONCyan, CONYellow, CONPink, CONWhite		
+		.byte	CONBrown, CONYellow, CONRed, CONOrange, CONCyan, CONYellow, CONPink, CONWhite
 
 		.send code
 
@@ -495,11 +509,11 @@ CLIDefault:
 
 CLIFComment = ControlStorage + 0
 CLIBComment = ControlStorage + 1
-CLILineNumber = ControlStorage + 2 
+CLILineNumber = ControlStorage + 2
 CLIToken = ControlStorage + 3
-CLIConstant = ControlStorage + 4  
-CLIIdentifier = ControlStorage + 5  
-CLIPunctuation = ControlStorage + 6 
+CLIConstant = ControlStorage + 4
+CLIIdentifier = ControlStorage + 5
+CLIPunctuation = ControlStorage + 6
 CLIData = ControlStorage + 7
 
 ; ************************************************************************************************

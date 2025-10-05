@@ -83,6 +83,8 @@ _CPLoop:
 		beq 	_CPExit
 		cmp 	#KWD_COLON
 		beq 	_CPExit
+		cmp 	#KWD_QUOTE 					; apostrophe (comment to end of line)
+		beq 	_CPExit
 		pla 								; throw last action flag
 		;
 		;		Decide what's next
@@ -93,8 +95,6 @@ _CPLoop:
 		beq 	_CPContinueWithSameLine
 		cmp 	#KWD_COMMA 					; comma
 		beq 	_CPTab
-		cmp 	#KWD_QUOTE 					; apostrophe (new line)
-		beq 	_CPNewLine
 		cmp 	#KWD_AT 					; `at` modifier
 		beq 	_CPAtModifier
 		dey 								; undo the get
