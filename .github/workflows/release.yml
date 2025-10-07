@@ -28,6 +28,9 @@ jobs:
             make 64tass \
             python3 python3-pip
 
+      - name: Install git-cliff
+        run: pip install git-cliff
+
       - name: Read the release version
         id: read_version
         run: |

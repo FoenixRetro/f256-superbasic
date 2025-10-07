@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   prepare-release-pr:
+    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release):') }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out sources
@@ -67,8 +68,8 @@ jobs:
         with:
           branch: release/next
           delete-branch: true
-          commit-message: 'chore(release): v${{ steps.version.outputs.version }}'
-          title: 'Release v${{ steps.version.outputs.version }}'
+          commit-message: "chore(release): v${{ steps.version.outputs.version }}"
+          title: "Release v${{ steps.version.outputs.version }}"
           body: >
             This PR was created by the [prepare-release-pr](/${{ github.repository }}/blob/main/.github/workflows/prepare-release-pr.yml)
             GitHub action. When you're ready to release, simply merge it — the corresponding GitHub release will be

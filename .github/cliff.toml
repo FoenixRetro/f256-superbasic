@@ -78,6 +78,7 @@ commit_parsers = [
     { message = "^refmanual", group = "<!-- 3 -->Documentation" },
     { message = "^perf", group = "<!-- 4 -->Performance" },
     { message = "^chore:\\s+new release\\s*$", skip = true },
+    { message = "^chore(release)$", skip = true },
     { message = ".*", group = "<!-- 5 -->Under the hood" },
 ]
 # Exclude commits that are not matched by any commit parser.
