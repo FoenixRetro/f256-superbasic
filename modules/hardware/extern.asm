@@ -26,7 +26,7 @@
 ; \see;			EXTClearScreenCode, EXTShowHeader, EXTScreenWidth, EXTScreenHeight
 ;;
 Export_EXTInitialise:
-		stz 	1 							; Access I/O page 0
+		stz 	$0001 						; Access I/O page 0
 		stz 	$D004 						; Disable border
 		stz 	$D008
 		stz 	$D009
@@ -66,15 +66,14 @@ Export_EXTInitialise:
 		sta 	$D012
 
 		jsr 	EXTClearScreenCode 			; clear the screen and home cursor
+		jsr 	EXTShowHeader 				; display the header
 
-_EXMoveDown: 								; move down past prompt
+_EXMoveDown: 								; position cursor for printing hardware & ROM info
 		lda 	#13
 		jsr 	PAGEDPrintCharacter
-		lda 	EXTRow
-		cmp 	#Header_Height-4
+		cpy 	EXTRow
 		bne 	_EXMoveDown
-		jsr 	EXTShowHeader
-		stz 	1
+		stz 	$0001
 		rts
 
 ;;

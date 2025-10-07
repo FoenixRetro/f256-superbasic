@@ -10,13 +10,14 @@ RLE Format:
 
 import sys
 from pathlib import Path
-from typing import TextIO
+from typing import Callable, TextIO
 
 
 def main(*, build_dir: Path, assets_dir: Path) -> None:
     """Generate assembly header data file from boot screen assets."""
     rle_marker = 255
-    height = 14
+    min_height = 14
+    header_offset = 4
     width = 80
 
     if not build_dir.exists():
@@ -28,8 +29,8 @@ def main(*, build_dir: Path, assets_dir: Path) -> None:
         out.write(";\n;\tAutomatically generated.\n;\n")
         out.write("\t.section code\n\n")
 
-        out.write(f"Header_Height = {height}\n\n")
         out.write(f"Header_RLE = {rle_marker}\n\n")
+        out.write(f"Header_info_offset = {header_offset}\n\n")
 
         asset_types = ["attrs", "chars"]
 
@@ -38,11 +39,25 @@ def main(*, build_dir: Path, assets_dir: Path) -> None:
 
         # Process binary assets
         for machine in ["j", "k", "j2", "k2"]:
+            heights = {}
             for asset_type in asset_types:
                 asset = asset_name(machine, asset_type)
+                with open(assets_dir / f"{asset}.bin", "rb") as f:
+                    data = f.read()
+
+                height = get_header_height(
+                    data=data,
+                    width=width,
+                    min_height=min_height,
+                    is_blank=is_blank_attr if asset_type == "attrs" else is_blank_char,
+                )
+
+                heights[asset_type] = height
+
+                out.write(f"Asset_{asset}_height = {height}\n")
                 out.write(f"Asset_{asset}:\n")
-                data = process_binary_file(
-                    assets_dir / f"{asset}.bin",
+                data = compress_header(
+                    data,
                     height=height,
                     width=width,
                     rle_marker=rle_marker,
@@ -50,12 +65,22 @@ def main(*, build_dir: Path, assets_dir: Path) -> None:
 
                 out.write("\t.byte\t{0}\n\n".format(",".join([str(x) for x in data])))  # noqa: UP030
 
+            if heights["attrs"] != heights["chars"]:
+                raise ValueError(
+                    f"Mismatched {machine} header dimensions: "
+                    f"attrs height={heights['attrs']} vs chars height={heights['chars']}"
+                )
+
         def write_asset_aliases(*, machines: list[str]):
             for machine in machines:
                 for asset_type in asset_types:
                     alias = asset_name(machine[0:1], asset_type)
                     asset = asset_name(machine, asset_type)
                     out.write(f"\tHeader_{alias} = Asset_{asset}\n")
+                    if asset_type == "chars":
+                        out.write(
+                            f"\tHeader_{machine[0:1]}info_line = Asset_{asset}_height - Header_info_offset\n"
+                        )
 
         out.write(".if HARDWARE_GEN == 1\n")
         write_asset_aliases(machines=["j", "k"])
@@ -92,14 +117,36 @@ def rle_compress(b: list[int], *, marker: int) -> list[int]:
     return r
 
 
-def process_binary_file(
-    filepath: Path, *, rle_marker: int, height: int, width: int
-) -> list[int]:
-    """Process a binary asset file and return RLE-compressed data."""
-    with open(filepath, "rb") as f:
-        data = f.read()
+def get_header_height(
+    *, data: bytes, width: int, min_height: int, is_blank: Callable[[int], bool]
+) -> int:
+    """Some headers may be taller than the minimum height. Determine the actual height
+    by finding the last non-empty line beyond the minimum height."""
 
-    # Convert to list and truncate to screen size
+    def is_empty_line(*, height: int) -> bool:
+        start = height * width
+        end = start + width
+        return all(is_blank(x) for x in data[start:end])
+
+    height = min_height
+    while not is_empty_line(height=height) and (height + 1) * width <= len(data):
+        height += 1
+    return height
+
+
+def is_blank_attr(byte: int) -> bool:
+    return byte == 0xF2 or byte == 0x12
+
+
+def is_blank_char(byte: int) -> bool:
+    return byte == 0x20
+
+
+def compress_header(
+    data: bytes, *, rle_marker: int, height: int, width: int
+) -> list[int]:
+    """Process a binary asset file and returns a list of RLE-compressed data."""
+    # Convert to list and truncate to header size
     src = list(data)[: height * width]
     return rle_compress(src, marker=rle_marker)
 
