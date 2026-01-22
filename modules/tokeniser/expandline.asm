@@ -59,6 +59,17 @@ Export_TKListConvertLine:
 		;
 		pla 								; adjustment to indent
 		pha 								; save on stack
+		;
+		;		Handle ELSE - decrement before printing so ELSE aligns with IF
+		;
+		lda 	listElseFound				; was ELSE found on this line?
+		beq 	_LCNoElsePre				; skip if not
+		lda 	listIndent					; decrement listIndent
+		beq 	_LCNoElsePre				; but don't go below 0
+		dec 	listIndent
+_LCNoElsePre:
+		pla 								; get adjustment back
+		pha 								; save on stack again
 		bpl 	_LCNoAdjust 				; don't adjust indent if +ve, do after.
 		clc 								; add to list indent and make 0 if goes -ve.
 		adc 	listIndent
@@ -100,8 +111,11 @@ _LCMainLoop:
 		cmp 	#128 						; 64-127 are variable identifiers.
 		bcc 	_LCIdentifiers
 		cmp 	#254 						; 128-253 are tokenised words
-		bcc 	_LCTokens
-		jmp 	_LCData 					; 254-5 are data objects
+		bcs 	_LCToData 					; 254-5 are data objects (local trampoline)
+		jmp 	_LCTokens 					; tokens need longer jump now
+		;
+_LCToData:
+		jmp 	_LCData						; trampoline to actual data handler
 		;
 		;		Exit - do +ve indent here.
 		;
@@ -112,6 +126,13 @@ _LCExit:
 		adc 	listIndent
 		sta 	listIndent
 _LCExit2:
+		;
+		;		Handle ELSE - increment after to restore indent for subsequent lines
+		;
+		lda 	listElseFound				; was ELSE found on this line?
+		beq 	_LCExit3					; skip if not
+		inc 	listIndent					; restore indent level
+_LCExit3:
 		rts
 		;	-------------------------------------------------------------------
 		;

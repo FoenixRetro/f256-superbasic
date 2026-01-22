@@ -145,8 +145,10 @@ BaseOpcode: 								; base opcode
 		.fill 	1		
 ModeMask: 									; modes allowed
 		.fill 	1		
-listIndent:	 								; list indent level. 
-		.fill 	1				
+listIndent:	 								; list indent level.
+		.fill 	1
+listElseFound:								; flag set when ELSE found on line (for indent fix)
+		.fill 	1
 lcLastCharacter: 							; last character output.
 		.fill 	1	
 isPrintFlag:	 							; zero if input, non-zero if print, bit 6 zero = character print
