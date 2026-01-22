@@ -64,9 +64,9 @@ ScanForwardOne:
 		bcs 	_ScanSkipData
 		;
 		cmp 	#KWC_FIRST_STRUCTURE 		; structure keyword ?
-		bcc 	_SFWExit 					; if not, ordinary keywords.
+		bcc 	_SFWCheckElse 				; if not, check if ELSE
 		cmp 	#KWC_LAST_STRUCTURE+1
-		bcs 	_SFWExit
+		bcs 	_SFWCheckElse				; if beyond structure range, check if ELSE
 		;
 		;		Structure code - can go up and down.
 		;
@@ -96,6 +96,17 @@ _ScanSkipData:
 		;
 		dey 								; point at data token
 		.cskipdatablock 					; skip block
+		rts
+		;
+		;		Check for ELSE keyword (needs special indent handling)
+		;
+_SFWCheckElse:
+		cmp 	#KWD_ELSE					; is it ELSE?
+		bne 	_SFWExit
+		pha 								; preserve A
+		lda 	#1
+		sta 	listElseFound 				; flag that ELSE was found on this line
+		pla 								; restore A
 _SFWExit:
 		rts
 
@@ -108,6 +119,7 @@ _SFWExit:
 
 ScanGetCurrentLineStep:
 		stz 	zTemp1
+		stz 	listElseFound 				; clear ELSE flag before scanning line
 		ldy 	#3
 _SGCLSLoop:
 		.cget 								; next and consume ?
