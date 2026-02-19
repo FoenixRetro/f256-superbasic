@@ -147,8 +147,7 @@ AssembleGroup4:
 		pla 								; pop address
 		plx
 		jsr 	AccessParameters 			; access and get first
-		jsr 	AssemblerWriteByte 			; output it.
-		rts
+		jmp 	AssemblerWriteByte 			; output it.
 
 ; ************************************************************************************************
 ;

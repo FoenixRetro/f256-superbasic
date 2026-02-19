@@ -502,8 +502,7 @@ _LCLWNNext:
 		bne 	_LCLWNLoop1
 _LCLWNOutDigit:
 		ora 	#'0'
-		jsr 	LCLWrite
-		rts
+		jmp 	LCLWrite
 
 _LCLWNTable:
 		.word 	10000

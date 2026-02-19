@@ -35,8 +35,7 @@ _SpcLoop:
 		bra 	_SpcLoop
 _SpcExit:
 		ply
-		jsr 	CheckRightBracket
-		rts
+		jmp 	CheckRightBracket
 
 		.send code
 

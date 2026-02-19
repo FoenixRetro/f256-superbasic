@@ -68,8 +68,7 @@ _PSNext:
 		.cnextline  						; next line and try again
 		bra 	_PSLoop				
 _PSExit:
-		jsr 	SwapDataCodePtrs 			; swap code and data
-		rts
+		jmp 	SwapDataCodePtrs 			; swap code and data
 _PSSyntax:
 		jmp 	SyntaxError
 

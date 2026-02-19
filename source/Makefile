@@ -28,6 +28,10 @@ ASFLAGS += -D HARDWARE=$(HARDWARE) -D HARDWARE_GEN=$(HARDWARE_GEN) \
 MODULES = +hardware +graphics +tokeniser +sound +kernel
 BUILD_OUT = $(BUILDDIR)basic.rom
 SCRIPTDIR = scripts$(S)
+MAME_PATH=../../mame
+IMAGE_PATH := sd
+IMAGE := $(IMAGE_PATH).img
+BASIC_TESTS_PATH=$(PWD)/../test
 
 all:  build
 
@@ -174,3 +178,23 @@ benchmark:
 
 paging:
 	$(PYTHON) $(SCRIPTDIR)checkpaging.py
+
+#
+#		Test on real hardware
+#
+run: build
+	foenixmgr binary --address 5000 $(BUILD_OUT)
+
+flash: build
+	foenixmgr flash-bulk build/basic.csv
+
+#
+#		Test in emulator
+#
+emu: build $(IMAGE)
+	cp $(BUILDDIR)/sb*.bin $(MAME_PATH)/roms/f256k
+	cd $(MAME_PATH) && ./f256k f256k -window -resolution 1280x720 -skip_gameinfo -harddisk $(BASIC_TESTS_PATH)/.output/tests.img -rompath roms
+	#cd $(MAME_PATH) && ./f256k f256k -window -resolution 1280x720 -skip_gameinfo -harddisk $(BASIC_TESTS_PATH)/.output/tests.img -rompath roms -script $(LAUNCH_SCRIPT) -log
+
+$(IMAGE): $(BASIC_TESTS_PATH)/ashanghai
+	$(BASIC_TESTS_PATH)/prepare-disk.py -t $<

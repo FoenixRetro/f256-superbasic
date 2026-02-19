@@ -132,8 +132,7 @@ ICGetSeperator:
 		lda 	(zTemp0),y
 		bne 	ICGSRange
 		ply
-		jsr 	CheckRightBracket 			; check following )
-		rts
+		jmp 	CheckRightBracket 			; check following )
 ICGSRange:
 		.error_range
 

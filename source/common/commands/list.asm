@@ -25,7 +25,7 @@ Command_List:	;; [list]
 		jsr 	SNDCommand
 		;
 		.cget 								; followed by an identifier ?
-		and 	#$C0 				 		; if so, we are list procedure() which is a seperate block		
+		and 	#$C0 				 		; if so, we are list procedure() which is a seperate block
 		cmp 	#$40  						; of code.
 		beq 	_CLListProcedure
 		;
@@ -40,8 +40,8 @@ Command_List:	;; [list]
 		;
 		;		First value.
 		;
-		.cget 								; is first a comma, if so goto 2nd 
-		cmp 	#KWD_COMMA 			
+		.cget 								; is first a comma, if so goto 2nd
+		cmp 	#KWD_COMMA
 		beq 	_CLSecond
 		jsr 	CLIsDigit 					; if not digit, list all
 		bcs 	_CLStart
@@ -60,13 +60,13 @@ Command_List:	;; [list]
 		;		Second value.
 		;
 _CLSecond:
-		iny 								; consume comma		
+		iny 								; consume comma
 		jsr 	CLIsDigit 					; digit found
 		bcs 	_CLStart 					; if not, continue listing
 		ldx 	#7 							; load 2nd range into slot 7
 		jsr 	Evaluate16BitInteger
 		;
-		;		Loop through the whole program 
+		;		Loop through the whole program
 		;
 _CLStart
 		.cresetcodepointer
@@ -77,17 +77,17 @@ _CLLoop:
 
 		.cget0 								; any more ?
 		beq 	_CLExit
-		; 
+		;
 		ldx 	#4 							; check range every time, line numbers aren't in order.
-		jsr 	CLCompareLineNo 
+		jsr 	CLCompareLineNo
 		bcc 	_CLNext
 		ldx 	#7
 		jsr 	CLCompareLineNo
 		beq 	_CLDoThisOne
 		bcs 	_CLNext
-_CLDoThisOne:		
-		jsr 	CLListOneLine 				; routine to list the current line.
-_CLNext:		
+_CLDoThisOne:
+		jsr 	CLListOneLineShift 			; list current line (skip if shift held)
+_CLNext:
 		.cnextline
 		bra 	_CLLoop
 _CLExit:
@@ -115,7 +115,7 @@ _CLListProcedure:
 _CLLPSearch:
 		.cget0 								; get offset
 		cmp 	#0 							; if zero, end
-		beq 	_CLExit		
+		beq 	_CLExit
 
 		ldy 	#3 							; check if PROC something
 		.cget
@@ -145,7 +145,7 @@ _CLLPFound:
 		ldy 	#3 							; get first keyword
 		.cget
 		pha
-		jsr 	CLListOneLine 				; list line and go forward
+		jsr 	CLListOneLineShift 			; list line (skip if shift held)
 		.cnextline
 		pla 								; reached ENDPROC ?
 		cmp 	#KWD_ENDPROC
@@ -162,10 +162,26 @@ CLListOneLine:
 		jsr 	ScanGetCurrentLineStep 		; get indent adjust.
 		jsr 	TKListConvertLine 			; convert line into token Buffer
 		ldx 	#(tokenBuffer >> 8) 		; print that line
-		lda 	#(tokenBuffer & $FF) 	
+		lda 	#(tokenBuffer & $FF)
 		jsr 	PrintStringXA
 		lda 	#13 						; new line
-		jsr 	EXTPrintCharacter
+		jmp 	EXTPrintCharacter
+
+; ************************************************************************************************
+;
+;		List one line, but skip if shift is held (to slow down listing).
+;
+; ************************************************************************************************
+
+CLListOneLineShift:
+		jsr 	CLListOneLine				; always print the line
+_CLLOSCheck:
+		jsr 	IsShiftPressed				; shift held?
+		beq 	_CLLOSDone
+		jsr 	kernel.Yield				; wait for next interrupt
+		jsr 	GetNextEvent				; process event to update KeyStatus
+		bra 	_CLLOSCheck
+_CLLOSDone:
 		rts
 
 ; ************************************************************************************************
@@ -203,7 +219,7 @@ _CLIDExitFalse:
 		rts
 
 		.send code
-		
+
 ; ************************************************************************************************
 ;
 ;									Changes and Updates
@@ -216,5 +232,6 @@ _CLIDExitFalse:
 ;		15/12/22 		LIST silences sound.
 ;		02/01/23 		Break check call now a macro.
 ;		01/03/23 		LIST procedure checks break.
+;		19/02/26 		Added Shift-pause: hold Shift to pause listing.
 ;
 ; ************************************************************************************************

@@ -21,8 +21,7 @@
 Command_REPEAT:	;; [repeat]
 		lda 	#STK_REPEAT+3 				; allocate 6 bytes on the return stack.
 		jsr 	StackOpen 
-		jsr 	STKSaveCodePosition 		; save loop position
-		rts
+		jmp 	STKSaveCodePosition 		; save loop position
 
 ; ************************************************************************************************
 ;
@@ -38,12 +37,10 @@ Command_UNTIL:	;; [until]
 		jsr 	EvaluateNumber 				; work out the number
 		jsr 	NSMIsZero 					; check if zero
 		beq 	_CULoopBack 				; if so keep looping
-		jsr 	StackClose		 			; return
-		rts
+		jmp 	StackClose		 			; return
 
 _CULoopBack:		
-		jsr 	STKLoadCodePosition 		; loop back
-		rts
+		jmp 	STKLoadCodePosition 		; loop back
 
 		.send code
 
