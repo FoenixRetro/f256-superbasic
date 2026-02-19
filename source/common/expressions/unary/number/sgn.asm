@@ -34,8 +34,7 @@ SgnUnary: ;; [sgn(]
 		sta 	NSStatus,x  				; so it will be -1 or 1
 		rts
 
-_SGZero:jsr 	NSMSetZero
-		rts
+_SGZero:jmp 	NSMSetZero
 
 		.send	code
 

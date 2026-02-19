@@ -24,8 +24,7 @@ Unary_Not: ;; [not(]
 		jsr 	CheckRightBracket
 		jsr 	NSMIsZero 					; zero mantissa ?
 		beq 	_NotZero
-		jsr 	NSMSetZero
-		rts
+		jmp 	NSMSetZero
 
 _NotZero: 									; return -1
 		jmp 	ReturnTrue

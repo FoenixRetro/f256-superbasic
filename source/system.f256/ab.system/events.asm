@@ -23,23 +23,106 @@ ProcessEvents:
 		jsr 	KNLSetEventPointer
 
 		jsr     GetNextEvent 				; get next event
-		bcs 	_PEExitZ 					; nothing left to process.
+		bcc 	_PEHaveEvent 				; have an event to process
+		jmp 	_PEExitZ 					; nothing left to process
+_PEHaveEvent:
 
 		lda 	KNLEvent.type 				; go back if event not key.pressed.
                 cmp     #kernel.event.timer.EXPIRED
-                beq     _PEIsTimer
+                bne 	_PENotTimer
+                jmp     _PEIsTimer
+_PENotTimer:
 		cmp     #kernel.event.key.RELEASED
-		beq     _PEIsRelease
+		bne 	_PENotRelease
+		jmp     _PEIsRelease
+_PENotRelease:
 		cmp 	#kernel.event.key.PRESSED
 		bne 	ProcessEvents
 
 		lda	KNLEvent.key.flags 			; is KNLEvent.key.flags = 0 ?
-		bmi 	_PEIsRaw
-		bne 	ProcessEvents
+		bpl 	_PENotRaw
+		jmp		_PEIsRaw
+_PENotRaw:
+		beq 	_PECheckNormal 				; flags=0, normal processing
+		;
+		; 		flags != 0, check for shift+arrow or shift+backspace
+		;
+		lda 	KNLEvent.key.ascii
+		cmp 	#$10 						; Up arrow
+		beq 	_PEShiftUp
+		cmp 	#$0E 						; Down arrow
+		beq 	_PEShiftDown
+		cmp 	#$08 						; Backspace (Shift+DEL = insert line)
+		beq 	_PEShiftBackspace 			; queue it, input.asm handles shift detection
+		cmp 	#$B5 						; INS key (Shift+Backspace)
+		beq 	_PEDoInsertLine
+		bra 	ProcessEvents 				; other modified keys, ignore
+
+_PEDoInsertLine:
+		lda 	#$B5 						; queue INS code for input.asm to handle
+		jmp 	_PEQueueA
+
+_PEShiftBackspace:
+		jmp 	_PEQueueA
+
+_PEShiftUp:
+		jsr 	HandleShiftUp
+		; Schedule repeat for shift+up (CBM/K keyboards only)
+		phx
+		ldx 	KNLEvent.key.keyboard
+		bne 	_PEShiftUpDone
+		lda 	#$90 					; special code for shift+up
+		jsr 	StartRepeatTimerForKey
+_PEShiftUpDone:
+		plx
+		jmp 	ProcessEvents
+_PEShiftDown:
+		jsr 	HandleShiftDown
+		; Schedule repeat for shift+down (CBM/K keyboards only)
+		phx
+		ldx 	KNLEvent.key.keyboard
+		bne 	_PEShiftDownDone
+		lda 	#$8E 					; special code for shift+down
+		jsr 	StartRepeatTimerForKey
+_PEShiftDownDone:
+		plx
+		jmp 	ProcessEvents
+
+_PECheckNormal:
+		lda 	KNLEvent.key.ascii 			; check for arrow keys
+		cmp 	#$10 						; Up arrow?
+		beq 	_PECheckShiftArrow
+		cmp 	#$0E 						; Down arrow?
+		beq 	_PECheckShiftArrow
+		cmp 	#$02 						; Left arrow?
+		beq 	_PECheckShiftArrow
+		cmp 	#$06 						; Right arrow?
+		beq 	_PECheckShiftArrow
+		cmp 	#$B5 						; INS key (Shift+Backspace)?
+		beq 	_PEDoInsertLine
+		bra 	_PECheckCtrlC
+_PECheckShiftArrow:
+		pha 								; save arrow key
+		jsr 	IsShiftPressed 				; check if shift held
+		beq 	_PENoShiftArrow 			; Z set = no shift
+		pla 								; restore arrow key
+		cmp 	#$10
+		beq 	_PEShiftUp
+		cmp 	#$0E
+		beq 	_PEShiftDown
+		; Must be Left ($02) or Right ($06) - do word jump
+		cmp 	#$06 						; C=1 if right, C=0 if left
+		jsr 	EXTWordJump
+		jmp 	ProcessEvents
+_PENoShiftArrow:
+		pla 								; restore arrow key, continue to repeat scheduling
+		bra 	_PEScheduleRepeat
+_PECheckCtrlC:
 		lda 	KNLEvent.key.ascii 			; is it Ctrl+C
 		cmp 	#3
 		beq 	_PEReturnBreak  			; no, keep going.
 
+_PEScheduleRepeat:
               ; Schedule repeats for keys from CBM/K keyboards.
 		phx
                 ldx     KNLEvent.key.keyboard
@@ -52,8 +135,21 @@ ProcessEvents:
 		bra 	_PEQueueA
 _PEIsTimer:
                 jsr     HandleRepeatTimerEvent
-                bcs     ProcessEvents
+                bcc     _PETimerValid
+                jmp     ProcessEvents
+_PETimerValid:
+                ; Check for shift+arrow repeat codes
+                cmp 	#$90 				; shift+up?
+                beq 	_PERepeatShiftUp
+                cmp 	#$8E 				; shift+down?
+                beq 	_PERepeatShiftDown
                 bra     _PEQueueA
+_PERepeatShiftUp:
+                jsr 	HandleShiftUp
+                jmp 	ProcessEvents
+_PERepeatShiftDown:
+                jsr 	HandleShiftDown
+                jmp 	ProcessEvents
 _PEIsRelease:
               ; We would normally "jsr StopRepeat" here, but 
               ; this function is no longer the central place
@@ -72,14 +168,44 @@ _PEIsRelease:
               ; here we are.  Until  someone chooses to improve
               ; the factoring, the call to StopRepeat must move to
               ; trackio.asm.
-              
-                bra     ProcessEvents
+
+                jmp     ProcessEvents
 _PEIsRaw:
-		lda 	KNLEvent.key.ascii 			; return pseudo ascii value if F1-F12
-		cmp 	#129
-		bcc		ProcessEvents
+		lda 	KNLEvent.key.ascii 			; check for shift+arrow in raw mode too
+		cmp 	#$10 						; Up arrow
+		beq 	_PERawArrow
+		cmp 	#$0E 						; Down arrow
+		beq 	_PERawArrow
+		bra 	_PERawNotArrow
+_PERawArrow:
+		pha 								; save arrow key code
+		jsr 	IsShiftPressed 				; check if shift is held
+		beq 	_PERawNoShift 				; Z set = no shift
+		pla 								; restore arrow code
+		cmp 	#$10
+		bne 	_PERawShiftDown
+		jmp 	_PEShiftUp
+_PERawShiftDown:
+		jmp 	_PEShiftDown
+_PERawNoShift:
+		pla 								; restore arrow code, continue to queue
+		bra 	_PEQueueA
+_PERawNotArrow:
+		cmp 	#$08 						; Backspace (Shift+Backspace = insert line)
+		beq 	_PEQueueA 					; queue it, input.asm handles shift detection
+		cmp 	#$B5 						; INS key (Shift+Backspace on F256K2)
+		beq 	_PEInsertLine 				; handle insert line directly
+		cmp 	#129 						; return pseudo ascii value if F1-F12
+		bcs 	_PERawCheckF12
+		jmp		ProcessEvents
+
+_PEInsertLine:
+		lda 	#$B5 						; queue INS code for input.asm to handle
+		jmp 	_PEQueueA
+_PERawCheckF12:
 		cmp 	#140+1
-		bcs 	ProcessEvents
+		bcc 	_PEQueueA
+		jmp 	ProcessEvents
 _PEQueueA:
 		phx
 		ldx 	KeyboardQueueEntries 		; get keyboard queue size into X
@@ -88,8 +214,8 @@ _PEQueueA:
 		sta 	KeyboardQueue,x 			; write into queue
 		inc 	KeyboardQueueEntries 		; bump count
 _PENoQueue:
-		plx 			
-		bra 	ProcessEvents
+		plx
+		jmp 	ProcessEvents
 
 _PEReturnBreak:
 		lda 	#255 						; return with NZ state
@@ -222,6 +348,44 @@ _repeat
                 clc
                 rts
 
+; ************************************************************************************************
+;
+;		Check if either shift key is currently pressed
+;		Returns: Z clear if shift pressed, Z set if not pressed
+;		Preserves: X, Y
+;
+; ************************************************************************************************
+
+IsShiftPressed:
+		pha
+		phx
+		;
+		; Kernel normalizes shift raw codes:
+		; LSHIFT = 0, RSHIFT = 1 (from keys.asm)
+		;
+		; Check left shift (raw code 0)
+		lda 	#0
+		jsr 	KeyboardConvertXA 			; X = index, A = mask
+		and 	KeyStatus,x
+		bne 	_ISPShiftFound
+		; Check right shift (raw code 1)
+		lda 	#1
+		jsr 	KeyboardConvertXA
+		and 	KeyStatus,x
+		bne 	_ISPShiftFound
+		;
+		; No shift pressed - return with Z set
+		plx
+		pla
+		lda 	#0 							; sets Z flag
+		rts
+_ISPShiftFound:
+		; Shift is pressed - return with Z clear
+		plx
+		pla
+		lda 	#1 							; clears Z flag
+		rts
+
 		.send code
 
 		.section storage
@@ -247,5 +411,8 @@ KeyboardQueueEntries:
 ;		==== 			=====
 ;		12/02/23 		Returns function keys as chr$(128+fn)
 ;               12/27/23                Adds last key repeat.
+;		19/02/26 		Added GetNextEvent for non-dispatching event read,
+;						IsShiftPressed helper for keyboard status check.
+;		20/02/26 		Added Shift+Left/Right word jump dispatch as $B6/$B7.
 ;
 ; ************************************************************************************************

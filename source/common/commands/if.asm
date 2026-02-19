@@ -62,8 +62,7 @@ _IfExit:
 ElseCode: ;; [else] 					
 		lda 	#KWD_ENDIF 					; else is only run after the if clause succeeds
 		tax 								; so just go to the structure exit
-		jsr 	ScanForward
-		rts
+		jmp 	ScanForward
 
 ; ************************************************************************************************
 ;

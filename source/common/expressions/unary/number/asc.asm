@@ -23,8 +23,7 @@ AscUnary: ;; [asc(]
 		jsr 	EvaluateString 				; get a string
 		lda 	(zTemp0)					; get/return first character
 		jsr 	NSMSetByte 					; ASC("") will return zero.
-		jsr 	CheckRightBracket
-		rts
+		jmp 	CheckRightBracket
 
 		.send code
 

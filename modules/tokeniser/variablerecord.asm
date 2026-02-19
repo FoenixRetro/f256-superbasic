@@ -109,8 +109,7 @@ _CCVFound:
 		ora 	#$40 						; make it a writeable token $4000-$7FFF
 		jsr 	TOKWriteByte
 		lda 	zTemp0 						; write out LSB
-		jsr 	TOKWriteByte
-		rts
+		jmp 	TOKWriteByte
 
 		.send code
 

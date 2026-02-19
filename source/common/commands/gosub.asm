@@ -37,8 +37,7 @@ Command_RETURN:	;; [return]
 		ldx 	#ERRID_GOSUB 				; this error
 		jsr 	StackCheckFrame
 		jsr 	STKLoadCodePosition 		; restore code position
-		jsr 	StackClose
-		rts
+		jmp 	StackClose
 
 		.send code
 

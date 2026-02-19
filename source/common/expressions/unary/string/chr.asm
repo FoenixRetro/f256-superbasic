@@ -26,8 +26,7 @@ ChrUnary: ;; [chr$(]
 		lda 	#1 							; allocate space for one char
 		jsr 	StringTempAllocate
 		pla 								; write number to it
-		jsr 	StringTempWrite
-		rts
+		jmp 	StringTempWrite
 
 		.send code
 
