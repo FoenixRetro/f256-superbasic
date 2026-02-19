@@ -222,7 +222,6 @@ _ETDereference:
 
 _ETParenthesis:
 		jsr 	EvaluateExpression 			; evaluate here, from lowest precedence
-		jsr 	CheckRightBracket 			; check for )
-		rts
+		jmp 	CheckRightBracket 			; check for )
 
 		.send code

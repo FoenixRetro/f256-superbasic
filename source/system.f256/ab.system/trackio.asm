@@ -98,8 +98,7 @@ ProcessMouseDeltaEvent:
 		jsr 	PMKOutputButton
 		jsr 	PMKOutputButton
 
-		jsr 	PMKClipMouseCoord
-		rts
+		jmp 	PMKClipMouseCoord
 
 ; ************************************************************************************************
 ;
@@ -114,8 +113,7 @@ ProcessMouseClickEvent:
 		lda 	KNLEvent.mouse.clicks.middle
 		jsr 	PMKAdd
 		lda 	KNLEvent.mouse.clicks.outer
-		jsr 	PMKAdd
-		rts
+		jmp 	PMKAdd
 
 ; ************************************************************************************************
 ;

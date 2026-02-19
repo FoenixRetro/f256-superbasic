@@ -23,6 +23,7 @@
 ;;
 EXTClearScreenCode:
 		;
+		jsr 	ClearAllWrapFlags			; clear wrap tracking flags
 		lda 	#2 							; select text page
 		sta 	1
 		lda		#32 						; fill with space
@@ -97,6 +98,8 @@ EXTHomeCursor:
 ;                   - Updates hardware cursor registers $D014-$D017.
 ;;
 EXTSetHardwareCursor:
+        lda 	EXTSuppressCursor 			; check if cursor updates suppressed
+        bne 	_EXTSHCExit 				; if non-zero, skip update
         stz 	1 							; I/O Page zero
         lda 	EXTColumn
         sta 	$D014 						; set cursor position
@@ -104,6 +107,7 @@ EXTSetHardwareCursor:
         lda 	EXTRow
         sta 	$D016
         stz 	$D017
+_EXTSHCExit:
         rts
 
 

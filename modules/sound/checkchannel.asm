@@ -99,16 +99,14 @@ SNDUpdateNote:
 		;
 		pla
 		ora 	#$90 						; set to write minimum attentuation.
-		jsr 	SNDWritePorts
-		rts
+		jmp 	SNDWritePorts
 		;
 		;		Turn off
 		;
 _SNDUNIsSilent:
 		lda 	SNDChannelBits 				; channel bits
 		ora 	#$9F 						; maximum attenuation
-		jsr 	SNDWritePorts 				; write to the ports
-		rts
+		jmp 	SNDWritePorts 				; write to the ports
 
 ; ************************************************************************************************
 ;

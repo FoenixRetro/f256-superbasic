@@ -31,8 +31,7 @@ SNDSilenceChannel:
 		asl 	a
 		asl 	a
 		ora 	#$9F 						; write register attenuation $F
-		jsr 	SNDWritePorts
-		rts
+		jmp 	SNDWritePorts
 
 ; ************************************************************************************************
 ;

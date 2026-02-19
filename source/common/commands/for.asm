@@ -261,12 +261,10 @@ _NCNoOverflow:
 		asl 	a 							; is bit 7 set.
 		bcc 	_NCLoopBack 				; if no , >= so loop back
 		;
-		jsr 	StackClose 					; exit the loop
-		rts
+		jmp 	StackClose 					; exit the loop
 
 _NCLoopBack:
-		jsr 	STKLoadCodePosition 		; loop back
-		rts
+		jmp 	STKLoadCodePosition 		; loop back
 
 		.send code
 

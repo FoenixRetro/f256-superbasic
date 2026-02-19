@@ -163,8 +163,7 @@ _GXAXExit:
 
 GXIncrementY:
 		inc 	gxY0
-		jsr 	GXMovePositionDown
-		rts
+		jmp 	GXMovePositionDown
 
 
 ; ************************************************************************************************
