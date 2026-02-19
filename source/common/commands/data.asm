@@ -21,8 +21,7 @@
 Command_Data:	;; [data]
 		lda 	#KWD_COLON 					; advance to colon/EOL, e.g. ignore anything till then.
 		ldx 	#KWC_EOL 	
-		jsr 	ScanForward
-		rts
+		jmp 	ScanForward
 
 		.send code
 		

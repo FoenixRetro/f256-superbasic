@@ -25,11 +25,9 @@ FracUnary: ;; [frac(]
 		lda 	NSStatus,x
 		and 	#NSTFloat 					; check it is a float
 		beq 	_IUZero
-		jsr 	FloatFractionalPart 		; if so, get the fractional part.
-		rts
+		jmp 	FloatFractionalPart 		; if so, get the fractional part.
 _IUZero:		
-		jsr 	NSMSetZero
-		rts
+		jmp 	NSMSetZero
 
 		.send code
 

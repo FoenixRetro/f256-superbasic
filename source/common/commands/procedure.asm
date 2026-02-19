@@ -105,8 +105,7 @@ Command_ENDPROC:	;; [endproc]
 		ldx 	#ERRID_PROC
 		jsr 	StackCheckFrame
 		jsr 	STKLoadCodePosition 		; restore code position
-		jsr 	StackClose
-		rts
+		jmp 	StackClose
 
 		.send code
 
