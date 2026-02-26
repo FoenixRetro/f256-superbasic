@@ -47,8 +47,7 @@ ScreenAtImpl:
 		jsr 	EXTScreenAt					; get screen character at (row, column)
 		ply									; restore `Y`
 
-		jsr 	NSMSetByte					; set return type to byte
-		rts
+		jmp 	NSMSetByte					; set return type to byte
 
 _range_error:
 		jmp 	RangeError 					; branch to range error handler

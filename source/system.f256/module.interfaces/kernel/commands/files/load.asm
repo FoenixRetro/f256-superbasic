@@ -68,8 +68,7 @@ _CLExit:
 CLComplete:
 		lda 	#_CLCMsg & $FF
 		ldx 	#_CLCMsg >> 8
-		jsr 	PrintStringXA
-		rts
+		jmp 	PrintStringXA
 
 _CLCMsg:
 		.text 	"Complete.",13,0

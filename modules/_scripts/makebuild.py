@@ -19,13 +19,17 @@ from typing import TextIO
 export_re = re.compile(r"^\s*Export_(\w+)\s*:\s*(;.*)?$")
 
 
-def main(*, module_name: str, build_dir: Path) -> None:
+def main(*, module_name: str, build_dir: Path, page: int = 1) -> None:
     """Generate a single assembly build file for the specified module."""
     if not build_dir.exists():
         build_dir.mkdir(parents=True, exist_ok=True)
 
     sources = collect_sources(module_name)
-    output_path = build_dir / (module_name + ".module.asm")
+
+    if page == 2:
+        output_path = build_dir / (module_name + "_p2.module.asm")
+    else:
+        output_path = build_dir / (module_name + ".module.asm")
 
     with open(output_path, "w", encoding="utf-8") as out:
         # Write the output assembly file header
@@ -36,14 +40,14 @@ def main(*, module_name: str, build_dir: Path) -> None:
         for src in sources:
             # Scan each source file line-by-line, accumulating its exports
             # and writing its contents to the output.
-            file_exports = process_source(src, out)
+            file_exports = process_source(src, out, page=page)
             module_exports.extend(file_exports)
 
         # Dump the collected exports to a file
-        dump_exports(build_dir, module_name, module_exports)
+        dump_exports(build_dir, module_name, module_exports, page=page)
 
 
-def process_source(path: Path, out: TextIO) -> list[str]:
+def process_source(path: Path, out: TextIO, *, page: int = 1) -> list[str]:
     """Process a single source file, extracting exports and writing to output."""
     exports: list[str] = []
 
@@ -52,17 +56,29 @@ def process_source(path: Path, out: TextIO) -> list[str]:
             if m := export_re.match(line):
                 exports.append(m.group(1))
 
+            if page == 2:
+                normalized = " ".join(line.split())
+                if normalized == ".section code":
+                    out.write("\t\t.section page2\n")
+                    out.write("\t\t.logical * + $6000\n")
+                    continue
+                elif normalized == ".send code":
+                    out.write("\t\t.here\n")
+                    out.write("\t\t.send page2\n")
+                    continue
+
             out.write(f"{line.rstrip()}\n")
 
     return exports
 
 
-def dump_exports(build_dir: Path, module_name: str, exports: list[str]) -> None:
+def dump_exports(build_dir: Path, module_name: str, exports: list[str], *, page: int = 1) -> None:
     """Save module exports to the corresponding `.exports` file."""
     if not exports:
         return
 
-    with open(build_dir / (module_name + ".exports"), "w", encoding="utf-8") as out:
+    suffix = "_p2" if page == 2 else ""
+    with open(build_dir / (module_name + suffix + ".exports"), "w", encoding="utf-8") as out:
         for export in exports:
             out.write(f"{export}\n")
 
@@ -89,14 +105,16 @@ def collect_sources(module_name: str) -> list[Path]:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print(
-            "Usage: python3 makebuild.py <module_name> [<build_directory>]",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Build module assembly file")
+    parser.add_argument("module_name", help="Name of the module to build")
+    parser.add_argument("build_dir", nargs="?", default=".build", help="Build output directory")
+    parser.add_argument("--page", type=int, default=1, choices=[1, 2], help="Module page (1 or 2)")
+    args = parser.parse_args()
 
     main(
-        module_name=sys.argv[1],
-        build_dir=Path(sys.argv[2] if len(sys.argv) > 2 else ".build"),
+        module_name=args.module_name,
+        build_dir=Path(args.build_dir),
+        page=args.page,
     )

@@ -39,8 +39,7 @@ UnaryHit: ;; [hit(]
 		inc 	a 							; so 255 (fail) -> 0, otherwise 1,2,3,4 pixels etc.
 		ply 								; restore XY
 		plx
-		jsr 	NSMSetByte 					; return the hit result
-		rts
+		jmp 	NSMSetByte 					; return the hit result
 
 		.send code
 

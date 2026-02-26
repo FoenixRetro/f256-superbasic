@@ -182,8 +182,7 @@ MCPosition:
 		.cget 								; is it AT x,y
 		cmp 	#KWD_AT
 		beq 	_MCPAt
-		jsr 	EvaluateInteger		
-		rts
+		jmp 	EvaluateInteger
 _MCPAt:
 		iny
 		jsr 	Evaluate8BitInteger 		; X position		
@@ -224,8 +223,7 @@ _MCPNoCarry:
 		jsr 	NSMShiftRight
 		jsr 	NSMShiftRight
 		ldx 	#0
-		jsr 	AddTopTwoStack
-		rts
+		jmp 	AddTopTwoStack
 		.send code
 
 		.section storage

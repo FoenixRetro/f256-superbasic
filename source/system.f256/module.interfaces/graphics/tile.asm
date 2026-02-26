@@ -133,8 +133,7 @@ TileRead: ;; [tile(]
 		ply 								; restore code and stack positions
 		plx
 		jsr 	NSMSetByte 					; set the result.
-		jsr 	CheckRightBracket 			; check for )
-		rts
+		jmp 	CheckRightBracket 			; check for ) and return
 
 		.send code
 

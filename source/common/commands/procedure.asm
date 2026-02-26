@@ -88,8 +88,7 @@ _ParamExtract:
 		bra 	_ParamExtract
 
 _ParamExit:				
-		jsr 	CheckRightBracket 			; check )
-		rts 								; and continue from here
+		jmp 	CheckRightBracket 			; check ) and return
 
 _TooManyParam:
 		error	.error_parameters

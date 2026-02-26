@@ -25,7 +25,7 @@ ASFLAGS += -D HARDWARE=$(HARDWARE) -D HARDWARE_GEN=$(HARDWARE_GEN) \
 			'-D TILEIMAGES_ADDRESS=$(DOLLAR)$(LTILEIMAGES)' \
 			-L $(BUILDDIR)debug$(S)basic.lst -l $(BUILDDIR)debug$(S)basic.lbl
 
-MODULES = +hardware +graphics +tokeniser +sound +kernel
+MODULES = +hardware +tokeniser +kernel +graphics:2 +sound:2
 BUILD_OUT = $(BUILDDIR)basic.rom
 SCRIPTDIR = scripts$(S)
 

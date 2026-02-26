@@ -37,7 +37,6 @@ _BPLoop:
 		ldx 	#$FF
 
 		jsr 	BLReadByte 					; read a byte
-		cmp 	#0
 		beq 	_BPExit 					; if 0 exit
 		bmi 	_BPExit 					; if -ve exit
 _BPCopy:

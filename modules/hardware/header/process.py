@@ -27,7 +27,7 @@ def main(*, build_dir: Path, assets_dir: Path) -> None:
 
     with open(output_path, "w", encoding="utf-8") as out:
         out.write(";\n;\tAutomatically generated.\n;\n")
-        out.write("\t.section code\n\n")
+        out.write("\t.section boot\n\n")
 
         out.write(f"Header_RLE = {rle_marker}\n\n")
         out.write(f"Header_info_offset = {header_offset}\n\n")
@@ -92,7 +92,7 @@ def main(*, build_dir: Path, assets_dir: Path) -> None:
         out.write("Header_Palette:\n")
         process_palette_file(assets_dir / "palette.hex", out)
 
-        out.write("\t.send code\n\n")
+        out.write("\t.send boot\n\n")
 
 
 def rle_compress(b: list[int], *, marker: int) -> list[int]:

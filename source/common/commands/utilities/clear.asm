@@ -53,7 +53,7 @@ _ClearNotProcedure:
 _ClearZeroEnd:
 		;
 		;		Reset the low memory allocation pointer, which is the byte after
-		;		the identifiers. 
+		;		the identifiers.
 		;
 		clc
 		lda 	zTemp0
@@ -62,6 +62,10 @@ _ClearZeroEnd:
 		lda 	zTemp0+1
 		adc 	#0
 		sta 	lowMemPtr+1
+		;
+		;		Reset the array memory pointer to start of slots 2-3.
+		;
+		.set16 	arrayMemPtr,ArrayStart
 		;
 		;		Reset the BASIC Stack pointer
 		;

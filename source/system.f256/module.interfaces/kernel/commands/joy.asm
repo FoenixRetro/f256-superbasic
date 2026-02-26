@@ -39,14 +39,12 @@ _JMNoShift:
 		bcs 	JMIsLeft
 		lsr 	a 							; if bit 1 set then right/down e.g. +1
 		bcs 	JMIsRight
-		jsr 	NSMSetZero 					; zero result
-		rts
+		jmp 	NSMSetZero 					; zero result
 JMIsLeft:
 		jmp 	ReturnTrue
 JMIsRight:
 		lda 	#1
-		jsr 	NSMSetByte
-		rts				
+		jmp 	NSMSetByte
 
 UnaryJoyB: ;; [joyb(]
 		plx 								; get pos
@@ -55,8 +53,7 @@ UnaryJoyB: ;; [joyb(]
 		jsr 	KNLReadController 			; read the controller.
 		and 	#$10
 		bne 	JMIsLeft
-		jsr 	NSMSetZero
-		rts				
+		jmp 	NSMSetZero
 
 		.send code
 

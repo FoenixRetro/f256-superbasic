@@ -154,8 +154,7 @@ _SIFindLength:
 		;
 _SSIExit:
 		plx
-		jsr 	CheckRightBracket 			; check closing bracket
-		rts 								; exit
+		jmp 	CheckRightBracket 			; check closing bracket and return
 		.send 	code
 		
 ; ************************************************************************************************
