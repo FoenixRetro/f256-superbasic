@@ -21,10 +21,8 @@ GotoCommand: ;; [goto]
 		ldx 	#0 							; GOTO where
 		jsr 	Evaluate16BitInteger
 GotoStackX:
-		lda  	NSMantissa1,x 				; put line # in XA. I'll keep this even though
-		pha 								; it is slightly inefficient, just in cases.
-		lda 	NSMantissa0,x
-		plx
+		ldx 	NSMantissa1 				; put line # in XA
+		lda 	NSMantissa0
 		jsr 	MemorySearch 				; transfer to line number AX.
 		bcc 	_GotoError 					; not found, off end.
 		bne 	_GotoError 					; not found exactly

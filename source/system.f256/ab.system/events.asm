@@ -275,7 +275,6 @@ KNLGetKeyPressed:
 		
 KNLGetSingleCharacter:
 		jsr 	KNLGetKeyPressed
-		cmp 	#0
 		beq 	KNLGetSingleCharacter
 		rts
 

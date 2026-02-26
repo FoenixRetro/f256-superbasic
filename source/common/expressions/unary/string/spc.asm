@@ -25,10 +25,9 @@ SpcUnary: ;; [spc(]
 
 		pha 								; save count
 		jsr 	StringTempAllocate
-		ply 								; to do count in Y
+		ply 								; to do count in Y (sets Z if 0)
+		beq 	_SpcExit
 _SpcLoop:
-		cpy 	#0 							; copy Y spaces in.
-		beq 	_SpcExit		
 		lda 	#32
 		jsr 	StringTempWrite
 		dey

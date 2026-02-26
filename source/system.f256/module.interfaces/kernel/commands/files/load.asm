@@ -77,8 +77,7 @@ CLComplete:
 		stz 	EXTSuppressCursor 			; resume cursor tracking
 		lda 	#_CLCMsg & $FF
 		ldx 	#_CLCMsg >> 8
-		jsr 	PrintStringXA
-		rts
+		jmp 	PrintStringXA
 
 _CLCMsg:
 		.text 	13,"Complete.",13,0

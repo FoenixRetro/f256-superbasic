@@ -20,8 +20,8 @@ cget 	.macro 								; get character
 		lda 	(codePtr),y
 		.endm 
 
-cget0 	.macro 								; get 1st character e.g. offset to next line
-		lda 	(codePtr)
+cget0 	.macro 								; get offset; auto-advances past page boundaries
+		jsr 	DoCheckEnd
 		.endm
 
 cset 	.macro 								; update character
@@ -43,6 +43,7 @@ ccmp 	.macro 								; compare against
 ; ************************************************************************************************
 
 cresync .macro
+		jsr 	DoResync
 		.endm
 
 ; ************************************************************************************************
@@ -52,13 +53,7 @@ cresync .macro
 ; ************************************************************************************************
 
 cnextline .macro
-		clc
-		lda 	(codePtr)					; get offset and add
-		adc 	codePtr
-		sta 	codePtr
-		bcc 	_CREExit
-		inc 	codePtr+1 					; carry
-_CREExit:
+		jsr 	DoNextLine
 		.endm
 
 ; ************************************************************************************************
@@ -97,6 +92,7 @@ csetcodepointer 	.macro
 ; ************************************************************************************************
 
 cresetcodepointer 	.macro
+		stz 	codePtr+2 					; reset to logical page 0
 		.csetcodepointer BasicStart
 		.endm
 

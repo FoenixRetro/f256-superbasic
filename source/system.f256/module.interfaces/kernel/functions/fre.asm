@@ -1,40 +1,30 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		assemble.asm
-;		Purpose:	Assemble command
-;		Created:	4th October 2022
-;		Reviewed: 	1st December 2022
+;		Name:		fre.asm
+;		Purpose:	Free program memory (unary handler, calls module)
+;		Created:	27th February 2026
 ;		Author:		Paul Robson (paul@robsons.org.uk)
 ;
 ; ************************************************************************************************
 ; ************************************************************************************************
 
-		.section code
+		.section	code
 
-AssembleCommand: ;; [assemble]
-		ldx 	#0
-		jsr 	Evaluate16BitInteger 		; start address
-		lda 	NSMantissa0
-		sta 	AssemblerAddress
-		lda 	NSMantissa1
-		sta 	AssemblerAddress+1
-		;
-		jsr 	CheckComma
-		jsr 	Evaluate8BitInteger 		; options 0-3
-		lda 	NSMantissa0
-		sta 	AssemblerControl
+; ************************************************************************************************
+;
+;		FRE() - returns total free program memory in bytes.
+;		Calculation is done in the hardware module (Export_EXTFreMemory).
+;
+; ************************************************************************************************
+
+FreUnary: ;; [fre(]
+		plx
+		jsr 	EvaluateInteger 		; evaluate parameter (result on math stack)
+		jsr 	CheckRightBracket
+		phy 							; save token buffer position (Y)
+		jsr 	EXTFreMemory 			; module reads param from math stack, dispatches
+		ply 							; restore token buffer position
 		rts
-		
-		.send code
 
-; ************************************************************************************************
-;
-;									Changes and Updates
-;
-; ************************************************************************************************
-;
-;		Date			Notes
-;		==== 			=====
-;
-; ************************************************************************************************
+		.send	code

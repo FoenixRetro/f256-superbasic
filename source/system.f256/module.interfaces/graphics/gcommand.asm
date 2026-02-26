@@ -77,8 +77,7 @@ ImageRunDraw:
 		tay
 		lda 	#GCMD_DrawSprite 			; image drawing
 		ldx 	NSMantissa0
-		jsr 	GXGraphicDraw		
-		rts
+		jmp 	GXGraphicDraw
 
 ; ************************************************************************************************
 ;
@@ -367,16 +366,14 @@ GCGetCoordinatePair:
 		jsr 	Evaluate16BitInteger
 		jsr 	CheckComma
 		inx
-		jsr 	Evaluate16BitInteger
-		rts
+		jmp 	Evaluate16BitInteger
 
 GCSignedCoordinatePair:
 		ldx 	#1
 		jsr 	Evaluate16BitIntegerSigned
 		jsr 	CheckComma
 		inx
-		jsr 	Evaluate16BitIntegerSigned
-		rts
+		jmp 	Evaluate16BitIntegerSigned
 
 _GCCPRange:
 		jmp 	RangeError		

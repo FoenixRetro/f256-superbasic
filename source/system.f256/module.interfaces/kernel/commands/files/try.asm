@@ -59,8 +59,7 @@ _TryExit:
 		ldx	 	#1 							; address in 0, data in 1
 		jsr 	NSMSetByte
 		dex
-		jsr 	AssignVariable 				; do the assign and exit
-		rts
+		jmp 	AssignVariable 				; do the assign and exit
 
 		.send code
 

@@ -106,7 +106,9 @@ decimalCount:								; decimal digit count
 		.fill 	1
 
 lowMemPtr: 									; memory allocation after program.
-		.fill 	2	
+		.fill 	2
+arrayMemPtr: 								; array/alloc storage pointer (slots 2-3, $4000-$7FFF)
+		.fill 	2
 stringMemory: 								; allocate concrete strings from here
 		.fill 	2			
 stringInitialised: 							; string 

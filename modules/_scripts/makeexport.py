@@ -18,15 +18,26 @@ def main(*, build_dir: Path) -> None:
 
     print(f"PagingEnabled = {1 if paging else 0}")
 
+    # Map module page number to MMU slot increments from slot 5 default (N+2):
+    #   page 1 (sb04 = N+3): 1 increment past default
+    #   page 2 (sb05 = N+4): 2 increments past default
+    page_to_incs = {1: 1, 2: 2}
+
     for module in exports:
-        print(f"\t.if {module}Integrated == 1")
-        for routine in exports[module]:
+        page = exports[module]["page"]
+        routines = exports[module]["routines"]
+        module_name = exports[module]["name"]
+        incs = page_to_incs[page]
+        print(f"\t.if {module_name}Integrated == 1")
+        for routine in routines:
             print(f"{routine}:")
             if paging:
-                print("\tinc 8+5")
+                for _ in range(incs):
+                    print("\tinc 8+5")
                 print(f"\tjsr\tExport_{routine}")
                 print("\tphp")
-                print("\tdec 8+5")
+                for _ in range(incs):
+                    print("\tdec 8+5")
                 print("\tplp")
                 print("\trts")
             else:
@@ -35,9 +46,13 @@ def main(*, build_dir: Path) -> None:
         print("\t.endif")
 
 
-def read_exports(build_dir: Path) -> dict[str, list[str]]:
-    """Read all `.exports` files from the build directory."""
-    all_exports: dict[str, list[str]] = {}
+def read_exports(build_dir: Path) -> dict[str, dict]:
+    """Read all `.exports` files from the build directory.
+
+    Files named `<module>_p2.exports` are treated as page 2 exports
+    (requiring double inc/dec 8+5). All others are page 1.
+    """
+    all_exports: dict[str, dict] = {}
 
     if not build_dir.exists():
         return all_exports
@@ -45,9 +60,19 @@ def read_exports(build_dir: Path) -> dict[str, list[str]]:
     # Find all .exports files in the build directory
     for file_path in build_dir.glob("*.exports"):
         if module_exports := read_module_exports(file_path):
-            module_name = file_path.stem  # filename without extension
+            stem = file_path.stem  # filename without extension
+            if stem.endswith("_p2"):
+                module_name = stem[:-3]  # strip _p2 suffix
+                page = 2
+            else:
+                module_name = stem
+                page = 1
             module_exports.sort()
-            all_exports[module_name] = module_exports
+            all_exports[stem] = {
+                "name": module_name,
+                "page": page,
+                "routines": module_exports,
+            }
 
     return all_exports
 
