@@ -12,17 +12,20 @@
 
 ; ************************************************************************************************
 ;
-;									Kernel Header
+;								Kernel Header (boot section, slot 3)
+;
+;		The F256Header lives in the boot section ($6000-$7FFF) along with headerdata.
+;		Slot 3 is remapped to RAM after boot, freeing $6000-$7FFF for arrays/temp.
 ;
 ; ************************************************************************************************
 
-		.section code
+		.section boot
 
 F256Header:
 		.text	$f2,$56         			; Signature
-		.byte   4               			; 4 blocks
-		.byte   4               			; mount at $8000
-		.word   Boot 	      				; Start here
+		.byte   5               			; 5 blocks
+		.byte   3               			; mount at $6000
+		.word   Boot 	      				; Start here (in code section)
 		.byte   1 			               	; version
 		.byte   0               			; reserved
 		.byte   0               			; reserved
@@ -31,14 +34,15 @@ F256Header:
 		.text   0							; arguments
 		.text	"The SuperBASIC environment.",0	; description
 
+		.send boot
 
 ; ************************************************************************************************
 ;
-;									 Main Program
+;									 Main Program (code section, slots 4-5)
 ;
 ; ************************************************************************************************
 
-		* = F256Header + 64
+		.section code
 
 CPU_CORE_1x = 0
 CPU_CORE_2x = 1
@@ -65,11 +69,19 @@ Boot:	jmp 	Start
 Start:	ldx 	#$FF 						; stack reset
 		txs
 
-		jsr 	EXTInitialise 				; hardware initialise
+		.if 	soundIntegrated==1 			; silence PSG immediately on boot
+		lda 	#$0F 						; (SN76489 may start in noisy state)
+		jsr 	SNDCommand
+		.endif
+
+		jsr 	EXTInitialise 				; hardware initialise (reads headerdata from slot 3)
 
 		lda 	0  							; turn on editing of MMU LUT
 		ora 	#$80
 		sta 	0
+
+		lda 	#3 							; remap slot 3 to RAM page 3
+		sta 	$0008+3 					; (frees $6000-$7FFF for arrays/temp buffers)
 
 		lda 	$2002 						; if $2002..5 is BT65 then jump to $2000
 		cmp 	#"B"
@@ -97,11 +109,6 @@ _NoMachineCode:
 		tax
 		tay
 		jsr 	GXGraphicDraw
-		.endif
-
-		.if 	soundIntegrated==1 			; if installed
-		lda 	#$0F 						; initialise sound system
-		jsr 	SNDCommand
 		.endif
 
 		stz 	$0001

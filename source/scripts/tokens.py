@@ -42,7 +42,7 @@ class TokenSource(object):
 				joyb( 		min(		max( 		hit( 		playing(	gettime$(
 				peek( 		peekw( 		peekl(		peekd(		getdate$(	inkey$(
 				get$( 		inkey(		get( 		itemcount(	itemget$( 	keydown(
-				tile(		screen(	    screen$(
+				tile(		screen(	    screen$(	fre(~
 
 			{0}							// Set 0
 				data 		dim 		let 		rem  		else 		to
@@ -132,11 +132,12 @@ class CtrlToken(Token):
 
 
 class UnaryToken(Token):
-    def __init__(self, name):
+    def __init__(self, name, sort_last=False):
         Token.__init__(self, name, 0)
+        self._sort_last = sort_last
 
     def sortKey(self):
-        return "1" + self.name
+        return ("1~" if self._sort_last else "1") + self.name
 
 
 class StructureToken(Token):
@@ -189,7 +190,10 @@ class TokenCollection(object):
                 if cClass == "+" or cClass == "-":  # Adjuster / structure
                     newToken = StructureToken(w, 1 if cClass == "+" else -1)
                 elif cClass == "U":  # Unary function
-                    newToken = UnaryToken(w)
+                    sort_last = w.endswith("~")
+                    if sort_last:
+                        w = w[:-1]
+                    newToken = UnaryToken(w, sort_last=sort_last)
                 else:  # The rest
                     newToken = Token(w, int(cClass))
                 self.addToken(w, newToken)

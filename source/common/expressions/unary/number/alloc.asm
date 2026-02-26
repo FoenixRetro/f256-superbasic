@@ -46,47 +46,60 @@ AllocUnary: ;; [alloc(]
 
 ; ************************************************************************************************
 ;
-;				Allocate XA bytes of memory - this is from the storage after the identifiers
+;		Allocate XA bytes of memory from array space (slots 2-3, $4000-$7FFF)
 ;
 ; ************************************************************************************************
 
 AllocateXABytes:
 		phy
-		ldy 	lowMemPtr 					; push current address on stack and to zTemp0
+		ldy 	arrayMemPtr 				; push current address on stack and to zTemp0
 		sty 	zTemp0
 		phy
-		ldy 	lowMemPtr+1
+		ldy 	arrayMemPtr+1
 		sty 	zTemp0+1
 		phy
 
-		clc 								; add to low memory pointer
-		adc 	lowMemPtr
-		sta 	lowMemPtr
+		clc 								; add to array memory pointer
+		adc 	arrayMemPtr
+		sta 	arrayMemPtr
 		txa
-		adc 	lowMemPtr+1
-		sta 	lowMemPtr+1
-		bcs 	CISSMemory
+		adc 	arrayMemPtr+1
+		sta 	arrayMemPtr+1
 
-		jsr 	CheckIdentifierStringSpace 	; check identifier/string space 
+		jsr 	CheckArraySpace 			; check array space not exhausted
 
 _ClearMemory:
-		lda 	lowMemPtr 					; cleared all memory allocated
+		lda 	arrayMemPtr 				; cleared all memory allocated
 		cmp 	zTemp0
 		bne 	_CMClearNext
-		lda 	lowMemPtr+1
+		lda 	arrayMemPtr+1
 		cmp 	zTemp0+1
 		beq 	_CMExit
-_CMClearNext:		
+_CMClearNext:
 		lda 	#0 							; clear byte, advance to next.
 		sta 	(zTemp0)
 		inc 	zTemp0
 		bne 	_ClearMemory
 		inc		zTemp0+1
 		bra 	_ClearMemory
-_CMExit:		
+_CMExit:
 		plx
 		pla
 		ply
+		rts
+
+; ************************************************************************************************
+;
+;				Check there is sufficient space in array area ($4000-$7FFF)
+;
+; ************************************************************************************************
+
+CheckArraySpace:
+		pha
+		lda 	arrayMemPtr+1 				; check high byte against ArrayEnd
+		cmp 	#(ArrayEnd >> 8) 			; >= $80 means overflow
+		bcs 	CISSMemory
+		pla
 		rts
 
 ; ************************************************************************************************

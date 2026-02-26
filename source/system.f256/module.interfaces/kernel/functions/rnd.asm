@@ -33,8 +33,7 @@ Unary_Random: ;; [random(]
 _URNoModulus:		
 		stz 	NSStatus,x 					; make it an integer positive
 		stz 	NSExponent,x
-		jsr 	CheckRightBracket
-		rts
+		jmp 	CheckRightBracket
 
 ; ************************************************************************************************
 ;

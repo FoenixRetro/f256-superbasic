@@ -133,6 +133,7 @@
 	.include	"./system.f256/module.interfaces/kernel/commands/mouse.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/setdatetime.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/timer.asm"
+	.include	"./system.f256/module.interfaces/kernel/functions/fre.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/getdatetime.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/getinkey.asm"
 	.include	"./system.f256/module.interfaces/kernel/functions/keydown.asm"
@@ -157,14 +158,14 @@ StartModuleCode:
 	.endif
 .send code
 	.include	"../modules/.build/hardware.module.asm"
-	.include	"../modules/.build/graphics.module.asm"
 	.include	"../modules/.build/tokeniser.module.asm"
-	.include	"../modules/.build/sound.module.asm"
 	.include	"../modules/.build/kernel.module.asm"
-.section code
-	.if PagingEnabled==1
-	* = $A000
-	.offs $4000
-	.endif
-.send code
+
+; --- Header data in boot section ($6000-$7FFF) ---
 	.include	"../modules/hardware/header/.build/headerdata.dat"
+
+; --- Module page 2 ---
+; page2 section at $4000 (below boot section at $6000)
+; .logical * + $6000 in each block maps labels to $A000+ runtime addresses
+	.include	"../modules/.build/graphics_p2.module.asm"
+	.include	"../modules/.build/sound_p2.module.asm"

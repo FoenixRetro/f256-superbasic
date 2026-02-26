@@ -18,13 +18,21 @@ def sortKey(k):
 includeFiles = []  # include files in order
 sourceFiles = []  # source files in order
 moduleFiles = []
+page2ModuleFiles = []
 
 modulesIntegrated = {}
 
 for s in sys.argv[1:]:
     if s[0] == "+":
-        moduleFiles.append("../modules/.build/{0}.module.asm".format(s[1:]))
-        modulesIntegrated[s[1:]] = True
+        name = s[1:]
+        if ":" in name:
+            name, page_str = name.split(":", 1)
+            if page_str == "2":
+                page2ModuleFiles.append("../modules/.build/{0}_p2.module.asm".format(name))
+                modulesIntegrated[name] = True
+                continue
+        moduleFiles.append("../modules/.build/{0}.module.asm".format(name))
+        modulesIntegrated[name] = True
     else:
         moduleFiles.append("!{0}Integrated = 0".format(s[1:]))
 
@@ -77,13 +85,14 @@ for f in moduleFiles:
     else:
         h.write('\t.include\t"{0}"\n'.format(f.replace(os.sep, "/")))
 
-h.write(".section code\n")
-h.write("\t.if PagingEnabled==1\n")
-h.write("\t* = $A000\n")
-h.write("\t.offs $4000\n")
-h.write("\t.endif\n")
-h.write(".send code\n")
-
+h.write('\n; --- Header data in boot section ($6000-$7FFF) ---\n')
 h.write('\t.include\t"../modules/hardware/header/.build/headerdata.dat"\n')
+
+if page2ModuleFiles:
+    h.write("\n; --- Module page 2 ---\n")
+    h.write("; page2 section at $4000 (below boot section at $6000)\n")
+    h.write("; .logical * + $6000 in each block maps labels to $A000+ runtime addresses\n")
+    for f in page2ModuleFiles:
+        h.write('\t.include\t"{0}"\n'.format(f.replace(os.sep, "/")))
 
 h.close()

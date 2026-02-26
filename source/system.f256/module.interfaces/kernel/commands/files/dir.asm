@@ -94,8 +94,7 @@ _CDEVVolume:
 _CDEVEOF:
 		lda     KNLEvent.directory.stream
 		sta     kernel.args.directory.close.stream
-		jsr     kernel.Directory.Close
-		rts
+		jmp     kernel.Directory.Close
 
 
 _CDEVFile:

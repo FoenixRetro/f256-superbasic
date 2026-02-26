@@ -20,8 +20,7 @@
 
 Command_Drive:	;; [drive]
 		jsr 	Evaluate8BitInteger
-		jsr 	KNLSetDrive
-		rts
+		jmp 	KNLSetDrive
 
 		.send code
 		

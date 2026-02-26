@@ -20,18 +20,32 @@
 
 MemoryInsertLine:
 		php
+_MDLIRetry:
 		jsr 	IMemoryFindEnd 				; find end to zTemp2.
 
 		lda 	zTemp2+1 					; is there space for the new line ?
-		inc 	a
-		cmp 	#(BasicEnd >> 8)-1
-		bcs 	_MDLIError 					; no, fail.
+		cmp 	#(BasicEnd >> 8)-2
+		bcc 	_MDLIHasRoom 				; yes, continue normally.
 		;
+		;		Page full — try to allocate a new page (CS=append only)
+		;
+		plp
+		bcs 	_MDLICanAlloc 				; CS = append, can always allocate new page
+		lda 	(codePtr) 					; CC: check if at end of program
+		bne 	_MDLIError 					; non-zero = truly mid-page, cannot split
+_MDLICanAlloc:
+		jsr 	MemoryAllocPage 			; allocate & initialize new page
+		bcs 	_MDLIError 					; out of memory
+		sec 								; re-push CS for append path
+		php
+		bra 	_MDLIRetry 					; retry on the new (empty) page
+		;
+_MDLIHasRoom:
 		plp 								; do at a specific point or the end ?
-		bcc 	_MDLIFound 					; if specific point already set.
+		bcc 	_MDLIFound 					; CC = insert at codePtr position.
 		;
-		lda 	zTemp2 						; if CS on entry append, so put on the
-		sta 	codePtr 					; end.
+		lda 	zTemp2 						; CS = append, so put on the end.
+		sta 	codePtr
 		lda 	zTemp2+1
 		sta 	codePtr+1
 		;
@@ -74,54 +88,7 @@ _MDLICopy:
 _MDLIError:
 		.error_memory
 
-; ************************************************************************************************
-;
-;									Append line at XA
-;
-;			Can just jump to MDLInsertLine. This allows optimisation of the appending
-;
-; ************************************************************************************************
-
-MDLAppendLine:
-		stx 	zTemp0+1 					; save new line at zTemp0
-		sta 	zTemp0
-
-		.set16 	zTemp1,BasicStart 			; check if program empty.
-		lda 	(zTemp1)
-		bne 	_MDLANoInitialise
-		.set16 	AppendPointer,BasicStart 	; reseet the append pointer
-
-_MDLANoInitialise:
-		clc
-		lda 	AppendPointer 				; copy append pointer to zTemp1 adding the offset as you go
-		sta 	zTemp1
-		adc 	(zTemp0)
-		sta 	AppendPointer
-		lda 	AppendPointer+1
-		sta 	zTemp1+1
-		adc 	#0
-		sta 	AppendPointer+1
-		;
-		ldy 	#0
-_MDLACopy:
-		lda 	(zTemp0),y 					; copy new line in
-		sta 	(zTemp1),y
-		iny
-		tya	
-		cmp 	(zTemp0) 					; done whole line
-		bne 	_MDLACopy
-			
-		lda 	#0 							; end of program.
-		sta 	(zTemp1),y
-
-		rts
-
 		.send code
-
-		.section storage
-AppendPointer:
-		.fill 	2
-		.send storage		
 
 ; ************************************************************************************************
 ;

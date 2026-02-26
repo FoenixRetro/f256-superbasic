@@ -52,9 +52,8 @@ ItemGetUnary: 	;; [itemget$(]
 		jsr 	EvaluateString 				; search string
 		jsr 	CheckComma 
 		inx 								; get count
-		jsr 	Evaluate8BitInteger
-		cmp 	#0 							; must be > 0, index starts at 1.
-		beq 	ICGSRange
+		jsr 	Evaluate8BitInteger 		; Z set by lda
+		beq 	ICGSRange 					; must be > 0, index starts at 1.
 		inx 								; get seperator.
 		jsr 	ICGetSeperator
 		dex

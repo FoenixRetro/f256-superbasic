@@ -39,7 +39,7 @@ WarmStart:
 		bne 	_WSNotSlash
 		ldx 	#(lineBuffer+1) >> 8 		; boot rest of line.
 		lda 	#(lineBuffer+1) & $FF
-		jmp 	BootXA
+		jmp 	EXTBootXA
 
 _WSNotSlash:
 		jsr 	TKTokeniseLine 				; tokenise the line

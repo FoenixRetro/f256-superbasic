@@ -1,5 +1,9 @@
 ;;
 ; Display the boot header for the machine.
+;
+; Headerdata is in the boot section ($6000-$7FFF, slot 3), which is
+; auto-mapped by the kernel at startup. No paging needed — data is
+; accessed directly. Slot 3 is remapped to RAM after boot completes.
 ;;
 
 		.section code
@@ -23,33 +27,27 @@ is_jr	.macro
 ;               - Writes to $C000 screen memory and $D800/$D840 palette registers.
 ;;
 EXTShowHeader:
-		lda 	$0008+3
-		pha
-		lda 	$0008+4
-		clc
-		adc 	#3
-		sta 	$0008+3
 		;
 		ldx 	#(Header_jchars & $FF)
-		ldy 	#(Header_jchars >> 8)-$40
+		ldy 	#(Header_jchars >> 8)
 
 		.is_jr
 		beq 	_EXTSHNotK1
 
 		ldx 	#(Header_kchars & $FF)
-		ldy 	#(Header_kchars >> 8)-$40
+		ldy 	#(Header_kchars >> 8)
 _EXTSHNotK1:
 		lda 	#2
 		jsr 	_ESHCopyBlock
 		;
 		ldx 	#(Header_jattrs & $FF)
-		ldy 	#(Header_jattrs >> 8)-$40
+		ldy 	#(Header_jattrs >> 8)
 
 		.is_jr
 		beq 	_EXTSHNotK2
 
 		ldx 	#(Header_kattrs & $FF)
-		ldy 	#(Header_kattrs >> 8)-$40
+		ldy 	#(Header_kattrs >> 8)
 _EXTSHNotK2:
 		lda 	#3
 		jsr 	_ESHCopyBlock
@@ -57,13 +55,11 @@ _EXTSHNotK2:
 		stz 	$0001
 		ldx 	#16*4-1
 _EXTCopyLUT:
-		lda 	Header_Palette-$4000,x
+		lda 	Header_Palette,x
 		sta 	$D800,x
 		sta 	$D840,x
 		dex
 		bpl 	_EXTCopyLUT
-		pla
-		sta 	$0008+3
 
 		ldy 	#Header_jinfo_line
 		.is_jr
