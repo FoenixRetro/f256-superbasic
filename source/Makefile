@@ -9,7 +9,7 @@ endif
 #		Current version
 #
 MAJOR_VERSION = 1
-MINOR_VERSION = 1
+MINOR_VERSION = 2
 VERSION ?= $(MAJOR_VERSION).$(MINOR_VERSION)
 
 # Hardware platform: 0 = F256
