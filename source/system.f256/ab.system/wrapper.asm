@@ -262,8 +262,7 @@ _KWBExit:
 
 KNLCloseFile:
 		sta     kernel.args.file.close.stream
-		jsr     kernel.File.Close
-		rts
+		jmp     kernel.File.Close
 
 ; ************************************************************************************************
 ;

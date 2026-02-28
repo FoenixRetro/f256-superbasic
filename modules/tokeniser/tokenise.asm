@@ -128,8 +128,7 @@ _TKHexConstant: 							; tokenise hex constant #A277
 		;----------------------------------------------------------------------------------------
 
 _TKExit:lda 	#KWC_EOL 					; write end of line byte
-		jsr 	TOKWriteByte		
-		rts	
+		jmp 	TOKWriteByte
 
 		;----------------------------------------------------------------------------------------
 		;
@@ -355,8 +354,7 @@ _TOBlockLoop:
 		bra 	_TOBlockLoop
 _TOBlockExit:
 		lda 	#0 							; add NULL.
-		jsr 	TOKWriteByte
-		rts
+		jmp 	TOKWriteByte
 
 ; ************************************************************************************************
 ;

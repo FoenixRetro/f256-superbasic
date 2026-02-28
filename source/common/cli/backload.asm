@@ -75,8 +75,7 @@ _BPEndLine:
 		;
 _BPExit:
 		stz 	$FFFA
-		jsr 	ClearSystem 				; clear variables etc.
-		rts
+		jmp 	ClearSystem 				; clear variables etc.
 _BLLoad:
 		.text 	"Loading from Memory",13,0
 

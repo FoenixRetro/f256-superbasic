@@ -51,6 +51,7 @@ Export_EXTInitialise:
 		stz 	EXTPendingWrap				;
 		lda 	#1							;
 		sta 	EXTPendingWrapEnabled		;
+		stz 	EXTSuppressCursor			; enable hardware cursor updates
 
 		;
 		; Precompute the screen row offsets

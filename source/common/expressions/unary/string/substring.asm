@@ -107,8 +107,7 @@ _SSMExit:
 
 _SSMNull:
 		lda 	#0
-		jsr 	StringTempAllocate		
-		rts
+		jmp 	StringTempAllocate		
 
 ; ************************************************************************************************
 ;

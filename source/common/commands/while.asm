@@ -46,8 +46,7 @@ _WHExitLoop:
 		pla 								; throw post loop position
 		lda 	#KWD_WEND 					; scan forward past WEND
 		tax
-		jsr 	ScanForward
-		rts
+		jmp 	ScanForward
 
 ; ************************************************************************************************
 ;
@@ -60,8 +59,7 @@ Command_WEND:	;; [wend]
 		ldx 	#ERRID_WHILE 				; this error if not.
 		jsr 	StackCheckFrame
 		jsr 	STKLoadCodePosition 		; loop back to the WHILE keyword.
-		jsr 	StackClose		 			; erase the frame
-		rts
+		jmp 	StackClose		 			; erase the frame
 
 		.send code
 

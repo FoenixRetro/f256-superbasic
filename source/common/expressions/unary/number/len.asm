@@ -34,8 +34,7 @@ _LenExit:
 		tya		 							; return length
 		jsr 	NSMSetByte
 		ply
-		jsr 	CheckRightBracket
-		rts
+		jmp 	CheckRightBracket
 
 		.send code
 

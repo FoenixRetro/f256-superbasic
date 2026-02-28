@@ -38,8 +38,7 @@ GXFontHandler: ;; <5:DrawFont>
 		lda 	#8 							; size 8x8
 		ldx 	#GXGetGraphicDataFont & $FF ; XY = Graphic Data retrieval routine
 		ldy 	#GXGetGraphicDataFont >> 8
-		jsr 	GXDrawGraphicElement
-		rts
+		jmp 	GXDrawGraphicElement
 ;
 ;		Get line X of the graphics into the Pixel Buffer
 ;

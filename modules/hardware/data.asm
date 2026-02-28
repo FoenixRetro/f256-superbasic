@@ -74,6 +74,30 @@ EXTPendingWrap		.fill 	1
 EXTPendingWrapEnabled	.fill 	1
 
 ;;
+; Line-wrap tracking for multi-line BASIC statements
+;;
+lwInListMode		.fill 	1		; Flag: 1 if outputting LIST/scroll nav content
+lwLineStartRow		.fill 	1		; Row where current BASIC line started
+lwLineRowCount		.fill 	1		; Number of display rows current line occupies
+
+;;
+; Flag to suppress hardware cursor updates during background printing
+;;
+EXTSuppressCursor	.fill 	1		; When non-zero, EXTSetHardwareCursor is a no-op
+
+;;
+; Line-wrap tracking bitmap for editing
+; Bit N in byte M = row (M*8+N) wrapped from previous row
+;;
+lwWrapFlags			.fill 	8		; 8 bytes = 64 rows max tracked
+
+;;
+; Temporary storage for insert overflow handling
+;;
+lwOverflowChar		.fill 	1		; character being pushed to next row
+lwOverflowTyped		.fill 	1		; typed character backup
+
+;;
 ; Screen height in characters.
 ;
 ; Stores the number of character rows available on the screen. This value
