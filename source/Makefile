@@ -92,7 +92,7 @@ build: prelim
 #
 prelim:
 	@echo "Building submodules"
-	$(Q)$(MAKE) -B -C ..$(S)modules
+	$(Q)$(MAKE) -B -C ..$(S)modules clean all
 
 	@echo "Generating assembly sources"
 	$(Q)$(PYTHON) $(SCRIPTDIR)errors.py $(LANGUAGE)
