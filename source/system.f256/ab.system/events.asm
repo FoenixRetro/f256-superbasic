@@ -45,18 +45,30 @@ _PENotRelease:
 _PENotRaw:
 		beq 	_PECheckNormal 				; flags=0, normal processing
 		;
-		; 		flags != 0, check for shift+arrow or shift+backspace
+		; 		flags != 0, check for FNX+arrow or shift+backspace
 		;
 		lda 	KNLEvent.key.ascii
 		cmp 	#$10 						; Up arrow
-		beq 	_PEShiftUp
+		beq 	_PEFlagsArrowUD
 		cmp 	#$0E 						; Down arrow
-		beq 	_PEShiftDown
+		beq 	_PEFlagsArrowUD
 		cmp 	#$08 						; Backspace (Shift+DEL = insert line)
 		beq 	_PEShiftBackspace 			; queue it, input.asm handles shift detection
 		cmp 	#$B5 						; INS key (Shift+Backspace)
 		beq 	_PEDoInsertLine
 		bra 	ProcessEvents 				; other modified keys, ignore
+
+_PEFlagsArrowUD:
+		pha
+		jsr 	IsFnxPressed
+		beq 	_PEFlagsNoFnx
+		pla
+		cmp 	#$10
+		beq 	_PEFnxUp
+		bra 	_PEFnxDown
+_PEFlagsNoFnx:
+		pla
+		jmp 	ProcessEvents 				; non-FNX modified arrow, ignore
 
 _PEDoInsertLine:
 		lda 	#$B5 						; queue INS code for input.asm to handle
@@ -65,56 +77,72 @@ _PEDoInsertLine:
 _PEShiftBackspace:
 		jmp 	_PEQueueA
 
-_PEShiftUp:
+_PEFnxUp:
 		jsr 	HandleShiftUp
-		; Schedule repeat for shift+up (CBM/K keyboards only)
+		; Schedule repeat for FNX+up (CBM/K keyboards only)
 		phx
 		ldx 	KNLEvent.key.keyboard
-		bne 	_PEShiftUpDone
-		lda 	#$90 					; special code for shift+up
+		bne 	_PEFnxUpDone
+		lda 	#$90 					; special code for FNX+up
 		jsr 	StartRepeatTimerForKey
-_PEShiftUpDone:
+_PEFnxUpDone:
 		plx
 		jmp 	ProcessEvents
-_PEShiftDown:
+_PEFnxDown:
 		jsr 	HandleShiftDown
-		; Schedule repeat for shift+down (CBM/K keyboards only)
+		; Schedule repeat for FNX+down (CBM/K keyboards only)
 		phx
 		ldx 	KNLEvent.key.keyboard
-		bne 	_PEShiftDownDone
-		lda 	#$8E 					; special code for shift+down
+		bne 	_PEFnxDownDone
+		lda 	#$8E 					; special code for FNX+down
 		jsr 	StartRepeatTimerForKey
-_PEShiftDownDone:
+_PEFnxDownDone:
 		plx
 		jmp 	ProcessEvents
 
 _PECheckNormal:
 		lda 	KNLEvent.key.ascii 			; check for arrow keys
 		cmp 	#$10 						; Up arrow?
-		beq 	_PECheckShiftArrow
+		beq 	_PECheckModArrow
 		cmp 	#$0E 						; Down arrow?
-		beq 	_PECheckShiftArrow
+		beq 	_PECheckModArrow
 		cmp 	#$02 						; Left arrow?
-		beq 	_PECheckShiftArrow
+		beq 	_PECheckModArrow
 		cmp 	#$06 						; Right arrow?
-		beq 	_PECheckShiftArrow
+		beq 	_PECheckModArrow
 		cmp 	#$B5 						; INS key (Shift+Backspace)?
 		beq 	_PEDoInsertLine
 		bra 	_PECheckCtrlC
-_PECheckShiftArrow:
+_PECheckModArrow:
 		pha 								; save arrow key
-		jsr 	IsShiftPressed 				; check if shift held
-		beq 	_PENoShiftArrow 			; Z set = no shift
+		jsr 	IsAltPressed 				; check if Alt held
+		beq 	_PENoAltArrow 				; Z set = no Alt
 		pla 								; restore arrow key
 		cmp 	#$10
-		beq 	_PEShiftUp
+		beq 	_PEAltUp
 		cmp 	#$0E
-		beq 	_PEShiftDown
+		beq 	_PEAltDown
 		; Must be Left ($02) or Right ($06) - do word jump
 		cmp 	#$06 						; C=1 if right, C=0 if left
 		jsr 	EXTWordJump
 		jmp 	ProcessEvents
-_PENoShiftArrow:
+_PEAltUp:
+		lda 	#$01 						; Ctrl+A = beginning of line
+		jmp 	_PEQueueA
+_PEAltDown:
+		lda 	#$05 						; Ctrl+E = end of line
+		jmp 	_PEQueueA
+_PENoAltArrow:
+		; Check FNX for Up/Down scroll
+		jsr 	IsFnxPressed
+		beq 	_PENoModArrow
+		pla 								; restore arrow key
+		cmp 	#$10
+		beq 	_PEFnxUp
+		cmp 	#$0E
+		beq 	_PEFnxDown
+		bra 	_PEScheduleRepeat 			; FNX+Left/Right = plain arrow
+_PENoModArrow:
 		pla 								; restore arrow key, continue to repeat scheduling
 		bra 	_PEScheduleRepeat
 _PECheckCtrlC:
@@ -138,16 +166,16 @@ _PEIsTimer:
                 bcc     _PETimerValid
                 jmp     ProcessEvents
 _PETimerValid:
-                ; Check for shift+arrow repeat codes
-                cmp 	#$90 				; shift+up?
-                beq 	_PERepeatShiftUp
-                cmp 	#$8E 				; shift+down?
-                beq 	_PERepeatShiftDown
+                ; Check for FNX+arrow repeat codes
+                cmp 	#$90 				; FNX+up?
+                beq 	_PERepeatFnxUp
+                cmp 	#$8E 				; FNX+down?
+                beq 	_PERepeatFnxDown
                 bra     _PEQueueA
-_PERepeatShiftUp:
+_PERepeatFnxUp:
                 jsr 	HandleShiftUp
                 jmp 	ProcessEvents
-_PERepeatShiftDown:
+_PERepeatFnxDown:
                 jsr 	HandleShiftDown
                 jmp 	ProcessEvents
 _PEIsRelease:
@@ -171,7 +199,7 @@ _PEIsRelease:
 
                 jmp     ProcessEvents
 _PEIsRaw:
-		lda 	KNLEvent.key.ascii 			; check for shift+arrow in raw mode too
+		lda 	KNLEvent.key.ascii 			; check for FNX+arrow in raw mode too
 		cmp 	#$10 						; Up arrow
 		beq 	_PERawArrow
 		cmp 	#$0E 						; Down arrow
@@ -179,15 +207,15 @@ _PEIsRaw:
 		bra 	_PERawNotArrow
 _PERawArrow:
 		pha 								; save arrow key code
-		jsr 	IsShiftPressed 				; check if shift is held
-		beq 	_PERawNoShift 				; Z set = no shift
+		jsr 	IsFnxPressed 				; check if FNX is held
+		beq 	_PERawNoFnx 				; Z set = no FNX
 		pla 								; restore arrow code
 		cmp 	#$10
-		bne 	_PERawShiftDown
-		jmp 	_PEShiftUp
-_PERawShiftDown:
-		jmp 	_PEShiftDown
-_PERawNoShift:
+		bne 	_PERawFnxDown
+		jmp 	_PEFnxUp
+_PERawFnxDown:
+		jmp 	_PEFnxDown
+_PERawNoFnx:
 		pla 								; restore arrow code, continue to queue
 		bra 	_PEQueueA
 _PERawNotArrow:
@@ -359,28 +387,80 @@ _repeat
 IsShiftPressed:
 		pha
 		phx
+		phy
 		;
-		; Kernel normalizes shift raw codes:
 		; LSHIFT = 0, RSHIFT = 1 (from keys.asm)
 		;
-		; Check left shift (raw code 0)
 		lda 	#0
-		jsr 	KeyboardConvertXA 			; X = index, A = mask
-		and 	KeyStatus,x
-		bne 	_ISPShiftFound
-		; Check right shift (raw code 1)
-		lda 	#1
+		ldy 	#1
+		bra 	CheckModPair
+
+; ************************************************************************************************
+;
+;		Check if either Alt key is currently pressed
+;		Returns: Z clear if Alt pressed, Z set if not pressed
+;		Preserves: X, Y
+;
+; ************************************************************************************************
+
+IsAltPressed:
+		pha
+		phx
+		phy
+		;
+		; LALT = 4, RALT = 5 (from keys.asm)
+		;
+		lda 	#4
+		ldy 	#5
+		bra 	CheckModPair
+
+; ************************************************************************************************
+;
+;		Check if either FNX/Meta key is currently pressed
+;		Returns: Z clear if FNX pressed, Z set if not pressed
+;		Preserves: X, Y
+;
+; ************************************************************************************************
+
+IsFnxPressed:
+		pha
+		phx
+		phy
+		;
+		; LMETA/FNX = 6, RMETA/FNX = 7 (from keys.asm)
+		;
+		lda 	#6
+		ldy 	#7
+		;
+		; Fall through to CheckModPair
+		;
+
+; ************************************************************************************************
+;
+;		Shared: check a pair of modifier keys (raw codes in A and Y)
+;		Called with A=left raw code, Y=right raw code
+;		Returns: Z clear if either pressed, Z set if neither
+;		Preserves: X, Y
+;
+; ************************************************************************************************
+
+CheckModPair:
 		jsr 	KeyboardConvertXA
 		and 	KeyStatus,x
-		bne 	_ISPShiftFound
+		bne 	_CMPFound
+		tya 								; try right-key code
+		jsr 	KeyboardConvertXA
+		and 	KeyStatus,x
+		bne 	_CMPFound
 		;
-		; No shift pressed - return with Z set
+		; Not pressed - return with Z set
+		ply
 		plx
 		pla
 		lda 	#0 							; sets Z flag
 		rts
-_ISPShiftFound:
-		; Shift is pressed - return with Z clear
+_CMPFound:
+		ply
 		plx
 		pla
 		lda 	#1 							; clears Z flag
@@ -414,5 +494,7 @@ KeyboardQueueEntries:
 ;		19/02/26 		Added GetNextEvent for non-dispatching event read,
 ;						IsShiftPressed helper for keyboard status check.
 ;		20/02/26 		Added Shift+Left/Right word jump dispatch as $B6/$B7.
+;		28/02/26 		Remapped to macOS conventions: Alt+arrow=word jump/home/end,
+;						FNX+Up/Down=scroll. Added IsAltPressed, IsFnxPressed helpers.
 ;
 ; ************************************************************************************************
