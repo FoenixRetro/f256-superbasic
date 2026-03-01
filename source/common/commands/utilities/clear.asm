@@ -100,9 +100,10 @@ _ClearZeroEnd:
 		;		Reset bitmap/sprites/tiles pages
 		;			
 		.if graphicsIntegrated==1
-		jsr 	ResetBitmapSpritesTiles
-		.endif
+		jmp 	ResetBitmapSpritesTiles
+		.else
 		rts
+		.endif
 
 		.send code
 

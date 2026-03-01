@@ -156,6 +156,7 @@ KWD_SOUND                            = $dc; $dc SOUND
 KWD_SPRITE                           = $dd; $dd SPRITE
 KWD_TEXT                             = $de; $de TEXT
 KWD_TO                               = $df; $df TO
+KWD_STEP                             = $e0; $e0 STEP
 KWD1_ASSEMBLE                         = $83; $83 ASSEMBLE
 KWD1_ASSERT                           = $84; $84 ASSERT
 KWD1_BITMAP                           = $85; $85 BITMAP

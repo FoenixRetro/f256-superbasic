@@ -99,6 +99,7 @@ KeywordSet0:
 	.text	6,$d7,"SPRITE"         ; $dd SPRITE
 	.text	4,$45,"TEXT"           ; $de TEXT
 	.text	2,$a3,"TO"             ; $df TO
+	.text	4,$3c,"STEP"           ; $e0 STEP
 	.text	$FF
 KeywordSet1:
 	.text	0,$65,""               ; $80 !0:EOF
