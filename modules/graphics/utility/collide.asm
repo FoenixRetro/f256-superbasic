@@ -31,9 +31,13 @@ GXCollide: 	;; <9:SpriteCollide>
 		ora 	gxSpriteLow,x
 		bmi 	_GXOkayFail 				; if either hidden, then they cannot collide.
 		;
-		clc 								; need to calculate sum of sizes.
-		lda 	gxSpriteHigh,y
-		adc 	gxSpriteHigh,x 				; at this point, CS, Bit 6 and 7 contain that sum.
+		lda 	gxSpriteHigh,y 				; need to calculate sum of sizes.
+		and 	#$C0 						; isolate size bits of sprite Y
+		sta 	gxzTemp1 					; save temporarily
+		lda 	gxSpriteHigh,x
+		and 	#$C0 						; isolate size bits of sprite X
+		clc
+		adc 	gxzTemp1 					; add only size bits (no y-position overflow)
 		;
 		;		So for 24 (10) and 32 (11) after AND CS:A is 1:0100 0000
 		;		After the shifts it is 1:0100 (20)
