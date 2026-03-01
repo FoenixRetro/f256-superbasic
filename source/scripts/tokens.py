@@ -51,6 +51,7 @@ class TokenSource(object):
 				colour 		solid 		outline 	gfx			image 		at
 				from		plot 		on 			off 		palette 	sound
 				poke 		pokew 		pokel 		poked 		memcopy 	clear
+				step~
 
 			{1}							// Set 1
 				end 		new 		list 		run 		stop
@@ -80,15 +81,19 @@ class TokenSource(object):
 
 
 class Token(object):
-    def __init__(self, name, set):
+    def __init__(self, name, set, sort_last=False):
         self.name = name.upper().strip()
         self.set = set
         self.id = None
         self.label = None
+        self._sort_last = sort_last
 
     #
     def sortKey(self):
-        return "9" + str(self.set) + self.name
+        prefix = "9" + str(self.set)
+        if self._sort_last:
+            prefix += "~"
+        return prefix + self.name
 
     #
     def getName(self):
@@ -195,7 +200,10 @@ class TokenCollection(object):
                         w = w[:-1]
                     newToken = UnaryToken(w, sort_last=sort_last)
                 else:  # The rest
-                    newToken = Token(w, int(cClass))
+                    sort_last = w.endswith("~")
+                    if sort_last:
+                        w = w[:-1]
+                    newToken = Token(w, int(cClass), sort_last=sort_last)
                 self.addToken(w, newToken)
         self.tokenList.sort(key=lambda x: x.sortKey())  # sort into the correct order
 

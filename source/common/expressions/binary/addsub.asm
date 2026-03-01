@@ -1,8 +1,8 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		Name:		simple.asm
-;		Purpose:	Simple binary operations
+;		Name:		addsub.asm
+;		Purpose:	Simple binary operations (add, subtract, bitwise, indirection)
 ;		Created:	21st September 2022
 ;		Reviewed: 	27th November 2022
 ;		Author:		Paul Robson (paul@robsons.org.uk)

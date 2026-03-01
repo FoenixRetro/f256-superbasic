@@ -10,8 +10,8 @@
 ; ************************************************************************************************
 ; ************************************************************************************************
 ;
-;		+16 		Step (1 or 255)
-;		+12..+15	Terminal value ((in 2's complement format.)
+;		+16..+19	Step value (in 2's complement format.)
+;		+12..+15	Terminal value (in 2's complement format.)
 ;		+8..+11 	Value of index variable (in 2's complement format.)
 ;		+6..+7 		Address of index variable
 ;		+1..5 		Loop back address
@@ -27,8 +27,8 @@
 ; ************************************************************************************************
 
 ForCommand: ;; [for]
-		lda 	#STK_FOR+9 					; allocate 18 bytes on the return stack (see above).
-		jsr 	StackOpen 
+		lda 	#STK_FOR+11 				; allocate 22 bytes on the return stack (see above).
+		jsr 	StackOpen
 		;
 		;		Get an integer reference to Stack[0] - this is the loop variable.
 		;
@@ -40,7 +40,7 @@ ForCommand: ;; [for]
 		;
 		;		= character
 		;
-		lda 	#KWD_EQUAL 					; = 
+		lda 	#KWD_EQUAL 					; =
 		jsr 	CheckNextA
 		;
 		;		The Initial value to Stack[1]
@@ -48,11 +48,11 @@ ForCommand: ;; [for]
 		inx
 		jsr 	EvaluateInteger 			; <from> in +1
 		;
-		;		TO or DOWNTO put on stack
+		;		Save TO or DOWNTO in temporary memory
 		;
 		.cget 								; next should be DOWNTO or TO
+		pha 								; save keyword for later
 		iny 								; consume it
-		pha 								; save on stack for later
 		cmp 	#KWD_DOWNTO
 		beq 	_FCNoSyntax
 		cmp 	#KWD_TO
@@ -62,23 +62,28 @@ _FCNoSyntax:
 		;		The Terminal value to Stack[2]
 		;
 		inx
-		jsr 	EvaluateInteger 			
+		jsr 	EvaluateInteger
 		;
-		;		Now set up the FOR Structure, starting with the code position
-		;
-		jsr 	STKSaveCodePosition 		; save loop back position
-		;
-		;		Now the TO or DOWNTO
+		;		Now set the +1 or -1 default step for the TO or DOWNTO
 		;
 		pla 								; restore DOWNTO or TO
-		phy 								; save Y on the stack
 		eor 	#KWD_DOWNTO 				; 0 if DOWNTO, #0 if TO
 		beq 	_FCNotDownTo
-		lda 	#2 							
+		lda 	#2
 _FCNotDownTo: 								; 0 if DOWNTO 2 if TO
-		dec 	a 							; 255 if DOWNTO, 1 if TO
+		phy 								; save current position
 		ldy 	#16
-		sta 	(basicStack),y 				; copy that out to the Basic Stack.
+		dec 	a 							; 255 if DOWNTO, 1 if TO
+		sta 	(basicStack),y 				; store low byte of step
+		bmi 	_FCNegativeStep
+		lda 	#0 							; next bytes are 0 for a step of 1
+_FCNegativeStep:
+		iny
+		sta 	(basicStack),y 				; store rest of step in Basic Stack
+		iny
+		sta 	(basicStack),y
+		iny
+		sta 	(basicStack),y
 		;
 		;		Copy the reference where the index goes.
 		;
@@ -98,11 +103,31 @@ _FCNotDownTo: 								; 0 if DOWNTO 2 if TO
 		ldx 	#2
 		jsr 	FCIntegerToStack
 		;
+		;		Handle optional STEP value
+		;
+		ply 								; restore position
+		.cget 								; check for optional STEP keyword
+		cmp 	#KWD_STEP
+		bne 	_FCNoStep
+		iny 								; consume STEP
+		;
+		ldx 	#0
+		jsr 	EvaluateInteger 			; get the step value
+		;
+		phy 								; save the new position
+		ldy 	#16 						; set the step value
+		ldx 	#0
+		jsr 	FCIntegerToStack
+		ply 								; restore position
+_FCNoStep:
+		;
+		;		Now set up the FOR Structure, starting with the code position
+		;
+		jsr 	STKSaveCodePosition 		; save loop back position
+		;
 		;		Now copy the current value to the index reference, in standard format.
 		;
-		jsr 	CopyIndexToReference
-		ply 								; restore position
-		rts
+		jmp 	CopyIndexToReference
 
 _FCError:
 		jmp 	TypeError
@@ -121,7 +146,7 @@ FCIntegerToStack:
 		jsr 	NSMNegateMantissa 			; if so 2's complement the mantissa
 _FCNotNegative:
 		lda 	NSMantissa0,x 				; copy out to the basic stack
-		sta 	(basicStack),y		
+		sta 	(basicStack),y
 		iny
 		lda 	NSMantissa1,x
 		sta 	(basicStack),y
@@ -141,7 +166,7 @@ _FCNotNegative:
 
 CopyIndexToReference:
 		phy
-		; 
+		;
 		ldy 	#6 							; copy address-8 to write to zTemp0
 		sec 								; (because we copy from offset 8)
 		lda 	(basicStack),y
@@ -159,7 +184,7 @@ CopyIndexToReference:
 		asl 	a 							; into carry
 
 		ldy 	#8 							; where to copy from.
-		bcc 	_CITRNormal		
+		bcc 	_CITRNormal
 		;
 		;		Copy out -ve
 		;
@@ -169,8 +194,8 @@ _CITRNegative:								; copy and negate simultaneously.
 		sbc 	(basicStack),y
 		sta 	(zTemp0),y
 		iny
-		dex 
-		bne 	_CITRNegative		
+		dex
+		bne 	_CITRNegative
 		dey 								; look at MSB of mantissa
 
 		lda 	(zTemp0),y 					; set the MSB as negative packed.
@@ -185,7 +210,7 @@ _CITRNormal:
 		lda 	(basicStack),y 				; copy without negation.
 		sta 	(zTemp0),y
 		iny
-		dex 
+		dex
 		bne 	_CITRNormal
 		ply 								; and exit.
 		rts
@@ -197,29 +222,35 @@ _CITRNormal:
 ; ************************************************************************************************
 
 NextCommand: ;; [next]
-		lda 	#STK_FOR+9 					; check FOR is TOS
+		lda 	#STK_FOR+11 				; check FOR is TOS
 		ldx 	#ERRID_FOR 					; this error
-		jsr 	StackCheckFrame		
+		jsr 	StackCheckFrame
 
 		phy
-		ldy 	#16 						; get the step count
-		lda 	(basicStack),y
-		sta 	zTemp0 						; this is the sign extend
-		bmi 	_NCStepNeg
-		stz 	zTemp0 						; which is 0 or 255
-_NCStepNeg:
+		;
+		;		Set up a pointer to step value (basicStack+16) via zTemp1
+		;		We use (zTemp1),y with the same y offsets as (basicStack),y
+		;		so that index[y] + step[y] works (both at y=8..11, offset by 8)
+		;
+		lda 	basicStack 					; zTemp1 = basicStack + 8
+		clc
+		adc 	#8
+		sta 	zTemp1
+		lda 	basicStack+1
+		adc 	#0
+		sta 	zTemp1+1
 		;
 		;		Bump the index, and update the index variable
 		;
 		ldy 	#8 							; offset to bump
-		ldx 	#4 							; count to bump
+		ldx 	#4 							; four bytes to add
 		clc
 _NCBump:
-		adc 	(basicStack),y 				; add it
+		lda 	(basicStack),y 				; get index
+		adc 	(zTemp1),y 					; add step
 		sta 	(basicStack),y
-		lda 	zTemp0 						; get sign extend for next time.
 		iny 								; next byte
-		dex 								; do four times
+		dex 								; are we done yet?
 		bne 	_NCBump
 		jsr		CopyIndexToReference		; copy it to the reference variable.
 		;
@@ -228,7 +259,7 @@ _NCBump:
 		;		if TO , exit if terminal < index (e.g. 10 < 11)
 		;		if DOWNTO, exit if index < terminal (e.g. -3 < -2)
 		;
-		ldy 	#16 						; get step count again
+		ldy 	#19 						; get MSB of step value
 		lda 	(basicStack),y
 		asl 	a 							; sign bit to carry
 		;
@@ -237,13 +268,13 @@ _NCBump:
 		bcc 	_NCCompRev 					; use if step is +ve
 		lda 	#8 							; now the LHS = index value
 _NCCompRev:
-		sta 	zTemp1 						; so zTemp0 is the index for LHS
-		eor 	#(8^12) 					; and zTemp0+1 is the index for RHS
+		sta 	zTemp1 						; so zTemp1 is the index for LHS
+		eor 	#(8^12) 					; and zTemp1+1 is the index for RHS
 		sta 	zTemp1+1
 		ldx 	#4 							; bytes to compare
 		sec
 
-_NCCompare:		
+_NCCompare:
 		ldy 	zTemp1 						; do compare using the two indices
 		lda 	(basicStack),y
 		ldy 	zTemp1+1
@@ -261,12 +292,10 @@ _NCNoOverflow:
 		asl 	a 							; is bit 7 set.
 		bcc 	_NCLoopBack 				; if no , >= so loop back
 		;
-		jsr 	StackClose 					; exit the loop
-		rts
+		jmp 	StackClose 					; exit the loop
 
 _NCLoopBack:
-		jsr 	STKLoadCodePosition 		; loop back
-		rts
+		jmp 	STKLoadCodePosition 		; loop back
 
 		.send code
 
@@ -278,5 +307,6 @@ _NCLoopBack:
 ;
 ;		Date			Notes
 ;		==== 			=====
+;		01/03/26 		Added support for optional use of STEP (from Kevin Cozens' patch)
 ;
 ; ************************************************************************************************

@@ -175,6 +175,7 @@ Unused1: 	;; [proc]
 Unused2: 	;; [to]
 Unused3: 	;; [downto]
 Unused4:	;; [then]
+Unused5:	;; [step]
 		jmp 	SyntaxError
 
 ; ************************************************************************************************		

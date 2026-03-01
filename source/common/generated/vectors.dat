@@ -163,6 +163,7 @@ VectorSet0:
 	.word	SpriteCommand                    ; $dd SPRITE
 	.word	TextCommand                      ; $de TEXT
 	.word	Unused2                          ; $df TO
+	.word	Unused5                          ; $e0 STEP
 VectorSet1:
 	.word	SyntaxError                      ; $80 !0:EOF
 	.word	SyntaxError                      ; $81 !1:SH1
