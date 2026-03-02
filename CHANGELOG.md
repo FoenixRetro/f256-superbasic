@@ -1,4 +1,23 @@
-## 1.1.2025-10-06
+## 1.2.2026-03-02
+
+### Features
+
+- Banked program memory, FRE() function, array region, boot ROM layout ([`b2e99a2`](https://github.com/FoenixRetro/f256-superbasic/commit/b2e99a2fb5f00e207b9053aa5d354c6d571b85be))
+- Add STEP support for FOR loops ([`df4639f`](https://github.com/FoenixRetro/f256-superbasic/commit/df4639f69b667a42dac8262dad7e8ec6172bba61))
+- Add scroll navigation, line-wrap tracking, and wrap-aware editing ([`bd83aa5`](https://github.com/FoenixRetro/f256-superbasic/commit/bd83aa5a540d6ce2221669467cf57b05478d2e19))
+- Remap editing keys ([`174c599`](https://github.com/FoenixRetro/f256-superbasic/commit/174c59944eedee095ea402475b08b6cf77fb9645))
+
+### Bug fixes
+
+- Correct else indentation in list output ([`5431177`](https://github.com/FoenixRetro/f256-superbasic/commit/543117733b6873755b443f77041c70d9502366a9))
+- Sprite collision threshold corrupted at high y-positions ([`a6a98b5`](https://github.com/FoenixRetro/f256-superbasic/commit/a6a98b5bbd66fca4612531cc9e5af798db8c5186))
+
+### Under the hood
+
+- Always clean `modules` build output ([`b747547`](https://github.com/FoenixRetro/f256-superbasic/commit/b747547f36b0ebedc953c505fab6ac063f3a08de))
+- Bump minor version ([`7d636fa`](https://github.com/FoenixRetro/f256-superbasic/commit/7d636fac68f1efc9de0efba063d1aba4dcbadb63))
+
+## v1.1.2025-10-06 - 2025-10-07
 
 ### Features
 
@@ -28,5 +47,6 @@
 - Rework build & release procedure + repository cleanup ([`f6736ca`](https://github.com/FoenixRetro/f256-superbasic/commit/f6736ca1b0cc4a1e38b8da406cd38a3eeedd30d4))
 - Add Contributing section ([`f2d07a7`](https://github.com/FoenixRetro/f256-superbasic/commit/f2d07a7979be463bfc383b07cb93b811a33a19c9))
 - Support variable-height boostscreen rendering ([`b1c38a1`](https://github.com/FoenixRetro/f256-superbasic/commit/b1c38a18314984b03560c7dc1d6a6bf0bbd4b899))
+- V1.1.2025-10-06 ([`2577337`](https://github.com/FoenixRetro/f256-superbasic/commit/25773372f522b6b2b7770bdd1d3345e059064ee1))
 
 
