@@ -53,6 +53,9 @@ _WSNotSlash:
 		;		Run code in token buffer
 		;
 		stz 	tokenOffset 				; zero the "offset", meaning it only runs one line.
+		lda 	pageCount 					; set page index to last page so DoCheckEnd
+		dec 	a 							; sees end-of-program (CPX pageCount sets Z=1
+		sta 	codePtr+2 					; when codePtr+2 = pageCount-1, after INX).
 		.csetcodepointer tokenOffset		; set up the code pointer.
 		lda 	tokenBuffer 				; nothing to run
 		cmp 	#KWC_EOL
