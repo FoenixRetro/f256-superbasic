@@ -191,10 +191,10 @@ flash: build
 #
 #		Test in emulator
 #
-emu: build $(IMAGE)
-	cp $(BUILDDIR)/sb*.bin $(MAME_PATH)/roms/f256k
+emu: build $(BASIC_TESTS_PATH)/.output/tests.img
+	$(Q)$(CCOPY) $(BUILDDIR)sb*.bin $(MAME_PATH)/roms/f256k
 	cd $(MAME_PATH) && ./f256k f256k -window -resolution 1280x720 -skip_gameinfo -harddisk $(BASIC_TESTS_PATH)/.output/tests.img -rompath roms
 	#cd $(MAME_PATH) && ./f256k f256k -window -resolution 1280x720 -skip_gameinfo -harddisk $(BASIC_TESTS_PATH)/.output/tests.img -rompath roms -script $(LAUNCH_SCRIPT) -log
 
-$(IMAGE): $(BASIC_TESTS_PATH)/ashanghai
-	$(BASIC_TESTS_PATH)/prepare-disk.py -t $<
+$(BASIC_TESTS_PATH)/.output/tests.img: $(BASIC_TESTS_PATH)/GraphicToolkit_v1.4
+	$(PYTHON) $(BASIC_TESTS_PATH)/prepare-disk.py -t $<
