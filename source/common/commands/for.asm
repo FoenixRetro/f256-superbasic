@@ -127,7 +127,7 @@ _FCNoStep:
 		;
 		;		Now copy the current value to the index reference, in standard format.
 		;
-		jmp 	CopyIndexToReference
+		bra 	CopyIndexToReference
 
 _FCError:
 		jmp 	TypeError

@@ -200,7 +200,7 @@ TileSwitch:
 		lda 	#GCMD_TileScrollY
 		jsr 	_TileResetScroll
 		ply
-		jmp 	TilesCtrlLoop
+		bra 	TilesCtrlLoop
 
 _TileResetScroll:
 		ldx 	#0
