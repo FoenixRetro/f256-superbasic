@@ -197,13 +197,13 @@ nextFreePage: 								; next physical page to allocate
 ;		Pages 20-21: source load area ($28000)
 ;		Pages 24-25: sprites ($30000)
 ;		Pages 26-27: BASIC I/O area ($34000)
-;		We allocate from page 56 upward to stay clear of all reservations.
-;		On a 512KB system, pages 0-63 exist (64 pages total).
+;		All F256 systems have at least 512KB RAM.
+;		We allocate from page 48 upward to stay clear of all reservations.
 ;
 ; ************************************************************************************************
 
 ProgramPage0 = BasicStart >> 13 			; physical page for slot 1 at boot (identity mapping)
-FirstFreePage = 56 							; first safe physical page for program data ($70000)
+FirstFreePage = 48 							; first safe physical page for program data ($60000)
 MaxPhysPage = 64 							; 512KB = 64 × 8KB pages
 _AvailablePages = MaxPhysPage - FirstFreePage + 1 ; dynamic pages + page 0
 .if _AvailablePages < MaxPages
