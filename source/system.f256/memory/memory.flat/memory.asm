@@ -23,9 +23,9 @@ MemoryNew:
 		stz 	codePtr 					; codePtr low = 0 (BasicStart & $FF)
 		lda 	#>BasicStart 				; codePtr high = $20
 		sta 	codePtr+1
-		;										page is already correctly mapped; skip DoResync
-		lda 	MMU_Slot1 					; save current physical page as page 0
-		sta 	pageTable
+		lda 	#ProgramPage0 				; always use the fixed boot page for page 0
+		sta 	MMU_Slot1 					; map it into slot 1
+		sta 	pageTable 					; save as page 0 in page table
 		lda 	#0 							; zero program start (erase program)
 		.cset0
 		inc 	a 							; A = 1
@@ -153,7 +153,7 @@ _DCERet:
 
 MemoryAllocPage:
 		ldx 	pageCount 					; check if we've hit the max
-		cpx 	#MaxPages
+		cpx 	#MaxUsablePages
 		bcs 	_MAPFail 					; too many logical pages
 		stx 	codePtr+2 					; set logical page index
 		lda 	nextFreePage 				; get next physical page
@@ -197,13 +197,20 @@ nextFreePage: 								; next physical page to allocate
 ;		Pages 20-21: source load area ($28000)
 ;		Pages 24-25: sprites ($30000)
 ;		Pages 26-27: BASIC I/O area ($34000)
-;		We allocate from page 28 upward to stay clear of all reservations.
+;		We allocate from page 56 upward to stay clear of all reservations.
 ;		On a 512KB system, pages 0-63 exist (64 pages total).
 ;
 ; ************************************************************************************************
 
-FirstFreePage = 28 							; first safe physical page for program data
+ProgramPage0 = BasicStart >> 13 			; physical page for slot 1 at boot (identity mapping)
+FirstFreePage = 56 							; first safe physical page for program data ($70000)
 MaxPhysPage = 64 							; 512KB = 64 × 8KB pages
+_AvailablePages = MaxPhysPage - FirstFreePage + 1 ; dynamic pages + page 0
+.if _AvailablePages < MaxPages
+MaxUsablePages = _AvailablePages
+.else
+MaxUsablePages = MaxPages
+.endif
 
 ; ************************************************************************************************
 ;
