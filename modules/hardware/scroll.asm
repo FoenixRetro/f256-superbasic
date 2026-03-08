@@ -18,7 +18,7 @@
 ;
 ; ************************************************************************************************
 
-EXTScrollFill:
+Export_EXTScrollFill:
 		tax									; save value to fill with
 
 		lda 	zTemp0 						; save zTemp0 (dest) zTemp1 (src)
@@ -74,7 +74,7 @@ _EXSFFill1:
 ;
 ; ************************************************************************************************
 
-EXTScrollDown:
+Export_EXTScrollDown:
 		tax									; save value to fill with
 
 		lda 	zTemp0 						; save zTemp0 (dest) zTemp1 (src)
@@ -109,18 +109,11 @@ EXTScrollDown:
 		dec 	zTemp1+1
 _EXSDNoCarry1:
 
-		; Copy backwards from $D2BF down to $C000+width
-		; (we stop when src reaches $C000 + width - 1)
+		; Copy backwards from $D2BF down to $C000
 _EXSDCopyLoop:
 		lda 	zTemp1+1 					; check if src < $C0xx
 		cmp 	#$C0
 		bcc 	_EXSDDone 					; if src high byte < $C0, we're done
-		bne 	_EXSDCopyByte 				; if src high byte > $C0, continue
-		lda 	zTemp1 						; src high = $C0, check low byte
-		cmp 	EXTScreenWidth 				; if src low < width, we're done
-		bcc 	_EXSDDone
-
-_EXSDCopyByte:
 		lda 	(zTemp1) 					; get byte from source
 		sta 	(zTemp0) 					; store to destination
 

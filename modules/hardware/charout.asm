@@ -657,10 +657,10 @@ EXTScreenScroll:
 		lda 	#2 							; select text page
 		sta 	1
 		lda		#32 						; fill with space
-		jsr 	EXTScrollFill
+		jsr 	Export_EXTScrollFill
 		inc 	1 							; select colour page
 		lda 	EXTTextColour
-		jsr 	EXTScrollFill
+		jsr 	Export_EXTScrollFill
 		jmp 	ShiftWrapFlagsUp 			; shift wrap flags to match scroll
 
 Export_EXTApplyPendingWrap:
