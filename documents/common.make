@@ -39,7 +39,7 @@ RELEASEDIR = $(ROOTDIR).release$(S)
 #
 ASM ?= 64tass
 ASFLAGS ?= -q -b -Wall -c -C
-PYTHON ?= python
+PYTHON ?= uv run
 GIT ?= git
 #
 #		Load Addresses
