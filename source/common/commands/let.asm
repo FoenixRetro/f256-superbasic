@@ -46,7 +46,7 @@ _LCMain:
 		jsr 	EvaluateValue
 		dex
 		;
-		jmp 	AssignVariable
+		bra 	AssignVariable
 
 _LetGoProc:
 		jmp 	CallProcedure		
