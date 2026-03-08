@@ -73,8 +73,8 @@ _CRIncMainLoop:
 		.breakcheck							; break check
 		bne 	_CRBreak
 		.tickcheck TickHandler  			; if time elapsed call the tick handler.
-_CRNoBreakCheck:		
-		; 									
+_CRNoBreakCheck:
+		;
 		iny									; next token
 _CRMainLoop:
 		stz 	stringInitialised 			; clear the temporary string initialised flag.
