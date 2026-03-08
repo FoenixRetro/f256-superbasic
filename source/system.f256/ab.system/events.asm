@@ -70,7 +70,7 @@ _PEFlagsArrowUD:
 		bra 	_PEFnxDown
 _PEFlagsNoFnx:
 		pla
-		jmp 	ProcessEvents 				; non-FNX modified arrow, ignore
+		bra 	ProcessEvents 				; non-FNX modified arrow, ignore
 
 _PEDoInsertLine:
 		lda 	#$B5 						; queue INS code for input.asm to handle
@@ -93,7 +93,7 @@ _PEFnxUp:
 		jsr 	StartRepeatTimerForKey
 _PEFnxUpDone:
 		plx
-		jmp 	ProcessEvents
+		bra 	ProcessEvents
 _PEFnxDown:
 		jsr 	HandleShiftDown
 		; Schedule repeat for FNX+down (CBM/K keyboards only)
@@ -237,7 +237,7 @@ _PERawNotArrow:
 
 _PEInsertLine:
 		lda 	#$B5 						; queue INS code for input.asm to handle
-		jmp 	_PEQueueA
+		bra 	_PEQueueA
 _PERawCheckF12:
 		cmp 	#140+1
 		bcc 	_PEQueueA

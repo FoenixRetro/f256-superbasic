@@ -29,16 +29,24 @@ HandleShiftUp:
 		; Try to find previous line to display
 		stz 	snHaveLine 					; assume no line to display
 		jsr 	FindFirstScreenLineNumber 	; get first visible line number into snLineNum
-		bcs 	_HSUDoScroll 				; no line found, just scroll 1
+		bcc 	_HSUHaveLine
 
+		; No line on screen - find last line in program
+		lda 	#$FF
+		sta 	snLineNum
+		sta 	snLineNum+1
+		jsr 	FindPreviousLine 			; find last line (before $FFFF)
+		bra 	_HSUCheckResult
+
+_HSUHaveLine:
 		jsr 	FindPreviousLine 			; find the line before it
-		bcs 	_HSUDoScroll 				; no previous line, just scroll 1
+_HSUCheckResult:
+		bcs 	_HSUDoScroll 				; no line found, just scroll 1
 
 		lda 	#1
 		sta 	snHaveLine 					; we have a line to display
 
 		; Calculate how many rows this line needs
-		jsr 	CalculateAbsoluteIndent 	; set up listIndent
 		jsr 	CalculateLineRowCount 		; result in snLineRowCount
 
 _HSUDoScroll:
@@ -54,12 +62,12 @@ _HSUScrollLoop:
 		lda 	#2 							; text page
 		sta 	1
 		lda 	#32 						; fill with space
-		jsr 	ScrollScreenDown
+		jsr 	EXTScrollDown
 
 		lda 	#3 							; colour page
 		sta 	1
 		lda 	EXTTextColour
-		jsr 	ScrollScreenDown
+		jsr 	EXTScrollDown
 
 		; Shift wrap flags down (inline) - row N becomes row N+1 (bits shift left)
 		; Use Y as down-counter since DEY doesn't affect carry flag
@@ -110,22 +118,46 @@ HandleShiftDown:
 		; Try to find next line to display
 		stz 	snHaveLine 					; assume no line to display
 		jsr 	FindLastScreenLineNumber 	; get last visible line number into snLineNum
-		bcs 	_HSDDoScroll 				; no line found, just scroll 1
+		bcc 	_HSDHaveLine
 
+		; No line on screen - find first line in program
+		stz 	snLineNum
+		stz 	snLineNum+1
+		jsr 	FindNextLine 				; find first line (after 0)
+		bra 	_HSDCheckResult
+
+_HSDHaveLine:
 		jsr 	FindNextLine 				; find the line after it
-		bcs 	_HSDDoScroll 				; no next line, just scroll 1
+_HSDCheckResult:
+		bcs 	_HSDDoScroll 				; no line found, just scroll 1
 
 		lda 	#1
 		sta 	snHaveLine 					; we have a line to display
 
 		; Calculate how many rows this line needs
-		jsr 	CalculateAbsoluteIndent 	; set up listIndent
 		jsr 	CalculateLineRowCount 		; result in snLineRowCount
 
 _HSDDoScroll:
-		; Save I/O page
+		; Save I/O page and EXTAddress (EXTScrollFill uses it for last row)
 		lda 	1
 		pha
+		lda 	EXTAddress
+		pha
+		lda 	EXTAddress+1
+		pha
+
+		; Set EXTAddress to last row for EXTScrollFill
+		lda 	EXTScreenHeight
+		dec 	a
+		asl 	a 							; multiply by 2 for table index
+		tay
+		clc
+		lda 	#<EXTMemory
+		adc 	EXTScreenRowOffsets,y
+		sta 	EXTAddress
+		lda 	#>EXTMemory
+		adc 	EXTScreenRowOffsets+1,y
+		sta 	EXTAddress+1
 
 		; Scroll snLineRowCount times
 		ldx 	snLineRowCount
@@ -135,12 +167,12 @@ _HSDScrollLoop:
 		lda 	#2 							; text page
 		sta 	1
 		lda 	#32 						; fill with space
-		jsr 	ScrollScreenUp
+		jsr 	EXTScrollFill
 
 		lda 	#3 							; colour page
 		sta 	1
 		lda 	EXTTextColour
-		jsr 	ScrollScreenUp
+		jsr 	EXTScrollFill
 
 		; Shift wrap flags up (inline) - row N becomes row N-1 (bits shift right)
 		; Use Y as down-counter since DEY doesn't affect carry flag
@@ -159,7 +191,11 @@ _HSDShiftWrap:
 		dex
 		bne 	_HSDScrollLoop
 
-		pla 								; restore I/O page
+		pla 								; restore EXTAddress and I/O page
+		sta 	EXTAddress+1
+		pla
+		sta 	EXTAddress
+		pla
 		sta 	1
 
 		; Display line at appropriate row if we have one
@@ -420,11 +456,13 @@ _FPLLoop:
 		bcs 	_FPLCheckPrev 				; current >= target, use prev
 
 _FPLSavePrev:
-		; Save current as previous
+		; Save current as previous (including page index)
 		lda 	codePtr
 		sta 	snPrevPtr
 		lda 	codePtr+1
 		sta 	snPrevPtr+1
+		lda 	codePtr+2
+		sta 	snPrevPage
 		stz 	snHavePrev 					; mark that we have a prev
 
 		.cnextline 							; advance to next line
@@ -434,11 +472,14 @@ _FPLCheckPrev:
 		lda 	snHavePrev 					; do we have a previous?
 		bne 	_FPLNotFound
 
-		; Set codePtr to previous line
+		; Set codePtr to previous line (including page)
+		lda 	snPrevPage
+		sta 	codePtr+2
 		lda 	snPrevPtr
 		sta 	codePtr
 		lda 	snPrevPtr+1
 		sta 	codePtr+1
+		.cresync
 
 		; Get its line number
 		ldy 	#1
@@ -506,18 +547,28 @@ _FNLNotFound:
 ; ************************************************************************************************
 
 CalculateAbsoluteIndent:
-		; Save the target codePtr
+		; Save the target codePtr (including page)
 		lda 	codePtr
 		sta 	snTargetPtr
 		lda 	codePtr+1
 		sta 	snTargetPtr+1
+		lda 	codePtr+2
+		sta 	snTargetPage
 
 		; Reset to program start and clear indent
 		.cresetcodepointer
 		stz 	listIndent
 
 _CAILoop:
-		; Check if we've reached the target line
+		; Check for end of program (may advance page at boundary)
+		.cget0
+		beq 	_CAIDone
+
+		; Check if we've reached the target line (page + address)
+		; Done AFTER .cget0 because it may cross a page boundary
+		lda 	codePtr+2
+		cmp 	snTargetPage
+		bne 	_CAINotTarget
 		lda 	codePtr
 		cmp 	snTargetPtr
 		bne 	_CAINotTarget
@@ -526,42 +577,50 @@ _CAILoop:
 		beq 	_CAIDone 					; reached target, listIndent is now correct
 
 _CAINotTarget:
-		; Check for end of program
-		.cget0
-		beq 	_CAIDone
+		; Replicate TKListConvertLine's exact listIndent adjustment
+		jsr 	ScanGetCurrentLineStep 		; returns step in A, sets listElseFound
 
-		; Get the indent adjustment for this line
-		jsr 	ScanGetCurrentLineStep 		; returns adjustment in A (and zTemp1)
-
-		; Apply the adjustment as TKListConvertLine would:
-		; - Negative adjustments are applied BEFORE the line (we've already passed it)
-		; - Positive adjustments are applied AFTER the line
-		; Since we're accumulating for lines we've passed, we apply both here
+		; 1. ELSE pre-adjust: dec listIndent (only if > 0)
+		pha
+		lda 	listElseFound
+		beq 	_CAINoElsePre
+		lda 	listIndent
+		beq 	_CAINoElsePre
+		dec 	listIndent
+_CAINoElsePre:
+		pla 								; restore step
+		; 2. Apply step (negative before, positive after — same net effect)
 		bmi 	_CAINegative
-		; Positive: add after printing
 		clc
 		adc 	listIndent
 		sta 	listIndent
-		bra 	_CAINext
+		bra 	_CAIElsePost
 _CAINegative:
-		; Negative: would have been applied before printing
 		clc
 		adc 	listIndent
 		bpl 	_CAIStoreNeg
-		lda 	#0 							; don't go below 0
+		lda 	#0
 _CAIStoreNeg:
 		sta 	listIndent
+_CAIElsePost:
+		; 3. ELSE post-adjust: inc listIndent
+		lda 	listElseFound
+		beq 	_CAINext
+		inc 	listIndent
 
 _CAINext:
 		.cnextline
 		bra 	_CAILoop
 
 _CAIDone:
-		; Restore the target codePtr
+		; Restore the target codePtr (including page)
+		lda 	snTargetPage
+		sta 	codePtr+2
 		lda 	snTargetPtr
 		sta 	codePtr
 		lda 	snTargetPtr+1
 		sta 	codePtr+1
+		.cresync
 		rts
 
 ; ************************************************************************************************
@@ -630,6 +689,9 @@ DisplayLineAtLastRowMulti:
 		pha
 		lda 	#1
 		sta 	EXTSuppressCursor 			; suppress hardware cursor updates
+
+		; Recalculate indent (may have been modified by CalculateLineRowCount)
+		jsr 	CalculateAbsoluteIndent
 
 		; Calculate starting row: lastRow - (rowCount - 1) = screenHeight - rowCount
 		lda 	EXTScreenHeight
@@ -748,165 +810,6 @@ _CLRCDivLoop:
 _CLRCDivDone:
 		rts
 
-; ************************************************************************************************
-;
-;		Scroll screen DOWN - copy memory backwards, fill top row with A
-;		Must be called with I/O page already set to 2 (text) or 3 (color)
-;		Based on EXTScrollDown from hardware module (hardcoded for 80x60)
-;
-; ************************************************************************************************
-
-ScrollScreenDown:
-		tax 								; save value to fill with
-
-		lda 	zTemp0 						; save zTemp0 (dest) zTemp1 (src)
-		pha
-		lda 	zTemp0+1
-		pha
-		lda 	zTemp1
-		pha
-		lda 	zTemp1+1
-		pha
-
-		; Screen goes from $C000 to $D2BF (80x60 = 4800 bytes)
-		; Set up dest = $D2BF (last byte), src = $D2BF - 80
-
-		lda 	#$D2 						; dest = $D2xx (last page)
-		sta 	zTemp0+1
-		sta 	zTemp1+1
-
-		lda 	#$BF
-		sta 	zTemp0 						; dest = $D2BF (end of screen)
-
-		sec 								; src = dest - width
-		sbc 	EXTScreenWidth
-		sta 	zTemp1
-		bcs 	_SSDNoCarry1
-		dec 	zTemp1+1
-_SSDNoCarry1:
-
-		; Copy backwards from $D2BF down to $C000
-		; We copy all rows including row 0 to row 1
-_SSDCopyLoop:
-		lda 	zTemp1+1 					; check if src < $C0xx
-		cmp 	#$C0
-		bcc 	_SSDDone 					; if src high byte < $C0, we're done
-		; If src.high >= $C0, continue copying (includes all of row 0)
-
-_SSDCopyByte:
-		lda 	(zTemp1) 					; get byte from source
-		sta 	(zTemp0) 					; store to destination
-
-		; Decrement both pointers
-		lda 	zTemp0
-		bne 	_SSDNoDec0
-		dec 	zTemp0+1
-_SSDNoDec0:
-		dec 	zTemp0
-
-		lda 	zTemp1
-		bne 	_SSDNoDec1
-		dec 	zTemp1+1
-_SSDNoDec1:
-		dec 	zTemp1
-
-		bra 	_SSDCopyLoop
-
-_SSDDone:
-		; Blank the top line with X (saved fill value)
-		ldy 	EXTScreenWidth 				; fill top row
-		txa
-		lda 	#$C0 						; point to start of screen
-		sta 	zTemp0+1
-		stz 	zTemp0
-_SSDFillLoop:
-		dey
-		txa
-		sta 	(zTemp0),y
-		cpy 	#0
-		bne 	_SSDFillLoop
-
-		pla
-		sta 	zTemp1+1
-		pla
-		sta 	zTemp1
-		pla
-		sta 	zTemp0+1
-		pla
-		sta 	zTemp0
-
-		rts
-
-; ************************************************************************************************
-;
-;		Scroll screen UP - copy memory forwards, fill bottom row with A
-;		Must be called with I/O page already set to 2 (text) or 3 (color)
-;		Based on EXTScrollFill from hardware module
-;
-; ************************************************************************************************
-
-ScrollScreenUp:
-		tax 								; save value to fill with
-
-		lda 	zTemp0 						; save zTemp0 (dest) zTemp1 (src)
-		pha
-		lda 	zTemp0+1
-		pha
-		lda 	zTemp1
-		pha
-		lda 	zTemp1+1
-		pha
-
-		lda 	#$C0 						; copy from C000+width to C000
-		sta 	zTemp0+1
-		sta 	zTemp1+1
-		stz 	zTemp0
-		lda 	EXTScreenWidth
-		sta 	zTemp1
-		ldy 	#0
-_SSUCopy1: 									; do one page
-		lda 	(zTemp1),y
-		sta 	(zTemp0),y
-		iny
-		bne 	_SSUCopy1
-		inc 	zTemp0+1 					; next page
-		inc 	zTemp1+1
-		lda 	zTemp1+1
-		cmp 	#$D3
-		bne 	_SSUCopy1
-
-		; Calculate address of last row for blanking
-		lda 	EXTScreenHeight
-		dec 	a
-		asl 	a 							; multiply by 2 for table index
-		tay
-		clc
-		lda 	#<EXTMemory
-		adc 	EXTScreenRowOffsets,y
-		sta 	zTemp0
-		lda 	#>EXTMemory
-		adc 	EXTScreenRowOffsets+1,y
-		sta 	zTemp0+1
-
-		ldy 	EXTScreenWidth 				; blank the bottom line
-		txa
-_SSUFill1:
-		dey
-		sta 	(zTemp0),y
-		cpy 	#0
-		bpl 	_SSUFill1
-
-		pla
-		sta 	zTemp1+1
-		pla
-		sta 	zTemp1
-		pla
-		sta 	zTemp0+1
-		pla
-		sta 	zTemp0
-
-		rts
-
 ; Bit lookup table for wrap flag checking
 snWrapBitTable:
 		.byte 	1, 2, 4, 8, 16, 32, 64, 128
@@ -931,12 +834,16 @@ snTemp: 									; temporary storage
 		.fill 	2
 snPrevPtr: 									; pointer to previous line
 		.fill 	2
+snPrevPage:									; page index of previous line
+		.fill 	1
 snHavePrev: 								; flag: have we found a previous line?
 		.fill 	1
 snHaveLine:									; flag: do we have a line to display after scroll?
 		.fill 	1
 snTargetPtr:								; saved target codePtr for indent calculation
 		.fill 	2
+snTargetPage:								; saved target page for indent calculation
+		.fill 	1
 snLineRowCount:								; calculated row count for a line
 		.fill 	1
 
