@@ -50,7 +50,7 @@ _EILSkipCont:
 		jsr 	EXTPrintCharacter
 		bra 	_EILSkipCont 				; check again
 _EILSkipDone:
-		jmp 	_EILLoop 					; continue input loop
+		bra 	_EILLoop 					; continue input loop
 _EILNotEnter:
 		cmp 	#4 							; Ctrl+D delete at cursor
 		bne 	_EILNotCtrlD
@@ -59,19 +59,19 @@ _EILNotCtrlD:
 		cmp 	#$B5 						; INS key (Shift+Backspace on F256K2)
 		bne 	_EILNotIns
 		jsr 	EXTInsertLine
-		jmp 	_EILLoop
+		bra 	_EILLoop
 _EILNotIns:
 		cmp 	#8 							; Ctrl+H backspace
 		bne 	_EILNotBackspace
-		jmp 	_EILBackspace
+		bra 	_EILBackspace
 _EILNotBackspace:
 		cmp 	#' '						; < space, print it
 		bcs 	_EILNotControl
-		jmp 	_EILPrintLoop
+		bra 	_EILPrintLoop
 _EILNotControl:
 		cmp 	#$7F 						; if -ve print it
 		bcc 	_EILNotHighChar
-		jmp 	_EILPrintLoop
+		bra 	_EILPrintLoop
 _EILNotHighChar:
 		;
 		tax 								; save character in X
@@ -91,7 +91,7 @@ _EILDoInsert:
 		inc 	1
 		jsr 	EXTILInsert 				; insert in colour screen
 		pla 								; get character back.
-		jmp 	_EILPrintLoop
+		bra 	_EILPrintLoop
 		;
 _EILCheckOverflow:
 		; Line is full - try overflow to next wrapped row
@@ -100,10 +100,10 @@ _EILCheckOverflow:
 		jsr 	EILDoOverflow 				; carry set = success
 		bcc 	_EILReject
 		ldx 	lwOverflowTyped
-		jmp 	_EILDoInsert
+		bra 	_EILDoInsert
 		;
 _EILReject:
-		jmp 	_EILLoop 					; reject input
+		bra 	_EILLoop 					; reject input
 		;
 _EILPrintLoop:
 		jsr 	EXTPrintCharacter
