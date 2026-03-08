@@ -30,7 +30,7 @@ Command_Read:	;; [read]
 		;
 		;		Now find something to be DATA
 		;
-		jsr 	SwapDataCodePtrs 			; swap code and data
+		jsr 	SwapDataCodePtrs 			; swap code and data (includes .cresync)
 
 		lda 	inDataStatement 			; if in a data statement, we don't need to search
 		bne 	_CRContinueData  			; forward for the next one.
@@ -70,8 +70,8 @@ _CRContinueData:
 		iny 								; consume comma
 		inc 	inDataStatement 			; set in data statement currently.
 		;
-_CRSwapBack:		
-		jsr 	SwapDataCodePtrs			; swap them back.		
+_CRSwapBack:
+		jsr 	SwapDataCodePtrs			; swap them back (includes .cresync)
 		.cget 								; followed by a comma
 		iny
 		cmp 	#KWD_COMMA

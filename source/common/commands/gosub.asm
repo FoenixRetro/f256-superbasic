@@ -24,7 +24,7 @@ Command_GOSUB:	;; [gosub]
 		lda 	#STK_GOSUB+3 				
 		jsr 	StackOpen 					; create frame
 		jsr 	STKSaveCodePosition 		; save current position
-		jmp 	GotoStackX
+		bra 	GotoStackX
 
 ; ************************************************************************************************
 ;

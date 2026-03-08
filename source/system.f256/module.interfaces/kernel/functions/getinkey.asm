@@ -49,7 +49,7 @@ AscInkey2:
 ChrGet:	 ;; [get$(]
 		plx
 		jsr 	AscGet2
-		jmp 	ChrToString
+		bra 	ChrToString
 
 ChrInkey: ;; [inkey$(]
 		plx

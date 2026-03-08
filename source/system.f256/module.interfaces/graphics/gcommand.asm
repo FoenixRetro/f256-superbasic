@@ -32,7 +32,7 @@ ShapeDrawCmd:
 		;
 ShapeDraw:
 		ora 	gxFillSolid  				; adjust AXY for solid fill.
-		jmp 	ExecuteGraphicCommand	 	; and complete
+		bra 	ExecuteGraphicCommand	 	; and complete
 
 ; ************************************************************************************************
 ;
