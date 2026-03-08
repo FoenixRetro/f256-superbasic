@@ -31,7 +31,7 @@ _SpcLoop:
 		lda 	#32
 		jsr 	StringTempWrite
 		dey
-		bra 	_SpcLoop
+		bne 	_SpcLoop
 _SpcExit:
 		ply
 		jmp 	CheckRightBracket
