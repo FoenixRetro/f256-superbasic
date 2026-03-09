@@ -30,8 +30,6 @@ MemoryNew:
 		.cset0
 		inc 	a 							; A = 1
 		sta 	pageCount 					; one page allocated
-		lda 	#FirstFreePage 				; initialize next-page allocator
-		sta 	nextFreePage
 		rts
 
 ; ************************************************************************************************
@@ -182,7 +180,7 @@ _DCERet:
 
 MemoryAllocPage:
 		ldx 	pageCount 					; check if we've hit the max
-		cpx 	#MaxUsablePages
+		cpx 	maxUsablePages
 		bcs 	_MAPFail 					; too many logical pages
 		stx 	codePtr+2 					; set logical page index
 		lda 	nextFreePage 				; get next physical page
@@ -213,6 +211,8 @@ pageTable: 									; maps logical page index -> physical page number
 pageCount: 									; number of allocated logical pages
 		.fill 	1
 nextFreePage: 								; next physical page to allocate
+		.fill 	1
+maxUsablePages:								; runtime max logical pages (updated by LOMEM)
 		.fill 	1
 
 		.send storage

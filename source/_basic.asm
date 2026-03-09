@@ -130,6 +130,7 @@
 	.include	"./system.f256/module.interfaces/kernel/commands/files/try.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/files/verify.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/joy.asm"
+	.include	"./system.f256/module.interfaces/kernel/commands/lomem.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/memcopy.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/mouse.asm"
 	.include	"./system.f256/module.interfaces/kernel/commands/setdatetime.asm"
