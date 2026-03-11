@@ -1,4 +1,31 @@
-## 1.1.2025-10-06
+## 1.2.2026-03-11
+
+### Features
+
+- Banked program memory, FRE() function, array region, boot ROM layout ([`b2e99a2`](https://github.com/FoenixRetro/f256-superbasic/commit/b2e99a2fb5f00e207b9053aa5d354c6d571b85be))
+- Add STEP support for FOR loops ([`df4639f`](https://github.com/FoenixRetro/f256-superbasic/commit/df4639f69b667a42dac8262dad7e8ec6172bba61))
+- Add scroll navigation, line-wrap tracking, and wrap-aware editing ([`bd83aa5`](https://github.com/FoenixRetro/f256-superbasic/commit/bd83aa5a540d6ce2221669467cf57b05478d2e19))
+- Remap editing keys ([`174c599`](https://github.com/FoenixRetro/f256-superbasic/commit/174c59944eedee095ea402475b08b6cf77fb9645))
+- Add LOMEM command for program page allocation ([#114](https://github.com/FoenixRetro/f256-superbasic/issues/114)) ([`efcf610`](https://github.com/FoenixRetro/f256-superbasic/commit/efcf610aab8153802dc41da885fe883517613bd8))
+
+### Bug fixes
+
+- Correct else indentation in list output ([`5431177`](https://github.com/FoenixRetro/f256-superbasic/commit/543117733b6873755b443f77041c70d9502366a9))
+- Sprite collision threshold corrupted at high y-positions ([`a6a98b5`](https://github.com/FoenixRetro/f256-superbasic/commit/a6a98b5bbd66fca4612531cc9e5af798db8c5186))
+- SPC() infinite loop and direct command loop after break ([`138f92c`](https://github.com/FoenixRetro/f256-superbasic/commit/138f92c08fea3ef013c53dbdb62ea3c919fdb1c5))
+- Scroll navigation page boundary, indentation, and scroll-down ([`1a61878`](https://github.com/FoenixRetro/f256-superbasic/commit/1a61878b628d46ab6257236240a4ca946ea88725))
+- Set FirstFreePage to 48 for 512KB systems ([`6e22acb`](https://github.com/FoenixRetro/f256-superbasic/commit/6e22acb1b14f7856a99f97e950ecee7a30756962))
+- Inline string corruption in multi-page programs ([#113](https://github.com/FoenixRetro/f256-superbasic/issues/113)) ([`c37f5a8`](https://github.com/FoenixRetro/f256-superbasic/commit/c37f5a85457d8cda7d42e36f2079f1b756934172))
+
+### Under the hood
+
+- Always clean `modules` build output ([`b747547`](https://github.com/FoenixRetro/f256-superbasic/commit/b747547f36b0ebedc953c505fab6ac063f3a08de))
+- Bump minor version ([`7d636fa`](https://github.com/FoenixRetro/f256-superbasic/commit/7d636fac68f1efc9de0efba063d1aba4dcbadb63))
+- Convert jmp to bra and remove redundant .cresync calls ([`763b150`](https://github.com/FoenixRetro/f256-superbasic/commit/763b150365df27a0be234b884e6316e487ecfafe))
+- Fix memory allocation and build configuration ([`7620da4`](https://github.com/FoenixRetro/f256-superbasic/commit/7620da422fd30b07a81e3d3c6e3efb2a0d4e81f2))
+- Remove Makefile emu target changes (testing only) ([`ba835c5`](https://github.com/FoenixRetro/f256-superbasic/commit/ba835c54690bdd8b1b40291b8c0c973afc197582))
+
+## v1.1.2025-10-06 - 2025-10-07
 
 ### Features
 
@@ -28,5 +55,6 @@
 - Rework build & release procedure + repository cleanup ([`f6736ca`](https://github.com/FoenixRetro/f256-superbasic/commit/f6736ca1b0cc4a1e38b8da406cd38a3eeedd30d4))
 - Add Contributing section ([`f2d07a7`](https://github.com/FoenixRetro/f256-superbasic/commit/f2d07a7979be463bfc383b07cb93b811a33a19c9))
 - Support variable-height boostscreen rendering ([`b1c38a1`](https://github.com/FoenixRetro/f256-superbasic/commit/b1c38a18314984b03560c7dc1d6a6bf0bbd4b899))
+- V1.1.2025-10-06 ([`2577337`](https://github.com/FoenixRetro/f256-superbasic/commit/25773372f522b6b2b7770bdd1d3345e059064ee1))
 
 
