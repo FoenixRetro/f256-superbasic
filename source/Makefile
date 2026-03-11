@@ -196,5 +196,5 @@ emu: build $(IMAGE)
 	cd $(MAME_PATH) && ./f256k f256k -window -resolution 1280x720 -skip_gameinfo -harddisk $(BASIC_TESTS_PATH)/.output/tests.img -rompath roms
 	#cd $(MAME_PATH) && ./f256k f256k -window -resolution 1280x720 -skip_gameinfo -harddisk $(BASIC_TESTS_PATH)/.output/tests.img -rompath roms -script $(LAUNCH_SCRIPT) -log
 
-$(IMAGE): $(BASIC_TESTS_PATH)/ashanghai
-	$(BASIC_TESTS_PATH)/prepare-disk.py -t $<
+$(IMAGE): $(BASIC_TESTS_PATH)/GraphicToolkit_v1.4
+	$(PYTHON) $(BASIC_TESTS_PATH)/prepare-disk.py -t $<
