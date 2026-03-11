@@ -183,10 +183,10 @@ VectorSet1:
 	.word	SyntaxError                      ; $8f GO
 	.word	Command_GOSUB                    ; $90 GOSUB
 	.word	GotoCommand                      ; $91 GOTO
-	.word	SyntaxError                      ; $92 HIMEM
-	.word	Command_Input                    ; $93 INPUT
-	.word	Command_List                     ; $94 LIST
-	.word	Command_Load                     ; $95 LOAD
+	.word	Command_Input                    ; $92 INPUT
+	.word	Command_List                     ; $93 LIST
+	.word	Command_Load                     ; $94 LOAD
+	.word	LomemCommand                     ; $95 LOMEM
 	.word	MouseDeltaStatus                 ; $96 MDELTA
 	.word	MouseStatus                      ; $97 MOUSE
 	.word	NewCommand                       ; $98 NEW

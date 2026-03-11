@@ -157,6 +157,11 @@ _NoMachineCode:
 
 		jsr 	ResetIOTracking 			; reset the I/O tracking.
 
+		lda 	#FirstFreePage 				; one-time init of page allocator
+		sta 	nextFreePage
+		lda 	#MaxUsablePages
+		sta 	maxUsablePages
+
 		jsr 	NewProgram 					; erase current program
 
 		.if 	AUTORUN==1 					; run straight off

@@ -120,10 +120,10 @@ KeywordSet1:
 	.text	2,$96,"GO"             ; $8f GO
 	.text	5,$80,"GOSUB"          ; $90 GOSUB
 	.text	4,$39,"GOTO"           ; $91 GOTO
-	.text	5,$70,"HIMEM"          ; $92 HIMEM
-	.text	5,$90,"INPUT"          ; $93 INPUT
-	.text	4,$3c,"LIST"           ; $94 LIST
-	.text	4,$20,"LOAD"           ; $95 LOAD
+	.text	5,$90,"INPUT"          ; $92 INPUT
+	.text	4,$3c,"LIST"           ; $93 LIST
+	.text	4,$20,"LOAD"           ; $94 LOAD
+	.text	5,$7a,"LOMEM"          ; $95 LOMEM
 	.text	6,$b7,"MDELTA"         ; $96 MDELTA
 	.text	5,$89,"MOUSE"          ; $97 MOUSE
 	.text	3,$ea,"NEW"            ; $98 NEW

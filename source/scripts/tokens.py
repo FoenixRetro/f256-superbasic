@@ -59,7 +59,7 @@ class TokenSource(object):
 				load 		go 			zap	 		ping 		setdate
 				shoot 		explode 	xload 		xgo 		settime
 				save		verify		drive 		dir 		bload
-				bsave		himem 		input 		cls 		gosub
+				bsave		lomem 		input 		cls 		gosub
 				return 		print 		cprint 		goto 		cursor
 				mouse 		mdelta 		try 		tile 		tiles
 				option

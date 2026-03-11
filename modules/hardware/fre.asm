@@ -124,7 +124,7 @@ _FMFoundEnd:
 		;		free_pages * $2000: byte 2 = free_pages >> 3, byte 1 += (free_pages & 7) << 5.
 		;		Split avoids overflow since (0..7) << 5 = 0..224 fits in a byte.
 		;
-		lda 	#MaxUsablePages
+		lda 	maxUsablePages
 		sec
 		sbc 	pageCount 					; A = free pages
 		pha 								; save free_pages
