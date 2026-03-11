@@ -44,12 +44,41 @@ MemoryNew:
 ; ************************************************************************************************
 
 MemoryInline:
+		lda 	pageCount 					; multi-page program?
+		cmp 	#2
+		bcs 	_MIPageCross 				; yes, always copy — pointer may go stale on page switch
+		;
 		tya 								; put address into stack,x
 		clc  								; get the offset, add codePtr
 		adc 	codePtr
-		sta 	NSMantissa0,x 				; store the result in the mantissa.
+		sta 	NSMantissa0,x
 		lda 	codePtr+1
 		adc 	#0
+		sta 	NSMantissa1,x 				; return direct address (safe: single page)
+		stz 	NSMantissa2,x
+		stz 	NSMantissa3,x
+		rts
+		;
+		;		Multi-page or boundary case — copy string to lineBuffer via .cget
+		;		so the pointer survives page switches (e.g. proc calls).
+		;
+_MIPageCross:
+		phy 								; save Y (offset to first char)
+		phx 								; save X (stack index)
+		ldx 	#0
+_MICopyLoop:
+		.cget 								; read byte at (codePtr),y (handles paging)
+		sta 	lineBuffer,x
+		beq 	_MICopyDone 				; null terminator copied
+		iny
+		inx
+		bne 	_MICopyLoop 				; max 255 chars
+_MICopyDone:
+		plx 								; restore stack index
+		ply 								; restore Y
+		lda 	#<lineBuffer
+		sta 	NSMantissa0,x
+		lda 	#>lineBuffer
 		sta 	NSMantissa1,x
 		stz 	NSMantissa2,x
 		stz 	NSMantissa3,x
