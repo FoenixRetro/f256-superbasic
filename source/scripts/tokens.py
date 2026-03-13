@@ -27,8 +27,10 @@ class TokenSource(object):
 				repeat
 				for
 				proc
+				deffn
 			{-} 						// Shift down
 				wend
+				enddef
 				endif
 				then
 				until

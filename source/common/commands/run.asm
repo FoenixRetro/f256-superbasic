@@ -52,10 +52,16 @@ RunCurrentProgram:
 		;
 		; ----------------------------------------------------------------------------------------
 		
-RunNewLine:		
+RunNewLine:
 		.cget0 								; is there any more program to run ?
 		beq 	CRNoProgram         		; no then END.
-		ldx 	#$FF 						; reset stack
+		lda 	fnNestLevel 				; inside a multi-line function body?
+		beq 	_RNLTopLevel
+		ldx 	fnSavedSP 					; yes: reset SP to function entry point
+		txs 								; (preserves expression evaluator returns)
+		bra 	RUNCodePointerLine
+_RNLTopLevel:
+		ldx 	#$FF 						; no: normal full stack reset
 		txs
 		;
 		;		Run a line from here.

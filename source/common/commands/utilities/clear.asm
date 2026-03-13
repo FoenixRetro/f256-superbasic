@@ -35,8 +35,9 @@ _ClearOneVariable:
 		cpy 	#8
 		bne 	_ClearOneVariable	
 
-		ldy 	#2 							; has it been marked procedure
+		ldy 	#2 							; has it been marked procedure or function
 		lda 	(zTemp0),y
+		and 	#NSBTypeMask 				; check type bits only (catches both $18 and $1C)
 		cmp 	#NSTProcedure
 		bne 	_ClearNotProcedure
 		lda 	#NSTInteger+NSBIsArray 		; if so set it back to an integer array
@@ -70,6 +71,10 @@ _ClearZeroEnd:
 		;		Reset the BASIC Stack pointer
 		;
 		jsr 	StackReset
+		;
+		;		Reset the function nesting level
+		;
+		stz 	fnNestLevel
 		;
 		;		Reset the BASIC string pointer
 		;

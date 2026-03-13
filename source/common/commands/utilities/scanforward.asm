@@ -121,6 +121,35 @@ ScanGetCurrentLineStep:
 		stz 	zTemp1
 		stz 	listElseFound 				; clear ELSE flag before scanning line
 		ldy 	#3
+		;
+		;		Single-line DEFFN (= expr) should not change indent. DEFFN is in {+}
+		;		so ScanForwardOne will add +1; pre-decrement here to offset it.
+		;
+		.cget
+		cmp 	#KWD_DEFFN
+		bne 	_SGCLSLoop
+		iny 								; skip var ref high
+		iny 								; skip var ref low
+		iny 								; skip '('
+		.cget
+		cmp 	#KWD_RPAREN
+		beq 	_SGCLSDeffnRP
+_SGCLSDeffnParam:
+		iny 								; skip param var ref high
+		iny 								; skip param var ref low
+		.cget
+		cmp 	#KWD_RPAREN
+		beq 	_SGCLSDeffnRP
+		iny 								; skip comma
+		bra 	_SGCLSDeffnParam
+_SGCLSDeffnRP:
+		iny 								; skip ')'
+		.cget
+		cmp 	#KWD_EQUAL
+		bne 	_SGCLSDeffnDone 			; multi-line: no adjustment needed
+		dec 	zTemp1 						; single-line: -1 to offset the +1 from {+}
+_SGCLSDeffnDone:
+		ldy 	#3 							; reset scan position
 _SGCLSLoop:
 		.cget 								; next and consume ?
 		iny
