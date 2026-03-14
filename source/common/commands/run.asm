@@ -52,10 +52,10 @@ RunCurrentProgram:
 		;
 		; ----------------------------------------------------------------------------------------
 		
-RunNewLine:		
+RunNewLine:
 		.cget0 								; is there any more program to run ?
 		beq 	CRNoProgram         		; no then END.
-		ldx 	#$FF 						; reset stack
+		ldx 	fnSavedSP 					; reset SP ($FF at top level, saved SP in function)
 		txs
 		;
 		;		Run a line from here.
@@ -171,7 +171,6 @@ Shift2Command: ;; [!2:SH20]
 ;
 ; ************************************************************************************************		
 
-Unused1: 	;; [proc]
 Unused2: 	;; [to]
 Unused3: 	;; [downto]
 Unused4:	;; [then]

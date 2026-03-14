@@ -76,6 +76,9 @@ NSMantissa3:
 NSExponent: 								; Exponent , 0 = Mantissa is integer
 		.fill 	MathStackSize
 
+fnStackLevel:								; saved stack level for function evaluation
+		.fill 	1
+
 		.send zeropref
 
 
@@ -150,6 +153,8 @@ ModeMask: 									; modes allowed
 listIndent:	 								; list indent level.
 		.fill 	1
 listElseFound:								; flag set when ELSE found on line (for indent fix)
+		.fill 	1
+listEndToken:								; closing token for LIST proc/fn
 		.fill 	1
 lcLastCharacter: 							; last character output.
 		.fill 	1	

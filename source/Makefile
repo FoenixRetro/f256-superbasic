@@ -29,9 +29,8 @@ MODULES = +hardware +tokeniser +kernel +graphics:2 +sound:2
 BUILD_OUT = $(BUILDDIR)basic.rom
 SCRIPTDIR = scripts$(S)
 MAME_PATH=../../mame
-IMAGE_PATH := sd
-IMAGE := $(IMAGE_PATH).img
 BASIC_TESTS_PATH=$(PWD)/../test
+IMAGE := $(BASIC_TESTS_PATH)/.output/tests.img
 
 all:  build
 
@@ -95,9 +94,6 @@ build: prelim
 #		Scripts run in advance generating tables etc.
 #
 prelim:
-	@echo "Building submodules"
-	$(Q)$(MAKE) -B -C ..$(S)modules clean all
-
 	@echo "Generating assembly sources"
 	$(Q)$(PYTHON) $(SCRIPTDIR)errors.py $(LANGUAGE)
 	$(Q)$(PYTHON) $(SCRIPTDIR)opcodes.py >common$(S)generated$(S)asmcore.asm
@@ -105,6 +101,9 @@ prelim:
 	$(Q)$(PYTHON) $(SCRIPTDIR)tokens.py
 	$(Q)$(PYTHON) $(SCRIPTDIR)constants.py
 	$(Q)$(PYTHON) $(SCRIPTDIR)version.py $(VERSION)
+
+	@echo "Building submodules"
+	$(Q)$(MAKE) -B -C ..$(S)modules clean all
 
 #
 #		Print base version to console
@@ -192,9 +191,10 @@ flash: build
 #		Test in emulator
 #
 emu: build $(IMAGE)
-	cp $(BUILDDIR)/sb*.bin $(MAME_PATH)/roms/f256k
+	$(Q)$(CCOPY) $(BUILDDIR)/sb*.bin $(MAME_PATH)/roms/f256k
+	$(Q)$(CDEL) $(MAME_PATH)/nvram/f256k/flash
 	cd $(MAME_PATH) && ./f256k f256k -window -resolution 1280x720 -skip_gameinfo -harddisk $(BASIC_TESTS_PATH)/.output/tests.img -rompath roms
-	#cd $(MAME_PATH) && ./f256k f256k -window -resolution 1280x720 -skip_gameinfo -harddisk $(BASIC_TESTS_PATH)/.output/tests.img -rompath roms -script $(LAUNCH_SCRIPT) -log
 
-$(IMAGE): $(BASIC_TESTS_PATH)/ashanghai
-	$(BASIC_TESTS_PATH)/prepare-disk.py -t $<
+$(IMAGE): $(BASIC_TESTS_PATH)/fnproc
+	$(PYTHON) $(BASIC_TESTS_PATH)/prepare-disk.py -t $<
+

@@ -35,6 +35,7 @@
 	.include	"./common/commands/assert.asm"
 	.include	"./common/commands/call.asm"
 	.include	"./common/commands/data.asm"
+	.include	"./common/commands/def.asm"
 	.include	"./common/commands/dim.asm"
 	.include	"./common/commands/end.asm"
 	.include	"./common/commands/for.asm"
@@ -150,6 +151,7 @@
 	.include	"./common/stack/setup.asm"
 	.include	"./common/strings/concrete.asm"
 	.include	"./common/strings/stringalloc.asm"
+	.include	"./common/expressions/unary/fn.asm"
 
 
 .section code
@@ -162,6 +164,9 @@ StartModuleCode:
 	.include	"../modules/.build/hardware.module.asm"
 	.include	"../modules/.build/tokeniser.module.asm"
 	.include	"../modules/.build/kernel.module.asm"
+
+; --- Error text in module page 1 ---
+	.include	"./common/generated/_errortext.asm"
 
 ; --- Header data in boot section ($6000-$7FFF) ---
 	.include	"../modules/hardware/header/.build/headerdata.dat"

@@ -59,6 +59,12 @@ VariableHandler:
 ; ************************************************************************************************
 
 _VHArray:
+		lda 	NSStatus,x 					; check if this is a function call
+		and 	#NSBTypeMask+NSBIsArray
+		cmp 	#NSTProcedure+NSBIsArray 	; function = procedure type + array bit
+		bne 	_VHNotFunction
+		jmp 	FunctionCall 				; dispatch to function call handler
+_VHNotFunction:
 		;
 		inx
 		jsr 	Evaluate8BitInteger 		; get the 1st index.

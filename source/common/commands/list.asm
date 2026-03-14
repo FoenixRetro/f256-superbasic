@@ -109,7 +109,7 @@ _CLListProcedure:
 		.cget
 		sta 	zTemp1+1
 		;
-		;		Look for the procedure first.
+		;		Look for the PROC or FN definition.
 		;
 		.cresetcodepointer 					; search for it.
 _CLLPSearch:
@@ -117,39 +117,71 @@ _CLLPSearch:
 		cmp 	#0 							; if zero, end
 		beq 	_CLExit
 
-		ldy 	#3 							; check if PROC something
+		ldy 	#3 							; check if PROC or FN something
 		.cget
 		cmp 	#KWD_PROC
+		beq 	_CLLPCheckName
+		cmp 	#KWD_FN
 		bne 	_CLLPNext
-		iny 								; check if PROC this.
+_CLLPCheckName:
+		pha 								; save keyword (PROC or FN)
+		iny 								; check if it's this name.
 		.cget
 		cmp 	zTemp1 						; does it match ?
-		bne 	_CLLPNext
+		bne 	_CLLPNextPop
 		iny
 		.cget
 		cmp 	zTemp1+1
-		beq 	_CLLPFound
+		beq 	_CLLPFoundPop
+_CLLPNextPop:
+		pla
 _CLLPNext:
 		.cnextline
 		bra 	_CLLPSearch
 		;
-		;		Procedure found, list until end of program or ENDPROC.
+		;		Definition found. Stack has the keyword (PROC or FN).
+		;		Determine the closing token.
 		;
-_CLLPFound:
+_CLLPFoundPop:
+		pla
+		cmp 	#KWD_FN
+		bne 	_CLLPFoundProc
+		;
+		;		FN: check for single-line (= expr) — just list one line.
+		;
+		iny 								; skip past params to find '=' or EOL
+		jsr 	SkipParamList
+		.cget
+		cmp 	#KWD_EQUAL
+		beq 	_CLLPSingleLine 			; single-line FN: list one line only
+		lda 	#KWD_ENDFN 					; multi-line FN: stop at ENDFN
+		bra 	_CLLPListDef
+_CLLPFoundProc:
+		lda 	#KWD_ENDPROC 				; PROC: stop at ENDPROC
+_CLLPListDef:
+		sta 	listEndToken
+		;
+		;		List lines until closing token or end of program.
+		;
+_CLLPListLoop:
 		.cget0 								; reached end
 		beq 	_CLExit
-
-		.breakcheck 		 				; break check
+		.breakcheck
 		bne 	_CLBreak
-
-		ldy 	#3 							; get first keyword
+		ldy 	#3
 		.cget
 		pha
-		jsr 	CLListOneLineShift 			; list line (skip if shift held)
+		jsr 	CLListOneLineShift
 		.cnextline
-		pla 								; reached ENDPROC ?
-		cmp 	#KWD_ENDPROC
-		bne 	_CLLPFound
+		pla
+		cmp 	listEndToken 				; reached closing token?
+		bne 	_CLLPListLoop
+		jmp 	WarmStart
+		;
+		;		Single-line FN: list just this one line.
+		;
+_CLLPSingleLine:
+		jsr 	CLListOneLineShift
 		jmp 	WarmStart
 
 ; ************************************************************************************************

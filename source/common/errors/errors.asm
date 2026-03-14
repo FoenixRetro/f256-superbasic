@@ -18,14 +18,15 @@
 ;
 ; ************************************************************************************************
 
-ErrorHandler:	
+ErrorHandler:
 		pha 								; save error #
 
 		tay 								; find the error text
 		beq 	_EHEnd
 		ldx 	#0
+		inc 	8+5 						; bank in module page 1 (ErrorText lives there)
 		.set16 	zTemp0,ErrorText
-_EHFind:		
+_EHFind:
 		dey 								; keep looking through text
 		beq 	_EHFound
 _EHFindZero:
@@ -33,16 +34,25 @@ _EHFindZero:
 		inc 	zTemp0
 		bne 	_EHFNoCarry
 		inc 	zTemp0+1
-_EHFNoCarry:		
+_EHFNoCarry:
 		cmp 	#0
 		bne 	_EHFindZero
 		bra 	_EHFind
 
 _EHFound:
-		lda 	zTemp0 						; print message
-		ldx 	zTemp0+1
+		ldy 	#0 							; copy error string to ArgumentStorage buffer
+_EHCopy:
+		lda 	(zTemp0),y
+		sta 	ArgumentStorage,y
+		beq 	_EHCopyDone
+		iny
+		bra 	_EHCopy
+_EHCopyDone:
+		dec 	8+5 						; restore main ROM page
+		lda 	#ArgumentStorage & $FF 		; print from buffer
+		ldx 	#ArgumentStorage >> 8
 		jsr 	PrintStringXA
-	
+
 		pla  								; check if error is 'open structure'
 		cmp 	#ERRID_STRUCT
 		beq 	_EHCREnd
