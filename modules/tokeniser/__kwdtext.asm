@@ -52,13 +52,13 @@ KeywordSet0:
 	.text	4,$40,"TRUE"           ; $ae TRUE
 	.text	4,$0b,"VAL("           ; $af VAL(
 	.text	4,$05,"FRE("           ; $b0 FRE(
-	.text	5,$63,"DEFFN"          ; $b1 DEFFN
+	.text	2,$94,"FN"             ; $b1 FN
 	.text	3,$e7,"FOR"            ; $b2 FOR
 	.text	2,$8f,"IF"             ; $b3 IF
 	.text	4,$34,"PROC"           ; $b4 PROC
 	.text	6,$c1,"REPEAT"         ; $b5 REPEAT
 	.text	5,$79,"WHILE"          ; $b6 WHILE
-	.text	6,$a6,"ENDDEF"         ; $b7 ENDDEF
+	.text	5,$6b,"ENDFN"          ; $b7 ENDFN
 	.text	5,$66,"ENDIF"          ; $b8 ENDIF
 	.text	7,$0b,"ENDPROC"        ; $b9 ENDPROC
 	.text	4,$3f,"NEXT"           ; $ba NEXT

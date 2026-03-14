@@ -75,6 +75,8 @@ _ClearZeroEnd:
 		;		Reset the function nesting level
 		;
 		stz 	fnNestLevel
+		lda 	#$FF
+		sta 	fnSavedSP
 		;
 		;		Reset the BASIC string pointer
 		;

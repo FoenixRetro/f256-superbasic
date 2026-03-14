@@ -195,6 +195,6 @@ emu: build $(IMAGE)
 	$(Q)$(CDEL) $(MAME_PATH)/nvram/f256k/flash
 	cd $(MAME_PATH) && ./f256k f256k -window -resolution 1280x720 -skip_gameinfo -harddisk $(BASIC_TESTS_PATH)/.output/tests.img -rompath roms
 
-$(IMAGE): $(BASIC_TESTS_PATH)/deffn
+$(IMAGE): $(BASIC_TESTS_PATH)/fnproc
 	$(PYTHON) $(BASIC_TESTS_PATH)/prepare-disk.py -t $<
 

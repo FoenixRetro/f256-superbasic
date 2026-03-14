@@ -14,7 +14,7 @@
 
 ; ************************************************************************************************
 ;
-;			Scan program code for PROC and DEFFN definitions
+;			Scan program code for PROC and FN definitions
 ;
 ; ************************************************************************************************
 
@@ -29,10 +29,10 @@ _PSLoop:
 		.cget
 		cmp 	#KWD_PROC 					; is it PROC ?
 		beq 	_PSIsProc
-		cmp 	#KWD_DEFFN					; is it DEFFN ?
+		cmp 	#KWD_FN						; is it FN ?
 		bne 	_PSNext
 		;
-		;		DEFFN: mark as function (NSTProcedure + NSBIsArray)
+		;		FN: mark as function (NSTProcedure + NSBIsArray)
 		;		so VariableHandler dispatches to function call.
 		;
 		lda 	#NSTProcedure+NSBIsArray

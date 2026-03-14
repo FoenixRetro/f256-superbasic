@@ -116,13 +116,13 @@ VectorSet0:
 	.word	UnaryTrue                        ; $ae TRUE
 	.word	ValUnary                         ; $af VAL(
 	.word	FreUnary                         ; $b0 FRE(
-	.word	Command_DEFFN                    ; $b1 DEFFN
+	.word	Command_FN                       ; $b1 FN
 	.word	ForCommand                       ; $b2 FOR
 	.word	IfCommand                        ; $b3 IF
-	.word	Unused1                          ; $b4 PROC
+	.word	Command_PROC                     ; $b4 PROC
 	.word	Command_REPEAT                   ; $b5 REPEAT
 	.word	Command_WHILE                    ; $b6 WHILE
-	.word	Command_ENDDEF                   ; $b7 ENDDEF
+	.word	Command_ENDFN                    ; $b7 ENDFN
 	.word	EndIf                            ; $b8 ENDIF
 	.word	Command_ENDPROC                  ; $b9 ENDPROC
 	.word	NextCommand                      ; $ba NEXT

@@ -2,7 +2,7 @@
 ; ************************************************************************************************
 ;
 ;		Name:		fn.asm
-;		Purpose:	Function call handler — invoked from VariableHandler for DEFFN functions
+;		Purpose:	Function call handler — invoked from VariableHandler for FN functions
 ;		Created:	12th March 2026
 ;		Author:		Matthias Brukner
 ;
@@ -24,35 +24,15 @@
 ; ************************************************************************************************
 
 FunctionCall:
-		stx 	fnStackLevel 				; save stack level for result
 		;
 		;		Stack the arguments on the evaluation stack.
-		;		Start params at fnStackLevel+1 so they don't overlap with the
-		;		definition pointer at NSMantissa[fnStackLevel]. Save fnStackLevel
-		;		on the hardware stack since nested calls during param eval clobber it.
 		;
 		phx 								; preserve caller's stack level
 		inx 								; params start above function variable
-		.cget 								; check for right bracket (no args)
-		cmp 	#KWD_RPAREN
-		beq 	_FCEndParam
-_FCParamLoop:
-		jsr 	EvaluateValue 				; get parameter onto stack
-		inx 								; bump next stack
-		cpx 	#MathStackSize 				; overflow check
-		blt 	_FCParamOK
-		jmp 	_FCTooManyParam
-_FCParamOK:
-		.cget 								; get next character
-		iny
-		cmp 	#KWD_COMMA 					; if comma, loop back for next param
-		beq 	_FCParamLoop
-		dey 								; unpick
-_FCEndParam:
-		stx 	lastParameter 				; save last parameter index
+		jsr 	EvaluateParamList 			; evaluate arguments onto stack
 		iny 								; skip right bracket
 		plx 								; restore caller's stack level
-		stx 	fnStackLevel
+		stx 	fnStackLevel 				; save stack level for result
 		;
 		;		Read the definition pointer while NSMantissa[fnStackLevel] is intact,
 		;		then save the code position on the BASIC stack.
@@ -66,42 +46,14 @@ _FCEndParam:
 		jsr 	StackOpen
 		jsr 	STKSaveCodePosition 		; save where we are (return point)
 		;
-		;		Jump to the DEFFN definition.
-		;
-		ldy 	#1 							; copy code address from record
-		lda 	(zTemp0)
-		sta 	safePtr
-		lda 	(zTemp0),y
-		sta 	safePtr+1
-		iny
-		lda 	(zTemp0),y
-		sta 	safePtr+2
-		iny
-		lda 	(zTemp0),y
-		sta 	safePtr+3
-		iny 								; get Y offset
-		lda 	(zTemp0),y
-		tay
-		.cresync 							; resync code pointer
+		jsr 	JumpToDefinition 			; load safePtr+Y from (zTemp0), resync
 		;
 		;		Localise parameters (copy from evaluation stack to local variables).
 		;
 		ldx 	fnStackLevel 				; params started at fnStackLevel + 1
 		inx
-		cpx 	lastParameter 				; zero parameters?
-		beq 	_FCParamsDone
-_FCParamExtract:
-		dex 								; level before for localise
-		jsr 	LocaliseNextTerm 			; push original value to BASIC stack
-		jsr 	AssignVariable 				; assign the argument value
-		inx 								; next parameter
-		inx
-		cpx 	lastParameter 				; done?
-		beq 	_FCParamsDone
-		jsr 	CheckComma 					; comma between params
-		bra 	_FCParamExtract
-_FCParamsDone:
-		jsr 	CheckRightBracket 			; skip ) in DEFFN definition
+		jsr 	LocaliseParams 				; localise params and check )
+		jsr 	CheckRightBracket
 		;
 		;		Check for single-line (= expr) definition.
 		;
@@ -118,10 +70,19 @@ _FCParamsDone:
 		plx 								; restore fnStackLevel
 		stx 	fnStackLevel
 		;
+		;		If string result, copy to temp before popping locals.
+		;
+		lda 	NSStatus,x
+		and 	#NSBTypeMask
+		cmp 	#NSTString
+		bne 	_FCSLRestore
+		jsr 	FRCopyString
+_FCSLRestore:
+		;
 		;		Restore: pop locals, restore code position.
 		;
-		lda 	#STK_PROC 					; check frame type
-		ldx 	#ERRID_PROC 				; reuse PROC error ID for mismatch
+		lda 	#STK_PROC
+		ldx 	#ERRID_PROC
 		jsr 	StackCheckFrame 			; pops all locals, checks frame
 		jsr 	STKLoadCodePosition 		; restore code pointer to after fn(...)
 		jsr 	StackClose 					; release the stack frame
@@ -131,31 +92,48 @@ _FCParamsDone:
 ; ************************************************************************************************
 ;
 ;		Multi-line function: save state and enter the command loop.
-;		The function body runs as normal BASIC code until ENDDEF is reached.
+;		The function body runs as normal BASIC code until ENDFN or RETURN.
 ;
 ; ************************************************************************************************
 
 _FCMultiLine:
-		;
-		;		Save fnStackLevel and outer fnSavedSP on the nesting stacks.
-		;
 		ldx 	fnNestLevel
 		cpx 	#8 							; nesting stack overflow?
-		bcs 	_FCTooManyParam 			; reuse "too many parameters" error
+		bcs 	_FCTooManyParam
 		lda 	fnStackLevel
 		sta 	fnStackLevelStack,x
 		lda 	fnSavedSP
 		sta 	fnSavedSPStack,x
 		inc 	fnNestLevel
 		;
-		;		Set fnSavedSP to current hardware SP (preserves expression evaluator
-		;		return addresses below this point on the 6502 stack).
+		;		Save caller's eval stack entries S[0]..S[fnStackLevel-1]
+		;		on the hardware stack. Command handlers always evaluate at
+		;		stack level 0, so without this the function body would
+		;		overwrite the calling expression's intermediate values.
+		;		The data is preserved because fnSavedSP (captured below)
+		;		sits above it, and RunNewLine resets SP to fnSavedSP.
 		;
+		ldx 	fnStackLevel
+		beq 	_FCMLNoSave
+		dex
+_FCMLSaveLoop:
+		lda 	NSMantissa0,x
+		pha
+		lda 	NSMantissa1,x
+		pha
+		lda 	NSMantissa2,x
+		pha
+		lda 	NSMantissa3,x
+		pha
+		lda 	NSExponent,x
+		pha
+		lda 	NSStatus,x
+		pha
+		dex
+		bpl 	_FCMLSaveLoop
+_FCMLNoSave:
 		tsx
 		stx 	fnSavedSP
-		;
-		;		Advance past the DEFFN line and enter the command loop.
-		;
 		.cnextline
 		jmp 	RunNewLine
 
@@ -165,8 +143,6 @@ _FCTooManyParam:
 		.send code
 
 		.section storage
-fnStackLevel:
-		.fill 	1 							; saved stack level for function evaluation
 fnNestLevel:
 		.fill 	1 							; function nesting depth (0 = not in function)
 fnSavedSP:
@@ -175,7 +151,5 @@ fnStackLevelStack:
 		.fill 	8 							; per-nesting-level fnStackLevel saves
 fnSavedSPStack:
 		.fill 	8 							; per-nesting-level fnSavedSP saves
-fnOuterSavedSP:
-		.fill 	1 							; temp for outer fnSavedSP during ENDDEF unwind
 		.send storage
 
